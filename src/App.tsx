@@ -1544,6 +1544,7 @@ function WordQuizContent({
   const [answeredCorrectly, setAnsweredCorrectly] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState<Word | null>(null);
   const [showExample, setShowExample] = useState(false);
+  const [showModernTranslation, setShowModernTranslation] = useState(false);
 
   // Reset state when question changes
   React.useEffect(() => {
@@ -1551,6 +1552,7 @@ function WordQuizContent({
     setSelectedOption(null);
     setUserAnswer('');
     setShowExample(false);
+    setShowModernTranslation(false);
   }, [question.correct.qid]);
 
   // 正解時に自動遷移
@@ -1763,13 +1765,24 @@ function WordQuizContent({
               例文を表示
             </button>
           ) : (
-            <ExampleDisplay
-              exampleKobun={question.exampleKobun}
-              exampleModern={question.exampleModern}
-              showKobun={true}
-              showModern={false}
-              phase={answeredCorrectly !== null ? 'answer' : 'question'}
-            />
+            <>
+              <ExampleDisplay
+                exampleKobun={question.exampleKobun}
+                exampleModern={question.exampleModern}
+                showKobun={true}
+                showModern={showModernTranslation}
+                forceShowModern={showModernTranslation}
+                phase={answeredCorrectly !== null ? 'answer' : 'question'}
+              />
+              {!showModernTranslation && answeredCorrectly === null && (
+                <button
+                  onClick={() => setShowModernTranslation(true)}
+                  className="w-full mt-2 py-2 px-4 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-lg transition text-sm"
+                >
+                  現代語訳を表示
+                </button>
+              )}
+            </>
           )}
         </div>
       )}
