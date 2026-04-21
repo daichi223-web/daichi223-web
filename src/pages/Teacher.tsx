@@ -238,6 +238,22 @@ export default function Teacher() {
               📊 候補を集計
             </button>
             <button
+              onClick={async () => {
+                try {
+                  setLoading(true);
+                  const result = await callAPI("/api/exportCandidatesJSON");
+                  alert(`エクスポート完了:\n候補数: ${result.candidatesCount}\nQID数: ${result.qidsCount}\n${result.message}`);
+                } catch (e: any) {
+                  alert(`エラー: ${e.message}`);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition"
+            >
+              📤 候補をエクスポート
+            </button>
+            <button
               onClick={deleteAllData}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition"
             >

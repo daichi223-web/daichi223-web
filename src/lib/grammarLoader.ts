@@ -1,8 +1,7 @@
 /**
  * kobun-grammar.json を読み込み、接続規則をインデックス化
  */
-// NO module-level imports to avoid TDZ
-let grammarDataCache: any = null;
+import grammarData from '../assets/kobun-grammar.json';
 
 export interface AuxiliaryRule {
   語: string;
@@ -78,33 +77,11 @@ let cachedGrammar: GrammarIndex | null = null;
 
 /**
  * 文法データをロードし、高速検索用のMapに変換
- * TDZ回避: requireによる遅延ロード
  */
 export function loadGrammar(): GrammarIndex {
   if (cachedGrammar) return cachedGrammar;
 
-  // TEMPORARY: Disable to avoid TDZ - return minimal grammar
-  console.warn("Grammar loading temporarily disabled to avoid TDZ");
-  cachedGrammar = {
-    auxConn: new Map(),
-    kakari: new Map(),
-    disamb: new Map(),
-    flows: new Map(),
-    verbs: [],
-    adjectives: [],
-    auxiliaries: [],
-    particles: [],
-  };
-  return cachedGrammar;
-
-  /* TDZ-CAUSING CODE DISABLED
   try {
-    // Lazy load JSON on first call using require (synchronous, TDZ-safe)
-    if (!grammarDataCache) {
-      grammarDataCache = require("../assets/kobun-grammar.json");
-    }
-    const grammarData = grammarDataCache;
-
     const auxConn = new Map<string, string>();
     const kakari = new Map<string, "連体形" | "已然形">();
     const disamb = new Map<string, DisambPattern[]>();
@@ -174,7 +151,6 @@ export function loadGrammar(): GrammarIndex {
     };
     return cachedGrammar;
   }
-  */
 }
 
 /**

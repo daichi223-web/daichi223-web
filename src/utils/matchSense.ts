@@ -69,6 +69,22 @@ function createTagSet(tags: string[]): Set<string> {
 }
 
 /**
+ * る・らる助動詞の等価タグセット
+ * 「る・らる」はオペークタグとして受身/可能/自発/尊敬のいずれとも一致する
+ */
+const RARU_EQUIVALENTS = new Set(["受身", "可能", "自発", "尊敬", "る・らる"]);
+
+/**
+ * タグ同士のファジーマッチ
+ * る・らる系のタグは相互に一致とみなす
+ */
+function tagsMatch(ansTag: string, correctTag: string): boolean {
+  if (ansTag === correctTag) return true;
+  if (RARU_EQUIVALENTS.has(ansTag) && RARU_EQUIVALENTS.has(correctTag)) return true;
+  return false;
+}
+
+/**
  * 安全な文字列正規化（括弧・記号除去）
  */
 function safeStrip(s: string): string {
@@ -219,11 +235,22 @@ export function matchSense(
 
     // ステップ2: 付属語 (aux) の評価 (語幹が一致していることが前提)
 
-    // 差分集合の計算
-    const missingTags = new Set([...correctTags].filter(t => !ansTags.has(t)));
-    const extraTags = new Set([...ansTags].filter(t => !correctTags.has(t)));
+    // 差分集合の計算（る・らる系タグのファジーマッチを適用）
+    const missingTags = new Set([...correctTags].filter(t => ![...ansTags].some(a => tagsMatch(a, t))));
+    const extraTags = new Set([...ansTags].filter(t => ![...correctTags].some(c => tagsMatch(t, c))));
 
-    // 100点評価: 完全に一致する場合（付属語なしも含む）
+    // 90点評価: 語幹のみ正解（両方に付属語なし）
+    if (ansTags.size === 0 && correctTags.size === 0) {
+      return {
+        ok: true,
+        reason: "lemma_only" as const,
+        matchedSurface: c.surface,
+        score: 90,
+        detail: "語幹のみ正解"
+      };
+    }
+
+    // 100点評価: 完全に一致する場合（付属語も一致）
     if (missingTags.size === 0 && extraTags.size === 0) {
       return {
         ok: true,

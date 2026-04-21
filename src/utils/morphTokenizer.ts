@@ -38,7 +38,7 @@ function getAuxRules(): Array<{ re: RegExp; tag: string }> {
     { re: /(なり|めり)$/u, tag: "推定" },
     { re: /ている$/u, tag: "存続" },  // 現代語の吸収
     { re: /れる$/u, tag: "可能" },   // ら抜き言葉の吸収
-    { re: /(らる|る)$/u, tag: "受身-可能-自発-尊敬" },
+    { re: /(らる|る)$/u, tag: "る・らる" },
     { re: /(さす|しむ|す)$/u, tag: "使役" },
 
     // 連用形音便も接続の機能を持つ（「座っ」=「座って」の「て」省略形）
@@ -225,15 +225,15 @@ export function tokenizeSense(
   // 敬語プレフィクス（お/ご）を評価対象にする：削除しない、タグ化する
   const honorific = /^(お|ご)(?=[ぁ-ゖ一-龯])/u.test(x);
 
-  // 助詞→助動詞の順にむしり取り
-  const { stem: afterPrt, prts } = peelParticles(x);
-  const { stem: afterAux, aux } = peelAuxiliaries(afterPrt);
+  // 助動詞→助詞の順にむしり取り（助動詞を先に剥がすことで「で」等の誤分類を防止）
+  const { stem: afterAux, aux } = peelAuxiliaries(x);
+  const { stem: afterPrt, prts } = peelParticles(afterAux);
 
   // 連用形音便の検出（「座っ」「読ん」「買い」など）
   // これらは「て」「で」と同じ接続機能を持つ
-  const hasRenyoOnbin = /(っ|ん|い)$/u.test(afterAux);
+  const hasRenyoOnbin = /(っ|ん|い)$/u.test(afterPrt);
 
-  const content = toContentMorpheme(afterAux);
+  const content = toContentMorpheme(afterPrt);
   const seq: Morpheme[] = [content, ...aux];
 
   // 連用形音便があり、かつまだ接続タグがない場合のみ追加（「座っ」=「座って」）
