@@ -10,6 +10,7 @@ import { WordQuizContent } from './components/quiz/WordQuizContent';
 import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
+import { recordAnswer } from './lib/wordStats';
 
 type AppMode = 'word' | 'polysemy';
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
@@ -633,6 +634,8 @@ function App() {
 
   const handleAnswer = (selectedOption: Word, correctOption: Word, isReverse = false) => {
     const isCorrect = selectedOption.qid === correctOption.qid;
+    // Track word stats in Supabase (fire-and-forget)
+    recordAnswer(correctOption.qid, isCorrect).catch(() => {});
     if (isCorrect) {
       setScore(prev => prev + 1);
       setShowCorrectCircle(true);
@@ -653,7 +656,8 @@ function App() {
   const handleTrueFalseAnswer = (userAnswer: boolean) => {
     const question = currentQuizData[currentQuestionIndex] as TrueFalseQuestion;
     const isCorrect = userAnswer === question.isCorrect;
-
+    // Track word stats in Supabase (fire-and-forget)
+    recordAnswer(question.correctAnswer.qid, isCorrect).catch(() => {});
     if (isCorrect) {
       setScore(prev => prev + 1);
       setShowCorrectCircle(true);
@@ -681,6 +685,9 @@ function App() {
     setWritingResult(evaluation);
     setCurrentWritingQid(correctQid);
     setWritingUserJudgment(undefined);
+
+    // Track word stats in Supabase (fire-and-forget)
+    recordAnswer(correctQid, evaluation.score >= 60).catch(() => {});
 
     // スコア更新と結果表示（即座に）
     // 60点以上で正解扱い（手動判定で変更可能）
