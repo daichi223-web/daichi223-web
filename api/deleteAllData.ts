@@ -25,16 +25,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     for (const collectionName of collections) {
       const snapshot = await db.collection(collectionName).get();
-      const batch = db.batch();
+      const docs = snapshot.docs;
       let count = 0;
 
-      snapshot.docs.forEach((doc) => {
-        batch.delete(doc.ref);
-        count++;
-      });
-
-      if (count > 0) {
+      // Firestore batches are limited to 500 operations
+      for (let i = 0; i < docs.length; i += 500) {
+        const batch = db.batch();
+        const chunk = docs.slice(i, i + 500);
+        chunk.forEach((doc) => batch.delete(doc.ref));
         await batch.commit();
+        count += chunk.length;
       }
 
       deleted[collectionName] = count;

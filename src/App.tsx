@@ -145,8 +145,12 @@ function App() {
   const [currentWritingQid, setCurrentWritingQid] = useState<string>('');
   const [currentWritingAnswerId, setCurrentWritingAnswerId] = useState<string>('');
 
+  // Wrong answers tracking for session-end review
+  const [wrongAnswers, setWrongAnswers] = useState<Array<{ lemma: string; sense: string; qid: string }>>([]);
+
   // Index modal state
   const [showIndexModal, setShowIndexModal] = useState(false);
+  const [pendingModeSwitch, setPendingModeSwitch] = useState<AppMode | null>(null);
   const [indexSearchQuery, setIndexSearchQuery] = useState('');
 
   // Polysemy mode state
@@ -274,7 +278,7 @@ function App() {
 
   const showErrorMessage = (message: string) => {
     setError(message);
-    setTimeout(() => setError(null), 5000);
+    setTimeout(() => setError(null), 10000);
   };
 
   const validateRangeInput = (start: number | undefined, end: number | undefined, maxValue: number = 330) => {
@@ -332,6 +336,7 @@ function App() {
     setNextButtonVisible(false);
     setShowWritingResult(false);
     setShowCorrectCircle(false);
+    setWrongAnswers([]);
 
     if (currentMode === 'word') {
       await setupWordQuiz();
@@ -683,6 +688,10 @@ function App() {
       }, 500);
     } else {
       setNextButtonVisible(true);
+      setWrongAnswers(prev => {
+        if (prev.some(w => w.qid === correctOption.qid)) return prev;
+        return [...prev, { lemma: correctOption.lemma, sense: correctOption.sense, qid: correctOption.qid }];
+      });
     }
   };
 
@@ -699,6 +708,11 @@ function App() {
       }, 500);
     } else {
       setNextButtonVisible(true);
+      const ca = question.correctAnswer;
+      setWrongAnswers(prev => {
+        if (prev.some(w => w.qid === ca.qid)) return prev;
+        return [...prev, { lemma: ca.lemma, sense: ca.sense, qid: ca.qid }];
+      });
     }
   };
 
@@ -717,6 +731,15 @@ function App() {
     // 60点以上で正解扱い（手動判定で変更可能）
     if (evaluation.score >= 60) {
       setScore(prev => prev + 1);
+    } else {
+      // 不正解を記録（セッション末復習用）
+      const correctWord = allWords.find(w => w.qid === correctQid);
+      if (correctWord) {
+        setWrongAnswers(prev => {
+          if (prev.some(w => w.qid === correctQid)) return prev;
+          return [...prev, { lemma: correctWord.lemma, sense: correctWord.sense, qid: correctQid }];
+        });
+      }
     }
     setShowWritingResult(true);
 
@@ -1216,6 +1239,22 @@ function App() {
               </p>
               <p className="text-slate-500 mt-1">正解率 {percent}%</p>
             </div>
+
+            {/* 間違えた単語の復習リスト */}
+            {wrongAnswers.length > 0 && (
+              <div className="mb-6 text-left">
+                <h3 className="text-sm font-bold text-slate-600 mb-2">間違えた単語（{wrongAnswers.length}語）</h3>
+                <div className="space-y-1 max-h-48 overflow-y-auto">
+                  {wrongAnswers.map(w => (
+                    <div key={w.qid} className="flex items-baseline gap-2 px-3 py-1.5 bg-red-50 rounded text-sm">
+                      <span className="font-bold text-slate-800">{w.lemma}</span>
+                      <span className="text-slate-600">{w.sense}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="space-y-3">
               <button
                 onClick={restartQuiz}
@@ -1251,8 +1290,12 @@ function App() {
         <div className="flex justify-center border-b border-slate-200 mb-4 bg-white rounded-t-2xl shadow-sm">
           <button
             onClick={() => {
-              setShowResults(false);
-              setCurrentMode('word');
+              if (isQuizActive && currentMode !== 'word') {
+                setPendingModeSwitch('word');
+              } else {
+                setShowResults(false);
+                setCurrentMode('word');
+              }
             }}
             className={`mode-tab ${currentMode === 'word' ? 'active-tab' : ''}`}
             style={{
@@ -1269,8 +1312,12 @@ function App() {
           </button>
           <button
             onClick={() => {
-              setShowResults(false);
-              setCurrentMode('polysemy');
+              if (isQuizActive && currentMode !== 'polysemy') {
+                setPendingModeSwitch('polysemy');
+              } else {
+                setShowResults(false);
+                setCurrentMode('polysemy');
+              }
             }}
             className={`mode-tab ${currentMode === 'polysemy' ? 'active-tab' : ''}`}
             style={{
@@ -1287,6 +1334,33 @@ function App() {
           </button>
         </div>
 
+        {/* Mode Switch Confirmation */}
+        {pendingModeSwitch && (
+          <div className="flex items-center justify-between bg-amber-50 border border-amber-300 rounded-lg p-3 mb-2 text-sm">
+            <span className="text-amber-800">
+              モードを切り替えると、進行中のクイズがリセットされます。
+            </span>
+            <div className="flex gap-2 ml-4 shrink-0">
+              <button
+                onClick={() => {
+                  setShowResults(false);
+                  setCurrentMode(pendingModeSwitch);
+                  setPendingModeSwitch(null);
+                }}
+                className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded transition"
+              >
+                切り替える
+              </button>
+              <button
+                onClick={() => setPendingModeSwitch(null)}
+                className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded transition"
+              >
+                キャンセル
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Settings Area */}
         <div className="bg-white p-3 rounded-b-2xl shadow-sm border-x border-b border-slate-200 mb-2">
           {currentMode === 'word' ? (
@@ -1300,10 +1374,10 @@ function App() {
                     onChange={(e) => setWordQuizType(e.target.value as WordQuizType)}
                     className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
                   >
-                    <option value="word-meaning">単語→意味</option>
-                    <option value="word-reverse">意味→単語</option>
-                    <option value="sentence-meaning">例文→意味</option>
-                    <option value="meaning-writing">意味記述</option>
+                    <option value="word-meaning">単語の意味を選ぶ</option>
+                    <option value="word-reverse">意味から単語を選ぶ</option>
+                    <option value="sentence-meaning">例文から意味を選ぶ</option>
+                    <option value="meaning-writing">意味を書いて答える</option>
                   </select>
                 </div>
                 <div className="flex items-center space-x-1">
@@ -1361,9 +1435,9 @@ function App() {
                     onChange={(e) => setPolysemyQuizType(e.target.value as PolysemyQuizType)}
                     className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
                   >
-                    <option value="example-comprehension">例文理解</option>
-                    <option value="true-false">正誤問題</option>
-                    <option value="context-writing">文脈記述</option>
+                    <option value="example-comprehension">例文と意味を結びつける</option>
+                    <option value="true-false">例文の訳の正誤を判断</option>
+                    <option value="context-writing">文脈から意味を書く</option>
                   </select>
                 </div>
                 <div className="flex items-center space-x-1">
@@ -1501,11 +1575,14 @@ function App() {
         {/* Error Message */}
         {error && (
           <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <span>{error}</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <span>{error}</span>
+              </div>
+              <button onClick={() => setError(null)} className="ml-3 text-red-500 hover:text-red-700 font-bold text-lg leading-none">&times;</button>
             </div>
           </div>
         )}
@@ -1660,27 +1737,40 @@ function WordQuizContent({
               {/* 採点結果訂正UI */}
               {writingUserJudgment === undefined && (
                 <div className="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-300">
-                  <p className="text-sm font-medium text-blue-800 mb-2">
-                    採点結果に納得できませんか？あなたの判定を選択してください
+                  <p className="text-sm font-medium text-blue-800 mb-1">
+                    自動採点の結果に異議がありますか？
+                  </p>
+                  <p className="text-xs text-blue-600 mb-3">
+                    {writingResult.score >= 60
+                      ? '現在の判定: 正解（+1点）'
+                      : '現在の判定: 不正解（+0点）'}
                   </p>
                   <div className="flex gap-2 justify-center">
                     <button
                       onClick={() => handleWritingUserJudgment(true)}
-                      className="px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition"
+                      className={`px-5 py-2 font-bold rounded-lg transition ${
+                        writingResult.score >= 60
+                          ? 'bg-green-200 text-green-800 border border-green-400'
+                          : 'bg-green-500 hover:bg-green-600 text-white'
+                      }`}
                     >
-                      ○ 正解
+                      {writingResult.score >= 60 ? '○ 正解のまま' : '○ 正解に変更'}
                     </button>
                     <button
                       onClick={() => handleWritingUserJudgment('partial')}
-                      className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-lg transition"
+                      className="px-5 py-2 bg-slate-200 text-slate-700 border border-slate-300 font-bold rounded-lg transition hover:bg-slate-300"
                     >
-                      △ 部分点
+                      そのまま進む
                     </button>
                     <button
                       onClick={() => handleWritingUserJudgment(false)}
-                      className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition"
+                      className={`px-5 py-2 font-bold rounded-lg transition ${
+                        writingResult.score < 60
+                          ? 'bg-red-200 text-red-800 border border-red-400'
+                          : 'bg-red-500 hover:bg-red-600 text-white'
+                      }`}
                     >
-                      × 不正解
+                      {writingResult.score < 60 ? '× 不正解のまま' : '× 不正解に変更'}
                     </button>
                   </div>
                 </div>
@@ -1847,6 +1937,17 @@ function WordQuizContent({
           );
         })}
       </div>
+
+      {/* 不正解時：例文で文脈記憶を補強 */}
+      {answeredCorrectly === false && (quizType === 'word-meaning' || quizType === 'word-reverse') && (
+        <ExampleDisplay
+          exampleKobun={question.exampleKobun}
+          exampleModern={question.exampleModern}
+          phase="answer"
+          forceShowModern={true}
+          className="mt-3 bg-amber-50 rounded-lg border border-amber-200"
+        />
+      )}
 
       {/* 不正解の場合のみ次へボタン表示 */}
       {answeredCorrectly === false && (
