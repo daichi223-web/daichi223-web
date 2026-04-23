@@ -1,4 +1,5 @@
 import { WordData, Word, MultiMeaningWord, ExamplesBySense } from '../types';
+import bundledKobunQ from '../data/kobunQ.json';
 
 export class DataParser {
   private wordData: WordData[] = [];
@@ -77,65 +78,52 @@ export class DataParser {
 
   async loadData(): Promise<void> {
     try {
-      const response = await fetch('/kobun_q.jsonl.txt');
-      const text = await response.text();
-      const lines = text.trim().split('\n');
+      // Bundled inside the JS chunk (旧 /kobun_q.jsonl.txt からの fetch 廃止)。
+      // 学校ネットワーク等の Web Gateway (Cisco Umbrella 等) が .txt 拡張子を
+      // SSO 認証壁に横取りして JSON パース失敗する現象を回避するため、
+      // JS bundle に同梱する方針に切替。
+      const raw = bundledKobunQ as unknown as WordData[];
       const allWarnings: string[] = [];
 
-      this.wordData = lines
-        .map((line, lineNum) => {
-          try {
-            const parsed = JSON.parse(line) as WordData;
-            // Validate required properties
-            if (!parsed || typeof parsed !== 'object') {
-              console.warn(`[Line ${lineNum + 1}] Invalid word data (not an object):`, parsed);
-              return null;
-            }
-
-            // 必須フィールドのチェック
-            const REQUIRED_FIELDS = ['qid', 'lemma', 'sense'] as const;
-            const missingFields = REQUIRED_FIELDS.filter(field => !parsed[field]);
-
-            if (missingFields.length > 0) {
-              console.warn(
-                `[Line ${lineNum + 1}] Invalid word data - missing fields: ${missingFields.join(', ')}`,
-                {
-                  allKeys: Object.keys(parsed),
-                  qid: parsed.qid,
-                  lemma: parsed.lemma,
-                  sense: parsed.sense,
-                  rawSample: JSON.stringify(parsed).slice(0, 200) + '...'
-                }
-              );
-              return null;
-            }
-
-            // 例文データの整合性チェック
-            const warnings = this.validateExamples(parsed);
-            allWarnings.push(...warnings);
-
-            return parsed;
-          } catch (parseError) {
-            console.warn('Failed to parse line:', line, parseError);
+      this.wordData = raw
+        .map((parsed, lineNum) => {
+          if (!parsed || typeof parsed !== 'object') {
+            console.warn(`[Index ${lineNum}] Invalid word data (not an object):`, parsed);
             return null;
           }
+
+          const REQUIRED_FIELDS = ['qid', 'lemma', 'sense'] as const;
+          const missingFields = REQUIRED_FIELDS.filter((field) => !parsed[field]);
+          if (missingFields.length > 0) {
+            console.warn(
+              `[Index ${lineNum}] Invalid word data - missing fields: ${missingFields.join(', ')}`,
+              {
+                allKeys: Object.keys(parsed),
+                qid: parsed.qid,
+                lemma: parsed.lemma,
+                sense: parsed.sense,
+              },
+            );
+            return null;
+          }
+
+          const warnings = this.validateExamples(parsed);
+          allWarnings.push(...warnings);
+          return parsed;
         })
         .filter((word): word is WordData => word !== null);
 
-      // データロード統計
       const validCount = this.wordData.length;
-      const totalLines = lines.length;
-      const invalidCount = totalLines - validCount;
+      const totalCount = raw.length;
+      const invalidCount = totalCount - validCount;
 
-      console.log(`[DataParser] Loaded ${validCount} valid words from ${totalLines} lines (${invalidCount} invalid/skipped)`);
+      console.log(`[DataParser] Loaded ${validCount} valid words from bundled data (${invalidCount} invalid/skipped)`);
 
-      // 空配列チェック（フェイルセーフ）
       if (this.wordData.length === 0) {
-        console.error('[DataParser] CRITICAL: No valid words loaded! All data was invalid or missing.');
+        console.error('[DataParser] CRITICAL: No valid words loaded! Bundled data is empty or corrupt.');
         throw new Error('No valid word data available');
       }
 
-      // ビルド時警告を出力
       if (allWarnings.length > 0) {
         console.warn(`[DataParser] Example validation warnings (${allWarnings.length} total):`, allWarnings.slice(0, 5));
       }
