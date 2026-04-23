@@ -37,7 +37,7 @@ function getNextReviewDate(box: number): string {
  * @returns array of qid strings that are due for review.
  */
 export async function getDueWords(): Promise<string[]> {
-  const userId = getUserId();
+  const userId = await getUserId();
   const now = new Date().toISOString();
 
   const { data, error } = await supabase
@@ -58,7 +58,7 @@ export async function getDueWords(): Promise<string[]> {
  * Get count of words due for review (useful for badge display).
  */
 export async function getDueCount(): Promise<number> {
-  const userId = getUserId();
+  const userId = await getUserId();
   const now = new Date().toISOString();
 
   const { count, error } = await supabase
@@ -82,7 +82,7 @@ export async function getDueCount(): Promise<number> {
  * - Incorrect: move back to box 1, set next_review to now (immediately due).
  */
 export async function updateSrsState(qid: string, isCorrect: boolean): Promise<void> {
-  const userId = getUserId();
+  const userId = await getUserId();
 
   // Get current SRS state
   const { data: existing } = await supabase
@@ -127,7 +127,7 @@ export async function updateSrsState(qid: string, isCorrect: boolean): Promise<v
  * If the word already exists in srs_state, this is a no-op.
  */
 export async function initSrsWord(qid: string): Promise<void> {
-  const userId = getUserId();
+  const userId = await getUserId();
 
   // Check if already exists
   const { data: existing } = await supabase

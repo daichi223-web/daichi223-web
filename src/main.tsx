@@ -19,7 +19,13 @@ import TextsIndex from './pages/TextsIndex.tsx'
 import SearchPage from './pages/SearchPage.tsx'
 import PWAInstallBanner from './components/PWAInstallBanner.tsx'
 import PullToRefresh from './components/PullToRefresh.tsx'
+import { ensureAnonSession } from './lib/anonAuth.ts'
 import './index.css'
+
+// Supabase Anonymous Sign-in を起動時に一度だけ発火する。
+// RLS が auth.uid ベースに締まっているので、学習記録系の書き込み前に
+// セッション確立を済ませておく。失敗しても起動は続行（フォールバックあり）。
+void ensureAnonSession().catch(() => {})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -1,10 +1,17 @@
 import { supabase } from './supabase';
+import { currentAuthUid } from './anonAuth';
 
 /**
- * Get or create anonymous user ID.
- * Reuses the existing anonId from localStorage if present.
+ * 現在のユーザー ID を返す。
+ * - 第一選択: Supabase Anonymous Sign-in による auth.uid（RLS と整合）
+ * - フォールバック: localStorage の legacy anonId（Anonymous Sign-in 不可環境向け）
+ *
+ * RLS は auth.uid ベースに締めるので、フォールバックが走った場合は
+ * DB 書き込みは 401/permission_denied で失敗する（壊れずスキップされる）。
  */
-export function getUserId(): string {
+export async function getUserId(): Promise<string> {
+  const uid = await currentAuthUid();
+  if (uid) return uid;
   let id = localStorage.getItem('anonId');
   if (!id) {
     id = `anon_${crypto.randomUUID()}`;
@@ -18,7 +25,7 @@ export function getUserId(): string {
  * Uses upsert to atomically increment the correct/incorrect counter.
  */
 export async function recordAnswer(qid: string, isCorrect: boolean): Promise<void> {
-  const userId = getUserId();
+  const userId = await getUserId();
 
   // First, try to get the existing record
   const { data: existing } = await supabase
@@ -59,7 +66,7 @@ export async function recordAnswer(qid: string, isCorrect: boolean): Promise<voi
 export async function getWordStats(): Promise<
   Record<string, { correct: number; incorrect: number; lastSeen: string }>
 > {
-  const userId = getUserId();
+  const userId = await getUserId();
 
   const { data, error } = await supabase
     .from('word_stats')
@@ -91,7 +98,7 @@ export async function getWordStats(): Promise<
  * @returns array of qid strings for weak words.
  */
 export async function getWeakWords(threshold = 0.5, minAttempts = 2): Promise<string[]> {
-  const userId = getUserId();
+  const userId = await getUserId();
 
   const { data, error } = await supabase
     .from('word_stats')

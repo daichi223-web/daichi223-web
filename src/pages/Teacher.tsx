@@ -25,19 +25,55 @@ function getToken(): string | null {
   return stored;
 }
 
-export function clearAdminToken() {
+/**
+ * ログアウト: サーバーに cookie 失効を要請しつつ、レガシー localStorage も消す。
+ * エラーは無視して続行（最終的に window.location.reload で強制リセット）。
+ */
+export async function logoutAdmin() {
+  try {
+    await fetch("/api/textPublications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ action: "logout" }),
+    });
+  } catch {
+    // ignore
+  }
   localStorage.removeItem("ADMIN_VIEW_TOKEN");
-  window.location.reload();
+}
+
+export function clearAdminToken() {
+  void logoutAdmin().finally(() => window.location.reload());
+}
+
+function readCookie(key: string): string | null {
+  if (typeof document === "undefined") return null;
+  const m = document.cookie.match(new RegExp(`(?:^|;\\s*)${key}=([^;]+)`));
+  return m ? decodeURIComponent(m[1]) : null;
 }
 
 async function callAPI(path: string, body?: any) {
-  const tok = getToken();
-  if (!tok) throw new Error("NO_TOKEN");
-  const headers: any = { "Content-Type": "application/json", "x-admin-token": tok };
+  const method = body ? "POST" : "GET";
+  const headers: Record<string, string> = {};
+  if (body) headers["Content-Type"] = "application/json";
+
+  // 状態変更系は CSRF token を付与（cookie 経路時のみ必要、レガシー経路では無視される）
+  if (method !== "GET") {
+    const csrf = readCookie("admin_csrf");
+    if (csrf) headers["x-csrf-token"] = csrf;
+  }
+
+  // 既存 localStorage セッション（レガシー）が残っていれば header 経由でも認証を通す。
+  // Cookie が発行されていればそちらが優先される（credentials: 'include'）。
+  const legacyTok = getToken();
+  if (legacyTok) headers["x-admin-token"] = legacyTok;
+
   const res = await fetch(path, {
-    method: body ? "POST" : "GET",
+    method,
     headers,
-    body: body ? JSON.stringify(body) : undefined
+    credentials: "include",
+    body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -76,7 +112,7 @@ export default function Teacher() {
         const msg = String(e?.message || e);
         // Detect permission errors so we can show the login form cleanly
         if (msg.includes("PERMISSION_DENIED") || msg.includes("403")) {
-          localStorage.removeItem("ADMIN_VIEW_TOKEN");
+          await logoutAdmin();
           setToken(null);
           setErr(null);
         } else {
@@ -246,8 +282,8 @@ export default function Teacher() {
         {err}
       </div>
       <button
-        onClick={() => {
-          localStorage.removeItem("ADMIN_VIEW_TOKEN");
+        onClick={async () => {
+          await logoutAdmin();
           setToken(null);
           setErr(null);
         }}
@@ -602,6 +638,7 @@ function LoginForm({ onLogin }: { onLogin: (tok: string) => void }) {
       const res = await fetch("/api/textPublications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ action: "login", username, password }),
       });
       if (!res.ok) {
