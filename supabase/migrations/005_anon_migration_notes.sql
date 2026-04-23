@@ -1,0 +1,49 @@
+-- ============================================================
+-- 005_anon_migration_notes.sql
+--
+-- C-7 Phase 4-b — 既存 anon_* user_id の auth.uid への rekey 計画
+--
+-- Migration 004 で RLS が auth.uid ベースに締まったため、
+-- localStorage に legacy anonId を保存していた既存ユーザーの行
+-- （user_id = 'anon_<uuid>' 形式）は anon key から UNREACHABLE に。
+--
+-- 本ファイルは DDL 変更を含まない運用ノート。実際の rekey は
+-- api/submitAnswer.ts に同居させた action="migrate" 経路で、
+-- service_role でクライアント主導に実行する。
+--
+-- -----------------------------------------------------------
+-- 運用フロー
+-- -----------------------------------------------------------
+-- 1. クライアント起動時、ensureAnonSession() が auth.signInAnonymously()
+--    で auth.uid を確立。
+-- 2. src/lib/anonAuth.ts が localStorage.anonId を確認。
+--    - 'anon_<uuid>' 形式で、かつ migration 未実行フラグが立っていれば
+--      /api/submitAnswer に {action:"migrate", fromUserId, toUserId}
+--      を POST。
+-- 3. サーバは service_role で下記を実施:
+--      a) toUserId (= auth.uid) の word_stats が空なら rekey。
+--         空でなければ "既に使われているアカウント" とみなし skip。
+--      b) 同様に srs_state も条件付き rekey。
+-- 4. クライアントは成功レスポンスを受けて localStorage に
+--    'anonId_migrated' フラグを立て、二度と呼ばない。
+--
+-- -----------------------------------------------------------
+-- 並行呼び出し対策
+-- -----------------------------------------------------------
+-- rekey UPDATE は atomic、かつ toUserId のデータ存在チェックを
+-- 同一トランザクション内で行うため、複数タブが同時に migrate を
+-- 叩いても競合しない（どちらか片方が先に rekey、もう片方は skip）。
+--
+-- -----------------------------------------------------------
+-- 後続運用
+-- -----------------------------------------------------------
+-- 1-2 ヶ月運用して localStorage に legacy anonId を持つ端末が
+-- ほぼゼロになった時点で、このフロー自体の削除を検討する
+-- (C-8 Step 2 と合わせて cleanup)。
+-- ============================================================
+
+-- 確認クエリ（手動で状態を把握したい場合）:
+-- select count(*) as orphan_rows, 'word_stats' as table
+--   from word_stats where user_id like 'anon\_%' escape '\';
+-- select count(*) as orphan_rows, 'srs_state' as table
+--   from srs_state where user_id like 'anon\_%' escape '\';

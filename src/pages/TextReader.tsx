@@ -17,6 +17,9 @@ import { LayerSelector } from "@/components/kobun/LayerSelector";
 import { TranslationPanel } from "@/components/kobun/TranslationPanel";
 import { SelectionToolbar } from "@/components/kobun/SelectionToolbar";
 import { LearningPointsPanel } from "@/components/kobun/LearningPointsPanel";
+import { fetchJsonAsset } from "@/lib/fetchJson";
+
+type LoadError = "not-found" | "intercepted" | "network";
 
 export default function TextReader() {
   const params = useParams<{ textId: string }>();
@@ -25,7 +28,7 @@ export default function TextReader() {
   const layerParam = searchParams.get("layer");
 
   const [text, setText] = useState<KobunText | null>(null);
-  const [notFoundFlag, setNotFoundFlag] = useState(false);
+  const [loadError, setLoadError] = useState<LoadError | null>(null);
   const [analysis, setAnalysis] = useState<TextAnalysis | null>(null);
   const [readingGuide, setReadingGuide] = useState<ReadingGuide | null>(null);
   const [currentLayer, setLayer] = useState<LayerId>(
@@ -36,29 +39,24 @@ export default function TextReader() {
 
   useEffect(() => {
     if (!textId) return;
-    fetch(`/texts-v3/${textId}.json`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data) setText(data as KobunText);
-        else setNotFoundFlag(true);
-      })
-      .catch(() => setNotFoundFlag(true));
+    fetchJsonAsset<KobunText>(`/texts-v3/${textId}.json`).then((r) => {
+      if (r.ok) setText(r.data);
+      else setLoadError(r.kind);
+    });
   }, [textId]);
 
   useEffect(() => {
     if (!textId) return;
-    fetch(`/analysis/${textId}.json`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => setAnalysis(data as TextAnalysis | null))
-      .catch(() => setAnalysis(null));
+    fetchJsonAsset<TextAnalysis>(`/analysis/${textId}.json`).then((r) => {
+      setAnalysis(r.ok ? r.data : null);
+    });
   }, [textId]);
 
   useEffect(() => {
     if (!textId) return;
-    fetch(`/reading/${textId}.json`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => setReadingGuide(data as ReadingGuide | null))
-      .catch(() => setReadingGuide(null));
+    fetchJsonAsset<ReadingGuide>(`/reading/${textId}.json`).then((r) => {
+      setReadingGuide(r.ok ? r.data : null);
+    });
   }, [textId]);
 
   useEffect(() => {
@@ -76,10 +74,31 @@ export default function TextReader() {
     markTokenViewed(textId, tokenId);
   };
 
-  if (notFoundFlag) {
+  if (loadError) {
     return (
-      <div className="min-h-dvh flex items-center justify-center">
-        <div>テキストが見つかりません</div>
+      <div className="min-h-dvh flex items-center justify-center p-6">
+        <div className="max-w-md text-center space-y-4">
+          <Link to="/read" className="text-sm text-scaffold hover:text-sumi">
+            ← 読解トップへ
+          </Link>
+          {loadError === "not-found" ? (
+            <p>テキストが見つかりません</p>
+          ) : (
+            <>
+              <p className="text-base font-bold">テキストを読み込めませんでした</p>
+              <p className="text-sm text-scaffold">
+                学校などのセキュリティ環境から一部リソースが遮断されている可能性があります。
+                時間をおくか、学外ネットワークで再度お試しください。
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 text-sm rounded-lg bg-shu text-white hover:bg-shu/90 transition-colors"
+              >
+                リロード
+              </button>
+            </>
+          )}
+        </div>
       </div>
     );
   }

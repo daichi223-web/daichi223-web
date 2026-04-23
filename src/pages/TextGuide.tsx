@@ -1,5 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { fetchJsonAsset } from "@/lib/fetchJson";
+
+type LoadError = "not-found" | "intercepted" | "network";
 
 interface GlossaryEntry {
   term: string;
@@ -45,7 +48,7 @@ export default function TextGuide() {
   const textId = params.textId ?? "";
 
   const [guide, setGuide] = useState<GuideData | null>(null);
-  const [notFoundFlag, setNotFoundFlag] = useState(false);
+  const [loadError, setLoadError] = useState<LoadError | null>(null);
   const [activeSection, setActiveSection] = useState<SectionKey>("background");
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(new Set());
   const sectionRefs = useRef<Record<SectionKey, HTMLElement | null>>({
@@ -56,13 +59,10 @@ export default function TextGuide() {
 
   useEffect(() => {
     if (!textId) return;
-    fetch(`/guides/${textId}.json`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data) setGuide(data as GuideData);
-        else setNotFoundFlag(true);
-      })
-      .catch(() => setNotFoundFlag(true));
+    fetchJsonAsset<GuideData>(`/guides/${textId}.json`).then((r) => {
+      if (r.ok) setGuide(r.data);
+      else setLoadError(r.kind);
+    });
   }, [textId]);
 
   useEffect(() => {
@@ -107,10 +107,31 @@ export default function TextGuide() {
     });
   };
 
-  if (notFoundFlag) {
+  if (loadError) {
     return (
-      <div className="min-h-dvh flex items-center justify-center">
-        <div>テキストが見つかりません</div>
+      <div className="min-h-dvh flex items-center justify-center p-6">
+        <div className="max-w-md text-center space-y-4">
+          <Link to={`/read/texts/${textId}?layer=1`} className="text-sm text-scaffold hover:text-sumi">
+            ← 本文へ
+          </Link>
+          {loadError === "not-found" ? (
+            <p>解説が見つかりません</p>
+          ) : (
+            <>
+              <p className="text-base font-bold">解説を読み込めませんでした</p>
+              <p className="text-sm text-scaffold">
+                学校などのセキュリティ環境から一部リソースが遮断されている可能性があります。
+                時間をおくか、学外ネットワークで再度お試しください。
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 text-sm rounded-lg bg-shu text-white hover:bg-shu/90 transition-colors"
+              >
+                リロード
+              </button>
+            </>
+          )}
+        </div>
       </div>
     );
   }

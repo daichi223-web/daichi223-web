@@ -4,6 +4,7 @@ import VocabModal from '../components/VocabModal';
 import MorphologyTable from '../components/MorphologyTable';
 import { getPublishedSlugs } from '../lib/textPublications';
 import bundledVocabIndex from '../data/vocabIndex.json';
+import { fetchJsonAsset } from '../lib/fetchJson';
 import './TextDetail.css';
 
 type TextRecord = {
@@ -76,17 +77,16 @@ export default function TextDetail() {
     let cancelled = false;
     setRecord(null);
     setError(null);
-    fetch(`/texts/${id}.json`)
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((d: TextRecord) => {
-        if (!cancelled) setRecord(d);
-      })
-      .catch((e) => {
-        if (!cancelled) setError(e?.message || '読み込み失敗');
-      });
+    fetchJsonAsset<TextRecord>(`/texts/${id}.json`).then((r) => {
+      if (cancelled) return;
+      if (r.ok) {
+        setRecord(r.data);
+      } else if (r.kind === 'not-found') {
+        setError('教材が見つかりません');
+      } else {
+        setError('読み込みエラー（ネットワーク環境をご確認ください）');
+      }
+    });
     return () => {
       cancelled = true;
     };

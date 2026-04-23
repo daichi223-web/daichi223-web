@@ -26,27 +26,8 @@ function getToken(): string | null {
   return stored;
 }
 
-/**
- * ログアウト: サーバーに cookie 失効を要請しつつ、レガシー localStorage も消す。
- * エラーは無視して続行（最終的に window.location.reload で強制リセット）。
- */
-export async function logoutAdmin() {
-  try {
-    await fetch("/api/textPublications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ action: "logout" }),
-    });
-  } catch {
-    // ignore
-  }
-  localStorage.removeItem("ADMIN_VIEW_TOKEN");
-}
-
-export function clearAdminToken() {
-  void logoutAdmin().finally(() => window.location.reload());
-}
+export { logoutAdmin, clearAdminToken } from "../lib/adminSession";
+import { logoutAdmin } from "../lib/adminSession";
 
 function readCookie(key: string): string | null {
   if (typeof document === "undefined") return null;
