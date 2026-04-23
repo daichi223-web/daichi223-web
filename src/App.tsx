@@ -1051,7 +1051,7 @@ function App() {
         </button>
         {typeof window !== 'undefined' && hasAdminSession() && (
           <a
-            href="/quiz/teacher"
+            href="/teacher"
             className="bg-slate-700 hover:bg-slate-800 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
             title="教員管理画面(回答一覧・誤答分析・教材公開管理)"
           >

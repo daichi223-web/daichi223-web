@@ -68,7 +68,7 @@ export default function ReferenceTopic() {
   if (error) {
     return (
       <div className="min-h-dvh max-w-2xl mx-auto p-6">
-        <Link to="/reference" className="text-sm text-scaffold hover:text-sumi">
+        <Link to="/read/reference" className="text-sm text-scaffold hover:text-sumi">
           ← 文法リファレンス
         </Link>
         <div className="mt-10 text-center">
@@ -103,7 +103,7 @@ export default function ReferenceTopic() {
       {/* ヘッダー */}
       <div className="flex items-center gap-4 mb-6">
         <Link
-          to="/reference"
+          to="/read/reference"
           className="text-sm text-scaffold hover:text-sumi transition-colors"
         >
           ← 文法リファレンス

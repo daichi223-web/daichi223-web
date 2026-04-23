@@ -37,7 +37,7 @@ export function TextExampleCard({ example }: TextExampleCardProps) {
 
   return (
     <Link
-      to={`/texts/${example.textId}?layer=2`}
+      to={`/read/texts/${example.textId}?layer=2`}
       className="block bg-white/50 rounded-lg p-3 border border-sumi/5
                  hover:bg-white/80 hover:shadow-sm transition-all"
     >

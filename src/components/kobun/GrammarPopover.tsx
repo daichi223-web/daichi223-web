@@ -203,7 +203,7 @@ function PopoverContent({
             className="text-layer-1 hover:underline"
             onClick={() => {
               onClose();
-              navigate(`/reference/${token.grammarRefId}`);
+              navigate(`/read/reference/${token.grammarRefId}`);
             }}
           >
             解説 →

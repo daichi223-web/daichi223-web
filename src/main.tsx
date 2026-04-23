@@ -33,21 +33,21 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <PullToRefresh />
       <PWAInstallBanner />
       <Routes>
-        {/* 新 UI（kobun-v3 形式） */}
-        <Route path="/" element={<HomeV3 />} />
-        <Route path="/texts/:textId" element={<TextReader />} />
-        <Route path="/texts/:textId/guide" element={<TextGuide />} />
-        <Route path="/reference" element={<ReferenceHome />} />
-        <Route path="/reference/:topicId" element={<ReferenceTopic />} />
-        <Route path="/vocab" element={<VocabPage />} />
+        {/* 単語クイズ（ルート） */}
+        <Route path="/" element={<App />} />
+        <Route path="/test-grading" element={<TestGrading />} />
+        <Route path="/teacher" element={<Teacher />} />
+        <Route path="/texts" element={<TextsIndex />} />
+        <Route path="/texts/:id" element={<TextDetail />} />
+        <Route path="/search" element={<SearchPage />} />
 
-        {/* 旧クイズ機能（/quiz 配下に退避） */}
-        <Route path="/quiz" element={<App />} />
-        <Route path="/quiz/test-grading" element={<TestGrading />} />
-        <Route path="/quiz/teacher" element={<Teacher />} />
-        <Route path="/quiz/texts" element={<TextsIndex />} />
-        <Route path="/quiz/texts/:id" element={<TextDetail />} />
-        <Route path="/quiz/search" element={<SearchPage />} />
+        {/* 読解 v3（/read 配下） */}
+        <Route path="/read" element={<HomeV3 />} />
+        <Route path="/read/texts/:textId" element={<TextReader />} />
+        <Route path="/read/texts/:textId/guide" element={<TextGuide />} />
+        <Route path="/read/reference" element={<ReferenceHome />} />
+        <Route path="/read/reference/:topicId" element={<ReferenceTopic />} />
+        <Route path="/read/vocab" element={<VocabPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

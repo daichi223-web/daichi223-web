@@ -22,7 +22,7 @@ export default function VocabPage() {
   return (
     <div className="min-h-dvh max-w-2xl mx-auto p-6">
       <header className="mb-8">
-        <Link to="/" className="text-sm text-scaffold hover:text-sumi transition-colors">
+        <Link to="/read" className="text-sm text-scaffold hover:text-sumi transition-colors">
           ← 戻る
         </Link>
         <h1 className="text-2xl font-bold mt-2">単語帳</h1>
@@ -59,7 +59,7 @@ export default function VocabPage() {
                   <div className="flex items-center gap-3 mt-2">
                     {entry.grammarRefId && (
                       <Link
-                        to={`/reference/${entry.grammarRefId}`}
+                        to={`/read/reference/${entry.grammarRefId}`}
                         className="text-xs text-layer-1 hover:underline"
                       >
                         解説 →

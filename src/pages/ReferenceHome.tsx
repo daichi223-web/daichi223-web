@@ -25,7 +25,7 @@ export default function ReferenceHome() {
     <div className="min-h-dvh max-w-2xl mx-auto p-6">
       {/* ヘッダー */}
       <div className="flex items-center gap-4 mb-6">
-        <Link to="/" className="text-sm text-scaffold hover:text-sumi transition-colors">
+        <Link to="/read" className="text-sm text-scaffold hover:text-sumi transition-colors">
           ← 戻る
         </Link>
         <h1 className="text-2xl font-bold">文法リファレンス</h1>
@@ -36,7 +36,7 @@ export default function ReferenceHome() {
         {categories.map((c) => (
           <Link
             key={c.key}
-            to={c.key ? `/reference?cat=${c.key}` : "/reference"}
+            to={c.key ? `/read/reference?cat=${c.key}` : "/read/reference"}
             className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
               cat === c.key
                 ? "bg-sumi text-white"
@@ -53,7 +53,7 @@ export default function ReferenceHome() {
         {topics.map((topic) => (
           <Link
             key={topic.id}
-            to={`/reference/${topic.id}`}
+            to={`/read/reference/${topic.id}`}
             className="block bg-white/60 rounded-xl p-4 shadow-sm border border-sumi/5
                        hover:bg-white/80 hover:shadow-md transition-all"
           >

@@ -208,7 +208,7 @@ export default function TextGuide() {
       <header className="sticky top-0 z-20 bg-washi/95 backdrop-blur border-b border-sumi/10">
         <div className="px-4 py-3 flex items-center justify-between">
           <Link
-            to={`/texts/${textId}?layer=1`}
+            to={`/read/texts/${textId}?layer=1`}
             className="text-sm text-scaffold hover:text-sumi transition-colors"
           >
             ← 本文へ
@@ -218,7 +218,7 @@ export default function TextGuide() {
             <p className="text-xs text-scaffold">{guide.source} — 解説</p>
           </div>
           <Link
-            to="/"
+            to="/read"
             className="text-sm text-scaffold hover:text-sumi transition-colors"
           >
             トップ
@@ -255,13 +255,13 @@ export default function TextGuide() {
       <footer className="sticky bottom-0 bg-washi/95 backdrop-blur border-t border-sumi/10 px-4 py-3">
         <div className="flex gap-3 justify-center">
           <Link
-            to={`/texts/${textId}?layer=1`}
+            to={`/read/texts/${textId}?layer=1`}
             className="px-4 py-2 text-sm rounded-lg bg-shu text-white hover:bg-shu/90 transition-colors font-bold"
           >
             本文を読む
           </Link>
           <Link
-            to="/"
+            to="/read"
             className="px-4 py-2 text-sm rounded-lg border border-sumi/20 hover:bg-sumi/5 transition-colors"
           >
             テキスト一覧へ

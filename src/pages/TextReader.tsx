@@ -101,7 +101,7 @@ export default function TextReader() {
       <header className="sticky top-0 z-10 bg-washi/95 backdrop-blur border-b border-sumi/10 px-4 py-3">
         <div className="flex items-center justify-between">
           <Link
-            to="/"
+            to="/read"
             className="text-sm text-scaffold hover:text-sumi transition-colors"
           >
             ← 戻る
@@ -169,7 +169,7 @@ export default function TextReader() {
             {showTranslation ? "現代語訳を隠す" : "現代語訳を表示"}
           </button>
           <Link
-            to={`/texts/${textId}/guide`}
+            to={`/read/texts/${textId}/guide`}
             className="px-4 py-2 text-sm rounded-lg border border-kin text-kin font-bold hover:bg-kin/10 transition-colors"
           >
             解説

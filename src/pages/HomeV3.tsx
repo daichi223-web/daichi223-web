@@ -31,10 +31,10 @@ interface TextListItem {
 }
 
 const grammarCategories = [
-  { label: "用言", href: "/reference?cat=yougen", layer: 1 },
-  { label: "助動詞", href: "/reference?cat=jodoshi", layer: 2 },
-  { label: "助詞", href: "/reference?cat=joshi", layer: 3 },
-  { label: "敬語", href: "/reference?cat=keigo", layer: 4 },
+  { label: "用言", href: "/read/reference?cat=yougen", layer: 1 },
+  { label: "助動詞", href: "/read/reference?cat=jodoshi", layer: 2 },
+  { label: "助詞", href: "/read/reference?cat=joshi", layer: 3 },
+  { label: "敬語", href: "/read/reference?cat=keigo", layer: 4 },
 ];
 
 const layerBgColors: Record<number, string> = {
@@ -71,9 +71,6 @@ export default function HomeV3() {
       {/* ヘッダー */}
       <div className="text-center space-y-2 mb-10 mt-8">
         <h1 className="text-3xl font-bold tracking-wide">古文読み</h1>
-        <p className="text-sm opacity-60">
-          テキストから始まり、テキストに戻る
-        </p>
       </div>
 
       {/* テキスト一覧 */}
@@ -93,7 +90,7 @@ export default function HomeV3() {
               className="bg-white/60 backdrop-blur rounded-xl p-5 shadow-sm border border-sumi/5"
             >
               <Link
-                to={`/texts/${t.id}?layer=${linkLayer}`}
+                to={`/read/texts/${t.id}?layer=${linkLayer}`}
                 className="block hover:opacity-80 transition-opacity"
               >
                 <div className="flex items-center gap-4">
@@ -134,7 +131,7 @@ export default function HomeV3() {
               </Link>
               <div className="mt-3 pt-3 border-t border-sumi/5">
                 <Link
-                  to={`/texts/${t.id}/guide`}
+                  to={`/read/texts/${t.id}/guide`}
                   className="text-xs font-bold text-scaffold hover:text-sumi transition-colors"
                 >
                   解説を読む →
@@ -166,7 +163,7 @@ export default function HomeV3() {
       {/* 単語帳 */}
       <section className="w-full max-w-lg space-y-3 mb-10">
         <Link
-          to="/vocab"
+          to="/read/vocab"
           className="block w-full text-center px-4 py-3 rounded-lg border border-sumi/20 font-bold hover:bg-sumi/5 transition-colors"
         >
           単語帳
