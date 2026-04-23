@@ -599,10 +599,10 @@ function LoginForm({ onLogin }: { onLogin: (tok: string) => void }) {
     setChecking(true);
     setError(null);
     try {
-      const res = await fetch("/api/teacherLogin", {
+      const res = await fetch("/api/textPublications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ action: "login", username, password }),
       });
       if (!res.ok) {
         if (res.status === 401) {
