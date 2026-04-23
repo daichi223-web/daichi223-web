@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "./_firebaseAdmin.js";
+import { supabaseAdmin } from "./_supabaseAdmin.js";
 import { makeKey } from "./_normalize.js";
 import { requireStaff } from "./_requireStaff.js";
 
@@ -20,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== "POST") return res.status(405).json({ error: "Method Not Allowed" });
 
-    const { actor } = await requireStaff(req);  // 権限チェック＆actor取得
+    const { actor } = await requireStaff(req);
 
     const body = req.body as Body;
     const key = deriveKey(body);
@@ -33,79 +33,75 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!["OK", "NG", "ABSTAIN"].includes(label)) return res.status(400).json({ error: "invalid label" });
     if (reason.length > 500) return res.status(400).json({ error: "reason too long" });
 
-    // upsert override doc (docId=key 推奨でもOK / ここは新規docで履歴も保存)
-    const ovDoc = db.collection("overrides").doc(key);
-    const now = new Date();
-    await db.runTransaction(async tx => {
-      const s = await tx.get(ovDoc);
-      const cur = s.exists ? s.data() : null;
-      const next = {
-        key,
-        label,
-        active,
-        reason,
-        by: { userId: actor, role: "teacher" },
-        createdAt: cur?.createdAt ?? now,
-        updatedAt: now,
-        history: [
-          ...(Array.isArray(cur?.history) ? (cur!.history as any[]) : []),
-          { label, at: now, by: actor, note: reason, active },
-        ],
-      };
-      tx.set(ovDoc, next);
-    });
-
-    // split key "qid::norm"
     const sep = key.indexOf("::");
     if (sep <= 0) return res.status(400).json({ error: "invalid key format" });
     const qid = key.slice(0, sep);
     const norm = key.slice(sep + 2);
 
-    // batch update attempts (manual があるものは尊重して除外)
-    // Require composite index: ["raw.qid" ASC, "curated.answerNorm" ASC]
-    const q = db
-      .collection("answers")
-      .where("raw.qid", "==", qid)
-      .where("curated.answerNorm", "==", norm)
+    const nowIso = new Date().toISOString();
+
+    // upsert override rule
+    const { error: upErr } = await supabaseAdmin
+      .from("overrides")
+      .upsert(
+        {
+          qid,
+          answer_norm: norm,
+          label,
+          active,
+          reason,
+          created_by: actor,
+          updated_at: nowIso,
+        },
+        { onConflict: "qid,answer_norm" }
+      );
+    if (upErr) throw upErr;
+
+    // find matching answers (exclude ones with a manual correction)
+    const { data: candidates, error: qErr } = await supabaseAdmin
+      .from("answers")
+      .select("id, raw, manual")
+      .eq("qid", qid)
+      .eq("answer_norm", norm)
+      .is("manual", null)
       .limit(limit);
+    if (qErr) throw qErr;
 
-    const snap = await q.get();
-    const batch = db.batch();
     let updated = 0;
-
-    for (const doc of snap.docs) {
-      const a: any = doc.data();
-      if (a.manual) continue;
-
-      if (active) {
-        batch.update(doc.ref, {
-          final: {
+    for (const doc of candidates ?? []) {
+      const nextFinal = active
+        ? {
             result: label,
             source: "override",
             reason: `override:${key}${reason ? " - " + reason : ""}`,
             by: actor,
-            at: now,
-          },
-        });
-      } else {
-        const auto = a.raw?.auto ?? { result: "ABSTAIN", reason: "auto_missing" };
-        batch.update(doc.ref, { final: { result: auto.result, source: "auto", reason: auto.reason } });
-      }
+            at: nowIso,
+          }
+        : (() => {
+            const auto = (doc.raw as any)?.auto ?? { result: "ABSTAIN", reason: "auto_missing" };
+            return { result: auto.result, source: "auto", reason: auto.reason };
+          })();
+
+      const { error: uErr } = await supabaseAdmin
+        .from("answers")
+        .update({ final: nextFinal })
+        .eq("id", doc.id);
+      if (uErr) throw uErr;
       updated++;
     }
 
-    if (updated) await batch.commit();
-
     // audit event
-    await db.collection("overrides").add({
-      ts: now,
+    const { error: aErr } = await supabaseAdmin.from("override_audit").insert({
+      ts: nowIso,
       action: active ? "override_apply" : "override_cancel",
       actor,
-      key,
+      qid,
+      answer_norm: norm,
       label,
       reason,
       affected: updated,
     });
+    if (aErr) throw aErr;
 
     res.json({ ok: true, key, active, label, updated });
   } catch (e: any) {

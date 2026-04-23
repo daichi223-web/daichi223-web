@@ -1,43 +1,40 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "./_firebaseAdmin.js";
+import { supabaseAdmin } from "./_supabaseAdmin.js";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(_req: VercelRequest, res: VercelResponse) {
   try {
-    // Public endpoint — no authentication required (students need this data)
-    const snap = await db
-      .collection("candidates")
-      .where("proposedRole", "==", "accept")
-      .get();
+    // Public endpoint (students need this data). Server uses service role so it bypasses RLS.
+    const candidatesByQid: Record<string, Array<{ answerNorm: string; freq: number; avgScore: number }>> = {};
 
-    // qid別に正解候補をグループ化
-    const candidatesByQid: Record<string, Array<{
-      answerNorm: string;
-      freq: number;
-      avgScore: number;
-    }>> = {};
-
-    for (const doc of snap.docs) {
-      const data = doc.data();
-      const qid = data.qid;
-      const answerNorm = data.answerNorm;
-      const freq = data.freq || 0;
-      const avgScore = data.avgScore || 0;
-
-      if (!qid || !answerNorm) continue;
-
-      if (!candidatesByQid[qid]) {
-        candidatesByQid[qid] = [];
+    const pageSize = 1000;
+    let offset = 0;
+    while (true) {
+      const { data, error } = await supabaseAdmin
+        .from("candidates")
+        .select("qid, answer_norm, freq, avg_score")
+        .eq("proposed_role", "accept")
+        .range(offset, offset + pageSize - 1);
+      if (error) throw error;
+      const batch = data ?? [];
+      for (const r of batch) {
+        const qid = r.qid;
+        const answerNorm = r.answer_norm;
+        if (!qid || !answerNorm) continue;
+        if (!candidatesByQid[qid]) candidatesByQid[qid] = [];
+        candidatesByQid[qid].push({
+          answerNorm,
+          freq: r.freq ?? 0,
+          avgScore: r.avg_score ?? 0,
+        });
       }
-
-      candidatesByQid[qid].push({ answerNorm, freq, avgScore });
+      if (batch.length < pageSize) break;
+      offset += pageSize;
     }
 
-    // 5 minute CDN cache
     res.setHeader("Cache-Control", "s-maxage=300");
     return res.json(candidatesByQid);
   } catch (e: any) {
     console.error("getAcceptedCandidates error:", e);
-    // Graceful fallback: return empty object on failure
     return res.json({});
   }
 }

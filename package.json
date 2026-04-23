@@ -12,10 +12,16 @@
     "test:ui": "vitest --ui",
     "demo": "tsx scripts/demo.ts",
     "check:cycles": "madge src --circular --extensions ts,tsx,js,jsx",
-    "check:cycles:fail": "madge src --circular --extensions ts,tsx,js,jsx --no-spinner --no-color --warning || (echo '⚠️  Circular dependencies detected! Please fix them before committing.' && exit 1)"
+    "check:cycles:fail": "madge src --circular --extensions ts,tsx,js,jsx --no-spinner --no-color --warning || (echo '⚠️  Circular dependencies detected! Please fix them before committing.' && exit 1)",
+    "build:match": "python scripts/match-vocab.py",
+    "build:vocab": "python scripts/build-vocab-bundle.py",
+    "build:examples": "python scripts/extract-examples.py",
+    "build:texts-extract": "python scripts/extract-texts.py",
+    "build:texts-enrich": "python scripts/enrich-texts.py",
+    "build:texts": "npm run build:texts-extract && npm run build:texts-enrich",
+    "build:data": "npm run build:match && npm run build:vocab && npm run build:examples && npm run build:texts"
   },
   "dependencies": {
-    "firebase-admin": "^12.0.0",
     "kuromoji.js": "^0.1.6",
     "moji": "^0.5.1",
     "path-browserify": "^1.0.1",

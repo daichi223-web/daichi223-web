@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db, FieldValue } from "./_firebaseAdmin.js";
+import { supabaseAdmin } from "./_supabaseAdmin.js";
 import { requireStaff } from "./_requireStaff.js";
 
 type ResultLabel = "OK" | "NG";
@@ -9,11 +9,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== "POST") return res.status(405).json({ error: "Method Not Allowed" });
 
-    const { actor } = await requireStaff(req);  // 権限チェック＆actor取得
+    const { actor } = await requireStaff(req);
 
     const { answerId, result, note } = req.body as {
       answerId: string;
-      result: ResultLabel | null; // null => revert to auto
+      result: ResultLabel | null;
       note?: string;
     };
 
@@ -22,56 +22,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     if (note && note.length > 500) return res.status(400).json({ error: "note too long" });
 
-    const ref = db.collection("answers").doc(answerId);
-    await db.runTransaction(async tx => {
-      const snap = await tx.get(ref);
-      if (!snap.exists) throw new Error("answer not found");
-      const cur: any = snap.data();
-      const now = new Date();
+    const { data: cur, error: getErr } = await supabaseAdmin
+      .from("answers")
+      .select("id, qid, answer_norm, raw, manual, final")
+      .eq("id", answerId)
+      .maybeSingle();
+    if (getErr) throw getErr;
+    if (!cur) throw new Error("answer not found");
 
-      // next manual
-      const nextManual =
-        result === null
-          ? null
-          : {
-              result,
-              reason: `teacher_override${note ? ": " + String(note) : ""}`,
-              note: note ?? "",
-              by: actor,
-              at: now,
-              version: (cur.manual?.version ?? 0) + 1,
-            };
+    const nowIso = new Date().toISOString();
+    const auto = (cur.raw as any)?.auto ?? { result: "ABSTAIN", reason: "auto_missing" };
 
-      // next final
-      const nextFinal:
-        | { result: ResultLabel | "ABSTAIN"; source: FinalSource; reason: string; by?: string; at?: Date }
-        = result === null
-          ? {
-              result: cur.raw?.auto?.result ?? "ABSTAIN",
-              source: "auto",
-              reason: cur.raw?.auto?.reason ?? "auto_missing",
-            }
-          : { result, source: "override", reason: "teacher_override", by: actor, at: now };
+    const nextManual =
+      result === null
+        ? null
+        : {
+            result,
+            reason: `teacher_override${note ? ": " + String(note) : ""}`,
+            note: note ?? "",
+            by: actor,
+            at: nowIso,
+            version: ((cur.manual as any)?.version ?? 0) + 1,
+          };
 
-      const payload: any = { final: nextFinal };
-      if (result === null) payload.manual = FieldValue.delete();
-      else payload.manual = nextManual;
+    const nextFinal:
+      | { result: ResultLabel | "ABSTAIN"; source: FinalSource; reason: string; by?: string; at?: string }
+      = result === null
+        ? { result: auto.result ?? "ABSTAIN", source: "auto", reason: auto.reason ?? "auto_missing" }
+        : { result, source: "override", reason: "teacher_override", by: actor, at: nowIso };
 
-      tx.update(ref, payload);
+    const { error: updErr } = await supabaseAdmin
+      .from("answers")
+      .update({ manual: nextManual, final: nextFinal })
+      .eq("id", answerId);
+    if (updErr) throw updErr;
 
-      // audit
-      tx.set(db.collection("overrides").doc(), {
-        ts: now,
-        action: result === null ? "revert" : "teacher_override",
-        actor,
-        answerId,
-        qid: cur.raw?.qid ?? null,
-        final: nextFinal,
-      });
+    // audit log
+    const { error: audErr } = await supabaseAdmin.from("override_audit").insert({
+      ts: nowIso,
+      action: result === null ? "revert" : "teacher_override",
+      actor,
+      answer_id: answerId,
+      qid: cur.qid,
+      answer_norm: cur.answer_norm,
+      final: nextFinal,
     });
+    if (audErr) throw audErr;
 
-    const updated = (await ref.get()).data();
-    return res.json({ ok: true, final: updated?.final, manual: updated?.manual ?? null });
+    return res.json({ ok: true, final: nextFinal, manual: nextManual });
   } catch (e: any) {
     return res.status(500).json({ error: String(e?.message || e) });
   }

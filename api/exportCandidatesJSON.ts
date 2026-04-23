@@ -1,78 +1,49 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "./_firebaseAdmin.js";
+import { supabaseAdmin } from "./_supabaseAdmin.js";
 import { requireStaff } from "./_requireStaff.js";
 import { promises as fs } from "fs";
 import path from "path";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    await requireStaff(req);  // 教師のみ実行可能
+    await requireStaff(req);
 
-    // acceptロールの候補データのみ取得
-    const snap = await db
-      .collection("candidates")
-      .where("proposedRole", "==", "accept")
-      .get();
+    const candidatesByQid: Record<string, Array<{ answerNorm: string; freq: number; avgScore: number }>> = {};
+    let total = 0;
 
-    // qid別に正解候補をグループ化
-    const candidatesByQid = new Map<string, Array<{
-      answerNorm: string;
-      freq: number;
-      avgScore: number;
-    }>>();
-
-    for (const doc of snap.docs) {
-      const data = doc.data();
-      const qid = data.qid;
-      const answerNorm = data.answerNorm;
-      const freq = data.freq || 0;
-      const avgScore = data.avgScore || 0;
-
-      if (!qid || !answerNorm) continue;
-
-      if (!candidatesByQid.has(qid)) {
-        candidatesByQid.set(qid, []);
+    const pageSize = 1000;
+    let offset = 0;
+    while (true) {
+      const { data, error } = await supabaseAdmin
+        .from("candidates")
+        .select("qid, answer_norm, freq, avg_score")
+        .eq("proposed_role", "accept")
+        .range(offset, offset + pageSize - 1);
+      if (error) throw error;
+      const batch = data ?? [];
+      for (const r of batch) {
+        const qid = r.qid;
+        const answerNorm = r.answer_norm;
+        if (!qid || !answerNorm) continue;
+        if (!candidatesByQid[qid]) candidatesByQid[qid] = [];
+        candidatesByQid[qid].push({
+          answerNorm,
+          freq: r.freq ?? 0,
+          avgScore: r.avg_score ?? 0,
+        });
+        total++;
       }
-
-      candidatesByQid.get(qid)!.push({
-        answerNorm,
-        freq,
-        avgScore
-      });
+      if (batch.length < pageSize) break;
+      offset += pageSize;
     }
 
-    // Map を普通のオブジェクトに変換
-    const candidatesObject: Record<string, Array<{
-      answerNorm: string;
-      freq: number;
-      avgScore: number;
-    }>> = {};
-
-    for (const [qid, candidates] of candidatesByQid.entries()) {
-      candidatesObject[qid] = candidates;
-    }
-
-    // public/candidates.json に書き込み
     const publicDir = path.join(process.cwd(), "public");
     const jsonPath = path.join(publicDir, "candidates.json");
+    try { await fs.access(publicDir); } catch { await fs.mkdir(publicDir, { recursive: true }); }
+    await fs.writeFile(jsonPath, JSON.stringify(candidatesByQid, null, 2), "utf-8");
 
-    // public ディレクトリが存在しない場合は作成
-    try {
-      await fs.access(publicDir);
-    } catch {
-      await fs.mkdir(publicDir, { recursive: true });
-    }
-
-    await fs.writeFile(
-      jsonPath,
-      JSON.stringify(candidatesObject, null, 2),
-      "utf-8"
-    );
-
-    // Vercel自動デプロイトリガー（DEPLOY_HOOKがある場合）
     const deployHook = process.env.VERCEL_DEPLOY_HOOK;
     let deployed = false;
-
     if (deployHook) {
       try {
         const deployRes = await fetch(deployHook, { method: "POST" });
@@ -84,13 +55,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.json({
       ok: true,
-      candidatesCount: snap.docs.length,
-      qidsCount: candidatesByQid.size,
+      candidatesCount: total,
+      qidsCount: Object.keys(candidatesByQid).length,
       filePath: jsonPath,
       deployed,
       message: deployed
         ? "Candidates exported and deployment triggered"
-        : "Candidates exported to JSON (manual deploy needed)"
+        : "Candidates exported to JSON (manual deploy needed)",
     });
   } catch (e: any) {
     const msg = String(e?.message || e);

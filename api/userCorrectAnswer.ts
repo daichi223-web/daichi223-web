@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "./_firebaseAdmin.js";
+import { supabaseAdmin } from "./_supabaseAdmin.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -13,49 +13,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       userId: string;
     };
 
-    if (!answerId) {
-      return res.status(400).json({ error: "answerId required" });
-    }
+    if (!answerId) return res.status(400).json({ error: "answerId required" });
 
-    const answerRef = db.collection("answers").doc(answerId);
-    const answerDoc = await answerRef.get();
+    const { data: cur, error: getErr } = await supabaseAdmin
+      .from("answers")
+      .select("id, raw, manual, final")
+      .eq("id", answerId)
+      .maybeSingle();
+    if (getErr) throw getErr;
+    if (!cur) return res.status(404).json({ error: "Answer not found" });
 
-    if (!answerDoc.exists) {
-      return res.status(404).json({ error: "Answer not found" });
-    }
+    const nowIso = new Date().toISOString();
+    const auto = (cur.raw as any)?.auto ?? { result: "NG", reason: "" };
 
-    const now = new Date();
-    const updateData: any = {};
+    let manual: any;
+    let finalObj: any;
 
     if (userCorrection === null) {
-      // ユーザー訂正を取り消し
-      updateData.manual = null;
-      updateData["final.result"] = answerDoc.data()?.raw?.auto?.result || "NG";
-      updateData["final.source"] = "auto";
-      updateData["final.reason"] = answerDoc.data()?.raw?.auto?.reason || "";
-      updateData["final.at"] = now;
-    } else {
-      // ユーザー訂正を保存
-      updateData.manual = {
-        result: userCorrection,
-        by: {
-          userId: userId,
-          at: now,
-        },
+      manual = null;
+      finalObj = {
+        ...(cur.final as any),
+        result: auto.result || "NG",
+        source: "auto",
+        reason: auto.reason || "",
+        at: nowIso,
       };
-      updateData["final.result"] = userCorrection;
-      updateData["final.source"] = "manual";
-      updateData["final.reason"] = `user_correction:${userCorrection}`;
-      updateData["final.at"] = now;
+    } else {
+      manual = { result: userCorrection, by: { userId, at: nowIso } };
+      finalObj = {
+        ...(cur.final as any),
+        result: userCorrection,
+        source: "manual",
+        reason: `user_correction:${userCorrection}`,
+        at: nowIso,
+      };
     }
 
-    await answerRef.update(updateData);
+    const { error: updErr } = await supabaseAdmin
+      .from("answers")
+      .update({ manual, final: finalObj })
+      .eq("id", answerId);
+    if (updErr) throw updErr;
 
-    return res.json({
-      ok: true,
-      answerId,
-      updated: updateData,
-    });
+    return res.json({ ok: true, answerId, updated: { manual, final: finalObj } });
   } catch (e: any) {
     return res.status(500).json({ error: String(e?.message || e) });
   }

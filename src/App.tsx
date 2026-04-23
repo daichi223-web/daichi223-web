@@ -11,6 +11,9 @@ import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { recordAnswer } from './lib/wordStats';
+import { updateSrsState } from './lib/srsEngine';
+import VocabModal from './components/VocabModal';
+import { chapterFor, chapterColor } from './utils/chapters';
 
 type AppMode = 'word' | 'polysemy';
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
@@ -123,6 +126,21 @@ function App() {
   const [showCorrectCircle, setShowCorrectCircle] = useState(false);
   const [writingUserJudgment, setWritingUserJudgment] = useState<boolean | 'partial' | undefined>(undefined);
   const [currentWritingQid, setCurrentWritingQid] = useState<string>('');
+  const [vocabLemma, setVocabLemma] = useState<string | null>(null);
+  const [vocabIndexKeys, setVocabIndexKeys] = useState<Set<string> | null>(null);
+
+  useEffect(() => {
+    fetch('/vocab/index.json')
+      .then((r) => (r.ok ? r.json() : {}))
+      .then((d) => setVocabIndexKeys(new Set(Object.keys(d))))
+      .catch(() => setVocabIndexKeys(new Set()));
+  }, []);
+
+  const hasVocab = (lemma: string | undefined) =>
+    !!lemma && vocabIndexKeys?.has(lemma) === true;
+
+  const lemmaOfQid = (qid: string): string | undefined =>
+    allWords.find((w) => w.qid === qid)?.lemma;
   const [currentWritingAnswerId, setCurrentWritingAnswerId] = useState<string>('');
 
   // Wrong answers tracking for session-end review
@@ -634,8 +652,9 @@ function App() {
 
   const handleAnswer = (selectedOption: Word, correctOption: Word, isReverse = false) => {
     const isCorrect = selectedOption.qid === correctOption.qid;
-    // Track word stats in Supabase (fire-and-forget)
+    // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(correctOption.qid, isCorrect).catch(() => {});
+    updateSrsState(correctOption.qid, isCorrect).catch(() => {});
     if (isCorrect) {
       setScore(prev => prev + 1);
       setShowCorrectCircle(true);
@@ -656,8 +675,9 @@ function App() {
   const handleTrueFalseAnswer = (userAnswer: boolean) => {
     const question = currentQuizData[currentQuestionIndex] as TrueFalseQuestion;
     const isCorrect = userAnswer === question.isCorrect;
-    // Track word stats in Supabase (fire-and-forget)
+    // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(question.correctAnswer.qid, isCorrect).catch(() => {});
+    updateSrsState(question.correctAnswer.qid, isCorrect).catch(() => {});
     if (isCorrect) {
       setScore(prev => prev + 1);
       setShowCorrectCircle(true);
@@ -686,8 +706,9 @@ function App() {
     setCurrentWritingQid(correctQid);
     setWritingUserJudgment(undefined);
 
-    // Track word stats in Supabase (fire-and-forget)
+    // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(correctQid, evaluation.score >= 60).catch(() => {});
+    updateSrsState(correctQid, evaluation.score >= 60).catch(() => {});
 
     // スコア更新と結果表示（即座に）
     // 60点以上で正解扱い（手動判定で変更可能）
@@ -757,6 +778,12 @@ function App() {
       setScore(prev => Math.max(0, prev - 1));
     }
     // judgment === 'partial' の場合はスコアを変更しない
+
+    // Override SRS with manual judgment (fire-and-forget)
+    // partial は自動評価のまま据え置く
+    if (currentWritingQid && judgment !== 'partial') {
+      updateSrsState(currentWritingQid, judgment === true).catch(() => {});
+    }
 
     // Save to Firestore（バックグラウンド）- answerIdがあれば保存
     if (currentWritingAnswerId) {
@@ -961,16 +988,64 @@ function App() {
     }
   }, [showIndexModal, currentMode, wordRange.from, polysemyRange.from]);
 
+  // Determine the "current word" for contextual search
+  const currentVisibleLemma = (() => {
+    if (showWritingResult && currentWritingQid) {
+      const l = lemmaOfQid(currentWritingQid);
+      if (l) return l;
+    }
+    if (isQuizActive) {
+      if (currentMode === 'word') {
+        const q = getCurrentQuestion();
+        if (q?.correct?.lemma) return q.correct.lemma;
+      } else {
+        const w = getCurrentPolysemyWord();
+        if (w?.lemma) return w.lemma;
+      }
+    }
+    return '';
+  })();
+  const searchHref = currentVisibleLemma
+    ? `/search?q=${encodeURIComponent(currentVisibleLemma)}`
+    : '/search';
+
   // Index button and modal (always visible)
   const indexButton = (
     <>
-      {/* Index Button - Fixed Position */}
-      <button
-        onClick={() => setShowIndexModal(true)}
-        className="fixed top-4 right-4 z-50 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-colors"
-      >
-        索引
-      </button>
+      {/* Top-right fixed navigation - compact on mobile */}
+      <div className="fixed top-2 right-2 z-50 flex gap-1.5">
+        <a
+          href={searchHref}
+          className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+          title={currentVisibleLemma ? `「${currentVisibleLemma}」を検索` : '単語・例文・教材を検索'}
+        >
+          🔍<span className="hidden sm:inline ml-1">
+            {currentVisibleLemma ? `「${currentVisibleLemma}」` : '検索'}
+          </span>
+        </a>
+        <a
+          href="/texts"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+          title="古文教材の一覧"
+        >
+          📚<span className="hidden sm:inline ml-1">教材</span>
+        </a>
+        <button
+          onClick={() => setShowIndexModal(true)}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+        >
+          索引
+        </button>
+        {typeof window !== 'undefined' && localStorage.getItem('ADMIN_VIEW_TOKEN') && (
+          <a
+            href="/teacher"
+            className="bg-slate-700 hover:bg-slate-800 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+            title="教員管理画面(回答一覧・誤答分析・教材公開管理)"
+          >
+            🛠<span className="hidden sm:inline ml-1">教員</span>
+          </a>
+        )}
+      </div>
 
       {/* Index Modal */}
       {showIndexModal && (
@@ -1007,33 +1082,47 @@ function App() {
             {/* Word List */}
             <div ref={indexListRef} className="flex-1 overflow-y-auto p-4">
               <div className="space-y-1">
-                {filteredIndexWords.map((word) => (
-                  <div
-                    key={`${word.group}-${word.lemma}-${word.sense}`}
-                    data-group={word.group}
-                    className="flex items-start space-x-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
-                    onClick={() => {
-                      // Set range to clicked word number (both from and to)
-                      if (currentMode === 'word') {
-                        setWordRange({ from: word.group, to: word.group });
-                      } else {
-                        setPolysemyRange({ from: word.group, to: word.group });
-                      }
-                      setShowIndexModal(false);
-                      setIndexSearchQuery('');
-                      setShowResults(false);
-                      setIsQuizActive(false);
-                    }}
-                  >
-                    <span className="font-mono text-sm text-blue-600 font-bold min-w-[3rem]">
-                      {word.group}
-                    </span>
-                    <div className="flex-1">
-                      <div className="font-bold text-slate-800">{word.lemma}</div>
-                      <div className="text-sm text-slate-600">{word.sense}</div>
+                {filteredIndexWords.map((word) => {
+                  const ch = chapterFor(word.group);
+                  const c = chapterColor(ch);
+                  return (
+                    <div
+                      key={`${word.group}-${word.lemma}-${word.sense}`}
+                      data-group={word.group}
+                      className="flex items-start space-x-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
+                      onClick={() => {
+                        // Set range to clicked word number (both from and to)
+                        if (currentMode === 'word') {
+                          setWordRange({ from: word.group, to: word.group });
+                        } else {
+                          setPolysemyRange({ from: word.group, to: word.group });
+                        }
+                        setShowIndexModal(false);
+                        setIndexSearchQuery('');
+                        setShowResults(false);
+                        setIsQuizActive(false);
+                      }}
+                    >
+                      <span className="font-mono text-sm text-blue-600 font-bold min-w-[3rem]">
+                        {word.group}
+                      </span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <div className="font-bold text-slate-800">{word.lemma}</div>
+                          {ch && (
+                            <span
+                              className="text-[0.68rem] px-1.5 py-0.5 rounded-full"
+                              style={{ background: c.bg, color: c.text, fontWeight: 500 }}
+                            >
+                              {ch.short}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm text-slate-600">{word.sense}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {filteredIndexWords.length === 0 && (
                   <div className="text-center text-slate-400 py-8">
                     検索結果がありません
@@ -1044,7 +1133,8 @@ function App() {
 
             {/* Modal Footer */}
             <div className="p-4 border-t border-slate-200 text-center text-sm text-slate-500">
-              全330見出し語 {indexSearchQuery && `（${filteredIndexWords.length}件表示）`}
+              全330見出し語
+              {indexSearchQuery && ` （${filteredIndexWords.length}件表示）`}
             </div>
           </div>
         </div>
@@ -1246,8 +1336,39 @@ function App() {
 
   return (
     <div className="bg-slate-50 min-h-screen">
+      {vocabLemma && (
+        <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} />
+      )}
       {indexButton}
-      <div className="max-w-2xl mx-auto p-3 md:p-6">
+      <div className="max-w-2xl mx-auto p-3 md:p-6 pt-16 md:pt-6">
+        {/* Feature shortcuts (shown only when no quiz in progress) */}
+        {!isQuizActive && !showResults && (
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <a
+              href="/search"
+              className="flex items-center gap-2 bg-white rounded-xl p-3 shadow-sm border border-slate-200 hover:border-purple-300 hover:shadow transition no-underline"
+              style={{ textDecoration: 'none' }}
+            >
+              <span style={{ fontSize: '1.4rem' }}>🔍</span>
+              <div style={{ lineHeight: 1.2 }}>
+                <div className="font-bold text-slate-800 text-sm">検索</div>
+                <div className="text-xs text-slate-500">単語・例文・本文から探す</div>
+              </div>
+            </a>
+            <a
+              href="/texts"
+              className="flex items-center gap-2 bg-white rounded-xl p-3 shadow-sm border border-slate-200 hover:border-emerald-300 hover:shadow transition no-underline"
+              style={{ textDecoration: 'none' }}
+            >
+              <span style={{ fontSize: '1.4rem' }}>📚</span>
+              <div style={{ lineHeight: 1.2 }}>
+                <div className="font-bold text-slate-800 text-sm">教材を読む</div>
+                <div className="text-xs text-slate-500">107本の古文教材</div>
+              </div>
+            </a>
+          </div>
+        )}
+
         {/* Mode Selection Tabs */}
         <div className="flex justify-center border-b border-slate-200 mb-4 bg-white rounded-t-2xl shadow-sm">
           <button
@@ -1386,7 +1507,9 @@ function App() {
                 />
               </div>
             </div>
-          ) : (
+          ) : null}
+
+          {currentMode !== 'word' && (
             <div className="grid grid-cols-2 gap-2">
               {/* 左列: モードと問題数 */}
               <div className="space-y-2">
@@ -1510,6 +1633,30 @@ function App() {
                 )}
               </>
             )}
+
+            {/* 解説ボタン: 採点後 or 選択式で正解表示時に出す */}
+            {(() => {
+              const activeLemma = showWritingResult
+                ? lemmaOfQid(currentWritingQid)
+                : currentMode === 'word'
+                ? getCurrentQuestion()?.correct?.lemma
+                : getCurrentPolysemyWord()?.lemma;
+              if (!activeLemma) return null;
+              if (!showWritingResult && !nextButtonVisible) return null;
+              const available = hasVocab(activeLemma);
+              return (
+                <div style={{ textAlign: 'center', marginTop: 8 }}>
+                  <button
+                    className="vocab-open-btn"
+                    disabled={!available}
+                    onClick={() => available && setVocabLemma(activeLemma)}
+                    title={available ? '単語の詳しい解説を開く' : 'この単語の解説は準備中です'}
+                  >
+                    📖 {activeLemma} の解説{available ? '' : '（準備中）'}
+                  </button>
+                </div>
+              );
+            })()}
 
             {/* Progress Bar */}
             <div className="mt-3 pt-2 border-t border-slate-200">

@@ -1,7 +1,51 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* kobun-v3 カラートークン */
+:root {
+  --background: #f5f0e8;
+  --foreground: #2d2d2d;
+  --sumi: #2d2d2d;
+  --shu: #cc3333;
+  --kin: #c9a84c;
+  --sakura: #fedfe1;
+  --washi: #f5f0e8;
+  --layer-1: #2563eb;   /* 用言 */
+  --layer-2: #dc2626;   /* 助動詞 */
+  --layer-3: #16a34a;   /* 助詞 */
+  --layer-4: #9333ea;   /* 敬語 */
+  --layer-5: #d97706;   /* 読解 */
+  --scaffold: #9ca3af;
+}
+
+/* kobun-v3 リーダー用スタイル */
+.token-active {
+  cursor: pointer;
+  border-bottom: 2px solid currentColor;
+  transition: background-color 0.15s;
+}
+.token-active:hover { background-color: rgba(0, 0, 0, 0.05); }
+.token-scaffold {
+  color: var(--scaffold);
+  cursor: pointer;
+  border-bottom: 1px dashed var(--scaffold);
+}
+
+@keyframes popover-in {
+  0% { opacity: 0; transform: translateY(4px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes slide-up {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+.animate-popover-in { animation: popover-in 0.15s ease-out; }
+.animate-slide-up { animation: slide-up 0.25s ease-out; }
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* kobun-app.htmlと同じスタイル定義 */
 @layer components {

@@ -1,112 +1,114 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "./_firebaseAdmin.js";
+import { supabaseAdmin } from "./_supabaseAdmin.js";
 import { requireStaff } from "./_requireStaff.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    await requireStaff(req);  // 教師のみ実行可能
+    await requireStaff(req);
 
     const minFreq = Number(req.query.minFreq || 3);
     const lookbackDays = Number(req.query.lookbackDays || 7);
 
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - lookbackDays);
+    const cutoffIso = cutoff.toISOString();
 
-    // Aggregate answers by qid + answerNorm (記述式のみ)
-    const snap = await db
-      .collection("answers")
-      .where("raw.ts", ">=", cutoff)
-      .where("raw.questionType", "==", "writing")
-      .get();
+    // Page through large result sets (Supabase default range max is 1000)
+    const pageSize = 1000;
+    let offset = 0;
+    type Row = { qid: string; answer_norm: string; raw: any; manual: any; final: any; created_at: string };
+    const all: Row[] = [];
+
+    while (true) {
+      const { data, error } = await supabaseAdmin
+        .from("answers")
+        .select("qid, answer_norm, raw, manual, final, created_at")
+        .gte("created_at", cutoffIso)
+        .eq("question_type", "writing")
+        .range(offset, offset + pageSize - 1);
+      if (error) throw error;
+      const batch = (data ?? []) as Row[];
+      all.push(...batch);
+      if (batch.length < pageSize) break;
+      offset += pageSize;
+    }
 
     const aggregated = new Map<string, {
       qid: string;
       answerNorm: string;
       freq: number;
-      lastSeen: Date;
+      lastSeen: string;
       scores: number[];
       sampleRaw: string;
     }>();
 
-    for (const doc of snap.docs) {
-      const data = doc.data();
-      const qid = data.raw?.qid;
-      const answerNorm = data.curated?.answerNorm;
-      const answerRaw = data.raw?.answerRaw;
-
+    for (const row of all) {
+      const qid = row.qid;
+      const answerNorm = row.answer_norm;
+      const answerRaw = row.raw?.answerRaw ?? "";
       if (!qid || !answerNorm) continue;
 
-      // ユーザー訂正を優先、なければ自動採点を使用
-      let score = data.raw?.auto?.score || 0;
-      let finalResult = data.final?.result;
+      let score = row.raw?.auto?.score ?? 0;
+      let finalResult = row.final?.result;
 
-      // ユーザー訂正がある場合はそれを優先
-      if (data.manual?.result) {
-        finalResult = data.manual.result;
-        // PARTIAL（△）は集計対象外
-        if (finalResult === 'PARTIAL') {
-          continue;
-        }
-        // ユーザー訂正をスコアに変換
-        score = finalResult === 'OK' ? 100 : finalResult === 'NG' ? 0 : 50;
+      if (row.manual?.result) {
+        finalResult = row.manual.result;
+        if (finalResult === "PARTIAL") continue;
+        score = finalResult === "OK" ? 100 : finalResult === "NG" ? 0 : 50;
       }
 
       const key = `${qid}::${answerNorm}`;
       const existing = aggregated.get(key);
-
       if (existing) {
         existing.freq++;
         existing.scores.push(score);
-        if (data.raw.ts.toDate() > existing.lastSeen) {
-          existing.lastSeen = data.raw.ts.toDate();
-        }
+        if (row.created_at > existing.lastSeen) existing.lastSeen = row.created_at;
       } else {
         aggregated.set(key, {
           qid,
           answerNorm,
           freq: 1,
-          lastSeen: data.raw.ts.toDate(),
+          lastSeen: row.created_at,
           scores: [score],
           sampleRaw: answerRaw,
         });
       }
     }
 
-    // Filter by frequency and save to candidates
-    const batch = db.batch();
     let saved = 0;
-
-    for (const [key, agg] of aggregated.entries()) {
+    const rowsToSave: any[] = [];
+    for (const agg of aggregated.values()) {
       if (agg.freq < minFreq) continue;
-
       const avgScore = agg.scores.reduce((a, b) => a + b, 0) / agg.scores.length;
       const bandMode = avgScore >= 80 ? "HIGH" : avgScore >= 50 ? "MID" : "LOW";
       const proposedRole = avgScore >= 80 ? "accept" : avgScore < 50 ? "negative" : "review";
-
-      const candidateDoc = {
+      rowsToSave.push({
         qid: agg.qid,
-        answerNorm: agg.answerNorm,
+        answer_norm: agg.answerNorm,
         freq: agg.freq,
-        lastSeen: agg.lastSeen,
-        bandMode,
-        proposedRole,
-        avgScore: Math.round(avgScore),
-        sampleAny: agg.sampleRaw,
-        updatedAt: new Date(),
-      };
-
-      const ref = db.collection("candidates").doc(key);
-      batch.set(ref, candidateDoc, { merge: true });
-      saved++;
+        last_seen: agg.lastSeen,
+        band_mode: bandMode,
+        proposed_role: proposedRole,
+        avg_score: Math.round(avgScore),
+        sample_any: agg.sampleRaw,
+        updated_at: new Date().toISOString(),
+      });
     }
 
-    if (saved > 0) {
-      await batch.commit();
+    // Batch upsert in chunks
+    const chunkSize = 500;
+    for (let i = 0; i < rowsToSave.length; i += chunkSize) {
+      const chunk = rowsToSave.slice(i, i + chunkSize);
+      const { error } = await supabaseAdmin
+        .from("candidates")
+        .upsert(chunk, { onConflict: "qid,answer_norm" });
+      if (error) throw error;
+      saved += chunk.length;
     }
 
     return res.json({
       ok: true,
-      processed: snap.docs.length,
+      processed: all.length,
       aggregated: aggregated.size,
       saved,
     });

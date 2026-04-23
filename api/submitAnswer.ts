@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db } from "./_firebaseAdmin.js";
+import { supabaseAdmin } from "./_supabaseAdmin.js";
 import { normalize } from "./_normalize.js";
 import crypto from "crypto";
 
@@ -24,69 +24,77 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: "qid and answerRaw required" });
     }
 
-    const now = new Date();
+    const nowIso = new Date().toISOString();
     const answerNorm = normalize(answerRaw);
     const dedupeKey = crypto.createHash("sha1").update(`${qid}::${answerNorm}`).digest("hex");
+    const qType = questionType || "writing";
 
-    // Build answer document
-    const answerDoc = {
-      raw: {
-        ts: now,
-        qid,
-        uid: uid || null,
-        anonId: anonId || null,
-        answerRaw,
-        autoAt: now,
-        questionType: questionType || 'writing', // デフォルトは記述式
-        auto: {
-          result: autoResult,
-          score: autoScore,
-          reason: autoReason,
-        },
+    const raw = {
+      ts: nowIso,
+      qid,
+      uid: uid || null,
+      anonId: anonId || null,
+      answerRaw,
+      autoAt: nowIso,
+      questionType: qType,
+      auto: { result: autoResult, score: autoScore, reason: autoReason },
+    };
+    const curated = {
+      v: 1,
+      answerNorm,
+      dedupeKey,
+      flags: {
+        pii: false,
+        tooLong: answerRaw.length > 200,
+        regexRisk: /[.*+?^${}()|[\]\\]/.test(answerRaw),
       },
-      curated: {
-        v: 1,
-        answerNorm,
-        dedupeKey,
-        flags: {
-          pii: false, // TODO: implement PII detection
-          tooLong: answerRaw.length > 200,
-          regexRisk: /[.*+?^${}()|[\]\\]/.test(answerRaw),
-        },
-      },
-      manual: null,
-      final: {
-        result: autoResult,
-        source: "auto",
-        reason: autoReason,
-        at: now,
-      } as any,
+    };
+    let finalObj: any = {
+      result: autoResult,
+      source: "auto",
+      reason: autoReason,
+      at: nowIso,
     };
 
     // Check for existing override
-    const overrideKey = `${qid}::${answerNorm}`;
-    const overrideSnap = await db.collection("overrides").doc(overrideKey).get();
+    const { data: ov, error: ovErr } = await supabaseAdmin
+      .from("overrides")
+      .select("label, active, reason, created_by")
+      .eq("qid", qid)
+      .eq("answer_norm", answerNorm)
+      .maybeSingle();
+    if (ovErr) throw ovErr;
 
-    if (overrideSnap.exists) {
-      const override = overrideSnap.data();
-      if (override?.active) {
-        answerDoc.final = {
-          result: override.label,
-          source: "override",
-          reason: `override:${overrideKey}${override.reason ? " - " + override.reason : ""}`,
-          by: override.by?.userId || "system",
-          at: now,
-        };
-      }
+    if (ov && ov.active) {
+      finalObj = {
+        result: ov.label,
+        source: "override",
+        reason: `override:${qid}::${answerNorm}${ov.reason ? " - " + ov.reason : ""}`,
+        by: ov.created_by || "system",
+        at: nowIso,
+      };
     }
 
-    // Save to answers collection
-    const docRef = await db.collection("answers").add(answerDoc);
+    const { data: inserted, error: insErr } = await supabaseAdmin
+      .from("answers")
+      .insert({
+        qid,
+        answer_norm: answerNorm,
+        question_type: qType,
+        raw,
+        curated,
+        manual: null,
+        final: finalObj,
+        created_at: nowIso,
+      })
+      .select("id")
+      .single();
+    if (insErr) throw insErr;
 
     return res.json({
       ok: true,
-      answerId: docRef.id,
-      final: answerDoc.final,
+      answerId: inserted!.id,
+      final: finalObj,
     });
   } catch (e: any) {
     return res.status(500).json({ error: String(e?.message || e) });

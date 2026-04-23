@@ -1,0 +1,76 @@
+.pwa-banner {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  gap: 12px;
+  z-index: 1100;
+  animation: pwa-banner-in 0.22s ease-out;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+@keyframes pwa-banner-in {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.pwa-banner-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.pwa-banner-text { flex: 1; min-width: 0; }
+.pwa-banner-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #222;
+}
+.pwa-banner-sub {
+  font-size: 0.78rem;
+  color: #666;
+  margin-top: 1px;
+}
+
+.pwa-banner-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pwa-banner-dismiss {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #f0f0f3;
+  color: #666;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.pwa-banner-dismiss:hover { background: #e5e5ea; }
+
+.pwa-banner-install {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.pwa-banner-install:hover { transform: translateY(-1px); }
+.pwa-banner-install:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 400px) {
+  .pwa-banner-sub { display: none; }
+}
