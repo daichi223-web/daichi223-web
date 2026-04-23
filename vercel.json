@@ -8,7 +8,10 @@
     }
   },
   "rewrites": [
-    { "source": "/((?!api|assets|pwa-|manifest.webmanifest|registerSW.js).*)", "destination": "/" }
+    {
+      "source": "/((?!api/)[^.]*)",
+      "destination": "/"
+    }
   ],
   "headers": [
     {
