@@ -1,6 +1,7 @@
 // src/pages/Teacher.tsx
 import { useEffect, useMemo, useState } from "react";
 import { dataParser } from "../utils/dataParser";
+import bundledTextsIndex from "../data/textsIndex.json";
 
 function getToken(): string | null {
   // URL ?token=... → localStorage 保存（次回からURLに出さなくてOK）
@@ -778,13 +779,10 @@ function TextsManageView() {
   const [eraFilter, setEraFilter] = useState<string>("");
 
   useEffect(() => {
+    setIndex(bundledTextsIndex as TextEntry[]);
     (async () => {
       try {
-        const [idx, pubs] = await Promise.all([
-          fetch("/texts/index.json").then((r) => r.json()),
-          callAPI("/api/textPublications"),
-        ]);
-        setIndex(idx);
+        const pubs = await callAPI("/api/textPublications");
         const m: Record<string, boolean> = {};
         for (const row of pubs.rows || []) {
           m[row.slug] = !!row.published;

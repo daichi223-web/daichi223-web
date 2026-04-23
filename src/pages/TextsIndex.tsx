@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPublishedSlugs } from '../lib/textPublications';
+import bundledTextsIndex from '../data/textsIndex.json';
 import './TextDetail.css';
 
 type TextIndexEntry = {
@@ -21,7 +22,7 @@ type TextIndexEntry = {
 const ERA_ORDER = ['奈良', '平安', '鎌倉', '室町', '江戸', '近代'];
 
 export default function TextsIndex() {
-  const [index, setIndex] = useState<TextIndexEntry[] | null>(null);
+  const [index] = useState<TextIndexEntry[]>(bundledTextsIndex as TextIndexEntry[]);
   const [query, setQuery] = useState('');
   const [filterGenre, setFilterGenre] = useState('');
   const [filterEra, setFilterEra] = useState('');
@@ -29,10 +30,6 @@ export default function TextsIndex() {
   const [publishedSet, setPublishedSet] = useState<Set<string> | null>(null);
 
   useEffect(() => {
-    fetch('/texts/index.json')
-      .then((r) => r.json())
-      .then(setIndex)
-      .catch(() => setIndex([]));
     getPublishedSlugs().then((s) => setPublishedSet(s));
   }, []);
 

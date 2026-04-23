@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import VocabModal from '../components/VocabModal';
 import MorphologyTable from '../components/MorphologyTable';
 import { getPublishedSlugs } from '../lib/textPublications';
+import bundledVocabIndex from '../data/vocabIndex.json';
 import './TextDetail.css';
 
 type TextRecord = {
@@ -43,15 +44,9 @@ let vocabLemmasCache: string[] | null = null;
 
 async function loadVocabLemmas(): Promise<string[]> {
   if (vocabLemmasCache) return vocabLemmasCache;
-  try {
-    const res = await fetch('/vocab/index.json');
-    if (!res.ok) throw new Error('failed');
-    const idx = await res.json();
-    // Sort by length desc so longest matches are tried first
-    vocabLemmasCache = Object.keys(idx).sort((a, b) => b.length - a.length);
-  } catch {
-    vocabLemmasCache = [];
-  }
+  vocabLemmasCache = Object.keys(bundledVocabIndex as Record<string, unknown>).sort(
+    (a, b) => b.length - a.length
+  );
   return vocabLemmasCache;
 }
 

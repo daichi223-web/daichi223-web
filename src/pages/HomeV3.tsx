@@ -3,6 +3,7 @@ import { loadAllProgress } from "@/lib/kobun/progress";
 import { getGemBaseUrl } from "@/lib/kobun/gem";
 import { useState, useEffect } from "react";
 import type { ReadingProgress } from "@/lib/kobun/types";
+import bundledTextsV3Index from "@/data/textsV3Index.json";
 
 /** public/texts-v3/index.json の1エントリ */
 interface TextIndexEntry {
@@ -53,22 +54,16 @@ export default function HomeV3() {
   }, []);
 
   useEffect(() => {
-    fetch("/texts-v3/index.json")
-      .then((r) => r.json())
-      .then((data: TextIndexEntry[]) => {
-        setTexts(
-          data.map((t) => ({
-            id: t.id,
-            title: t.title,
-            source: t.source,
-            difficulty: typeof t.difficulty === "number" ? t.difficulty : 1,
-            totalLayers: 5,
-          }))
-        );
-      })
-      .catch(() => {
-        setTexts([]);
-      });
+    const data = bundledTextsV3Index as TextIndexEntry[];
+    setTexts(
+      data.map((t) => ({
+        id: t.id,
+        title: t.title,
+        source: t.source,
+        difficulty: typeof t.difficulty === "number" ? t.difficulty : 1,
+        totalLayers: 5,
+      }))
+    );
   }, []);
 
   return (

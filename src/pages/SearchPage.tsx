@@ -2,6 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { chapterFor, chapterColor } from '../utils/chapters';
 import VocabModal from '../components/VocabModal';
+import bundledKobunQ from '../data/kobunQ.json';
+import bundledVocabIndex from '../data/vocabIndex.json';
+import bundledTextsIndex from '../data/textsIndex.json';
 import './SearchPage.css';
 
 type VocabIndexEntry = {
@@ -118,28 +121,18 @@ export default function SearchPage() {
   const bodiesRef = useRef<TextBody[] | null>(null);
 
   useEffect(() => {
-    Promise.all([
-      fetch('/vocab/index.json').then((r) => (r.ok ? r.json() : {})),
-      fetch('/examples.json').then((r) => (r.ok ? r.json() : [])),
-      fetch('/texts/index.json').then((r) => (r.ok ? r.json() : [])),
-      fetch('/kobun_q.jsonl.txt').then((r) => (r.ok ? r.text() : '')),
-    ]).then(([v, e, t, qText]) => {
-      setVocabIdx(v);
-      setExamples(e);
-      setTexts(t);
-      // Build lemma → group map from kobun_q.jsonl.txt
-      const map: LemmaGroupMap = {};
-      for (const line of qText.split('\n')) {
-        if (!line.trim()) continue;
-        try {
-          const o = JSON.parse(line);
-          if (o.lemma && o.group && !(o.lemma in map)) {
-            map[o.lemma] = o.group;
-          }
-        } catch {}
+    setVocabIdx(bundledVocabIndex as VocabIndex);
+    setTexts(bundledTextsIndex as TextIndexEntry[]);
+    const map: LemmaGroupMap = {};
+    for (const row of bundledKobunQ as Array<{ lemma?: string; group?: number }>) {
+      if (row.lemma && row.group && !(row.lemma in map)) {
+        map[row.lemma] = row.group;
       }
-      setLemmaGroup(map);
-    });
+    }
+    setLemmaGroup(map);
+    fetch('/examples.json')
+      .then((r) => (r.ok ? r.json() : []))
+      .then(setExamples);
   }, []);
 
   useEffect(() => {

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import bundledVocabIndex from '../data/vocabIndex.json';
+import bundledTextsIndex from '../data/textsIndex.json';
 import './VocabModal.css';
 
 type VocabIndexEntry = {
@@ -30,16 +32,10 @@ type TextIndexEntry = {
   genre: string;
 };
 
-let vocabIdxCache: VocabIndex | null = null;
 let examplesCache: ExamplesByLemma | null = null;
-let textsIdxCache: TextIndexEntry[] | null = null;
 
 async function loadVocabIndex(): Promise<VocabIndex> {
-  if (vocabIdxCache) return vocabIdxCache;
-  const res = await fetch('/vocab/index.json');
-  if (!res.ok) throw new Error(`vocab index HTTP ${res.status}`);
-  vocabIdxCache = (await res.json()) as VocabIndex;
-  return vocabIdxCache;
+  return bundledVocabIndex as VocabIndex;
 }
 
 async function loadExamples(): Promise<ExamplesByLemma> {
@@ -54,18 +50,7 @@ async function loadExamples(): Promise<ExamplesByLemma> {
 }
 
 async function loadTextsIndex(): Promise<TextIndexEntry[]> {
-  if (textsIdxCache) return textsIdxCache;
-  try {
-    const res = await fetch('/texts/index.json');
-    if (!res.ok) {
-      textsIdxCache = [];
-      return textsIdxCache;
-    }
-    textsIdxCache = (await res.json()) as TextIndexEntry[];
-  } catch {
-    textsIdxCache = [];
-  }
-  return textsIdxCache;
+  return bundledTextsIndex as TextIndexEntry[];
 }
 
 export async function hasVocabFor(lemma: string): Promise<boolean> {

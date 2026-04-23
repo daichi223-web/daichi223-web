@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { TextExample } from "@/lib/kobun/types";
+import bundledTextsV3Index from "@/data/textsV3Index.json";
 
 interface TextExampleCardProps {
   example: TextExample;
@@ -11,28 +12,16 @@ interface TextIndexEntry {
   title: string;
 }
 
-/** タイトル解決用 Map（モジュールレベルでキャッシュ） */
 let titleMapCache: Record<string, string> | null = null;
-let titleMapPromise: Promise<Record<string, string>> | null = null;
 
-async function loadTitleMap(): Promise<Record<string, string>> {
+function loadTitleMap(): Record<string, string> {
   if (titleMapCache) return titleMapCache;
-  if (titleMapPromise) return titleMapPromise;
-  titleMapPromise = fetch("/texts-v3/index.json")
-    .then((r) => (r.ok ? r.json() : []))
-    .then((entries: TextIndexEntry[]) => {
-      const map: Record<string, string> = {};
-      for (const e of entries) {
-        if (e && e.id) map[e.id] = e.title ?? e.id;
-      }
-      titleMapCache = map;
-      return map;
-    })
-    .catch(() => {
-      titleMapCache = {};
-      return {};
-    });
-  return titleMapPromise;
+  const map: Record<string, string> = {};
+  for (const e of bundledTextsV3Index as TextIndexEntry[]) {
+    if (e && e.id) map[e.id] = e.title ?? e.id;
+  }
+  titleMapCache = map;
+  return map;
 }
 
 export function TextExampleCard({ example }: TextExampleCardProps) {
@@ -41,13 +30,7 @@ export function TextExampleCard({ example }: TextExampleCardProps) {
   );
 
   useEffect(() => {
-    let cancelled = false;
-    loadTitleMap().then((map) => {
-      if (!cancelled) setTitleMap(map);
-    });
-    return () => {
-      cancelled = true;
-    };
+    setTitleMap(loadTitleMap());
   }, []);
 
   const title = titleMap[example.textId] ?? example.textId;

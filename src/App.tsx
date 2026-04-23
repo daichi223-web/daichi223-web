@@ -14,6 +14,7 @@ import { recordAnswer } from './lib/wordStats';
 import { updateSrsState } from './lib/srsEngine';
 import VocabModal from './components/VocabModal';
 import { chapterFor, chapterColor } from './utils/chapters';
+import bundledVocabIndex from './data/vocabIndex.json';
 
 /**
  * 教員セッションが生きているかの簡易判定。
@@ -143,17 +144,13 @@ function App() {
   const [writingUserJudgment, setWritingUserJudgment] = useState<boolean | 'partial' | undefined>(undefined);
   const [currentWritingQid, setCurrentWritingQid] = useState<string>('');
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
-  const [vocabIndexKeys, setVocabIndexKeys] = useState<Set<string> | null>(null);
-
-  useEffect(() => {
-    fetch('/vocab/index.json')
-      .then((r) => (r.ok ? r.json() : {}))
-      .then((d) => setVocabIndexKeys(new Set(Object.keys(d))))
-      .catch(() => setVocabIndexKeys(new Set()));
-  }, []);
+  const vocabIndexKeys = useMemo(
+    () => new Set(Object.keys(bundledVocabIndex as Record<string, unknown>)),
+    []
+  );
 
   const hasVocab = (lemma: string | undefined) =>
-    !!lemma && vocabIndexKeys?.has(lemma) === true;
+    !!lemma && vocabIndexKeys.has(lemma);
 
   const lemmaOfQid = (qid: string): string | undefined =>
     allWords.find((w) => w.qid === qid)?.lemma;
