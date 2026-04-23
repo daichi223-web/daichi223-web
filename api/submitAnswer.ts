@@ -114,8 +114,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
  *
  * 入力の toUserId はクライアント申告だが、orphan 行を吸収するだけなので
  * なりすましリスクは低い（他ユーザーの有効データには触れない）。
+ *
+ * Rate limit: warm instance 単位の簡易 in-memory ウィンドウで、
+ * 同一 IP から 60 秒あたり 5 回まで。instance 跨ぎでは効かないが、
+ * 攻撃の速度を落とす速度制限として機能する。
  */
+const MIGRATE_WINDOW_MS = 60_000;
+const MIGRATE_MAX_PER_WINDOW = 5;
+const migrateAttempts = new Map<string, number[]>();
+
+function checkMigrateRate(ip: string): boolean {
+  const now = Date.now();
+  const arr = migrateAttempts.get(ip) || [];
+  const recent = arr.filter((t) => now - t < MIGRATE_WINDOW_MS);
+  if (recent.length >= MIGRATE_MAX_PER_WINDOW) {
+    migrateAttempts.set(ip, recent);
+    return false;
+  }
+  recent.push(now);
+  migrateAttempts.set(ip, recent);
+  // Map が膨らみすぎないように ~10000 キーで掃除
+  if (migrateAttempts.size > 10000) {
+    for (const [k, v] of migrateAttempts) {
+      if (v.length === 0 || now - v[v.length - 1] > MIGRATE_WINDOW_MS) {
+        migrateAttempts.delete(k);
+      }
+    }
+  }
+  return true;
+}
+
 async function handleMigrate(req: VercelRequest, res: VercelResponse) {
+  // Rate limit（X-Forwarded-For の先頭 IP で識別、無ければ unknown 単一バケット）
+  const fwd = req.headers["x-forwarded-for"];
+  const ip = (Array.isArray(fwd) ? fwd[0] : fwd || "unknown").split(",")[0].trim();
+  if (!checkMigrateRate(ip)) {
+    return res.status(429).json({ error: "Too many migration attempts, try again later" });
+  }
+
   const { fromUserId, toUserId } = (req.body || {}) as {
     fromUserId?: string;
     toUserId?: string;

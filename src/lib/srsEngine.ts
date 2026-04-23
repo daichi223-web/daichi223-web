@@ -12,7 +12,7 @@ import { getUserId } from './wordStats';
  *   Box 5: review after 14 days (mastered)
  */
 
-const BOX_INTERVALS_DAYS: Record<number, number> = {
+export const BOX_INTERVALS_DAYS: Record<number, number> = {
   1: 0,   // always due
   2: 1,   // 1 day
   3: 3,   // 3 days
@@ -21,11 +21,23 @@ const BOX_INTERVALS_DAYS: Record<number, number> = {
 };
 
 /**
+ * 既存 box と正誤から次の box 番号を算出するピュア関数。
+ * - 正解: +1（上限 5）
+ * - 不正解: 常に 1（最下段まで落とす）
+ * 初回（既存データ無し）の場合、isCorrect=true なら 2、false なら 1。
+ */
+export function nextBox(currentBox: number | null, isCorrect: boolean): number {
+  if (currentBox == null) return isCorrect ? 2 : 1;
+  if (!isCorrect) return 1;
+  return Math.min(currentBox + 1, 5);
+}
+
+/**
  * Calculate the next review date based on the Leitner box number.
  */
-function getNextReviewDate(box: number): string {
+export function getNextReviewDate(box: number, now: Date = new Date()): string {
   const days = BOX_INTERVALS_DAYS[box] ?? 0;
-  const next = new Date();
+  const next = new Date(now);
   next.setDate(next.getDate() + days);
   return next.toISOString();
 }
@@ -95,8 +107,7 @@ export async function updateSrsState(qid: string, isCorrect: boolean): Promise<v
   const now = new Date().toISOString();
 
   if (existing) {
-    const currentBox = existing.box;
-    const newBox = isCorrect ? Math.min(currentBox + 1, 5) : 1;
+    const newBox = nextBox(existing.box, isCorrect);
 
     await supabase
       .from('srs_state')
@@ -108,7 +119,7 @@ export async function updateSrsState(qid: string, isCorrect: boolean): Promise<v
       .eq('id', existing.id);
   } else {
     // Word not yet in SRS -- initialize it
-    const newBox = isCorrect ? 2 : 1;
+    const newBox = nextBox(null, isCorrect);
 
     await supabase
       .from('srs_state')
