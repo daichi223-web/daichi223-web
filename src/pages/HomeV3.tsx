@@ -68,6 +68,16 @@ export default function HomeV3() {
 
   return (
     <div className="min-h-dvh flex flex-col items-center p-6">
+      {/* トップナビ */}
+      <div className="w-full max-w-lg flex justify-start mt-2">
+        <Link
+          to="/"
+          className="text-sm text-scaffold hover:text-sumi transition-colors"
+        >
+          ← 単語クイズへ
+        </Link>
+      </div>
+
       {/* ヘッダー */}
       <div className="text-center space-y-2 mb-10 mt-8">
         <h1 className="text-3xl font-bold tracking-wide">古文読み</h1>
