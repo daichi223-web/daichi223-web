@@ -13,43 +13,19 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       VitePWA({
+        // 学校ネットワーク (Cisco Umbrella SWG 等) 環境下で Service Worker の
+        // importScripts が SSO 認証壁にリダイレクトされて PWA 全体が壊れる
+        // 問題を回避するため、Service Worker を廃止。
+        //
+        // selfDestroying: 既にユーザー端末に登録済みの SW を強制 unregister
+        // + caches を全消去する特殊 SW を発行する。ユーザーが一度でも新版を
+        // 読み込めば自動的に SW なし状態に移行する。将来的には本設定自体を
+        // 削除してよい（今は旧 SW を持つ端末のクリーンアップ期間）。
+        selfDestroying: true,
         registerType: 'autoUpdate',
         injectRegister: 'auto',
         workbox: {
-          globPatterns: ['**/*.{js,css,ico,png,svg}', 'index.html'],
-          globIgnores: [
-            'vocab/**/*.html',
-            'vocab/**/*.json',
-            'texts/**/*.json',
-            'examples*.json',
-          ],
-          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-          runtimeCaching: [
-            {
-              urlPattern: ({ url }) => url.pathname.startsWith('/vocab/'),
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'vocab-cache',
-                expiration: { maxEntries: 400, maxAgeSeconds: 60 * 60 * 24 * 30 },
-              },
-            },
-            {
-              urlPattern: ({ url }) => url.pathname.startsWith('/texts/'),
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'texts-cache',
-                expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
-              },
-            },
-            {
-              urlPattern: /\/(examples|examples-by-lemma)\.json$/,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'examples-cache',
-                expiration: { maxAgeSeconds: 60 * 60 * 24 * 7 },
-              },
-            },
-          ],
+          globPatterns: [],
         },
         manifest: {
           name: '古文単語学習アプリ',
