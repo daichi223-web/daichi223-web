@@ -15,6 +15,22 @@ import { updateSrsState } from './lib/srsEngine';
 import VocabModal from './components/VocabModal';
 import { chapterFor, chapterColor } from './utils/chapters';
 
+/**
+ * 教員セッションが生きているかの簡易判定。
+ * admin_session cookie は HttpOnly で JS から読めないため、
+ * ペアで発行される admin_csrf cookie（非 HttpOnly）の有無で代替する。
+ * レガシー localStorage 経路（段階移行中）も互換で見る。
+ */
+function hasAdminSession(): boolean {
+  if (typeof document === 'undefined') return false;
+  if (document.cookie.includes('admin_csrf=')) return true;
+  try {
+    return !!localStorage.getItem('ADMIN_VIEW_TOKEN');
+  } catch {
+    return false;
+  }
+}
+
 type AppMode = 'word' | 'polysemy';
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
 type PolysemyQuizType = 'example-comprehension' | 'true-false' | 'context-writing';
@@ -1036,9 +1052,9 @@ function App() {
         >
           索引
         </button>
-        {typeof window !== 'undefined' && localStorage.getItem('ADMIN_VIEW_TOKEN') && (
+        {typeof window !== 'undefined' && hasAdminSession() && (
           <a
-            href="/teacher"
+            href="/quiz/teacher"
             className="bg-slate-700 hover:bg-slate-800 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
             title="教員管理画面(回答一覧・誤答分析・教材公開管理)"
           >

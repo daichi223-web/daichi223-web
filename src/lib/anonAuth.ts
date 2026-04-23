@@ -18,7 +18,18 @@ export function ensureAnonSession(): Promise<string | null> {
 
       const { data, error } = await supabase.auth.signInAnonymously();
       if (error) {
-        console.warn('[anonAuth] signInAnonymously failed:', error.message);
+        const msg = error.message || '';
+        if (/anonymous/i.test(msg) && /(disabled|not enabled|provider)/i.test(msg)) {
+          // Dashboard で Anonymous Sign-in が OFF のまま。
+          // RLS が auth.uid ベースだと書き込みが全て silent fail する危険。
+          console.error(
+            '[anonAuth] Supabase で Anonymous Sign-in が無効です。\n' +
+              '  Dashboard > Authentication > Providers > "Allow anonymous sign-ins" を ON にしてください。\n' +
+              '  有効化するまで word_stats / srs_state への書き込みは RLS により拒否されます。',
+          );
+        } else {
+          console.warn('[anonAuth] signInAnonymously failed:', msg);
+        }
         return null;
       }
       return data.user?.id ?? null;

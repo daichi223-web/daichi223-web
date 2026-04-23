@@ -304,8 +304,8 @@ export default function Teacher() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="sticky top-0 bg-white z-10 pb-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-slate-800">教師用管理画面（共有トークン）</h2>
-          <div className="flex gap-2">
+          <h2 className="text-2xl font-bold text-slate-800">教員管理画面</h2>
+          <div className="flex gap-2 flex-wrap items-center">
             <button
               onClick={aggregateCandidates}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
@@ -333,6 +333,19 @@ export default function Teacher() {
               className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition"
             >
               🗑️ 全データ削除
+            </button>
+            <button
+              onClick={async () => {
+                await logoutAdmin();
+                setToken(null);
+                setErr(null);
+                setRows([]);
+                setCandidates([]);
+              }}
+              className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg transition"
+              title="セッション cookie を失効させて再度ログインが必要な状態に戻す"
+            >
+              ログアウト
             </button>
           </div>
         </div>
