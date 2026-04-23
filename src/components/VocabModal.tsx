@@ -132,13 +132,29 @@ export default function VocabModal({ lemma, onClose }: Props) {
     return groups;
   }, [examples]);
 
+  // 基本データ callout 内の <p> は「<strong>品詞</strong>: ... \n <strong>漢字</strong>: ...
+  // \n <strong>語源</strong>: ...」のように改行区切りで複数項目が詰め込まれている。
+  // 改行 + <strong> を paragraph 境界に昇格させて縦並びにする。
+  const formatBasicData = (raw: string): string =>
+    raw.replace(
+      /(<div class="callout callout-info">\s*<div class="callout-title">基本データ<\/div>\s*<div class="callout-body">)([\s\S]*?)(<\/div>\s*<\/div>)/,
+      (_m, prefix, body, suffix) => {
+        const newBody = body.replace(/<p>([\s\S]*?)<\/p>/g, (pMatch: string, inner: string) => {
+          const normalized = inner.replace(/\n\s*(?=<strong>)/g, '</p><p>');
+          if (normalized === inner) return pMatch;
+          return `<p>${normalized}</p>`;
+        });
+        return `${prefix}${newBody}${suffix}`;
+      }
+    );
+
   // Split HTML into sections: each h2 starts a new collapsible section.
   // The first chunk (before any h2, usually just the callout 基本データ) is
   // shown as an always-visible header area.
   const sections = useMemo(() => {
     if (!html) return { lead: '', sections: [] as { title: string; body: string }[] };
     const parts = html.split(/(?=<h2\b[^>]*>)/i);
-    const lead = parts.shift() || '';
+    const lead = formatBasicData(parts.shift() || '');
     const out: { title: string; body: string }[] = [];
     for (const chunk of parts) {
       const m = chunk.match(/^<h2\b[^>]*>([\s\S]*?)<\/h2>/i);

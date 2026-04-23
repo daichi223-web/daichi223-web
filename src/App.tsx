@@ -1037,18 +1037,11 @@ function App() {
           </span>
         </a>
         <a
-          href="/texts"
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-          title="古文教材の一覧"
-        >
-          📚<span className="hidden sm:inline ml-1">教材</span>
-        </a>
-        <a
           href="/read"
-          className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
           title="古文読み（読解モード）"
         >
-          📖<span className="hidden sm:inline ml-1">読解</span>
+          📚<span className="hidden sm:inline ml-1">読解</span>
         </a>
         <button
           onClick={() => setShowIndexModal(true)}
@@ -1363,7 +1356,7 @@ function App() {
       <div className="max-w-2xl mx-auto p-3 md:p-6 pt-16 md:pt-6">
         {/* Feature shortcuts (shown only when no quiz in progress) */}
         {!isQuizActive && !showResults && (
-          <div className="grid grid-cols-3 gap-2 mb-3">
+          <div className="grid grid-cols-2 gap-2 mb-3">
             <a
               href="/search"
               className="flex items-center gap-2 bg-white rounded-xl p-3 shadow-sm border border-slate-200 hover:border-purple-300 hover:shadow transition no-underline"
@@ -1372,29 +1365,18 @@ function App() {
               <span style={{ fontSize: '1.4rem' }}>🔍</span>
               <div style={{ lineHeight: 1.2 }}>
                 <div className="font-bold text-slate-800 text-sm">検索</div>
-                <div className="text-xs text-slate-500">単語・例文・本文</div>
+                <div className="text-xs text-slate-500">単語・例文・本文から探す</div>
               </div>
             </a>
             <a
-              href="/texts"
+              href="/read"
               className="flex items-center gap-2 bg-white rounded-xl p-3 shadow-sm border border-slate-200 hover:border-emerald-300 hover:shadow transition no-underline"
               style={{ textDecoration: 'none' }}
             >
               <span style={{ fontSize: '1.4rem' }}>📚</span>
               <div style={{ lineHeight: 1.2 }}>
-                <div className="font-bold text-slate-800 text-sm">教材</div>
-                <div className="text-xs text-slate-500">107本の古文</div>
-              </div>
-            </a>
-            <a
-              href="/read"
-              className="flex items-center gap-2 bg-white rounded-xl p-3 shadow-sm border border-slate-200 hover:border-amber-300 hover:shadow transition no-underline"
-              style={{ textDecoration: 'none' }}
-            >
-              <span style={{ fontSize: '1.4rem' }}>📖</span>
-              <div style={{ lineHeight: 1.2 }}>
                 <div className="font-bold text-slate-800 text-sm">読解</div>
-                <div className="text-xs text-slate-500">古文読み v3</div>
+                <div className="text-xs text-slate-500">古文を読む</div>
               </div>
             </a>
           </div>

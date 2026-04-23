@@ -1,0 +1,107 @@
+/* 時代 × ジャンル マトリクス */
+.era-genre-matrix-wrap {
+  padding: 0 16px 24px;
+  overflow-x: auto;
+}
+
+.era-genre-matrix {
+  display: grid;
+  gap: 1px;
+  background: #e5e7eb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 100%;
+}
+
+.era-genre-corner {
+  background: #f3f4f6;
+  padding: 8px 10px;
+}
+
+.era-genre-col-header {
+  background: #f3f4f6;
+  padding: 8px 10px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #374151;
+  text-align: center;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.era-genre-row {
+  display: contents;
+}
+
+.era-genre-row-header {
+  background: #f3f4f6;
+  padding: 8px 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #374151;
+  text-align: center;
+  writing-mode: horizontal-tb;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.era-genre-cell {
+  background: #fff;
+  padding: 6px;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  vertical-align: top;
+}
+
+.era-genre-card {
+  display: block;
+  padding: 6px 8px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.era-genre-card:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.era-genre-card-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  color: #111827;
+}
+
+.era-genre-card-source {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.era-genre-card-layer {
+  font-size: 0.68rem;
+  color: #667eea;
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+.home-v3-nav {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
