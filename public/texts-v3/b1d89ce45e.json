@@ -1,0 +1,1398 @@
+{
+  "id": "b1d89ce45e",
+  "title": "近世の句",
+  "source": "",
+  "genre": "物語",
+  "difficulty": 1,
+  "layers": [
+    {
+      "id": 1,
+      "label": "用言の活用",
+      "description": "動詞・形容詞・形容動詞の活用を分析する"
+    },
+    {
+      "id": 2,
+      "label": "助動詞",
+      "description": "助動詞の意味・接続・活用を分析する",
+      "prerequisite": 1
+    },
+    {
+      "id": 3,
+      "label": "助詞",
+      "description": "助詞の種類と機能を分析する",
+      "prerequisite": 2
+    },
+    {
+      "id": 4,
+      "label": "敬語",
+      "description": "敬語の種類と対象を分析する",
+      "prerequisite": 3
+    },
+    {
+      "id": 5,
+      "label": "読解",
+      "description": "文法知識を総動員して読み方の手がかりを掴む",
+      "prerequisite": 4
+    }
+  ],
+  "learningPoints": {
+    "overview": [
+      "俳諧は連歌から派生し、近世に独自の文芸として発展した。発句が独立して鑑賞されるようになり、近代の「俳句」につながる。",
+      "芭蕉は「さび」「しをり」「軽み」などの美的理念を追求し、俳諧を芸術の域に高めた。紀行文『おくのほそ道』『野ざらし紀行』も重要。",
+      "蕪村は芭蕉没後約半世紀、大衆化した俳諧を芭蕉の理想に戻す「蕉風復興運動」の中心となった。画家としても活躍し、絵画的句風が特色。",
+      "一茶は農民出身で、小動物や子供への共感、貧しさの中の温かみを詠んだ。『おらが春』『七番日記』などの句文集を残した。"
+    ],
+    "byLayer": [
+      {
+        "layer": 2,
+        "label": "助動詞",
+        "keyPoint": "切れ字「や」は俳句の最重要技法。「古池や」で場面を提示し、「蛙飛びこむ水の音」と取り合わせる。上五で切る句が最も多い。",
+        "points": [
+          {
+            "text": "切れ字「や」は俳句の最重要技法。「古池や」で場面を提示し、「蛙飛びこむ水の音」と取り合わせる。上五で切る句が最も多い。",
+            "priority": "important"
+          },
+          {
+            "text": "切れ字「かな」は句末に置かれ詠嘆を表す。「のたりのたりかな」は春の海ののどかさへの感動を示す。",
+            "priority": "important"
+          },
+          {
+            "text": "俳句の季語は季節を規定する。「蛙」＝春、「五月雨」＝夏、「秋風」＝秋、「雪」＝冬。季語の正確な把握が鑑賞の基本。",
+            "priority": "important"
+          }
+        ]
+      },
+      {
+        "layer": 5,
+        "label": "読解",
+        "keyPoint": "芭蕉「古池や」は、静寂の中に蛙の水音だけが響く瞬間を捉えた句。「さび」の美意識の体現として、蕉風を代表する。",
+        "points": [
+          {
+            "text": "芭蕉「古池や」は、静寂の中に蛙の水音だけが響く瞬間を捉えた句。「さび」の美意識の体現として、蕉風を代表する。",
+            "priority": "important"
+          },
+          {
+            "text": "蕪村「春の海」は、のどかな春の海を終日眺める悠然たる気分を、擬態語「のたりのたり」で絵画的に描く。",
+            "priority": "important"
+          },
+          {
+            "text": "三俳人の句風の比較は重要。芭蕉＝閑寂・深み、蕪村＝絵画的・浪漫的、一茶＝庶民的・共感的という対比を意識して読む。",
+            "priority": "important"
+          },
+          {
+            "text": "「ひねもす」は「終日（一日中）」の意。蕪村の句では春の海の穏やかさを一日中眺める心情を表す。",
+            "priority": "important"
+          },
+          {
+            "text": "「のたりのたり」は蕪村独自のオノマトペで、波がゆったりと寄せては返す様子を視覚的に描写する。",
+            "priority": "important"
+          },
+          {
+            "text": "「痩蛙」は一茶の代表句の季語であり主題。弱い蛙への声援は、弱者への共感という一茶の俳風を象徴する。",
+            "priority": "important"
+          }
+        ]
+      }
+    ]
+  },
+  "sentences": [
+    {
+      "id": "s1",
+      "originalText": "枯れ枝に烏のとまりけり秋の暮れ　　　　　　　　　　　　　　　　　　　　松尾芭蕉",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s1-t1",
+          "text": "松尾芭蕉",
+          "start": 0,
+          "end": 4,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t2",
+          "text": "枯れ枝",
+          "start": 4,
+          "end": 7,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t3",
+          "text": "に",
+          "start": 7,
+          "end": 8,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t4",
+          "text": "烏",
+          "start": 8,
+          "end": 9,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t5",
+          "text": "の",
+          "start": 9,
+          "end": 10,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t6",
+          "text": "とまり",
+          "start": 10,
+          "end": 13,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t7",
+          "text": "けり",
+          "start": 13,
+          "end": 15,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s1-t8",
+          "text": "秋",
+          "start": 15,
+          "end": 16,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t9",
+          "text": "の",
+          "start": 16,
+          "end": 17,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t10",
+          "text": "暮れ",
+          "start": 17,
+          "end": 19,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t11",
+          "text": "荒海",
+          "start": 19,
+          "end": 21,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t12",
+          "text": "や",
+          "start": 21,
+          "end": 22,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s1-t13",
+          "text": "佐渡",
+          "start": 22,
+          "end": 24,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t14",
+          "text": "に",
+          "start": 24,
+          "end": 25,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t15",
+          "text": "横たふ",
+          "start": 25,
+          "end": 28,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t16",
+          "text": "天の川",
+          "start": 28,
+          "end": 31,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t17",
+          "text": "梅",
+          "start": 31,
+          "end": 32,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t18",
+          "text": "が",
+          "start": 32,
+          "end": 33,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t19",
+          "text": "香",
+          "start": 33,
+          "end": 34,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t20",
+          "text": "に",
+          "start": 34,
+          "end": 35,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "添加"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t21",
+          "text": "のつと",
+          "start": 35,
+          "end": 38,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s1-t22",
+          "text": "日",
+          "start": 38,
+          "end": 39,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t23",
+          "text": "の",
+          "start": 39,
+          "end": 40,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t24",
+          "text": "出る",
+          "start": 40,
+          "end": 42,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "ダ下一"
+          }
+        },
+        {
+          "id": "s1-t25",
+          "text": "山路",
+          "start": 42,
+          "end": 44,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t26",
+          "text": "かな",
+          "start": 44,
+          "end": 46,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "終助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s1-t27",
+          "text": "旅",
+          "start": 46,
+          "end": 47,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t28",
+          "text": "に",
+          "start": 47,
+          "end": 48,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "時間"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t29",
+          "text": "病ん",
+          "start": 48,
+          "end": 50,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t30",
+          "text": "で",
+          "start": 50,
+          "end": 51,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s1-t31",
+          "text": "夢",
+          "start": 51,
+          "end": 52,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t32",
+          "text": "は",
+          "start": 52,
+          "end": 53,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s1-t33",
+          "text": "枯れ野",
+          "start": 53,
+          "end": 56,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t34",
+          "text": "を",
+          "start": 56,
+          "end": 57,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t35",
+          "text": "かけめぐる",
+          "start": 57,
+          "end": 62,
+          "layer": 1,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t36",
+          "text": "与謝蕪村",
+          "start": 62,
+          "end": 66,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t37",
+          "text": "春",
+          "start": 66,
+          "end": 67,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t38",
+          "text": "の",
+          "start": 67,
+          "end": 68,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t39",
+          "text": "海",
+          "start": 68,
+          "end": 69,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t40",
+          "text": "ひねもす",
+          "start": 69,
+          "end": 73,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s1-t41",
+          "text": "のたり",
+          "start": 73,
+          "end": 76,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s1-t42",
+          "text": "のたり",
+          "start": 76,
+          "end": 79,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s1-t43",
+          "text": "かな",
+          "start": 79,
+          "end": 81,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "終助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s1-t44",
+          "text": "愁ひ",
+          "start": 81,
+          "end": 83,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ上二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t45",
+          "text": "つつ",
+          "start": 83,
+          "end": 85,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s1-t46",
+          "text": "岡",
+          "start": 85,
+          "end": 86,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t47",
+          "text": "に",
+          "start": 86,
+          "end": 87,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t48",
+          "text": "のぼれ",
+          "start": 87,
+          "end": 90,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "已"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t49",
+          "text": "ば",
+          "start": 90,
+          "end": 91,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s1-t50",
+          "text": "花いばら",
+          "start": 91,
+          "end": 95,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t51",
+          "text": "五月雨",
+          "start": 95,
+          "end": 98,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t52",
+          "text": "や",
+          "start": 98,
+          "end": 99,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s1-t53",
+          "text": "大河",
+          "start": 99,
+          "end": 101,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t54",
+          "text": "を",
+          "start": 101,
+          "end": 102,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t55",
+          "text": "前",
+          "start": 102,
+          "end": 103,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t56",
+          "text": "に",
+          "start": 103,
+          "end": 104,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t57",
+          "text": "家",
+          "start": 104,
+          "end": 105,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t58",
+          "text": "二軒",
+          "start": 105,
+          "end": 107,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t59",
+          "text": "白梅",
+          "start": 107,
+          "end": 109,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t60",
+          "text": "に",
+          "start": 109,
+          "end": 110,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t61",
+          "text": "明くる",
+          "start": 110,
+          "end": 113,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ下二",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t62",
+          "text": "夜",
+          "start": 113,
+          "end": 114,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t63",
+          "text": "ばかり",
+          "start": 114,
+          "end": 117,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "副助詞"
+          }
+        },
+        {
+          "id": "s1-t64",
+          "text": "と",
+          "start": 117,
+          "end": 118,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "結果"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t65",
+          "text": "なり",
+          "start": 118,
+          "end": 120,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用",
+            "baseForm": "なる"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t66",
+          "text": "に",
+          "start": 120,
+          "end": 121,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s1-t67",
+          "text": "けり",
+          "start": 121,
+          "end": 123,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s1-t68",
+          "text": "小林一茶",
+          "start": 123,
+          "end": 127,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t69",
+          "text": "これ",
+          "start": 127,
+          "end": 129,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s1-t70",
+          "text": "が",
+          "start": 129,
+          "end": 130,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t71",
+          "text": "まあ",
+          "start": 130,
+          "end": 132,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s1-t72",
+          "text": "つひ",
+          "start": 132,
+          "end": 134,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t73",
+          "text": "の",
+          "start": 134,
+          "end": 135,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t74",
+          "text": "栖",
+          "start": 135,
+          "end": 136,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t75",
+          "text": "か",
+          "start": 136,
+          "end": 137,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "終助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s1-t76",
+          "text": "雪五尺",
+          "start": 137,
+          "end": 140,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t77",
+          "text": "涼風",
+          "start": 140,
+          "end": 142,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "originalText": "荒海や佐渡に横たふ天の川",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s2-t1",
+          "text": "の",
+          "start": 0,
+          "end": 1,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s2-t2",
+          "text": "曲がりくねつ",
+          "start": 1,
+          "end": 7,
+          "layer": 1,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t3",
+          "text": "て",
+          "start": 7,
+          "end": 8,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s2-t4",
+          "text": "来り",
+          "start": 8,
+          "end": 10,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s2-t5",
+          "text": "けり",
+          "start": 10,
+          "end": 12,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s2-t6",
+          "text": "麦秋",
+          "start": 12,
+          "end": 14,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t7",
+          "text": "や",
+          "start": 14,
+          "end": 15,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s2-t8",
+          "text": "子",
+          "start": 15,
+          "end": 16,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t9",
+          "text": "を",
+          "start": 16,
+          "end": 17,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s2-t10",
+          "text": "負ひ",
+          "start": 17,
+          "end": 19,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s2-t11",
+          "text": "ながら",
+          "start": 19,
+          "end": 22,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s2-t12",
+          "text": "鰯売り",
+          "start": 22,
+          "end": 25,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t13",
+          "text": "秋風",
+          "start": 25,
+          "end": 27,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t14",
+          "text": "や",
+          "start": 27,
+          "end": 28,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s2-t15",
+          "text": "むしりた",
+          "start": 28,
+          "end": 32,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s2-t16",
+          "text": "がり",
+          "start": 32,
+          "end": 34,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t17",
+          "text": "し",
+          "start": 34,
+          "end": 35,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s2-t18",
+          "text": "赤い",
+          "start": 35,
+          "end": 37,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "keiyoshi-katsuyo"
+        },
+        {
+          "id": "s2-t19",
+          "text": "花",
+          "start": 37,
+          "end": 38,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t20",
+          "text": "（",
+          "start": 38,
+          "end": 39,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t21",
+          "text": "）",
+          "start": 39,
+          "end": 40,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t22",
+          "text": "【句意】",
+          "start": 40,
+          "end": 44,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t23",
+          "text": "ふと見ると、葉の落ち尽くした木の枝に烏がとまっていることだよ。この晩秋の夕暮れ時に。",
+          "start": 44,
+          "end": 86,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "originalText": "梅が香にのつと日の出る山路かな",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s3-t1",
+          "text": "目の前で荒い波音をとどろかせている日本海の荒海よ。そのかなたには、流刑者の哀しい歴史が秘められた佐渡島があり、一方、澄んだ夜空には、その佐渡島にかけて天の川が大きく横たわっている。",
+          "start": 0,
+          "end": 90,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "originalText": "旅に病んで夢は枯れ野をかけめぐる",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s4-t1",
+          "text": "まだ夜の明けぬうちに、梅の香りが自然と漂う山道を歩いていると、突然朝日が顔を出してきたことだよ。",
+          "start": 0,
+          "end": 48,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "originalText": "春の海ひねもすのたりのたりかな　　　　　　　　　　　　　　　　　　　　与謝蕪村",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s5-t1",
+          "text": "旅先で病の床に伏している。床の中でよく夢を見るのだが、（旅の思い捨てがたいのか、）その夢とは、自分があちらの枯れ野、こちらの枯れ野をかけめぐっている、というものなのだ。",
+          "start": 0,
+          "end": 84,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s5-t2",
+          "text": "風のない穏やかな春の海では、一日中のたりのたりと、波が穏やかに寄せては返していることだよ。",
+          "start": 84,
+          "end": 129,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "originalText": "愁ひつつ岡にのぼれば花いばら",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s6-t1",
+          "text": "やるせない思いを抱いたまま岡にのぼると、白く小さな茨の花が群がり咲いている。その花や香りが、心に深く沁み入るようであるよ。",
+          "start": 0,
+          "end": 61,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "originalText": "五月雨や大河を前に家二軒",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s7-t1",
+          "text": "来る日も来る日も降り続く五月雨。その、水かさを増し濁流となって荒れ狂うように流れる大河を前に、家が二軒、寄り添うように心細げに立っている。",
+          "start": 0,
+          "end": 69,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "originalText": "白梅に明くる夜ばかりとなりにけり",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s8-t1",
+          "text": "ほのかな香りの漂う白梅のあたりが、まずうっすらと明るくなって、そこからしだいに全体が明るくなってきた。初春の訪れが近づいており、これからはこうした夜明けが続いていくのだなあ。",
+          "start": 0,
+          "end": 87,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s9",
+      "originalText": "これがまあつひの栖か雪五尺　　　　　　　　　　　　　　　　　　　　　　小林一茶",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s9-t1",
+          "text": "これがまあ、我が生涯で最後の栖となるのだろうなあ。五尺もの豪雪に埋もれた、この柏原の地が。",
+          "start": 0,
+          "end": 45,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s9-t2",
+          "text": "（裏長屋の奥の方に住んでいるからであろうか、）夏の涼風も路地に沿うように曲がりくねって、ようやく我が家にも吹きこんできたよ。",
+          "start": 45,
+          "end": 107,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s10",
+      "originalText": "涼風の曲がりくねつて来りけり",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s10-t1",
+          "text": "麦の刈り入れ時になったよ。そんな初夏の麦畑の道を、子どもを背負いながら、重そうな売り荷をたずさえて、（越後女が）いわしを売りにやって来た。",
+          "start": 0,
+          "end": 69,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s11",
+      "originalText": "麦秋や子を負ひながら鰯売り",
+      "modernTranslation": "",
+      "tokens": [
+        {
+          "id": "s11-t1",
+          "text": "秋風が吹いている（。そして、その秋風が目の前の赤い花を揺らしている）よ。そういえば、たしかに娘がむしりたがっていたなあ、この赤い花を。",
+          "start": 0,
+          "end": 67,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s12",
+      "originalText": "秋風やむしりたがりし赤い花",
+      "modernTranslation": "",
+      "tokens": []
+    }
+  ],
+  "author": "",
+  "era": ""
+}

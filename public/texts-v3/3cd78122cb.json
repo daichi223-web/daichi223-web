@@ -1,0 +1,489 @@
+{
+  "id": "3cd78122cb",
+  "title": "つひにゆく",
+  "source": "伊勢物語",
+  "genre": "物語",
+  "difficulty": 1,
+  "layers": [
+    {
+      "id": 1,
+      "label": "用言の活用",
+      "description": "動詞・形容詞・形容動詞の活用を分析する"
+    },
+    {
+      "id": 2,
+      "label": "助動詞",
+      "description": "助動詞の意味・接続・活用を分析する",
+      "prerequisite": 1
+    },
+    {
+      "id": 3,
+      "label": "助詞",
+      "description": "助詞の種類と機能を分析する",
+      "prerequisite": 2
+    },
+    {
+      "id": 4,
+      "label": "敬語",
+      "description": "敬語の種類と対象を分析する",
+      "prerequisite": 3
+    },
+    {
+      "id": 5,
+      "label": "読解",
+      "description": "文法知識を総動員して読み方の手がかりを掴む",
+      "prerequisite": 4
+    }
+  ],
+  "learningPoints": {
+    "overview": [
+      "『伊勢物語』は平安初期成立の歌物語で、作者未詳。第125段は最終段であり、第1段「初冠」（元服・初恋）と対をなして男の一生を閉じる。",
+      "「つひにゆく道」は死への道を意味し、仏教的な無常観を背景とする。しかし悟りではなく「思はざりしを」という率直な嘆きで終わるところに、業平的な人間味がある。",
+      "伊勢物語全体は元服（第1段）→恋愛→放浪→友情→老い→辞世（第125段）という構成で、一人の男の生涯を歌で綴る「歌伝」的な性格を持つ。",
+      "在原業平の辞世として『古今和歌集』巻十六・哀傷・861番にも「つひにゆく道とはかねて聞きしかど昨日今日とは思はざりしを」が収録されている。"
+    ],
+    "byLayer": [
+      {
+        "layer": 2,
+        "label": "助動詞",
+        "keyPoint": "「死ぬべくおぼえければ」の「べく」は当然の助動詞「べし」の連用形。「死んでしまうに違いないと感じられたので」の意。「おぼえ」は自発。",
+        "points": [
+          {
+            "text": "「死ぬべくおぼえければ」の「べく」は当然の助動詞「べし」の連用形。「死んでしまうに違いないと感じられたので」の意。「おぼえ」は自発。",
+            "priority": "important"
+          },
+          {
+            "text": "「聞きしかど」の「しか」は過去の助動詞「き」の已然形。「ど」は逆接の接続助詞で「聞いていたけれど」の意。",
+            "priority": "important"
+          },
+          {
+            "text": "「思はざりしを」の「ざり」は打消の助動詞「ず」の連用形、「し」は過去の助動詞「き」の連体形、「を」は詠嘆の終助詞で「思わなかったのになあ」の意。",
+            "priority": "important"
+          }
+        ]
+      },
+      {
+        "layer": 5,
+        "label": "読解",
+        "keyPoint": "本段の核心は「かねて聞きしかど…思はざりしを」の対比にある。死は知識として知っていたが、いざ自分の身に迫ると全く違う実感として受け止められるという普遍的な心情を詠む。",
+        "points": [
+          {
+            "text": "本段の核心は「かねて聞きしかど…思はざりしを」の対比にある。死は知識として知っていたが、いざ自分の身に迫ると全く違う実感として受け止められるという普遍的な心情を詠む。",
+            "priority": "important"
+          },
+          {
+            "text": "わずか二文＋一首という極端な短さは、死を前にした人間に多くの言葉は不要であるという認識を体現している。伊勢物語最長の段（狩りの使ひ等）との対比に注意。",
+            "priority": "important"
+          },
+          {
+            "text": "「を」で終わる余韻のある結びは、嘆きが完結せず続くことを暗示する。語り手は「昔、男」の最期を一切の修飾なく伝え、読者に深い余韻を残す。",
+            "priority": "important"
+          },
+          {
+            "text": "「つひにゆく道」＝死出の道。「つひに」は最終的に・とうとうの意で、避けられない死を指す。",
+            "priority": "important"
+          },
+          {
+            "text": "「かねて聞きしかど」＝以前から聞いていたけれど。誰もがいつかは死ぬという道理を知識としては知っていたことを示す。",
+            "priority": "important"
+          },
+          {
+            "text": "「昨日今日とは思はざりしを」＝昨日や今日（こんなに間近に）とは思わなかったのになあ。知識と実感の断絶を率直に表す。",
+            "priority": "important"
+          }
+        ]
+      }
+    ]
+  },
+  "sentences": [
+    {
+      "id": "s1",
+      "originalText": "昔、男、わづらひて、心地死ぬべくおぼえければ、",
+      "modernTranslation": "昔、男が、病気になって、心持ちが今にも死んでしまいそうに思われたので、",
+      "tokens": [
+        {
+          "id": "s1-t1",
+          "text": "昔",
+          "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t2",
+          "text": "、",
+          "start": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t3",
+          "text": "男",
+          "start": 2,
+          "end": 3,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t4",
+          "text": "、",
+          "start": 3,
+          "end": 4,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t5",
+          "text": "わづらひ",
+          "start": 4,
+          "end": 8,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t6",
+          "text": "て",
+          "start": 8,
+          "end": 9,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s1-t7",
+          "text": "、",
+          "start": 9,
+          "end": 10,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t8",
+          "text": "心地",
+          "start": 10,
+          "end": 12,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t9",
+          "text": "死ぬ",
+          "start": 12,
+          "end": 14,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ナ変",
+            "conjugationForm": "終"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s1-t10",
+          "text": "べく",
+          "start": 14,
+          "end": 16,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "当然"
+          },
+          "grammarRefId": "jodoshi-suiryo"
+        },
+        {
+          "id": "s1-t11",
+          "text": "おぼえ",
+          "start": 16,
+          "end": 19,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "ヤ下二",
+            "baseForm": "おぼえ"
+          }
+        },
+        {
+          "id": "s1-t12",
+          "text": "けれ",
+          "start": 19,
+          "end": 21,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "已",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "originalText": "つひにゆく道とはかねて聞きしかど昨日今日とは思はざりしを　（第一二五段）",
+      "modernTranslation": "つひにゆく……（誰もが）最後に行く道だとは以前から聞いていたが、（それが）昨日今日のこととは思ってもいなかったことよ。",
+      "tokens": [
+        {
+          "id": "s2-t1",
+          "text": "ば",
+          "start": 0,
+          "end": 1,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s2-t2",
+          "text": "、",
+          "start": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t3",
+          "text": "つひに",
+          "start": 2,
+          "end": 5,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s2-t4",
+          "text": "ゆく",
+          "start": 5,
+          "end": 7,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "体",
+            "baseForm": "ゆく"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s2-t5",
+          "text": "道",
+          "start": 7,
+          "end": 8,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t6",
+          "text": "と",
+          "start": 8,
+          "end": 9,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s2-t7",
+          "text": "は",
+          "start": 9,
+          "end": 10,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s2-t8",
+          "text": "かねて",
+          "start": 10,
+          "end": 13,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s2-t9",
+          "text": "聞き",
+          "start": 13,
+          "end": 15,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s2-t10",
+          "text": "しか",
+          "start": 15,
+          "end": 17,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "已",
+            "meaning": "過去",
+            "baseForm": "しか"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s2-t11",
+          "text": "ど",
+          "start": 17,
+          "end": 18,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s2-t12",
+          "text": "昨日",
+          "start": 18,
+          "end": 20,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t13",
+          "text": "今日",
+          "start": 20,
+          "end": 22,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t14",
+          "text": "と",
+          "start": 22,
+          "end": 23,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s2-t15",
+          "text": "は",
+          "start": 23,
+          "end": 24,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s2-t16",
+          "text": "思は",
+          "start": 24,
+          "end": 26,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s2-t17",
+          "text": "ざり",
+          "start": 26,
+          "end": 28,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei"
+        },
+        {
+          "id": "s2-t18",
+          "text": "し",
+          "start": 28,
+          "end": 29,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s2-t19",
+          "text": "を",
+          "start": 29,
+          "end": 30,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s2-t20",
+          "text": "（",
+          "start": 30,
+          "end": 31,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t21",
+          "text": "）",
+          "start": 31,
+          "end": 32,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    }
+  ],
+  "author": "不明",
+  "era": "平安"
+}
