@@ -137,6 +137,16 @@ export default function TextReader() {
 
       {/* テキスト本文 */}
       <main className="flex-1 px-4 py-6 space-y-6">
+        {/* Layer 5 読解ガイド準備中バナー */}
+        {currentLayer === 5 && !readingGuide && (
+          <div className="rounded-lg border border-layer-5/30 bg-layer-5/5 p-3 text-center">
+            <p className="text-sm font-bold text-layer-5">読解ガイドは準備中です</p>
+            <p className="text-xs text-scaffold mt-1">
+              この教材のレイヤー 5 用アノテーションはまだ作成されていません。本文と振り仮名のみ表示されます。
+            </p>
+          </div>
+        )}
+
         {/* 学習ポイント */}
         {text.learningPoints && (
           <LearningPointsPanel
