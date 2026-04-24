@@ -105,3 +105,87 @@
   flex-direction: column;
   align-items: center;
 }
+
+/* モバイル専用: 時代ごとのフラットリスト */
+.era-list-mobile {
+  display: none;
+  padding: 0 12px 24px;
+}
+
+.era-list-section {
+  margin-bottom: 20px;
+}
+
+.era-list-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #374151;
+  padding: 6px 10px;
+  background: #f3f4f6;
+  border-left: 4px solid #667eea;
+  border-radius: 4px;
+  margin: 0 0 8px 0;
+}
+
+.era-list-card {
+  display: block;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.era-list-card:hover,
+.era-list-card:active {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.era-list-card-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.era-list-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.era-list-chip {
+  display: inline-block;
+  padding: 1px 6px;
+  background: #e0e7ff;
+  color: #4338ca;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.era-list-card-layer {
+  color: #667eea;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+/* レスポンシブ切替: 640px 以下ではマトリクスを隠してリスト表示 */
+@media (max-width: 640px) {
+  .era-genre-matrix-wrap {
+    display: none;
+  }
+  .era-list-mobile {
+    display: block;
+  }
+}
