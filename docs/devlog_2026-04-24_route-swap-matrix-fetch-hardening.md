@@ -292,5 +292,117 @@ React.lazy は遅延ロード中の flash of fallback が発生しうる。`Susp
 
 ---
 
-**ログ作成日**: 2026-04-24
-**セッション終了時点の git HEAD**: 本コミット
+## 14. 午後〜夜セッション追記（同日続き）
+
+午前中のルート swap 後、追加で以下を実施。
+
+### 14.1 文法リファレンス欠損 4 トピックを補完（`d524569`）
+
+`grammarIndex.ts` は 16 トピックを列挙していたが、以下 4 本が JSON 未作成で「準備中」表示だった:
+- `jodoshi-ganbou` 助動詞 願望・仮想系（まし・まほし・たし・ごとし）
+- `jodoshi-dantei` 助動詞 断定系（なり・たり）
+- `keigo` 敬語（尊敬・謙譲・丁寧・二重敬語・絶対敬語）
+- `shikibetsu` 紛らわしい語の識別（なむ/に/ぬ × けれ/し/しか/せ/る/れ）
+
+`F:\A2A\NotebookLM\kokugo-vault\20-文法\古文文法\` の MD を参照して作成。`ReferenceTopic.tsx` も `fetchJsonAsset` 化した。
+
+### 14.2 public/ 配下の JSON 静的アセットを tracking（`1b1e52c`）
+
+**「テキストが見つかりません」バグの真因**:
+- `.gitignore` の `*.json` 全一致で `public/texts/`、`public/texts-v3/`、`public/grammar/` 等すべての JSON が untracked
+- 過去の `vercel --prod` CLI デプロイはローカルファイルをそのまま上げていたので動いていたが、GitHub 連携の自動デプロイは git 経由 → untracked ファイルは本番に上がらない
+- 結果: `/texts-v3/*.json` が HTTP 404 → TextReader が not-found
+
+**修正**: `.gitignore` に `!public/**/*.json` を追加。`public/texts/` 105 + `public/texts-v3/` 105 + `public/grammar/` 30+ + `public/guides/` など計 **449 ファイル（568,961 行）**を追加 tracking。
+
+### 14.3 児のそら寝・絵仏師の Layer 5 読解ガイド（`ba57164`）
+
+kobun-v3 archive を参照して Layer 5（読解ガイド）を実装:
+- **児のそら寝** (chigo-no-sorane): v3 の 4 ファイル（texts/analysis/reading/guide）を直接コピー、`textsIndex.json` / `textsV3Index.json` にもエントリ追加
+- **絵仏師良秀** (31d11bf2f8): v3 の 13 文 → tan の 21 文に sentence 境界をリマップして reading JSON 新規作成
+- `TextReader.tsx` に Layer 5 で `readingGuide` が null の場合の「準備中」バナー追加
+- Layer 5 の動作を初めて実データで確認可能に
+
+### 14.4 Layer 5 読解ガイドの大量生成（バッチ 1〜10、進捗 62/106）
+
+`F:\A2A\NotebookLM\kokugo-vault\30-教材\古文\` の MD（218 本、tan と 105/106 タイトル一致）を参照し、並列エージェント（5〜10 並列）で `reading/*.json` を順次生成。
+
+#### 完了ファイル (62/106)
+| ジャンル | 教材 (件数) |
+|---|---|
+| 説話 | ちごのそらね ×2（slug + hash）、絵仏師良秀、猟師仏を射ること、賀茂の祭り |
+| 物語 | 伊勢物語 8 本、源氏物語 7 本、大鏡 6 本、平家物語 2 本、大和物語 1 |
+| 随筆 | 徒然草 8 本、枕草子 6 本、方丈記 2 本 |
+| 日記 | 土佐日記 3 本、更級日記 2 本、蜻蛉日記、紫式部日記、和泉式部日記 各 1 |
+
+#### 使用した並列化パターン
+- バッチ 1 本あたり 5〜8 文で、guide + hints (subject/grammar/vocab/structure/method の 5 type) 構成
+- 生成時間: 1 本 1〜7 分（文数に依存）、並列 5 本で平均 5 分完了
+- 全バッチ後の検証: sentenceId と textsV3Index の完全整合を node script で自動チェック
+
+#### ハマりどころ
+- **rate limit**: バッチ 5 の 2 エージェントが Claude API quota に到達（"resets 3pm Asia/Tokyo"）。ただしその時点でファイルは保存済みで、実害なし
+- **"honorific" type 混入**: 更級日記の 1 本で指定外の "honorific" type を出力。`TokenizedText.tsx` に fallback（`hintMeta[type] ?? grammar`）を追加し、該当ファイルは grammar に置換
+- **XML 残骸**: バッチ 10 の「花山院の出家」で末尾に `</content></invoke>` が付いていた。手動で trim
+
+#### 残件 (44/106)
+和泉式部日記、増鏡、堤中納言物語、落窪物語、古事記、古今和歌集仮名序、雨月物語、近世作品（俳論・去来抄・三冊子・野ざらし紀行・西鶴）、謡曲、風姿花伝、玉勝間 など。次セッション以降で継続。
+
+---
+
+## 15. コミット一覧（午後セッション）
+
+| SHA | 概要 |
+|-----|------|
+| `d524569` | 文法リファレンス欠損 4 トピック補完 + ReferenceTopic fetchJsonAsset 化 |
+| `1b1e52c` | public/ 配下の JSON 449 ファイル tracking（「テキストが見つかりません」根因修正）|
+| `ba57164` | 児のそら寝・絵仏師 Layer 5 読解ガイド整備 + 準備中バナー |
+| `c82072a` | 読解 Layer 5 バッチ 1（徒然草仁和寺・土佐日記門出・伊勢物語初冠）|
+| `a1054c6` | バッチ 2（枕草子×2・源氏心づくし・平家忠度・大鏡安子）|
+| `eac38a3` | バッチ 3（伊勢つひにゆく・徒然草世に語り・大鏡宣耀・平家能登殿・源氏暁の雪）|
+| `1298680` | バッチ 4（徒然草×2・伊勢とみ・土佐日記かしら・枕草子里）|
+| `40421a1` | バッチ 5（源氏×2・枕草子・伊勢・大鏡×2・更級×2・方丈記・土佐日記）|
+| `b0d99a0` | バッチ 6（徒然草×2・源氏車争ひ・枕草子中納言・伊勢月やあらぬ）|
+| `c6f88d1` | バッチ 7（徒然草×2・大鏡道長・枕草子二月・伊勢渚・方丈記養和・源氏橋姫）|
+| `e480313` | バッチ 8（源氏髪の香・枕草子なめき・伊勢狩り使・大鏡公任三船・今昔賀茂・chigo 重複）|
+| `40d4d5b` | バッチ 9 前半（春あけぼの・芥川・嘆きつつ・南の院競射・光源氏誕生）|
+| `9d22f90` | バッチ 9 後半（猟師仏・廃院の怪）|
+| `35fe3fd` | バッチ 10 7/8（行く蛍・東下り・紫式部日記和泉・姨捨・飽かぬ別れ・花山院・和泉式部日記夢）|
+
+---
+
+## 16. 検証体制
+
+全バッチで以下を自動検証:
+```js
+// sentenceId の完全一致、全 sentence 網羅、hint.type が規定 5 種内
+const tIds = t.sentences.map(s => s.id);
+const rIds = r.annotations.map(a => a.sentenceId);
+missing = tIds.filter(id => !rIds.includes(id));
+extra = rIds.filter(id => !tIds.includes(id));
+// types が subject/grammar/vocab/structure/method のみ
+```
+
+62/106 すべてパス。ランタイム耐性として `TokenizedText.tsx` に未知 type フォールバック追加済。
+
+---
+
+## 17. 次セッション申し送り
+
+### 最優先
+1. **残 44 本の reading ガイド生成**: バッチ 11 以降で続き。近世作品や未カバー日記・和歌集を中心に
+2. **実機確認**: `/read/texts/<id>?layer=5` で各教材の読解ガイド表示を確認。Layer 5 banner が意図通り出るか、hint の折り畳みが動くか
+
+### 中期
+- 若紫の君 (fd3012c216) 用 reading は並列実行中で停止時点では未完了。次セッションで回収または再生成
+- Teacher 画面で「reading データ有無」列を追加して教材ごとの進捗を可視化する案
+
+### 技術的注意
+- Agent 出力の末尾 XML 残骸は常に警戒（1 件発生）。validation script に「最後が `}` で終わるか」のチェックを追加してもよい
+- rate limit に当たったらその時点でファイル保存されていることが多い。次セッションでは結果を先に確認
+
+---
+
+**ログ作成日**: 2026-04-24（午前＋午後）
+**セッション終了時点の git HEAD**: `35fe3fd`
+**進捗スナップショット**: 読解 Layer 5 ガイド 62/106（58%）、文法リファレンス 16/16 完了、静的アセット配信 OK
