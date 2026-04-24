@@ -1018,7 +1018,7 @@ function App() {
           className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
           title={currentVisibleLemma ? `「${currentVisibleLemma}」を検索` : '単語・例文・教材を検索'}
         >
-          🔍<span className="hidden sm:inline ml-1">
+          🔍<span className="ml-1">
             {currentVisibleLemma ? `「${currentVisibleLemma}」` : '検索'}
           </span>
         </a>

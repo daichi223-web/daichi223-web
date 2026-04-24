@@ -1,8 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Token, LayerId, TokenAnalysis } from "@/lib/kobun/types";
 import { buildGemUrl, buildNotebookLmUrl } from "@/lib/kobun/gem";
 import { addVocabEntry } from "@/lib/kobun/progress";
+import VocabModal from "@/components/VocabModal";
+import bundledVocabIndex from "@/data/vocabIndex.json";
+
+const vocabIndexKeys = new Set(Object.keys(bundledVocabIndex as Record<string, unknown>));
 
 interface GrammarPopoverProps {
   token: Token;
@@ -110,6 +114,15 @@ function PopoverContent({
   const gemUrl = buildGemUrl({ textTitle, sentenceText, token, currentLayer });
   const nlmUrl = buildNotebookLmUrl({ token, currentLayer });
 
+  const [vocabLemma, setVocabLemma] = useState<string | null>(null);
+  // 見出し語 / 表層形のいずれかが vocab DB にあれば「📖 語彙解説」を出せる
+  const vocabCandidate = (() => {
+    const base = tag.baseForm;
+    if (base && vocabIndexKeys.has(base)) return base;
+    if (vocabIndexKeys.has(token.text)) return token.text;
+    return null;
+  })();
+
   function handleAddVocab() {
     addVocabEntry({
       tokenText: token.text,
@@ -196,17 +209,27 @@ function PopoverContent({
         </button>
       </div>
 
+      {/* 語彙解説 (vocab DB にある語のみ) */}
+      {vocabCandidate && (
+        <button
+          onClick={() => setVocabLemma(vocabCandidate)}
+          className="w-full text-left px-3 py-2 bg-layer-5/5 hover:bg-layer-5/10 border border-layer-5/20 rounded-md text-sm font-bold text-layer-5 transition-colors"
+        >
+          📖 「{vocabCandidate}」の語彙解説
+        </button>
+      )}
+
       {/* リンク3つ横並び */}
       <div className="flex items-center justify-between text-sm">
         {token.grammarRefId ? (
           <button
-            className="text-layer-1 hover:underline"
+            className="text-layer-1 hover:underline font-bold"
             onClick={() => {
               onClose();
               navigate(`/read/reference/${token.grammarRefId}`);
             }}
           >
-            解説 →
+            📘 文法解説 →
           </button>
         ) : (
           <span />
@@ -228,6 +251,11 @@ function PopoverContent({
           先生AI →
         </button>
       </div>
+
+      {/* VocabModal — popover より前面に重ねる */}
+      {vocabLemma && (
+        <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} />
+      )}
     </div>
   );
 }
