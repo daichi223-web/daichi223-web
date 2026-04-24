@@ -19,6 +19,7 @@
     "build:texts-extract": "python scripts/extract-texts.py",
     "build:texts-enrich": "python scripts/enrich-texts.py",
     "build:texts": "npm run build:texts-extract && npm run build:texts-enrich",
+    "build:hint-coverage": "node scripts/compute-hint-coverage.cjs",
     "build:data": "npm run build:match && npm run build:vocab && npm run build:examples && npm run build:texts"
   },
   "dependencies": {
