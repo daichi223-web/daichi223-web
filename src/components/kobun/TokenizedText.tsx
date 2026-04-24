@@ -94,7 +94,10 @@ export function TokenizedText({
           </p>
           <div className="space-y-1">
             {readingAnnotation.hints.map((hint, i) => {
-              const meta = hintMeta[hint.type];
+              // 想定外の hint.type にも安全にフォールバック（例: honorific → grammar 表示）
+              const meta =
+                hintMeta[hint.type] ?? { icon: "🔤", color: "text-amber-700", bg: "bg-amber-50" };
+              const label = hintLabel[hint.type] ?? hint.type;
               const isOpen = openHints.has(i);
               return (
                 <div key={i} className="rounded-md border border-sumi/10 overflow-hidden">
@@ -106,7 +109,7 @@ export function TokenizedText({
                     <span
                       className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${meta.bg} ${meta.color}`}
                     >
-                      {hintLabel[hint.type]}
+                      {label}
                     </span>
                     <span className="text-xs font-bold text-sumi/80 flex-1">
                       {hint.label}
