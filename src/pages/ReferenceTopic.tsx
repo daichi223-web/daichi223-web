@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { GrammarTopic, SectionPriority } from "@/lib/kobun/types";
 import { TextExampleCard } from "@/components/kobun/TextExampleCard";
+import { fetchJsonAsset } from "@/lib/fetchJson";
 
 const priorityOrder: Record<SectionPriority, number> = {
   essential: 0,
@@ -37,16 +38,11 @@ export default function ReferenceTopic() {
     let cancelled = false;
     setTopic(null);
     setError(false);
-    fetch(`/grammar/${topicId}.json`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (cancelled) return;
-        if (data) setTopic(data as GrammarTopic);
-        else setError(true);
-      })
-      .catch(() => {
-        if (!cancelled) setError(true);
-      });
+    fetchJsonAsset<GrammarTopic>(`/grammar/${topicId}.json`).then((r) => {
+      if (cancelled) return;
+      if (r.ok) setTopic(r.data);
+      else setError(true);
+    });
     return () => {
       cancelled = true;
     };
