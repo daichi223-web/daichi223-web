@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+
+const SEARCH_SCROLL_KEY = 'kobun-search-scroll-v1';
 import { chapterFor, chapterColor } from '../utils/chapters';
 import VocabModal from '../components/VocabModal';
 import bundledKobunQ from '../data/kobunQ.json';
@@ -179,6 +181,54 @@ export default function SearchPage() {
     if (searchParams.get('bodies') === '1') setIncludeBodies(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 検索結果から個別単語/教材へ飛んだあとブラウザ戻るで復帰した際に
+  // 直前のスクロール位置を復元する。query をキーにしているので、
+  // 別の語を検索しに来たときには復元しない。
+  const scrollRestoredRef = useRef(false);
+  useLayoutEffect(() => {
+    if (scrollRestoredRef.current) return;
+    if (!query) return;
+    if (!vocabIdx) return;
+    const raw = sessionStorage.getItem(SEARCH_SCROLL_KEY);
+    if (!raw) return;
+    try {
+      const { q: savedQ, y } = JSON.parse(raw);
+      if (savedQ !== query) return;
+      if (typeof y !== 'number' || y <= 0) return;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, y);
+          scrollRestoredRef.current = true;
+        });
+      });
+    } catch {
+      /* ignore */
+    }
+  }, [query, vocabIdx]);
+
+  // 現在の query と一緒にスクロール位置を保存する
+  useEffect(() => {
+    let pending = false;
+    const save = () => {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => {
+        pending = false;
+        if (!query) return;
+        try {
+          sessionStorage.setItem(
+            SEARCH_SCROLL_KEY,
+            JSON.stringify({ q: query, y: window.scrollY })
+          );
+        } catch {
+          /* ignore */
+        }
+      });
+    };
+    window.addEventListener('scroll', save, { passive: true });
+    return () => window.removeEventListener('scroll', save);
+  }, [query]);
 
   const results = useMemo(() => {
     if (!query || query.length < 1) {

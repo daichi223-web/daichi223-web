@@ -24,6 +24,8 @@ export default function PullToRefresh() {
   const [pull, setPull] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const startY = useRef<number | null>(null);
+  const startX = useRef<number | null>(null);
+  const lockedHorizontal = useRef(false);
   const activeId = useRef<number | null>(null);
   const pullRef = useRef(0);
   pullRef.current = pull;
@@ -33,16 +35,51 @@ export default function PullToRefresh() {
       window.scrollY === 0 &&
       (document.documentElement.scrollTop === 0 || document.body.scrollTop === 0);
 
+    // touch の初期位置から、横スクロール可能な祖先要素を探す。
+    // 該当があれば PullToRefresh は介入しない (横スクロール優先)。
+    const isInsideHorizontalScroller = (el: Element | null): boolean => {
+      let node: Element | null = el;
+      while (node && node !== document.body) {
+        const cs = getComputedStyle(node);
+        const ox = cs.overflowX;
+        if ((ox === "auto" || ox === "scroll") && node.scrollWidth > node.clientWidth) {
+          return true;
+        }
+        node = node.parentElement;
+      }
+      return false;
+    };
+
     const onTouchStart = (e: TouchEvent) => {
       if (refreshing) return;
       if (!atTop()) return;
       if (e.touches.length !== 1) return;
+      // 横スクロール可能な要素内で開始した touch には関与しない
+      if (isInsideHorizontalScroller(e.target as Element | null)) {
+        startY.current = null;
+        startX.current = null;
+        lockedHorizontal.current = false;
+        return;
+      }
       startY.current = e.touches[0].clientY;
+      startX.current = e.touches[0].clientX;
+      lockedHorizontal.current = false;
     };
 
     const onTouchMove = (e: TouchEvent) => {
       if (refreshing || startY.current == null) return;
+      // 一度横方向ジェスチャと判定したら以後は無関与
+      if (lockedHorizontal.current) return;
       const dy = e.touches[0].clientY - startY.current;
+      const dx = e.touches[0].clientX - (startX.current ?? e.touches[0].clientX);
+      // 横方向の動きが垂直方向を上回ったら、横スクロールジェスチャと判断して降りる
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) {
+        lockedHorizontal.current = true;
+        startY.current = null;
+        startX.current = null;
+        setPull(0);
+        return;
+      }
       if (dy <= 0) {
         setPull(0);
         return;
@@ -58,6 +95,8 @@ export default function PullToRefresh() {
     };
 
     const onTouchEnd = () => {
+      lockedHorizontal.current = false;
+      startX.current = null;
       if (refreshing) return;
       const current = pullRef.current;
       startY.current = null;

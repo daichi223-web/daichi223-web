@@ -47,6 +47,19 @@
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* Vercel Toolbar / Live Feedback をスマホでは非表示にする
+   (モバイルで横スクロール操作等の邪魔になるため) */
+@media (max-width: 768px) {
+  vercel-live-feedback,
+  [data-vercel-feedback],
+  [data-vercel-toolbar],
+  #__vercel_toolbar,
+  iframe[src*="vercel.live"],
+  iframe[src*="vercel-toolbar"] {
+    display: none !important;
+  }
+}
+
 /* kobun-app.htmlと同じスタイル定義 */
 @layer components {
   /* カードコンポーネント */

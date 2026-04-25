@@ -2,6 +2,9 @@
 .era-genre-matrix-wrap {
   padding: 0 16px 24px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
 }
 
 .era-genre-matrix {
@@ -10,7 +13,9 @@
   background: #e5e7eb;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  overflow: hidden;
+  /* width:max-content にすることでグリッドのトラックが確実に
+     インライン方向へ伸び、親 wrap で overflow-x スクロールが効く */
+  width: max-content;
   min-width: 100%;
 }
 
@@ -145,6 +150,14 @@
   }
   .era-genre-card-source {
     font-size: 0.65rem;
+  }
+  /* スクロールバーを常時細く可視化して操作可能と分かるようにする */
+  .era-genre-matrix-wrap::-webkit-scrollbar {
+    height: 6px;
+  }
+  .era-genre-matrix-wrap::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
   }
 }
 
