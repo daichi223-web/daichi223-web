@@ -150,6 +150,22 @@
           {
             "text": "「志」: 古語では「心ざし（気持ち・謝礼）」。本段では留守番への謝礼。",
             "priority": "important"
+          },
+          {
+            "text": "[古文常識] 受領（地方官）の赴任と帰京: 平安朝の中下級貴族（紀貫之もその一人）にとり、国守（受領）に任じられて地方へ下るのは経済的に重要な機会だが、文化の中心京から離れる5年前後の任期は精神的な「流謫」とも観じられた。任地で家族を亡くす不慮も多く、本作の女児の死もそうした地方赴任の現実が背景にある。任期終了の帰京は喜びと同時に、京の生活基盤（邸宅・隣人関係・縁者）の変質を確認する苦い経験ともなった。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 平安京の地理と隣家の関係: 京は条坊制で碁盤目状に区画され、貴族邸宅は四方を築地塀で囲む寝殿造が標準。しかし親しい家同士は「中垣」程度の簡素な仕切りで隣接し、火事・盗難・留守時の管理を相互に支え合う共同体的近所付き合いがあった。本作「中垣こそあれ、一つ家のやうなれば、望みて預かれるなり」は、こうした密接な隣家関係を前提に、「だからこそ預けた」「なのに荒廃させた」という裏切りの落差を語る。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 仮名日記の私性と『土佐日記』の革新: 古来漢文で書かれた公的記録としての日記に対し、紀貫之は935年頃『土佐日記』で初めて仮名による私的日記を試み、女性に仮託する形で漢文の規範を逃れた率直な情感（亡児追悼・船旅の不安・帰京の哀感）を綴った。これが後の『蜻蛉日記』『和泉式部日記』『更級日記』など平安女流仮名日記文学の源流を作った。本段の最終文「とく破りてむ」は、仮名日記の私性を強調しつつ、書く行為自体への屈折した自己意識を示す結句となる。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 平安貴族の幼児死亡と追悼歌の伝統: 平安期の幼児死亡率は高く、貴族家でも子を失う悲嘆は珍しくなかった。和歌・物語は亡児を直接「子」と呼ばず「見し人」「いにし人」と婉曲化し、植物（松・小松・撫子）や自然物（露・霧）に託して哀傷を詠む伝統を持つ。本作の「見し人の松の千年に見ましかば」「生まれしも帰らぬもの」も、亡き女児を直接名指さず「松」「小松」に重ねる古今集的な追悼歌の典型。私性が強い仮名日記でこそ、こうした婉曲表現の哀切さが際立つ。",
+            "priority": "important"
           }
         ]
       }
@@ -169,7 +185,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "[古文常識] 京: 平安京（現在の京都）。律令制下の首都で、官人・貴族の生活と文化の中核。地方へ赴任した受領（国司）が任期を終えて帰る場が「京」であり、京を離れること＝中央文化からの隔絶を意味した。土佐から京への船旅は約55日。本作冒頭「京に入り立ちて」が長旅と地方任期の終結を一語で告げる。"
         },
         {
           "id": "s1-t2",
@@ -181,7 +198,8 @@
             "pos": "格助詞",
             "meaning": "帰着"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 帰着点（〜に）。動作の到達先を示す。本作「京に入り立ちて」「家に至りて」「門に入るに」と帰京の段階を刻む基本助詞。"
         },
         {
           "id": "s1-t3",
@@ -191,7 +209,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "[[20-文法/古文文法/動詞の活用|タ四"
-          }
+          },
+          "hint": "複合動詞「入り立つ」: 「中に踏み入る・立ち入る」。本作「京に入り立ちて」で京の地に足を踏み入れる帰京の感慨を端的に表す。"
         },
         {
           "id": "s1-t4",
@@ -201,7 +220,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続（〜て）。連用形接続。動作の連続・並列を示す古文最頻出の接続助詞。"
         },
         {
           "id": "s1-t5",
@@ -214,7 +234,8 @@
             "conjugationType": "シク",
             "conjugationForm": "終"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞シク活用「うれし」: 「うれしい」。本作冒頭「うれし」の終止形断言が、後の暗転を際立たせる伏線になる。"
         },
         {
           "id": "s1-t6",
@@ -224,7 +245,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「家」: 「自邸・住まい」。本作の「家」は土佐赴任前の京の自邸で、貫之家代々の屋敷。本段の中心舞台で、荒廃と亡き女児の追憶の場となる。"
         }
       ]
     },
@@ -243,7 +265,8 @@
             "pos": "格助詞",
             "meaning": "帰着"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 帰着点（〜に）。動作の到達先を示す。本作「京に入り立ちて」「家に至りて」「門に入るに」と帰京の段階を刻む基本助詞。"
         },
         {
           "id": "s2-t2",
@@ -256,7 +279,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「至る」（ラ四）連用形: 「行き着く・到着する」。本作「家に至りて」で京の自邸への到着を示す。"
         },
         {
           "id": "s2-t3",
@@ -266,7 +290,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続（〜て）。連用形接続。動作の連続・並列を示す古文最頻出の接続助詞。"
         },
         {
           "id": "s2-t4",
@@ -288,7 +313,8 @@
             "pos": "格助詞",
             "meaning": "帰着"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 帰着点（〜に）。動作の到達先を示す。本作「京に入り立ちて」「家に至りて」「門に入るに」と帰京の段階を刻む基本助詞。"
         },
         {
           "id": "s2-t6",
@@ -301,7 +327,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「入る」（ラ四）連体形: 「入る」。本作「門に入るに」の「に」は接続助詞・順接確定（偶然条件）で「〜すると」の意。"
         },
         {
           "id": "s2-t7",
@@ -311,7 +338,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「に」: 順接確定（〜すると・〜ので）／逆接（〜のに）。連体形接続。本作「門に入るに」は偶然条件「〜すると」、「悲しきに耐へずして」は対象格に近い用法。"
         },
         {
           "id": "s2-t8",
@@ -334,7 +362,8 @@
             "conjugationType": "ク",
             "conjugationForm": "已"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞ク活用「明かし」已然形: 「明るい」。「明かければ」で「明るいので」の順接確定条件。"
         },
         {
           "id": "s2-t10",
@@ -344,7 +373,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 已然形＋ば＝順接確定（〜ので・〜すると）／未然形＋ば＝順接仮定（もし〜なら）。本作「明かければ」「なれば」「たれば」「ねば」で確定条件、「見ましかば」で仮定条件。"
         },
         {
           "id": "s2-t11",
@@ -365,7 +395,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いと"
-          }
+          },
+          "hint": "重要副詞「いと」: 「たいそう・非常に・大変」。下に打消を伴うと「たいして〜ない」。本作「いとはつらく」で「とても薄情だ」の強調。"
         },
         {
           "id": "s2-t13",
@@ -388,7 +419,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「ありさま」: 「ようす・状態・様相」。本作「ありさま見ゆ」で月光に照らされた邸内の荒廃が見える、と暗転を予告する。"
         },
         {
           "id": "s2-t15",
@@ -401,7 +433,8 @@
             "conjugationType": "ヤ下二",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見ゆ」（ヤ下二）: 「見える・思われる」。「見る」の自発・受身的派生語。本作「ありさま見ゆ」「つらく見ゆれど」と二様に用いる。"
         },
         {
           "id": "s2-t16",
@@ -414,7 +447,8 @@
             "conjugationType": "カ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「聞く」（カ四）連用形: 「聞く」。本作「聞きしよりもまして」で「（旅中に）伝え聞いていた以上に」と過去の伝聞を指す。"
         }
       ]
     },
@@ -434,7 +468,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」連体形「し」: 直接体験過去（〜た）の連体形。話者が実際に体験した過去を表す。「けり」（伝聞・詠嘆）と区別。"
         },
         {
           "id": "s3-t2",
@@ -446,7 +481,8 @@
             "pos": "格助詞",
             "meaning": "比較"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「より」: 比較の基準（〜よりも）。本作「聞きしよりもまして」で「（旅中に）伝え聞いていた以上に」と現実の荒廃が予想を超えた事を示す。"
         },
         {
           "id": "s3-t3",
@@ -458,7 +494,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列・添加・強意。本作「物も」「心も」「船人もみな」「生まれしも」などで「〜まで・〜さえも」の含意を持つ場面が多い。"
         },
         {
           "id": "s3-t4",
@@ -468,7 +505,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "重要副詞「まして」: 「いっそう・なおさら」。「（A）よりもまして（B）」の形で比較強調。本作「聞きしよりもまして」で予想以上の荒廃を表す。"
         },
         {
           "id": "s3-t5",
@@ -481,7 +519,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「言ふかひなし」: 「言いようもないほどひどい・どうしようもない」。直訳「言う甲斐がない」。本作で家の荒廃の極限を表す核の語。"
         },
         {
           "id": "s3-t6",
@@ -493,7 +532,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。結びは連体形。本作「言ふかひなくぞこぼれ破れたる」「ぞ交じれる」「ぞ人々言ふ」「ぞ言へる」と多用され、語気を強める。"
         },
         {
           "id": "s3-t7",
@@ -503,7 +543,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "[[20-文法/古文文法/動詞の活用|ラ下二"
-          }
+          },
+          "hint": "複合動詞「こぼれ破る」（ラ下二）: 「壊れ崩れる・ぼろぼろになる」。本作「ぞこぼれ破れたる」で家の物理的荒廃を強調する核の語。"
         },
         {
           "id": "s3-t8",
@@ -516,7 +557,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」連体形「たる」（存続）: 〜ている。動作の結果が継続している状態を示す。本作で荒廃の継続を表現する核となる用法。"
         },
         {
           "id": "s3-t9",
@@ -526,7 +568,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「家」: 「自邸・住まい」。本作の「家」は土佐赴任前の京の自邸で、貫之家代々の屋敷。本段の中心舞台で、荒廃と亡き女児の追憶の場となる。"
         },
         {
           "id": "s3-t10",
@@ -538,7 +581,8 @@
             "pos": "格助詞",
             "meaning": "帰着"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 帰着点（〜に）。動作の到達先を示す。本作「京に入り立ちて」「家に至りて」「門に入るに」と帰京の段階を刻む基本助詞。"
         }
       ]
     },
@@ -558,7 +602,8 @@
             "conjugationType": "カ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「預く」（カ下二）: 「預ける」。「預かる」（ラ四・受け入れる側）と対をなす。本作では作者が隣人に「預け」、隣人が「預かれ」る関係。"
         },
         {
           "id": "s4-t2",
@@ -571,7 +616,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」: 完了（〜た）／存続（〜ている）。連用形接続。動作の結果が現在続いていることを表す存続用法に注意。"
         },
         {
           "id": "s4-t3",
@@ -584,7 +630,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「つ」連体形「つる」: 完了（〜てしまった）。本作「預けたりつる人」では「たり＋つる」の重ねで決定的な過去の行為を強める。"
         },
         {
           "id": "s4-t4",
@@ -628,7 +675,8 @@
             "pos": "係助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列・添加・強意。本作「物も」「心も」「船人もみな」「生まれしも」などで「〜まで・〜さえも」の含意を持つ場面が多い。"
         },
         {
           "id": "s4-t8",
@@ -641,7 +689,8 @@
             "conjugationType": "ラ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「荒る」（ラ下二）連用形: 「荒れる・荒廃する」。本作「荒れたる」「荒れにたれば」で物理的な荒廃と人心の荒廃の両方に用いる。"
         },
         {
           "id": "s4-t9",
@@ -654,7 +703,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」連体形「たる」（存続）: 〜ている。動作の結果が継続している状態を示す。本作で荒廃の継続を表現する核となる用法。"
         },
         {
           "id": "s4-t10",
@@ -667,7 +717,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」: 断定（〜である・〜だ）。体言・連体形に接続。文末で「〜のである」と説明・確認の口調を作る。"
         },
         {
           "id": "s4-t11",
@@ -680,7 +731,8 @@
             "conjugationForm": "終",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」: 伝聞・気づきの過去（〜た）／詠嘆（〜だなあ）。本作の地の文では詠嘆「けり」が哀感を込める働きをする。連用形接続。"
         },
         {
           "id": "s4-t12",
@@ -690,7 +742,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "[古文常識] 中垣: 隣家との境にある垣根。平安京の貴族邸宅は通常築地塀で囲まれたが、親しい家どうしは敷地内に簡素な「中垣」のみで仕切り、行き来の自由な「一つ家」のような近所付き合いを結んだ。本作「中垣こそあれ、一つ家のやうなれば」は隣人を信頼して家の管理を任せた前提を示し、その期待が裏切られる構図を作る。"
         },
         {
           "id": "s4-t13",
@@ -702,7 +755,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。結びは已然形。本作「中垣こそあれ」は文末で結ばず、文が継続する場合は逆接の含意を持つ特殊用法（〜こそ…だが）。"
         }
       ]
     },
@@ -723,7 +777,8 @@
             "conjugationForm": "已",
             "baseForm": "あり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「あり」（ラ行変格）: 「ある・存在する」。ラ変は「あり・をり・はべり・いますがり」のみ。終止形「あり」、連体形「ある」、已然形「あれ」。"
         },
         {
           "id": "s5-t2",
@@ -733,7 +788,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「一つ家」: 「同じ家・一軒の家」。本作では「中垣はあるが一つ家のようなもの」で、隣家との垣根を超えた家族同様の親密さを表す。"
         },
         {
           "id": "s5-t3",
@@ -755,7 +811,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「やう（様）」: 「ようす・ありさま・〜のような」。「一つ家のやうなれば」で「一つ家のようなものなので」の比況を作る。"
         },
         {
           "id": "s5-t5",
@@ -768,7 +825,8 @@
             "conjugationForm": "已",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」已然形「なれ」: 断定の已然形。「なれば」で「〜なので」の順接確定条件をつくる。"
         },
         {
           "id": "s5-t6",
@@ -778,7 +836,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 已然形＋ば＝順接確定（〜ので・〜すると）／未然形＋ば＝順接仮定（もし〜なら）。本作「明かければ」「なれば」「たれば」「ねば」で確定条件、「見ましかば」で仮定条件。"
         },
         {
           "id": "s5-t7",
@@ -791,7 +850,8 @@
             "conjugationType": "マ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「望む」（マ四）: 「望む・願う」。本作「望みて預かれるなり」は隣人が自ら進んで留守番を引き受けた経緯を示す。"
         },
         {
           "id": "s5-t8",
@@ -801,7 +861,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続（〜て）。連用形接続。動作の連続・並列を示す古文最頻出の接続助詞。"
         },
         {
           "id": "s5-t9",
@@ -814,7 +875,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "已"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「預かる」（ラ四）: 「預かる・引き受ける」。本作「望みて預かれるなり」で、相手が自発的に引き受けた事を強調する。"
         },
         {
           "id": "s5-t10",
@@ -827,7 +889,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」連体形「る」（存続）: 〜ている。サ変未然・四段已然形接続。「預かれる」「水漬ける」など本段で繰り返し用いられる。"
         },
         {
           "id": "s5-t11",
@@ -840,7 +903,8 @@
             "conjugationForm": "終",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」: 断定（〜である・〜だ）。体言・連体形に接続。文末で「〜のである」と説明・確認の口調を作る。"
         },
         {
           "id": "s5-t12",
@@ -850,7 +914,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "連体"
-          }
+          },
+          "hint": "連体詞「さる」/接続語「さるは」: 「そのような・そんな」。「さるは」で「とはいえ・それなのに」と前後の対比を導く。"
         },
         {
           "id": "s5-t13",
@@ -862,7 +927,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・対比。本作「いとはつらく」「いかがは悲しき」「志はせむ」など、提示・反語強意で多用される。"
         }
       ]
     },
@@ -879,7 +945,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要名詞「便り（たより）」: 「機会・つて・ついで」。現代語「便り＝手紙」とは異なる。本作「便りごとに」で「機会のあるたびに」の意。"
         },
         {
           "id": "s6-t2",
@@ -889,7 +956,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "接尾"
-          }
+          },
+          "hint": "接尾語「ごと」: 「〜ごとに・〜のたびに」。本作「便りごとに」で「機会のあるたびに」と反復の頻度を示す。"
         },
         {
           "id": "s6-t3",
@@ -923,7 +991,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列・添加・強意。本作「物も」「心も」「船人もみな」「生まれしも」などで「〜まで・〜さえも」の含意を持つ場面が多い。"
         },
         {
           "id": "s6-t6",
@@ -936,7 +1005,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」連用形を含む形（絶えず）: 動詞「絶ゆ」未然＋打消「ず」連用＝「絶えることなく」。副詞的に「ずっと・続けて」の意で用いる。"
         },
         {
           "id": "s6-t7",
@@ -949,7 +1019,8 @@
             "conjugationType": "サ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「得さす」（サ下二）: 「与えさせる・贈らせる」。「得＋使役」の形で「（人に）与える・遣わす」の意。"
         },
         {
           "id": "s6-t8",
@@ -962,7 +1033,8 @@
             "conjugationForm": "終",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」: 完了（〜た）／存続（〜ている）。連用形接続。動作の結果が現在続いていることを表す存続用法に注意。"
         },
         {
           "id": "s6-t9",
@@ -972,7 +1044,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「今宵（こよひ）」: 「今夜」。「今宵、…と」で帰着の夜の場面を限定する時間語。"
         },
         {
           "id": "s6-t10",
@@ -982,7 +1055,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "連体"
-          }
+          },
+          "hint": "連体詞「かかる」: 「このような」。「かく＋ある」の音便。本作「かかること」（こんなひどい状態）「かかるうちに」で文脈を強く受ける指示語。"
         }
       ]
     },
@@ -1021,7 +1095,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用（〜と）。発言・思考・歌の引用を導く。本作「とぞ人々言ふ」「とぞ言へる」「と、声高にものも言はせず」と多用。"
         },
         {
           "id": "s7-t4",
@@ -1034,7 +1109,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容動詞ナリ活用「声高なり」連用形: 「大声で」。「声高にものも言はせず」で従者に大声で抗議させない自制を表す。"
         }
       ]
     },
@@ -1051,7 +1127,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「もの」: 「もの・こと」。形式名詞として様々な事象を抽象的に指す。本作「ものも言はせず」「帰らぬもの」など多用。"
         },
         {
           "id": "s8-t2",
@@ -1063,7 +1140,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列・添加・強意。本作「物も」「心も」「船人もみな」「生まれしも」などで「〜まで・〜さえも」の含意を持つ場面が多い。"
         },
         {
           "id": "s8-t3",
@@ -1076,7 +1154,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「言ふ」（ハ四）: 「言う・話す」。地の文・引用文を導く最頻出動詞。本作で「人々言ふ」「言へりける歌」「とぞ言へる」と繰り返し現れる。"
         },
         {
           "id": "s8-t4",
@@ -1089,7 +1168,8 @@
             "conjugationForm": "用",
             "meaning": "使役"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す」連用形「せ」: 使役（〜させる）。四段・ナ変・ラ変の未然形に接続。本作「言はせず」で「（従者に）言わせない」と作者の自制を示す。"
         },
         {
           "id": "s8-t5",
@@ -1102,7 +1182,8 @@
             "conjugationForm": "終",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消（〜ない）。未然形接続。本作は副詞「え」と呼応し「え尽くさず」で不可能（〜できない）を表す。"
         },
         {
           "id": "s8-t6",
@@ -1123,7 +1204,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いと"
-          }
+          },
+          "hint": "重要副詞「いと」: 「たいそう・非常に・大変」。下に打消を伴うと「たいして〜ない」。本作「いとはつらく」で「とても薄情だ」の強調。"
         },
         {
           "id": "s8-t8",
@@ -1135,7 +1217,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・対比。本作「いとはつらく」「いかがは悲しき」「志はせむ」など、提示・反語強意で多用される。"
         },
         {
           "id": "s8-t9",
@@ -1148,7 +1231,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「つらし」: 古語では「薄情だ・冷淡だ」。現代語「辛い（苦しい）」とは別の意味。本作で隣人の冷淡な態度を指す。"
         }
       ]
     },
@@ -1168,7 +1252,8 @@
             "conjugationType": "ヤ下二",
             "conjugationForm": "已"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見ゆ」（ヤ下二）: 「見える・思われる」。「見る」の自発・受身的派生語。本作「ありさま見ゆ」「つらく見ゆれど」と二様に用いる。"
         },
         {
           "id": "s9-t2",
@@ -1178,7 +1263,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ど」: 逆接確定（〜けれども）。已然形接続。本作「見ゆれど」「多かれど」で逆接の譲歩を表す。"
         },
         {
           "id": "s9-t3",
@@ -1188,7 +1274,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要名詞「志（こころざし）」: 古語では「気持ち・好意・贈り物・謝礼」。本作「志はせむとす」で「（隣人への）謝礼はしようと思う」の意。"
         },
         {
           "id": "s9-t4",
@@ -1200,7 +1287,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・対比。本作「いとはつらく」「いかがは悲しき」「志はせむ」など、提示・反語強意で多用される。"
         },
         {
           "id": "s9-t5",
@@ -1213,7 +1301,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「す」（サ行変格）: 「する」。サ変は「す」「おはす」のみ。本作「志はせむとす」で「謝礼はしようと思う」、「別れせましや」で「別れをしただろうか」。"
         },
         {
           "id": "s9-t6",
@@ -1226,7 +1315,8 @@
             "conjugationForm": "終",
             "meaning": "意志"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」: 意志（〜しよう）。未然形接続。本作「破りてむ」「志はせむ」で作者の決意を示す核の語。"
         },
         {
           "id": "s9-t7",
@@ -1238,7 +1328,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用（〜と）。発言・思考・歌の引用を導く。本作「とぞ人々言ふ」「とぞ言へる」「と、声高にものも言はせず」と多用。"
         },
         {
           "id": "s9-t8",
@@ -1251,7 +1342,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「す」（サ行変格）: 「する」。サ変は「す」「おはす」のみ。本作「志はせむとす」で「謝礼はしようと思う」、「別れせましや」で「別れをしただろうか」。"
         },
         {
           "id": "s9-t9",
@@ -1271,7 +1363,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "接続詞"
-          }
+          },
+          "hint": "接続詞「さて」: 「そうして・さて」。話題転換の標識。本作「さて、池めいて…」で家屋の描写から庭の描写へ視線を移す場面転換を担う。"
         },
         {
           "id": "s9-t11",
@@ -1281,7 +1374,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「池」: 平安貴族の邸宅（寝殿造）には庭園に「遣水・池」が設けられるのが通例。本作「池めいてくぼまり」では、かつての池が単なる「くぼみ」へ荒廃した様を描く。"
         },
         {
           "id": "s9-t12",
@@ -1294,7 +1388,8 @@
             "conjugationType": "カ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「池めく」（カ四）連用形のイ音便: 「池のようになる」。接尾語「めく」（〜らしくなる）。「池めいて」でかつての池が「池らしきもの」に変質した事を示す。"
         }
       ]
     },
@@ -1311,7 +1406,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続（〜て）。連用形接続。動作の連続・並列を示す古文最頻出の接続助詞。"
         },
         {
           "id": "s10-t2",
@@ -1324,7 +1420,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「くぼまる」（ラ四）連用形: 「くぼむ・凹む」。本作「池めいてくぼまり」で池の跡が単なる「くぼみ」と化した荒廃を描写。"
         },
         {
           "id": "s10-t3",
@@ -1337,7 +1434,8 @@
             "conjugationType": "カ四",
             "conjugationForm": "已"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「水漬く」（カ四）已然形: 「水にひたる・水がたまる」。「水漬ける所」で水が溜まっている場所を示す。"
         },
         {
           "id": "s10-t4",
@@ -1350,7 +1448,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」連体形「る」（存続）: 〜ている。サ変未然・四段已然形接続。「預かれる」「水漬ける」など本段で繰り返し用いられる。"
         },
         {
           "id": "s10-t5",
@@ -1374,7 +1473,8 @@
             "conjugationForm": "終",
             "baseForm": "あり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「あり」（ラ行変格）: 「ある・存在する」。ラ変は「あり・をり・はべり・いますがり」のみ。終止形「あり」、連体形「ある」、已然形「あれ」。"
         },
         {
           "id": "s10-t7",
@@ -1384,7 +1484,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「ほとり」: 「ほとり・周辺・かたわら」。「池のほとり」で池のすぐそば。"
         },
         {
           "id": "s10-t8",
@@ -1406,7 +1507,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "[古文常識] 松: 古来「常緑＝長寿・不変」の象徴で、慶事・祝言の歌語。古今集では「君が代は…松の千年」など千年寿の比喩で頻出。本作ではこの祝祭的象徴を反転させ、亡き女児の短命と対比する哀傷の媒介物に転用する点が紀貫之の象徴再解釈の妙。"
         },
         {
           "id": "s10-t10",
@@ -1418,7 +1520,8 @@
             "pos": "係助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列・添加・強意。本作「物も」「心も」「船人もみな」「生まれしも」などで「〜まで・〜さえも」の含意を持つ場面が多い。"
         },
         {
           "id": "s10-t11",
@@ -1432,7 +1535,8 @@
             "conjugationForm": "用",
             "baseForm": "あり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「あり」（ラ行変格）: 「ある・存在する」。ラ変は「あり・をり・はべり・いますがり」のみ。終止形「あり」、連体形「ある」、已然形「あれ」。"
         }
       ]
     },
@@ -1452,7 +1556,8 @@
             "conjugationForm": "終",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」: 直接体験過去（〜た）。語り手が自ら経験した過去を語る。連用形接続。終止形「き」/連体形「し」/已然形「しか」。"
         },
         {
           "id": "s11-t2",
@@ -1484,7 +1589,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「うち」: 「中・内部」。時間的・空間的範囲を示す。本作「五年六年のうちに」「思ひ恋しきがうちに」「かかるうちに」と頻出。"
         },
         {
           "id": "s11-t5",
@@ -1513,7 +1619,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「千年（ちとせ）」: 千年・長い歳月。「松の千年」で松の長寿を表す類型。本作で「五年六年」と「千年」を対比し、わずかな歳月が千年の荒廃に等しい誇張を生む。"
         },
         {
           "id": "s12-t2",
@@ -1525,7 +1632,8 @@
             "pos": "係助詞",
             "meaning": "疑問"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」: 疑問（〜か）／反語。結びは連体形。本作「千年や過ぎにけむ」で「千年も経ったのだろうか」と自問する。"
         },
         {
           "id": "s12-t3",
@@ -1538,7 +1646,8 @@
             "conjugationType": "ガ上二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「過ぐ」（ガ上二）連用形: 「過ぎる・経る」。本作「千年や過ぎにけむ」で「千年も経ってしまったのだろうか」と誇張的時間表現。"
         },
         {
           "id": "s12-t4",
@@ -1551,7 +1660,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」連用形「に」: 完了（〜てしまう）。「に＋けり／たり／けむ」の形で過去や存続と重ね、決定的な完了を強調する。"
         },
         {
           "id": "s12-t5",
@@ -1564,7 +1674,8 @@
             "conjugationForm": "体",
             "meaning": "過去推量"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けむ」: 過去推量（〜ただろう）／過去原因推量（〜たのだろう）。連用形接続。「や…けむ」の係り結びで疑問を含む過去推量を表す。"
         },
         {
           "id": "s12-t6",
@@ -1574,7 +1685,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「かたへ」: 「一方・一部・片方」。本作「かたへはなくなりにけり」で「（松の）一部はなくなった」と部分的な消失を表す。"
         },
         {
           "id": "s12-t7",
@@ -1586,7 +1698,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・対比。本作「いとはつらく」「いかがは悲しき」「志はせむ」など、提示・反語強意で多用される。"
         },
         {
           "id": "s12-t8",
@@ -1596,7 +1709,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "[[20-文法/古文文法/動詞の活用|ラ四"
-          }
+          },
+          "hint": "複合動詞「なくなる」（ラ四）: 「失われる・消える」。本作「かたへはなくなりにけり」で松の一部が消失した荒廃を示す。"
         },
         {
           "id": "s12-t9",
@@ -1609,7 +1723,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」連用形「に」: 完了（〜てしまう）。「に＋けり／たり／けむ」の形で過去や存続と重ね、決定的な完了を強調する。"
         },
         {
           "id": "s12-t10",
@@ -1622,7 +1737,8 @@
             "conjugationForm": "終",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」: 伝聞・気づきの過去（〜た）／詠嘆（〜だなあ）。本作の地の文では詠嘆「けり」が哀感を込める働きをする。連用形接続。"
         },
         {
           "id": "s12-t11",
@@ -1645,7 +1761,8 @@
             "conjugationType": "ハ上二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「生ふ」（ハ上二）「生まる」（ラ下二）: 「生える・生まれる」。本作で「今生ひたる」（新しく生えた松）と「生まれし女子」（生まれた娘）が対比を作る。"
         },
         {
           "id": "s12-t13",
@@ -1658,7 +1775,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」連体形「たる」（存続）: 〜ている。動作の結果が継続している状態を示す。本作で荒廃の継続を表現する核となる用法。"
         },
         {
           "id": "s12-t14",
@@ -1670,7 +1788,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。結びは連体形。本作「言ふかひなくぞこぼれ破れたる」「ぞ交じれる」「ぞ人々言ふ」「ぞ言へる」と多用され、語気を強める。"
         },
         {
           "id": "s12-t15",
@@ -1683,7 +1802,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "已"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「交じる」（ラ四）已然形: 「混ざる・入りまじる」。本作「ぞ交じれる」で「ぞ…り（連体）」の係り結びを構成する。"
         }
       ]
     },
@@ -1703,7 +1823,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」連体形「る」（存続）: 〜ている。サ変未然・四段已然形接続。「預かれる」「水漬ける」など本段で繰り返し用いられる。"
         },
         {
           "id": "s13-t2",
@@ -1713,7 +1834,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「大方（おほかた）」: 「だいたい・全体として」。本作「大方のみな荒れにたれば」で「ほとんど全部が荒れているので」と総括的に述べる。"
         },
         {
           "id": "s13-t3",
@@ -1725,7 +1847,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 主格（〜が）。本作「女子の、もろともに帰らねば」「小松のあるを見るが」「大方のみな荒れ」など、連体修飾節の主格として頻出。"
         },
         {
           "id": "s13-t4",
@@ -1735,7 +1858,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「みな」: 「全て・残らず」。本作「大方のみな」で全体的な荒廃を、「船人もみな」で同船者全員を指す総括の語。"
         },
         {
           "id": "s13-t5",
@@ -1748,7 +1872,8 @@
             "conjugationType": "ラ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「荒る」（ラ下二）連用形: 「荒れる・荒廃する」。本作「荒れたる」「荒れにたれば」で物理的な荒廃と人心の荒廃の両方に用いる。"
         },
         {
           "id": "s13-t6",
@@ -1761,7 +1886,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」連用形「に」: 完了（〜てしまう）。「に＋けり／たり／けむ」の形で過去や存続と重ね、決定的な完了を強調する。"
         },
         {
           "id": "s13-t7",
@@ -1774,7 +1900,8 @@
             "conjugationForm": "已",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」已然形「たれ」: 完了・存続。「たれば」で「〜てしまっているので」の順接確定条件。"
         }
       ]
     },
@@ -1791,7 +1918,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 已然形＋ば＝順接確定（〜ので・〜すると）／未然形＋ば＝順接仮定（もし〜なら）。本作「明かければ」「なれば」「たれば」「ねば」で確定条件、「見ましかば」で仮定条件。"
         },
         {
           "id": "s14-t2",
@@ -1823,7 +1951,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用（〜と）。発言・思考・歌の引用を導く。本作「とぞ人々言ふ」「とぞ言へる」「と、声高にものも言はせず」と多用。"
         },
         {
           "id": "s14-t5",
@@ -1835,7 +1964,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。結びは連体形。本作「言ふかひなくぞこぼれ破れたる」「ぞ交じれる」「ぞ人々言ふ」「ぞ言へる」と多用され、語気を強める。"
         },
         {
           "id": "s14-t6",
@@ -1845,7 +1975,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「人々」: 「人たち・大勢の人」。本作「とぞ人々言ふ」では、同船で帰京した一行や周囲の者たちの共通の嘆きを指す。"
         },
         {
           "id": "s14-t7",
@@ -1859,7 +1990,8 @@
             "conjugationForm": "体",
             "baseForm": "いふ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「言ふ」（ハ四）: 「言う・話す」。地の文・引用文を導く最頻出動詞。本作で「人々言ふ」「言へりける歌」「とぞ言へる」と繰り返し現れる。"
         },
         {
           "id": "s14-t8",
@@ -1869,7 +2001,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "[[20-文法/古文文法/動詞の活用|ダ下二"
-          }
+          },
+          "hint": "複合動詞「思ひ出づ」（ダ下二）: 「思い出す」。本作「思ひ出でぬことなく」は二重否定で「思い出さないことはない＝必ず思い出す」の強い肯定。"
         }
       ]
     },
@@ -1889,7 +2022,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」連体形「ぬ」: 打消の連体形（〜ない）。「帰らぬもの」「思ひ出でぬこと」と本段の哀傷の核に位置する。"
         }
       ]
     },
@@ -1919,7 +2053,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞ク活用「なし」連用形「なく」: 「ない・無い」。「思ひ出でぬことなく」で二重否定「思い出さないことはなく＝必ず思い出す」の強調。"
         },
         {
           "id": "s16-t3",
@@ -1932,7 +2067,8 @@
             "conjugationType": "シク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「恋し」: 「慕わしい・懐かしい」。「思ひ恋し」で「思い慕う」の複合形容詞。亡き女児への思慕を表す。"
         },
         {
           "id": "s16-t4",
@@ -1944,7 +2080,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」: 主格（〜が）。古文の「が」は連体修飾節の主格に多く現れる。本作「思ひ恋しきがうちに」「見るが悲しさ」で動作・状態の主体を示す。"
         },
         {
           "id": "s16-t5",
@@ -1954,7 +2091,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「うち」: 「中・内部」。時間的・空間的範囲を示す。本作「五年六年のうちに」「思ひ恋しきがうちに」「かかるうちに」と頻出。"
         },
         {
           "id": "s16-t6",
@@ -1976,7 +2114,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「こ」（指示）: 「これ」の指示成分。「この家」で目の前の家を直示する近称。"
         },
         {
           "id": "s16-t8",
@@ -1998,7 +2137,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「家」: 「自邸・住まい」。本作の「家」は土佐赴任前の京の自邸で、貫之家代々の屋敷。本段の中心舞台で、荒廃と亡き女児の追憶の場となる。"
         },
         {
           "id": "s16-t10",
@@ -2010,7 +2150,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「にて」: 「〜で・〜において」（場所・手段）。本作「この家にて生まれし女子」で「この家で生まれた娘」と出生の場を指す。"
         },
         {
           "id": "s16-t11",
@@ -2023,7 +2164,8 @@
             "conjugationType": "ラ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「生ふ」（ハ上二）「生まる」（ラ下二）: 「生える・生まれる」。本作で「今生ひたる」（新しく生えた松）と「生まれし女子」（生まれた娘）が対比を作る。"
         },
         {
           "id": "s16-t12",
@@ -2036,7 +2178,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」連体形「し」: 直接体験過去（〜た）の連体形。話者が実際に体験した過去を表す。「けり」（伝聞・詠嘆）と区別。"
         },
         {
           "id": "s16-t13",
@@ -2046,7 +2189,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「女子（をむなご）」: 女の子・娘。本作の「この家にて生まれし女子」は紀貫之が土佐で亡くした娘を指し、土佐日記全編の通奏低音となる存在。"
         },
         {
           "id": "s16-t14",
@@ -2058,7 +2202,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 主格（〜が）。本作「女子の、もろともに帰らねば」「小松のあるを見るが」「大方のみな荒れ」など、連体修飾節の主格として頻出。"
         },
         {
           "id": "s16-t15",
@@ -2071,7 +2216,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容動詞ナリ活用「もろともなり」連用形: 「一緒に・共に」。本作「もろともに帰らねば」は亡き女児が一緒に帰らない不在を強調する。"
         },
         {
           "id": "s16-t16",
@@ -2084,7 +2230,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「帰る」（ラ四）未然形: 「帰る」。本作の核語。「もろともに帰らねば」「帰らぬもの」で亡き女児が共に帰らぬ不在を反復強調する。"
         }
       ]
     },
@@ -2104,7 +2251,8 @@
             "conjugationForm": "已",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」已然形「ね」: 打消の已然形。「ねば」で「〜ないので」の順接確定条件、「ねども」で「〜ないけれども」の逆接確定条件。"
         },
         {
           "id": "s17-t2",
@@ -2114,7 +2262,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 已然形＋ば＝順接確定（〜ので・〜すると）／未然形＋ば＝順接仮定（もし〜なら）。本作「明かければ」「なれば」「たれば」「ねば」で確定条件、「見ましかば」で仮定条件。"
         },
         {
           "id": "s17-t3",
@@ -2124,7 +2273,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "重要副詞「いかが」: 「どうして・どのように」。本作「いかがは悲しき」は反語含意で「どうして悲しくないことがあろうか、いや、たいそう悲しい」。"
         },
         {
           "id": "s17-t4",
@@ -2136,7 +2286,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・対比。本作「いとはつらく」「いかがは悲しき」「志はせむ」など、提示・反語強意で多用される。"
         },
         {
           "id": "s17-t5",
@@ -2149,7 +2300,8 @@
             "conjugationType": "シク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「悲し」: しみじみとした哀しみ・愛おしさ。本作では亡き女児への追悼と帰京の喪失感を支える基調語。"
         },
         {
           "id": "s17-t6",
@@ -2159,7 +2311,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "[古文常識] 船人: 「同船で帰京した人々」。受領（国司）の任期終了帰京には家族・従者・親しい同僚が同船する慣わしで、本作の「船人」は土佐から55日かけて共に帰った一行を指す。彼らが「子たかりてののしる」（子に迎えられて賑やか）一方で、作者だけが娘を失って戻る対比が、本段の核心の喪失感を浮かび上がらせる。"
         },
         {
           "id": "s17-t7",
@@ -2171,7 +2324,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列・添加・強意。本作「物も」「心も」「船人もみな」「生まれしも」などで「〜まで・〜さえも」の含意を持つ場面が多い。"
         },
         {
           "id": "s17-t8",
@@ -2181,7 +2335,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「みな」: 「全て・残らず」。本作「大方のみな」で全体的な荒廃を、「船人もみな」で同船者全員を指す総括の語。"
         }
       ]
     },
@@ -2211,7 +2366,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「集る（たかる）」（ラ四）連用形: 「群がる・集まる」。本作「子たかりてののしる」で他家の子供たちが帰った父に群がり集まる賑やかさを描く。"
         },
         {
           "id": "s18-t3",
@@ -2221,7 +2377,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続（〜て）。連用形接続。動作の連続・並列を示す古文最頻出の接続助詞。"
         },
         {
           "id": "s18-t4",
@@ -2234,7 +2391,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「ののしる」（ラ四）: 古語では「大声で騒ぐ・名声をあげる」。現代語「罵る（ののしる）」とは異なり、必ずしも非難の意ではない。"
         },
         {
           "id": "s18-t5",
@@ -2244,7 +2402,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "連体"
-          }
+          },
+          "hint": "連体詞「かかる」: 「このような」。「かく＋ある」の音便。本作「かかること」（こんなひどい状態）「かかるうちに」で文脈を強く受ける指示語。"
         },
         {
           "id": "s18-t6",
@@ -2254,7 +2413,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「うち」: 「中・内部」。時間的・空間的範囲を示す。本作「五年六年のうちに」「思ひ恋しきがうちに」「かかるうちに」と頻出。"
         },
         {
           "id": "s18-t7",
@@ -2276,7 +2436,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "重要副詞「なほ」: 「やはり・それでもなお・さらに」。本作「なほ悲しきに耐へずして」で抑え難い悲しみの継続を、「なほ飽かず」で詠み足りない思いを表す。"
         },
         {
           "id": "s18-t9",
@@ -2289,7 +2450,8 @@
             "conjugationType": "シク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「悲し」: しみじみとした哀しみ・愛おしさ。本作では亡き女児への追悼と帰京の喪失感を支える基調語。"
         },
         {
           "id": "s18-t10",
@@ -2314,7 +2476,8 @@
             "conjugationType": "ハ下二",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「耐ふ」（ハ下二）未然形: 「耐える・我慢する」。本作「悲しきに耐へずして」で「悲しさに堪えきれずに」の意。"
         },
         {
           "id": "s18-t12",
@@ -2327,7 +2490,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消（〜ない）。未然形接続。本作は副詞「え」と呼応し「え尽くさず」で不可能（〜できない）を表す。"
         },
         {
           "id": "s18-t13",
@@ -2337,7 +2501,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「して」: 単純接続（〜て）。「ず」など打消の連用形に付き「〜ないで」の連結を作る。本作「耐へずして」＝「堪えきれずに」。"
         },
         {
           "id": "s18-t14",
@@ -2350,7 +2515,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容動詞ナリ活用「ひそかなり」連用形: 「ひそかに・人目を忍んで」。「ひそかに心知れる人」で公にできない私的な悲嘆の共有を示す。"
         },
         {
           "id": "s18-t15",
@@ -2373,7 +2539,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "已"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「知る」（ラ四）已然形: 「知る・分かる」。本作「心知れる人」で「心を理解してくれる人＝事情を知っている親しい人」。"
         }
       ]
     },
@@ -2393,7 +2560,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」連体形「る」（存続）: 〜ている。サ変未然・四段已然形接続。「預かれる」「水漬ける」など本段で繰り返し用いられる。"
         },
         {
           "id": "s19-t2",
@@ -2415,7 +2583,8 @@
             "pos": "格助詞",
             "meaning": "共同"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 共同・相手（〜と）。本作「心知れる人と言へりける歌」で「親しい人と詠み交わした歌」を意味し、私的な歌の共有を示す。"
         },
         {
           "id": "s19-t4",
@@ -2428,7 +2597,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "已"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「言ふ」（ハ四）: 「言う・話す」。地の文・引用文を導く最頻出動詞。本作で「人々言ふ」「言へりける歌」「とぞ言へる」と繰り返し現れる。"
         },
         {
           "id": "s19-t5",
@@ -2441,7 +2611,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」: 完了（〜た）／存続（〜ている）。サ変未然・四段已然形に接続する特殊な助動詞。「り」は四段已然「e段」の音に付くと覚える。"
         },
         {
           "id": "s19-t6",
@@ -2454,7 +2625,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」連体形「ける」: 過去（〜た）。係助詞「ぞ・なむ・や・か」の結びとしてもよく現れる。"
         },
         {
           "id": "s19-t7",
@@ -2464,7 +2636,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「歌」: 和歌。本作で「言へりける歌」「とぞ言へる」と二度の和歌を導入する詞書を伴う構造は、平安日記文学の典型。"
         },
         {
           "id": "s19-t8",
@@ -2487,7 +2660,8 @@
             "conjugationType": "ラ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「生ふ」（ハ上二）「生まる」（ラ下二）: 「生える・生まれる」。本作で「今生ひたる」（新しく生えた松）と「生まれし女子」（生まれた娘）が対比を作る。"
         },
         {
           "id": "s19-t10",
@@ -2500,7 +2674,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」連体形「し」: 直接体験過去（〜た）の連体形。話者が実際に体験した過去を表す。「けり」（伝聞・詠嘆）と区別。"
         },
         {
           "id": "s19-t11",
@@ -2512,7 +2687,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列・添加・強意。本作「物も」「心も」「船人もみな」「生まれしも」などで「〜まで・〜さえも」の含意を持つ場面が多い。"
         },
         {
           "id": "s19-t12",
@@ -2525,7 +2701,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「帰る」（ラ四）未然形: 「帰る」。本作の核語。「もろともに帰らねば」「帰らぬもの」で亡き女児が共に帰らぬ不在を反復強調する。"
         },
         {
           "id": "s19-t13",
@@ -2538,7 +2715,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」連体形「ぬ」: 打消の連体形（〜ない）。「帰らぬもの」「思ひ出でぬこと」と本段の哀傷の核に位置する。"
         },
         {
           "id": "s19-t14",
@@ -2548,7 +2726,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「もの」: 「もの・こと」。形式名詞として様々な事象を抽象的に指す。本作「ものも言はせず」「帰らぬもの」など多用。"
         },
         {
           "id": "s19-t15",
@@ -2558,7 +2737,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "終助詞"
-          }
+          },
+          "hint": "終助詞「ものを」を構成する「を」: 詠嘆・逆接（〜のに・〜のだなあ）。和歌「生まれしも帰らぬものを」で死別の悔恨を漂わす余情の助詞。"
         },
         {
           "id": "s19-t16",
@@ -2568,7 +2748,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「わ」（一人称）: 「私」。「わが宿」で「私の家」。和歌の中でしばしば用いられる雅な一人称。"
         },
         {
           "id": "s19-t17",
@@ -2580,7 +2761,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」: 主格（〜が）。古文の「が」は連体修飾節の主格に多く現れる。本作「思ひ恋しきがうちに」「見るが悲しさ」で動作・状態の主体を示す。"
         },
         {
           "id": "s19-t18",
@@ -2590,7 +2772,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「宿（やど）」: 「住まい・自宅」を指す和歌語の雅称。本作「わが宿に小松のある」で詩的な「我が家」観を示す。"
         },
         {
           "id": "s19-t19",
@@ -2612,7 +2795,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "[古文常識] 小松: 新しく生えた若松。「子の日の小松」（正月初の子の日に若松を引いて長寿を祝う宮中行事）でめでたさの象徴。本来は新生児の祝福にも重ねられる慶事の植物だが、本作では亡き女児への思慕を呼び起こす哀しみの媒介に転じる。古今的祝祭歌語の反転的使用。"
         },
         {
           "id": "s19-t21",
@@ -2624,7 +2808,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 主格（〜が）。本作「女子の、もろともに帰らねば」「小松のあるを見るが」「大方のみな荒れ」など、連体修飾節の主格として頻出。"
         },
         {
           "id": "s19-t22",
@@ -2638,7 +2823,8 @@
             "conjugationForm": "体",
             "baseForm": "あり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「あり」（ラ行変格）: 「ある・存在する」。ラ変は「あり・をり・はべり・いますがり」のみ。終止形「あり」、連体形「ある」、已然形「あれ」。"
         }
       ]
     },
@@ -2670,7 +2856,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見る」（マ行上一段）連体形: 「見る」。本作の和歌「ある（小松）を見るが悲しさ」で、見ることそれ自体が哀しみの源泉と詠まれる。"
         },
         {
           "id": "s20-t3",
@@ -2682,7 +2869,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」: 主格（〜が）。古文の「が」は連体修飾節の主格に多く現れる。本作「思ひ恋しきがうちに」「見るが悲しさ」で動作・状態の主体を示す。"
         },
         {
           "id": "s20-t4",
@@ -2711,7 +2899,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用（〜と）。発言・思考・歌の引用を導く。本作「とぞ人々言ふ」「とぞ言へる」「と、声高にものも言はせず」と多用。"
         },
         {
           "id": "s21-t2",
@@ -2723,7 +2912,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。結びは連体形。本作「言ふかひなくぞこぼれ破れたる」「ぞ交じれる」「ぞ人々言ふ」「ぞ言へる」と多用され、語気を強める。"
         },
         {
           "id": "s21-t3",
@@ -2736,7 +2926,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "已"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「言ふ」（ハ四）: 「言う・話す」。地の文・引用文を導く最頻出動詞。本作で「人々言ふ」「言へりける歌」「とぞ言へる」と繰り返し現れる。"
         },
         {
           "id": "s21-t4",
@@ -2749,7 +2940,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」連体形「る」: 完了・存続（〜ている）。サ変未然・四段已然形接続。「預かれる」「水漬ける」「言へる」「交じれる」など本段で頻出。"
         },
         {
           "id": "s21-t5",
@@ -2759,7 +2951,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "重要副詞「なほ」: 「やはり・それでもなお・さらに」。本作「なほ悲しきに耐へずして」で抑え難い悲しみの継続を、「なほ飽かず」で詠み足りない思いを表す。"
         },
         {
           "id": "s21-t6",
@@ -2772,7 +2965,8 @@
             "conjugationType": "カ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「飽く」（カ四）未然形: 「満足する・思いを遂げる」。現代語「飽きる」より広い意。本作「なほ飽かず」で詠み足りない思いを示す。"
         },
         {
           "id": "s21-t7",
@@ -2785,7 +2979,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消（〜ない）。未然形接続。本作は副詞「え」と呼応し「え尽くさず」で不可能（〜できない）を表す。"
         },
         {
           "id": "s21-t8",
@@ -2797,7 +2992,8 @@
             "pos": "係助詞",
             "meaning": "疑問"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」: 疑問（〜か）／反語。結びは連体形。本作「千年や過ぎにけむ」で「千年も経ったのだろうか」と自問する。"
         },
         {
           "id": "s21-t9",
@@ -2811,7 +3007,8 @@
             "conjugationForm": "未",
             "baseForm": "あり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「あり」（ラ行変格）: 「ある・存在する」。ラ変は「あり・をり・はべり・いますがり」のみ。終止形「あり」、連体形「ある」、已然形「あれ」。"
         },
         {
           "id": "s21-t10",
@@ -2824,7 +3021,8 @@
             "conjugationForm": "体",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」: 推量（〜だろう）／意志（〜しよう）／適当・勧誘。未然形接続。文末・連体形ともに「む」。"
         },
         {
           "id": "s21-t11",
@@ -2834,7 +3032,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「また」: 「再び・さらに・他方」。本作「また、かくなむ」で二首目の和歌を導入する。"
         },
         {
           "id": "s21-t12",
@@ -2844,7 +3043,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「かく」: 「このように・かく」。引用を導入する語で、本作「かくなむ」（このように詠んだ）の形で次の和歌を予告する。"
         }
       ]
     },
@@ -2863,7 +3063,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「なむ」: 強意。結びは連体形。本作「かくなむ」は結びが省略され、続く和歌全体が結びを担う「結びの省略」の修辞。"
         },
         {
           "id": "s22-t2",
@@ -2886,7 +3087,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見る」（マ行上一段）: 「見る」。上一段は「見る・着る・似る・煮る・干る・射る・鋳る」など限定。「見し人」で過去連体形「し」を伴う婉曲表現に。"
         },
         {
           "id": "s22-t4",
@@ -2899,7 +3101,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」連体形「し」: 直接体験過去（〜た）の連体形。話者が実際に体験した過去を表す。「けり」（伝聞・詠嘆）と区別。"
         },
         {
           "id": "s22-t5",
@@ -2931,7 +3134,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「松」: 古来「常緑＝長寿」の象徴で、慶事の歌語。本作では亡き女児への思慕の媒介物に転化し、「千年の松」と「短命の娘」が痛切に対比される。"
         },
         {
           "id": "s22-t8",
@@ -2953,7 +3157,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「千年（ちとせ）」: 千年・長い歳月。「松の千年」で松の長寿を表す類型。本作で「五年六年」と「千年」を対比し、わずかな歳月が千年の荒廃に等しい誇張を生む。"
         },
         {
           "id": "s22-t10",
@@ -2978,7 +3183,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見る」（マ行上一段）: 「見る」。上一段は「見る・着る・似る・煮る・干る・射る・鋳る」など限定。「見し人」で過去連体形「し」を伴う婉曲表現に。"
         },
         {
           "id": "s22-t12",
@@ -2991,7 +3197,8 @@
             "conjugationForm": "未",
             "meaning": "反実仮想"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「まし」未然形「ましか」: 反実仮想（もし〜なら〜だろうに）の仮定部分。「ましかば…まし」の定型。「現実に成らなかった」事を裏返しに強調する修辞。"
         },
         {
           "id": "s22-t13",
@@ -3001,7 +3208,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 已然形＋ば＝順接確定（〜ので・〜すると）／未然形＋ば＝順接仮定（もし〜なら）。本作「明かければ」「なれば」「たれば」「ねば」で確定条件、「見ましかば」で仮定条件。"
         },
         {
           "id": "s22-t14",
@@ -3014,7 +3222,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞ク活用「遠し」連用形: 「（距離・時間が）遠い」。本作「遠く悲しき別れ」で土佐という遠国での死別を指す。"
         },
         {
           "id": "s22-t15",
@@ -3027,7 +3236,8 @@
             "conjugationType": "シク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「悲し」: しみじみとした哀しみ・愛おしさ。本作では亡き女児への追悼と帰京の喪失感を支える基調語。"
         },
         {
           "id": "s22-t16",
@@ -3037,7 +3247,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要名詞「別れ」: 「別れ・離別」。本作の和歌「遠く悲しき別れ」は土佐という遠国で亡き女児と死別したことを指す核語。"
         },
         {
           "id": "s22-t17",
@@ -3050,7 +3261,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「す」（サ行変格）: 「する」。サ変は「す」「おはす」のみ。本作「志はせむとす」で「謝礼はしようと思う」、「別れせましや」で「別れをしただろうか」。"
         },
         {
           "id": "s22-t18",
@@ -3063,7 +3275,8 @@
             "conjugationForm": "終",
             "meaning": "反実仮想"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「まし」終止形: 反実仮想（〜だろうに）。本作「別れせましや」では反語「や」を伴い「〜しただろうか、いや、しなかったろうに」と詠嘆と悔恨を凝縮する。"
         }
       ]
     },
@@ -3082,7 +3295,8 @@
             "pos": "係助詞",
             "meaning": "反語"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」: 反語（〜だろうか、いや〜ない）。本作「別れせましや」で反実仮想「まし」と組み合わせて極めて強い悔恨と否定を表す。"
         },
         {
           "id": "s23-t2",
@@ -3105,7 +3319,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「忘れ難し」: 「忘れることができない」。複合形容詞で「難し」（〜しづらい）の用法。本作の結章を締める核語。"
         },
         {
           "id": "s23-t4",
@@ -3118,7 +3333,8 @@
             "conjugationType": "シク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「口惜し」: 「残念だ・心残りだ・情けない」。現代語「悔しい」より広い情感。本作では亡き女児や荒廃への尽きぬ心残りを表す。"
         },
         {
           "id": "s23-t5",
@@ -3151,7 +3367,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ど」: 逆接確定（〜けれども）。已然形接続。本作「見ゆれど」「多かれど」で逆接の譲歩を表す。"
         },
         {
           "id": "s23-t8",
@@ -3172,7 +3389,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "え"
-          }
+          },
+          "hint": "重要副詞「え」: 不可能を表す呼応副詞。下に打消を伴い「え〜ず」で「〜できない」。本作「え尽くさず」＝「書き尽くせない」。"
         },
         {
           "id": "s23-t10",
@@ -3185,7 +3403,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「尽くす」（サ四）未然形: 「尽くす・全部書き表す」。本作「え尽くさず」で「書き尽くすことができない」の不可能を表す。"
         },
         {
           "id": "s23-t11",
@@ -3198,7 +3417,8 @@
             "conjugationForm": "終",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消（〜ない）。未然形接続。本作は副詞「え」と呼応し「え尽くさず」で不可能（〜できない）を表す。"
         },
         {
           "id": "s23-t12",
@@ -3208,7 +3428,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "重要副詞「とまれかうまれ」: 「ともあれ・何はともあれ」（「ともあれかくもあれ」の約）。本作の最終文「とまれかうまれ、とく破りてむ」で日記を締めくくる結句。"
         }
       ]
     },
@@ -3228,7 +3449,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「疾し（とし）」連用形「とく」: 「早く・すぐに」。副詞的に用い「とく破りてむ」で「早く破ってしまおう」と強い意志の即時性を表す。"
         },
         {
           "id": "s24-t2",
@@ -3241,7 +3463,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「破る」（ラ四）連用形: 「破る・破棄する」。本作の結句「破りてむ」で日記を破り捨てる意志を示す土佐日記最大の名句。"
         },
         {
           "id": "s24-t3",
@@ -3254,7 +3477,8 @@
             "conjugationForm": "未",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「つ」未然形「て」: 完了（〜てしまう）。次に意志「む」を伴い「てむ」で「きっと～しよう・～してしまおう」の確信的意志を表す。"
         },
         {
           "id": "s24-t4",
@@ -3267,7 +3491,8 @@
             "conjugationForm": "終",
             "meaning": "意志"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」: 意志（〜しよう）。未然形接続。本作「破りてむ」「志はせむ」で作者の決意を示す核の語。"
         },
         {
           "id": "s24-t5",
