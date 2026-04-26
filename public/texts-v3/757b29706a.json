@@ -110,7 +110,8 @@
           "grammarTag": {
             "pos": "連体",
             "baseForm": "ある"
-          }
+          },
+          "hint": "連体詞「ある」: 「(名前を伏せた)ある〜・とある〜」。「ある人」は文語の常套表現で、書き手・話者が特定の人物名を出さずに「とある人」と紹介するときに使う。"
         },
         {
           "id": "s1-t2",
@@ -132,7 +133,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(主格): 「〜が」。連体修飾節の中の主語に用いられることが多い。本文「ある人のいはく」=「ある人が言うには」。"
         },
         {
           "id": "s1-t4",
@@ -164,7 +166,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s1-t7",
@@ -186,7 +189,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s1-t9",
@@ -206,7 +210,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「よくよく」: 「念入りに・まったく・十分に」の意。「よく」を重ねた強調形。"
         },
         {
           "id": "s1-t11",
@@ -228,7 +233,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s1-t13",
@@ -251,7 +257,8 @@
             "conjugationForm": "体",
             "meaning": "推定"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「らし」: 推定「〜らしい」。終止形（ラ変は連体形）接続。客観的根拠に基づく推定。「らしき」は連体形。"
         },
         {
           "id": "s1-t15",
@@ -275,7 +282,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。 本文「実らしきことにあらざれば」の「に」は断定の連用形。"
         },
         {
           "id": "s1-t17",
@@ -288,7 +296,8 @@
             "conjugationType": "ラ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「あり」(ラ変): 「に＋あり」=「〜である」(断定)。「あら」は未然形。「あらず」=「〜ではない」。"
         },
         {
           "id": "s1-t18",
@@ -301,7 +310,8 @@
             "conjugationForm": "已",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 「〜ない」。未然形接続。「ず・ず・ず／ぬ・ぬ／ね・〇」と特殊活用。連体形「ぬ」、已然形「ね」が頻出。 「ざれ」は補助活用「ざら／ざり／〇／ざる／ざれ／ざれ」の已然形。"
         },
         {
           "id": "s1-t19",
@@ -311,7 +321,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」(已然形＋): 確定条件「〜したので／〜したところ／〜すると」。未然形＋「ば」の仮定条件「もし〜ならば」と区別。"
         },
         {
           "id": "s1-t20",
@@ -334,7 +345,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ変動詞「合点す」: 「合点」+ サ変「す」=「承知する・納得する」。サ変動詞は名詞＋「す」で多く作られる。"
         },
         {
           "id": "s1-t22",
@@ -347,7 +359,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 「〜ない」。未然形接続。「ず・ず・ず／ぬ・ぬ／ね・〇」と特殊活用。連体形「ぬ」、已然形「ね」が頻出。"
         },
         {
           "id": "s1-t23",
@@ -369,7 +382,8 @@
             "pos": "格助詞",
             "meaning": "資格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(資格・状態): 「〜として・〜に」。動作主・客体の身分・状態を示す。"
         },
         {
           "id": "s1-t25",
@@ -383,7 +397,8 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。終止形が「-り」で終わる四動詞 (あり/をり/はべり/いまそかり) の代表。 本文「昔語りにあること」=「昔話にあること」。"
         },
         {
           "id": "s1-t26",
@@ -406,7 +421,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(対象): 「〜に・〜を対象に」。動作の向かう対象を示す。"
         },
         {
           "id": "s1-t28",
@@ -439,7 +455,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「受け取る」: 「ら・り・る・る・れ・れ」と活用。「承知する・納得する」の意で本文では使われる。"
         },
         {
           "id": "s1-t31",
@@ -452,7 +469,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 「〜ない」。未然形接続。「ず・ず・ず／ぬ・ぬ／ね・〇」と特殊活用。連体形「ぬ」、已然形「ね」が頻出。"
         },
         {
           "id": "s1-t32",
@@ -476,7 +494,8 @@
             "conjugationType": "ク",
             "conjugationForm": "終"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ク活用形容詞「多し」: 「く・く・し・き・けれ・〇」と活用。「多い」の終止形。"
         },
         {
           "id": "s1-t34",
@@ -503,7 +522,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "接続詞"
-          }
+          },
+          "hint": "接続詞「されば」: 「然(さ)あれば」の約。「だから・それで」の意で前文の事柄を受けて結論を導く。「さればこそ」=「だからこそ」。"
         },
         {
           "id": "s2-t2",
@@ -515,7 +535,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。本文「さればこそ」=「だからこそ」。"
         },
         {
           "id": "s2-t3",
@@ -547,7 +568,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s2-t6",
@@ -567,7 +589,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「など」: 例示・婉曲「〜など・〜のようなもの」。直接断定を避け、ぼかして言うニュアンス。"
         },
         {
           "id": "s2-t8",
@@ -579,7 +602,8 @@
             "pos": "係助詞",
             "meaning": "類似"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 類似・並列・強意「〜も」。係り結びは起こさないが、共通点・付け加えを示す。"
         },
         {
           "id": "s2-t9",
@@ -599,7 +623,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「とかく」: 「あれこれと・いずれにせよ・とにかく」の意。物事を断定せず一括する用法。"
         },
         {
           "id": "s2-t11",
@@ -609,7 +634,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「そ」: 中称指示「その・それ」。「その所作」=「その演技」。"
         },
         {
           "id": "s2-t12",
@@ -621,7 +647,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s2-t13",
@@ -643,7 +670,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」(主格): 「〜が」。連体修飾節の中の主語に多用された用法。中世以降は文末でも「〜が」が広がる。"
         },
         {
           "id": "s2-t15",
@@ -665,7 +693,8 @@
             "pos": "格助詞",
             "meaning": "比較"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(比較・基準): 「〜に・〜と」。比較・類似の基準を示す。「Aに似る」=「Aに似ている」。 本文「実事に似る」=「実事に似ている」。"
         },
         {
           "id": "s2-t17",
@@ -678,7 +707,8 @@
             "conjugationType": "ナ上一",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ナ上一動詞「似る」: 「に・に・にる・にる・にれ・によ」と活用。「似る」「煮る」が代表的。「似」一字で活用。"
         },
         {
           "id": "s2-t18",
@@ -690,7 +720,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s2-t19",
@@ -712,7 +743,8 @@
             "pos": "格助詞",
             "meaning": "結果"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(結果): 「〜と・〜として」。変化・結果の状態を示す。「上手とす」=「上手とする」。"
         },
         {
           "id": "s2-t21",
@@ -725,7 +757,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ変動詞「す」: 「せ・し・す・する・すれ・せよ」と活用。「す」(する) ＋名詞 の連語が頻出 (「合点す」「芸をす」)。 本文「上手とす」=「上手とする」。"
         },
         {
           "id": "s2-t22",
@@ -754,7 +787,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s3-t2",
@@ -776,7 +810,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s3-t4",
@@ -798,7 +833,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s3-t6",
@@ -820,7 +856,8 @@
             "pos": "格助詞",
             "meaning": "比較"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(比較・基準): 「〜に・〜と」。比較・類似の基準を示す。「Aに似る」=「Aに似ている」。"
         },
         {
           "id": "s3-t8",
@@ -833,7 +870,8 @@
             "conjugationType": "サ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ下二「似す／似する」: 「せ・せ・す・する・すれ・せよ」と活用。他動詞「似せる・真似る」の意。自動詞「似る」(ナ上一) と区別。 本文「家老に似せ」=「家老に真似て・似せようとして」。"
         },
         {
           "id": "s3-t9",
@@ -855,7 +893,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s3-t11",
@@ -877,7 +916,8 @@
             "pos": "格助詞",
             "meaning": "比較"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(比較・基準): 「〜に・〜と」。比較・類似の基準を示す。「Aに似る」=「Aに似ている」。"
         },
         {
           "id": "s3-t13",
@@ -890,7 +930,8 @@
             "conjugationType": "ナ上一",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ナ上一動詞「似る」: 「に・に・にる・にる・にれ・によ」と活用。「似る」「煮る」が代表的。「似」一字で活用。"
         },
         {
           "id": "s3-t14",
@@ -902,7 +943,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s3-t15",
@@ -934,7 +976,8 @@
             "pos": "格助詞",
             "meaning": "結果"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(結果): 「〜と・〜として」。変化・結果の状態を示す。「上手とす」=「上手とする」。"
         },
         {
           "id": "s3-t18",
@@ -947,7 +990,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ変動詞「す」: 「せ・し・す・する・すれ・せよ」と活用。「す」(する) ＋名詞 の連語が頻出 (「合点す」「芸をす」)。"
         },
         {
           "id": "s3-t19",
@@ -976,7 +1020,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s4-t2",
@@ -1001,7 +1046,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。 「やうなる」は連語「〜のようだ」。"
         },
         {
           "id": "s4-t4",
@@ -1023,7 +1069,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s4-t6",
@@ -1036,7 +1083,8 @@
             "conjugationType": "カ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ下二「あじやらく」: 「け・け・く・くる・くれ・けよ」と活用。「ふざける・ばかげている」の意。江戸期口語。「あじやらけたる」=「ふざけた」(存続)。"
         },
         {
           "id": "s4-t7",
@@ -1049,7 +1097,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」(完了・存続): 「〜た」「〜ている／〜てある」。連用形接続。「たる」連体形。「あじやらけたる」=「ふざけた」(存続)。"
         },
         {
           "id": "s4-t8",
@@ -1072,7 +1121,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s4-t10",
@@ -1085,7 +1135,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「取る」: 「ら・り・る・る・れ・れ」と活用。本文「取らず」=「採用しない・認めない」。"
         },
         {
           "id": "s4-t11",
@@ -1098,7 +1149,8 @@
             "conjugationForm": "終",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 「〜ない」。未然形接続。「ず・ず・ず／ぬ・ぬ／ね・〇」と特殊活用。連体形「ぬ」、已然形「ね」が頻出。"
         },
         {
           "id": "s4-t12",
@@ -1128,7 +1180,8 @@
             "conjugationType": "ハ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ下二動詞「答ふ」: 「へ・へ・ふ・ふる・ふれ・へよ」と活用。「答へ」は連用形。「言ふ」のハ四と異なるので区別。"
         },
         {
           "id": "s5-t2",
@@ -1138,7 +1191,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形＋「て」=単純接続「〜て・〜で」。動作の継起・並列を示す。"
         },
         {
           "id": "s5-t3",
@@ -1168,7 +1222,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「こ」: 近称指示「この・これ」。「この論」=「この主張」。"
         },
         {
           "id": "s5-t6",
@@ -1180,7 +1235,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s5-t7",
@@ -1200,7 +1256,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "ナリ"
-          }
+          },
+          "hint": "形容動詞「もつとも」(ナリ活用): 「もっともだ・道理にかなっている」の意。本文「この論もつとものやうなれども」=「この論はもっともなようだけれども」。"
         },
         {
           "id": "s5-t9",
@@ -1212,7 +1269,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s5-t10",
@@ -1237,7 +1295,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。 「なれ」は已然形。下に「ども」を伴い「〜だけれども」の逆接確定条件。"
         },
         {
           "id": "s5-t12",
@@ -1247,7 +1306,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ども」: 已然形＋「ども」=逆接確定条件「〜けれども・〜のに」。「ど」の強調形。"
         },
         {
           "id": "s5-t13",
@@ -1279,7 +1339,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「〜と」。直前の語句を引用句としてまとめる。「Aといふ」「Aと思ふ」の形で頻出。"
         },
         {
           "id": "s5-t16",
@@ -1293,7 +1354,8 @@
             "conjugationForm": "体",
             "baseForm": "いふ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「言ふ」: 「は・ひ・ふ・ふ・へ・へ」と活用。「言う・呼ぶ」の意。「Aといふ」=「Aという」の引用句で頻出。"
         },
         {
           "id": "s5-t17",
@@ -1316,7 +1378,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s5-t19",
@@ -1338,7 +1401,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s5-t21",
@@ -1360,7 +1424,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s5-t23",
@@ -1373,7 +1438,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「知る」: 「ら・り・る・る・れ・れ」と活用。「知っている・分かっている」の意。「知らぬ説」=「分かっていない説」。"
         },
         {
           "id": "s5-t24",
@@ -1386,7 +1452,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 「〜ない」。未然形接続。「ず・ず・ず／ぬ・ぬ／ね・〇」と特殊活用。連体形「ぬ」、已然形「ね」が頻出。"
         },
         {
           "id": "s5-t25",
@@ -1410,7 +1477,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。"
         },
         {
           "id": "s5-t27",
@@ -1439,7 +1507,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「〜と」。直前の語句を引用句としてまとめる。「Aといふ」「Aと思ふ」の形で頻出。"
         },
         {
           "id": "s6-t2",
@@ -1453,7 +1522,8 @@
             "conjugationForm": "体",
             "baseForm": "いふ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「言ふ」: 「は・ひ・ふ・ふ・へ・へ」と活用。「言う・呼ぶ」の意。「Aといふ」=「Aという」の引用句で頻出。"
         },
         {
           "id": "s6-t3",
@@ -1476,7 +1546,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s6-t5",
@@ -1508,7 +1579,8 @@
             "pos": "格助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(並列): 「〜と〜」。「AとBと」の形で並列を示す古文の定型。現代語の「AとB」より「と」が両方に付くのが古文の特徴。"
         },
         {
           "id": "s6-t8",
@@ -1530,7 +1602,8 @@
             "pos": "格助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(並列): 「〜と〜」。「AとBと」の形で並列を示す古文の定型。現代語の「AとB」より「と」が両方に付くのが古文の特徴。"
         },
         {
           "id": "s6-t10",
@@ -1542,7 +1615,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s6-t11",
@@ -1564,7 +1638,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s6-t13",
@@ -1586,7 +1661,8 @@
             "pos": "格助詞",
             "meaning": "状態"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(状態): 「〜に・〜という状態に」。存在・状態を示す。「皮膜の間にあるもの」=「皮膜の境にある事物」。"
         },
         {
           "id": "s6-t15",
@@ -1600,7 +1676,8 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。終止形が「-り」で終わる四動詞 (あり/をり/はべり/いまそかり) の代表。"
         },
         {
           "id": "s6-t16",
@@ -1625,7 +1702,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。"
         },
         {
           "id": "s6-t18",
@@ -1645,7 +1723,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「なるほど」: 「いかにも・確かに」の意。相手の言を一旦肯定する用法。本文では近松が「ある人」の主張を一応認める起点。"
         }
       ]
     },
@@ -1674,7 +1753,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s7-t3",
@@ -1696,7 +1776,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(対象): 「〜に・〜を対象に」。動作の向かう対象を示す。"
         },
         {
           "id": "s7-t5",
@@ -1706,7 +1787,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「よく」: 「上手に・よく・しっかりと」の意。動詞を修飾して動作の程度を示す。"
         },
         {
           "id": "s7-t6",
@@ -1719,7 +1801,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ四「写す」: 「さ・し・す・す・せ・せ」と活用。「(姿を)真似る・写実的に再現する」。本文の芸論キーワード。"
         },
         {
           "id": "s7-t7",
@@ -1731,7 +1814,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s7-t8",
@@ -1744,7 +1828,8 @@
             "conjugationType": "マ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ四「好む」: 「ま・み・む・む・め・め」と活用。「(〜を)愛好する・好む」の意。"
         },
         {
           "id": "s7-t9",
@@ -1766,7 +1851,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s7-t11",
@@ -1777,7 +1863,8 @@
           "grammarTag": {
             "pos": "",
             "baseForm": "まこと"
-          }
+          },
+          "hint": "重要語「まこと」: 「真実・本物・本当」の意。本文「まことの家老」=「本物の家老」。「実(まこと)」と書く。"
         },
         {
           "id": "s7-t12",
@@ -1789,7 +1876,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s7-t13",
@@ -1811,7 +1899,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s7-t15",
@@ -1833,7 +1922,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s7-t17",
@@ -1846,7 +1936,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ四「写す」: 「さ・し・す・す・せ・せ」と活用。「(姿を)真似る・写実的に再現する」。本文の芸論キーワード。"
         },
         {
           "id": "s7-t18",
@@ -1858,7 +1949,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「〜と」。直前の語句を引用句としてまとめる。「Aといふ」「Aと思ふ」の形で頻出。"
         },
         {
           "id": "s7-t19",
@@ -1870,7 +1962,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s7-t20",
@@ -1884,7 +1977,8 @@
             "conjugationForm": "已",
             "baseForm": "いふ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「言ふ」: 「は・ひ・ふ・ふ・へ・へ」と活用。「言う・呼ぶ」の意。「Aといふ」=「Aという」の引用句で頻出。 「いへ」は已然形。下に「ども」を伴い「〜けれども」。"
         },
         {
           "id": "s7-t21",
@@ -1894,7 +1988,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ども」: 已然形＋「ども」=逆接確定条件「〜けれども・〜のに」。「ど」の強調形。"
         },
         {
           "id": "s7-t22",
@@ -1914,7 +2009,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "接続詞"
-          }
+          },
+          "hint": "接続詞「さらば」: 「さあらば」の約。「もしそうならば・それならば」の意。仮定的な接続。"
         },
         {
           "id": "s7-t24",
@@ -1926,7 +2022,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「とて」: 引用「〜と言って・〜として」。「と」＋接続助詞「て」が一語化した形。"
         },
         {
           "id": "s7-t25",
@@ -1948,7 +2045,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s7-t27",
@@ -1970,7 +2068,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s7-t29",
@@ -1990,7 +2089,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「など」: 例示・婉曲「〜など・〜のようなもの」。直接断定を避け、ぼかして言うニュアンス。"
         },
         {
           "id": "s7-t31",
@@ -2002,7 +2102,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」(主格): 「〜が」。連体修飾節の中の主語に多用された用法。中世以降は文末でも「〜が」が広がる。"
         },
         {
           "id": "s7-t32",
@@ -2034,7 +2135,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s7-t35",
@@ -2047,7 +2149,8 @@
             "conjugationForm": "用",
             "meaning": "比況"
           },
-          "grammarRefId": "jodoshi-ganbou"
+          "grammarRefId": "jodoshi-ganbou",
+          "hint": "助動詞「ごとし」(比況): 「〜のようだ」。連体形・体言＋「の／が」に接続。「ごとく」連用形・「ごとき」連体形。 「立ち役のごとく」=「立ち役のように」。"
         },
         {
           "id": "s7-t36",
@@ -2069,7 +2172,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(対象): 「〜に・〜を対象に」。動作の向かう対象を示す。"
         },
         {
           "id": "s7-t38",
@@ -2091,7 +2195,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s7-t40",
@@ -2104,7 +2209,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「塗る」: 「ら・り・る・る・れ・れ」と活用。「(化粧などを)塗る」の意。"
         },
         {
           "id": "s7-t41",
@@ -2129,7 +2235,8 @@
             "conjugationForm": "終",
             "baseForm": "あり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。終止形が「-り」で終わる四動詞 (あり/をり/はべり/いまそかり) の代表。 本文「ことありや」の「あり」は終止形。「あり」+「や」(反語) で「あろうか、いやない」。"
         },
         {
           "id": "s7-t43",
@@ -2141,7 +2248,8 @@
             "pos": "係助詞",
             "meaning": "反語"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」(疑問・反語): 文末の「や」は疑問「〜か」または反語「〜か、いや〜ない」。文脈で判別。係り結びは連体形。 本文「ことありや」=「あろうか、いやない」(反語)。"
         },
         {
           "id": "s7-t44",
@@ -2161,7 +2269,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "接続詞"
-          }
+          },
+          "hint": "接続詞「また」: 「さらに・そのうえ」の意。前文に新たな論点を加えるときの定型語。"
         }
       ]
     },
@@ -2190,7 +2299,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s8-t3",
@@ -2212,7 +2322,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s8-t5",
@@ -2234,7 +2345,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s8-t7",
@@ -2247,7 +2359,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「飾る」: 「ら・り・る・る・れ・れ」と活用。「美しく装う・化粧する」。本文「顔をかざらず」=「顔に化粧をしない」。"
         },
         {
           "id": "s8-t8",
@@ -2260,7 +2373,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 「〜ない」。未然形接続。「ず・ず・ず／ぬ・ぬ／ね・〇」と特殊活用。連体形「ぬ」、已然形「ね」が頻出。"
         },
         {
           "id": "s8-t9",
@@ -2272,7 +2386,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「とて」: 引用「〜と言って・〜として」。「と」＋接続助詞「て」が一語化した形。"
         },
         {
           "id": "s8-t10",
@@ -2294,7 +2409,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」(主格): 「〜が」。連体修飾節の中の主語に多用された用法。中世以降は文末でも「〜が」が広がる。"
         },
         {
           "id": "s8-t12",
@@ -2314,7 +2430,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「むしやむしやと」: 「ぼうぼうと・もじゃもじゃと」の意。江戸口語の擬態語。「ひげが伸び放題」のさま。"
         },
         {
           "id": "s8-t14",
@@ -2336,7 +2453,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s8-t16",
@@ -2358,7 +2476,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s8-t18",
@@ -2380,7 +2499,8 @@
             "pos": "格助詞",
             "meaning": "状態"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(状態): 「〜に・〜のままで」。状態のまま続けることを示す。「はげなりに」=「はげたままで」。"
         },
         {
           "id": "s8-t20",
@@ -2402,7 +2522,8 @@
             "pos": "格助詞",
             "meaning": "方向"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「へ」(方向): 「〜へ・〜の方へ」。動作の方向・到達点を示す。"
         },
         {
           "id": "s8-t22",
@@ -2412,7 +2533,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": "ダ下一"
-          }
+          },
+          "hint": "ダ下一動詞「出(い)づ」(古典では「いづ」がダ下二): 「で・で・づ・づる・づれ・でよ」と活用。「外へ出る・舞台に出る」。本文では「出て」=「出て」。"
         },
         {
           "id": "s8-t23",
@@ -2422,7 +2544,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形＋「て」=単純接続「〜て・〜で」。動作の継起・並列を示す。"
         },
         {
           "id": "s8-t24",
@@ -2444,7 +2567,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s8-t26",
@@ -2457,7 +2581,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ変動詞「す」: 「せ・し・す・する・すれ・せよ」と活用。「す」(する) ＋名詞 の連語が頻出 (「合点す」「芸をす」)。 「せ」は未然形。「せば」=「もし〜したら」(仮定)。"
         },
         {
           "id": "s8-t27",
@@ -2469,7 +2594,8 @@
             "pos": "係助詞",
             "meaning": "順仮"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "接続助詞「ば」(未然形＋): 仮定条件「もし〜ならば」。本文「芸をせば」=「芸をするならば」(未然形「せ」＋「ば」)。 本文「芸をせば」=「芸をするならば」(サ変未然形「せ」＋「ば」)。"
         },
         {
           "id": "s8-t28",
@@ -2501,7 +2627,8 @@
             "pos": "格助詞",
             "meaning": "資格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(資格・状態): 「〜として・〜に」。動作主・客体の身分・状態を示す。"
         },
         {
           "id": "s8-t31",
@@ -2515,7 +2642,8 @@
             "conjugationForm": "終",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「なる」: 「ら・り・る・る・れ・れ」と活用。「成る・為る」=「〜になる・〜となる」。断定の助動詞「なり」と識別注意。"
         },
         {
           "id": "s8-t32",
@@ -2528,7 +2656,8 @@
             "conjugationForm": "体",
             "meaning": "当然"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「べし」: 推量・意志・可能・当然・命令・適当の六義。終止形(ラ変は連体形)接続。文脈で意味判別。「べき」連体・「べく」連用。 本文「慰みになるべきや」の「べき」は可能（反語）。「〜できるだろうか、いや、できない」。"
         },
         {
           "id": "s8-t33",
@@ -2540,7 +2669,8 @@
             "pos": "係助詞",
             "meaning": "反語"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」(疑問・反語): 文末の「や」は疑問「〜か」または反語「〜か、いや〜ない」。文脈で判別。係り結びは連体形。 本文「慰みになるべきや」=「慰みになるだろうか、いやならない」(反語)。"
         },
         {
           "id": "s8-t34",
@@ -2579,7 +2709,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s9-t2",
@@ -2601,7 +2732,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「〜と」。直前の語句を引用句としてまとめる。「Aといふ」「Aと思ふ」の形で頻出。"
         },
         {
           "id": "s9-t4",
@@ -2615,7 +2747,8 @@
             "conjugationForm": "体",
             "baseForm": "いふ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「言ふ」: 「は・ひ・ふ・ふ・へ・へ」と活用。「言う・呼ぶ」の意。「Aといふ」=「Aという」の引用句で頻出。"
         },
         {
           "id": "s9-t5",
@@ -2627,7 +2760,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」(主格): 「〜が」。連体修飾節の中の主語に多用された用法。中世以降は文末でも「〜が」が広がる。"
         },
         {
           "id": "s9-t6",
@@ -2637,7 +2771,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「ここ」: 近称指示「ここ・この場所」。本文「皮膜の間といふがここなり」=「皮膜の間というのがこれ(=今述べたこの境域)である」。"
         },
         {
           "id": "s9-t7",
@@ -2651,7 +2786,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。"
         },
         {
           "id": "s9-t8",
@@ -2681,7 +2817,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。 「に」連用形＋接続助詞「して」=「〜であって」。"
         },
         {
           "id": "s10-t2",
@@ -2691,7 +2828,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「して」: 連用形＋「して」=「〜であって・〜で」。「に＋して」で「〜であって」。"
         },
         {
           "id": "s10-t3",
@@ -2714,7 +2852,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。"
         },
         {
           "id": "s10-t5",
@@ -2727,7 +2866,8 @@
             "conjugationType": "ラ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「あり」(ラ変): 「に＋あら＋ず」=「〜ではない」。断定「に」＋ 未然形「あら」＋ 打消「ず」の定型。"
         },
         {
           "id": "s10-t6",
@@ -2740,7 +2880,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 「〜ない」。未然形接続。「ず・ず・ず／ぬ・ぬ／ね・〇」と特殊活用。連体形「ぬ」、已然形「ね」が頻出。"
         },
         {
           "id": "s10-t7",
@@ -2763,7 +2904,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。"
         },
         {
           "id": "s10-t9",
@@ -2773,7 +2915,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「して」: 連用形＋「して」=「〜であって・〜で」。「に＋して」で「〜であって」。"
         },
         {
           "id": "s10-t10",
@@ -2796,7 +2939,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。"
         },
         {
           "id": "s10-t12",
@@ -2809,7 +2953,8 @@
             "conjugationType": "ラ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「あり」(ラ変): 「に＋あら＋ず」=「〜ではない」。断定「に」＋ 未然形「あら」＋ 打消「ず」の定型。"
         },
         {
           "id": "s10-t13",
@@ -2822,7 +2967,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 「〜ない」。未然形接続。「ず・ず・ず／ぬ・ぬ／ね・〇」と特殊活用。連体形「ぬ」、已然形「ね」が頻出。"
         },
         {
           "id": "s10-t14",
@@ -2842,7 +2988,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「こ」: 近称指示「この」。「この間に慰みがあった」=「この虚と実の境に楽しみがあった」。"
         },
         {
           "id": "s10-t16",
@@ -2854,7 +3001,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s10-t17",
@@ -2876,7 +3024,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(場所・時): 「〜に・〜で」。動作・存在の場所や時を示す。"
         },
         {
           "id": "s10-t19",
@@ -2898,7 +3047,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」(主格): 「〜が」。連体修飾節の中の主語に多用された用法。中世以降は文末でも「〜が」が広がる。"
         },
         {
           "id": "s10-t21",
@@ -2911,7 +3061,8 @@
             "conjugationType": "ラ変",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変「あり」: 「あつ」は「あり」の連用形「あり」のウ音便（中世以降の口語）。「あつた」=「あった」(完了)。"
         },
         {
           "id": "s10-t22",
@@ -2924,7 +3075,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「た」(完了): 近世口語の完了。中古の「たり」が音便化・口語化したもの。「あつた」=「あった」。江戸期文体の特徴。"
         },
         {
           "id": "s10-t23",
@@ -2949,7 +3101,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である・〜にある」。体言・連体形接続。連用形「に」+補助動詞「あり」=「にあり」(〜である)。「ナリ活用」と区別。"
         },
         {
           "id": "s10-t25",
@@ -2978,7 +3131,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「とて」: 引用「〜と言って・〜として」。「と」＋接続助詞「て」が一語化した形。"
         },
         {
           "id": "s11-t2",
@@ -2998,7 +3152,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「そ」: 中称指示「その」。「その姿」=「人物の姿」。"
         },
         {
           "id": "s11-t4",
@@ -3010,7 +3165,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s11-t5",
@@ -3032,7 +3188,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s11-t7",
@@ -3045,7 +3202,8 @@
             "conjugationType": "カ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ四「描く」: 「か・き・く・く・け・け」と活用。「(絵を)描く」「書く」と同源。"
         },
         {
           "id": "s11-t8",
@@ -3057,7 +3215,8 @@
             "pos": "格助詞",
             "meaning": "資格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(資格・状態): 「〜として・〜に」。動作主・客体の身分・状態を示す。"
         },
         {
           "id": "s11-t9",
@@ -3069,7 +3228,8 @@
             "pos": "係助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 類似・並列・強意「〜も」。係り結びは起こさないが、共通点・付け加えを示す。"
         },
         {
           "id": "s11-t10",
@@ -3089,7 +3249,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "接続詞"
-          }
+          },
+          "hint": "接続詞「また」: 「さらに・そのうえ」の意。前文に新たな例を加える用法。"
         },
         {
           "id": "s11-t12",
@@ -3111,7 +3272,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(場所・時): 「〜に・〜で」。動作・存在の場所や時を示す。"
         },
         {
           "id": "s11-t14",
@@ -3124,7 +3286,8 @@
             "conjugationType": "マ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ四「刻む」: 「ま・み・む・む・め・め」と活用。「彫り刻む」の意。本文「木に刻む」=「木に彫る」。"
         },
         {
           "id": "s11-t15",
@@ -3136,7 +3299,8 @@
             "pos": "格助詞",
             "meaning": "資格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(資格・状態): 「〜として・〜に」。動作主・客体の身分・状態を示す。"
         },
         {
           "id": "s11-t16",
@@ -3148,7 +3312,8 @@
             "pos": "係助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 類似・並列・強意「〜も」。係り結びは起こさないが、共通点・付け加えを示す。"
         },
         {
           "id": "s11-t17",
@@ -3180,7 +3345,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s11-t20",
@@ -3202,7 +3368,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「〜を」。動作の対象・目的を示す現代語と同じ用法。"
         },
         {
           "id": "s11-t22",
@@ -3215,7 +3382,8 @@
             "conjugationType": "サ下二",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ下二「似す／似する」: 「せ・せ・す・する・すれ・せよ」と活用。他動詞「似せる・真似る」の意。自動詞「似る」(ナ上一) と区別。"
         },
         {
           "id": "s11-t23",
@@ -3237,7 +3405,8 @@
             "pos": "格助詞",
             "meaning": "状態"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(状態): 「〜に・〜のうちに」。動作・状態の進行中を示す。「似するうちに」=「真似する中で」。"
         },
         {
           "id": "s11-t25",
@@ -3257,7 +3426,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「また」: 「一方で・しかも」の意で、対比的な内容を導く。"
         },
         {
           "id": "s11-t27",
@@ -3270,7 +3440,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ナリ活用形容動詞「おほまかなり」: 「大ざっぱだ・大づかみだ」の意。ク活用「大まか」(現代語) の祖形。本文芸論の核心語。"
         },
         {
           "id": "s11-t28",
@@ -3294,7 +3465,8 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。終止形が「-り」で終わる四動詞 (あり/をり/はべり/いまそかり) の代表。"
         },
         {
           "id": "s11-t30",
@@ -3306,7 +3478,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」(主格): 「〜が」。連体修飾節の中の主語に多用された用法。中世以降は文末でも「〜が」が広がる。"
         },
         {
           "id": "s11-t31",
@@ -3326,7 +3499,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「けつく」: 「結句」と書き、「結局・かえって」の意。江戸期に流行した語。本文の重要語。"
         },
         {
           "id": "s11-t33",
@@ -3348,7 +3522,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(主格): 「〜が」。連体修飾節の中の主語に用いられることが多い。本文では「人の愛する種」=「人が愛する元」。"
         },
         {
           "id": "s11-t35",
@@ -3361,7 +3536,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ変動詞「愛す」: 「愛」+ サ変「す」=「愛する・好む」。漢語＋「す」で作るサ変は古文・近世の常用形。"
         },
         {
           "id": "s11-t36",
@@ -3383,7 +3559,8 @@
             "pos": "格助詞",
             "meaning": "結果"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(結果): 「〜と・〜として」。変化・結果の状態を示す。「上手とす」=「上手とする」。"
         },
         {
           "id": "s11-t38",
@@ -3395,7 +3572,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示「〜は」。係り結びは起こさないが、文の話題・対比を示す重要語。"
         },
         {
           "id": "s11-t39",
@@ -3409,7 +3587,8 @@
             "conjugationForm": "体",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「なる」: 「ら・り・る・る・れ・れ」と活用。「成る・為る」=「〜になる・〜となる」。断定の助動詞「なり」と識別注意。"
         },
         {
           "id": "s11-t40",
@@ -3423,7 +3602,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 「〜である」。体言・連体形接続。文末の「〜なり」は断定の終止形。「ナリ活用」と区別。"
         },
         {
           "id": "s11-t41",
@@ -3452,7 +3632,8 @@
             "pos": "係助詞",
             "meaning": "類似"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 類似・並列・強意「〜も」。係り結びは起こさないが、共通点・付け加えを示す。"
         },
         {
           "id": "s12-t2",
@@ -3462,7 +3643,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「こ」: 近称指示「この」。「このごとく」=「このように」。"
         },
         {
           "id": "s12-t3",
@@ -3474,7 +3656,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s12-t4",
@@ -3487,7 +3670,8 @@
             "conjugationForm": "用",
             "meaning": "比況"
           },
-          "grammarRefId": "jodoshi-ganbou"
+          "grammarRefId": "jodoshi-ganbou",
+          "hint": "助動詞「ごとし」(比況): 「〜のようだ」。連体形・体言＋「の／が」に接続。「ごとく」連用形・「ごとき」連体形。 「このごとく」=「このように」。"
         },
         {
           "id": "s12-t5",
@@ -3509,7 +3693,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s12-t7",
@@ -3532,7 +3717,8 @@
             "pos": "格助詞",
             "meaning": "比較"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(比較・基準): 「〜に・〜と」。比較・類似の基準を示す。「Aに似る」=「Aに似ている」。"
         },
         {
           "id": "s12-t9",
@@ -3545,7 +3731,8 @@
             "conjugationType": "ナ上一",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ナ上一動詞「似る」: 「に・に・にる・にる・にれ・によ」と活用。「似る」「煮る」が代表的。「似」一字で活用。"
         },
         {
           "id": "s12-t10",
@@ -3567,7 +3754,8 @@
             "pos": "格助詞",
             "meaning": "状態"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(状態): 「〜に・〜のうちに」。"
         },
         {
           "id": "s12-t12",
@@ -3587,7 +3775,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「また」: 「一方で・しかも」の意で、対比的な内容を導く。"
         },
         {
           "id": "s12-t14",
@@ -3600,7 +3789,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ナリ活用形容動詞「おほまかなり」: 「大ざっぱだ・大づかみだ」の意。ク活用「大まか」(現代語) の祖形。本文芸論の核心語。"
         },
         {
           "id": "s12-t15",
@@ -3624,7 +3814,8 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。終止形が「-り」で終わる四動詞 (あり/をり/はべり/いまそかり) の代表。"
         },
         {
           "id": "s12-t17",
@@ -3636,7 +3827,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」(主格): 「〜が」。連体修飾節の中の主語に多用された用法。中世以降は文末でも「〜が」が広がる。"
         },
         {
           "id": "s12-t18",
@@ -3656,7 +3848,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「けつく」: 「結句」と書き、「結局・かえって」の意。江戸期に流行した語。本文の重要語。"
         },
         {
           "id": "s12-t20",
@@ -3678,7 +3871,8 @@
             "pos": "格助詞",
             "meaning": "結果"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(結果): 「〜に・〜となる」。変化・結果の到達点を示す。"
         },
         {
           "id": "s12-t22",
@@ -3692,7 +3886,8 @@
             "conjugationForm": "用",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「なる」: 「ら・り・る・る・れ・れ」と活用。「成る・為る」=「〜になる・〜となる」。断定の助動詞「なり」と識別注意。"
         },
         {
           "id": "s12-t23",
@@ -3702,7 +3897,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形＋「て」=単純接続「〜て・〜で」。動作の継起・並列を示す。"
         },
         {
           "id": "s12-t24",
@@ -3734,7 +3930,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s12-t27",
@@ -3756,7 +3953,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s12-t29",
@@ -3778,7 +3976,8 @@
             "pos": "格助詞",
             "meaning": "結果"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(結果): 「〜と・〜として」。変化・結果の状態を示す。「上手とす」=「上手とする」。"
         },
         {
           "id": "s12-t31",
@@ -3792,7 +3991,8 @@
             "conjugationForm": "終",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四「なる」: 「ら・り・る・る・れ・れ」と活用。「成る・為る」=「〜になる・〜となる」。断定の助動詞「なり」と識別注意。"
         },
         {
           "id": "s12-t32",
@@ -3821,7 +4021,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s13-t2",
@@ -3841,7 +4042,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「など」: 例示・婉曲「〜など・〜のようなもの」。直接断定を避け、ぼかして言うニュアンス。"
         },
         {
           "id": "s13-t4",
@@ -3853,7 +4055,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 類似・並列・強意「〜も」。係り結びは起こさないが、共通点・付け加えを示す。"
         },
         {
           "id": "s13-t5",
@@ -3873,7 +4076,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「こ」: 近称指示「この」。「この心入れ」=「この心構え」。"
         },
         {
           "id": "s13-t7",
@@ -3885,7 +4089,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の・〜という」。体言＋「の」＋体言で名詞句を作る最頻出用法。"
         },
         {
           "id": "s13-t8",
@@ -3907,7 +4112,8 @@
             "pos": "格助詞",
             "meaning": "状態"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「にて」: 「〜で・〜によって」。場所・手段・状態を示す。「に＋て」が一語化した形。現代語「で」の祖形。 本文「この心入れにて見る」=「この心構えで見る」。"
         },
         {
           "id": "s13-t10",
@@ -3920,7 +4126,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ上一「見る」: 「み・み・みる・みる・みれ・みよ」と活用。「目で見る・観賞する・判断する」。本文「見るべき」=「観賞すべき・判断すべき」。"
         },
         {
           "id": "s13-t11",
@@ -3933,7 +4140,8 @@
             "conjugationForm": "体",
             "meaning": "適当"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「べし」: 推量・意志・可能・当然・命令・適当の六義。終止形(ラ変は連体形)接続。文脈で意味判別。「べき」連体・「べく」連用。 本文「見るべきこと多し」の「べき」は適当・当然「〜するのがよい・〜すべきだ」。"
         },
         {
           "id": "s13-t12",
@@ -3957,7 +4165,8 @@
             "conjugationType": "ク",
             "conjugationForm": "終"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ク活用形容詞「多し」: 「く・く・し・き・けれ・〇」と活用。「多い」の終止形。"
         },
         {
           "id": "s13-t14",
