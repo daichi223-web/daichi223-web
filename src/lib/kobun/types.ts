@@ -124,7 +124,7 @@ export interface ReadingGuide {
   annotations: ReadingAnnotation[];
 }
 
-export type ReadingHintType = "subject" | "grammar" | "structure" | "method" | "vocab";
+export type ReadingHintType = "subject" | "grammar" | "structure" | "method" | "vocab" | "culture";
 
 export interface ReadingHint {
   type: ReadingHintType;
