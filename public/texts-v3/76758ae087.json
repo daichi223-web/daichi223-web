@@ -90,6 +90,26 @@
           {
             "text": "「さながら」の意味: 「七珍万宝さながら灰燼となりにき」の「さながら」は副詞で「すべて・残らず」の意",
             "priority": "important"
+          },
+          {
+            "text": "[古文常識] 鴨長明と方丈記の成立背景: 鴨長明（1155-1216）は下鴨神社禰宜の家系に生まれたが、神職継承に失敗し50歳頃に出家。日野山に一丈四方（約3メートル四方）の方丈の庵を結び、建暦2年（1212）に『方丈記』を執筆した。「方丈」とはこの庵の規模に由来する。和歌・管弦に秀で後鳥羽院歌壇にも参加した教養人で、平安貴族文化の終焉と鎌倉武家政権の興起という大変動期を目撃した記録者である。本作の客観的記録性と内省的無常観の同居は、彼の経歴に裏打ちされている。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 平安末から鎌倉初の災厄頻発期と無常観: 12世紀後半の京都は治承・寿永の乱（源平争乱）と相前後して、安元の大火（1177）・治承の辻風（1180）・福原遷都（1180）・養和の大飢饉（1181-82）・元暦の大地震（1185）と未曾有の天災・人災が連続した。当時の人々はこれを「末法」（釈尊滅後二千年で仏法が衰える時代）の到来と受け止め、阿弥陀信仰や浄土教が急速に広まった。長明の無常観はこの時代精神を凝縮しており、「人のいとなみ皆愚かなる」という結びは仏教的世界観に根ざしている。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 平安京の木造建築と火災延焼の構造: 平安京は条坊制の整然たる都だが、住宅・宮殿のほとんどが檜皮葺・板葺の木造建築であり、防火壁や石垣がないため一度発火すると風に煽られ広範囲に延焼した。「扇をひろげたるがごとく」(s6)・「炎飛ぶがごとく」(s8)の比喩は、まさに飛び火が一・二町（約100-200m）を越える木造都市の脆弱性を視覚化したもの。安元の大火で大内裏中枢の朱雀門・大極殿・大学寮・民部省すら焼失したことは、都市計画そのものの危うさを示し、s18の「さしも危ふき京中の家」批判につながる。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 安元の大火（1177）の史実と大極殿焼失の意味: 安元三年四月二十八日（1177年5月27日）夜、京の樋口富小路の舞人仮屋から発した火災は北西風に煽られ、内裏・大内裏まで延焼。朱雀門・大極殿・大学寮・八省院など中枢施設を焼き払った。特に大極殿は天皇即位や元日朝賀を行う律令国家最高の儀礼空間であり、これが焼失したことは律令制象徴の終焉を意味した。以後、大極殿は再建されないまま中世を迎え、平安王朝の物理的衰退の起点となる事件として記憶される。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 公卿・庶民・家畜の階層的描写と仏教的生類観: 本作は「公卿の家、十六焼けたり」(s14)と上層貴族の被害を具体数で示し、続いて「ましてそのほか数へ知るに及ばず」(s15)で庶民の被害を不可算として示す。さらに「男女死ぬるもの数十人、馬牛のたぐひ辺際を知らず」(s17)と人命と家畜を並べて記す手法は、被害の階層的記録であると同時に、仏教の「生類平等（一切衆生）」の視座を反映している。災厄の前では身分も種類も区別なく無常であるという長明の思想が構文に滲む。",
+            "priority": "important"
           }
         ]
       }
@@ -109,7 +129,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "一人称代名詞「予（よ）」: 自分自身を指す古語の一人称。「われ」より硬く、漢文訓読・随筆等で用いる。鴨長明が筆者として自らを示す。"
         },
         {
           "id": "s1-t2",
@@ -167,7 +188,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "命"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「知る」: 命令形「知れ」に存続「り」が接続する形（命令形＋り＝ラ四またはサ変命令形接続）。「ものの心を知る」で「道理を理解する」の意。"
         },
         {
           "id": "s1-t7",
@@ -180,7 +202,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」: 完了・存続「〜ている／てしまった」。サ変未然形・四段命令形に接続（さみしいリカちゃん）。「知れり」で「知っている」状態。"
         },
         {
           "id": "s1-t8",
@@ -193,7 +216,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」連体形「し」: 直接過去「〜た」（自分が直接体験した過去）。連用形接続だが、上に「り」の連用形が来た形。後続の「より」を受けて連体形。"
         },
         {
           "id": "s1-t9",
@@ -206,7 +230,8 @@
             "meaning": "起点",
             "baseForm": "よる"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「より」: 起点・経由を表す。「〜から」。「知れりしより」で「分別がついた頃から」。多義語で「比較」「手段」の意もあり区別が必要。"
         },
         {
           "id": "s1-t10",
@@ -249,7 +274,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「春秋（しゅんじゅう）」: 漢語で「年月・歳月」を表す。四季の代表として年数を示す雅語。「四十あまりの春秋」で「四十数年」。"
         },
         {
           "id": "s1-t14",
@@ -274,7 +300,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "命"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「送る」: 命令形「送れ」に存続「る（り）」が接続。「春秋を送る」で「歳月を過ごす」の意。"
         },
         {
           "id": "s1-t16",
@@ -287,7 +314,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」連体形「る」: 完了・存続。ここは存続「〜ている／てきた」。「あひだ」を修飾する連体形。"
         },
         {
           "id": "s1-t17",
@@ -297,7 +325,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「あひだ」: 「期間・間（あいだ）」の意。「〜あひだに」で時間範囲を示す。"
         },
         {
           "id": "s1-t18",
@@ -366,7 +395,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ上一動詞「見る」: ワ・ヤ・カ・ナ・マ・ハ行上一段（一語ずつ）の代表。「見・見・見る・見る・見れ・見よ」と活用。"
         },
         {
           "id": "s1-t24",
@@ -387,7 +417,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「やや」: 「次第に・だんだん・少しずつ」の意。後続の「たびたび」を修飾し、漸増を表す。"
         },
         {
           "id": "s1-t26",
@@ -397,7 +428,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「たびたび」: 「何度も・しばしば」の意。"
         },
         {
           "id": "s1-t27",
@@ -423,7 +455,8 @@
             "conjugationForm": "用",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「なる」: 「〜になる」の変化を表す代表動詞。「(状態)になりぬ」で完了形になり結果の確定を表す定型。"
         },
         {
           "id": "s1-t29",
@@ -436,7 +469,8 @@
             "conjugationForm": "終",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」: 完了「〜た・〜てしまった」。連用形接続。同形の打消「ず」連体形「ぬ」と識別する: 接続が連用形なら完了、未然形なら打消。"
         },
         {
           "id": "s1-t30",
@@ -463,7 +497,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "連体"
-          }
+          },
+          "hint": "連体詞「いんじ」: 「去（い）んじ」の音便。「過ぎ去った・先の・さる〜」の意。年月日を回想する場面で「いんじ＋年号」の形で用いる古文常識語。"
         },
         {
           "id": "s2-t2",
@@ -473,7 +508,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "日付の古語読み: 「安元三年（1177年）」「四月（うづき）」「二十八日」と読む。安元は高倉天皇の年号で、本作はその三年目の記録。"
         },
         {
           "id": "s2-t3",
@@ -485,7 +521,8 @@
             "pos": "係助詞",
             "meaning": "疑問"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「か」: 疑問・反語を表す。ここは記憶を喚起する疑問「〜であったか」。後続「とよ」と合わせ「〜だっただろうか、そうそう」のニュアンスを生む。"
         },
         {
           "id": "s2-t4",
@@ -497,7 +534,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用を表す。「〜と」と訳す。"
         },
         {
           "id": "s2-t5",
@@ -510,7 +548,8 @@
             "meaning": "詠嘆",
             "baseForm": "よ"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「よ」: 詠嘆・呼びかけ。「〜よ」と訳す。「かとよ」で記憶を辿る独白調になる。"
         },
         {
           "id": "s2-t6",
@@ -533,7 +572,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "シク活用形容詞「激し」: 「程度がはなはだしい・荒々しい」の意。連用形「激しく」で動詞を修飾。"
         },
         {
           "id": "s2-t8",
@@ -546,7 +586,8 @@
             "conjugationType": "カ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ四動詞「吹く」: 風の動作を表す代表動詞。連用形「吹き」＋接続助詞「て」で「吹いて」。"
         },
         {
           "id": "s2-t9",
@@ -579,7 +620,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "未"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ナリ活用形容動詞「静かなり」: 「静かである」の意。未然形「静かなら」＋打消「ず」で「静かでない」。語幹「静か」＋活用語尾「なり」。"
         },
         {
           "id": "s2-t12",
@@ -592,7 +634,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」連用形「ざり」: 打消「〜ない」。未然形接続。「ず」＋「あり」のラ変補助活用「ざら／ざり／ざる／ざれ」が助動詞接続用に発達。"
         },
         {
           "id": "s2-t13",
@@ -605,7 +648,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」連体形「し」: 直接過去。後続の体言「夜」を修飾するため連体形。長明自身の体験記録を示す重要なマーカー。"
         },
         {
           "id": "s2-t14",
@@ -615,7 +659,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "時刻名「戌の時（いぬのとき）」: 十二支時刻で午後7時〜9時頃（中心は午後8時）。古文常識として一刻＝約2時間、子の時（午前0時）から十二支順に一日を区切る。"
         },
         {
           "id": "s2-t15",
@@ -647,7 +692,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「ばかり」: 「〜頃・〜ほど・〜だけ」の意。時刻・分量を限定。「戌の時ばかり」で「午後8時頃」。"
         },
         {
           "id": "s2-t18",
@@ -679,7 +725,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "方位の古語「東南（たつみ）」: 十二支方位の「巽（たつみ＝辰巳）」。京の東南は内裏の東南方面、富小路や樋口小路の交差地帯。十二支方位（子＝北・卯＝東・午＝南・酉＝西を基準に対角線で巽・坤・乾・艮）は古文常識として必須。"
         },
         {
           "id": "s2-t21",
@@ -692,7 +739,8 @@
             "meaning": "起点",
             "baseForm": "よる"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「より」: 起点「〜から」。「東南より火出で来て」で出火点を示す。"
         },
         {
           "id": "s2-t22",
@@ -712,7 +760,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "カ変複合動詞「出で来（いでく）」: 「出てくる・発生する」。カ変動詞「来（く）」を含むため「来・来・く・くる・くれ・こ／こよ」と活用。"
         },
         {
           "id": "s2-t24",
@@ -744,7 +793,8 @@
             "pos": "格助詞",
             "meaning": "帰着点"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 帰着点「〜に」。「西北に至る」で延焼の到達点を示す。"
         },
         {
           "id": "s2-t27",
@@ -757,7 +807,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「至る」: 「行き着く・及ぶ」の意。「東南より〜西北に至る」で対角線上の延焼を表現する対句構文の核。"
         },
         {
           "id": "s2-t28",
@@ -786,7 +837,8 @@
             "pos": "格助詞",
             "meaning": "時間"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」+「は」: 「はて＋に＋は」で「最後には・しまいには」と読む慣用表現。時間の終点を強調。"
         },
         {
           "id": "s3-t2",
@@ -798,7 +850,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題化。「〜について言えば」。"
         },
         {
           "id": "s3-t3",
@@ -808,7 +861,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "固有名詞: 朱雀門（大内裏正門）・大極殿（即位等の儀式の舞台）・大学寮（官吏養成機関）・民部省（戸籍財政担当の中央官庁）。すべて平安京中枢の象徴で、これらの焼失は律令国家の物理的衰退を意味する。"
         },
         {
           "id": "s3-t4",
@@ -818,7 +872,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「など」: 例示「〜など」。複数列挙のうえに「〜まで」を続け、被害が中枢にまで及んだことを示す。"
         },
         {
           "id": "s3-t5",
@@ -828,7 +883,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「まで」: 範囲・程度の極限「〜にまで」。「など＋まで」で「〜のような重要施設にまでも」と被害の異常さを強調。"
         },
         {
           "id": "s3-t6",
@@ -841,7 +897,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「移る」: 「燃え移る・場所を変える」の意。火災の延焼を表す代表動詞。"
         },
         {
           "id": "s3-t7",
@@ -905,7 +962,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「塵灰（じんかい）」: 「ちりとはい・燃えかすの灰」。漢語で甚大な焼失を示す。本作の「灰燼」(s12)と対をなす。"
         },
         {
           "id": "s3-t13",
@@ -917,7 +975,8 @@
             "pos": "格助詞",
             "meaning": "結果"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 結果「〜となる」。状態変化の到達点を示す。"
         },
         {
           "id": "s3-t14",
@@ -931,7 +990,8 @@
             "conjugationForm": "用",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「なる」: 「(状態)になる」変化を表す。「塵灰となる」で「灰になる」。"
         },
         {
           "id": "s3-t15",
@@ -944,7 +1004,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」連用形「に」: 完了「〜てしまった」。下に「き」（過去）が連なる「にき」は完了＋過去で「すっかり〜してしまった」と取り返しのつかぬ事態を示す定型。"
         },
         {
           "id": "s3-t16",
@@ -957,7 +1018,8 @@
             "conjugationForm": "終",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」: 直接過去「〜た」。連用形接続。長明が直接体験した過去を示す。"
         }
       ]
     },
@@ -986,7 +1048,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題化「〜は」。"
         },
         {
           "id": "s4-t3",
@@ -996,7 +1059,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "地名: 樋口富小路（ひぐちとみのこうじ）＝平安京の樋口小路と富小路の交差地。現在の京都市下京区付近に当たる。"
         },
         {
           "id": "s4-t4",
@@ -1008,7 +1072,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用「〜と」。後続の「かや」と合わさり伝聞表現を作る。"
         },
         {
           "id": "s4-t5",
@@ -1020,7 +1085,8 @@
             "pos": "係助詞",
             "meaning": "疑問"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「か」: 疑問。「とかや」で「〜とかいうことだ」の伝聞・婉曲を表現。係り結びは省略（結びの「言ふ・聞く」省略）。"
         },
         {
           "id": "s4-t6",
@@ -1032,7 +1098,8 @@
             "pos": "間投助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「や」: 詠嘆。「とかや」全体で記録者の慎重さ＝伝聞情報を断定せぬ態度を表す。"
         }
       ]
     },
@@ -1049,7 +1116,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「舞人（まいびと）」: 宮中行事や祭礼で舞を奉納する人々。当時、舞人を宿す仮屋＝臨時宿舎は祭礼の頃に設けられた。出火元という記録から、公的行事の準備期間に火災が発生した可能性を示す。"
         },
         {
           "id": "s5-t2",
@@ -1061,7 +1129,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。"
         },
         {
           "id": "s5-t3",
@@ -1074,7 +1143,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "命"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ四動詞「宿す」: 「泊める・宿泊させる」の意。命令形「宿せ」に存続「り」連体形「る」が接続→「泊まらせている（仮屋）」。"
         },
         {
           "id": "s5-t4",
@@ -1087,7 +1157,8 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」連体形「る」: 完了・存続「〜ている」。サ変未然形・四段命令形接続（さみしいリカちゃん）の識別ポイント。"
         },
         {
           "id": "s5-t5",
@@ -1097,7 +1168,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「仮屋（かりや）」: 一時的に建てた仮設の小屋・宿舎。木造で粗末なため引火しやすい。当時の京の建築物の脆弱性が火災延焼の前提。"
         },
         {
           "id": "s5-t6",
@@ -1110,7 +1182,8 @@
             "meaning": "起点",
             "baseForm": "よる"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「より」: 起点「〜から」。「仮屋より出で来」で出火元を示す。"
         },
         {
           "id": "s5-t7",
@@ -1120,7 +1193,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "カ変複合動詞「出で来」: 「出てくる・発生する」。「来（く）」を含むためカ変。「火出で来」で「出火する」の定型。"
         },
         {
           "id": "s5-t8",
@@ -1133,7 +1207,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」連用形: 完了「〜た」。連用形接続。「出で来たり」で「出てきた」。"
         },
         {
           "id": "s5-t9",
@@ -1146,7 +1221,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」連体形「ける」: 過去・伝聞過去「〜たという」。長明自身が直接見ていない出来事を伝える際に用いる重要マーカー。"
         },
         {
           "id": "s5-t10",
@@ -1158,7 +1234,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用「〜と」。"
         },
         {
           "id": "s5-t11",
@@ -1170,7 +1247,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「なん」: 強意「なむ」の撥音便。本来は「言ふ・聞く」等の結び連体形を要するが省略され、「〜ということだ／〜と聞いている」の伝聞ニュアンスを生む（係り結びの省略）。s4「とかや」と並ぶ伝聞表現。"
         }
       ]
     },
@@ -1197,7 +1275,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "ハ四複合動詞「吹きまよふ」: 「吹き＋まよふ（迷う）」で「方向が定まらず吹き乱れる」。本作の延焼の混乱・無方向性を表現。"
         },
         {
           "id": "s6-t3",
@@ -1219,7 +1298,8 @@
             "pos": "格助詞",
             "meaning": "原因"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 原因「〜によって・〜のために」。「風に」で延焼の原因を示す。"
         },
         {
           "id": "s6-t5",
@@ -1239,7 +1319,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「とかく」: 「あれこれ・あちらこちらに・なにかと」。動詞「移りゆく」を修飾し、火が四方に広がる様を表す。"
         },
         {
           "id": "s6-t7",
@@ -1249,7 +1330,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "カ四複合動詞「移りゆく」: 「移る＋ゆく」で「次第に移っていく・燃え移っていく」。延焼の継続を強調する複合動詞。"
         },
         {
           "id": "s6-t8",
@@ -1260,7 +1342,8 @@
           "grammarTag": {
             "pos": "",
             "baseForm": "ほど"
-          }
+          },
+          "hint": "名詞「ほど」: 多義語。ここでは「時間・程度・状況」の「〜ほど・〜うちに」。「〜ほどに」で時の経過を示す接続。"
         },
         {
           "id": "s6-t9",
@@ -1272,7 +1355,8 @@
             "pos": "格助詞",
             "meaning": "時間"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 時間「〜うちに」。"
         },
         {
           "id": "s6-t10",
@@ -1307,7 +1391,8 @@
             "conjugationType": "ガ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ガ下二動詞「ひろぐ」: 「広げる」の意。下二段（ひろげ・ひろげ・ひろぐ・ひろぐる・ひろぐれ・ひろげよ）。"
         },
         {
           "id": "s6-t13",
@@ -1320,7 +1405,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」連体形「たる」: 完了・存続「〜た／〜ている」。連用形接続。「ひろげたる」で「広げた（状態の）」。"
         },
         {
           "id": "s6-t14",
@@ -1332,7 +1418,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」: 連体修飾「〜の」（古語の「が」）。「ごとく」と合わさって比況を作る。"
         },
         {
           "id": "s6-t15",
@@ -1345,7 +1432,8 @@
             "conjugationForm": "用",
             "meaning": "比況"
           },
-          "grammarRefId": "jodoshi-ganbou"
+          "grammarRefId": "jodoshi-ganbou",
+          "hint": "比況の助動詞「ごとし」連用形「ごとく」: 「〜のようだ」。連体形＋「が」または「の」に接続。「扇をひろげたるがごとく」＝「扇を広げたかのように」。和漢混淆文の代表的直喩。"
         },
         {
           "id": "s6-t16",
@@ -1367,7 +1455,8 @@
             "pos": "格助詞",
             "meaning": "結果"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 結果「〜に（なる）」。"
         },
         {
           "id": "s6-t18",
@@ -1381,7 +1470,8 @@
             "conjugationForm": "用",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「なる」: 「〜になる」変化動詞。"
         },
         {
           "id": "s6-t19",
@@ -1394,7 +1484,8 @@
             "conjugationForm": "終",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」: 完了「〜てしまった・〜た」。連用形接続。打消「ず」連体形「ぬ」と接続で識別する。"
         },
         {
           "id": "s6-t20",
@@ -1417,7 +1508,8 @@
             "conjugationType": "ク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ク活用形容詞「遠し」: 連体形「遠き」。後続の体言「家」を修飾。「近き」(s7)と対句を成す。"
         }
       ]
     },
@@ -1446,7 +1538,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題化。s7-9「は」と対をなし、対句を作る。"
         },
         {
           "id": "s7-t3",
@@ -1468,7 +1561,8 @@
             "pos": "格助詞",
             "meaning": "原因"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 原因「〜によって」。"
         },
         {
           "id": "s7-t5",
@@ -1481,7 +1575,8 @@
             "conjugationType": "バ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "バ四動詞「むせぶ」: 「(煙等で)むせかえる・噎せる」。連用形「むせび」で接続。"
         },
         {
           "id": "s7-t6",
@@ -1504,7 +1599,8 @@
             "conjugationType": "ク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ク活用形容詞「近し」: 連体形「近き」。s7-t1「遠き」と対比し、距離による被害の差を描き分ける漢文的対偶。"
         },
         {
           "id": "s7-t8",
@@ -1515,7 +1611,8 @@
           "grammarTag": {
             "pos": "",
             "baseForm": "あたり"
-          }
+          },
+          "hint": "名詞「あたり」: 「付近・周辺」。"
         },
         {
           "id": "s7-t9",
@@ -1527,7 +1624,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題化。s7-t2と対をなす。"
         },
         {
           "id": "s7-t10",
@@ -1538,7 +1636,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "ひたすら"
-          }
+          },
+          "hint": "副詞「ひたすら」: 「ただただ・もっぱら・一途に」。現代語と概ね同義。動詞「吹きつけ」を強調。"
         },
         {
           "id": "s7-t11",
@@ -1560,7 +1659,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。"
         },
         {
           "id": "s7-t13",
@@ -1582,7 +1682,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 場所「〜に」。"
         },
         {
           "id": "s7-t15",
@@ -1595,7 +1696,8 @@
             "conjugationType": "カ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ下二動詞「吹きつく」: 「吹きつける」の意。下二段（つけ・つけ・つく・つくる・つくれ・つけよ）。"
         },
         {
           "id": "s7-t16",
@@ -1608,7 +1710,8 @@
             "conjugationForm": "終",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」: 存続「〜ている」（継続中の状況）。完了「たり」と区別: ここは火が地に吹きつけている状態の継続。"
         },
         {
           "id": "s7-t17",
@@ -1637,7 +1740,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 場所「〜に」。"
         },
         {
           "id": "s8-t2",
@@ -1649,7 +1753,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題化。"
         },
         {
           "id": "s8-t3",
@@ -1671,7 +1776,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。"
         },
         {
           "id": "s8-t5",
@@ -1681,7 +1787,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "タ下二複合動詞「吹き立つ」: 「吹き＋立つ（下二）」で「吹いて舞い上げる」。下二段活用。"
         },
         {
           "id": "s8-t6",
@@ -1694,7 +1801,8 @@
             "conjugationForm": "已",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」已然形「たれ」: 存続「〜ている」。後続「ば」を伴い順接確定（〜ので）を作る。"
         },
         {
           "id": "s8-t7",
@@ -1704,7 +1812,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 已然形＋ばで順接確定（原因「〜ので・〜ところ」）。未然形＋ばの順接仮定（〜なら）と識別。"
         },
         {
           "id": "s8-t8",
@@ -1736,7 +1845,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾「〜の」。"
         },
         {
           "id": "s8-t11",
@@ -1758,7 +1868,8 @@
             "pos": "格助詞",
             "meaning": "原因"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 原因「〜に・〜によって」。"
         },
         {
           "id": "s8-t13",
@@ -1771,7 +1882,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ変動詞「映ず」: 「映る・反射する」の意。サ変は「せ・し・す・する・すれ・せよ」と活用。"
         },
         {
           "id": "s8-t14",
@@ -1804,7 +1916,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ク活用形容詞「あまねし」: 「広い・行き渡っている」の意。連用形「あまねく」で副詞的に「一面に・広く」。"
         },
         {
           "id": "s8-t17",
@@ -1828,7 +1941,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "断定助動詞「なり」連体形「なる」: 「〜である」。連体形・体言・一部の助詞に接続。「紅なる」で「真っ赤である」。形容動詞ナリ活用と接続のしかたで区別。"
         },
         {
           "id": "s8-t19",
@@ -1850,7 +1964,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 場所「〜の中で」。"
         },
         {
           "id": "s8-t21",
@@ -1872,7 +1987,8 @@
             "pos": "格助詞",
             "meaning": "原因"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 原因「〜に」。"
         },
         {
           "id": "s8-t23",
@@ -1885,7 +2001,8 @@
             "conjugationType": "ハ下二",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ下二動詞「堪ふ」: 「耐える・持ちこたえる」。下二段（へ・へ・ふ・ふる・ふれ・へよ）。「堪へず」で「耐えきれず」。"
         },
         {
           "id": "s8-t24",
@@ -1898,7 +2015,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」連用形: 打消「〜ない」。未然形接続。"
         },
         {
           "id": "s8-t25",
@@ -1918,7 +2036,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "ラ四複合動詞「吹き切る」: 「吹いて切り離す」。受身「る」の未然形接続のためラ四未然形「吹き切ら」。"
         },
         {
           "id": "s8-t27",
@@ -1931,7 +2050,8 @@
             "conjugationForm": "用",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」連用形「れ」: 受身・尊敬・自発・可能。ここは受身「〜られる」（風によって炎が吹き切られる）。四段・ナ変・ラ変未然形に接続。"
         },
         {
           "id": "s8-t28",
@@ -1944,7 +2064,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」連体形「たる」: 完了「〜た」。後続「炎」を修飾。"
         },
         {
           "id": "s8-t29",
@@ -1967,7 +2088,8 @@
             "conjugationType": "バ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "バ四動詞「飛ぶ」: 連体形「飛ぶ」で「が」に接続し直喩を作る。"
         },
         {
           "id": "s8-t31",
@@ -1979,7 +2101,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」: 連体修飾。「飛ぶがごとく」で比況の構文を作る。s6「ひろげたるがごとく」と対をなす二重直喩。"
         },
         {
           "id": "s8-t32",
@@ -1992,7 +2115,8 @@
             "conjugationForm": "用",
             "meaning": "比況"
           },
-          "grammarRefId": "jodoshi-ganbou"
+          "grammarRefId": "jodoshi-ganbou",
+          "hint": "比況の助動詞「ごとし」連用形「ごとく」: 「〜のように」。s6と同じく、和漢混淆文の対句的直喩。"
         },
         {
           "id": "s8-t33",
@@ -2002,7 +2126,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「して」: 「〜（の状態）で・〜のようにして」。様態の接続。"
         },
         {
           "id": "s8-t34",
@@ -2024,7 +2149,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 経過点・場所「〜を」。「一、二町を越え」で経過する空間を示す。"
         },
         {
           "id": "s8-t36",
@@ -2034,7 +2160,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": "ヤ下二"
-          }
+          },
+          "hint": "ヤ下二動詞「越ゆ」: 「越える・通り過ぎる」の意。連用形「越え」。"
         },
         {
           "id": "s8-t37",
@@ -2044,7 +2171,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「つつ」: 反復・継続「〜ては〜・〜しながら」。「越えつつ移りゆく」で反復的延焼を強調。"
         },
         {
           "id": "s8-t38",
@@ -2054,7 +2182,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "カ四複合動詞「移りゆく」: s6と同じ複合動詞。延焼の継続を象徴的に重ねる。"
         },
         {
           "id": "s8-t39",
@@ -2093,7 +2222,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s9-t2",
@@ -2115,7 +2245,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s9-t4",
@@ -2135,7 +2266,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「現し心（うつしごころ）」: 古語で「正気・理性を保った平常心」。「現し」＝「現実をそのまま現実と認識する意識」。恐怖や妄執で失われる「まともな心」。仏教思想の影響を受け、清澄で乱れない心を意味する。"
         },
         {
           "id": "s9-t6",
@@ -2148,7 +2280,8 @@
             "conjugationType": "ラ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 未然形「あら」。ラ変は「ら・り・り・る・れ・れ」と活用。終止形が「-り」で終わる四動詞（あり/をり/はべり/いまそかり）の代表。"
         },
         {
           "id": "s9-t7",
@@ -2161,7 +2294,8 @@
             "conjugationForm": "終",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」: 推量・意志・適当・婉曲・仮定「〜だろう・〜よう」。未然形接続。ここは反語「や」と呼応し「〜だろうか」。"
         },
         {
           "id": "s9-t8",
@@ -2173,7 +2307,8 @@
             "pos": "係助詞",
             "meaning": "反語"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」: 疑問・反語。文末にあり係り結びは生じない。「〜あらむや」は反語で「〜であろうか、いや〜ない」。本作頻出の反語形。"
         },
         {
           "id": "s9-t9",
@@ -2222,7 +2357,8 @@
             "pos": "格助詞",
             "meaning": "原因"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 原因「〜に・〜のために」。"
         },
         {
           "id": "s10-t3",
@@ -2235,7 +2371,8 @@
             "conjugationType": "バ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "バ四動詞「むせぶ」: 「むせる」の連用形。s7と同形。"
         },
         {
           "id": "s10-t4",
@@ -2255,7 +2392,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "ハ四複合動詞「倒れ伏す」: 「倒れる＋伏す」で「倒れ込む」。"
         },
         {
           "id": "s10-t6",
@@ -2297,7 +2435,8 @@
             "pos": "格助詞",
             "meaning": "原因"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 原因「〜に」。"
         },
         {
           "id": "s10-t10",
@@ -2310,7 +2449,8 @@
             "conjugationType": "ラ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ下二動詞「まぐる（紛る）」: 「目がくらむ・意識が混濁する」の意。下二段。「まぐれて」で「気を失って」。現代語「紛れる（離散する）」とは別義の古今異義語。"
         },
         {
           "id": "s10-t11",
@@ -2330,7 +2470,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「たちまちに」: 「即座に・瞬時に」。"
         },
         {
           "id": "s10-t13",
@@ -2343,7 +2484,8 @@
             "conjugationType": "ナ変",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ナ変動詞「死ぬ」: ナ変動詞の代表（「死ぬ」「いぬ＝去ぬ・往ぬ」のみ）。「な・に・ぬ・ぬる・ぬれ・ね」と活用。"
         },
         {
           "id": "s10-t14",
@@ -2380,7 +2522,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「身ひとつ」: 「わが身一つだけ・他に何も持たず」。命だけ無事の意。"
         },
         {
           "id": "s11-t2",
@@ -2390,7 +2533,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「からうじて」: 「辛くして」の音便化。「やっとのことで・かろうじて」。現代語「かろうじて」の祖形。"
         },
         {
           "id": "s11-t3",
@@ -2403,7 +2547,8 @@
             "conjugationType": "ラ下二",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ下二動詞「のがる（逃る）」: 「逃れる」。下二段（れ・れ・る・るる・るれ・れよ）。連体形「のがるる」が「も」に接続。"
         },
         {
           "id": "s11-t4",
@@ -2413,7 +2558,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「も」: 逆接「〜ても・〜けれども」。「のがるるも」で「逃れたが・逃れたものの」。"
         },
         {
           "id": "s11-t5",
@@ -2435,7 +2581,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。"
         },
         {
           "id": "s11-t7",
@@ -2445,7 +2592,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "ダ下二複合動詞「取り出づ」: 「取り出す」の意。下二段（づ・づ・づ・づる・づれ・でよ）。"
         },
         {
           "id": "s11-t8",
@@ -2457,7 +2605,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 対象「〜に・〜することに」。"
         },
         {
           "id": "s11-t9",
@@ -2470,7 +2619,8 @@
             "conjugationType": "バ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "バ四動詞「及ぶ」: 「至る・能力が達する」の意。「〜に及ばず」で不可能「〜できない」を表す慣用。"
         },
         {
           "id": "s11-t10",
@@ -2483,7 +2633,8 @@
             "conjugationForm": "終",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消「〜ない」。未然形接続。"
         },
         {
           "id": "s11-t11",
@@ -2511,7 +2662,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "さながら"
-          }
+          },
+          "hint": "副詞「さながら」: 古語で「すべて・残らず・そのまま」。現代語「さながら（あたかも）」とは異なる古今異義語。試験頻出。"
         },
         {
           "id": "s12-t2",
@@ -2521,7 +2673,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「灰燼（かいじん）」: 「灰と燃えさし・焼け跡」。漢語で甚大な焼失を表現。仏教経典にも見られる無常の語彙。"
         },
         {
           "id": "s12-t3",
@@ -2533,7 +2686,8 @@
             "pos": "格助詞",
             "meaning": "結果"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 結果「〜となる」。"
         },
         {
           "id": "s12-t4",
@@ -2547,7 +2701,8 @@
             "conjugationForm": "用",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「なる」: 「〜になる」変化動詞。"
         },
         {
           "id": "s12-t5",
@@ -2560,7 +2715,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」連用形「に」: 完了「〜てしまった」。下に過去「き」が続き「にき」で取り返しのつかない確定を表す（s3と同形）。"
         },
         {
           "id": "s12-t6",
@@ -2573,7 +2729,8 @@
             "conjugationForm": "終",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」: 直接過去「〜た」。連用形接続。"
         },
         {
           "id": "s12-t7",
@@ -2612,7 +2769,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s13-t2",
@@ -2622,7 +2780,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「費え（ついえ）」: 動詞「費ゆ（ついゆ）」の名詞化。「損失・失われたもの」。物的損失のみならず人命・文化を含意。"
         },
         {
           "id": "s13-t3",
@@ -2632,7 +2791,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「いくそばく」: 「どれくらい・どれほど」（疑問）。古語の数量疑問副詞。"
         },
         {
           "id": "s13-t4",
@@ -2644,7 +2804,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。本来は連体形で結ぶが、ここは結びを省略して文を切り、感嘆＋疑問のニュアンス「どれほどか（計り知れない）」。"
         },
         {
           "id": "s13-t5",
@@ -2683,7 +2844,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s14-t3",
@@ -2693,7 +2855,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「たび」「公卿（くぎょう）」: 「たび」＝この時。「公卿」＝三位以上の貴族および参議の高官。当時の政界最上層で、邸宅は大規模な寝殿造。本来延焼に強い造りだが、それすら十六軒焼失したことが被害の異常さを示す。"
         },
         {
           "id": "s14-t4",
@@ -2705,7 +2868,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s14-t5",
@@ -2728,7 +2892,8 @@
             "conjugationType": "カ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ下二動詞「焼く」: 自動詞「焼ける」の意で下二段。連用形「焼け」。他動詞「焼く」（四段）と区別。"
         },
         {
           "id": "s14-t7",
@@ -2741,7 +2906,8 @@
             "conjugationForm": "終",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」: 完了「〜た」（結果存続とも解せる）。連用形接続。"
         },
         {
           "id": "s14-t8",
@@ -2768,7 +2934,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「まして」: 「ましてや・いっそう」。前述より程度が強いことを導く。「A、ましてB」＝Bの方がさらに〜の論法。"
         },
         {
           "id": "s15-t2",
@@ -2790,7 +2957,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s15-t4",
@@ -2813,7 +2981,8 @@
             "conjugationType": "ハ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ下二動詞「数ふ」: 「数える」の意。下二段（へ・へ・ふ・ふる・ふれ・へよ）。"
         },
         {
           "id": "s15-t6",
@@ -2826,7 +2995,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「知る」: 「知り得る・把握する」。「数へ知る」で「数えて把握する」の複合的意味。"
         },
         {
           "id": "s15-t7",
@@ -2838,7 +3008,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 対象「〜に」。"
         },
         {
           "id": "s15-t8",
@@ -2851,7 +3022,8 @@
             "conjugationType": "バ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "バ四動詞「及ぶ」: 「至る・能力が達する」。「〜に及ばず」で不可能「〜できない」。"
         },
         {
           "id": "s15-t9",
@@ -2864,7 +3036,8 @@
             "conjugationForm": "終",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消「〜ない」。"
         },
         {
           "id": "s15-t10",
@@ -2891,7 +3064,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「すべて」: 「総じて・合計すると」。"
         },
         {
           "id": "s16-t2",
@@ -2913,7 +3087,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s16-t4",
@@ -2945,7 +3120,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 対象「〜に」。"
         },
         {
           "id": "s16-t7",
@@ -2958,7 +3134,8 @@
             "conjugationType": "バ四",
             "conjugationForm": "命"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "バ四動詞「及ぶ」: 命令形「及べ」に存続「り」が接続（さみしいリカちゃん）。「達する・至る」の意。"
         },
         {
           "id": "s16-t8",
@@ -2971,7 +3148,8 @@
             "conjugationForm": "終",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」: 完了・存続「〜ている／てしまった」。サ変未然形・四段命令形接続。"
         },
         {
           "id": "s16-t9",
@@ -2983,7 +3161,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用「〜と」。"
         },
         {
           "id": "s16-t10",
@@ -2995,7 +3174,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。連体形で結ぶが、結びを省略して伝聞「〜ということだ」のニュアンス（係り結びの省略）。s5「なん」、s4「かや」と並ぶ伝聞表現の三度目。"
         },
         {
           "id": "s16-t11",
@@ -3035,7 +3215,8 @@
             "conjugationType": "ナ変",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ナ変動詞「死ぬ」: 連体形「死ぬる」。準体法的に「死んだ者」。"
         },
         {
           "id": "s17-t3",
@@ -3057,7 +3238,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s17-t5",
@@ -3067,7 +3249,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "名詞「たぐひ」「辺際（へんざい）」: 「たぐひ」＝類・同類。「辺際」＝限り・果て・境界。「辺際を知らず」で「数の果てが分からない・計り知れない」。"
         },
         {
           "id": "s17-t6",
@@ -3079,7 +3262,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。"
         },
         {
           "id": "s17-t7",
@@ -3092,7 +3276,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「知る」: 未然形「知ら」。"
         },
         {
           "id": "s17-t8",
@@ -3105,7 +3290,8 @@
             "conjugationForm": "終",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消「〜ない」。"
         },
         {
           "id": "s17-t9",
@@ -3144,7 +3330,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s18-t3",
@@ -3167,7 +3354,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ナリ活用形容動詞「愚かなり」: 「愚かである」。連体形「愚かなる」。語幹「愚か」＋活用語尾「なる」。"
         },
         {
           "id": "s18-t5",
@@ -3189,7 +3377,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 場所「〜の中で」。"
         },
         {
           "id": "s18-t7",
@@ -3209,7 +3398,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「さしも」: 「あれほどに・あんなにも・それほどに」。指示性を強める副詞。"
         },
         {
           "id": "s18-t9",
@@ -3222,7 +3412,8 @@
             "conjugationType": "ク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ク活用形容詞「危ふし」: 「危険である・危うい」。連体形「危ふき」で「家」を修飾。"
         },
         {
           "id": "s18-t10",
@@ -3244,7 +3435,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾。"
         },
         {
           "id": "s18-t12",
@@ -3266,7 +3458,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。"
         },
         {
           "id": "s18-t14",
@@ -3279,7 +3472,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ四動詞「作る」: 「建てる・造る」の意。"
         },
         {
           "id": "s18-t15",
@@ -3291,7 +3485,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「とて」: 「〜と思って・〜と言って・〜という目的で」。引用＋意図を示す慣用句。"
         },
         {
           "id": "s18-t16",
@@ -3313,7 +3508,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。"
         },
         {
           "id": "s18-t18",
@@ -3326,7 +3522,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ四動詞「費やす」: 「使い果たす・浪費する」の意。"
         },
         {
           "id": "s18-t19",
@@ -3348,7 +3545,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。"
         },
         {
           "id": "s18-t21",
@@ -3361,7 +3559,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ四動詞「悩ます」: 「悩ませる・苦しめる」。「心を悩ます」で「心配し神経をすり減らす」。"
         },
         {
           "id": "s18-t22",
@@ -3384,7 +3583,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題化。"
         },
         {
           "id": "s18-t24",
@@ -3404,7 +3604,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「すぐれて」: 「特に・とりわけ・群を抜いて」。古語の意味は現代語「すぐれて」に近いが、ここは肯定的でなく「特に〜（あぢきなし）」とネガティブな程度強調。"
         },
         {
           "id": "s18-t26",
@@ -3417,7 +3618,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ク活用形容詞「あぢきなし」: 「無益だ・つまらない・やりきれない」の重要古今異義語。現代語「味気ない」とは違い、古文では「徒労感・どうにもならぬ」が中心義。方丈記全体の無常観を集約する語。"
         },
         {
           "id": "s18-t27",
@@ -3429,7 +3631,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。結びは連体形「はべる」。"
         },
         {
           "id": "s18-t28",
@@ -3443,7 +3646,8 @@
             "conjugationForm": "体",
             "baseForm": "はべる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "丁寧の補助動詞「はべる（侍る）」: ラ変動詞「侍り」の連体形（係助詞「ぞ」の結び）。本動詞「お仕えする」（謙譲）から発展した丁寧の補助動詞「〜でございます」。方丈記は基本常体だが結論部で丁寧体に切り替わる長明独自の筆法。読者への語りかけの姿勢を示す。"
         },
         {
           "id": "s18-t29",
