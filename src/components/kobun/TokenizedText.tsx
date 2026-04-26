@@ -25,6 +25,7 @@ const hintMeta: Record<ReadingHintType, { icon: string; color: string; bg: strin
   structure: { icon: "🔗", color: "text-purple-700", bg: "bg-purple-50" },
   method: { icon: "💡", color: "text-green-700", bg: "bg-green-50" },
   vocab: { icon: "📚", color: "text-purple-700", bg: "bg-purple-50" },
+  culture: { icon: "🏛️", color: "text-rose-700", bg: "bg-rose-50" },
 };
 
 const hintLabel: Record<ReadingHintType, string> = {
@@ -33,6 +34,7 @@ const hintLabel: Record<ReadingHintType, string> = {
   structure: "構造",
   method: "読解法",
   vocab: "語彙",
+  culture: "古文常識",
 };
 
 export function TokenizedText({
