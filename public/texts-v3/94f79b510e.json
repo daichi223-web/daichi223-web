@@ -256,9 +256,9 @@
         },
         {
           "id": "s1-t14",
-          "text": "。詞",
+          "text": "。",
           "start": 20,
-          "end": 22,
+          "end": 21,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -274,9 +274,20 @@
       "tokens": [
         {
           "id": "s2-t1",
-          "text": "に",
+          "text": "詞",
           "start": 0,
           "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
+        },
+        {
+          "id": "s2-t2",
+          "text": "に",
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -285,10 +296,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t2",
+          "id": "s2-t3",
           "text": "つき",
-          "start": 1,
-          "end": 3,
+          "start": 2,
+          "end": 4,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -300,30 +311,30 @@
           "hint": "カ行四段「つく (付く)」: 「か・き・く・く・け・け」と活用。「〜につきて」=「〜について」(漢文訓読体的接続)。"
         },
         {
-          "id": "s2-t3",
+          "id": "s2-t4",
           "text": "て",
-          "start": 3,
-          "end": 4,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s2-t4",
+          "id": "s2-t5",
           "text": "強弱大小",
-          "start": 4,
-          "end": 8,
+          "start": 5,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t5",
+          "id": "s2-t6",
           "text": "候ふ",
-          "start": 8,
-          "end": 10,
+          "start": 9,
+          "end": 11,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -334,10 +345,10 @@
           "hint": "丁寧の補助動詞「候ふ (さうらふ)」: 「〜ます・〜でございます」。ハ行四段。「はべり」とほぼ同義で、中世論説で増加。"
         },
         {
-          "id": "s2-t6",
+          "id": "s2-t7",
           "text": "べし",
-          "start": 10,
-          "end": 12,
+          "start": 11,
+          "end": 13,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -348,10 +359,10 @@
           "hint": "助動詞「べし」: 推量「〜だろう」が基本義。文脈で当然・適当・命令・可能・意志・予定にも。終止形（ラ変は連体形）接続。"
         },
         {
-          "id": "s2-t7",
+          "id": "s2-t8",
           "text": "。",
-          "start": 12,
-          "end": 13,
+          "start": 13,
+          "end": 14,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1277,6 +1288,17 @@
           },
           "grammarRefId": "jodoshi-suiryo",
           "hint": "助動詞「べし」: 推量「〜だろう」が基本義。文脈で当然・適当・命令・可能・意志・予定にも。終止形（ラ変は連体形）接続。"
+        },
+        {
+          "id": "s5-t10",
+          "text": "。",
+          "start": 18,
+          "end": 19,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "歌論用語「幽玄 (ゆうげん)」: 中世和歌・連歌の美的理念で「奥深く言い尽くせない余情・神秘的な趣」。定家・俊成が体系化した。"
         }
       ]
     },
@@ -1287,9 +1309,9 @@
       "tokens": [
         {
           "id": "s6-t1",
-          "text": "。幽玄",
+          "text": "幽玄",
           "start": 0,
-          "end": 3,
+          "end": 2,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1299,8 +1321,8 @@
         {
           "id": "s6-t2",
           "text": "の",
-          "start": 3,
-          "end": 4,
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1311,8 +1333,8 @@
         {
           "id": "s6-t3",
           "text": "詞",
-          "start": 4,
-          "end": 5,
+          "start": 3,
+          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1322,8 +1344,8 @@
         {
           "id": "s6-t4",
           "text": "に",
-          "start": 5,
-          "end": 6,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1334,8 +1356,8 @@
         {
           "id": "s6-t5",
           "text": "鬼拉",
-          "start": 6,
-          "end": 8,
+          "start": 5,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1345,8 +1367,8 @@
         {
           "id": "s6-t6",
           "text": "の",
-          "start": 8,
-          "end": 9,
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1357,8 +1379,8 @@
         {
           "id": "s6-t7",
           "text": "詞",
-          "start": 9,
-          "end": 10,
+          "start": 8,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1368,8 +1390,8 @@
         {
           "id": "s6-t8",
           "text": "など",
-          "start": 10,
-          "end": 12,
+          "start": 9,
+          "end": 11,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
@@ -1379,8 +1401,8 @@
         {
           "id": "s6-t9",
           "text": "を",
-          "start": 12,
-          "end": 13,
+          "start": 11,
+          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1391,8 +1413,8 @@
         {
           "id": "s6-t10",
           "text": "つらね",
-          "start": 13,
-          "end": 16,
+          "start": 12,
+          "end": 15,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1405,8 +1427,8 @@
         {
           "id": "s6-t11",
           "text": "たら",
-          "start": 16,
-          "end": 18,
+          "start": 15,
+          "end": 17,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1419,8 +1441,8 @@
         {
           "id": "s6-t12",
           "text": "む",
-          "start": 18,
-          "end": 19,
+          "start": 17,
+          "end": 18,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1433,8 +1455,8 @@
         {
           "id": "s6-t13",
           "text": "は",
-          "start": 19,
-          "end": 20,
+          "start": 18,
+          "end": 19,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1446,8 +1468,8 @@
         {
           "id": "s6-t14",
           "text": "、",
-          "start": 20,
-          "end": 21,
+          "start": 19,
+          "end": 20,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1456,8 +1478,8 @@
         {
           "id": "s6-t15",
           "text": "いと",
-          "start": 21,
-          "end": 23,
+          "start": 20,
+          "end": 22,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -1468,8 +1490,8 @@
         {
           "id": "s6-t16",
           "text": "見苦しから",
-          "start": 23,
-          "end": 28,
+          "start": 22,
+          "end": 27,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1482,8 +1504,8 @@
         {
           "id": "s6-t17",
           "text": "む",
-          "start": 28,
-          "end": 29,
+          "start": 27,
+          "end": 28,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1496,8 +1518,8 @@
         {
           "id": "s6-t18",
           "text": "に",
-          "start": 29,
-          "end": 30,
+          "start": 28,
+          "end": 29,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1510,8 +1532,8 @@
         {
           "id": "s6-t19",
           "text": "こそ",
-          "start": 30,
-          "end": 32,
+          "start": 29,
+          "end": 31,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1519,6 +1541,16 @@
           },
           "grammarRefId": "joshi-fuku-kakari",
           "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。「〜にこそ」「〜にこそはべらめ」など文末省略・余情表現で頻出。"
+        },
+        {
+          "id": "s6-t20",
+          "text": "。",
+          "start": 31,
+          "end": 32,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
         }
       ]
     },
@@ -1529,19 +1561,9 @@
       "tokens": [
         {
           "id": "s7-t1",
-          "text": "。",
-          "start": 0,
-          "end": 1,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t2",
           "text": "されば",
-          "start": 1,
-          "end": 4,
+          "start": 0,
+          "end": 3,
           "layer": 0,
           "grammarTag": {
             "pos": "接続詞"
@@ -1549,10 +1571,10 @@
           "hint": "接続詞「されば」: 「そうであるから・だから」(順接帰結)。「ラ変動詞さり (然り) 已然形＋ば」の融合。漢文訓読体。"
         },
         {
-          "id": "s7-t3",
+          "id": "s7-t2",
           "text": "、「心",
-          "start": 4,
-          "end": 7,
+          "start": 3,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1560,10 +1582,10 @@
           "hint": "歌論用語「心 (こころ)」: 和歌の内容・主題・情趣・思想の側面。「詞」(=ことば・表現) と対をなし、定家「毎月抄」では両者の調和を理想とする。"
         },
         {
-          "id": "s7-t4",
+          "id": "s7-t3",
           "text": "を",
-          "start": 7,
-          "end": 8,
+          "start": 6,
+          "end": 7,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1572,10 +1594,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s7-t5",
+          "id": "s7-t4",
           "text": "本",
-          "start": 8,
-          "end": 9,
+          "start": 7,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1583,10 +1605,10 @@
           "hint": "歌論用語「本 (もと)」: 「根本・基礎・第一義」。「心を本として」=「心を根本として」。漢文訓読的論述語。"
         },
         {
-          "id": "s7-t6",
+          "id": "s7-t5",
           "text": "と",
-          "start": 9,
-          "end": 10,
+          "start": 8,
+          "end": 9,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1596,10 +1618,10 @@
           "hint": "結果の格助詞「と」: 「〜として・〜と (なる)」。「本として」=「根本として」、「詮とすべけれ」=「肝要とすべきだ」。"
         },
         {
-          "id": "s7-t7",
+          "id": "s7-t6",
           "text": "し",
-          "start": 10,
-          "end": 11,
+          "start": 9,
+          "end": 10,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1610,20 +1632,20 @@
           "hint": "サ変動詞「す」連用形「し」: 「せ・し・す・する・すれ・せよ」と活用。「本として」「心として」の形で論を進める接続表現。"
         },
         {
-          "id": "s7-t8",
+          "id": "s7-t7",
           "text": "て",
-          "start": 11,
-          "end": 12,
+          "start": 10,
+          "end": 11,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s7-t9",
+          "id": "s7-t8",
           "text": "詞",
-          "start": 12,
-          "end": 13,
+          "start": 11,
+          "end": 12,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1631,10 +1653,10 @@
           "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
         },
         {
-          "id": "s7-t10",
+          "id": "s7-t9",
           "text": "を",
-          "start": 13,
-          "end": 14,
+          "start": 12,
+          "end": 13,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1643,10 +1665,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s7-t11",
+          "id": "s7-t10",
           "text": "取捨",
-          "start": 14,
-          "end": 16,
+          "start": 13,
+          "end": 15,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1654,10 +1676,10 @@
           "hint": "サ変漢語「取捨 (しゅしゃ)」: 「取捨選択する」。「詞を取捨せよ」=「言葉を取捨選択せよ」。"
         },
         {
-          "id": "s7-t12",
+          "id": "s7-t11",
           "text": "せよ",
-          "start": 16,
-          "end": 18,
+          "start": 15,
+          "end": 17,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1666,6 +1688,16 @@
           },
           "grammarRefId": "doushi-katsuyo",
           "hint": "サ変動詞「す」命令形「せよ」: 「取捨せよ」「先にせよ」=「取捨しなさい・優先しなさい」。命令文で歌論の指針を示す。"
+        },
+        {
+          "id": "s7-t12",
+          "text": "。",
+          "start": 17,
+          "end": 18,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
         }
       ]
     },
@@ -1676,9 +1708,9 @@
       "tokens": [
         {
           "id": "s8-t1",
-          "text": "。」",
+          "text": "」",
           "start": 0,
-          "end": 2,
+          "end": 1,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1687,8 +1719,8 @@
         {
           "id": "s8-t2",
           "text": "と",
-          "start": 2,
-          "end": 3,
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1700,8 +1732,8 @@
         {
           "id": "s8-t3",
           "text": "亡父卿",
-          "start": 3,
-          "end": 6,
+          "start": 2,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1710,8 +1742,8 @@
         {
           "id": "s8-t4",
           "text": "も",
-          "start": 6,
-          "end": 7,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1723,8 +1755,8 @@
         {
           "id": "s8-t5",
           "text": "申し置き",
-          "start": 7,
-          "end": 11,
+          "start": 6,
+          "end": 10,
           "layer": 4,
           "grammarTag": {
             "pos": ""
@@ -1734,8 +1766,8 @@
         {
           "id": "s8-t6",
           "text": "はべり",
-          "start": 11,
-          "end": 14,
+          "start": 10,
+          "end": 13,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -1749,8 +1781,8 @@
         {
           "id": "s8-t7",
           "text": "し",
-          "start": 14,
-          "end": 15,
+          "start": 13,
+          "end": 14,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1759,6 +1791,16 @@
           },
           "grammarRefId": "jodoshi-jisei",
           "hint": "助動詞「き」連体形「し」: 直接体験過去「〜た」。連用形接続。「申し置きはべりし」=「申し置きなさった」(自分の過去経験)。"
+        },
+        {
+          "id": "s8-t8",
+          "text": "。",
+          "start": 14,
+          "end": 15,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
         }
       ]
     },
@@ -1769,19 +1811,9 @@
       "tokens": [
         {
           "id": "s9-t1",
-          "text": "。",
-          "start": 0,
-          "end": 1,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s9-t2",
           "text": "ある",
-          "start": 1,
-          "end": 3,
+          "start": 0,
+          "end": 2,
           "layer": 0,
           "grammarTag": {
             "pos": "連体",
@@ -1790,20 +1822,20 @@
           "hint": "連体詞「ある」: 「ある〜・とある〜」(不特定の人物・事物を指す)。「ある人」=「とある人」。"
         },
         {
-          "id": "s9-t3",
+          "id": "s9-t2",
           "text": "人、花実",
-          "start": 3,
-          "end": 7,
+          "start": 2,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t4",
+          "id": "s9-t3",
           "text": "の",
-          "start": 7,
-          "end": 8,
+          "start": 6,
+          "end": 7,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1812,10 +1844,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t5",
+          "id": "s9-t4",
           "text": "こと",
-          "start": 8,
-          "end": 10,
+          "start": 7,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -1824,10 +1856,10 @@
           "hint": "名詞「こと (事)」: 「事柄・事・場合」。形式名詞として「〜こと＋助動詞」で抽象命題を作る。"
         },
         {
-          "id": "s9-t6",
+          "id": "s9-t5",
           "text": "を",
-          "start": 10,
-          "end": 11,
+          "start": 9,
+          "end": 10,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1836,20 +1868,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t7",
+          "id": "s9-t6",
           "text": "歌",
-          "start": 11,
-          "end": 12,
+          "start": 10,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t8",
+          "id": "s9-t7",
           "text": "に",
-          "start": 12,
-          "end": 13,
+          "start": 11,
+          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1858,10 +1890,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t9",
+          "id": "s9-t8",
           "text": "たて",
-          "start": 13,
-          "end": 15,
+          "start": 12,
+          "end": 14,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1873,10 +1905,10 @@
           "hint": "タ行下二段「たつ (立つ)」: 「て・て・つ・つる・つれ・てよ」と活用。「(問題などを) 立てる・設ける」。「歌にたて申してはべる」=「歌で問題に立てて申し上げます」。"
         },
         {
-          "id": "s9-t10",
+          "id": "s9-t9",
           "text": "申し",
-          "start": 15,
-          "end": 17,
+          "start": 14,
+          "end": 16,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -1888,20 +1920,20 @@
           "hint": "謙譲の補助動詞「申す」: 「〜申し上げる」(尊敬の意は無く、動作の対象を高める)。サ四。「たて申してはべる」のように複合敬語に組み込まれる。"
         },
         {
-          "id": "s9-t11",
+          "id": "s9-t10",
           "text": "て",
-          "start": 17,
-          "end": 18,
+          "start": 16,
+          "end": 17,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s9-t12",
+          "id": "s9-t11",
           "text": "はべる",
-          "start": 18,
-          "end": 21,
+          "start": 17,
+          "end": 20,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -1913,10 +1945,10 @@
           "hint": "丁寧の補助動詞「はべり」: 「〜ます・〜でございます」。ラ変型 (ら／り／り／る／れ／れ)。論説の地の文・会話で多用、丁寧の敬意は読者・聞き手へ。"
         },
         {
-          "id": "s9-t13",
+          "id": "s9-t12",
           "text": "に",
-          "start": 21,
-          "end": 22,
+          "start": 20,
+          "end": 21,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1925,10 +1957,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t14",
+          "id": "s9-t13",
           "text": "とり",
-          "start": 22,
-          "end": 24,
+          "start": 21,
+          "end": 23,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1939,20 +1971,30 @@
           "hint": "ラ行四段「取る」: 「ら・り・る・る・れ・れ」と活用。「〜にとりて」=「〜について・〜に関して」(漢文訓読的接続)。"
         },
         {
-          "id": "s9-t15",
+          "id": "s9-t14",
           "text": "て",
-          "start": 24,
-          "end": 25,
+          "start": 23,
+          "end": 24,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s9-t16",
+          "id": "s9-t15",
           "text": "、",
+          "start": 24,
+          "end": 25,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s9-t16",
+          "text": "「いにしへ",
           "start": 25,
-          "end": 26,
+          "end": 30,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1960,19 +2002,9 @@
         },
         {
           "id": "s9-t17",
-          "text": "「いにしへ",
-          "start": 26,
-          "end": 31,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s9-t18",
           "text": "の",
-          "start": 31,
-          "end": 32,
+          "start": 30,
+          "end": 31,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1981,20 +2013,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t19",
+          "id": "s9-t18",
           "text": "歌",
-          "start": 32,
-          "end": 33,
+          "start": 31,
+          "end": 32,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t20",
+          "id": "s9-t19",
           "text": "は",
-          "start": 33,
-          "end": 34,
+          "start": 32,
+          "end": 33,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2004,10 +2036,10 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s9-t21",
+          "id": "s9-t20",
           "text": "みな",
-          "start": 34,
-          "end": 36,
+          "start": 33,
+          "end": 35,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2015,10 +2047,10 @@
           "hint": "副詞「みな」: 「すべて・みな」。「みな実を存して」=「すべて実 (内容) を保って」。"
         },
         {
-          "id": "s9-t22",
+          "id": "s9-t21",
           "text": "実",
-          "start": 36,
-          "end": 37,
+          "start": 35,
+          "end": 36,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2026,10 +2058,10 @@
           "hint": "歌論用語「実 (じつ)」: 和歌の内容・主題の充実 (=心)。表面的華やかさ「花」(=詞) と対をなす。「実を存して」=「心 (内容) を保って」。"
         },
         {
-          "id": "s9-t23",
+          "id": "s9-t22",
           "text": "を",
-          "start": 37,
-          "end": 38,
+          "start": 36,
+          "end": 37,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2038,10 +2070,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t24",
+          "id": "s9-t23",
           "text": "存し",
-          "start": 38,
-          "end": 40,
+          "start": 37,
+          "end": 39,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2052,20 +2084,20 @@
           "hint": "サ変複合動詞「存ず」(存す): 「保つ・心得る・知る」。「実を存して花を忘れ」=「実 (=心) を保って花 (=詞) を忘れ」。"
         },
         {
-          "id": "s9-t25",
+          "id": "s9-t24",
           "text": "て",
-          "start": 40,
-          "end": 41,
+          "start": 39,
+          "end": 40,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s9-t26",
+          "id": "s9-t25",
           "text": "花",
-          "start": 41,
-          "end": 42,
+          "start": 40,
+          "end": 41,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2073,10 +2105,10 @@
           "hint": "歌論用語「花 (か)」: 和歌の表現の華やかさ (=詞)。内容の充実「実」(=心) と対をなす。「花をのみ心にかけて」=「表現だけに気をとられて」。"
         },
         {
-          "id": "s9-t27",
+          "id": "s9-t26",
           "text": "を",
-          "start": 42,
-          "end": 43,
+          "start": 41,
+          "end": 42,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2085,10 +2117,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t28",
+          "id": "s9-t27",
           "text": "忘れ",
-          "start": 43,
-          "end": 45,
+          "start": 42,
+          "end": 44,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2099,20 +2131,20 @@
           "hint": "ラ行下二段「忘る」: 「れ・れ・る・るる・るれ・れよ」と活用。「(無意識に) 忘れる」(自発的)。四段「忘る」(意志的に忘れる) と区別する語もある。"
         },
         {
-          "id": "s9-t29",
+          "id": "s9-t28",
           "text": "、近代",
-          "start": 45,
-          "end": 48,
+          "start": 44,
+          "end": 47,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t30",
+          "id": "s9-t29",
           "text": "の",
-          "start": 48,
-          "end": 49,
+          "start": 47,
+          "end": 48,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2121,20 +2153,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t31",
+          "id": "s9-t30",
           "text": "歌",
-          "start": 49,
-          "end": 50,
+          "start": 48,
+          "end": 49,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t32",
+          "id": "s9-t31",
           "text": "は",
-          "start": 50,
-          "end": 51,
+          "start": 49,
+          "end": 50,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2144,10 +2176,10 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s9-t33",
+          "id": "s9-t32",
           "text": "花",
-          "start": 51,
-          "end": 52,
+          "start": 50,
+          "end": 51,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2155,10 +2187,10 @@
           "hint": "歌論用語「花 (か)」: 和歌の表現の華やかさ (=詞)。内容の充実「実」(=心) と対をなす。「花をのみ心にかけて」=「表現だけに気をとられて」。"
         },
         {
-          "id": "s9-t34",
+          "id": "s9-t33",
           "text": "を",
-          "start": 52,
-          "end": 53,
+          "start": 51,
+          "end": 52,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2167,10 +2199,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t35",
+          "id": "s9-t34",
           "text": "のみ",
-          "start": 53,
-          "end": 55,
+          "start": 52,
+          "end": 54,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
@@ -2178,10 +2210,10 @@
           "hint": "副助詞「のみ」: 限定「〜だけ・〜ばかり」+ 強意「とくに〜」。「花をのみ心にかけて」=「花だけを心にかけて」。"
         },
         {
-          "id": "s9-t36",
+          "id": "s9-t35",
           "text": "心",
-          "start": 55,
-          "end": 56,
+          "start": 54,
+          "end": 55,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2189,10 +2221,10 @@
           "hint": "歌論用語「心 (こころ)」: 和歌の内容・主題・情趣・思想の側面。「詞」(=ことば・表現) と対をなし、定家「毎月抄」では両者の調和を理想とする。"
         },
         {
-          "id": "s9-t37",
+          "id": "s9-t36",
           "text": "に",
-          "start": 56,
-          "end": 57,
+          "start": 55,
+          "end": 56,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2201,10 +2233,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t38",
+          "id": "s9-t37",
           "text": "かけ",
-          "start": 57,
-          "end": 59,
+          "start": 56,
+          "end": 58,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2216,20 +2248,20 @@
           "hint": "カ行下二段「かく (掛く)」: 「け・け・く・くる・くれ・けよ」と活用。「心にかけて」=「心にとめて」、「目もかけぬ」=「目を向けない」。慣用表現で頻出。"
         },
         {
-          "id": "s9-t39",
+          "id": "s9-t38",
           "text": "て",
-          "start": 59,
-          "end": 60,
+          "start": 58,
+          "end": 59,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s9-t40",
+          "id": "s9-t39",
           "text": "実",
-          "start": 60,
-          "end": 61,
+          "start": 59,
+          "end": 60,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2237,10 +2269,10 @@
           "hint": "歌論用語「実 (じつ)」: 和歌の内容・主題の充実 (=心)。表面的華やかさ「花」(=詞) と対をなす。「実を存して」=「心 (内容) を保って」。"
         },
         {
-          "id": "s9-t41",
+          "id": "s9-t40",
           "text": "に",
-          "start": 61,
-          "end": 62,
+          "start": 60,
+          "end": 61,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2249,10 +2281,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t42",
+          "id": "s9-t41",
           "text": "は",
-          "start": 62,
-          "end": 63,
+          "start": 61,
+          "end": 62,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2262,20 +2294,20 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s9-t43",
+          "id": "s9-t42",
           "text": "目",
-          "start": 63,
-          "end": 64,
+          "start": 62,
+          "end": 63,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t44",
+          "id": "s9-t43",
           "text": "も",
-          "start": 64,
-          "end": 65,
+          "start": 63,
+          "end": 64,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2285,10 +2317,10 @@
           "hint": "係助詞「も」: 強意・類似「〜も」。係り結びは起こさない。「目もかけぬ」=「目も向けない」(強意)。"
         },
         {
-          "id": "s9-t45",
+          "id": "s9-t44",
           "text": "かけ",
-          "start": 65,
-          "end": 67,
+          "start": 64,
+          "end": 66,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2300,10 +2332,10 @@
           "hint": "カ行下二段「かく (掛く)」: 「け・け・く・くる・くれ・けよ」と活用。「心にかけて」=「心にとめて」、「目もかけぬ」=「目を向けない」。慣用表現で頻出。"
         },
         {
-          "id": "s9-t46",
+          "id": "s9-t45",
           "text": "ぬ",
-          "start": 67,
-          "end": 68,
+          "start": 66,
+          "end": 67,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2314,10 +2346,10 @@
           "hint": "助動詞「ず」連体形「ぬ」: 「〜ない＋体言」。完了「ぬ」(終止形) と紛らわしいので、接続 (未然形か連用形か) と活用形 (連体か終止か) で識別。"
         },
         {
-          "id": "s9-t47",
+          "id": "s9-t46",
           "text": "から",
-          "start": 68,
-          "end": 70,
+          "start": 67,
+          "end": 69,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2327,10 +2359,10 @@
           "hint": "格助詞「から」: 「〜のために・〜によって・〜から」(原因・起点)。「目もかけぬから」=「目もかけないから (=ことだ)」。中世以降に発達した用法。"
         },
         {
-          "id": "s9-t48",
-          "text": "。」",
-          "start": 70,
-          "end": 72,
+          "id": "s9-t47",
+          "text": "。",
+          "start": 69,
+          "end": 70,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2345,9 +2377,19 @@
       "tokens": [
         {
           "id": "s10-t1",
-          "text": "と",
+          "text": "」",
           "start": 0,
           "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s10-t2",
+          "text": "と",
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2357,10 +2399,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s10-t2",
+          "id": "s10-t3",
           "text": "申し",
-          "start": 1,
-          "end": 3,
+          "start": 2,
+          "end": 4,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -2372,10 +2414,10 @@
           "hint": "謙譲の動詞「申す」: 「申し上げる」(言ふの謙譲)。サ行四段。連用形「申し」+ 補助動詞で複合的な敬語表現を作る。"
         },
         {
-          "id": "s10-t3",
+          "id": "s10-t4",
           "text": "た",
-          "start": 3,
-          "end": 4,
+          "start": 4,
+          "end": 5,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2386,10 +2428,10 @@
           "hint": "助動詞「つ」連体形「た」: 完了「〜た・〜てしまった」。連用形接続。「〜ためり」「〜たり」の形で頻出。意志的・確述的な完了を表す。"
         },
         {
-          "id": "s10-t4",
+          "id": "s10-t5",
           "text": "めり",
-          "start": 4,
-          "end": 6,
+          "start": 5,
+          "end": 7,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2400,25 +2442,14 @@
           "hint": "助動詞「めり」: 視覚的推定「〜のようだ・〜と見える」と婉曲「〜のように見える」。終止形 (ラ変は連体形) 接続。「申しためり」=「申しているように見える」。"
         },
         {
-          "id": "s10-t5",
+          "id": "s10-t6",
           "text": "。",
-          "start": 6,
-          "end": 7,
+          "start": 7,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s10-t6",
-          "text": "もつとも",
-          "start": 7,
-          "end": 11,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「もつとも」: 「もっとも・まことに」(同意・肯定の強意)。「もつともさとおぼえはべる」=「もっともそのように思われます」。"
         }
       ]
     },
@@ -2429,9 +2460,20 @@
       "tokens": [
         {
           "id": "s11-t1",
-          "text": "さ",
+          "text": "もつとも",
           "start": 0,
-          "end": 1,
+          "end": 4,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「もつとも」: 「もっとも・まことに」(同意・肯定の強意)。「もつともさとおぼえはべる」=「もっともそのように思われます」。"
+        },
+        {
+          "id": "s11-t2",
+          "text": "さ",
+          "start": 4,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
@@ -2439,10 +2481,10 @@
           "hint": "副詞「さ (然)」: 「そう・そのように」(指示)。「さとおぼえる」=「そのように思われる」。「さらば／されば」「さて」の構成要素。"
         },
         {
-          "id": "s11-t2",
+          "id": "s11-t3",
           "text": "と",
-          "start": 1,
-          "end": 2,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2452,10 +2494,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s11-t3",
+          "id": "s11-t4",
           "text": "おぼえ",
-          "start": 2,
-          "end": 5,
+          "start": 6,
+          "end": 9,
           "layer": 1,
           "grammarTag": {
             "pos": "ヤ下二",
@@ -2464,10 +2506,10 @@
           "hint": "ヤ行下二段「覚ゆ」: 「え・え・ゆ・ゆる・ゆれ・えよ」と活用。「思われる・感じられる」(自発)+「思い出される」+「似る」。「さとおぼえはべる」=「そのように思われます」。"
         },
         {
-          "id": "s11-t4",
+          "id": "s11-t5",
           "text": "はべる",
-          "start": 5,
-          "end": 8,
+          "start": 9,
+          "end": 12,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -2479,20 +2521,20 @@
           "hint": "丁寧の補助動詞「はべり」: 「〜ます・〜でございます」。ラ変型 (ら／り／り／る／れ／れ)。論説の地の文・会話で多用、丁寧の敬意は読者・聞き手へ。"
         },
         {
-          "id": "s11-t5",
+          "id": "s11-t6",
           "text": "うへ、古今序",
-          "start": 8,
-          "end": 14,
+          "start": 12,
+          "end": 18,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s11-t6",
+          "id": "s11-t7",
           "text": "に",
-          "start": 14,
-          "end": 15,
+          "start": 18,
+          "end": 19,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2501,10 +2543,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s11-t7",
+          "id": "s11-t8",
           "text": "も",
-          "start": 15,
-          "end": 16,
+          "start": 19,
+          "end": 20,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2514,20 +2556,20 @@
           "hint": "係助詞「も」: 類似「〜もまた」。「古今序にも」=「古今集の序文にも」(同類提示)。"
         },
         {
-          "id": "s11-t8",
+          "id": "s11-t9",
           "text": "そ",
-          "start": 16,
-          "end": 17,
+          "start": 20,
+          "end": 21,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s11-t9",
+          "id": "s11-t10",
           "text": "の",
-          "start": 17,
-          "end": 18,
+          "start": 21,
+          "end": 22,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2536,20 +2578,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s11-t10",
+          "id": "s11-t11",
           "text": "意",
-          "start": 18,
-          "end": 19,
+          "start": 22,
+          "end": 23,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s11-t11",
+          "id": "s11-t12",
           "text": "はべる",
-          "start": 19,
-          "end": 22,
+          "start": 23,
+          "end": 26,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2561,10 +2603,10 @@
           "hint": "丁寧の本動詞「はべり」: 「あります・おります」。ラ変。「〜はべるべし」=「〜でございましょう」と読む論説定型。"
         },
         {
-          "id": "s11-t12",
+          "id": "s11-t13",
           "text": "やらむ",
-          "start": 22,
-          "end": 25,
+          "start": 26,
+          "end": 29,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2572,28 +2614,14 @@
           "hint": "係助詞「や」+ 助動詞「らむ」=「やらむ」: 「〜であろうか」(現在推量の疑問)。「その意はべるやらむ」=「その意味があるのだろうか」(婉曲な疑問)。"
         },
         {
-          "id": "s11-t13",
+          "id": "s11-t14",
           "text": "。",
-          "start": 25,
-          "end": 26,
+          "start": 29,
+          "end": 30,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s11-t14",
-          "text": "さる",
-          "start": 26,
-          "end": 28,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ラ変動詞「さり」(然り): 「そうである・しかり」。「されば」=「そうであるから・だから」(順接接続)。「さるにつきて」=「それについて」。"
         }
       ]
     },
@@ -2604,9 +2632,23 @@
       "tokens": [
         {
           "id": "s12-t1",
-          "text": "に",
+          "text": "さる",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「さり」(然り): 「そうである・しかり」。「されば」=「そうであるから・だから」(順接接続)。「さるにつきて」=「それについて」。"
+        },
+        {
+          "id": "s12-t2",
+          "text": "に",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2615,10 +2657,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s12-t2",
+          "id": "s12-t3",
           "text": "つき",
-          "start": 1,
-          "end": 3,
+          "start": 3,
+          "end": 5,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2630,30 +2672,30 @@
           "hint": "カ行四段「つく (付く)」: 「か・き・く・く・け・け」と活用。「〜につきて」=「〜について」(漢文訓読体的接続)。"
         },
         {
-          "id": "s12-t3",
+          "id": "s12-t4",
           "text": "て",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s12-t4",
+          "id": "s12-t5",
           "text": "、",
-          "start": 4,
-          "end": 5,
+          "start": 6,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s12-t5",
+          "id": "s12-t6",
           "text": "なほ",
-          "start": 5,
-          "end": 7,
+          "start": 7,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -2662,39 +2704,17 @@
           "hint": "副詞「なほ」: 「やはり・依然として・さらに」。「なほこの下の了簡」=「さらに以下の考察」。論を続ける際の常用副詞。"
         },
         {
-          "id": "s12-t6",
+          "id": "s12-t7",
           "text": "こ",
-          "start": 7,
-          "end": 8,
+          "start": 9,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s12-t7",
-          "text": "の",
-          "start": 8,
-          "end": 9,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
           "id": "s12-t8",
-          "text": "下",
-          "start": 9,
-          "end": 10,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s12-t9",
           "text": "の",
           "start": 10,
           "end": 11,
@@ -2706,20 +2726,42 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s12-t10",
-          "text": "了簡、愚推",
+          "id": "s12-t9",
+          "text": "下",
           "start": 11,
-          "end": 16,
+          "end": 12,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
+          "id": "s12-t10",
+          "text": "の",
+          "start": 12,
+          "end": 13,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
           "id": "s12-t11",
+          "text": "了簡、愚推",
+          "start": 13,
+          "end": 18,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s12-t12",
           "text": "を",
-          "start": 16,
-          "end": 17,
+          "start": 18,
+          "end": 19,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2728,10 +2770,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s12-t12",
+          "id": "s12-t13",
           "text": "わづかに",
-          "start": 17,
-          "end": 21,
+          "start": 19,
+          "end": 23,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2742,10 +2784,10 @@
           "hint": "ナリ活用形動詞「わづかなり」連用形: 「わずかに・ほんの少し」。「わづかにめぐらし見はべれば」=「わずかに思案してみますと」。"
         },
         {
-          "id": "s12-t13",
+          "id": "s12-t14",
           "text": "めぐらし",
-          "start": 21,
-          "end": 25,
+          "start": 23,
+          "end": 27,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2756,10 +2798,10 @@
           "hint": "サ変「めぐらす (回らす)」: 「(考えを) 廻らす・思案する」。「愚推をわづかにめぐらし見はべれば」=「愚かな推測をわずかに廻らせて考えてみると」。"
         },
         {
-          "id": "s12-t14",
+          "id": "s12-t15",
           "text": "見",
-          "start": 25,
-          "end": 26,
+          "start": 27,
+          "end": 28,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2770,10 +2812,10 @@
           "hint": "マ行上一段「見る」: 「み・み・みる・みる・みれ・みよ」と活用。「〜して見る」「めぐらし見る」など複合動詞でも頻出。"
         },
         {
-          "id": "s12-t15",
+          "id": "s12-t16",
           "text": "はべれ",
-          "start": 26,
-          "end": 29,
+          "start": 28,
+          "end": 31,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -2785,10 +2827,10 @@
           "hint": "丁寧「はべり」已然形: 「〜はべれば」=「〜でございますので」(確定条件)。"
         },
         {
-          "id": "s12-t16",
+          "id": "s12-t17",
           "text": "ば",
-          "start": 29,
-          "end": 30,
+          "start": 31,
+          "end": 32,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -2796,20 +2838,20 @@
           "hint": "接続助詞「ば」(已然形接続): 確定条件「〜したので・〜すると」。「教ふれば」=「教えると」。未然＋ば (仮定) との識別が重要。"
         },
         {
-          "id": "s12-t17",
+          "id": "s12-t18",
           "text": "、",
-          "start": 30,
-          "end": 31,
+          "start": 32,
+          "end": 33,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s12-t18",
+          "id": "s12-t19",
           "text": "心得",
-          "start": 31,
-          "end": 33,
+          "start": 33,
+          "end": 35,
           "layer": 1,
           "grammarTag": {
             "pos": "ア下二"
@@ -2817,10 +2859,10 @@
           "hint": "ア行下二段「心得 (こころう)」: 「え・え・う・うる・うれ・えよ」と活用。「理解する・納得する」。「心得べきこと」=「理解しておくべきこと」。古文でア下二は「得・心得」のみ。"
         },
         {
-          "id": "s12-t19",
+          "id": "s12-t20",
           "text": "べき",
-          "start": 33,
-          "end": 35,
+          "start": 35,
+          "end": 37,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2831,10 +2873,10 @@
           "hint": "助動詞「べし」: 当然「〜はずだ・〜べきだ」。連体形「べき」+体言で「〜すべき〜」。終止形接続（ラ変は連体形）。"
         },
         {
-          "id": "s12-t20",
+          "id": "s12-t21",
           "text": "こと",
-          "start": 35,
-          "end": 37,
+          "start": 37,
+          "end": 39,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -2843,10 +2885,10 @@
           "hint": "名詞「こと (事)」: 「事柄・事・場合」。形式名詞として「〜こと＋助動詞」で抽象命題を作る。"
         },
         {
-          "id": "s12-t21",
+          "id": "s12-t22",
           "text": "はべる",
-          "start": 37,
-          "end": 40,
+          "start": 39,
+          "end": 42,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2858,10 +2900,10 @@
           "hint": "丁寧の本動詞「はべり」: 「あります・おります」。ラ変。「〜はべるべし」=「〜でございましょう」と読む論説定型。"
         },
         {
-          "id": "s12-t22",
+          "id": "s12-t23",
           "text": "に",
-          "start": 40,
-          "end": 41,
+          "start": 42,
+          "end": 43,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2872,10 +2914,10 @@
           "hint": "断定の助動詞「なり」連用形「に」: 「に＋て」「に＋こそ」「に＋や」の形で頻出。識別は「断定 (にて) ／ 完了 (ぬの連用) ／ 形動 (なり) の連用形」を区別する。"
         },
         {
-          "id": "s12-t23",
+          "id": "s12-t24",
           "text": "や",
-          "start": 41,
-          "end": 42,
+          "start": 43,
+          "end": 44,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2885,25 +2927,14 @@
           "hint": "係助詞「や」: 疑問「〜か」、反語「〜か、いや〜ない」。係り結びの結びは連体形。「〜にや (はべらむ)」で婉曲な疑問。"
         },
         {
-          "id": "s12-t24",
+          "id": "s12-t25",
           "text": "。",
-          "start": 42,
-          "end": 43,
+          "start": 44,
+          "end": 45,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s12-t25",
-          "text": "いはゆる",
-          "start": 43,
-          "end": 47,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "連体"
-          },
-          "hint": "連体詞「いはゆる (所謂)」: 「いわゆる・世にいう」。漢文訓読語で論述に使う。"
         }
       ]
     },
@@ -2914,9 +2945,20 @@
       "tokens": [
         {
           "id": "s13-t1",
-          "text": "実",
+          "text": "いはゆる",
           "start": 0,
-          "end": 1,
+          "end": 4,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "連体"
+          },
+          "hint": "連体詞「いはゆる (所謂)」: 「いわゆる・世にいう」。漢文訓読語で論述に使う。"
+        },
+        {
+          "id": "s13-t2",
+          "text": "実",
+          "start": 4,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2924,10 +2966,10 @@
           "hint": "歌論用語「実 (じつ)」: 和歌の内容・主題の充実 (=心)。表面的華やかさ「花」(=詞) と対をなす。「実を存して」=「心 (内容) を保って」。"
         },
         {
-          "id": "s13-t2",
+          "id": "s13-t3",
           "text": "と",
-          "start": 1,
-          "end": 2,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2937,10 +2979,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s13-t3",
+          "id": "s13-t4",
           "text": "申す",
-          "start": 2,
-          "end": 4,
+          "start": 6,
+          "end": 8,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -2952,10 +2994,10 @@
           "hint": "謙譲の動詞「申す」: 「申し上げる」(言ふの謙譲)。サ行四段。動作対象への敬意。「〜と申す」=「〜と申し上げる」、論説で「〜と言う」の意でも使われる。"
         },
         {
-          "id": "s13-t4",
+          "id": "s13-t5",
           "text": "は",
-          "start": 4,
-          "end": 5,
+          "start": 8,
+          "end": 9,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2965,20 +3007,20 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s13-t5",
+          "id": "s13-t6",
           "text": "心、花",
-          "start": 5,
-          "end": 8,
+          "start": 9,
+          "end": 12,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s13-t6",
+          "id": "s13-t7",
           "text": "と",
-          "start": 8,
-          "end": 9,
+          "start": 12,
+          "end": 13,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2988,10 +3030,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s13-t7",
+          "id": "s13-t8",
           "text": "申す",
-          "start": 9,
-          "end": 11,
+          "start": 13,
+          "end": 15,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -3003,10 +3045,10 @@
           "hint": "謙譲の動詞「申す」: 「申し上げる」(言ふの謙譲)。サ行四段。動作対象への敬意。「〜と申す」=「〜と申し上げる」、論説で「〜と言う」の意でも使われる。"
         },
         {
-          "id": "s13-t8",
+          "id": "s13-t9",
           "text": "は",
-          "start": 11,
-          "end": 12,
+          "start": 15,
+          "end": 16,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3016,10 +3058,10 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s13-t9",
+          "id": "s13-t10",
           "text": "詞",
-          "start": 12,
-          "end": 13,
+          "start": 16,
+          "end": 17,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3027,10 +3069,10 @@
           "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
         },
         {
-          "id": "s13-t10",
+          "id": "s13-t11",
           "text": "なり",
-          "start": 13,
-          "end": 15,
+          "start": 17,
+          "end": 19,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3042,25 +3084,14 @@
           "hint": "助動詞「なり」: 断定「〜である・〜だ」。体言＋なり、連体形＋なり。「〜なり」で文を結ぶ論説の基本表現。"
         },
         {
-          "id": "s13-t11",
+          "id": "s13-t12",
           "text": "。",
-          "start": 15,
-          "end": 16,
+          "start": 19,
+          "end": 20,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s13-t12",
-          "text": "必ず",
-          "start": 16,
-          "end": 18,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「必ず」: 「きっと・確実に」+ 打消と呼応すると「必ずしも〜ない」(部分否定)。「必ず〜定めがたかるべし」=「必ずしも断定しがたいだろう」。"
         }
       ]
     },
@@ -3071,19 +3102,30 @@
       "tokens": [
         {
           "id": "s14-t1",
-          "text": "、いにしへ",
+          "text": "必ず",
           "start": 0,
-          "end": 5,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「必ず」: 「きっと・確実に」+ 打消と呼応すると「必ずしも〜ない」(部分否定)。「必ず〜定めがたかるべし」=「必ずしも断定しがたいだろう」。"
+        },
+        {
+          "id": "s14-t2",
+          "text": "、いにしへ",
+          "start": 2,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s14-t2",
+          "id": "s14-t3",
           "text": "の",
-          "start": 5,
-          "end": 6,
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3092,10 +3134,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s14-t3",
+          "id": "s14-t4",
           "text": "詞",
-          "start": 6,
-          "end": 7,
+          "start": 8,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3103,10 +3145,10 @@
           "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
         },
         {
-          "id": "s14-t4",
+          "id": "s14-t5",
           "text": "強く",
-          "start": 7,
-          "end": 9,
+          "start": 9,
+          "end": 11,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3117,10 +3159,10 @@
           "hint": "ク活用形容詞「つよし (強し)」連用形: 「強く・力強く」。「いにしへの詞強く聞こゆる」=「古歌の言葉が力強く感じられる」。"
         },
         {
-          "id": "s14-t5",
+          "id": "s14-t6",
           "text": "聞こゆる",
-          "start": 9,
-          "end": 13,
+          "start": 11,
+          "end": 15,
           "layer": 1,
           "grammarTag": {
             "pos": "ヤ下二"
@@ -3128,10 +3170,10 @@
           "hint": "ヤ行下二段「聞こゆ」: 「え・え・ゆ・ゆる・ゆれ・えよ」と活用。「(自然と) 聞こえる」(自発)+「言う・申し上げる」(謙譲)。「強く聞こゆる」=「強く感じられる」。"
         },
         {
-          "id": "s14-t6",
+          "id": "s14-t7",
           "text": "を",
-          "start": 13,
-          "end": 14,
+          "start": 15,
+          "end": 16,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3140,20 +3182,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s14-t7",
+          "id": "s14-t8",
           "text": "、",
-          "start": 14,
-          "end": 15,
+          "start": 16,
+          "end": 17,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s14-t8",
+          "id": "s14-t9",
           "text": "実",
-          "start": 15,
-          "end": 16,
+          "start": 17,
+          "end": 18,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3161,10 +3203,10 @@
           "hint": "歌論用語「実 (じつ)」: 和歌の内容・主題の充実 (=心)。表面的華やかさ「花」(=詞) と対をなす。「実を存して」=「心 (内容) を保って」。"
         },
         {
-          "id": "s14-t9",
+          "id": "s14-t10",
           "text": "と",
-          "start": 16,
-          "end": 17,
+          "start": 18,
+          "end": 19,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3174,10 +3216,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s14-t10",
+          "id": "s14-t11",
           "text": "申す",
-          "start": 17,
-          "end": 19,
+          "start": 19,
+          "end": 21,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -3189,10 +3231,10 @@
           "hint": "謙譲の動詞「申す」: 「申し上げる」(言ふの謙譲)。サ行四段。動作対象への敬意。「〜と申す」=「〜と申し上げる」、論説で「〜と言う」の意でも使われる。"
         },
         {
-          "id": "s14-t11",
+          "id": "s14-t12",
           "text": "と",
-          "start": 19,
-          "end": 20,
+          "start": 21,
+          "end": 22,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3202,10 +3244,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s14-t12",
+          "id": "s14-t13",
           "text": "は",
-          "start": 20,
-          "end": 21,
+          "start": 22,
+          "end": 23,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3215,10 +3257,10 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s14-t13",
+          "id": "s14-t14",
           "text": "定めがたかる",
-          "start": 21,
-          "end": 27,
+          "start": 23,
+          "end": 29,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3229,10 +3271,10 @@
           "hint": "ク活用形容詞「定めがたし」: 「決めがたい・断定しがたい」。「〜がたし」=「〜しにくい」の派生語。"
         },
         {
-          "id": "s14-t14",
+          "id": "s14-t15",
           "text": "べし",
-          "start": 27,
-          "end": 29,
+          "start": 29,
+          "end": 31,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3243,9 +3285,9 @@
           "hint": "助動詞「べし」: 推量「〜だろう」が基本義。文脈で当然・適当・命令・可能・意志・予定にも。終止形（ラ変は連体形）接続。"
         },
         {
-          "id": "s14-t15",
-          "text": "。古人",
-          "start": 29,
+          "id": "s14-t16",
+          "text": "。",
+          "start": 31,
           "end": 32,
           "layer": 0,
           "grammarTag": {
@@ -3261,9 +3303,19 @@
       "tokens": [
         {
           "id": "s15-t1",
-          "text": "の",
+          "text": "古人",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s15-t2",
+          "text": "の",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3272,20 +3324,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s15-t2",
+          "id": "s15-t3",
           "text": "詠作",
-          "start": 1,
-          "end": 3,
+          "start": 3,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s15-t3",
+          "id": "s15-t4",
           "text": "に",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3294,10 +3346,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s15-t4",
+          "id": "s15-t5",
           "text": "も",
-          "start": 4,
-          "end": 5,
+          "start": 6,
+          "end": 7,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3307,20 +3359,20 @@
           "hint": "係助詞「も」: 強意・類似「〜も」。係り結びは起こさない。「目もかけぬ」=「目も向けない」(強意)。"
         },
         {
-          "id": "s15-t5",
+          "id": "s15-t6",
           "text": "、",
-          "start": 5,
-          "end": 6,
+          "start": 7,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s15-t6",
+          "id": "s15-t7",
           "text": "心なから",
-          "start": 6,
-          "end": 10,
+          "start": 8,
+          "end": 12,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3331,10 +3383,10 @@
           "hint": "ク活用形容詞「心なし」未然形: 「心 (=主題・情感) がない・思慮がない」。歌論では「実 (内容) がない」の意。"
         },
         {
-          "id": "s15-t7",
+          "id": "s15-t8",
           "text": "む",
-          "start": 10,
-          "end": 11,
+          "start": 12,
+          "end": 13,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3345,20 +3397,20 @@
           "hint": "助動詞「む」: 婉曲「〜のような・〜ような」+体言の用法。連体形「む」+体言＝婉曲・仮定が中心。未然形接続。"
         },
         {
-          "id": "s15-t8",
+          "id": "s15-t9",
           "text": "歌",
-          "start": 11,
-          "end": 12,
+          "start": 13,
+          "end": 14,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s15-t9",
+          "id": "s15-t10",
           "text": "をば",
-          "start": 12,
-          "end": 14,
+          "start": 14,
+          "end": 16,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3366,10 +3418,10 @@
           "hint": "格助詞「を」+ 係助詞「は」=「をば」: 「〜を (取り立てて)」。動作対象を強調・対比して提示する形。「強き詞をば」=「強い言葉については」。"
         },
         {
-          "id": "s15-t10",
+          "id": "s15-t11",
           "text": "実",
-          "start": 14,
-          "end": 15,
+          "start": 16,
+          "end": 17,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3377,10 +3429,10 @@
           "hint": "歌論用語「実 (じつ)」: 和歌の内容・主題の充実 (=心)。表面的華やかさ「花」(=詞) と対をなす。「実を存して」=「心 (内容) を保って」。"
         },
         {
-          "id": "s15-t11",
+          "id": "s15-t12",
           "text": "なき",
-          "start": 15,
-          "end": 17,
+          "start": 17,
+          "end": 19,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3392,20 +3444,20 @@
           "hint": "形容詞「なし」連体形: ク活用「なし」=「ない」。「〜なき〜」=「〜のない〜」。古文では「無し」一語で「亡くなる」の意もある。"
         },
         {
-          "id": "s15-t12",
+          "id": "s15-t13",
           "text": "歌",
-          "start": 17,
-          "end": 18,
+          "start": 19,
+          "end": 20,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s15-t13",
+          "id": "s15-t14",
           "text": "と",
-          "start": 18,
-          "end": 19,
+          "start": 20,
+          "end": 21,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3415,10 +3467,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s15-t14",
+          "id": "s15-t15",
           "text": "ぞ",
-          "start": 19,
-          "end": 20,
+          "start": 21,
+          "end": 22,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3428,10 +3480,10 @@
           "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。訳出不要が多いが論説では「まさに〜だ」と強める。"
         },
         {
-          "id": "s15-t15",
+          "id": "s15-t16",
           "text": "申す",
-          "start": 20,
-          "end": 22,
+          "start": 22,
+          "end": 24,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -3443,10 +3495,10 @@
           "hint": "謙譲の動詞「申す」: 「申し上げる」(言ふの謙譲)。サ行四段。動作対象への敬意。「〜と申す」=「〜と申し上げる」、論説で「〜と言う」の意でも使われる。"
         },
         {
-          "id": "s15-t16",
+          "id": "s15-t17",
           "text": "べき",
-          "start": 22,
-          "end": 24,
+          "start": 24,
+          "end": 26,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3457,20 +3509,10 @@
           "hint": "助動詞「べし」: 当然「〜はずだ・〜べきだ」。連体形「べき」+体言で「〜すべき〜」。終止形接続（ラ変は連体形）。"
         },
         {
-          "id": "s15-t17",
-          "text": "。",
-          "start": 24,
-          "end": 25,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s15-t18",
-          "text": "今",
-          "start": 25,
-          "end": 26,
+          "text": "。",
+          "start": 26,
+          "end": 27,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3485,9 +3527,19 @@
       "tokens": [
         {
           "id": "s16-t1",
-          "text": "の",
+          "text": "今",
           "start": 0,
           "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s16-t2",
+          "text": "の",
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3496,20 +3548,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s16-t2",
+          "id": "s16-t3",
           "text": "人",
-          "start": 1,
-          "end": 2,
+          "start": 2,
+          "end": 3,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s16-t3",
+          "id": "s16-t4",
           "text": "の",
-          "start": 2,
-          "end": 3,
+          "start": 3,
+          "end": 4,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3518,10 +3570,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s16-t4",
+          "id": "s16-t5",
           "text": "よめ",
-          "start": 3,
-          "end": 5,
+          "start": 4,
+          "end": 6,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3532,10 +3584,10 @@
           "hint": "マ行四段「詠む」: 「ま・み・む・む・め・め」と活用。「(歌を) 詠む」。命令形 (已然形) +り＝完了存続「よめり」=「詠んでいる」(四已＋り)。"
         },
         {
-          "id": "s16-t5",
+          "id": "s16-t6",
           "text": "ら",
-          "start": 5,
-          "end": 6,
+          "start": 6,
+          "end": 7,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3546,10 +3598,10 @@
           "hint": "助動詞「り」: 完了・存続「〜た／〜ている」。サ変未然形・四段已然形に接続 (サ未四已)。「よめらむ」=「詠んでいるような」。"
         },
         {
-          "id": "s16-t6",
+          "id": "s16-t7",
           "text": "む",
-          "start": 6,
-          "end": 7,
+          "start": 7,
+          "end": 8,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3560,10 +3612,10 @@
           "hint": "助動詞「む」: 婉曲「〜のような・〜ような」+体言の用法。連体形「む」+体言＝婉曲・仮定が中心。未然形接続。"
         },
         {
-          "id": "s16-t7",
+          "id": "s16-t8",
           "text": "に",
-          "start": 7,
-          "end": 8,
+          "start": 8,
+          "end": 9,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3572,10 +3624,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s16-t8",
+          "id": "s16-t9",
           "text": "も",
-          "start": 8,
-          "end": 9,
+          "start": 9,
+          "end": 10,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3585,20 +3637,20 @@
           "hint": "係助詞「も」: 強意・類似「〜も」。係り結びは起こさない。「目もかけぬ」=「目も向けない」(強意)。"
         },
         {
-          "id": "s16-t9",
+          "id": "s16-t10",
           "text": "、",
-          "start": 9,
-          "end": 10,
+          "start": 10,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s16-t10",
+          "id": "s16-t11",
           "text": "うるはしく",
-          "start": 10,
-          "end": 15,
+          "start": 11,
+          "end": 16,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3609,10 +3661,10 @@
           "hint": "シク活用形容詞「うるはし」連用形: 「整って美しい・端正だ・立派だ」。歌論では「整って正しい歌」を指す。"
         },
         {
-          "id": "s16-t11",
+          "id": "s16-t12",
           "text": "正しから",
-          "start": 15,
-          "end": 19,
+          "start": 16,
+          "end": 20,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3623,10 +3675,10 @@
           "hint": "シク活用形容詞「正し」未然形: 「正しい・規範に合っている」。「うるはしく正しからむ」=「端正で正しいような (歌)」。"
         },
         {
-          "id": "s16-t12",
+          "id": "s16-t13",
           "text": "む",
-          "start": 19,
-          "end": 20,
+          "start": 20,
+          "end": 21,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3637,10 +3689,10 @@
           "hint": "助動詞「む」: 婉曲「〜のような・〜ような」+体言の用法。連体形「む」+体言＝婉曲・仮定が中心。未然形接続。"
         },
         {
-          "id": "s16-t13",
+          "id": "s16-t14",
           "text": "をば",
-          "start": 20,
-          "end": 22,
+          "start": 21,
+          "end": 23,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3648,10 +3700,10 @@
           "hint": "格助詞「を」+ 係助詞「は」=「をば」: 「〜を (取り立てて)」。動作対象を強調・対比して提示する形。「強き詞をば」=「強い言葉については」。"
         },
         {
-          "id": "s16-t14",
+          "id": "s16-t15",
           "text": "実",
-          "start": 22,
-          "end": 23,
+          "start": 23,
+          "end": 24,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3659,10 +3711,10 @@
           "hint": "歌論用語「実 (じつ)」: 和歌の内容・主題の充実 (=心)。表面的華やかさ「花」(=詞) と対をなす。「実を存して」=「心 (内容) を保って」。"
         },
         {
-          "id": "s16-t15",
+          "id": "s16-t16",
           "text": "ある",
-          "start": 23,
-          "end": 25,
+          "start": 24,
+          "end": 26,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3674,20 +3726,20 @@
           "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。終止形「あり」が「-り」で終わる四変格 (あり／をり／はべり／いまそかり) の代表。"
         },
         {
-          "id": "s16-t16",
+          "id": "s16-t17",
           "text": "歌",
-          "start": 25,
-          "end": 26,
+          "start": 26,
+          "end": 27,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s16-t17",
+          "id": "s16-t18",
           "text": "と",
-          "start": 26,
-          "end": 27,
+          "start": 27,
+          "end": 28,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3697,10 +3749,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s16-t18",
+          "id": "s16-t19",
           "text": "ぞ",
-          "start": 27,
-          "end": 28,
+          "start": 28,
+          "end": 29,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3710,10 +3762,10 @@
           "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。訳出不要が多いが論説では「まさに〜だ」と強める。"
         },
         {
-          "id": "s16-t19",
+          "id": "s16-t20",
           "text": "申し",
-          "start": 28,
-          "end": 30,
+          "start": 29,
+          "end": 31,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -3725,10 +3777,10 @@
           "hint": "謙譲の動詞「申す」: 「申し上げる」(言ふの謙譲)。サ行四段。連用形「申し」+ 補助動詞で複合的な敬語表現を作る。"
         },
         {
-          "id": "s16-t20",
+          "id": "s16-t21",
           "text": "はべる",
-          "start": 30,
-          "end": 33,
+          "start": 31,
+          "end": 34,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -3740,10 +3792,10 @@
           "hint": "丁寧の補助動詞「はべり」: 「〜ます・〜でございます」。ラ変型 (ら／り／り／る／れ／れ)。論説の地の文・会話で多用、丁寧の敬意は読者・聞き手へ。"
         },
         {
-          "id": "s16-t21",
+          "id": "s16-t22",
           "text": "べく",
-          "start": 33,
-          "end": 35,
+          "start": 34,
+          "end": 36,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3754,10 +3806,10 @@
           "hint": "助動詞「べし」: 適当「〜のがよい・〜のがふさわしい」。歌論・論説では「〜申すべし」=「申し上げるのがよい」と読む。"
         },
         {
-          "id": "s16-t22",
+          "id": "s16-t23",
           "text": "候ふ",
-          "start": 35,
-          "end": 37,
+          "start": 36,
+          "end": 38,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -3768,25 +3820,14 @@
           "hint": "丁寧の補助動詞「候ふ (さうらふ)」: 「〜ます・〜でございます」。ハ行四段。「はべり」とほぼ同義で、中世論説で増加。"
         },
         {
-          "id": "s16-t23",
+          "id": "s16-t24",
           "text": "。",
-          "start": 37,
-          "end": 38,
+          "start": 38,
+          "end": 39,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s16-t24",
-          "text": "さて",
-          "start": 38,
-          "end": 40,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "接続詞"
-          },
-          "hint": "接続詞「さて」: 「それでは・さて・そうして」(話題転換)。論を新段に切り替える接続表現。"
         }
       ]
     },
@@ -3797,9 +3838,20 @@
       "tokens": [
         {
           "id": "s17-t1",
-          "text": "、「心",
+          "text": "さて",
           "start": 0,
-          "end": 3,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "接続詞"
+          },
+          "hint": "接続詞「さて」: 「それでは・さて・そうして」(話題転換)。論を新段に切り替える接続表現。"
+        },
+        {
+          "id": "s17-t2",
+          "text": "、「心",
+          "start": 2,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3807,10 +3859,10 @@
           "hint": "歌論用語「心 (こころ)」: 和歌の内容・主題・情趣・思想の側面。「詞」(=ことば・表現) と対をなし、定家「毎月抄」では両者の調和を理想とする。"
         },
         {
-          "id": "s17-t2",
+          "id": "s17-t3",
           "text": "を",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3819,10 +3871,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s17-t3",
+          "id": "s17-t4",
           "text": "先",
-          "start": 4,
-          "end": 5,
+          "start": 6,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3830,10 +3882,10 @@
           "hint": "名詞「先」: 「最初・優先・前」。「心を先にせよ」=「心を優先せよ」。優先順位を示す論説語。"
         },
         {
-          "id": "s17-t4",
+          "id": "s17-t5",
           "text": "に",
-          "start": 5,
-          "end": 6,
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3842,10 +3894,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s17-t5",
+          "id": "s17-t6",
           "text": "せよ",
-          "start": 6,
-          "end": 8,
+          "start": 8,
+          "end": 10,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3856,27 +3908,14 @@
           "hint": "サ変動詞「す」命令形「せよ」: 「取捨せよ」「先にせよ」=「取捨しなさい・優先しなさい」。命令文で歌論の指針を示す。"
         },
         {
-          "id": "s17-t6",
-          "text": "。」",
-          "start": 8,
-          "end": 10,
+          "id": "s17-t7",
+          "text": "。",
+          "start": 10,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s17-t7",
-          "text": "と",
-          "start": 10,
-          "end": 11,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         }
       ]
     },
@@ -3887,9 +3926,32 @@
       "tokens": [
         {
           "id": "s18-t1",
-          "text": "教ふれ",
+          "text": "」",
           "start": 0,
-          "end": 3,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s18-t2",
+          "text": "と",
+          "start": 1,
+          "end": 2,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
+        },
+        {
+          "id": "s18-t3",
+          "text": "教ふれ",
+          "start": 2,
+          "end": 5,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3900,10 +3962,10 @@
           "hint": "ハ行下二段「教ふ」: 「へ・へ・ふ・ふる・ふれ・へよ」と活用。已然形「教ふれ＋ば」=「教えると」(確定条件)。"
         },
         {
-          "id": "s18-t2",
+          "id": "s18-t4",
           "text": "ば",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -3911,20 +3973,20 @@
           "hint": "接続助詞「ば」(已然形接続): 確定条件「〜したので・〜すると」。「教ふれば」=「教えると」。未然＋ば (仮定) との識別が重要。"
         },
         {
-          "id": "s18-t3",
+          "id": "s18-t5",
           "text": "、",
-          "start": 4,
-          "end": 5,
+          "start": 6,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s18-t4",
+          "id": "s18-t6",
           "text": "「詞",
-          "start": 5,
-          "end": 7,
+          "start": 7,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3932,10 +3994,10 @@
           "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
         },
         {
-          "id": "s18-t5",
+          "id": "s18-t7",
           "text": "を",
-          "start": 7,
-          "end": 8,
+          "start": 9,
+          "end": 10,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3944,10 +4006,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s18-t6",
+          "id": "s18-t8",
           "text": "次",
-          "start": 8,
-          "end": 9,
+          "start": 10,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3955,10 +4017,10 @@
           "hint": "名詞「次」: 「次・第二・後」。「詞を次にせよ」=「詞は二の次にせよ」。"
         },
         {
-          "id": "s18-t7",
+          "id": "s18-t9",
           "text": "に",
-          "start": 9,
-          "end": 10,
+          "start": 11,
+          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3967,10 +4029,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s18-t8",
+          "id": "s18-t10",
           "text": "せよ",
-          "start": 10,
-          "end": 12,
+          "start": 12,
+          "end": 14,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3981,27 +4043,14 @@
           "hint": "サ変動詞「す」命令形「せよ」: 「取捨せよ」「先にせよ」=「取捨しなさい・優先しなさい」。命令文で歌論の指針を示す。"
         },
         {
-          "id": "s18-t9",
-          "text": "。」",
-          "start": 12,
-          "end": 14,
+          "id": "s18-t11",
+          "text": "。",
+          "start": 14,
+          "end": 15,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s18-t10",
-          "text": "と",
-          "start": 14,
-          "end": 15,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         }
       ]
     },
@@ -4012,9 +4061,32 @@
       "tokens": [
         {
           "id": "s19-t1",
-          "text": "申す",
+          "text": "」",
           "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s19-t2",
+          "text": "と",
+          "start": 1,
           "end": 2,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
+        },
+        {
+          "id": "s19-t3",
+          "text": "申す",
+          "start": 2,
+          "end": 4,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -4026,10 +4098,10 @@
           "hint": "謙譲の動詞「申す」: 「申し上げる」(言ふの謙譲)。サ行四段。動作対象への敬意。「〜と申す」=「〜と申し上げる」、論説で「〜と言う」の意でも使われる。"
         },
         {
-          "id": "s19-t2",
+          "id": "s19-t4",
           "text": "に",
-          "start": 2,
-          "end": 3,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4038,10 +4110,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s19-t3",
+          "id": "s19-t5",
           "text": "似",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -4052,10 +4124,10 @@
           "hint": "ナ行上一段「似る」: 「に・に・にる・にる・にれ・にょ」と活用。「申すに似たり」=「申すのに似ている」(存続)。上一段＋たりは存続。"
         },
         {
-          "id": "s19-t4",
+          "id": "s19-t6",
           "text": "たり",
-          "start": 4,
-          "end": 6,
+          "start": 6,
+          "end": 8,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4066,9 +4138,9 @@
           "hint": "助動詞「たり」: 存続「〜ている・〜てある」と完了「〜た」。連用形接続。下二段「たり」(完了) と四段の「たり」(完了存続) を区別。"
         },
         {
-          "id": "s19-t5",
-          "text": "。「詞",
-          "start": 6,
+          "id": "s19-t7",
+          "text": "。",
+          "start": 8,
           "end": 9,
           "layer": 0,
           "grammarTag": {
@@ -4085,9 +4157,20 @@
       "tokens": [
         {
           "id": "s20-t1",
-          "text": "を",
+          "text": "「詞",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
+        },
+        {
+          "id": "s20-t2",
+          "text": "を",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4096,10 +4179,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s20-t2",
+          "id": "s20-t3",
           "text": "こそ",
-          "start": 1,
-          "end": 3,
+          "start": 3,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -4109,10 +4192,10 @@
           "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。「〜にこそ」「〜にこそはべらめ」など文末省略・余情表現で頻出。"
         },
         {
-          "id": "s20-t3",
+          "id": "s20-t4",
           "text": "詮",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -4120,10 +4203,10 @@
           "hint": "歌論用語「詮 (せん)」: 「肝要・最も大事な点・本質」。「詞をこそ詮とすべけれ」=「詞こそが肝要とすべきだ」(係り結び)。"
         },
         {
-          "id": "s20-t4",
+          "id": "s20-t5",
           "text": "と",
-          "start": 4,
-          "end": 5,
+          "start": 6,
+          "end": 7,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4133,10 +4216,10 @@
           "hint": "結果の格助詞「と」: 「〜として・〜と (なる)」。「本として」=「根本として」、「詮とすべけれ」=「肝要とすべきだ」。"
         },
         {
-          "id": "s20-t5",
+          "id": "s20-t6",
           "text": "す",
-          "start": 5,
-          "end": 6,
+          "start": 7,
+          "end": 8,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -4147,10 +4230,10 @@
           "hint": "サ変動詞「す」: 「せ・し・す・する・すれ・せよ」と活用。「〜す」=「〜する」。漢語＋す (取捨す／存す／めぐらす) の形で論説に頻出。"
         },
         {
-          "id": "s20-t6",
+          "id": "s20-t7",
           "text": "べけれ",
-          "start": 6,
-          "end": 9,
+          "start": 8,
+          "end": 11,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4161,27 +4244,14 @@
           "hint": "助動詞「べし」: 当然「〜はずだ・〜べきだ」。連体形「べき」+体言で「〜すべき〜」。終止形接続（ラ変は連体形）。"
         },
         {
-          "id": "s20-t7",
-          "text": "。」",
-          "start": 9,
-          "end": 11,
+          "id": "s20-t8",
+          "text": "。",
+          "start": 11,
+          "end": 12,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s20-t8",
-          "text": "と",
-          "start": 11,
-          "end": 12,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         }
       ]
     },
@@ -4192,9 +4262,32 @@
       "tokens": [
         {
           "id": "s21-t1",
-          "text": "言は",
+          "text": "」",
           "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s21-t2",
+          "text": "と",
+          "start": 1,
           "end": 2,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
+        },
+        {
+          "id": "s21-t3",
+          "text": "言は",
+          "start": 2,
+          "end": 4,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -4205,10 +4298,10 @@
           "hint": "ハ行四段「言ふ」: 「は・ひ・ふ・ふ・へ・へ」と活用。未然形「言は＋ば」=「言うならば」(仮定)。歌論で多用される基本動詞。"
         },
         {
-          "id": "s21-t2",
+          "id": "s21-t4",
           "text": "ば",
-          "start": 2,
-          "end": 3,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -4216,20 +4309,20 @@
           "hint": "接続助詞「ば」(未然形接続): 仮定条件「もし〜ならば」。「申さば」「言はば」=「もし申すならば／言うならば」。"
         },
         {
-          "id": "s21-t3",
+          "id": "s21-t5",
           "text": "、",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s21-t4",
+          "id": "s21-t6",
           "text": "また",
-          "start": 4,
-          "end": 6,
+          "start": 6,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
@@ -4237,10 +4330,10 @@
           "hint": "副詞「また」: 「再び・もう一度・同様に」。繰り返し・並列を表す。"
         },
         {
-          "id": "s21-t5",
+          "id": "s21-t7",
           "text": "「心",
-          "start": 6,
-          "end": 8,
+          "start": 8,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -4248,10 +4341,10 @@
           "hint": "歌論用語「心 (こころ)」: 和歌の内容・主題・情趣・思想の側面。「詞」(=ことば・表現) と対をなし、定家「毎月抄」では両者の調和を理想とする。"
         },
         {
-          "id": "s21-t6",
+          "id": "s21-t8",
           "text": "は",
-          "start": 8,
-          "end": 9,
+          "start": 10,
+          "end": 11,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -4261,10 +4354,10 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s21-t7",
+          "id": "s21-t9",
           "text": "なく",
-          "start": 9,
-          "end": 11,
+          "start": 11,
+          "end": 13,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -4276,10 +4369,10 @@
           "hint": "形容詞「なし」連用形: ク活用「なし」=「ない」。「心はなくとも」=「心はなくても」(逆接仮定)。"
         },
         {
-          "id": "s21-t8",
+          "id": "s21-t10",
           "text": "とも",
-          "start": 11,
-          "end": 13,
+          "start": 13,
+          "end": 15,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -4287,27 +4380,14 @@
           "hint": "接続助詞「とも」: 逆接仮定「たとえ〜としても」。終止形 (形容詞は連用形) 接続。「心はなくとも」=「たとえ心はなくても」。"
         },
         {
-          "id": "s21-t9",
-          "text": "。」",
-          "start": 13,
-          "end": 15,
+          "id": "s21-t11",
+          "text": "。",
+          "start": 15,
+          "end": 16,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s21-t10",
-          "text": "と",
-          "start": 15,
-          "end": 16,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         }
       ]
     },
@@ -4318,9 +4398,32 @@
       "tokens": [
         {
           "id": "s22-t1",
-          "text": "言ふ",
+          "text": "」",
           "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s22-t2",
+          "text": "と",
+          "start": 1,
           "end": 2,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
+        },
+        {
+          "id": "s22-t3",
+          "text": "言ふ",
+          "start": 2,
+          "end": 4,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -4331,10 +4434,10 @@
           "hint": "ハ行四段「言ふ」: 「は・ひ・ふ・ふ・へ・へ」と活用。「〜と言ふにてはべり」=「〜と言うことでございます」(論説の引き取り定型)。"
         },
         {
-          "id": "s22-t2",
+          "id": "s22-t4",
           "text": "に",
-          "start": 2,
-          "end": 3,
+          "start": 4,
+          "end": 5,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4345,20 +4448,20 @@
           "hint": "断定の助動詞「なり」連用形「に」: 「に＋て」「に＋こそ」「に＋や」の形で頻出。識別は「断定 (にて) ／ 完了 (ぬの連用) ／ 形動 (なり) の連用形」を区別する。"
         },
         {
-          "id": "s22-t3",
+          "id": "s22-t5",
           "text": "て",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s22-t4",
+          "id": "s22-t6",
           "text": "はべり",
-          "start": 4,
-          "end": 7,
+          "start": 6,
+          "end": 9,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -4370,25 +4473,14 @@
           "hint": "丁寧の補助動詞「はべり」: 「〜ます・〜でございます」。ラ変型 (ら／り／り／る／れ／れ)。論説の地の文・会話で多用、丁寧の敬意は読者・聞き手へ。"
         },
         {
-          "id": "s22-t5",
+          "id": "s22-t7",
           "text": "。",
-          "start": 7,
-          "end": 8,
+          "start": 9,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s22-t6",
-          "text": "所詮",
-          "start": 8,
-          "end": 10,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "中世論説語「所詮 (しょせん)」: 「結局のところ・つまるところ」。漢文訓読語で、論を結ぶ際の接続表現。現代語の「しょせん (どうせ)」とは含意が違う。"
         }
       ]
     },
@@ -4399,9 +4491,20 @@
       "tokens": [
         {
           "id": "s23-t1",
-          "text": "、心",
+          "text": "所詮",
           "start": 0,
           "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "中世論説語「所詮 (しょせん)」: 「結局のところ・つまるところ」。漢文訓読語で、論を結ぶ際の接続表現。現代語の「しょせん (どうせ)」とは含意が違う。"
+        },
+        {
+          "id": "s23-t2",
+          "text": "、心",
+          "start": 2,
+          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -4409,31 +4512,7 @@
           "hint": "歌論用語「心 (こころ)」: 和歌の内容・主題・情趣・思想の側面。「詞」(=ことば・表現) と対をなし、定家「毎月抄」では両者の調和を理想とする。"
         },
         {
-          "id": "s23-t2",
-          "text": "と",
-          "start": 2,
-          "end": 3,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "並列"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "並列の格助詞「と」: 「〜と〜」(並列列挙)。「心と詞とを」=「心と詞とを」。古文では並列の「と」が体言ごとに付くことが多い。"
-        },
-        {
           "id": "s23-t3",
-          "text": "詞",
-          "start": 3,
-          "end": 4,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
-        },
-        {
-          "id": "s23-t4",
           "text": "と",
           "start": 4,
           "end": 5,
@@ -4446,10 +4525,34 @@
           "hint": "並列の格助詞「と」: 「〜と〜」(並列列挙)。「心と詞とを」=「心と詞とを」。古文では並列の「と」が体言ごとに付くことが多い。"
         },
         {
-          "id": "s23-t5",
-          "text": "を",
+          "id": "s23-t4",
+          "text": "詞",
           "start": 5,
           "end": 6,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
+        },
+        {
+          "id": "s23-t5",
+          "text": "と",
+          "start": 6,
+          "end": 7,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "並列"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "並列の格助詞「と」: 「〜と〜」(並列列挙)。「心と詞とを」=「心と詞とを」。古文では並列の「と」が体言ごとに付くことが多い。"
+        },
+        {
+          "id": "s23-t6",
+          "text": "を",
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4458,10 +4561,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s23-t6",
+          "id": "s23-t7",
           "text": "兼ね",
-          "start": 6,
-          "end": 8,
+          "start": 8,
+          "end": 10,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -4472,10 +4575,10 @@
           "hint": "ナ行下二段「かぬ (兼ぬ)」: 「ね・ね・ぬ・ぬる・ぬれ・ねよ」と活用。「兼ね備える」。「心と詞とを兼ねたらむ」=「心と詞の両方を兼ね備えているような」(存続+婉曲)。"
         },
         {
-          "id": "s23-t7",
+          "id": "s23-t8",
           "text": "たら",
-          "start": 8,
-          "end": 10,
+          "start": 10,
+          "end": 12,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4486,10 +4589,10 @@
           "hint": "助動詞「たり」: 存続「〜ている・〜てある」と完了「〜た」。連用形接続。下二段「たり」(完了) と四段の「たり」(完了存続) を区別。"
         },
         {
-          "id": "s23-t8",
+          "id": "s23-t9",
           "text": "む",
-          "start": 10,
-          "end": 11,
+          "start": 12,
+          "end": 13,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4500,10 +4603,10 @@
           "hint": "助動詞「む」: 婉曲「〜のような・〜ような」+体言の用法。連体形「む」+体言＝婉曲・仮定が中心。未然形接続。"
         },
         {
-          "id": "s23-t9",
+          "id": "s23-t10",
           "text": "を",
-          "start": 11,
-          "end": 12,
+          "start": 13,
+          "end": 14,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4512,20 +4615,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s23-t10",
+          "id": "s23-t11",
           "text": "、",
-          "start": 12,
-          "end": 13,
+          "start": 14,
+          "end": 15,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s23-t11",
+          "id": "s23-t12",
           "text": "よき",
-          "start": 13,
-          "end": 15,
+          "start": 15,
+          "end": 17,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -4536,20 +4639,20 @@
           "hint": "ク活用形容詞「よし (良し)」連体形: 「よい・優れている」(絶対評価)。「よき歌」=「優れた歌」。「よろし (まあまあ)」と区別。"
         },
         {
-          "id": "s23-t12",
+          "id": "s23-t13",
           "text": "歌",
-          "start": 15,
-          "end": 16,
+          "start": 17,
+          "end": 18,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s23-t13",
+          "id": "s23-t14",
           "text": "と",
-          "start": 16,
-          "end": 17,
+          "start": 18,
+          "end": 19,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4559,10 +4662,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s23-t14",
+          "id": "s23-t15",
           "text": "申す",
-          "start": 17,
-          "end": 19,
+          "start": 19,
+          "end": 21,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -4574,10 +4677,10 @@
           "hint": "謙譲の動詞「申す」: 「申し上げる」(言ふの謙譲)。サ行四段。動作対象への敬意。「〜と申す」=「〜と申し上げる」、論説で「〜と言う」の意でも使われる。"
         },
         {
-          "id": "s23-t15",
+          "id": "s23-t16",
           "text": "べし",
-          "start": 19,
-          "end": 21,
+          "start": 21,
+          "end": 23,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4588,10 +4691,10 @@
           "hint": "助動詞「べし」: 適当「〜のがよい・〜のがふさわしい」。歌論・論説では「〜申すべし」=「申し上げるのがよい」と読む。"
         },
         {
-          "id": "s23-t16",
-          "text": "。心・詞",
-          "start": 21,
-          "end": 25,
+          "id": "s23-t17",
+          "text": "。",
+          "start": 23,
+          "end": 24,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -4606,9 +4709,19 @@
       "tokens": [
         {
           "id": "s24-t1",
-          "text": "の",
+          "text": "心・詞",
           "start": 0,
-          "end": 1,
+          "end": 3,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s24-t2",
+          "text": "の",
+          "start": 3,
+          "end": 4,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4617,20 +4730,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s24-t2",
+          "id": "s24-t3",
           "text": "二つ",
-          "start": 1,
-          "end": 3,
+          "start": 4,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s24-t3",
+          "id": "s24-t4",
           "text": "は",
-          "start": 3,
-          "end": 4,
+          "start": 6,
+          "end": 7,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -4640,20 +4753,10 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s24-t4",
-          "text": "、",
-          "start": 4,
-          "end": 5,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s24-t5",
-          "text": "鳥",
-          "start": 5,
-          "end": 6,
+          "text": "、",
+          "start": 7,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -4661,20 +4764,8 @@
         },
         {
           "id": "s24-t6",
-          "text": "の",
-          "start": 6,
-          "end": 7,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s24-t7",
-          "text": "左右",
-          "start": 7,
+          "text": "鳥",
+          "start": 8,
           "end": 9,
           "layer": 0,
           "grammarTag": {
@@ -4682,7 +4773,7 @@
           }
         },
         {
-          "id": "s24-t8",
+          "id": "s24-t7",
           "text": "の",
           "start": 9,
           "end": 10,
@@ -4694,20 +4785,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s24-t9",
-          "text": "翼",
+          "id": "s24-t8",
+          "text": "左右",
           "start": 10,
-          "end": 11,
+          "end": 12,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s24-t10",
+          "id": "s24-t9",
           "text": "の",
-          "start": 11,
-          "end": 12,
+          "start": 12,
+          "end": 13,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4716,10 +4807,32 @@
           "grammarRefId": "joshi-kaku"
         },
         {
+          "id": "s24-t10",
+          "text": "翼",
+          "start": 13,
+          "end": 14,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
           "id": "s24-t11",
+          "text": "の",
+          "start": 14,
+          "end": 15,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s24-t12",
           "text": "ごとくなる",
-          "start": 12,
-          "end": 17,
+          "start": 15,
+          "end": 20,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4730,10 +4843,10 @@
           "hint": "比況の助動詞「ごとし／ごとくなり」: 「〜のようだ・〜と同じだ」。連体形＋ごとし／体言＋の＋ごとし。「翼のごとくなるべき」=「翼のようであるべき」。"
         },
         {
-          "id": "s24-t12",
+          "id": "s24-t13",
           "text": "べき",
-          "start": 17,
-          "end": 19,
+          "start": 20,
+          "end": 22,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4744,10 +4857,10 @@
           "hint": "助動詞「べし」: 当然「〜はずだ・〜べきだ」。連体形「べき」+体言で「〜すべき〜」。終止形接続（ラ変は連体形）。"
         },
         {
-          "id": "s24-t13",
+          "id": "s24-t14",
           "text": "に",
-          "start": 19,
-          "end": 20,
+          "start": 22,
+          "end": 23,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4758,10 +4871,10 @@
           "hint": "断定の助動詞「なり」連用形「に」: 「に＋て」「に＋こそ」「に＋や」の形で頻出。識別は「断定 (にて) ／ 完了 (ぬの連用) ／ 形動 (なり) の連用形」を区別する。"
         },
         {
-          "id": "s24-t14",
+          "id": "s24-t15",
           "text": "こそ",
-          "start": 20,
-          "end": 22,
+          "start": 23,
+          "end": 25,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -4771,10 +4884,10 @@
           "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。「〜にこそ」「〜にこそはべらめ」など文末省略・余情表現で頻出。"
         },
         {
-          "id": "s24-t15",
+          "id": "s24-t16",
           "text": "と",
-          "start": 22,
-          "end": 23,
+          "start": 25,
+          "end": 26,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4784,10 +4897,10 @@
           "hint": "引用の格助詞「と」: 「〜と」(発言・引用・思考の内容を受ける)。「〜と申す／〜と言ふ／〜と思ふ／〜とおぼゆ」の形で頻出。"
         },
         {
-          "id": "s24-t16",
+          "id": "s24-t17",
           "text": "ぞ",
-          "start": 23,
-          "end": 24,
+          "start": 26,
+          "end": 27,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -4797,10 +4910,10 @@
           "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。訳出不要が多いが論説では「まさに〜だ」と強める。"
         },
         {
-          "id": "s24-t17",
+          "id": "s24-t18",
           "text": "思う",
-          "start": 24,
-          "end": 26,
+          "start": 27,
+          "end": 29,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -4811,10 +4924,10 @@
           "hint": "ハ行四段「思ふ」のウ音便「思う」: 「思ひたまへ」が中世以降「思うたまへ」に音便化。「思うたまへはべりける」=「存じておりました」。"
         },
         {
-          "id": "s24-t18",
+          "id": "s24-t19",
           "text": "たまへ",
-          "start": 26,
-          "end": 29,
+          "start": 29,
+          "end": 32,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -4827,10 +4940,10 @@
           "hint": "謙譲の補助動詞「たまふ」(下二段): 「〜させていただく・〜申し上げる」。話し手 (定家) の謙譲。「思ひたまふ／見たまふ／聞きたまふ」など知覚動詞限定。四段「たまふ」(尊敬) と区別。"
         },
         {
-          "id": "s24-t19",
+          "id": "s24-t20",
           "text": "はべり",
-          "start": 29,
-          "end": 32,
+          "start": 32,
+          "end": 35,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -4842,10 +4955,10 @@
           "hint": "丁寧の補助動詞「はべり」: 「〜ます・〜でございます」。ラ変型。連用形「はべり」、連体形「はべる」、已然形「はべれ」。"
         },
         {
-          "id": "s24-t20",
+          "id": "s24-t21",
           "text": "ける",
-          "start": 32,
-          "end": 34,
+          "start": 35,
+          "end": 37,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4856,25 +4969,14 @@
           "hint": "助動詞「けり」: 詠嘆「〜だなあ」。連用形接続。「〜けるかな」の形や和歌中で気づき・感動を表す。"
         },
         {
-          "id": "s24-t21",
+          "id": "s24-t22",
           "text": "。",
-          "start": 34,
-          "end": 35,
+          "start": 37,
+          "end": 38,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s24-t22",
-          "text": "ただし",
-          "start": 35,
-          "end": 38,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "接続詞"
-          },
-          "hint": "接続詞「ただし」: 「ただし・しかし」(逆接条件)。前述の主張に留保・例外を加える論説の常用語。"
         }
       ]
     },
@@ -4885,19 +4987,30 @@
       "tokens": [
         {
           "id": "s25-t1",
-          "text": "、心・詞",
+          "text": "ただし",
           "start": 0,
-          "end": 4,
+          "end": 3,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "接続詞"
+          },
+          "hint": "接続詞「ただし」: 「ただし・しかし」(逆接条件)。前述の主張に留保・例外を加える論説の常用語。"
+        },
+        {
+          "id": "s25-t2",
+          "text": "、心・詞",
+          "start": 3,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s25-t2",
+          "id": "s25-t3",
           "text": "の",
-          "start": 4,
-          "end": 5,
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4906,20 +5019,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s25-t3",
+          "id": "s25-t4",
           "text": "二つ",
-          "start": 5,
-          "end": 7,
+          "start": 8,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s25-t4",
+          "id": "s25-t5",
           "text": "を",
-          "start": 7,
-          "end": 8,
+          "start": 10,
+          "end": 11,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4928,20 +5041,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s25-t5",
+          "id": "s25-t6",
           "text": "共",
-          "start": 8,
-          "end": 9,
+          "start": 11,
+          "end": 12,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s25-t6",
+          "id": "s25-t7",
           "text": "に",
-          "start": 9,
-          "end": 10,
+          "start": 12,
+          "end": 13,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4950,10 +5063,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s25-t7",
+          "id": "s25-t8",
           "text": "兼ね",
-          "start": 10,
-          "end": 12,
+          "start": 13,
+          "end": 15,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -4964,10 +5077,10 @@
           "hint": "ナ行下二段「かぬ (兼ぬ)」: 「ね・ね・ぬ・ぬる・ぬれ・ねよ」と活用。「兼ね備える」。「心と詞とを兼ねたらむ」=「心と詞の両方を兼ね備えているような」(存続+婉曲)。"
         },
         {
-          "id": "s25-t8",
+          "id": "s25-t9",
           "text": "たら",
-          "start": 12,
-          "end": 14,
+          "start": 15,
+          "end": 17,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4978,10 +5091,10 @@
           "hint": "助動詞「たり」: 存続「〜ている・〜てある」と完了「〜た」。連用形接続。下二段「たり」(完了) と四段の「たり」(完了存続) を区別。"
         },
         {
-          "id": "s25-t9",
+          "id": "s25-t10",
           "text": "む",
-          "start": 14,
-          "end": 15,
+          "start": 17,
+          "end": 18,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -4992,10 +5105,10 @@
           "hint": "助動詞「む」: 婉曲「〜のような・〜ような」+体言の用法。連体形「む」+体言＝婉曲・仮定が中心。未然形接続。"
         },
         {
-          "id": "s25-t10",
+          "id": "s25-t11",
           "text": "は",
-          "start": 15,
-          "end": 16,
+          "start": 18,
+          "end": 19,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -5005,10 +5118,10 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s25-t11",
+          "id": "s25-t12",
           "text": "言ふ",
-          "start": 16,
-          "end": 18,
+          "start": 19,
+          "end": 21,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -5019,10 +5132,10 @@
           "hint": "ハ行四段「言ふ」: 「は・ひ・ふ・ふ・へ・へ」と活用。「〜と言ふにてはべり」=「〜と言うことでございます」(論説の引き取り定型)。"
         },
         {
-          "id": "s25-t12",
+          "id": "s25-t13",
           "text": "に",
-          "start": 18,
-          "end": 19,
+          "start": 21,
+          "end": 22,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5031,10 +5144,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s25-t13",
+          "id": "s25-t14",
           "text": "及ば",
-          "start": 19,
-          "end": 21,
+          "start": 22,
+          "end": 24,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -5045,10 +5158,10 @@
           "hint": "バ行四段「及ぶ」: 「ば・び・ぶ・ぶ・べ・べ」と活用。「言ふに及ばず」=「言うまでもない」(慣用句)。"
         },
         {
-          "id": "s25-t14",
+          "id": "s25-t15",
           "text": "ず",
-          "start": 21,
-          "end": 22,
+          "start": 24,
+          "end": 25,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5059,10 +5172,10 @@
           "hint": "助動詞「ず」: 打消「〜ない」。未然形接続。活用は「ず／ず／ず／ぬ／ね／〇」と「ざら／ざり／〇／ざる／ざれ／ざれ」(ラ変型) の二系統。"
         },
         {
-          "id": "s25-t15",
+          "id": "s25-t16",
           "text": "、心",
-          "start": 22,
-          "end": 24,
+          "start": 25,
+          "end": 27,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -5070,10 +5183,10 @@
           "hint": "歌論用語「心 (こころ)」: 和歌の内容・主題・情趣・思想の側面。「詞」(=ことば・表現) と対をなし、定家「毎月抄」では両者の調和を理想とする。"
         },
         {
-          "id": "s25-t16",
+          "id": "s25-t17",
           "text": "の",
-          "start": 24,
-          "end": 25,
+          "start": 27,
+          "end": 28,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5082,10 +5195,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s25-t17",
+          "id": "s25-t18",
           "text": "欠け",
-          "start": 25,
-          "end": 27,
+          "start": 28,
+          "end": 30,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -5096,10 +5209,10 @@
           "hint": "カ行下二段「かく (欠く)」: 「け・け・く・くる・くれ・けよ」と活用。「心の欠けたらむよりは」=「心が欠けているようなものよりは」(存続+婉曲+比較)。"
         },
         {
-          "id": "s25-t18",
+          "id": "s25-t19",
           "text": "たら",
-          "start": 27,
-          "end": 29,
+          "start": 30,
+          "end": 32,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5110,10 +5223,10 @@
           "hint": "助動詞「たり」: 存続「〜ている・〜てある」と完了「〜た」。連用形接続。下二段「たり」(完了) と四段の「たり」(完了存続) を区別。"
         },
         {
-          "id": "s25-t19",
+          "id": "s25-t20",
           "text": "む",
-          "start": 29,
-          "end": 30,
+          "start": 32,
+          "end": 33,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5124,10 +5237,10 @@
           "hint": "助動詞「む」: 婉曲「〜のような・〜ような」+体言の用法。連体形「む」+体言＝婉曲・仮定が中心。未然形接続。"
         },
         {
-          "id": "s25-t20",
+          "id": "s25-t21",
           "text": "より",
-          "start": 30,
-          "end": 32,
+          "start": 33,
+          "end": 35,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5138,10 +5251,10 @@
           "hint": "格助詞「より」: 「〜から (起点)・〜より (比較)」。「心の欠けたらむよりは」=「心が欠けているようなものよりは」(比較)。"
         },
         {
-          "id": "s25-t21",
+          "id": "s25-t22",
           "text": "は",
-          "start": 32,
-          "end": 33,
+          "start": 35,
+          "end": 36,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -5151,20 +5264,20 @@
           "hint": "係助詞「は」: 主題提示「〜は」。古文では他と区別・対比のニュアンスが強い。係り結びは起こさない。"
         },
         {
-          "id": "s25-t22",
+          "id": "s25-t23",
           "text": "、",
-          "start": 33,
-          "end": 34,
+          "start": 36,
+          "end": 37,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s25-t23",
+          "id": "s25-t24",
           "text": "詞",
-          "start": 34,
-          "end": 35,
+          "start": 37,
+          "end": 38,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -5172,10 +5285,10 @@
           "hint": "歌論用語「詞 (ことば)」: 和歌の言葉づかい・表現・修辞の側面。「心」(=内容) と対をなす。本作の中心テーマ。"
         },
         {
-          "id": "s25-t24",
+          "id": "s25-t25",
           "text": "の",
-          "start": 35,
-          "end": 36,
+          "start": 38,
+          "end": 39,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5184,10 +5297,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s25-t25",
+          "id": "s25-t26",
           "text": "つたなき",
-          "start": 36,
-          "end": 40,
+          "start": 39,
+          "end": 43,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -5198,10 +5311,10 @@
           "hint": "ク活用形容詞「つたなし (拙し)」: 「下手だ・劣っている・不運だ」。歌論では「詞のつたなき」=「言葉が拙劣であること」。現代語「拙い」と同義だが古語では「不運・不才」も含意。"
         },
         {
-          "id": "s25-t26",
+          "id": "s25-t27",
           "text": "に",
-          "start": 40,
-          "end": 41,
+          "start": 43,
+          "end": 44,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5212,10 +5325,10 @@
           "hint": "断定の助動詞「なり」連用形「に」: 「に＋て」「に＋こそ」「に＋や」の形で頻出。識別は「断定 (にて) ／ 完了 (ぬの連用) ／ 形動 (なり) の連用形」を区別する。"
         },
         {
-          "id": "s25-t27",
+          "id": "s25-t28",
           "text": "こそ",
-          "start": 41,
-          "end": 43,
+          "start": 44,
+          "end": 46,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -5225,10 +5338,10 @@
           "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。「〜にこそ」「〜にこそはべらめ」など文末省略・余情表現で頻出。"
         },
         {
-          "id": "s25-t28",
+          "id": "s25-t29",
           "text": "はべら",
-          "start": 43,
-          "end": 46,
+          "start": 46,
+          "end": 49,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -5240,10 +5353,10 @@
           "hint": "丁寧「はべり」未然形: 「〜にこそはべらめ」=「〜でございましょう」。「こそ＋已然形 (め)」で係り結び。"
         },
         {
-          "id": "s25-t29",
+          "id": "s25-t30",
           "text": "め",
-          "start": 46,
-          "end": 47,
+          "start": 49,
+          "end": 50,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5254,30 +5367,10 @@
           "hint": "助動詞「む」: 推量「〜だろう」、意志「〜しよう」、婉曲「〜のような」。未然形接続。下に体言が来れば婉曲。"
         },
         {
-          "id": "s25-t30",
-          "text": "。",
-          "start": 47,
-          "end": 48,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s25-t31",
-          "text": "（",
-          "start": 48,
-          "end": 49,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s25-t32",
-          "text": "）",
-          "start": 49,
-          "end": 50,
+          "text": "。",
+          "start": 50,
+          "end": 51,
           "layer": 0,
           "grammarTag": {
             "pos": ""

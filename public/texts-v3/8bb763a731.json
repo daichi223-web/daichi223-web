@@ -1228,6 +1228,16 @@
             "baseForm": "なる"
           },
           "grammarRefId": "jodoshi-dantei"
+        },
+        {
+          "id": "s2-t62",
+          "text": "。",
+          "start": 107,
+          "end": 108,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
         }
       ]
     },
@@ -1238,9 +1248,9 @@
       "tokens": [
         {
           "id": "s3-t1",
-          "text": "。",
+          "text": "源氏の君",
           "start": 0,
-          "end": 1,
+          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1248,19 +1258,9 @@
         },
         {
           "id": "s3-t2",
-          "text": "源氏の君",
-          "start": 1,
-          "end": 5,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t3",
           "text": "の",
-          "start": 5,
-          "end": 6,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1269,20 +1269,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t4",
+          "id": "s3-t3",
           "text": "上",
-          "start": 6,
-          "end": 7,
+          "start": 5,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t5",
+          "id": "s3-t4",
           "text": "にて",
-          "start": 7,
-          "end": 9,
+          "start": 6,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1291,10 +1291,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t6",
+          "id": "s3-t5",
           "text": "言は",
-          "start": 9,
-          "end": 11,
+          "start": 8,
+          "end": 10,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1304,18 +1304,28 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t7",
+          "id": "s3-t6",
           "text": "ば",
-          "start": 11,
-          "end": 12,
+          "start": 10,
+          "end": 11,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t8",
+          "id": "s3-t7",
           "text": "、",
+          "start": 11,
+          "end": 12,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s3-t8",
+          "text": "空",
           "start": 12,
           "end": 13,
           "layer": 0,
@@ -1325,7 +1335,7 @@
         },
         {
           "id": "s3-t9",
-          "text": "空",
+          "text": "蟬",
           "start": 13,
           "end": 14,
           "layer": 0,
@@ -1335,9 +1345,9 @@
         },
         {
           "id": "s3-t10",
-          "text": "蟬",
+          "text": "の君・朧月夜の君・",
           "start": 14,
-          "end": 15,
+          "end": 23,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1345,9 +1355,9 @@
         },
         {
           "id": "s3-t11",
-          "text": "の君・朧月夜の君・",
-          "start": 15,
-          "end": 24,
+          "text": "藤壺の中宮",
+          "start": 23,
+          "end": 28,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1355,29 +1365,19 @@
         },
         {
           "id": "s3-t12",
-          "text": "藤壺の中宮",
-          "start": 24,
-          "end": 29,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t13",
           "text": "など",
-          "start": 29,
-          "end": 31,
+          "start": 28,
+          "end": 30,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
           }
         },
         {
-          "id": "s3-t14",
+          "id": "s3-t13",
           "text": "に",
-          "start": 31,
-          "end": 32,
+          "start": 30,
+          "end": 31,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1386,20 +1386,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t15",
+          "id": "s3-t14",
           "text": "心",
-          "start": 32,
-          "end": 33,
+          "start": 31,
+          "end": 32,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t16",
+          "id": "s3-t15",
           "text": "を",
-          "start": 33,
-          "end": 34,
+          "start": 32,
+          "end": 33,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1408,10 +1408,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t17",
+          "id": "s3-t16",
           "text": "かけ",
-          "start": 34,
-          "end": 36,
+          "start": 33,
+          "end": 35,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1422,20 +1422,20 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t18",
+          "id": "s3-t17",
           "text": "て",
-          "start": 36,
-          "end": 37,
+          "start": 35,
+          "end": 36,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t19",
+          "id": "s3-t18",
           "text": "逢ひ",
-          "start": 37,
-          "end": 39,
+          "start": 36,
+          "end": 38,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1445,10 +1445,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t20",
+          "id": "s3-t19",
           "text": "たまへ",
-          "start": 39,
-          "end": 42,
+          "start": 38,
+          "end": 41,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -1460,10 +1460,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t21",
+          "id": "s3-t20",
           "text": "る",
-          "start": 42,
-          "end": 43,
+          "start": 41,
+          "end": 42,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1473,10 +1473,10 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s3-t22",
+          "id": "s3-t21",
           "text": "は",
-          "start": 43,
-          "end": 44,
+          "start": 42,
+          "end": 43,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1485,10 +1485,20 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s3-t23",
+          "id": "s3-t22",
           "text": "、",
+          "start": 43,
+          "end": 44,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s3-t23",
+          "text": "儒仏",
           "start": 44,
-          "end": 45,
+          "end": 46,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1496,29 +1506,19 @@
         },
         {
           "id": "s3-t24",
-          "text": "儒仏",
-          "start": 45,
-          "end": 47,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t25",
           "text": "など",
-          "start": 47,
-          "end": 49,
+          "start": 46,
+          "end": 48,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
           }
         },
         {
-          "id": "s3-t26",
+          "id": "s3-t25",
           "text": "の",
-          "start": 49,
-          "end": 50,
+          "start": 48,
+          "end": 49,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1527,20 +1527,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t27",
+          "id": "s3-t26",
           "text": "道",
-          "start": 50,
-          "end": 51,
+          "start": 49,
+          "end": 50,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t28",
+          "id": "s3-t27",
           "text": "にて",
-          "start": 51,
-          "end": 53,
+          "start": 50,
+          "end": 52,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1549,10 +1549,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t29",
+          "id": "s3-t28",
           "text": "言は",
-          "start": 53,
-          "end": 55,
+          "start": 52,
+          "end": 54,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1562,10 +1562,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t30",
+          "id": "s3-t29",
           "text": "む",
-          "start": 55,
-          "end": 56,
+          "start": 54,
+          "end": 55,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1575,10 +1575,10 @@
           "grammarRefId": "jodoshi-ganbou"
         },
         {
-          "id": "s3-t31",
+          "id": "s3-t30",
           "text": "に",
-          "start": 56,
-          "end": 57,
+          "start": 55,
+          "end": 56,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1587,10 +1587,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t32",
+          "id": "s3-t31",
           "text": "は",
-          "start": 57,
-          "end": 58,
+          "start": 56,
+          "end": 57,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1599,20 +1599,20 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s3-t33",
+          "id": "s3-t32",
           "text": "、",
-          "start": 58,
-          "end": 59,
+          "start": 57,
+          "end": 58,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t34",
+          "id": "s3-t33",
           "text": "よに",
-          "start": 59,
-          "end": 61,
+          "start": 58,
+          "end": 60,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -1620,20 +1620,20 @@
           }
         },
         {
-          "id": "s3-t35",
+          "id": "s3-t34",
           "text": "上",
-          "start": 61,
-          "end": 62,
+          "start": 60,
+          "end": 61,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t36",
+          "id": "s3-t35",
           "text": "も",
-          "start": 62,
-          "end": 63,
+          "start": 61,
+          "end": 62,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1642,10 +1642,10 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s3-t37",
+          "id": "s3-t36",
           "text": "なき",
-          "start": 63,
-          "end": 65,
+          "start": 62,
+          "end": 64,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1656,20 +1656,20 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t38",
+          "id": "s3-t37",
           "text": "、",
-          "start": 65,
-          "end": 66,
+          "start": 64,
+          "end": 65,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t39",
+          "id": "s3-t38",
           "text": "いみじき",
-          "start": 66,
-          "end": 70,
+          "start": 65,
+          "end": 69,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1680,20 +1680,20 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t40",
+          "id": "s3-t39",
           "text": "不義悪行",
-          "start": 70,
-          "end": 74,
+          "start": 69,
+          "end": 73,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t41",
+          "id": "s3-t40",
           "text": "なれ",
-          "start": 74,
-          "end": 76,
+          "start": 73,
+          "end": 75,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1704,20 +1704,30 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s3-t42",
+          "id": "s3-t41",
           "text": "ば",
-          "start": 76,
-          "end": 77,
+          "start": 75,
+          "end": 76,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t43",
+          "id": "s3-t42",
           "text": "、",
+          "start": 76,
+          "end": 77,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s3-t43",
+          "text": "ほか",
           "start": 77,
-          "end": 78,
+          "end": 79,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1725,19 +1735,9 @@
         },
         {
           "id": "s3-t44",
-          "text": "ほか",
-          "start": 78,
-          "end": 80,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t45",
           "text": "に",
-          "start": 80,
-          "end": 81,
+          "start": 79,
+          "end": 80,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1746,20 +1746,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t46",
+          "id": "s3-t45",
           "text": "いかばかり",
-          "start": 81,
-          "end": 86,
+          "start": 80,
+          "end": 85,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
           }
         },
         {
-          "id": "s3-t47",
+          "id": "s3-t46",
           "text": "の",
-          "start": 86,
-          "end": 87,
+          "start": 85,
+          "end": 86,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1768,10 +1768,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t48",
+          "id": "s3-t47",
           "text": "よき",
-          "start": 87,
-          "end": 89,
+          "start": 86,
+          "end": 88,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1781,10 +1781,10 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t49",
+          "id": "s3-t48",
           "text": "こと",
-          "start": 89,
-          "end": 91,
+          "start": 88,
+          "end": 90,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -1792,10 +1792,10 @@
           }
         },
         {
-          "id": "s3-t50",
+          "id": "s3-t49",
           "text": "あら",
-          "start": 91,
-          "end": 93,
+          "start": 90,
+          "end": 92,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1805,10 +1805,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t51",
+          "id": "s3-t50",
           "text": "む",
-          "start": 93,
-          "end": 94,
+          "start": 92,
+          "end": 93,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1818,10 +1818,10 @@
           "grammarRefId": "jodoshi-suiryo"
         },
         {
-          "id": "s3-t52",
+          "id": "s3-t51",
           "text": "にて",
-          "start": 94,
-          "end": 96,
+          "start": 93,
+          "end": 95,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1830,10 +1830,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t53",
+          "id": "s3-t52",
           "text": "も",
-          "start": 96,
-          "end": 97,
+          "start": 95,
+          "end": 96,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1842,20 +1842,20 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s3-t54",
+          "id": "s3-t53",
           "text": "、",
-          "start": 97,
-          "end": 98,
+          "start": 96,
+          "end": 97,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t55",
+          "id": "s3-t54",
           "text": "よき",
-          "start": 98,
-          "end": 100,
+          "start": 97,
+          "end": 99,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1865,20 +1865,20 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t56",
+          "id": "s3-t55",
           "text": "人",
-          "start": 100,
-          "end": 101,
+          "start": 99,
+          "end": 100,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t57",
+          "id": "s3-t56",
           "text": "と",
-          "start": 101,
-          "end": 102,
+          "start": 100,
+          "end": 101,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1887,10 +1887,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t58",
+          "id": "s3-t57",
           "text": "は",
-          "start": 102,
-          "end": 103,
+          "start": 101,
+          "end": 102,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1899,10 +1899,10 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s3-t59",
+          "id": "s3-t58",
           "text": "言ひがたかる",
-          "start": 103,
-          "end": 109,
+          "start": 102,
+          "end": 108,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1912,10 +1912,10 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t60",
+          "id": "s3-t59",
           "text": "べき",
-          "start": 109,
-          "end": 111,
+          "start": 108,
+          "end": 110,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1925,40 +1925,40 @@
           "grammarRefId": "jodoshi-suiryo"
         },
         {
-          "id": "s3-t61",
+          "id": "s3-t60",
           "text": "に",
-          "start": 111,
-          "end": 112,
+          "start": 110,
+          "end": 111,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t62",
+          "id": "s3-t61",
           "text": "、",
-          "start": 112,
-          "end": 113,
+          "start": 111,
+          "end": 112,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t63",
+          "id": "s3-t62",
           "text": "そ",
-          "start": 113,
-          "end": 114,
+          "start": 112,
+          "end": 113,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s3-t64",
+          "id": "s3-t63",
           "text": "の",
-          "start": 114,
-          "end": 115,
+          "start": 113,
+          "end": 114,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1967,20 +1967,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t65",
+          "id": "s3-t64",
           "text": "不義悪行",
-          "start": 115,
-          "end": 119,
+          "start": 114,
+          "end": 118,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t66",
+          "id": "s3-t65",
           "text": "なる",
-          "start": 119,
-          "end": 121,
+          "start": 118,
+          "end": 120,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1991,10 +1991,10 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s3-t67",
+          "id": "s3-t66",
           "text": "よし",
-          "start": 121,
-          "end": 123,
+          "start": 120,
+          "end": 122,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -2002,9 +2002,19 @@
           }
         },
         {
-          "id": "s3-t68",
+          "id": "s3-t67",
           "text": "をば",
-          "start": 123,
+          "start": 122,
+          "end": 124,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s3-t68",
+          "text": "、",
+          "start": 124,
           "end": 125,
           "layer": 0,
           "grammarTag": {
@@ -2013,29 +2023,19 @@
         },
         {
           "id": "s3-t69",
-          "text": "、",
-          "start": 125,
-          "end": 126,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t70",
           "text": "さしも",
-          "start": 126,
-          "end": 129,
+          "start": 125,
+          "end": 128,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
           }
         },
         {
-          "id": "s3-t71",
+          "id": "s3-t70",
           "text": "たて",
-          "start": 129,
-          "end": 131,
+          "start": 128,
+          "end": 130,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2046,20 +2046,20 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t72",
+          "id": "s3-t71",
           "text": "て",
-          "start": 131,
-          "end": 132,
+          "start": 130,
+          "end": 131,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t73",
+          "id": "s3-t72",
           "text": "は",
-          "start": 132,
-          "end": 133,
+          "start": 131,
+          "end": 132,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2068,10 +2068,10 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s3-t74",
+          "id": "s3-t73",
           "text": "言は",
-          "start": 133,
-          "end": 135,
+          "start": 132,
+          "end": 134,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2081,10 +2081,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t75",
+          "id": "s3-t74",
           "text": "ず",
-          "start": 135,
-          "end": 136,
+          "start": 134,
+          "end": 135,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2094,30 +2094,30 @@
           "grammarRefId": "jodoshi-hitei"
         },
         {
-          "id": "s3-t76",
+          "id": "s3-t75",
           "text": "して",
-          "start": 136,
-          "end": 138,
+          "start": 135,
+          "end": 137,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t77",
+          "id": "s3-t76",
           "text": "、",
-          "start": 138,
-          "end": 139,
+          "start": 137,
+          "end": 138,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t78",
+          "id": "s3-t77",
           "text": "ただ",
-          "start": 139,
-          "end": 141,
+          "start": 138,
+          "end": 140,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -2125,20 +2125,20 @@
           }
         },
         {
-          "id": "s3-t79",
+          "id": "s3-t78",
           "text": "そ",
-          "start": 141,
-          "end": 142,
+          "start": 140,
+          "end": 141,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s3-t80",
+          "id": "s3-t79",
           "text": "の",
-          "start": 142,
-          "end": 143,
+          "start": 141,
+          "end": 142,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2147,20 +2147,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t81",
+          "id": "s3-t80",
           "text": "間",
-          "start": 143,
-          "end": 144,
+          "start": 142,
+          "end": 143,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t82",
+          "id": "s3-t81",
           "text": "の",
-          "start": 144,
-          "end": 145,
+          "start": 143,
+          "end": 144,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2169,10 +2169,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t83",
+          "id": "s3-t82",
           "text": "、",
+          "start": 144,
+          "end": 145,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s3-t83",
+          "text": "もののあはれ",
           "start": 145,
-          "end": 146,
+          "end": 151,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2180,19 +2190,9 @@
         },
         {
           "id": "s3-t84",
-          "text": "もののあはれ",
-          "start": 146,
-          "end": 152,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t85",
           "text": "の",
-          "start": 152,
-          "end": 153,
+          "start": 151,
+          "end": 152,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2201,10 +2201,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t86",
+          "id": "s3-t85",
           "text": "深き",
-          "start": 153,
-          "end": 155,
+          "start": 152,
+          "end": 154,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -2214,10 +2214,10 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t87",
+          "id": "s3-t86",
           "text": "かた",
-          "start": 155,
-          "end": 157,
+          "start": 154,
+          "end": 156,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -2225,10 +2225,10 @@
           }
         },
         {
-          "id": "s3-t88",
+          "id": "s3-t87",
           "text": "を",
-          "start": 157,
-          "end": 158,
+          "start": 156,
+          "end": 157,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2237,50 +2237,60 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t89",
+          "id": "s3-t88",
           "text": "、",
-          "start": 158,
-          "end": 159,
+          "start": 157,
+          "end": 158,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t90",
+          "id": "s3-t89",
           "text": "かへすがへす",
-          "start": 159,
-          "end": 165,
+          "start": 158,
+          "end": 164,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
           }
         },
         {
-          "id": "s3-t91",
+          "id": "s3-t90",
           "text": "書きのべ",
-          "start": 165,
-          "end": 169,
+          "start": 164,
+          "end": 168,
           "layer": 1,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t92",
+          "id": "s3-t91",
           "text": "て",
-          "start": 169,
-          "end": 170,
+          "start": 168,
+          "end": 169,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t93",
+          "id": "s3-t92",
           "text": "、",
+          "start": 169,
+          "end": 170,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s3-t93",
+          "text": "源氏の君",
           "start": 170,
-          "end": 171,
+          "end": 174,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2288,9 +2298,9 @@
         },
         {
           "id": "s3-t94",
-          "text": "源氏の君",
-          "start": 171,
-          "end": 175,
+          "text": "をば",
+          "start": 174,
+          "end": 176,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2298,8 +2308,8 @@
         },
         {
           "id": "s3-t95",
-          "text": "をば",
-          "start": 175,
+          "text": "、",
+          "start": 176,
           "end": 177,
           "layer": 0,
           "grammarTag": {
@@ -2308,29 +2318,19 @@
         },
         {
           "id": "s3-t96",
-          "text": "、",
-          "start": 177,
-          "end": 178,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t97",
           "text": "むねと",
-          "start": 178,
-          "end": 181,
+          "start": 177,
+          "end": 180,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
           }
         },
         {
-          "id": "s3-t98",
+          "id": "s3-t97",
           "text": "よき",
-          "start": 181,
-          "end": 183,
+          "start": 180,
+          "end": 182,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -2340,20 +2340,20 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t99",
+          "id": "s3-t98",
           "text": "人",
-          "start": 183,
-          "end": 184,
+          "start": 182,
+          "end": 183,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t100",
+          "id": "s3-t99",
           "text": "の",
-          "start": 184,
-          "end": 185,
+          "start": 183,
+          "end": 184,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2362,20 +2362,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t101",
+          "id": "s3-t100",
           "text": "本",
-          "start": 185,
-          "end": 186,
+          "start": 184,
+          "end": 185,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t102",
+          "id": "s3-t101",
           "text": "と",
-          "start": 186,
-          "end": 187,
+          "start": 185,
+          "end": 186,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2384,10 +2384,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t103",
+          "id": "s3-t102",
           "text": "し",
-          "start": 187,
-          "end": 188,
+          "start": 186,
+          "end": 187,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2397,30 +2397,30 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t104",
+          "id": "s3-t103",
           "text": "て",
-          "start": 188,
-          "end": 189,
+          "start": 187,
+          "end": 188,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t105",
+          "id": "s3-t104",
           "text": "、",
-          "start": 189,
-          "end": 190,
+          "start": 188,
+          "end": 189,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t106",
+          "id": "s3-t105",
           "text": "よき",
-          "start": 190,
-          "end": 192,
+          "start": 189,
+          "end": 191,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -2430,10 +2430,10 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t107",
+          "id": "s3-t106",
           "text": "こと",
-          "start": 192,
-          "end": 194,
+          "start": 191,
+          "end": 193,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -2441,10 +2441,10 @@
           }
         },
         {
-          "id": "s3-t108",
+          "id": "s3-t107",
           "text": "の",
-          "start": 194,
-          "end": 195,
+          "start": 193,
+          "end": 194,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2453,20 +2453,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t109",
+          "id": "s3-t108",
           "text": "限り",
-          "start": 195,
-          "end": 197,
+          "start": 194,
+          "end": 196,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t110",
+          "id": "s3-t109",
           "text": "を",
-          "start": 197,
-          "end": 198,
+          "start": 196,
+          "end": 197,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2475,52 +2475,52 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t111",
+          "id": "s3-t110",
           "text": "、",
-          "start": 198,
-          "end": 199,
+          "start": 197,
+          "end": 198,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t112",
+          "id": "s3-t111",
           "text": "こ",
-          "start": 199,
-          "end": 200,
+          "start": 198,
+          "end": 199,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s3-t113",
+          "id": "s3-t112",
           "text": "の",
-          "start": 200,
-          "end": 201,
+          "start": 199,
+          "end": 200,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
           "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s3-t113",
+          "text": "君",
+          "start": 200,
+          "end": 201,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
         },
         {
           "id": "s3-t114",
-          "text": "君",
+          "text": "の",
           "start": 201,
           "end": 202,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t115",
-          "text": "の",
-          "start": 202,
-          "end": 203,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2529,20 +2529,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t116",
+          "id": "s3-t115",
           "text": "上",
-          "start": 203,
-          "end": 204,
+          "start": 202,
+          "end": 203,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t117",
+          "id": "s3-t116",
           "text": "に",
-          "start": 204,
-          "end": 205,
+          "start": 203,
+          "end": 204,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2551,20 +2551,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t118",
+          "id": "s3-t117",
           "text": "とり集め",
-          "start": 205,
-          "end": 209,
+          "start": 204,
+          "end": 208,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t119",
+          "id": "s3-t118",
           "text": "たる",
-          "start": 209,
-          "end": 211,
+          "start": 208,
+          "end": 210,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2574,40 +2574,40 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s3-t120",
+          "id": "s3-t119",
           "text": "、",
-          "start": 211,
-          "end": 212,
+          "start": 210,
+          "end": 211,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t121",
+          "id": "s3-t120",
           "text": "これ",
-          "start": 212,
-          "end": 214,
+          "start": 211,
+          "end": 213,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s3-t122",
+          "id": "s3-t121",
           "text": "物語",
-          "start": 214,
-          "end": 216,
+          "start": 213,
+          "end": 215,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t123",
+          "id": "s3-t122",
           "text": "の",
-          "start": 216,
-          "end": 217,
+          "start": 215,
+          "end": 216,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2616,20 +2616,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t124",
+          "id": "s3-t123",
           "text": "大旨",
-          "start": 217,
-          "end": 219,
+          "start": 216,
+          "end": 218,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t125",
+          "id": "s3-t124",
           "text": "に",
-          "start": 219,
-          "end": 220,
+          "start": 218,
+          "end": 219,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2639,40 +2639,40 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s3-t126",
+          "id": "s3-t125",
           "text": "して",
-          "start": 220,
-          "end": 222,
+          "start": 219,
+          "end": 221,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s3-t127",
+          "id": "s3-t126",
           "text": "、",
-          "start": 222,
-          "end": 223,
+          "start": 221,
+          "end": 222,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t128",
+          "id": "s3-t127",
           "text": "そ",
-          "start": 223,
-          "end": 224,
+          "start": 222,
+          "end": 223,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s3-t129",
+          "id": "s3-t128",
           "text": "の",
-          "start": 224,
-          "end": 225,
+          "start": 223,
+          "end": 224,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2681,10 +2681,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t130",
+          "id": "s3-t129",
           "text": "よき",
-          "start": 225,
-          "end": 227,
+          "start": 224,
+          "end": 226,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -2694,10 +2694,10 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t131",
+          "id": "s3-t130",
           "text": "悪しき",
-          "start": 227,
-          "end": 230,
+          "start": 226,
+          "end": 229,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -2707,10 +2707,10 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s3-t132",
+          "id": "s3-t131",
           "text": "は",
-          "start": 230,
-          "end": 231,
+          "start": 229,
+          "end": 230,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2719,10 +2719,20 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s3-t133",
+          "id": "s3-t132",
           "text": "、",
+          "start": 230,
+          "end": 231,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s3-t133",
+          "text": "儒仏",
           "start": 231,
-          "end": 232,
+          "end": 233,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2730,51 +2740,41 @@
         },
         {
           "id": "s3-t134",
-          "text": "儒仏",
-          "start": 232,
-          "end": 234,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t135",
           "text": "など",
-          "start": 234,
-          "end": 236,
+          "start": 233,
+          "end": 235,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
           }
         },
         {
-          "id": "s3-t136",
+          "id": "s3-t135",
           "text": "の",
-          "start": 236,
-          "end": 237,
+          "start": 235,
+          "end": 236,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
           "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s3-t136",
+          "text": "書",
+          "start": 236,
+          "end": 237,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
         },
         {
           "id": "s3-t137",
-          "text": "書",
+          "text": "の",
           "start": 237,
           "end": 238,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t138",
-          "text": "の",
-          "start": 238,
-          "end": 239,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2783,20 +2783,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t139",
+          "id": "s3-t138",
           "text": "善悪",
-          "start": 239,
-          "end": 241,
+          "start": 238,
+          "end": 240,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t140",
+          "id": "s3-t139",
           "text": "と",
-          "start": 241,
-          "end": 242,
+          "start": 240,
+          "end": 241,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2805,20 +2805,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s3-t141",
+          "id": "s3-t140",
           "text": "変はり",
-          "start": 242,
-          "end": 245,
+          "start": 241,
+          "end": 244,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t142",
+          "id": "s3-t141",
           "text": "ある",
-          "start": 245,
-          "end": 247,
+          "start": 244,
+          "end": 246,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2829,20 +2829,20 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s3-t143",
+          "id": "s3-t142",
           "text": "けぢめ",
-          "start": 247,
-          "end": 250,
+          "start": 246,
+          "end": 249,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t144",
+          "id": "s3-t143",
           "text": "なり",
-          "start": 250,
-          "end": 252,
+          "start": 249,
+          "end": 251,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2853,10 +2853,10 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s3-t145",
+          "id": "s3-t144",
           "text": "。",
-          "start": 252,
-          "end": 253,
+          "start": 251,
+          "end": 252,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3054,28 +3054,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s4-t17",
-          "text": "そ",
-          "start": 25,
-          "end": 26,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          }
-        },
-        {
-          "id": "s4-t18",
-          "text": "の",
-          "start": 26,
-          "end": 27,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
         }
       ]
     },
@@ -3086,9 +3064,31 @@
       "tokens": [
         {
           "id": "s5-t1",
-          "text": "悪しき",
+          "text": "そ",
           "start": 0,
-          "end": 3,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s5-t2",
+          "text": "の",
+          "start": 1,
+          "end": 2,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s5-t3",
+          "text": "悪しき",
+          "start": 2,
+          "end": 5,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3098,10 +3098,10 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s5-t2",
+          "id": "s5-t4",
           "text": "こと",
-          "start": 3,
-          "end": 5,
+          "start": 5,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -3109,10 +3109,10 @@
           }
         },
         {
-          "id": "s5-t3",
+          "id": "s5-t5",
           "text": "は",
-          "start": 5,
-          "end": 6,
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3121,30 +3121,30 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s5-t4",
+          "id": "s5-t6",
           "text": "、",
-          "start": 6,
-          "end": 7,
+          "start": 8,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s5-t5",
+          "id": "s5-t7",
           "text": "今さら",
-          "start": 7,
-          "end": 10,
+          "start": 9,
+          "end": 12,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
           }
         },
         {
-          "id": "s5-t6",
+          "id": "s5-t8",
           "text": "言は",
-          "start": 10,
-          "end": 12,
+          "start": 12,
+          "end": 14,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3154,20 +3154,20 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s5-t7",
+          "id": "s5-t9",
           "text": "で",
-          "start": 12,
-          "end": 13,
+          "start": 14,
+          "end": 15,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s5-t8",
+          "id": "s5-t10",
           "text": "も",
-          "start": 13,
-          "end": 14,
+          "start": 15,
+          "end": 16,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3176,10 +3176,10 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s5-t9",
+          "id": "s5-t11",
           "text": "しるく",
-          "start": 14,
-          "end": 17,
+          "start": 16,
+          "end": 19,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3189,20 +3189,20 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s5-t10",
+          "id": "s5-t12",
           "text": "、",
-          "start": 17,
-          "end": 18,
+          "start": 19,
+          "end": 20,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s5-t11",
+          "id": "s5-t13",
           "text": "さる",
-          "start": 18,
-          "end": 20,
+          "start": 20,
+          "end": 22,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3212,31 +3212,9 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s5-t12",
-          "text": "たぐひ",
-          "start": 20,
-          "end": 23,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s5-t13",
-          "text": "の",
-          "start": 23,
-          "end": 24,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
           "id": "s5-t14",
-          "text": "罪",
-          "start": 24,
+          "text": "たぐひ",
+          "start": 22,
           "end": 25,
           "layer": 0,
           "grammarTag": {
@@ -3245,9 +3223,31 @@
         },
         {
           "id": "s5-t15",
-          "text": "を",
+          "text": "の",
           "start": 25,
           "end": 26,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s5-t16",
+          "text": "罪",
+          "start": 26,
+          "end": 27,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s5-t17",
+          "text": "を",
+          "start": 27,
+          "end": 28,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3256,10 +3256,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s5-t16",
+          "id": "s5-t18",
           "text": "論ずる",
-          "start": 26,
-          "end": 29,
+          "start": 28,
+          "end": 31,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3269,10 +3269,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s5-t17",
+          "id": "s5-t19",
           "text": "こと",
-          "start": 29,
-          "end": 31,
+          "start": 31,
+          "end": 33,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -3280,10 +3280,10 @@
           }
         },
         {
-          "id": "s5-t18",
+          "id": "s5-t20",
           "text": "は",
-          "start": 31,
-          "end": 32,
+          "start": 33,
+          "end": 34,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3292,20 +3292,20 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s5-t19",
+          "id": "s5-t21",
           "text": "、",
-          "start": 32,
-          "end": 33,
+          "start": 34,
+          "end": 35,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s5-t20",
+          "id": "s5-t22",
           "text": "おのづから",
-          "start": 33,
-          "end": 38,
+          "start": 35,
+          "end": 40,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -3313,43 +3313,20 @@
           }
         },
         {
-          "id": "s5-t21",
+          "id": "s5-t23",
           "text": "そ",
-          "start": 38,
-          "end": 39,
+          "start": 40,
+          "end": 41,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s5-t22",
-          "text": "の",
-          "start": 39,
-          "end": 40,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s5-t23",
-          "text": "かた",
-          "start": 40,
-          "end": 42,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "",
-            "baseForm": "かた"
-          }
-        },
-        {
           "id": "s5-t24",
           "text": "の",
-          "start": 42,
-          "end": 43,
+          "start": 41,
+          "end": 42,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3359,18 +3336,31 @@
         },
         {
           "id": "s5-t25",
-          "text": "書",
-          "start": 43,
+          "text": "かた",
+          "start": 42,
           "end": 44,
           "layer": 0,
           "grammarTag": {
-            "pos": ""
+            "pos": "",
+            "baseForm": "かた"
           }
         },
         {
           "id": "s5-t26",
-          "text": "ども",
+          "text": "の",
           "start": 44,
+          "end": 45,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s5-t27",
+          "text": "書",
+          "start": 45,
           "end": 46,
           "layer": 0,
           "grammarTag": {
@@ -3378,21 +3368,9 @@
           }
         },
         {
-          "id": "s5-t27",
-          "text": "の",
-          "start": 46,
-          "end": 47,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "主格"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
           "id": "s5-t28",
-          "text": "、",
-          "start": 47,
+          "text": "ども",
+          "start": 46,
           "end": 48,
           "layer": 0,
           "grammarTag": {
@@ -3401,19 +3379,41 @@
         },
         {
           "id": "s5-t29",
-          "text": "世",
+          "text": "の",
           "start": 48,
           "end": 49,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s5-t30",
+          "text": "、",
+          "start": 49,
+          "end": 50,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s5-t30",
+          "id": "s5-t31",
+          "text": "世",
+          "start": 50,
+          "end": 51,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s5-t32",
           "text": "に",
-          "start": 49,
-          "end": 50,
+          "start": 51,
+          "end": 52,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3422,20 +3422,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s5-t31",
+          "id": "s5-t33",
           "text": "ここら",
-          "start": 50,
-          "end": 53,
+          "start": 52,
+          "end": 55,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
           }
         },
         {
-          "id": "s5-t32",
+          "id": "s5-t34",
           "text": "あれ",
-          "start": 53,
-          "end": 55,
+          "start": 55,
+          "end": 57,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3445,30 +3445,30 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s5-t33",
+          "id": "s5-t35",
           "text": "ば",
-          "start": 55,
-          "end": 56,
+          "start": 57,
+          "end": 58,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s5-t34",
+          "id": "s5-t36",
           "text": "、",
-          "start": 56,
-          "end": 57,
+          "start": 58,
+          "end": 59,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s5-t35",
+          "id": "s5-t37",
           "text": "もの",
-          "start": 57,
-          "end": 59,
+          "start": 59,
+          "end": 61,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -3476,10 +3476,10 @@
           }
         },
         {
-          "id": "s5-t36",
+          "id": "s5-t38",
           "text": "遠き",
-          "start": 59,
-          "end": 61,
+          "start": 61,
+          "end": 63,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3489,20 +3489,20 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s5-t37",
+          "id": "s5-t39",
           "text": "物語",
-          "start": 61,
-          "end": 63,
+          "start": 63,
+          "end": 65,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s5-t38",
+          "id": "s5-t40",
           "text": "を",
-          "start": 63,
-          "end": 64,
+          "start": 65,
+          "end": 66,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3511,10 +3511,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s5-t39",
+          "id": "s5-t41",
           "text": "まつ",
-          "start": 64,
-          "end": 66,
+          "start": 66,
+          "end": 68,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3524,10 +3524,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s5-t40",
+          "id": "s5-t42",
           "text": "べき",
-          "start": 66,
-          "end": 68,
+          "start": 68,
+          "end": 70,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3537,10 +3537,10 @@
           "grammarRefId": "jodoshi-suiryo"
         },
         {
-          "id": "s5-t41",
+          "id": "s5-t43",
           "text": "に",
-          "start": 68,
-          "end": 69,
+          "start": 70,
+          "end": 71,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3550,10 +3550,10 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s5-t42",
+          "id": "s5-t44",
           "text": "あら",
-          "start": 69,
-          "end": 71,
+          "start": 71,
+          "end": 73,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -3563,10 +3563,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s5-t43",
+          "id": "s5-t45",
           "text": "ず",
-          "start": 71,
-          "end": 72,
+          "start": 73,
+          "end": 74,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3576,19 +3576,9 @@
           "grammarRefId": "jodoshi-hitei"
         },
         {
-          "id": "s5-t44",
+          "id": "s5-t46",
           "text": "。",
-          "start": 72,
-          "end": 73,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s5-t45",
-          "text": "物語",
-          "start": 73,
+          "start": 74,
           "end": 75,
           "layer": 0,
           "grammarTag": {
@@ -3604,9 +3594,19 @@
       "tokens": [
         {
           "id": "s6-t1",
-          "text": "は",
+          "text": "物語",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t2",
+          "text": "は",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3615,19 +3615,9 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s6-t2",
-          "text": "、",
-          "start": 1,
-          "end": 2,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s6-t3",
-          "text": "儒仏",
-          "start": 2,
+          "text": "、",
+          "start": 3,
           "end": 4,
           "layer": 0,
           "grammarTag": {
@@ -3636,534 +3626,27 @@
         },
         {
           "id": "s6-t4",
-          "text": "など",
+          "text": "儒仏",
           "start": 4,
           "end": 6,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t5",
+          "text": "など",
+          "start": 6,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
           }
         },
         {
-          "id": "s6-t5",
-          "text": "の",
-          "start": 6,
-          "end": 7,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
           "id": "s6-t6",
-          "text": "したたかなる",
-          "start": 7,
-          "end": 13,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ナリ",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "keiyoshi-katsuyo"
-        },
-        {
-          "id": "s6-t7",
-          "text": "道",
-          "start": 13,
-          "end": 14,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t8",
           "text": "の",
-          "start": 14,
-          "end": 15,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s6-t9",
-          "text": "やう",
-          "start": 15,
-          "end": 17,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "",
-            "baseForm": "やう"
-          }
-        },
-        {
-          "id": "s6-t10",
-          "text": "に",
-          "start": 17,
-          "end": 18,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "状態"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s6-t11",
-          "text": "、",
-          "start": 18,
-          "end": 19,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t12",
-          "text": "迷ひ",
-          "start": 19,
-          "end": 21,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t13",
-          "text": "を",
-          "start": 21,
-          "end": 22,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s6-t14",
-          "text": "離れ",
-          "start": 22,
-          "end": 24,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s6-t15",
-          "text": "て",
-          "start": 24,
-          "end": 25,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s6-t16",
-          "text": "悟り",
-          "start": 25,
-          "end": 27,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t17",
-          "text": "に",
-          "start": 27,
-          "end": 28,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "場所"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s6-t18",
-          "text": "入る",
-          "start": 28,
-          "end": 30,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "終"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s6-t19",
-          "text": "べき",
-          "start": 30,
-          "end": 32,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "可能"
-          },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
-        },
-        {
-          "id": "s6-t20",
-          "text": "法",
-          "start": 32,
-          "end": 33,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t21",
-          "text": "に",
-          "start": 33,
-          "end": 34,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "断定"
-          },
-          "grammarRefId": "jodoshi-dantei"
-        },
-        {
-          "id": "s6-t22",
-          "text": "も",
-          "start": 34,
-          "end": 35,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "並列"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s6-t23",
-          "text": "あら",
-          "start": 35,
-          "end": 37,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s6-t24",
-          "text": "ず",
-          "start": 37,
-          "end": 38,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei"
-        },
-        {
-          "id": "s6-t25",
-          "text": "、",
-          "start": 38,
-          "end": 39,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t26",
-          "text": "また",
-          "start": 39,
-          "end": 41,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "接続詞"
-          }
-        },
-        {
-          "id": "s6-t27",
-          "text": "国",
-          "start": 41,
-          "end": 42,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t28",
-          "text": "を",
-          "start": 42,
-          "end": 43,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s6-t29",
-          "text": "も",
-          "start": 43,
-          "end": 44,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "並列"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s6-t30",
-          "text": "家",
-          "start": 44,
-          "end": 45,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t31",
-          "text": "を",
-          "start": 45,
-          "end": 46,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s6-t32",
-          "text": "も",
-          "start": 46,
-          "end": 47,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "並列"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s6-t33",
-          "text": "身",
-          "start": 47,
-          "end": 48,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t34",
-          "text": "を",
-          "start": 48,
-          "end": 49,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s6-t35",
-          "text": "も",
-          "start": 49,
-          "end": 50,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "並列"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s6-t36",
-          "text": "修む",
-          "start": 50,
-          "end": 52,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ下二",
-            "conjugationForm": "終"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s6-t37",
-          "text": "べき",
-          "start": 52,
-          "end": 54,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "可能"
-          },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
-        },
-        {
-          "id": "s6-t38",
-          "text": "教へ",
-          "start": 54,
-          "end": 56,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t39",
-          "text": "に",
-          "start": 56,
-          "end": 57,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "断定"
-          },
-          "grammarRefId": "jodoshi-dantei"
-        },
-        {
-          "id": "s6-t40",
-          "text": "も",
-          "start": 57,
-          "end": 58,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "並列"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s6-t41",
-          "text": "あら",
-          "start": 58,
-          "end": 60,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s6-t42",
-          "text": "ず",
-          "start": 60,
-          "end": 61,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei"
-        },
-        {
-          "id": "s6-t43",
-          "text": "。",
-          "start": 61,
-          "end": 62,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t44",
-          "text": "ただ",
-          "start": 62,
-          "end": 64,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞",
-            "baseForm": "ただ"
-          }
-        }
-      ]
-    },
-    {
-      "id": "s7",
-      "originalText": "ただ世の中の物語なるがゆゑに、さる筋の善悪の論はしばらくさしおきて、さしもかかはらず、ただもののあはれを知れるかたのよきを、とりたててよしとはしたるなり。",
-      "modernTranslation": "ただ世の中の（できごとを描く）物語であるがゆえに、儒教・仏教でいう善悪の論はしばらく措いておき、あまりこだわらないで、ただ「もののあはれ」を知っているということのよさを、とりたててよいことだとしているのである。",
-      "tokens": [
-        {
-          "id": "s7-t1",
-          "text": "世の中",
-          "start": 0,
-          "end": 3,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t2",
-          "text": "の",
-          "start": 3,
-          "end": 4,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s7-t3",
-          "text": "物語",
-          "start": 4,
-          "end": 6,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t4",
-          "text": "なる",
-          "start": 6,
-          "end": 8,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "断定",
-            "baseForm": "なる"
-          },
-          "grammarRefId": "jodoshi-dantei"
-        },
-        {
-          "id": "s7-t5",
-          "text": "が",
           "start": 8,
           "end": 9,
           "layer": 3,
@@ -4174,53 +3657,21 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s7-t6",
-          "text": "ゆゑ",
+          "id": "s6-t7",
+          "text": "したたかなる",
           "start": 9,
-          "end": 11,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t7",
-          "text": "に",
-          "start": 11,
-          "end": 12,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "原因"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s7-t8",
-          "text": "、",
-          "start": 12,
-          "end": 13,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t9",
-          "text": "さる",
-          "start": 13,
           "end": 15,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
-            "conjugationType": "ラ変",
+            "conjugationType": "ナリ",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s7-t10",
-          "text": "筋",
+          "id": "s6-t8",
+          "text": "道",
           "start": 15,
           "end": 16,
           "layer": 0,
@@ -4229,7 +3680,7 @@
           }
         },
         {
-          "id": "s7-t11",
+          "id": "s6-t9",
           "text": "の",
           "start": 16,
           "end": 17,
@@ -4241,30 +3692,31 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s7-t12",
-          "text": "善悪",
+          "id": "s6-t10",
+          "text": "やう",
           "start": 17,
           "end": 19,
           "layer": 0,
           "grammarTag": {
-            "pos": ""
+            "pos": "",
+            "baseForm": "やう"
           }
         },
         {
-          "id": "s7-t13",
-          "text": "の",
+          "id": "s6-t11",
+          "text": "に",
           "start": 19,
           "end": 20,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
-            "meaning": "体修"
+            "meaning": "状態"
           },
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s7-t14",
-          "text": "論",
+          "id": "s6-t12",
+          "text": "、",
           "start": 20,
           "end": 21,
           "layer": 0,
@@ -4273,95 +3725,148 @@
           }
         },
         {
-          "id": "s7-t15",
-          "text": "は",
+          "id": "s6-t13",
+          "text": "迷ひ",
           "start": 21,
-          "end": 22,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s7-t16",
-          "text": "しばらく",
-          "start": 22,
-          "end": 26,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          }
-        },
-        {
-          "id": "s7-t17",
-          "text": "さし",
-          "start": 26,
-          "end": 28,
+          "end": 23,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s7-t18",
-          "text": "おき",
-          "start": 28,
-          "end": 30,
+          "id": "s6-t14",
+          "text": "を",
+          "start": 23,
+          "end": 24,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s6-t15",
+          "text": "離れ",
+          "start": 24,
+          "end": 26,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
-            "conjugationType": "カ四",
+            "conjugationType": "ラ下二",
             "conjugationForm": "用"
           },
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s7-t19",
+          "id": "s6-t16",
           "text": "て",
-          "start": 30,
-          "end": 31,
+          "start": 26,
+          "end": 27,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s7-t20",
-          "text": "、",
-          "start": 31,
-          "end": 32,
+          "id": "s6-t17",
+          "text": "悟り",
+          "start": 27,
+          "end": 29,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s7-t21",
-          "text": "さしも",
-          "start": 32,
-          "end": 35,
-          "layer": 0,
+          "id": "s6-t18",
+          "text": "に",
+          "start": 29,
+          "end": 30,
+          "layer": 3,
           "grammarTag": {
-            "pos": "副詞"
-          }
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s7-t22",
-          "text": "かかはら",
-          "start": 35,
-          "end": 39,
+          "id": "s6-t19",
+          "text": "入る",
+          "start": 30,
+          "end": 32,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
             "conjugationType": "ラ四",
+            "conjugationForm": "終"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s6-t20",
+          "text": "べき",
+          "start": 32,
+          "end": 34,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "可能"
+          },
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+        },
+        {
+          "id": "s6-t21",
+          "text": "法",
+          "start": 34,
+          "end": 35,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t22",
+          "text": "に",
+          "start": 35,
+          "end": 36,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "断定"
+          },
+          "grammarRefId": "jodoshi-dantei"
+        },
+        {
+          "id": "s6-t23",
+          "text": "も",
+          "start": 36,
+          "end": 37,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "並列"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s6-t24",
+          "text": "あら",
+          "start": 37,
+          "end": 39,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ラ変",
             "conjugationForm": "未"
           },
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s7-t23",
+          "id": "s6-t25",
           "text": "ず",
           "start": 39,
           "end": 40,
@@ -4374,7 +3879,7 @@
           "grammarRefId": "jodoshi-hitei"
         },
         {
-          "id": "s7-t24",
+          "id": "s6-t26",
           "text": "、",
           "start": 40,
           "end": 41,
@@ -4384,569 +3889,19 @@
           }
         },
         {
-          "id": "s7-t25",
-          "text": "ただ",
+          "id": "s6-t27",
+          "text": "また",
           "start": 41,
           "end": 43,
           "layer": 0,
           "grammarTag": {
-            "pos": "副詞",
-            "baseForm": "ただ"
+            "pos": "接続詞"
           }
         },
         {
-          "id": "s7-t26",
-          "text": "もののあはれ",
+          "id": "s6-t28",
+          "text": "国",
           "start": 43,
-          "end": 49,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t27",
-          "text": "を",
-          "start": 49,
-          "end": 50,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s7-t28",
-          "text": "知れ",
-          "start": 50,
-          "end": 52,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "命"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s7-t29",
-          "text": "る",
-          "start": 52,
-          "end": 53,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "存続"
-          },
-          "grammarRefId": "jodoshi-jisei"
-        },
-        {
-          "id": "s7-t30",
-          "text": "かた",
-          "start": 53,
-          "end": 55,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "",
-            "baseForm": "かた"
-          }
-        },
-        {
-          "id": "s7-t31",
-          "text": "の",
-          "start": 55,
-          "end": 56,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s7-t32",
-          "text": "よき",
-          "start": 56,
-          "end": 58,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "ク",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "keiyoshi-katsuyo"
-        },
-        {
-          "id": "s7-t33",
-          "text": "を",
-          "start": 58,
-          "end": 59,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s7-t34",
-          "text": "、",
-          "start": 59,
-          "end": 60,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t35",
-          "text": "とりたて",
-          "start": 60,
-          "end": 64,
-          "layer": 1,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t36",
-          "text": "て",
-          "start": 64,
-          "end": 65,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s7-t37",
-          "text": "よし",
-          "start": 65,
-          "end": 67,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "ク",
-            "conjugationForm": "終",
-            "baseForm": "よす"
-          },
-          "grammarRefId": "keiyoshi-katsuyo"
-        },
-        {
-          "id": "s7-t38",
-          "text": "と",
-          "start": 67,
-          "end": 68,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s7-t39",
-          "text": "は",
-          "start": 68,
-          "end": 69,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s7-t40",
-          "text": "し",
-          "start": 69,
-          "end": 70,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ変",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s7-t41",
-          "text": "たる",
-          "start": 70,
-          "end": 72,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "存続"
-          },
-          "grammarRefId": "jodoshi-jisei"
-        },
-        {
-          "id": "s7-t42",
-          "text": "なり",
-          "start": 72,
-          "end": 74,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "断定",
-            "baseForm": "なる"
-          },
-          "grammarRefId": "jodoshi-dantei"
-        },
-        {
-          "id": "s7-t43",
-          "text": "。",
-          "start": 74,
-          "end": 75,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t44",
-          "text": "こ",
-          "start": 75,
-          "end": 76,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          }
-        }
-      ]
-    },
-    {
-      "id": "s8",
-      "originalText": "この心ばへを物にたとへて言はば、蓮を植ゑてめでむとする人の、濁りてきたなくはあれども、泥水をたくはふるがごとし。",
-      "modernTranslation": "この趣旨を物にたとえていうならば、蓮を植えて観賞しようとする人が、濁って汚くはあるけれども、泥水をたくわえるようなものである。",
-      "tokens": [
-        {
-          "id": "s8-t1",
-          "text": "の",
-          "start": 0,
-          "end": 1,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s8-t2",
-          "text": "心ばへ",
-          "start": 1,
-          "end": 4,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t3",
-          "text": "を",
-          "start": 4,
-          "end": 5,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s8-t4",
-          "text": "物",
-          "start": 5,
-          "end": 6,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t5",
-          "text": "に",
-          "start": 6,
-          "end": 7,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s8-t6",
-          "text": "たとへ",
-          "start": 7,
-          "end": 10,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s8-t7",
-          "text": "て",
-          "start": 10,
-          "end": 11,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s8-t8",
-          "text": "言は",
-          "start": 11,
-          "end": 13,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s8-t9",
-          "text": "ば",
-          "start": 13,
-          "end": 14,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s8-t10",
-          "text": "、",
-          "start": 14,
-          "end": 15,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t11",
-          "text": "蓮",
-          "start": 15,
-          "end": 16,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t12",
-          "text": "を",
-          "start": 16,
-          "end": 17,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s8-t13",
-          "text": "植ゑ",
-          "start": 17,
-          "end": 19,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ワ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s8-t14",
-          "text": "て",
-          "start": 19,
-          "end": 20,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s8-t15",
-          "text": "めで",
-          "start": 20,
-          "end": 22,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "ダ下二"
-          }
-        },
-        {
-          "id": "s8-t16",
-          "text": "む",
-          "start": 22,
-          "end": 23,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "意志"
-          },
-          "grammarRefId": "jodoshi-suiryo"
-        },
-        {
-          "id": "s8-t17",
-          "text": "と",
-          "start": 23,
-          "end": 24,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s8-t18",
-          "text": "する",
-          "start": 24,
-          "end": 26,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ変",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s8-t19",
-          "text": "人",
-          "start": 26,
-          "end": 27,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t20",
-          "text": "の",
-          "start": 27,
-          "end": 28,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "主格"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s8-t21",
-          "text": "、",
-          "start": 28,
-          "end": 29,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t22",
-          "text": "濁り",
-          "start": 29,
-          "end": 31,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s8-t23",
-          "text": "て",
-          "start": 31,
-          "end": 32,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s8-t24",
-          "text": "きたなく",
-          "start": 32,
-          "end": 36,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "ク",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "keiyoshi-katsuyo"
-        },
-        {
-          "id": "s8-t25",
-          "text": "は",
-          "start": 36,
-          "end": 37,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s8-t26",
-          "text": "あれ",
-          "start": 37,
-          "end": 39,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "已"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s8-t27",
-          "text": "ども",
-          "start": 39,
-          "end": 41,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s8-t28",
-          "text": "、",
-          "start": 41,
-          "end": 42,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t29",
-          "text": "泥水",
-          "start": 42,
           "end": 44,
           "layer": 0,
           "grammarTag": {
@@ -4954,7 +3909,7 @@
           }
         },
         {
-          "id": "s8-t30",
+          "id": "s6-t29",
           "text": "を",
           "start": 44,
           "end": 45,
@@ -4966,10 +3921,1055 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s8-t31",
-          "text": "たくはふる",
+          "id": "s6-t30",
+          "text": "も",
           "start": 45,
+          "end": 46,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "並列"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s6-t31",
+          "text": "家",
+          "start": 46,
+          "end": 47,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t32",
+          "text": "を",
+          "start": 47,
+          "end": 48,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s6-t33",
+          "text": "も",
+          "start": 48,
+          "end": 49,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "並列"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s6-t34",
+          "text": "身",
+          "start": 49,
           "end": 50,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t35",
+          "text": "を",
+          "start": 50,
+          "end": 51,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s6-t36",
+          "text": "も",
+          "start": 51,
+          "end": 52,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "並列"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s6-t37",
+          "text": "修む",
+          "start": 52,
+          "end": 54,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ下二",
+            "conjugationForm": "終"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s6-t38",
+          "text": "べき",
+          "start": 54,
+          "end": 56,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "可能"
+          },
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+        },
+        {
+          "id": "s6-t39",
+          "text": "教へ",
+          "start": 56,
+          "end": 58,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t40",
+          "text": "に",
+          "start": 58,
+          "end": 59,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "断定"
+          },
+          "grammarRefId": "jodoshi-dantei"
+        },
+        {
+          "id": "s6-t41",
+          "text": "も",
+          "start": 59,
+          "end": 60,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "並列"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s6-t42",
+          "text": "あら",
+          "start": 60,
+          "end": 62,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s6-t43",
+          "text": "ず",
+          "start": 62,
+          "end": 63,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei"
+        },
+        {
+          "id": "s6-t44",
+          "text": "。",
+          "start": 63,
+          "end": 64,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "originalText": "ただ世の中の物語なるがゆゑに、さる筋の善悪の論はしばらくさしおきて、さしもかかはらず、ただもののあはれを知れるかたのよきを、とりたててよしとはしたるなり。",
+      "modernTranslation": "ただ世の中の（できごとを描く）物語であるがゆえに、儒教・仏教でいう善悪の論はしばらく措いておき、あまりこだわらないで、ただ「もののあはれ」を知っているということのよさを、とりたててよいことだとしているのである。",
+      "tokens": [
+        {
+          "id": "s7-t1",
+          "text": "ただ",
+          "start": 0,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞",
+            "baseForm": "ただ"
+          }
+        },
+        {
+          "id": "s7-t2",
+          "text": "世の中",
+          "start": 2,
+          "end": 5,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t3",
+          "text": "の",
+          "start": 5,
+          "end": 6,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t4",
+          "text": "物語",
+          "start": 6,
+          "end": 8,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t5",
+          "text": "なる",
+          "start": 8,
+          "end": 10,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "断定",
+            "baseForm": "なる"
+          },
+          "grammarRefId": "jodoshi-dantei"
+        },
+        {
+          "id": "s7-t6",
+          "text": "が",
+          "start": 10,
+          "end": 11,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t7",
+          "text": "ゆゑ",
+          "start": 11,
+          "end": 13,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t8",
+          "text": "に",
+          "start": 13,
+          "end": 14,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "原因"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t9",
+          "text": "、",
+          "start": 14,
+          "end": 15,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t10",
+          "text": "さる",
+          "start": 15,
+          "end": 17,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s7-t11",
+          "text": "筋",
+          "start": 17,
+          "end": 18,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t12",
+          "text": "の",
+          "start": 18,
+          "end": 19,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t13",
+          "text": "善悪",
+          "start": 19,
+          "end": 21,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t14",
+          "text": "の",
+          "start": 21,
+          "end": 22,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t15",
+          "text": "論",
+          "start": 22,
+          "end": 23,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t16",
+          "text": "は",
+          "start": 23,
+          "end": 24,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s7-t17",
+          "text": "しばらく",
+          "start": 24,
+          "end": 28,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s7-t18",
+          "text": "さし",
+          "start": 28,
+          "end": 30,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t19",
+          "text": "おき",
+          "start": 30,
+          "end": 32,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s7-t20",
+          "text": "て",
+          "start": 32,
+          "end": 33,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s7-t21",
+          "text": "、",
+          "start": 33,
+          "end": 34,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t22",
+          "text": "さしも",
+          "start": 34,
+          "end": 37,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s7-t23",
+          "text": "かかはら",
+          "start": 37,
+          "end": 41,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s7-t24",
+          "text": "ず",
+          "start": 41,
+          "end": 42,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei"
+        },
+        {
+          "id": "s7-t25",
+          "text": "、",
+          "start": 42,
+          "end": 43,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t26",
+          "text": "ただ",
+          "start": 43,
+          "end": 45,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞",
+            "baseForm": "ただ"
+          }
+        },
+        {
+          "id": "s7-t27",
+          "text": "もののあはれ",
+          "start": 45,
+          "end": 51,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t28",
+          "text": "を",
+          "start": 51,
+          "end": 52,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t29",
+          "text": "知れ",
+          "start": 52,
+          "end": 54,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "命"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s7-t30",
+          "text": "る",
+          "start": 54,
+          "end": 55,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "存続"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s7-t31",
+          "text": "かた",
+          "start": 55,
+          "end": 57,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "",
+            "baseForm": "かた"
+          }
+        },
+        {
+          "id": "s7-t32",
+          "text": "の",
+          "start": 57,
+          "end": 58,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t33",
+          "text": "よき",
+          "start": 58,
+          "end": 60,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "keiyoshi-katsuyo"
+        },
+        {
+          "id": "s7-t34",
+          "text": "を",
+          "start": 60,
+          "end": 61,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t35",
+          "text": "、",
+          "start": 61,
+          "end": 62,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t36",
+          "text": "とりたて",
+          "start": 62,
+          "end": 66,
+          "layer": 1,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t37",
+          "text": "て",
+          "start": 66,
+          "end": 67,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s7-t38",
+          "text": "よし",
+          "start": 67,
+          "end": 69,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "終",
+            "baseForm": "よす"
+          },
+          "grammarRefId": "keiyoshi-katsuyo"
+        },
+        {
+          "id": "s7-t39",
+          "text": "と",
+          "start": 69,
+          "end": 70,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s7-t40",
+          "text": "は",
+          "start": 70,
+          "end": 71,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s7-t41",
+          "text": "し",
+          "start": 71,
+          "end": 72,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ変",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s7-t42",
+          "text": "たる",
+          "start": 72,
+          "end": 74,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "存続"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s7-t43",
+          "text": "なり",
+          "start": 74,
+          "end": 76,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "断定",
+            "baseForm": "なる"
+          },
+          "grammarRefId": "jodoshi-dantei"
+        },
+        {
+          "id": "s7-t44",
+          "text": "。",
+          "start": 76,
+          "end": 77,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "originalText": "この心ばへを物にたとへて言はば、蓮を植ゑてめでむとする人の、濁りてきたなくはあれども、泥水をたくはふるがごとし。",
+      "modernTranslation": "この趣旨を物にたとえていうならば、蓮を植えて観賞しようとする人が、濁って汚くはあるけれども、泥水をたくわえるようなものである。",
+      "tokens": [
+        {
+          "id": "s8-t1",
+          "text": "こ",
+          "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s8-t2",
+          "text": "の",
+          "start": 1,
+          "end": 2,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s8-t3",
+          "text": "心ばへ",
+          "start": 2,
+          "end": 5,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t4",
+          "text": "を",
+          "start": 5,
+          "end": 6,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s8-t5",
+          "text": "物",
+          "start": 6,
+          "end": 7,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t6",
+          "text": "に",
+          "start": 7,
+          "end": 8,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s8-t7",
+          "text": "たとへ",
+          "start": 8,
+          "end": 11,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s8-t8",
+          "text": "て",
+          "start": 11,
+          "end": 12,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s8-t9",
+          "text": "言は",
+          "start": 12,
+          "end": 14,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s8-t10",
+          "text": "ば",
+          "start": 14,
+          "end": 15,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s8-t11",
+          "text": "、",
+          "start": 15,
+          "end": 16,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t12",
+          "text": "蓮",
+          "start": 16,
+          "end": 17,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t13",
+          "text": "を",
+          "start": 17,
+          "end": 18,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s8-t14",
+          "text": "植ゑ",
+          "start": 18,
+          "end": 20,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ワ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s8-t15",
+          "text": "て",
+          "start": 20,
+          "end": 21,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s8-t16",
+          "text": "めで",
+          "start": 21,
+          "end": 23,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "ダ下二"
+          }
+        },
+        {
+          "id": "s8-t17",
+          "text": "む",
+          "start": 23,
+          "end": 24,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "意志"
+          },
+          "grammarRefId": "jodoshi-suiryo"
+        },
+        {
+          "id": "s8-t18",
+          "text": "と",
+          "start": 24,
+          "end": 25,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s8-t19",
+          "text": "する",
+          "start": 25,
+          "end": 27,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ変",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s8-t20",
+          "text": "人",
+          "start": 27,
+          "end": 28,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t21",
+          "text": "の",
+          "start": 28,
+          "end": 29,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s8-t22",
+          "text": "、",
+          "start": 29,
+          "end": 30,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t23",
+          "text": "濁り",
+          "start": 30,
+          "end": 32,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s8-t24",
+          "text": "て",
+          "start": 32,
+          "end": 33,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s8-t25",
+          "text": "きたなく",
+          "start": 33,
+          "end": 37,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "keiyoshi-katsuyo"
+        },
+        {
+          "id": "s8-t26",
+          "text": "は",
+          "start": 37,
+          "end": 38,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s8-t27",
+          "text": "あれ",
+          "start": 38,
+          "end": 40,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "已"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s8-t28",
+          "text": "ども",
+          "start": 40,
+          "end": 42,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s8-t29",
+          "text": "、",
+          "start": 42,
+          "end": 43,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t30",
+          "text": "泥水",
+          "start": 43,
+          "end": 45,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t31",
+          "text": "を",
+          "start": 45,
+          "end": 46,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s8-t32",
+          "text": "たくはふる",
+          "start": 46,
+          "end": 51,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -4979,10 +4979,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s8-t32",
+          "id": "s8-t33",
           "text": "が",
-          "start": 50,
-          "end": 51,
+          "start": 51,
+          "end": 52,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -4991,10 +4991,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s8-t33",
+          "id": "s8-t34",
           "text": "ごとし",
-          "start": 51,
-          "end": 54,
+          "start": 52,
+          "end": 55,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5004,10 +5004,10 @@
           "grammarRefId": "jodoshi-ganbou"
         },
         {
-          "id": "s8-t34",
-          "text": "。物語",
-          "start": 54,
-          "end": 57,
+          "id": "s8-t35",
+          "text": "。",
+          "start": 55,
+          "end": 56,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -5022,9 +5022,19 @@
       "tokens": [
         {
           "id": "s9-t1",
-          "text": "に",
+          "text": "物語",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s9-t2",
+          "text": "に",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5033,20 +5043,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t2",
+          "id": "s9-t3",
           "text": "不義",
-          "start": 1,
-          "end": 3,
+          "start": 3,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t3",
+          "id": "s9-t4",
           "text": "なる",
-          "start": 3,
-          "end": 5,
+          "start": 5,
+          "end": 7,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5057,20 +5067,20 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s9-t4",
+          "id": "s9-t5",
           "text": "恋",
-          "start": 5,
-          "end": 6,
+          "start": 7,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t5",
+          "id": "s9-t6",
           "text": "を",
-          "start": 6,
-          "end": 7,
+          "start": 8,
+          "end": 9,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5079,10 +5089,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t6",
+          "id": "s9-t7",
           "text": "書け",
-          "start": 7,
-          "end": 9,
+          "start": 9,
+          "end": 11,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -5092,10 +5102,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s9-t7",
+          "id": "s9-t8",
           "text": "る",
-          "start": 9,
-          "end": 10,
+          "start": 11,
+          "end": 12,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5105,10 +5115,10 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s9-t8",
+          "id": "s9-t9",
           "text": "も",
-          "start": 10,
-          "end": 11,
+          "start": 12,
+          "end": 13,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -5117,30 +5127,30 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s9-t9",
+          "id": "s9-t10",
           "text": "、",
-          "start": 11,
-          "end": 12,
+          "start": 13,
+          "end": 14,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t10",
+          "id": "s9-t11",
           "text": "そ",
-          "start": 12,
-          "end": 13,
+          "start": 14,
+          "end": 15,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           }
         },
         {
-          "id": "s9-t11",
+          "id": "s9-t12",
           "text": "の",
-          "start": 13,
-          "end": 14,
+          "start": 15,
+          "end": 16,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5149,10 +5159,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t12",
+          "id": "s9-t13",
           "text": "濁れ",
-          "start": 14,
-          "end": 16,
+          "start": 16,
+          "end": 18,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -5162,10 +5172,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s9-t13",
+          "id": "s9-t14",
           "text": "る",
-          "start": 16,
-          "end": 17,
+          "start": 18,
+          "end": 19,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5175,20 +5185,20 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s9-t14",
+          "id": "s9-t15",
           "text": "泥",
-          "start": 17,
-          "end": 18,
+          "start": 19,
+          "end": 20,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t15",
+          "id": "s9-t16",
           "text": "を",
-          "start": 18,
-          "end": 19,
+          "start": 20,
+          "end": 21,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5197,30 +5207,30 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t16",
+          "id": "s9-t17",
           "text": "めで",
-          "start": 19,
-          "end": 21,
+          "start": 21,
+          "end": 23,
           "layer": 1,
           "grammarTag": {
             "pos": "ダ下二"
           }
         },
         {
-          "id": "s9-t17",
+          "id": "s9-t18",
           "text": "て",
-          "start": 21,
-          "end": 22,
+          "start": 23,
+          "end": 24,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s9-t18",
+          "id": "s9-t19",
           "text": "に",
-          "start": 22,
-          "end": 23,
+          "start": 24,
+          "end": 25,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5230,10 +5240,10 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s9-t19",
+          "id": "s9-t20",
           "text": "は",
-          "start": 23,
-          "end": 24,
+          "start": 25,
+          "end": 26,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -5242,10 +5252,10 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s9-t20",
+          "id": "s9-t21",
           "text": "あら",
-          "start": 24,
-          "end": 26,
+          "start": 26,
+          "end": 28,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -5255,10 +5265,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s9-t21",
+          "id": "s9-t22",
           "text": "ず",
-          "start": 26,
-          "end": 27,
+          "start": 28,
+          "end": 29,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5268,20 +5278,10 @@
           "grammarRefId": "jodoshi-hitei"
         },
         {
-          "id": "s9-t22",
-          "text": "、",
-          "start": 27,
-          "end": 28,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s9-t23",
-          "text": "もののあはれ",
-          "start": 28,
-          "end": 34,
+          "text": "、",
+          "start": 29,
+          "end": 30,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -5289,9 +5289,19 @@
         },
         {
           "id": "s9-t24",
+          "text": "もののあはれ",
+          "start": 30,
+          "end": 36,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s9-t25",
           "text": "の",
-          "start": 34,
-          "end": 35,
+          "start": 36,
+          "end": 37,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5300,20 +5310,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t25",
+          "id": "s9-t26",
           "text": "花",
-          "start": 35,
-          "end": 36,
+          "start": 37,
+          "end": 38,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t26",
+          "id": "s9-t27",
           "text": "を",
-          "start": 36,
-          "end": 37,
+          "start": 38,
+          "end": 39,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -5322,10 +5332,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s9-t27",
+          "id": "s9-t28",
           "text": "咲か",
-          "start": 37,
-          "end": 39,
+          "start": 39,
+          "end": 41,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -5335,10 +5345,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s9-t28",
+          "id": "s9-t29",
           "text": "せ",
-          "start": 39,
-          "end": 40,
+          "start": 41,
+          "end": 42,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5348,10 +5358,10 @@
           "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
         },
         {
-          "id": "s9-t29",
+          "id": "s9-t30",
           "text": "ん",
-          "start": 40,
-          "end": 41,
+          "start": 42,
+          "end": 43,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -5361,20 +5371,20 @@
           "grammarRefId": "jodoshi-suiryo"
         },
         {
-          "id": "s9-t30",
+          "id": "s9-t31",
           "text": "料",
-          "start": 41,
-          "end": 42,
+          "start": 43,
+          "end": 44,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t31",
+          "id": "s9-t32",
           "text": "ぞ",
-          "start": 42,
-          "end": 43,
+          "start": 44,
+          "end": 45,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -5383,10 +5393,10 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s9-t32",
+          "id": "s9-t33",
           "text": "かし",
-          "start": 43,
-          "end": 45,
+          "start": 45,
+          "end": 47,
           "layer": 3,
           "grammarTag": {
             "pos": "終助詞",
@@ -5395,10 +5405,10 @@
           "grammarRefId": "joshi-shujoshi"
         },
         {
-          "id": "s9-t33",
+          "id": "s9-t34",
           "text": "。",
-          "start": 45,
-          "end": 46,
+          "start": 47,
+          "end": 48,
           "layer": 0,
           "grammarTag": {
             "pos": ""
