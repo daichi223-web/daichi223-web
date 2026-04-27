@@ -20,7 +20,12 @@ export function LayerSelector({ layers, currentLayer, onChange }: LayerSelectorP
       <span className="text-xs text-scaffold mr-1">Layer</span>
       {layers.map((layer) => {
         const isActive = layer.id === currentLayer;
-        const isLocked = layer.prerequisite ? layer.prerequisite > currentLayer : false;
+        const isLocked =
+          layer.id === 5
+            ? false
+            : layer.prerequisite
+            ? layer.prerequisite > currentLayer
+            : false;
 
         return (
           <button
