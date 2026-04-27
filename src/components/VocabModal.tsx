@@ -280,7 +280,7 @@ export default function VocabModal({ lemma, onClose }: Props) {
                                   出典:{' '}
                                   {linkedText ? (
                                     <Link
-                                      to={`/texts/${linkedText.slug}`}
+                                      to={`/read/texts/${linkedText.id}`}
                                       onClick={onClose}
                                       className="example-source-link"
                                     >

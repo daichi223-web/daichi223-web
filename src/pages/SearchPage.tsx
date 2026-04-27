@@ -463,7 +463,7 @@ export default function SearchPage() {
                       <div className="result-source">
                         出典:{' '}
                         {linked ? (
-                          <Link to={`/texts/${linked.slug}?q=${encodeURIComponent(e.sentence.slice(0, 12))}`}>
+                          <Link to={`/read/texts/${linked.id}`}>
                             {e.source_work} →
                           </Link>
                         ) : (
