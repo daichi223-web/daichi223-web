@@ -90,6 +90,22 @@
           {
             "text": "「ことわり」= 道理だ、当然だ（名詞「理」から来た語で、納得の気持ちを表す）",
             "priority": "important"
+          },
+          {
+            "text": "[古文常識] 平安貴族の宮仕へ所と人間関係: 「宮仕へ所」は天皇・中宮・東宮などに仕える場で、清少納言自身も中宮定子に女房として仕えていた。狭い御所内で女房・殿上人が密に交わり、噂・陰口・嫉妬が容易に広がる空間だった。本段で清少納言が「思はるる思はれぬがある」と嘆くのは、この閉鎖的人間関係の中で愛憎の差が露骨に可視化される実体験に基づく。机上の人間論ではなく、宮中という具体的な場の観察から導かれた省察である。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 平安貴族社会の身分秩序「よき人」と「下衆」: 「よき人」＝三位以上の上達部や殿上人など貴族層、「下衆」＝身分の低い庶民・受領以下の階層を指す。平安社会は厳格な身分制で、家格・官位が結婚・交際・処遇のすべてを規定した。本段が「よき人の御ことはさらなり、下衆などのほどにも」と身分差を超えて愛情の普遍性を語る点は注目される — 身分秩序を前提にしつつ、それを超える親子の情を「あはれ」と感じる清少納言の人間観察が際立つ。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 「あはれ」の美意識と「をかし」: 平安貴族の二大美意識のうち、「をかし」が知的・明朗な美的感動（枕草子の基調）であるのに対し、「あはれ」は対象に深く心を寄せるしみじみとした情感（源氏物語の基調）。本段の末尾「親なればぞかしと、あはれなり」は、清少納言が珍しく「あはれ」を語る箇所であり、平凡な子をかわいがる親の無償の愛に対する深い共感を示す。「をかし」の作家・清少納言の隠れた一面を露わにする重要な一節。",
+            "priority": "important"
+          },
+          {
+            "text": "[古文常識] 仏教思想と「人を憎む心」の罪業観: 平安貴族は天台・真言の仏教思想を生活基盤とし、貪・瞋（憎しみ）・痴の三毒を避けることが日々の戒めだった。とくに『法華経』『大乗起信論』などで「瞋恚（しんに）」＝怒り憎む心は地獄に堕ちる業とされ、宮中の女房たちも仏典講説や写経を通してこの教義を内面化していた。本段冒頭の「人に憎まれむことこそあるべけれ」という命題には、こうした仏教的善悪観が背景にあり、憎まれる側のつらさだけでなく、憎む側の罪深さも暗に意識されている。",
+            "priority": "important"
           }
         ]
       }
@@ -121,7 +137,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(場所): 「〜において・〜で」。動作・存在の場を示す。受身の動作主・時・原因など多義のうち最頻"
         },
         {
           "id": "s1-t3",
@@ -132,7 +149,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "なほ"
-          }
+          },
+          "hint": "重要副詞「なほ」: 「やはり・何といっても」が中心義。語り手の実感を補強する語で、命題提示の冒頭で多用される。「依然として」「さらに」の意も派生する"
         },
         {
           "id": "s1-t4",
@@ -143,7 +161,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いと"
-          }
+          },
+          "hint": "重要副詞「いと」: 「ひどく・たいそう」と程度を強める。打消を伴うと「いと〜ず」＝「たいして〜ない」の部分否定になる点に注意"
         },
         {
           "id": "s1-t5",
@@ -156,7 +175,8 @@
             "conjugationType": "ク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古今異義語「心憂し」: 「つらい・情けない」が古語の中心義。現代語「心憂い」と異なり、より深い精神的苦痛・嘆きを含む。本段では「人に憎まれること」のつらさを示す主題語"
         },
         {
           "id": "s1-t6",
@@ -179,7 +199,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示。「〜ものは〜こそ〜」の枠で命題を立てる随筆の典型構文"
         },
         {
           "id": "s1-t8",
@@ -211,7 +232,8 @@
             "pos": "格助詞",
             "meaning": "受身"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 受身の動作主を示す。「〜に〜（受身助動詞）」の枠で「〜から〜される」と訳す"
         },
         {
           "id": "s1-t11",
@@ -224,7 +246,8 @@
             "conjugationType": "マ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ行四段「憎む」: 受身助動詞「る」が未然形に接続するため未然形「憎ま」。仏教的には「瞋恚」（しんに）として三毒の一つに数えられる感情"
         },
         {
           "id": "s1-t12",
@@ -237,7 +260,8 @@
             "conjugationForm": "未",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」: 四段・ラ変・ナ変の未然形に接続。受身・自発・可能・尊敬の四義のうち、「人に〜る」の枠は受身が基本"
         },
         {
           "id": "s1-t13",
@@ -250,7 +274,8 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(婉曲): 連体形で体言にかかるとき、推量ではなく婉曲「〜のような」と取るのが基本。「憎まれむこと」＝「憎まれるようなこと」"
         },
         {
           "id": "s1-t14",
@@ -273,7 +298,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。結びは已然形。「こそ〜べけれ」で作者の確信を表す。本段の命題提示の核"
         },
         {
           "id": "s1-t16",
@@ -287,7 +313,8 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「あり」(ラ変): 「〜こと（で）あり」の形で、前の連体節を受けて存在を断じる。本来の「ある」とほぼ同義だが補助的役割"
         }
       ]
     },
@@ -307,7 +334,8 @@
             "conjugationForm": "已",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「べし」(推量): 「こそ」の結びで已然形「べけれ」。終止形接続。推量・意志・当然・適当・命令・可能の六義 — ここは推量「〜であろう」"
         },
         {
           "id": "s2-t2",
@@ -337,7 +365,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "連語「てふ」: 「といふ」の縮約形（〜という）。和歌・物語で多用される。「誰てふ物狂ひ」＝「誰という変わり者」"
         },
         {
           "id": "s2-t5",
@@ -347,7 +376,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "「物狂ひ」: 常軌を逸した者・気がふれた人。当時、心の異常は物の怪・霊の憑依とも結びついて理解された。ここでは「正気を失った者でなければ自ら憎まれたいとは思うまい」と反語の核を担う"
         },
         {
           "id": "s2-t6",
@@ -359,7 +389,8 @@
             "pos": "係助詞",
             "meaning": "反語"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「か」: 疑問・反語。結びは連体形。文脈上「いや、いない・しない」と取るのが反語。本句は反語で命題の自明性を補強"
         },
         {
           "id": "s2-t7",
@@ -401,7 +432,8 @@
             "pos": "格助詞",
             "meaning": "受身"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 受身の動作主。「人に〜れ」で「人から〜される」"
         },
         {
           "id": "s2-t11",
@@ -411,7 +443,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "指示副詞「さ」: 「そう・そのように」。直前の内容を受けて指示する。ここでは前文の「人に憎まれる」を指す"
         },
         {
           "id": "s2-t12",
@@ -424,7 +457,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ行四段「思ふ」: 「思う・愛する・心にかける」と多義。本段では受身「る」と組んで「思はる」＝「愛される・人から思われる」が主題語として頻出"
         },
         {
           "id": "s2-t13",
@@ -437,7 +471,8 @@
             "conjugationForm": "未",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」(受身): 未然形。「人に〜思はれ」で「人にそう思われる」"
         }
       ]
     },
@@ -457,7 +492,8 @@
             "conjugationForm": "終",
             "meaning": "意志"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(意志): 主語が一人称（われ）の場合の終止形は意志「〜しよう」。「われ…さ思はれむ」＝「自分はそう（憎まれよう）と」"
         },
         {
           "id": "s3-t2",
@@ -469,7 +505,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用。「〜と思ふ」「〜と言ふ」の枠で前の心内・発話内容を受ける"
         },
         {
           "id": "s3-t3",
@@ -481,7 +518,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示。「〜とは」で前文の心内発話を主題化"
         },
         {
           "id": "s3-t4",
@@ -494,7 +532,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「思ふ」: 反語「か」の枠内で結ぶ未然形。「思はむ」全体で「思おうか」となる"
         },
         {
           "id": "s3-t5",
@@ -507,7 +546,8 @@
             "conjugationForm": "体",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(推量): 反語「か」の結びで連体形。「誰てふ物狂ひか…思はむ」＝「誰がそう思おうか、いや思わない」"
         },
         {
           "id": "s3-t6",
@@ -527,7 +567,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "接続詞"
-          }
+          },
+          "hint": "接続詞「されど」: 「そうではあるが・そうはいっても」と逆接で論を転じる。「さ＋あれど」の縮約。理想と現実の対比を導く"
         },
         {
           "id": "s3-t8",
@@ -547,7 +588,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「自然に」: 「ひとりでに・自然と」。意図せずそうなるさまを示す。「自然に〜あるぞ」＝「自然と〜があるのは」"
         },
         {
           "id": "s3-t10",
@@ -557,7 +599,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "「宮仕へ所」: 天皇・中宮・東宮などに女房・殿上人として仕える場所。清少納言自身は中宮定子の後宮（登華殿・職の御曹司など）に仕えた。狭い御所内で女房同士の人間関係が濃密に展開し、愛憎・嫉妬・噂が渦巻く現場で、本段の人間観察の発生源"
         },
         {
           "id": "s3-t11",
@@ -569,7 +612,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 場所「〜において」"
         },
         {
           "id": "s3-t12",
@@ -581,7 +625,8 @@
             "pos": "係助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列・添加。「〜にも〜にても」の枠で「Aでも、Bでも」と複数の場面を並べる"
         },
         {
           "id": "s3-t13",
@@ -601,7 +646,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "「はらから」: 同じ母から生まれた兄弟姉妹。「腹（同じ腹）+から（族・仲間）」の語源。平安貴族は一夫多妻のため、父が同じでも母が違えば「はらから」とは呼ばない点が古今異義の核"
         },
         {
           "id": "s3-t15",
@@ -613,7 +659,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾「〜の」"
         },
         {
           "id": "s3-t16",
@@ -635,7 +682,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「にて」: 場所・手段・原因・資格。ここは場所「〜において」。「に＋て」由来で、現代語「で」に近い"
         },
         {
           "id": "s3-t18",
@@ -647,7 +695,8 @@
             "pos": "係助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列「〜にも」。複数場面の並置で論を一般化"
         },
         {
           "id": "s3-t19",
@@ -670,7 +719,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「思ふ」: 受身「るる」と組んで「思はるる」＝「（人から）思われる・愛される」と名詞節化"
         },
         {
           "id": "s3-t21",
@@ -683,7 +733,8 @@
             "conjugationForm": "体",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」(受身): 連体形「るる」。ここでは体言止め的に「思はるる（者・こと）」と名詞化し、「思はれぬ（者）」と対比される"
         },
         {
           "id": "s3-t22",
@@ -709,7 +760,8 @@
             "conjugationForm": "未",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」(受身): 未然形。次の打消「ぬ」に接続するため未然形をとる"
         },
         {
           "id": "s3-t24",
@@ -722,7 +774,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 連体形「ぬ」。完了「ぬ」（終止形）と紛らわしい — ここは未然形「れ」に接続するので打消の連体形と確定"
         },
         {
           "id": "s3-t25",
@@ -734,7 +787,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」: 主格。「思はるる思はれぬが」＝「愛される者と愛されない者があること」を主語化"
         }
       ]
     },
@@ -755,7 +809,8 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と特殊活用。係助詞「ぞ」の結びで連体形「ある」"
         },
         {
           "id": "s4-t2",
@@ -767,7 +822,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。結びは連体形。ここでは「ある」（ラ変・体）が結び。文末の「や」と相俟って嘆息のニュアンスを生む"
         },
         {
           "id": "s4-t3",
@@ -801,7 +857,8 @@
             "conjugationType": "シク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古今異義語「わびし」: 「つらい・やりきれない・困った」が古語の中心義。現代語「侘しい（さびしい）」とは意味がかなり異なる。本段では「愛される/されないの差がある」現実への嘆きを表す"
         },
         {
           "id": "s4-t6",
@@ -813,7 +870,8 @@
             "pos": "間投助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「や」: 詠嘆「〜だなあ・〜よ」。文中・文末に置かれ、感慨を露わにする。係助詞「ぞ〜わびしき」と相俟って作者の嘆息を表現"
         },
         {
           "id": "s4-t7",
@@ -836,7 +894,8 @@
             "conjugationType": "ク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「よし」: ク活用。古文では「身分が高い・優れている」の意で使うことが多く、「よき人」＝「身分の高い貴人」。現代語の「良い」より範囲が狭く社会的評価寄り"
         },
         {
           "id": "s4-t9",
@@ -846,7 +905,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "「よき人」: 三位以上の上達部・殿上人など、身分の高い人。「下衆」と対をなす身分用語。本段では身分差を超えて愛情の普遍性を語る前提として用いられる"
         },
         {
           "id": "s4-t10",
@@ -858,7 +918,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾「〜の」"
         },
         {
           "id": "s4-t11",
@@ -868,7 +929,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "接頭語「御」: 尊敬・美称の接頭。「御こと」で「（よき人の）御身の上のこと」と尊敬を表す"
         },
         {
           "id": "s4-t12",
@@ -891,7 +953,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題「〜については」"
         },
         {
           "id": "s4-t14",
@@ -904,7 +967,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古今異義語「さらなり」: 「言うまでもない・もちろんだ」が中心義。「言ふもさらなり」「いふも更なり」の縮約形と説かれる。「Aはさらなり、Bも〜」で「Aは当然、Bも〜だ」の一般化構文を作る"
         },
         {
           "id": "s4-t15",
@@ -924,7 +988,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "「下衆」(げす): 身分の低い者・庶民。「よき人」の対概念。読みは「げす」（漢音）。受領以下、地下人・下級官吏・庶民全般を含む幅広い語"
         },
         {
           "id": "s4-t17",
@@ -934,7 +999,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「など」: 婉曲・例示「〜のような」。直接名指しを避ける丁寧な表現で、「下衆など」「親など」と緩めて言う"
         },
         {
           "id": "s4-t18",
@@ -946,7 +1012,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾"
         },
         {
           "id": "s4-t19",
@@ -957,7 +1024,8 @@
           "grammarTag": {
             "pos": "",
             "baseForm": "ほど"
-          }
+          },
+          "hint": "重要名詞「ほど」: 「程度・身分・時間・場所・あたり」と多義。ここでは「身分・階層」の意で「下衆などのほど」＝「身分の低い者の階層」"
         },
         {
           "id": "s4-t20",
@@ -969,7 +1037,8 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 場所"
         },
         {
           "id": "s4-t21",
@@ -981,7 +1050,8 @@
             "pos": "係助詞",
             "meaning": "類似"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 類似・添加「〜でも」。「さらなり、〜も」で「Aは言うまでもなく、Bも同じだ」と範囲を拡張"
         },
         {
           "id": "s4-t22",
@@ -1011,7 +1081,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「など」: 婉曲・例示"
         },
         {
           "id": "s4-t25",
@@ -1023,7 +1094,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 主格「〜が」。連体修飾節の中で主語を示す。「親などのかなしうする子」＝「親などが愛している子」"
         },
         {
           "id": "s4-t26",
@@ -1036,7 +1108,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要古今異義語「かなしうす」: 形容詞「かなし」(いとしい)+「す」のサ変複合動詞で「かわいがる」。形容詞語幹のウ音便「かなしう」+「す」 → 「かなしうする子」＝「かわいがっている子」。現代語「悲しい」とは別義"
         },
         {
           "id": "s4-t27",
@@ -1058,7 +1131,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示。「親などのかなしうする子は」が次の述部の主語となる"
         },
         {
           "id": "s4-t29",
@@ -1092,7 +1166,8 @@
             "conjugationForm": "用",
             "baseForm": "たつ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「たつ」(タ下二): 「立てる・目立たせる」の他動詞。「目たて耳たて」＝「目を凝らし耳を澄まし」と五感を集中させる慣用句で、注目するさまを表す"
         },
         {
           "id": "s4-t32",
@@ -1123,7 +1198,8 @@
             "conjugationForm": "未",
             "baseForm": "たつ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "タ下二「たつ」: 「立てる」の他動詞。受身助動詞「らる」が未然形に接続するため未然形「たて」"
         },
         {
           "id": "s5-t2",
@@ -1136,7 +1212,8 @@
             "conjugationForm": "用",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「らる」(受身): 下二段・上二段・カ変・サ変の未然形に接続。「たて」（タ下二・未）に続くので「らる」を選択。受身・自発・可能・尊敬の四義のうちここは受身"
         },
         {
           "id": "s5-t3",
@@ -1146,7 +1223,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続。連用形に付いて前後を順に接ぐ。「られて」＝「〜られて」"
         },
         {
           "id": "s5-t4",
@@ -1169,7 +1247,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古今異義語「いたはし」: 「大切にしたい・いとしい・気の毒だ」が古語の中心義。現代語「労しい（気の毒）」とは別に「大切に思う」が古文の主用法。本段では「子を大切に思われる」"
         },
         {
           "id": "s5-t6",
@@ -1181,7 +1260,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。結びは已然形「おぼゆれ」。作者の実感の強さを表す"
         },
         {
           "id": "s5-t7",
@@ -1191,7 +1271,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": "ヤ下二"
-          }
+          },
+          "hint": "重要動詞「おぼゆ」(ヤ下二): 「自然と思われる・感じられる」が中心義。受動的・自発的な感情を表す。本段の「いたはしうこそおぼゆれ」「いかが思はざらむとおぼゆ」と類似形が頻出"
         },
         {
           "id": "s5-t8",
@@ -1214,7 +1295,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ上一動詞「見る」: 「見る・世話する・面倒を見る・配偶者として迎える」と多義。「見るかひあり」＝「世話する甲斐がある」の慣用"
         },
         {
           "id": "s5-t10",
@@ -1224,7 +1306,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "「かひ」(甲斐): 努力・行為の効果や価値。「見るかひ」＝「世話する甲斐」。漢字「甲斐」は当て字で語源は「替（代）り」"
         }
       ]
     },
@@ -1245,7 +1328,8 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変「あり」: 「見るかひある」全体で「世話するかいがある」と動詞句、ここで連体形止め"
         },
         {
           "id": "s6-t2",
@@ -1257,7 +1341,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題化。「見るかひあるは」＝「すぐれた子については」"
         },
         {
           "id": "s6-t3",
@@ -1268,7 +1353,8 @@
           "grammarTag": {
             "pos": "ナリ",
             "baseForm": "ことわり"
-          }
+          },
+          "hint": "重要古今異義語「ことわり」: 「道理だ・当然だ」が中心義。名詞「理」から派生し、納得・容認の気持ちを表す。「見るかひあるはことわり」＝「すぐれた子が愛されるのは当然だ」"
         },
         {
           "id": "s6-t4",
@@ -1289,7 +1375,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いかが"
-          }
+          },
+          "hint": "重要副詞「いかが」: 「どうして〜か（疑問）／どうして〜か、いや〜ない（反語）」。「いかが〜む」で反語を作るのが定型。本段は「いかが思はざらむ」＝「どうして愛さずにいられようか、いや愛さずにはいられない」"
         },
         {
           "id": "s6-t6",
@@ -1302,7 +1389,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「思ふ」: 打消「ざら」が未然形接続するため未然形"
         },
         {
           "id": "s6-t7",
@@ -1315,7 +1403,8 @@
             "conjugationForm": "未",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消・補助活用): 「ざら・ざり・〇・ざる・ざれ・ざれ」の補助活用。下に推量「む」が続くため未然形「ざら」をとる"
         },
         {
           "id": "s6-t8",
@@ -1328,7 +1417,8 @@
             "conjugationForm": "体",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(推量): 反語「いかが」の結びで連体形。「いかが〜ざらむ」で二重否定の反語＝強い肯定を表す"
         },
         {
           "id": "s6-t9",
@@ -1340,7 +1430,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用「〜と思う」"
         },
         {
           "id": "s6-t10",
@@ -1351,7 +1442,8 @@
           "grammarTag": {
             "pos": "ヤ下二",
             "baseForm": "おぼゆ"
-          }
+          },
+          "hint": "重要動詞「おぼゆ」(ヤ下二): 「自然と思われる」。終止形止めで一文を結ぶ"
         },
         {
           "id": "s6-t11",
@@ -1374,7 +1466,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容動詞「ことなり」(ナリ): 「格別だ・特別だ・違っている」。「事＋なり」または「異＋なり」。「ことなることなき」＝「格別のこともない・平凡な」"
         },
         {
           "id": "s6-t13",
@@ -1399,7 +1492,8 @@
             "conjugationForm": "体",
             "baseForm": "なく"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「なし」(ク): 連体形「なき」。「ことなることなき」＝「格別のこともない・平凡な」"
         },
         {
           "id": "s6-t15",
@@ -1411,7 +1505,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題化。「ことなることなきは」＝「平凡な子については」と前文と対比"
         },
         {
           "id": "s6-t16",
@@ -1431,7 +1526,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "接続詞"
-          }
+          },
+          "hint": "接続詞「また」: 「同じく・一方で」。前文と並列に新たな視点を導入する。本段では「見るかひある」子（前段）と「ことなることなき」子（本句）の対比を導く"
         },
         {
           "id": "s6-t18",
@@ -1470,7 +1566,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 動作の対象。「これを愛しと思ふ」＝「この子をかわいいと思う」"
         },
         {
           "id": "s7-t2",
@@ -1484,7 +1581,8 @@
             "conjugationForm": "終",
             "baseForm": "かなし"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古今異義語「かなし」(シク): 「いとしい・かわいい」が古語の中心義。「愛し」と書くこともある。「悲し」と書く場合は「悲嘆」だが、子・恋人・幼児への深い愛情で使う場合は「いとしい」と訳す"
         },
         {
           "id": "s7-t3",
@@ -1496,7 +1594,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用"
         },
         {
           "id": "s7-t4",
@@ -1509,7 +1608,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「思ふ」: 「らむ」が終止形接続なので終止形"
         },
         {
           "id": "s7-t5",
@@ -1522,7 +1622,8 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「らむ」: 終止形接続。原義は現在推量「今ごろ〜ているだろう」だが、連体形＋体言の枠では婉曲「〜ようだ」と取れる。本句は「思ふらむは」＝「思うようなのは」と一般論を和らげる"
         },
         {
           "id": "s7-t6",
@@ -1534,7 +1635,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題化。「思ふらむは」＝「思うようなのは」を主部とする"
         },
         {
           "id": "s7-t7",
@@ -1568,7 +1670,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 体言・連体形に接続。「親なれば」＝「親であるから」。「ぞかし」と相俟って「親だからこそなのだよ」と納得を表す"
         },
         {
           "id": "s7-t10",
@@ -1578,7 +1681,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 已然形接続で順接の確定条件。「〜から・〜ので」。未然形＋ば「〜なら」（仮定）と区別する"
         },
         {
           "id": "s7-t11",
@@ -1590,7 +1694,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。「ぞかし」で念押し連結し、「親であるからこそだよ」と確信を表明"
         },
         {
           "id": "s7-t12",
@@ -1602,7 +1707,8 @@
             "pos": "終助詞",
             "meaning": "念押"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「かし」: 念押し「〜だよ・〜なのさ」。文末で語り手の確信・自己納得を強める。「親なればぞかし」＝「親だからこそなのだよ」"
         },
         {
           "id": "s7-t13",
@@ -1614,7 +1720,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用「〜と（思って）」"
         },
         {
           "id": "s7-t14",
@@ -1638,7 +1745,8 @@
             "conjugationForm": "終",
             "baseForm": "あはれ"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古今異義語「あはれなり」(ナリ): 「しみじみと心を動かされる・趣深い」。源氏物語の基調をなす美意識で、枕草子の「をかし」と対をなす。本段で清少納言が珍しく「あはれ」を語る点に注意 — 平凡な子をかわいがる親の無償の愛への共感"
         },
         {
           "id": "s7-t16",
@@ -1670,7 +1778,8 @@
             "pos": "格助詞",
             "meaning": "受身"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 受身の動作主"
         },
         {
           "id": "s7-t19",
@@ -1682,7 +1791,8 @@
             "pos": "係助詞",
             "meaning": "並列"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 並列。「親にも、君にも、…人にも」と網羅列挙"
         },
         {
           "id": "s7-t20",
@@ -1702,7 +1812,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "「君」: 主君・主人・天皇・中宮・あるじ。古文の「君」は身分上位者を指すのが基本で、現代語の二人称「君」とは異なる。本段では「親・君・うち語らふ人」と並列され、自分が仕える主君を意味する"
         },
         {
           "id": "s7-t22",
@@ -1746,7 +1857,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「すべて」: 「総じて・全部・全体として」。下に肯定で全肯定、打消で全否定（「すべて〜なし」）。本句は全肯定で結論を一般化"
         },
         {
           "id": "s7-t26",
@@ -1773,7 +1885,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "複合動詞「うち語らふ」: 接頭語「うち」（軽い意・少しの意）+「語らふ」（親しく話し合う・交際する）。「うち語らふ人」＝「親しく交際する友人」。平安貴族の交友関係を示す語"
         },
         {
           "id": "s8-t2",
@@ -1852,7 +1965,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「思ふ」: 受身「れ」+婉曲「む」と組んで「思はれむばかり」＝「愛されるほど」と最上級を作る"
         },
         {
           "id": "s8-t9",
@@ -1865,7 +1979,8 @@
             "conjugationForm": "未",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」(受身): 末尾の「思はれむばかり」は冒頭の「憎まれむこと」と対称構造。否定的命題から肯定的結論へ転換する核となる受身"
         },
         {
           "id": "s8-t10",
@@ -1878,7 +1993,8 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(婉曲): 連体形＋「ばかり」（程度の副助詞）の枠で婉曲「〜ような・〜くらい」。「思はれむばかり」＝「愛されるほど」"
         },
         {
           "id": "s8-t11",
@@ -1888,7 +2004,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「ばかり」: 程度・限定。「〜ほど・〜だけ・〜くらい」。「〜ばかり〜あらじ」で「〜ほど〜はないだろう」と最上級を作る"
         },
         {
           "id": "s8-t12",
@@ -1902,7 +2019,8 @@
             "conjugationForm": "体",
             "baseForm": "めでたし"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古今異義語「めでたし」: 「すばらしい・立派だ」が中心義。動詞「愛づ」+形容詞語尾「いたし」の複合。現代語「目出度い（祝事）」より広く価値全般の称賛で使う"
         },
         {
           "id": "s8-t13",
@@ -1925,7 +2043,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題化。「めでたきことは」を主部とし、「あらじ」で結ぶ"
         },
         {
           "id": "s8-t15",
@@ -1938,7 +2057,8 @@
             "conjugationType": "ラ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変「あり」: 未然形「あら」。「じ」が未然形接続のため。「あらじ」＝「あるまい」で章段の結論を打消推量で締める"
         },
         {
           "id": "s8-t16",
@@ -1951,7 +2071,8 @@
             "conjugationForm": "終",
             "meaning": "打消推量"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「じ」(打消推量・打消意志): 未然形接続。「む」の打消相当で「〜ないだろう・〜まい」。「あらじ」＝「あるまい」。本段の結論を穏やかな打消推量で締める"
         },
         {
           "id": "s8-t17",
