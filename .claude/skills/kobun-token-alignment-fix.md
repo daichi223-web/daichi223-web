@@ -160,3 +160,33 @@ done
 ```
 
 ただし pre-fix が必要な教材は失敗するので、失敗ログを別途精査する。
+
+## より強力な修復: rebuild-from-tokens.cjs
+
+`fix-token-alignment.cjs` で失敗するケース（originalText が tokens より大幅に短い、
+または小さな drift で累積ズレが発生する）には `rebuild-from-tokens.cjs` を使う。
+
+### ロジック
+
+1. 各 sentence の existing originalText を **anchor** として fullText (token 連結) 中で検索
+2. anchor の前後を含めて originalText を「拡張」: 各 sentence は自分の anchor から次の anchor までの fullText 範囲を吸収
+3. 見つからない anchor (例: 出典「（第八四段）」が tokens に無いケース) は skip し、その sentence は元の originalText のまま filler token を生成
+4. 拡張後の originalText 配列に基づいてトークンを再分配 (fix-token-alignment.cjs と同じロジック)
+
+### 使い方
+
+```bash
+node scripts/rebuild-from-tokens.cjs <textId>
+```
+
+### 特性
+
+- sentence ID と count を保持 → reading guide annotation との整合保てる
+- modernTranslation も保持 (sentence 単位で対応)
+- token の grammarTag/hint/layer は保持
+- 見つからない anchor は warning 表示で skip、validation pass
+
+### 適用結果 (2026-04-28)
+
+`fix-token-alignment.cjs` で失敗した 77 教材すべて `rebuild-from-tokens.cjs` で修復成功。
+重大な情報損失は無し（sentence 構造とトークンメタは保たれ、originalText のみ tokens に揃う方向で再生成）。

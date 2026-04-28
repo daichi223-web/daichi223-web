@@ -186,9 +186,9 @@
         },
         {
           "id": "s1-t8",
-          "text": "。一時",
+          "text": "。",
           "start": 12,
-          "end": 15,
+          "end": 13,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -203,9 +203,19 @@
       "tokens": [
         {
           "id": "s2-t1",
-          "text": "の",
+          "text": "一時",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t2",
+          "text": "の",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -215,20 +225,20 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s2-t2",
+          "id": "s2-t3",
           "text": "変化",
-          "start": 1,
-          "end": 3,
+          "start": 3,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t3",
+          "id": "s2-t4",
           "text": "あり",
-          "start": 3,
-          "end": 5,
+          "start": 5,
+          "end": 7,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -240,10 +250,10 @@
           "hint": "重要動詞「あり」: ラ変動詞。活用は「ら/り/り/る/れ/れ」。終止形が「り」でなく「あり」になるのがラ変の特徴"
         },
         {
-          "id": "s2-t4",
+          "id": "s2-t5",
           "text": "。",
-          "start": 5,
-          "end": 6,
+          "start": 7,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -529,9 +539,9 @@
         },
         {
           "id": "s4-t11",
-          "text": "。不易",
+          "text": "。",
           "start": 14,
-          "end": 17,
+          "end": 15,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -546,670 +556,7 @@
       "tokens": [
         {
           "id": "s5-t1",
-          "text": "を",
-          "start": 0,
-          "end": 1,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
-        },
-        {
-          "id": "s5-t2",
-          "text": "知ら",
-          "start": 1,
-          "end": 3,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要動詞「知る」: ラ行四段活用 (ら/り/る/る/れ/れ)。未然形「知ら」+「ず」=「知らない」"
-        },
-        {
-          "id": "s5-t3",
-          "text": "ざれ",
-          "start": 3,
-          "end": 5,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "已",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei",
-          "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。活用は「ず・ず・ず・ぬ・ね」と「ざら・ざり・○・ざる・ざれ・ざれ」の二系統。「ざれ」は已然形・命令形"
-        },
-        {
-          "id": "s5-t4",
-          "text": "ば",
-          "start": 5,
-          "end": 6,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「ば」: 已然形＋ば＝確定条件「〜ので・〜と」、未然形＋ば＝仮定条件「もし〜ならば」。識別は直前活用形"
-        },
-        {
-          "id": "s5-t5",
-          "text": "、",
-          "start": 6,
-          "end": 7,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s5-t6",
-          "text": "まことに",
-          "start": 7,
-          "end": 11,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「まことに」: 「本当に・真実に」の意。漢文訓読体で「真に」と訓ずる強意の副詞"
-        },
-        {
-          "id": "s5-t7",
-          "text": "知れ",
-          "start": 11,
-          "end": 13,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "命"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要動詞「知る」: ラ行四段。已然形「知れ」+「り」(完了・存続) =「知っている」。命令形と同形だが文法的には已然形"
-        },
-        {
-          "id": "s5-t8",
-          "text": "る",
-          "start": 13,
-          "end": 14,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "存続"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「り」: 完了・存続 (〜た・〜ている)。サ変未然形・四段已然形 (e音) に接続。「知れる」=「知っている」"
-        },
-        {
-          "id": "s5-t9",
-          "text": "に",
-          "start": 14,
-          "end": 15,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "断定"
-          },
-          "grammarRefId": "jodoshi-dantei",
-          "hint": "助動詞「なり」連用形「に」: 断定。「にあり/にあらず」の形で用いられる。格助詞「に」との識別注意"
-        },
-        {
-          "id": "s5-t10",
-          "text": "あら",
-          "start": 15,
-          "end": 17,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「あり」: ラ変。「にあらず」=「〜ではない」(断定の助動詞「なり」連用形「に」＋「あらず」)"
-        },
-        {
-          "id": "s5-t11",
-          "text": "ず",
-          "start": 17,
-          "end": 18,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei",
-          "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。「にあらず」=「〜ではない」の定型句"
-        }
-      ]
-    },
-    {
-      "id": "s6",
-      "originalText": "不易といふは、新古によらず、変化流行にもかかはらず、誠によく立ちたる姿なり。",
-      "modernTranslation": "「不易（不変）」というのは、（時代や作風の）新しいとか古いとかに左右されず、（また）変化流行にも関係せず、「風雅の誠」の上に立脚した作品の姿をいうのである。",
-      "tokens": [
-        {
-          "id": "s6-t1",
-          "text": "。",
-          "start": 0,
-          "end": 1,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t2",
           "text": "不易",
-          "start": 1,
-          "end": 3,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "俳論キーワード「不易」: 時代を超えて変わらない俳諧の本質。「流行」(時代に応じた変化) と対をなし、根は同じ「風雅の誠」"
-        },
-        {
-          "id": "s6-t3",
-          "text": "と",
-          "start": 3,
-          "end": 4,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「と」引用: 「〜と」=「〜と (いう)・〜と (思う)」。引用対象の文や語を受ける。「〜といふ」は定型句"
-        },
-        {
-          "id": "s6-t4",
-          "text": "いふ",
-          "start": 4,
-          "end": 6,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "体",
-            "baseForm": "いふ"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要動詞「いふ」: ハ行四段活用 (は・ひ・ふ・ふ・へ・へ)。「〜といふ」は「〜というもの」の意で頻出"
-        },
-        {
-          "id": "s6-t5",
-          "text": "は",
-          "start": 6,
-          "end": 7,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「は」: 主題提示・対比・強調。係り結びは生じない。「〜といふは」は「〜というのは」と訳す定型句"
-        },
-        {
-          "id": "s6-t6",
-          "text": "、",
-          "start": 7,
-          "end": 8,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t7",
-          "text": "新古",
-          "start": 8,
-          "end": 10,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t8",
-          "text": "に",
-          "start": 10,
-          "end": 11,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
-        },
-        {
-          "id": "s6-t9",
-          "text": "よら",
-          "start": 11,
-          "end": 13,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "未",
-            "baseForm": "よる"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要動詞「よる」: ラ行四段。「(〜に)よる・基づく・関わる」の意。「〜によらず」=「〜に左右されず」"
-        },
-        {
-          "id": "s6-t10",
-          "text": "ず",
-          "start": 13,
-          "end": 14,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei",
-          "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。連用形「ず」は中止用法で「〜ずに・〜ず」と訳す"
-        },
-        {
-          "id": "s6-t11",
-          "text": "、",
-          "start": 14,
-          "end": 15,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t12",
-          "text": "変化流行",
-          "start": 15,
-          "end": 19,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t13",
-          "text": "に",
-          "start": 19,
-          "end": 20,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
-        },
-        {
-          "id": "s6-t14",
-          "text": "も",
-          "start": 20,
-          "end": 21,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "類似"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「も」: 同類・並列・強調。「〜にも〜ず」は「〜にも〜ない」の意。係り結びは起こさない"
-        },
-        {
-          "id": "s6-t15",
-          "text": "かかはら",
-          "start": 21,
-          "end": 25,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「かかはる」: ラ行四段。「関係する・とらわれる」の意。「〜にもかかはらず」=「〜にも関係なく」"
-        },
-        {
-          "id": "s6-t16",
-          "text": "ず",
-          "start": 25,
-          "end": 26,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei",
-          "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。連用形「ず」は中止用法で「〜ずに・〜ず」と訳す"
-        },
-        {
-          "id": "s6-t17",
-          "text": "、",
-          "start": 26,
-          "end": 27,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t18",
-          "text": "誠",
-          "start": 27,
-          "end": 28,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t19",
-          "text": "に",
-          "start": 28,
-          "end": 29,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
-        },
-        {
-          "id": "s6-t20",
-          "text": "よく",
-          "start": 29,
-          "end": 31,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「よく」: 「しっかり・十分に」(連用修飾)。形容詞「よし」連用形と同形だが、ここは副詞用法"
-        },
-        {
-          "id": "s6-t21",
-          "text": "立ち",
-          "start": 31,
-          "end": 33,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "タ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「立つ」: タ行四段 (た/ち/つ/つ/て/て)。「(誠に)よく立ちたる」=「(誠の上に)しっかり立脚した」"
-        },
-        {
-          "id": "s6-t22",
-          "text": "た",
-          "start": 33,
-          "end": 34,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "完了"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「たり」: 完了・存続 (〜た・〜ている)。連用形接続。ラ変型活用で連体形は「たる」"
-        },
-        {
-          "id": "s6-t23",
-          "text": "る",
-          "start": 34,
-          "end": 35,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t24",
-          "text": "姿",
-          "start": 35,
-          "end": 36,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s6-t25",
-          "text": "なり",
-          "start": 36,
-          "end": 38,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "断定",
-            "baseForm": "なる"
-          },
-          "grammarRefId": "jodoshi-dantei",
-          "hint": "助動詞「なり」: 断定 (〜である)。体言・連体形に接続。形容動詞ナリ活用語尾と紛らわしいが、識別は接続で判断"
-        }
-      ]
-    },
-    {
-      "id": "s7",
-      "originalText": "代々の歌人の歌を見るに、代々その変化あり。",
-      "modernTranslation": "歴代の歌人の歌を見ると、その時代時代によって歌風の変化がある。",
-      "tokens": [
-        {
-          "id": "s7-t1",
-          "text": "。",
-          "start": 0,
-          "end": 1,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t2",
-          "text": "代々",
-          "start": 1,
-          "end": 3,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t3",
-          "text": "の",
-          "start": 3,
-          "end": 4,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
-        },
-        {
-          "id": "s7-t4",
-          "text": "歌人",
-          "start": 4,
-          "end": 6,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t5",
-          "text": "の",
-          "start": 6,
-          "end": 7,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
-        },
-        {
-          "id": "s7-t6",
-          "text": "歌",
-          "start": 7,
-          "end": 8,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t7",
-          "text": "を",
-          "start": 8,
-          "end": 9,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
-        },
-        {
-          "id": "s7-t8",
-          "text": "見る",
-          "start": 9,
-          "end": 11,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ上一",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要動詞「見る」: マ行上一段活用 (み・み・みる・みる・みれ・みよ)。上一段は「ひいきにみゐる」と覚える"
-        },
-        {
-          "id": "s7-t9",
-          "text": "に",
-          "start": 11,
-          "end": 12,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「に」: 連体形＋に。順接 (〜ので) / 逆接 (〜のに) / 単純接続 (〜ところ) を文脈判断。ここは単純接続「〜と」"
-        },
-        {
-          "id": "s7-t10",
-          "text": "、",
-          "start": 12,
-          "end": 13,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t11",
-          "text": "代々",
-          "start": 13,
-          "end": 15,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t12",
-          "text": "そ",
-          "start": 15,
-          "end": 16,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          },
-          "hint": "代名詞「こ・そ・か・あ」: 「これ・それ・かれ・あれ」の指示代名詞。「そ」は中称、「こ」は近称"
-        },
-        {
-          "id": "s7-t13",
-          "text": "の",
-          "start": 16,
-          "end": 17,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
-        },
-        {
-          "id": "s7-t14",
-          "text": "変化",
-          "start": 17,
-          "end": 19,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t15",
-          "text": "あり",
-          "start": 19,
-          "end": 21,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "終",
-            "baseForm": "あり"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要動詞「あり」: ラ変動詞。活用は「ら/り/り/る/れ/れ」。終止形が「り」でなく「あり」になるのがラ変の特徴"
-        },
-        {
-          "id": "s7-t16",
-          "text": "。",
-          "start": 21,
-          "end": 22,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s7-t17",
-          "text": "また",
-          "start": 22,
-          "end": 24,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "接続詞"
-          },
-          "hint": "接続詞「また」: 「さらに・一方」の意。話題の転換や並列を示す"
-        }
-      ]
-    },
-    {
-      "id": "s8",
-      "originalText": "また新古にもわたらず、今見るところ昔見しに変はらず、あはれなる歌多し。",
-      "modernTranslation": "また、（時代や作風の）新しい古いにかかわりなく、今（我々が）見るところが昔（の人が）見たところと何ら変わりなく、しみじみと感じ入る歌が多い。",
-      "tokens": [
-        {
-          "id": "s8-t1",
-          "text": "新古",
           "start": 0,
           "end": 2,
           "layer": 0,
@@ -1218,8 +565,8 @@
           }
         },
         {
-          "id": "s8-t2",
-          "text": "に",
+          "id": "s5-t2",
+          "text": "を",
           "start": 2,
           "end": 3,
           "layer": 3,
@@ -1231,10 +578,304 @@
           "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
         },
         {
-          "id": "s8-t3",
-          "text": "も",
+          "id": "s5-t3",
+          "text": "知ら",
           "start": 3,
-          "end": 4,
+          "end": 5,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「知る」: ラ行四段活用 (ら/り/る/る/れ/れ)。未然形「知ら」+「ず」=「知らない」"
+        },
+        {
+          "id": "s5-t4",
+          "text": "ざれ",
+          "start": 5,
+          "end": 7,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "已",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。活用は「ず・ず・ず・ぬ・ね」と「ざら・ざり・○・ざる・ざれ・ざれ」の二系統。「ざれ」は已然形・命令形"
+        },
+        {
+          "id": "s5-t5",
+          "text": "ば",
+          "start": 7,
+          "end": 8,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「ば」: 已然形＋ば＝確定条件「〜ので・〜と」、未然形＋ば＝仮定条件「もし〜ならば」。識別は直前活用形"
+        },
+        {
+          "id": "s5-t6",
+          "text": "、",
+          "start": 8,
+          "end": 9,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s5-t7",
+          "text": "まことに",
+          "start": 9,
+          "end": 13,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「まことに」: 「本当に・真実に」の意。漢文訓読体で「真に」と訓ずる強意の副詞"
+        },
+        {
+          "id": "s5-t8",
+          "text": "知れ",
+          "start": 13,
+          "end": 15,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "命"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「知る」: ラ行四段。已然形「知れ」+「り」(完了・存続) =「知っている」。命令形と同形だが文法的には已然形"
+        },
+        {
+          "id": "s5-t9",
+          "text": "る",
+          "start": 15,
+          "end": 16,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "存続"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」: 完了・存続 (〜た・〜ている)。サ変未然形・四段已然形 (e音) に接続。「知れる」=「知っている」"
+        },
+        {
+          "id": "s5-t10",
+          "text": "に",
+          "start": 16,
+          "end": 17,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "断定"
+          },
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」連用形「に」: 断定。「にあり/にあらず」の形で用いられる。格助詞「に」との識別注意"
+        },
+        {
+          "id": "s5-t11",
+          "text": "あら",
+          "start": 17,
+          "end": 19,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「あり」: ラ変。「にあらず」=「〜ではない」(断定の助動詞「なり」連用形「に」＋「あらず」)"
+        },
+        {
+          "id": "s5-t12",
+          "text": "ず",
+          "start": 19,
+          "end": 20,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。「にあらず」=「〜ではない」の定型句"
+        },
+        {
+          "id": "s5-t13",
+          "text": "。",
+          "start": 20,
+          "end": 21,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "originalText": "不易といふは、新古によらず、変化流行にもかかはらず、誠によく立ちたる姿なり。",
+      "modernTranslation": "「不易（不変）」というのは、（時代や作風の）新しいとか古いとかに左右されず、（また）変化流行にも関係せず、「風雅の誠」の上に立脚した作品の姿をいうのである。",
+      "tokens": [
+        {
+          "id": "s6-t1",
+          "text": "不易",
+          "start": 0,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "俳論キーワード「不易」: 時代を超えて変わらない俳諧の本質。「流行」(時代に応じた変化) と対をなし、根は同じ「風雅の誠」"
+        },
+        {
+          "id": "s6-t2",
+          "text": "と",
+          "start": 2,
+          "end": 3,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」引用: 「〜と」=「〜と (いう)・〜と (思う)」。引用対象の文や語を受ける。「〜といふ」は定型句"
+        },
+        {
+          "id": "s6-t3",
+          "text": "いふ",
+          "start": 3,
+          "end": 5,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "体",
+            "baseForm": "いふ"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「いふ」: ハ行四段活用 (は・ひ・ふ・ふ・へ・へ)。「〜といふ」は「〜というもの」の意で頻出"
+        },
+        {
+          "id": "s6-t4",
+          "text": "は",
+          "start": 5,
+          "end": 6,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 主題提示・対比・強調。係り結びは生じない。「〜といふは」は「〜というのは」と訳す定型句"
+        },
+        {
+          "id": "s6-t5",
+          "text": "、",
+          "start": 6,
+          "end": 7,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t6",
+          "text": "新古",
+          "start": 7,
+          "end": 9,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t7",
+          "text": "に",
+          "start": 9,
+          "end": 10,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
+        },
+        {
+          "id": "s6-t8",
+          "text": "よら",
+          "start": 10,
+          "end": 12,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "未",
+            "baseForm": "よる"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「よる」: ラ行四段。「(〜に)よる・基づく・関わる」の意。「〜によらず」=「〜に左右されず」"
+        },
+        {
+          "id": "s6-t9",
+          "text": "ず",
+          "start": 12,
+          "end": 13,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。連用形「ず」は中止用法で「〜ずに・〜ず」と訳す"
+        },
+        {
+          "id": "s6-t10",
+          "text": "、",
+          "start": 13,
+          "end": 14,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t11",
+          "text": "変化流行",
+          "start": 14,
+          "end": 18,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t12",
+          "text": "に",
+          "start": 18,
+          "end": 19,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
+        },
+        {
+          "id": "s6-t13",
+          "text": "も",
+          "start": 19,
+          "end": 20,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1244,10 +885,389 @@
           "hint": "係助詞「も」: 同類・並列・強調。「〜にも〜ず」は「〜にも〜ない」の意。係り結びは起こさない"
         },
         {
-          "id": "s8-t4",
-          "text": "わたら",
-          "start": 4,
+          "id": "s6-t14",
+          "text": "かかはら",
+          "start": 20,
+          "end": 24,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「かかはる」: ラ行四段。「関係する・とらわれる」の意。「〜にもかかはらず」=「〜にも関係なく」"
+        },
+        {
+          "id": "s6-t15",
+          "text": "ず",
+          "start": 24,
+          "end": 25,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。連用形「ず」は中止用法で「〜ずに・〜ず」と訳す"
+        },
+        {
+          "id": "s6-t16",
+          "text": "、",
+          "start": 25,
+          "end": 26,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t17",
+          "text": "誠",
+          "start": 26,
+          "end": 27,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t18",
+          "text": "に",
+          "start": 27,
+          "end": 28,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
+        },
+        {
+          "id": "s6-t19",
+          "text": "よく",
+          "start": 28,
+          "end": 30,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「よく」: 「しっかり・十分に」(連用修飾)。形容詞「よし」連用形と同形だが、ここは副詞用法"
+        },
+        {
+          "id": "s6-t20",
+          "text": "立ち",
+          "start": 30,
+          "end": 32,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "タ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「立つ」: タ行四段 (た/ち/つ/つ/て/て)。「(誠に)よく立ちたる」=「(誠の上に)しっかり立脚した」"
+        },
+        {
+          "id": "s6-t21",
+          "text": "た",
+          "start": 32,
+          "end": 33,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」: 完了・存続 (〜た・〜ている)。連用形接続。ラ変型活用で連体形は「たる」"
+        },
+        {
+          "id": "s6-t22",
+          "text": "る",
+          "start": 33,
+          "end": 34,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t23",
+          "text": "姿",
+          "start": 34,
+          "end": 35,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s6-t24",
+          "text": "なり",
+          "start": 35,
+          "end": 37,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "断定",
+            "baseForm": "なる"
+          },
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」: 断定 (〜である)。体言・連体形に接続。形容動詞ナリ活用語尾と紛らわしいが、識別は接続で判断"
+        },
+        {
+          "id": "s6-t25",
+          "text": "。",
+          "start": 37,
+          "end": 38,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "originalText": "代々の歌人の歌を見るに、代々その変化あり。",
+      "modernTranslation": "歴代の歌人の歌を見ると、その時代時代によって歌風の変化がある。",
+      "tokens": [
+        {
+          "id": "s7-t1",
+          "text": "代々",
+          "start": 0,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t2",
+          "text": "の",
+          "start": 2,
+          "end": 3,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
+        },
+        {
+          "id": "s7-t3",
+          "text": "歌人",
+          "start": 3,
+          "end": 5,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t4",
+          "text": "の",
+          "start": 5,
+          "end": 6,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
+        },
+        {
+          "id": "s7-t5",
+          "text": "歌",
+          "start": 6,
           "end": 7,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t6",
+          "text": "を",
+          "start": 7,
+          "end": 8,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
+        },
+        {
+          "id": "s7-t7",
+          "text": "見る",
+          "start": 8,
+          "end": 10,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ上一",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「見る」: マ行上一段活用 (み・み・みる・みる・みれ・みよ)。上一段は「ひいきにみゐる」と覚える"
+        },
+        {
+          "id": "s7-t8",
+          "text": "に",
+          "start": 10,
+          "end": 11,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「に」: 連体形＋に。順接 (〜ので) / 逆接 (〜のに) / 単純接続 (〜ところ) を文脈判断。ここは単純接続「〜と」"
+        },
+        {
+          "id": "s7-t9",
+          "text": "、",
+          "start": 11,
+          "end": 12,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t10",
+          "text": "代々",
+          "start": 12,
+          "end": 14,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t11",
+          "text": "そ",
+          "start": 14,
+          "end": 15,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          },
+          "hint": "代名詞「こ・そ・か・あ」: 「これ・それ・かれ・あれ」の指示代名詞。「そ」は中称、「こ」は近称"
+        },
+        {
+          "id": "s7-t12",
+          "text": "の",
+          "start": 15,
+          "end": 16,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
+        },
+        {
+          "id": "s7-t13",
+          "text": "変化",
+          "start": 16,
+          "end": 18,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s7-t14",
+          "text": "あり",
+          "start": 18,
+          "end": 20,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "終",
+            "baseForm": "あり"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「あり」: ラ変動詞。活用は「ら/り/り/る/れ/れ」。終止形が「り」でなく「あり」になるのがラ変の特徴"
+        },
+        {
+          "id": "s7-t15",
+          "text": "。",
+          "start": 20,
+          "end": 21,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "originalText": "また新古にもわたらず、今見るところ昔見しに変はらず、あはれなる歌多し。",
+      "modernTranslation": "また、（時代や作風の）新しい古いにかかわりなく、今（我々が）見るところが昔（の人が）見たところと何ら変わりなく、しみじみと感じ入る歌が多い。",
+      "tokens": [
+        {
+          "id": "s8-t1",
+          "text": "また",
+          "start": 0,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "接続詞"
+          },
+          "hint": "接続詞「また」: 「さらに・一方」の意。話題の転換や並列を示す"
+        },
+        {
+          "id": "s8-t2",
+          "text": "新古",
+          "start": 2,
+          "end": 4,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t3",
+          "text": "に",
+          "start": 4,
+          "end": 5,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
+        },
+        {
+          "id": "s8-t4",
+          "text": "も",
+          "start": 5,
+          "end": 6,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "類似"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 同類・並列・強調。「〜にも〜ず」は「〜にも〜ない」の意。係り結びは起こさない"
+        },
+        {
+          "id": "s8-t5",
+          "text": "わたら",
+          "start": 6,
+          "end": 9,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1259,10 +1279,10 @@
           "hint": "重要動詞「わたる」: ラ行四段。「ずっと〜する・及ぶ・関わる」。「新古にもわたらず」=「新古にも及ばず・関わらず」"
         },
         {
-          "id": "s8-t5",
+          "id": "s8-t6",
           "text": "ず",
-          "start": 7,
-          "end": 8,
+          "start": 9,
+          "end": 10,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1273,20 +1293,10 @@
           "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。連用形「ず」は中止用法で「〜ずに・〜ず」と訳す"
         },
         {
-          "id": "s8-t6",
-          "text": "、",
-          "start": 8,
-          "end": 9,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s8-t7",
-          "text": "今",
-          "start": 9,
-          "end": 10,
+          "text": "、",
+          "start": 10,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1294,9 +1304,19 @@
         },
         {
           "id": "s8-t8",
-          "text": "見る",
-          "start": 10,
+          "text": "今",
+          "start": 11,
           "end": 12,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t9",
+          "text": "見る",
+          "start": 12,
+          "end": 14,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1307,20 +1327,10 @@
           "hint": "重要動詞「見る」: マ行上一段活用 (み・み・みる・みる・みれ・みよ)。上一段は「ひいきにみゐる」と覚える"
         },
         {
-          "id": "s8-t9",
-          "text": "ところ",
-          "start": 12,
-          "end": 15,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s8-t10",
-          "text": "昔",
-          "start": 15,
-          "end": 16,
+          "text": "ところ",
+          "start": 14,
+          "end": 17,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1328,9 +1338,19 @@
         },
         {
           "id": "s8-t11",
+          "text": "昔",
+          "start": 17,
+          "end": 18,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s8-t12",
           "text": "見",
-          "start": 16,
-          "end": 17,
+          "start": 18,
+          "end": 19,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1341,10 +1361,10 @@
           "hint": "重要動詞「見る」: マ行上一段活用 (み・み・みる・みる・みれ・みよ)。連用形「見」+「し」(過去)"
         },
         {
-          "id": "s8-t12",
+          "id": "s8-t13",
           "text": "し",
-          "start": 17,
-          "end": 18,
+          "start": 19,
+          "end": 20,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1355,10 +1375,10 @@
           "hint": "助動詞「き」: 過去 (〜た)。連用形接続。連体形「し」、已然形「しか」。直接体験の過去 (詠嘆「けり」と対比)"
         },
         {
-          "id": "s8-t13",
+          "id": "s8-t14",
           "text": "に",
-          "start": 18,
-          "end": 19,
+          "start": 20,
+          "end": 21,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1368,10 +1388,10 @@
           "hint": "格助詞「に」比較: 「〜と比べて」の比較基準を示す。「昔見しに変はらず」=「昔見たのと変わらない」"
         },
         {
-          "id": "s8-t14",
+          "id": "s8-t15",
           "text": "変はら",
-          "start": 19,
-          "end": 22,
+          "start": 21,
+          "end": 24,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1382,10 +1402,10 @@
           "hint": "動詞「変はる」: ラ行四段。未然形「変はら」+「ず」=「変わらない」。「〜に変はらず」は「〜と変わらない」"
         },
         {
-          "id": "s8-t15",
+          "id": "s8-t16",
           "text": "ず",
-          "start": 22,
-          "end": 23,
+          "start": 24,
+          "end": 25,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1396,20 +1416,20 @@
           "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。連用形「ず」は中止用法で「〜ずに・〜ず」と訳す"
         },
         {
-          "id": "s8-t16",
+          "id": "s8-t17",
           "text": "、",
-          "start": 23,
-          "end": 24,
+          "start": 25,
+          "end": 26,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s8-t17",
+          "id": "s8-t18",
           "text": "あはれなる",
-          "start": 24,
-          "end": 29,
+          "start": 26,
+          "end": 31,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1421,20 +1441,20 @@
           "hint": "重要古語「あはれなり」: しみじみとした情趣・感動を表す古文最重要語。「をかし」(知的に明るい趣) と対比。形容動詞ナリ活用"
         },
         {
-          "id": "s8-t18",
+          "id": "s8-t19",
           "text": "歌",
-          "start": 29,
-          "end": 30,
+          "start": 31,
+          "end": 32,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s8-t19",
+          "id": "s8-t20",
           "text": "多し",
-          "start": 30,
-          "end": 32,
+          "start": 32,
+          "end": 34,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1445,10 +1465,10 @@
           "hint": "形容詞「多し」: ク活用 (く/く/し/き/けれ/○)。終止形「多し」、連体形「多き」を識別"
         },
         {
-          "id": "s8-t20",
+          "id": "s8-t21",
           "text": "。",
-          "start": 32,
-          "end": 33,
+          "start": 34,
+          "end": 35,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1659,9 +1679,9 @@
         },
         {
           "id": "s10-t10",
-          "text": "。変化",
+          "text": "。",
           "start": 18,
-          "end": 21,
+          "end": 19,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1676,9 +1696,19 @@
       "tokens": [
         {
           "id": "s11-t1",
-          "text": "に",
+          "text": "変化",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s11-t2",
+          "text": "に",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1688,10 +1718,10 @@
           "hint": "格助詞「に」結果: 「〜になる・〜に至る」の結果を示す。「この二つに究まり」=「この二つに行き着き」"
         },
         {
-          "id": "s11-t2",
+          "id": "s11-t3",
           "text": "うつら",
-          "start": 1,
-          "end": 4,
+          "start": 3,
+          "end": 6,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1703,10 +1733,10 @@
           "hint": "重要動詞「移る」: ラ行四段。「移動する・変化する・季節が移る」。俳論で「(俳風が)移り変わる」の意で頻出"
         },
         {
-          "id": "s11-t3",
+          "id": "s11-t4",
           "text": "ざれ",
-          "start": 4,
-          "end": 6,
+          "start": 6,
+          "end": 8,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1717,10 +1747,10 @@
           "hint": "助動詞「ず」已然形「ざれ」: 打消 (〜ない)。已然形＋ば＝「〜ないので・〜ないと」の確定条件"
         },
         {
-          "id": "s11-t4",
+          "id": "s11-t5",
           "text": "ば",
-          "start": 6,
-          "end": 7,
+          "start": 8,
+          "end": 9,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -1728,20 +1758,20 @@
           "hint": "接続助詞「ば」: 已然形＋ば＝確定条件「〜ので・〜と」、未然形＋ば＝仮定条件「もし〜ならば」。識別は直前活用形"
         },
         {
-          "id": "s11-t5",
+          "id": "s11-t6",
           "text": "風",
-          "start": 7,
-          "end": 8,
+          "start": 9,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s11-t6",
+          "id": "s11-t7",
           "text": "あらたまら",
-          "start": 8,
-          "end": 13,
+          "start": 10,
+          "end": 15,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1752,10 +1782,10 @@
           "hint": "動詞「改まる」: ラ行四段。「新しく改まる・更新される」の意。自動詞用法。「風(俳風)あらたまる」"
         },
         {
-          "id": "s11-t7",
+          "id": "s11-t8",
           "text": "ず",
-          "start": 13,
-          "end": 14,
+          "start": 15,
+          "end": 16,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1766,23 +1796,13 @@
           "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。終止形「ず」で文を結ぶ"
         },
         {
-          "id": "s11-t8",
-          "text": "。",
-          "start": 14,
-          "end": 15,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s11-t9",
-          "text": "これ",
-          "start": 15,
+          "text": "。",
+          "start": 16,
           "end": 17,
           "layer": 0,
           "grammarTag": {
-            "pos": "代名詞"
+            "pos": ""
           }
         }
       ]
@@ -1794,9 +1814,19 @@
       "tokens": [
         {
           "id": "s12-t1",
-          "text": "に",
+          "text": "これ",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s12-t2",
+          "text": "に",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1806,20 +1836,20 @@
           "hint": "格助詞「に」結果: 「〜になる・〜に至る」の結果を示す。「この二つに究まり」=「この二つに行き着き」"
         },
         {
-          "id": "s12-t2",
+          "id": "s12-t3",
           "text": "おし",
-          "start": 1,
-          "end": 3,
+          "start": 3,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s12-t3",
+          "id": "s12-t4",
           "text": "うつら",
-          "start": 3,
-          "end": 6,
+          "start": 5,
+          "end": 8,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1831,10 +1861,10 @@
           "hint": "重要動詞「移る」: ラ行四段。「おしうつる」=「自然に移る・推移する」。複合動詞の前項「おし」は強調"
         },
         {
-          "id": "s12-t4",
+          "id": "s12-t5",
           "text": "ず",
-          "start": 6,
-          "end": 7,
+          "start": 8,
+          "end": 9,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1845,10 +1875,10 @@
           "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。終止形「ず」で文を結ぶ"
         },
         {
-          "id": "s12-t5",
+          "id": "s12-t6",
           "text": "と",
-          "start": 7,
-          "end": 8,
+          "start": 9,
+          "end": 10,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1858,10 +1888,10 @@
           "hint": "格助詞「と」引用: 「〜と」=「〜と (いう)・〜と (思う)」。引用対象の文や語を受ける。「〜といふ」は定型句"
         },
         {
-          "id": "s12-t6",
+          "id": "s12-t7",
           "text": "いふ",
-          "start": 8,
-          "end": 10,
+          "start": 10,
+          "end": 12,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1873,10 +1903,10 @@
           "hint": "重要動詞「いふ」: ハ行四段活用 (は・ひ・ふ・ふ・へ・へ)。「〜といふ」は「〜というもの」の意で頻出"
         },
         {
-          "id": "s12-t7",
+          "id": "s12-t8",
           "text": "は",
-          "start": 10,
-          "end": 11,
+          "start": 12,
+          "end": 13,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1886,20 +1916,10 @@
           "hint": "係助詞「は」: 主題提示・対比・強調。係り結びは生じない。「〜といふは」は「〜というのは」と訳す定型句"
         },
         {
-          "id": "s12-t8",
-          "text": "、",
-          "start": 11,
-          "end": 12,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s12-t9",
-          "text": "いつたん",
-          "start": 12,
-          "end": 16,
+          "text": "、",
+          "start": 13,
+          "end": 14,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1907,9 +1927,19 @@
         },
         {
           "id": "s12-t10",
+          "text": "いつたん",
+          "start": 14,
+          "end": 18,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s12-t11",
           "text": "の",
-          "start": 16,
-          "end": 17,
+          "start": 18,
+          "end": 19,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1919,10 +1949,10 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s12-t11",
+          "id": "s12-t12",
           "text": "流行",
-          "start": 17,
-          "end": 19,
+          "start": 19,
+          "end": 21,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1930,10 +1960,10 @@
           "hint": "俳論キーワード「流行」: 時代に応じて変化する俳諧の側面。「不易」と対をなすが、根源は同じ「風雅の誠」"
         },
         {
-          "id": "s12-t12",
+          "id": "s12-t13",
           "text": "に",
-          "start": 19,
-          "end": 20,
+          "start": 21,
+          "end": 22,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1943,20 +1973,10 @@
           "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
         },
         {
-          "id": "s12-t13",
-          "text": "口質",
-          "start": 20,
-          "end": 22,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s12-t14",
-          "text": "時",
+          "text": "口質",
           "start": 22,
-          "end": 23,
+          "end": 24,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1964,9 +1984,19 @@
         },
         {
           "id": "s12-t15",
+          "text": "時",
+          "start": 24,
+          "end": 25,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s12-t16",
           "text": "を",
-          "start": 23,
-          "end": 24,
+          "start": 25,
+          "end": 26,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1976,10 +2006,10 @@
           "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
         },
         {
-          "id": "s12-t16",
+          "id": "s12-t17",
           "text": "得",
-          "start": 24,
-          "end": 25,
+          "start": 26,
+          "end": 27,
           "layer": 1,
           "grammarTag": {
             "pos": "ア下二"
@@ -1987,10 +2017,10 @@
           "hint": "重要動詞「得」: ア行下二段活用 (え/え/う/うる/うれ/えよ)。「手に入れる・できる」の意。ア行下二段は「得」「心得」「所得」のみ"
         },
         {
-          "id": "s12-t17",
+          "id": "s12-t18",
           "text": "たる",
-          "start": 25,
-          "end": 27,
+          "start": 27,
+          "end": 29,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2001,10 +2031,10 @@
           "hint": "助動詞「たり」: 完了・存続 (〜た・〜ている)。連用形接続。連体形「たる」は体言を修飾"
         },
         {
-          "id": "s12-t18",
+          "id": "s12-t19",
           "text": "ばかり",
-          "start": 27,
-          "end": 30,
+          "start": 29,
+          "end": 32,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
@@ -2012,10 +2042,10 @@
           "hint": "副助詞「ばかり」: 程度 (〜くらい) ・限定 (〜だけ) の二義。「〜ばかりにて」は「〜だけであって」と訳す"
         },
         {
-          "id": "s12-t19",
+          "id": "s12-t20",
           "text": "に",
-          "start": 30,
-          "end": 31,
+          "start": 32,
+          "end": 33,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2026,10 +2056,10 @@
           "hint": "助動詞「なり」連用形「に」: 断定。「にて・にあり・にあらず」の形をとる。格助詞「に」と要識別"
         },
         {
-          "id": "s12-t20",
+          "id": "s12-t21",
           "text": "て",
-          "start": 31,
-          "end": 32,
+          "start": 33,
+          "end": 34,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -2037,20 +2067,20 @@
           "hint": "接続助詞「て」: 連用形接続。単純接続「〜て」、原因「〜ので」、逆接「〜のに」を文脈判断"
         },
         {
-          "id": "s12-t21",
+          "id": "s12-t22",
           "text": "、",
-          "start": 32,
-          "end": 33,
+          "start": 34,
+          "end": 35,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s12-t22",
+          "id": "s12-t23",
           "text": "そ",
-          "start": 33,
-          "end": 34,
+          "start": 35,
+          "end": 36,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
@@ -2058,10 +2088,10 @@
           "hint": "代名詞「こ・そ・か・あ」: 「これ・それ・かれ・あれ」の指示代名詞。「そ」は中称、「こ」は近称"
         },
         {
-          "id": "s12-t23",
+          "id": "s12-t24",
           "text": "の",
-          "start": 34,
-          "end": 35,
+          "start": 36,
+          "end": 37,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2071,20 +2101,20 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s12-t24",
+          "id": "s12-t25",
           "text": "誠",
-          "start": 35,
-          "end": 36,
+          "start": 37,
+          "end": 38,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s12-t25",
+          "id": "s12-t26",
           "text": "を",
-          "start": 36,
-          "end": 37,
+          "start": 38,
+          "end": 39,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2094,10 +2124,10 @@
           "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
         },
         {
-          "id": "s12-t26",
+          "id": "s12-t27",
           "text": "責め",
-          "start": 37,
-          "end": 39,
+          "start": 39,
+          "end": 41,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2108,10 +2138,10 @@
           "hint": "重要古語「責む」: マ行下二段。古文では「責める・非難する」の他、「究める・追求する」の意で俳論に頻出。ここは後者"
         },
         {
-          "id": "s12-t27",
+          "id": "s12-t28",
           "text": "ざる",
-          "start": 39,
-          "end": 41,
+          "start": 41,
+          "end": 43,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2122,10 +2152,10 @@
           "hint": "助動詞「ず」連体形「ざる」: 打消 (〜ない)。「ざら・ざり・○・ざる・ざれ・ざれ」の補助系列。連体形で体言を修飾"
         },
         {
-          "id": "s12-t28",
+          "id": "s12-t29",
           "text": "ゆゑ",
-          "start": 41,
-          "end": 43,
+          "start": 43,
+          "end": 45,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2133,10 +2163,10 @@
           "hint": "重要古語「ゆゑ」: 「故」=「理由・原因・由縁」。「〜ゆゑなり」=「〜だからである」(原因・理由を示す定型)"
         },
         {
-          "id": "s12-t29",
+          "id": "s12-t30",
           "text": "なり",
-          "start": 43,
-          "end": 45,
+          "start": 45,
+          "end": 47,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2148,28 +2178,14 @@
           "hint": "助動詞「なり」: 断定 (〜である)。体言・連体形に接続。「〜ゆゑなり」=「〜だからである」の定型句"
         },
         {
-          "id": "s12-t30",
+          "id": "s12-t31",
           "text": "。",
-          "start": 45,
-          "end": 46,
+          "start": 47,
+          "end": 48,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s12-t31",
-          "text": "責め",
-          "start": 46,
-          "end": 48,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ下二",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要古語「責む」: マ行下二段。古文では「責める・非難する」の他、「究める・追求する」の意で俳論に頻出。ここは後者"
         }
       ]
     },
@@ -2180,9 +2196,23 @@
       "tokens": [
         {
           "id": "s13-t1",
-          "text": "ず",
+          "text": "責め",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ下二",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要古語「責む」: マ行下二段。古文では「責める・非難する」の他、「究める・追求する」の意で俳論に頻出。ここは後者"
+        },
+        {
+          "id": "s13-t2",
+          "text": "ず",
+          "start": 2,
+          "end": 3,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2193,20 +2223,10 @@
           "hint": "助動詞「ず」: 打消 (〜ない)。未然形接続。連用形「ず」は中止用法で「〜ずに・〜ず」と訳す"
         },
         {
-          "id": "s13-t2",
-          "text": "、",
-          "start": 1,
-          "end": 2,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s13-t3",
-          "text": "心",
-          "start": 2,
-          "end": 3,
+          "text": "、",
+          "start": 3,
+          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2214,9 +2234,19 @@
         },
         {
           "id": "s13-t4",
+          "text": "心",
+          "start": 4,
+          "end": 5,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s13-t5",
           "text": "を",
-          "start": 3,
-          "end": 4,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2226,10 +2256,10 @@
           "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
         },
         {
-          "id": "s13-t5",
+          "id": "s13-t6",
           "text": "こらさ",
-          "start": 4,
-          "end": 7,
+          "start": 6,
+          "end": 9,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2240,10 +2270,10 @@
           "hint": "動詞「凝らす」: サ行四段。「集中する・工夫する」の意。「心をこらす」=「心を研ぎ澄ます・心血を注ぐ」"
         },
         {
-          "id": "s13-t6",
+          "id": "s13-t7",
           "text": "ざる",
-          "start": 7,
-          "end": 9,
+          "start": 9,
+          "end": 11,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2254,20 +2284,20 @@
           "hint": "助動詞「ず」連体形「ざる」: 打消 (〜ない)。「ざら・ざり・○・ざる・ざれ・ざれ」の補助系列。体言「者」を修飾"
         },
         {
-          "id": "s13-t7",
+          "id": "s13-t8",
           "text": "者、誠",
-          "start": 9,
-          "end": 12,
+          "start": 11,
+          "end": 14,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s13-t8",
+          "id": "s13-t9",
           "text": "の",
-          "start": 12,
-          "end": 13,
+          "start": 14,
+          "end": 15,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2277,20 +2307,20 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s13-t9",
+          "id": "s13-t10",
           "text": "変化",
-          "start": 13,
-          "end": 15,
+          "start": 15,
+          "end": 17,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s13-t10",
+          "id": "s13-t11",
           "text": "を",
-          "start": 15,
-          "end": 16,
+          "start": 17,
+          "end": 18,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2300,10 +2330,10 @@
           "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
         },
         {
-          "id": "s13-t11",
+          "id": "s13-t12",
           "text": "知る",
-          "start": 16,
-          "end": 18,
+          "start": 18,
+          "end": 20,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2314,10 +2344,10 @@
           "hint": "重要動詞「知る」: ラ行四段。終止形「知る」、連体形「知る」 (同形)。「〜を知る」=「〜を理解する」"
         },
         {
-          "id": "s13-t12",
+          "id": "s13-t13",
           "text": "と",
-          "start": 18,
-          "end": 19,
+          "start": 20,
+          "end": 21,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2327,10 +2357,10 @@
           "hint": "格助詞「と」引用: 「〜と」=「〜と (いう)・〜と (思う)」。引用対象の文や語を受ける。「〜といふ」は定型句"
         },
         {
-          "id": "s13-t13",
+          "id": "s13-t14",
           "text": "いふ",
-          "start": 19,
-          "end": 21,
+          "start": 21,
+          "end": 23,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2342,10 +2372,10 @@
           "hint": "重要動詞「いふ」: ハ行四段活用 (は・ひ・ふ・ふ・へ・へ)。「〜といふ」は「〜というもの」の意で頻出"
         },
         {
-          "id": "s13-t14",
+          "id": "s13-t15",
           "text": "こと",
-          "start": 21,
-          "end": 23,
+          "start": 23,
+          "end": 25,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -2353,10 +2383,10 @@
           }
         },
         {
-          "id": "s13-t15",
+          "id": "s13-t16",
           "text": "なし",
-          "start": 23,
-          "end": 25,
+          "start": 25,
+          "end": 27,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -2367,26 +2397,14 @@
           "hint": "形容詞「なし」: ク活用 (く/く/し/き/けれ/○)。「無し」(存在しない) と「亡し」(死んだ) の2義。終止形は「なし」"
         },
         {
-          "id": "s13-t16",
+          "id": "s13-t17",
           "text": "。",
-          "start": 25,
-          "end": 26,
+          "start": 27,
+          "end": 28,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s13-t17",
-          "text": "ただ",
-          "start": 26,
-          "end": 28,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞",
-            "baseForm": "ただ"
-          },
-          "hint": "副詞「ただ」: 「ただ〜のみ」=「ただ〜だけ」の限定構文。下に「のみ」「ばかり」を伴う"
         }
       ]
     },
@@ -2397,19 +2415,31 @@
       "tokens": [
         {
           "id": "s14-t1",
-          "text": "人",
+          "text": "ただ",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞",
+            "baseForm": "ただ"
+          },
+          "hint": "副詞「ただ」: 「ただ〜のみ」=「ただ〜だけ」の限定構文。下に「のみ」「ばかり」を伴う"
+        },
+        {
+          "id": "s14-t2",
+          "text": "人",
+          "start": 2,
+          "end": 3,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s14-t2",
+          "id": "s14-t3",
           "text": "に",
-          "start": 1,
-          "end": 2,
+          "start": 3,
+          "end": 4,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2419,10 +2449,10 @@
           "hint": "格助詞「に」添加: 「〜に対して・〜にあやかって」の対象。「人にあやかる」=「他者(の境地)にあやかる」"
         },
         {
-          "id": "s14-t3",
+          "id": "s14-t4",
           "text": "あやか",
-          "start": 2,
-          "end": 5,
+          "start": 4,
+          "end": 7,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2433,20 +2463,20 @@
           "hint": "動詞「あやかる」: ラ行四段。「(他者の幸運や境地に)肖る・似せる・倣う」。俳論では否定的に「無批判な追従」"
         },
         {
-          "id": "s14-t4",
+          "id": "s14-t5",
           "text": "り",
-          "start": 5,
-          "end": 6,
+          "start": 7,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s14-t5",
+          "id": "s14-t6",
           "text": "て",
-          "start": 6,
-          "end": 7,
+          "start": 8,
+          "end": 9,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -2454,10 +2484,10 @@
           "hint": "接続助詞「て」: 連用形接続。単純接続「〜て」、原因「〜ので」、逆接「〜のに」を文脈判断"
         },
         {
-          "id": "s14-t6",
+          "id": "s14-t7",
           "text": "行く",
-          "start": 7,
-          "end": 9,
+          "start": 9,
+          "end": 11,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2468,10 +2498,10 @@
           "hint": "重要動詞「行く」: カ行四段 (か/き/く/く/け/け)。終止形・連体形が同形「行く」。連用形は「行き」(イ音便で「行つ」)"
         },
         {
-          "id": "s14-t7",
+          "id": "s14-t8",
           "text": "のみ",
-          "start": 9,
-          "end": 11,
+          "start": 11,
+          "end": 13,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
@@ -2479,10 +2509,10 @@
           "hint": "副助詞「のみ」: 限定 (〜だけ・〜ばかり) ・強調。「〜のみなり」は「〜だけである」と訳す"
         },
         {
-          "id": "s14-t8",
+          "id": "s14-t9",
           "text": "なり",
-          "start": 11,
-          "end": 13,
+          "start": 13,
+          "end": 15,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2494,28 +2524,14 @@
           "hint": "助動詞「なり」: 断定 (〜である)。体言・連体形に接続。形容動詞ナリ活用語尾と紛らわしいが、識別は接続で判断"
         },
         {
-          "id": "s14-t9",
+          "id": "s14-t10",
           "text": "。",
-          "start": 13,
-          "end": 14,
+          "start": 15,
+          "end": 16,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s14-t10",
-          "text": "責むる",
-          "start": 14,
-          "end": 17,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ下二",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要古語「責む」: マ下二、連体形「責むる」。俳論では「究める・追求する」の意。「誠を責む」=「誠を究める」"
         }
       ]
     },
@@ -2526,19 +2542,33 @@
       "tokens": [
         {
           "id": "s15-t1",
-          "text": "者",
+          "text": "責むる",
           "start": 0,
-          "end": 1,
+          "end": 3,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ下二",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要古語「責む」: マ下二、連体形「責むる」。俳論では「究める・追求する」の意。「誠を責む」=「誠を究める」"
+        },
+        {
+          "id": "s15-t2",
+          "text": "者",
+          "start": 3,
+          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s15-t2",
+          "id": "s15-t3",
           "text": "は",
-          "start": 1,
-          "end": 2,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2548,20 +2578,20 @@
           "hint": "係助詞「は」: 主題提示・対比・強調。係り結びは生じない"
         },
         {
-          "id": "s15-t3",
+          "id": "s15-t4",
           "text": "、",
-          "start": 2,
-          "end": 3,
+          "start": 5,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s15-t4",
+          "id": "s15-t5",
           "text": "そ",
-          "start": 3,
-          "end": 4,
+          "start": 6,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
@@ -2569,10 +2599,10 @@
           "hint": "代名詞「こ・そ・か・あ」: 「これ・それ・かれ・あれ」の指示代名詞。「そ」は中称、「こ」は近称"
         },
         {
-          "id": "s15-t5",
+          "id": "s15-t6",
           "text": "の",
-          "start": 4,
-          "end": 5,
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2582,20 +2612,20 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s15-t6",
+          "id": "s15-t7",
           "text": "地",
-          "start": 5,
-          "end": 6,
+          "start": 8,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s15-t7",
+          "id": "s15-t8",
           "text": "に",
-          "start": 6,
-          "end": 7,
+          "start": 9,
+          "end": 10,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2605,20 +2635,20 @@
           "hint": "格助詞「に」場所: 「〜において・〜に」(場所・場面)。「師の風雅に」=「先生の俳諧において」"
         },
         {
-          "id": "s15-t8",
+          "id": "s15-t9",
           "text": "足",
-          "start": 7,
-          "end": 8,
+          "start": 10,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s15-t9",
+          "id": "s15-t10",
           "text": "を",
-          "start": 8,
-          "end": 9,
+          "start": 11,
+          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2628,10 +2658,10 @@
           "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
         },
         {
-          "id": "s15-t10",
+          "id": "s15-t11",
           "text": "すゑがたく",
-          "start": 9,
-          "end": 14,
+          "start": 12,
+          "end": 17,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -2642,20 +2672,10 @@
           "hint": "重要語「〜がたし」: 動詞連用形＋接尾語「がたし」(ク活用形容詞)。「〜することができない・〜しにくい」の意。「すゑがたく」=「(足を) 据えていられない」"
         },
         {
-          "id": "s15-t11",
-          "text": "、一歩",
-          "start": 14,
-          "end": 17,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s15-t12",
-          "text": "自然",
+          "text": "、一歩",
           "start": 17,
-          "end": 19,
+          "end": 20,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2663,9 +2683,19 @@
         },
         {
           "id": "s15-t13",
+          "text": "自然",
+          "start": 20,
+          "end": 22,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s15-t14",
           "text": "に",
-          "start": 19,
-          "end": 20,
+          "start": 22,
+          "end": 23,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2675,10 +2705,10 @@
           "hint": "格助詞「に」状態: 「〜の状態で・〜のように」(連用修飾)。「自然に進む」=「自然な状態で進む」"
         },
         {
-          "id": "s15-t14",
+          "id": "s15-t15",
           "text": "進む",
-          "start": 20,
-          "end": 22,
+          "start": 23,
+          "end": 25,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2689,10 +2719,10 @@
           "hint": "動詞「進む」: マ行四段。「自然に進む」=「無理なく進む」。「進む理(ことわり)」=「進むのが道理」"
         },
         {
-          "id": "s15-t15",
+          "id": "s15-t16",
           "text": "理",
-          "start": 22,
-          "end": 23,
+          "start": 25,
+          "end": 26,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2700,10 +2730,10 @@
           "hint": "重要古語「理(ことわり)」: 「道理・筋道・自然の法則」。「進む理なり」=「進むのが道理である」"
         },
         {
-          "id": "s15-t16",
+          "id": "s15-t17",
           "text": "なり",
-          "start": 23,
-          "end": 25,
+          "start": 26,
+          "end": 28,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2715,28 +2745,14 @@
           "hint": "助動詞「なり」: 断定 (〜である)。体言・連体形に接続。形容動詞ナリ活用語尾と紛らわしいが、識別は接続で判断"
         },
         {
-          "id": "s15-t17",
+          "id": "s15-t18",
           "text": "。",
-          "start": 25,
-          "end": 26,
+          "start": 28,
+          "end": 29,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s15-t18",
-          "text": "行く",
-          "start": 26,
-          "end": 28,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "重要動詞「行く」: カ行四段 (か/き/く/く/け/け)。「行く末」=「これから先・将来」の意"
         }
       ]
     },
@@ -2747,19 +2763,23 @@
       "tokens": [
         {
           "id": "s16-t1",
-          "text": "末",
+          "text": "行く",
           "start": 0,
-          "end": 1,
-          "layer": 0,
+          "end": 2,
+          "layer": 1,
           "grammarTag": {
-            "pos": ""
-          }
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要動詞「行く」: カ行四段 (か/き/く/く/け/け)。「行く末」=「これから先・将来」の意"
         },
         {
           "id": "s16-t2",
-          "text": "幾千変万化",
-          "start": 1,
-          "end": 6,
+          "text": "末",
+          "start": 2,
+          "end": 3,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2767,9 +2787,19 @@
         },
         {
           "id": "s16-t3",
-          "text": "する",
-          "start": 6,
+          "text": "幾千変万化",
+          "start": 3,
           "end": 8,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s16-t4",
+          "text": "する",
+          "start": 8,
+          "end": 10,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2780,10 +2810,10 @@
           "hint": "重要動詞「す」: サ行変格活用 (せ・し・す・する・すれ・せよ)。漢語+「す」=「〜す」もサ変。連体形「する」"
         },
         {
-          "id": "s16-t4",
+          "id": "s16-t5",
           "text": "とも",
-          "start": 8,
-          "end": 10,
+          "start": 10,
+          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -2791,20 +2821,10 @@
           "hint": "接続助詞「とも」: 終止形 (形容詞・打消助動詞は連用形) ＋とも＝逆接仮定条件「たとえ〜としても」"
         },
         {
-          "id": "s16-t5",
-          "text": "、",
-          "start": 10,
-          "end": 11,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s16-t6",
-          "text": "誠",
-          "start": 11,
-          "end": 12,
+          "text": "、",
+          "start": 12,
+          "end": 13,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2812,9 +2832,19 @@
         },
         {
           "id": "s16-t7",
+          "text": "誠",
+          "start": 13,
+          "end": 14,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s16-t8",
           "text": "の",
-          "start": 12,
-          "end": 13,
+          "start": 14,
+          "end": 15,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2824,20 +2854,20 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s16-t8",
+          "id": "s16-t9",
           "text": "変化",
-          "start": 13,
-          "end": 15,
+          "start": 15,
+          "end": 17,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s16-t9",
+          "id": "s16-t10",
           "text": "は",
-          "start": 15,
-          "end": 16,
+          "start": 17,
+          "end": 18,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2847,20 +2877,10 @@
           "hint": "係助詞「は」: 主題提示・対比・強調。係り結びは生じない"
         },
         {
-          "id": "s16-t10",
-          "text": "みな",
-          "start": 16,
-          "end": 18,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
           "id": "s16-t11",
-          "text": "師",
+          "text": "みな",
           "start": 18,
-          "end": 19,
+          "end": 20,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2868,9 +2888,19 @@
         },
         {
           "id": "s16-t12",
+          "text": "師",
+          "start": 20,
+          "end": 21,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s16-t13",
           "text": "の",
-          "start": 19,
-          "end": 20,
+          "start": 21,
+          "end": 22,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2880,20 +2910,20 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s16-t13",
+          "id": "s16-t14",
           "text": "俳諧",
-          "start": 20,
-          "end": 22,
+          "start": 22,
+          "end": 24,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s16-t14",
+          "id": "s16-t15",
           "text": "なり",
-          "start": 22,
-          "end": 24,
+          "start": 24,
+          "end": 26,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2905,28 +2935,14 @@
           "hint": "助動詞「なり」: 断定 (〜である)。体言・連体形に接続。形容動詞ナリ活用語尾と紛らわしいが、識別は接続で判断"
         },
         {
-          "id": "s16-t15",
-          "text": "。「",
-          "start": 24,
-          "end": 26,
+          "id": "s16-t16",
+          "text": "。",
+          "start": 26,
+          "end": 27,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s16-t16",
-          "text": "かりに",
-          "start": 26,
-          "end": 29,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ナリ",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "重要古語「かりなり」: 形容動詞ナリ活用。「一時的だ・仮初めだ」の意。「かりにも」=「仮にも・決して」"
         }
       ]
     },
@@ -2937,9 +2953,33 @@
       "tokens": [
         {
           "id": "s17-t1",
-          "text": "も",
+          "text": "「",
           "start": 0,
           "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s17-t2",
+          "text": "かりに",
+          "start": 1,
+          "end": 4,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ナリ",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古語「かりなり」: 形容動詞ナリ活用。「一時的だ・仮初めだ」の意。「かりにも」=「仮にも・決して」"
+        },
+        {
+          "id": "s17-t3",
+          "text": "も",
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2949,20 +2989,20 @@
           "hint": "係助詞「も」: 同類・並列・強調。「かりにも」=「仮にも・決して」(下に禁止表現を伴う) "
         },
         {
-          "id": "s17-t2",
+          "id": "s17-t4",
           "text": "古人",
-          "start": 1,
-          "end": 3,
+          "start": 5,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s17-t3",
+          "id": "s17-t5",
           "text": "の",
-          "start": 3,
-          "end": 4,
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2972,10 +3012,10 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s17-t4",
+          "id": "s17-t6",
           "text": "よだれ",
-          "start": 4,
-          "end": 7,
+          "start": 8,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2983,10 +3023,10 @@
           "hint": "俳論慣用句「よだれをなむる」: 先人を無批判に模倣すること。否定的に用いる。「古人のよだれをなむることなかれ」=「先人のまねをするな」"
         },
         {
-          "id": "s17-t5",
+          "id": "s17-t7",
           "text": "を",
-          "start": 7,
-          "end": 8,
+          "start": 11,
+          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2996,10 +3036,10 @@
           "hint": "格助詞「を/に」対象: 動作の対象を示す。「を」は他動詞の直接目的語、「に」は間接目的語・帰着点。漢文訓読体で頻出"
         },
         {
-          "id": "s17-t6",
+          "id": "s17-t8",
           "text": "なむる",
-          "start": 8,
-          "end": 11,
+          "start": 12,
+          "end": 15,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3010,10 +3050,10 @@
           "hint": "重要古語「舐む(なむ)」: マ下二、連体形「なむる」=「なめる」。「古人のよだれをなむる」=「先人を無批判に模倣する」(俳論の慣用句)"
         },
         {
-          "id": "s17-t7",
+          "id": "s17-t9",
           "text": "こと",
-          "start": 11,
-          "end": 13,
+          "start": 15,
+          "end": 17,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -3021,10 +3061,10 @@
           }
         },
         {
-          "id": "s17-t8",
+          "id": "s17-t10",
           "text": "なかれ",
-          "start": 13,
-          "end": 16,
+          "start": 17,
+          "end": 20,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -3035,10 +3075,10 @@
           "hint": "形容詞「なし」命令形「なかれ」: 「〜こと(なかれ)」=禁止「〜してはならない」。漢文訓読体特有の禁止表現"
         },
         {
-          "id": "s17-t9",
-          "text": "。四時",
-          "start": 16,
-          "end": 19,
+          "id": "s17-t11",
+          "text": "。",
+          "start": 20,
+          "end": 21,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -3049,14 +3089,25 @@
     },
     {
       "id": "s18",
-      "originalText": "四時のおしうつるごとくものあらたまる、皆かくのごとし。",
+      "originalText": "四時のおしうつるごとくものあらたまる、皆かくのごとし。」とも言へり。（）",
       "modernTranslation": "春夏秋冬、季節が移り変わるように、物事が変化してゆくこと、万物すべてがこれと同じなのだ。",
       "tokens": [
         {
           "id": "s18-t1",
-          "text": "の",
+          "text": "四時",
           "start": 0,
-          "end": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "古語「四時(しいじ・しじ)」: 春夏秋冬の四季のこと。漢文訓読語。芭蕉俳論で「自然の移ろい」を表す重要語"
+        },
+        {
+          "id": "s18-t2",
+          "text": "の",
+          "start": 2,
+          "end": 3,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3066,20 +3117,20 @@
           "hint": "格助詞「の」主格用法: 「〜が」と訳す。連体修飾節の主語を示す。「四時のおしうつる」=「四季が移り変わる」"
         },
         {
-          "id": "s18-t2",
+          "id": "s18-t3",
           "text": "おしうつる",
-          "start": 1,
-          "end": 6,
+          "start": 3,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s18-t3",
+          "id": "s18-t4",
           "text": "ごとく",
-          "start": 6,
-          "end": 9,
+          "start": 8,
+          "end": 11,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3090,10 +3141,10 @@
           "hint": "助動詞「ごとし」: 比況・例示 (〜ようだ・〜のような)。体言・連体形＋「の」または「が」に接続。連用形「ごとく」"
         },
         {
-          "id": "s18-t4",
+          "id": "s18-t5",
           "text": "もの",
-          "start": 9,
-          "end": 11,
+          "start": 11,
+          "end": 13,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -3101,10 +3152,10 @@
           }
         },
         {
-          "id": "s18-t5",
+          "id": "s18-t6",
           "text": "あらたまる",
-          "start": 11,
-          "end": 16,
+          "start": 13,
+          "end": 18,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3115,20 +3166,20 @@
           "hint": "動詞「改まる」: ラ行四段。「ものあらたまる」=「物事(万物)が新しくなる」。芭蕉の「ものの変化」観の核心語"
         },
         {
-          "id": "s18-t6",
+          "id": "s18-t7",
           "text": "、皆",
-          "start": 16,
-          "end": 18,
+          "start": 18,
+          "end": 20,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s18-t7",
+          "id": "s18-t8",
           "text": "かく",
-          "start": 18,
-          "end": 20,
+          "start": 20,
+          "end": 22,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -3137,10 +3188,10 @@
           "hint": "副詞「かく」: 「このように」の意 (近称指示)。「かくのごとし」=「このようである」(漢文訓読体の常套句)"
         },
         {
-          "id": "s18-t8",
+          "id": "s18-t9",
           "text": "の",
-          "start": 20,
-          "end": 21,
+          "start": 22,
+          "end": 23,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -3150,10 +3201,10 @@
           "hint": "格助詞「の」連体修飾: 「〜の」(所属・所有)。連体修飾節中では主格「が」と訳す場合あり"
         },
         {
-          "id": "s18-t9",
+          "id": "s18-t10",
           "text": "ごとし",
-          "start": 21,
-          "end": 24,
+          "start": 23,
+          "end": 26,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3164,39 +3215,32 @@
           "hint": "助動詞「ごとし」: 比況・例示 (〜ようだ)。「かくのごとし」=「このようである」(指示語＋ごとし)。漢文訓読体の常套句"
         },
         {
-          "id": "s18-t10",
+          "id": "s18-t11",
           "text": "。」",
-          "start": 24,
-          "end": 26,
+          "start": 26,
+          "end": 28,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s18-t11",
+          "id": "s18-t12",
           "text": "と",
-          "start": 26,
-          "end": 27,
+          "start": 28,
+          "end": 29,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "引用"
           },
           "grammarRefId": "joshi-kaku"
-        }
-      ]
-    },
-    {
-      "id": "s19",
-      "originalText": "」ともいへり。",
-      "modernTranslation": "」とも言った。",
-      "tokens": [
+        },
         {
-          "id": "s19-t1",
+          "id": "s18-t13",
           "text": "も",
-          "start": 0,
-          "end": 1,
+          "start": 29,
+          "end": 30,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -3206,10 +3250,10 @@
           "hint": "係助詞「も」: 同類・並列・強調。「〜とも」は「〜とも (言った)」"
         },
         {
-          "id": "s19-t2",
+          "id": "s18-t14",
           "text": "言へ",
-          "start": 1,
-          "end": 3,
+          "start": 30,
+          "end": 32,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -3220,10 +3264,10 @@
           "hint": "重要動詞「いふ」: ハ行四段。已然形「言へ」+「り」(完了) =「言った・言っている」。命令形と同形だが文法的には已然形"
         },
         {
-          "id": "s19-t3",
+          "id": "s18-t15",
           "text": "り",
-          "start": 3,
-          "end": 4,
+          "start": 32,
+          "end": 33,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -3234,29 +3278,46 @@
           "hint": "助動詞「り」: 完了・存続 (〜た・〜ている)。サ変未然形・四段已然形 (e音) のみに接続。「言へり」=「言った」"
         },
         {
-          "id": "s19-t4",
+          "id": "s18-t16",
           "text": "。",
-          "start": 4,
-          "end": 5,
+          "start": 33,
+          "end": 34,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s19-t5",
+          "id": "s18-t17",
           "text": "（",
-          "start": 5,
-          "end": 6,
+          "start": 34,
+          "end": 35,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s19-t6",
+          "id": "s18-t18",
           "text": "）",
-          "start": 6,
+          "start": 35,
+          "end": 36,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s19",
+      "originalText": "」ともいへり。",
+      "modernTranslation": "」とも言った。",
+      "tokens": [
+        {
+          "id": "s19-t1",
+          "text": "」ともいへり。",
+          "start": 0,
           "end": 7,
           "layer": 0,
           "grammarTag": {

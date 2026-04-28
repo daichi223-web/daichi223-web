@@ -114,7 +114,7 @@
   "sentences": [
     {
       "id": "s1",
-      "originalText": "深く信をいたしぬれば、かかる徳もありけるにこそ。",
+      "originalText": "筑紫に、なにがしの押領使などいふやうなるもののありけるが、土大根を万にいみじき薬とて、朝ごとに二つづつ焼きて食ひけること、年久しくなりぬ。ある時、館の内に人もなかりける隙をはかりて、敵襲ひ来りて囲み攻めけるに、館の内に兵二人出で来て、命を惜しまず戦ひて、皆追ひかへしてげり。いと不思議に覚えて、「日ごろここにものしたまふとも見ぬ人々の、かく戦ひしたまふは、いかなる人ぞ。」と問ひければ、「年ごろ頼みて、朝な朝な召しつる土大根らにさぶらふ。」と言ひて失せにけり。深く信をいたしぬれば、かかる徳もありけるにこそ。",
       "modernTranslation": "筑紫（現在の九州地方）に、誰それという押領使などというような者がいたが、大根を何にでもすぐれて効く薬として、毎朝二本焼いて食べることが、長年（の習慣）となっていた。",
       "tokens": [
         {
@@ -1285,39 +1285,32 @@
             "meaning": "過去"
           },
           "grammarRefId": "jodoshi-jisei"
-        }
-      ]
-    },
-    {
-      "id": "s2",
-      "originalText": "（第六八段）",
-      "modernTranslation": "深く信心を尽くしてきたから、このような利益（功徳）もあったのだろう。",
-      "tokens": [
+        },
         {
-          "id": "s2-t1",
+          "id": "s1-t102",
           "text": "ば",
-          "start": 0,
-          "end": 1,
+          "start": 191,
+          "end": 192,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s2-t2",
+          "id": "s1-t103",
           "text": "、「年ごろ",
-          "start": 1,
-          "end": 6,
+          "start": 192,
+          "end": 197,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t3",
+          "id": "s1-t104",
           "text": "頼み",
-          "start": 6,
-          "end": 8,
+          "start": 197,
+          "end": 199,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1327,40 +1320,40 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t4",
+          "id": "s1-t105",
           "text": "て",
-          "start": 8,
-          "end": 9,
+          "start": 199,
+          "end": 200,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s2-t5",
+          "id": "s1-t106",
           "text": "、",
-          "start": 9,
-          "end": 10,
+          "start": 200,
+          "end": 201,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t6",
+          "id": "s1-t107",
           "text": "朝な朝な",
-          "start": 10,
-          "end": 14,
+          "start": 201,
+          "end": 205,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
           }
         },
         {
-          "id": "s2-t7",
+          "id": "s1-t108",
           "text": "召し",
-          "start": 14,
-          "end": 16,
+          "start": 205,
+          "end": 207,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -1371,10 +1364,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t8",
+          "id": "s1-t109",
           "text": "つる",
-          "start": 16,
-          "end": 18,
+          "start": 207,
+          "end": 209,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1384,30 +1377,30 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s2-t9",
+          "id": "s1-t110",
           "text": "土大根",
-          "start": 18,
-          "end": 21,
+          "start": 209,
+          "end": 212,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t10",
+          "id": "s1-t111",
           "text": "ら",
-          "start": 21,
-          "end": 22,
+          "start": 212,
+          "end": 213,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t11",
+          "id": "s1-t112",
           "text": "に",
-          "start": 22,
-          "end": 23,
+          "start": 213,
+          "end": 214,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1417,10 +1410,10 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s2-t12",
+          "id": "s1-t113",
           "text": "さぶらふ",
-          "start": 23,
-          "end": 27,
+          "start": 214,
+          "end": 218,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -1431,20 +1424,20 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t13",
+          "id": "s1-t114",
           "text": "。」",
-          "start": 27,
-          "end": 29,
+          "start": 218,
+          "end": 220,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t14",
+          "id": "s1-t115",
           "text": "と",
-          "start": 29,
-          "end": 30,
+          "start": 220,
+          "end": 221,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1453,10 +1446,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t15",
+          "id": "s1-t116",
           "text": "言ひ",
-          "start": 30,
-          "end": 32,
+          "start": 221,
+          "end": 223,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1466,20 +1459,20 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t16",
+          "id": "s1-t117",
           "text": "て",
-          "start": 32,
-          "end": 33,
+          "start": 223,
+          "end": 224,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s2-t17",
+          "id": "s1-t118",
           "text": "失せ",
-          "start": 33,
-          "end": 35,
+          "start": 224,
+          "end": 226,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1489,10 +1482,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t18",
+          "id": "s1-t119",
           "text": "に",
-          "start": 35,
-          "end": 36,
+          "start": 226,
+          "end": 227,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1502,10 +1495,10 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s2-t19",
+          "id": "s1-t120",
           "text": "けり",
-          "start": 36,
-          "end": 38,
+          "start": 227,
+          "end": 229,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1515,20 +1508,20 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s2-t20",
+          "id": "s1-t121",
           "text": "。",
-          "start": 38,
-          "end": 39,
+          "start": 229,
+          "end": 230,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t21",
+          "id": "s1-t122",
           "text": "深く",
-          "start": 39,
-          "end": 41,
+          "start": 230,
+          "end": 232,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1538,20 +1531,20 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s2-t22",
+          "id": "s1-t123",
           "text": "信",
-          "start": 41,
-          "end": 42,
+          "start": 232,
+          "end": 233,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t23",
+          "id": "s1-t124",
           "text": "を",
-          "start": 42,
-          "end": 43,
+          "start": 233,
+          "end": 234,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1560,10 +1553,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t24",
+          "id": "s1-t125",
           "text": "いたし",
-          "start": 43,
-          "end": 46,
+          "start": 234,
+          "end": 237,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1574,10 +1567,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t25",
+          "id": "s1-t126",
           "text": "ぬれ",
-          "start": 46,
-          "end": 48,
+          "start": 237,
+          "end": 239,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1587,40 +1580,40 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s2-t26",
+          "id": "s1-t127",
           "text": "ば",
-          "start": 48,
-          "end": 49,
+          "start": 239,
+          "end": 240,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s2-t27",
+          "id": "s1-t128",
           "text": "、",
-          "start": 49,
-          "end": 50,
+          "start": 240,
+          "end": 241,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t28",
+          "id": "s1-t129",
           "text": "かかる",
-          "start": 50,
-          "end": 53,
+          "start": 241,
+          "end": 244,
           "layer": 0,
           "grammarTag": {
             "pos": "連体"
           }
         },
         {
-          "id": "s2-t29",
+          "id": "s1-t130",
           "text": "徳",
-          "start": 53,
-          "end": 54,
+          "start": 244,
+          "end": 245,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1628,10 +1621,10 @@
           "hint": "「徳」＝利益・功徳。仏教語の「功徳（くどく）」に由来し、信心や善行の結果として得られる目に見える御利益を指す。中世の仏教的世界観では、深い信仰は必ず現世利益（病平癒・延命・除災）として返ってくるという「験（げん）あらたか」の論理が広く受け入れられていた。本段の結語「かかる徳もありけるにこそ」はこの論理を踏まえて押領使が大根の信心によって命を救われたことを総括する。"
         },
         {
-          "id": "s2-t30",
+          "id": "s1-t131",
           "text": "も",
-          "start": 54,
-          "end": 55,
+          "start": 245,
+          "end": 246,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1640,10 +1633,10 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s2-t31",
+          "id": "s1-t132",
           "text": "あり",
-          "start": 55,
-          "end": 57,
+          "start": 246,
+          "end": 248,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1654,10 +1647,10 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t32",
+          "id": "s1-t133",
           "text": "ける",
-          "start": 57,
-          "end": 59,
+          "start": 248,
+          "end": 250,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1667,10 +1660,10 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s2-t33",
+          "id": "s1-t134",
           "text": "に",
-          "start": 59,
-          "end": 60,
+          "start": 250,
+          "end": 251,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1680,10 +1673,10 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s2-t34",
+          "id": "s1-t135",
           "text": "こそ",
-          "start": 60,
-          "end": 62,
+          "start": 251,
+          "end": 253,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1692,10 +1685,27 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s2-t35",
+          "id": "s1-t136",
           "text": "。",
-          "start": 62,
-          "end": 63,
+          "start": 253,
+          "end": 254,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "originalText": "（第六八段）",
+      "modernTranslation": "深く信心を尽くしてきたから、このような利益（功徳）もあったのだろう。",
+      "tokens": [
+        {
+          "id": "s2-t1",
+          "text": "（第六八段）",
+          "start": 0,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""

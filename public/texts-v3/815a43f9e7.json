@@ -42,7 +42,7 @@
   "sentences": [
     {
       "id": "s1",
-      "originalText": "われもしかなきてぞ人に恋ひられし今こそよそに声をのみ聞け",
+      "originalText": "大和の国に、男女ありけり。年月かぎりなく思ひて住みけるを、いかがしけむ、女を得てけり。なほもあらず、この家に率て来て、壁をへだててすゑて、わが方にはさらに寄り来ず。いと憂しと思へど、さらに言ひもねたまず。秋の夜の長きに、目をさまして聞けば、鹿なむ鳴きける。ものも言はで聞きけり。壁をへだてたる男、「聞きたまふや、西こそ。」と言ひければ、「何ごと。」と答へければ、「この鹿の鳴くは聞きたうぶや。」と言ひければ、「さ聞きはべり。」と答へけり。男、「さて、それをばいかが聞きたまふ。」と言ひければ、女、ふと答へけり。われもしかなきてぞ人に恋ひられし今こそよそに声をのみ聞け",
       "modernTranslation": "大和の国に、ある男と女がいた。",
       "tokens": [
         {
@@ -953,19 +953,12 @@
           "grammarTag": {
             "pos": ""
           }
-        }
-      ]
-    },
-    {
-      "id": "s2",
-      "originalText": "とよみたりければ、かぎりなくめでて、この今の妻をば送りて、もとのごとなむ住みわたりける。",
-      "modernTranslation": "われもしか……（わたしもかつてはそのように、鹿が鳴くように泣いて、あなたに恋い慕われたものでした。",
-      "tokens": [
+        },
         {
-          "id": "s2-t1",
+          "id": "s1-t77",
           "text": "を",
-          "start": 0,
-          "end": 1,
+          "start": 111,
+          "end": 112,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -975,10 +968,10 @@
           "hint": "格助詞「を」(対象): 体言+「を」で他動詞の目的・対象を示す。連体形+「を」だと接続助詞の可能性 (順接・逆接) があるので接続形に注目"
         },
         {
-          "id": "s2-t2",
+          "id": "s1-t78",
           "text": "さまし",
-          "start": 1,
-          "end": 4,
+          "start": 112,
+          "end": 115,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -989,10 +982,10 @@
           "hint": "重要語「さます」: サ行四段動詞。「(目を) 覚ます・覚める状態にする」の意。「目をさます」で目覚める"
         },
         {
-          "id": "s2-t3",
+          "id": "s1-t79",
           "text": "て",
-          "start": 4,
-          "end": 5,
+          "start": 115,
+          "end": 116,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -1000,10 +993,10 @@
           "hint": "接続助詞「て」: 連用形接続。単純接続 (〜て・〜ので)。動作の継起や原因・結果を結ぶ。完了「つ」連用形「て」と要識別 (用言の連用形に付くのが助詞、用言が「e 段」になるのが助動詞)"
         },
         {
-          "id": "s2-t4",
+          "id": "s1-t80",
           "text": "聞け",
-          "start": 5,
-          "end": 7,
+          "start": 116,
+          "end": 118,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1014,10 +1007,10 @@
           "hint": "カ四「聞く」已然形「聞け」:「か・き・く・く・け・け」と活用。「聞けば」=聞くと (已然形+ば の確定条件)"
         },
         {
-          "id": "s2-t5",
+          "id": "s1-t81",
           "text": "ば",
-          "start": 7,
-          "end": 8,
+          "start": 118,
+          "end": 119,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -1025,30 +1018,30 @@
           "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)。識別は接続する活用形でする"
         },
         {
-          "id": "s2-t6",
+          "id": "s1-t82",
           "text": "、",
-          "start": 8,
-          "end": 9,
+          "start": 119,
+          "end": 120,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t7",
+          "id": "s1-t83",
           "text": "鹿",
-          "start": 9,
-          "end": 10,
+          "start": 120,
+          "end": 121,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t8",
+          "id": "s1-t84",
           "text": "なむ",
-          "start": 10,
-          "end": 12,
+          "start": 121,
+          "end": 123,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1058,10 +1051,10 @@
           "hint": "係助詞「なむ」: 強意を表し、結びは連体形。訳出はほぼ不要。完了「ぬ」未然形+推量「む」、終助詞「なむ」(他者願望) と要識別"
         },
         {
-          "id": "s2-t9",
+          "id": "s1-t85",
           "text": "鳴き",
-          "start": 12,
-          "end": 14,
+          "start": 123,
+          "end": 125,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1072,10 +1065,10 @@
           "hint": "カ四「鳴く」:「か・き・く・く・け・け」と活用。「(鳥獣が) 鳴く」の意。秋の鹿の鳴き声は和歌の伝統的題材で「妻を恋う声」の象徴"
         },
         {
-          "id": "s2-t10",
+          "id": "s1-t86",
           "text": "ける",
-          "start": 14,
-          "end": 16,
+          "start": 125,
+          "end": 127,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1086,20 +1079,20 @@
           "hint": "助動詞「けり」連体形「ける」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。ここは係助詞「なむ」の結びで連体形"
         },
         {
-          "id": "s2-t11",
+          "id": "s1-t87",
           "text": "。",
-          "start": 16,
-          "end": 17,
+          "start": 127,
+          "end": 128,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t12",
+          "id": "s1-t88",
           "text": "もの",
-          "start": 17,
-          "end": 19,
+          "start": 128,
+          "end": 130,
           "layer": 0,
           "grammarTag": {
             "pos": "",
@@ -1107,10 +1100,10 @@
           }
         },
         {
-          "id": "s2-t13",
+          "id": "s1-t89",
           "text": "も",
-          "start": 19,
-          "end": 20,
+          "start": 130,
+          "end": 131,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1120,10 +1113,10 @@
           "hint": "係助詞「も」: 強意・並列・添加。係り結びは起こさない。「ものも言はで」=何も言わずに、で「も」が文意を強める"
         },
         {
-          "id": "s2-t14",
+          "id": "s1-t90",
           "text": "言は",
-          "start": 20,
-          "end": 22,
+          "start": 131,
+          "end": 133,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1134,10 +1127,10 @@
           "hint": "ハ四「言ふ」未然形「言は」: 打消・受身・使役・意志などの助動詞を承ける。「言はで」=言わずに (打消の接続助詞「で」+未然形)"
         },
         {
-          "id": "s2-t15",
+          "id": "s1-t91",
           "text": "で",
-          "start": 22,
-          "end": 23,
+          "start": 133,
+          "end": 134,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -1145,10 +1138,10 @@
           "hint": "接続助詞「で」: 未然形接続で打消の確定条件 (〜ないで・〜ずに)。「ず+て」が縮約した形。「言はで」=言わずに"
         },
         {
-          "id": "s2-t16",
+          "id": "s1-t92",
           "text": "聞き",
-          "start": 23,
-          "end": 25,
+          "start": 134,
+          "end": 136,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1159,10 +1152,10 @@
           "hint": "カ四「聞く」:「か・き・く・く・け・け」と活用。「(声・音を) 聞く・聞き分ける」の意"
         },
         {
-          "id": "s2-t17",
+          "id": "s1-t93",
           "text": "けり",
-          "start": 25,
-          "end": 27,
+          "start": 136,
+          "end": 138,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1173,30 +1166,30 @@
           "hint": "助動詞「けり」: 過去 (〜た・〜たという伝聞) + 詠嘆 (〜だなあ)。連用形接続。物語の地の文で多用"
         },
         {
-          "id": "s2-t18",
+          "id": "s1-t94",
           "text": "。",
-          "start": 27,
-          "end": 28,
+          "start": 138,
+          "end": 139,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t19",
+          "id": "s1-t95",
           "text": "壁",
-          "start": 28,
-          "end": 29,
+          "start": 139,
+          "end": 140,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t20",
+          "id": "s1-t96",
           "text": "を",
-          "start": 29,
-          "end": 30,
+          "start": 140,
+          "end": 141,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1206,10 +1199,10 @@
           "hint": "格助詞「を」(対象): 体言+「を」で他動詞の目的・対象を示す。連体形+「を」だと接続助詞の可能性 (順接・逆接) があるので接続形に注目"
         },
         {
-          "id": "s2-t21",
+          "id": "s1-t97",
           "text": "へだて",
-          "start": 30,
-          "end": 33,
+          "start": 141,
+          "end": 144,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1220,10 +1213,10 @@
           "hint": "タ下二「へだつ」:「て・て・つ・つる・つれ・てよ」と活用。「(物で) 隔てる・距離を置く」の意"
         },
         {
-          "id": "s2-t22",
+          "id": "s1-t98",
           "text": "たる",
-          "start": 33,
-          "end": 35,
+          "start": 144,
+          "end": 146,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1234,40 +1227,40 @@
           "hint": "助動詞「たり」連体形「たる」: 存続 (〜ている) + 完了 (〜た)。連用形接続。「へだてたる男」=隔てている男 (壁を隔てた状態の男)"
         },
         {
-          "id": "s2-t23",
+          "id": "s1-t99",
           "text": "男",
-          "start": 35,
-          "end": 36,
+          "start": 146,
+          "end": 147,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t24",
+          "id": "s1-t100",
           "text": "、",
-          "start": 36,
-          "end": 37,
+          "start": 147,
+          "end": 148,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t25",
+          "id": "s1-t101",
           "text": "「",
-          "start": 37,
-          "end": 38,
+          "start": 148,
+          "end": 149,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t26",
+          "id": "s1-t102",
           "text": "聞き",
-          "start": 38,
-          "end": 40,
+          "start": 149,
+          "end": 151,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1278,10 +1271,10 @@
           "hint": "カ四「聞く」:「か・き・く・く・け・け」と活用。連用形+尊敬の補助動詞で「お聞きになる」"
         },
         {
-          "id": "s2-t27",
+          "id": "s1-t103",
           "text": "たまふ",
-          "start": 40,
-          "end": 43,
+          "start": 151,
+          "end": 154,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -1294,10 +1287,10 @@
           "hint": "尊敬の補助動詞「たまふ」(ハ四): 動詞連用形+「たまふ」で「〜なさる・お〜になる」。動作主への尊敬。下二段の「給ふ」(謙譲・自分の動作に付す) と要識別"
         },
         {
-          "id": "s2-t28",
+          "id": "s1-t104",
           "text": "や",
-          "start": 43,
-          "end": 44,
+          "start": 154,
+          "end": 155,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1307,30 +1300,30 @@
           "hint": "係助詞「や」: 疑問 (〜か) または反語 (〜だろうか、いや〜ない)。文末では結びは連体形。文中の「や」も同様。文脈で疑問/反語を判別"
         },
         {
-          "id": "s2-t29",
+          "id": "s1-t105",
           "text": "、",
-          "start": 44,
-          "end": 45,
+          "start": 155,
+          "end": 156,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t30",
+          "id": "s1-t106",
           "text": "西",
-          "start": 45,
-          "end": 46,
+          "start": 156,
+          "end": 157,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t31",
+          "id": "s1-t107",
           "text": "こそ",
-          "start": 46,
-          "end": 48,
+          "start": 157,
+          "end": 159,
           "layer": 3,
           "grammarTag": {
             "pos": "終助詞",
@@ -1340,30 +1333,30 @@
           "hint": "呼びかけの「こそ」: 体言の下に付く呼びかけの間投助詞・終助詞。「西こそ」=西の方 (にお住まいの方) よ、と話しかける用法。係助詞の「こそ」(強意・結びは已然形) と要識別"
         },
         {
-          "id": "s2-t32",
+          "id": "s1-t108",
           "text": "。",
-          "start": 48,
-          "end": 49,
+          "start": 159,
+          "end": 160,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t33",
+          "id": "s1-t109",
           "text": "」",
-          "start": 49,
-          "end": 50,
+          "start": 160,
+          "end": 161,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t34",
+          "id": "s1-t110",
           "text": "と",
-          "start": 50,
-          "end": 51,
+          "start": 161,
+          "end": 162,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1373,10 +1366,10 @@
           "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
         },
         {
-          "id": "s2-t35",
+          "id": "s1-t111",
           "text": "言ひ",
-          "start": 51,
-          "end": 53,
+          "start": 162,
+          "end": 164,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1387,10 +1380,10 @@
           "hint": "ハ四「言ふ」:「は・ひ・ふ・ふ・へ・へ」と活用。引用「と+言ふ」の形で発話を表す物語頻出語"
         },
         {
-          "id": "s2-t36",
+          "id": "s1-t112",
           "text": "けれ",
-          "start": 53,
-          "end": 55,
+          "start": 164,
+          "end": 166,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1401,10 +1394,10 @@
           "hint": "助動詞「けり」已然形「けれ」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。「けれ+ば」で「〜たので」の確定条件"
         },
         {
-          "id": "s2-t37",
+          "id": "s1-t113",
           "text": "ば",
-          "start": 55,
-          "end": 56,
+          "start": 166,
+          "end": 167,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -1412,50 +1405,50 @@
           "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)。識別は接続する活用形でする"
         },
         {
-          "id": "s2-t38",
+          "id": "s1-t114",
           "text": "、",
-          "start": 56,
-          "end": 57,
+          "start": 167,
+          "end": 168,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t39",
+          "id": "s1-t115",
           "text": "「何ごと",
-          "start": 57,
-          "end": 61,
+          "start": 168,
+          "end": 172,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t40",
+          "id": "s1-t116",
           "text": "。",
-          "start": 61,
-          "end": 62,
+          "start": 172,
+          "end": 173,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t41",
+          "id": "s1-t117",
           "text": "」",
-          "start": 62,
-          "end": 63,
+          "start": 173,
+          "end": 174,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t42",
+          "id": "s1-t118",
           "text": "と",
-          "start": 63,
-          "end": 64,
+          "start": 174,
+          "end": 175,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1465,10 +1458,10 @@
           "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
         },
         {
-          "id": "s2-t43",
+          "id": "s1-t119",
           "text": "答へ",
-          "start": 64,
-          "end": 66,
+          "start": 175,
+          "end": 177,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1479,907 +1472,7 @@
           "hint": "ハ下二「答ふ」:「へ・へ・ふ・ふる・ふれ・へよ」と活用。「答える・返答する」の意。下二段は終止形が「u 段」"
         },
         {
-          "id": "s2-t44",
-          "text": "けれ",
-          "start": 66,
-          "end": 68,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "已",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「けり」已然形「けれ」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。「けれ+ば」で「〜たので」の確定条件"
-        },
-        {
-          "id": "s2-t45",
-          "text": "ば",
-          "start": 68,
-          "end": 69,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)"
-        },
-        {
-          "id": "s2-t46",
-          "text": "、",
-          "start": 69,
-          "end": 70,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t47",
-          "text": "「",
-          "start": 70,
-          "end": 71,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t48",
-          "text": "こ",
-          "start": 71,
-          "end": 72,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          }
-        },
-        {
-          "id": "s2-t49",
-          "text": "の",
-          "start": 72,
-          "end": 73,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
-        },
-        {
-          "id": "s2-t50",
-          "text": "鹿",
-          "start": 73,
-          "end": 74,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t51",
-          "text": "の",
-          "start": 74,
-          "end": 75,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
-        },
-        {
-          "id": "s2-t52",
-          "text": "鳴く",
-          "start": 75,
-          "end": 77,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "カ四「鳴く」連体形「鳴く」:「か・き・く・く・け・け」と活用。「鹿の鳴くは」=鹿が鳴くのは (連体形が準体言として機能)"
-        },
-        {
-          "id": "s2-t53",
-          "text": "は",
-          "start": 77,
-          "end": 78,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「は」: 提題・対比・強調。係り結びは起こさない。「鳴くは」=鳴くということに関しては、と話題を提示する用法"
-        },
-        {
-          "id": "s2-t54",
-          "text": "聞き",
-          "start": 78,
-          "end": 80,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "カ四「聞く」:「か・き・く・く・け・け」と活用。「聞きたうぶ」で尊敬の補助動詞に接続"
-        },
-        {
-          "id": "s2-t55",
-          "text": "たうぶ",
-          "start": 80,
-          "end": 83,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "バ四",
-            "conjugationForm": "終",
-            "honorific": "尊敬"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "尊敬の補助動詞「たうぶ」(賜ぶ): バ行四段。「たぶ」が音便化した形。動詞連用形+「たうぶ」で「〜なさる」。「たまふ」と並ぶ尊敬補助動詞でやや古風・男性的"
-        },
-        {
-          "id": "s2-t56",
-          "text": "や",
-          "start": 83,
-          "end": 84,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "疑問"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「や」: 疑問 (〜か) または反語 (〜だろうか、いや〜ない)。文末では結びは連体形。文脈で疑問/反語を判別"
-        },
-        {
-          "id": "s2-t57",
-          "text": "。",
-          "start": 84,
-          "end": 85,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t58",
-          "text": "」",
-          "start": 85,
-          "end": 86,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t59",
-          "text": "と",
-          "start": 86,
-          "end": 87,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
-        },
-        {
-          "id": "s2-t60",
-          "text": "言ひ",
-          "start": 87,
-          "end": 89,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ハ四「言ふ」:「は・ひ・ふ・ふ・へ・へ」と活用。引用「と+言ふ」の形で発話を表す物語頻出語"
-        },
-        {
-          "id": "s2-t61",
-          "text": "けれ",
-          "start": 89,
-          "end": 91,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "已",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「けり」已然形「けれ」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。「けれ+ば」で「〜たので」の確定条件"
-        },
-        {
-          "id": "s2-t62",
-          "text": "ば",
-          "start": 91,
-          "end": 92,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)"
-        },
-        {
-          "id": "s2-t63",
-          "text": "、",
-          "start": 92,
-          "end": 93,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t64",
-          "text": "「",
-          "start": 93,
-          "end": 94,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t65",
-          "text": "さ",
-          "start": 94,
-          "end": 95,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「さ」:「そう・そのように」。前述の内容を指して「そのように」と受ける指示副詞。「さ聞きはべり」=そのように (鹿が鳴く声を) 聞いております"
-        },
-        {
-          "id": "s2-t66",
-          "text": "聞き",
-          "start": 95,
-          "end": 97,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "カ四「聞く」:「か・き・く・く・け・け」と活用。「聞きはべり」で丁寧の補助動詞に接続"
-        },
-        {
-          "id": "s2-t67",
-          "text": "はべり",
-          "start": 97,
-          "end": 100,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "終",
-            "baseForm": "はべり"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "丁寧の補助動詞「はべり」: ラ変。動詞連用形+「はべり」で「〜ます・〜です」と聞き手への丁寧。本動詞では「お控え申し上げる」(謙譲)。会話文・手紙文で多用"
-        },
-        {
-          "id": "s2-t68",
-          "text": "。",
-          "start": 100,
-          "end": 101,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t69",
-          "text": "」",
-          "start": 101,
-          "end": 102,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t70",
-          "text": "と",
-          "start": 102,
-          "end": 103,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
-        },
-        {
-          "id": "s2-t71",
-          "text": "答へ",
-          "start": 103,
-          "end": 105,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ハ下二「答ふ」:「へ・へ・ふ・ふる・ふれ・へよ」と活用。「答える・返答する」の意"
-        },
-        {
-          "id": "s2-t72",
-          "text": "けり",
-          "start": 105,
-          "end": 107,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「けり」: 過去 (〜た・〜たという伝聞) + 詠嘆 (〜だなあ)。連用形接続。物語の地の文で多用"
-        },
-        {
-          "id": "s2-t73",
-          "text": "。",
-          "start": 107,
-          "end": 108,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t74",
-          "text": "男",
-          "start": 108,
-          "end": 109,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t75",
-          "text": "、",
-          "start": 109,
-          "end": 110,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t76",
-          "text": "「",
-          "start": 110,
-          "end": 111,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t77",
-          "text": "さて",
-          "start": 111,
-          "end": 113,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "接続詞"
-          }
-        },
-        {
-          "id": "s2-t78",
-          "text": "、",
-          "start": 113,
-          "end": 114,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t79",
-          "text": "それ",
-          "start": 114,
-          "end": 116,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          }
-        },
-        {
-          "id": "s2-t80",
-          "text": "をば",
-          "start": 116,
-          "end": 118,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t81",
-          "text": "いかが",
-          "start": 118,
-          "end": 121,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞",
-            "baseForm": "いかが"
-          },
-          "hint": "副詞「いかが」:「どのように・どうして」の疑問・反語。文中の助動詞や動詞の連体形と呼応して係り結び的に機能。「いかが聞きたまふ」=どのようにお聞きになる (か)"
-        },
-        {
-          "id": "s2-t82",
-          "text": "聞き",
-          "start": 121,
-          "end": 123,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "カ四「聞く」:「か・き・く・く・け・け」と活用。「聞きたまふ」=お聞きになる"
-        },
-        {
-          "id": "s2-t83",
-          "text": "たまふ",
-          "start": 123,
-          "end": 126,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "体",
-            "baseForm": "たまふ",
-            "honorific": "尊敬"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "尊敬の補助動詞「たまふ」(ハ四): 動詞連用形+「たまふ」で「〜なさる・お〜になる」。動作主への尊敬。連体形「たまふ」は係助詞「いかが」の結び (連体形係り結び的)"
-        },
-        {
-          "id": "s2-t84",
-          "text": "。",
-          "start": 126,
-          "end": 127,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t85",
-          "text": "」",
-          "start": 127,
-          "end": 128,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t86",
-          "text": "と",
-          "start": 128,
-          "end": 129,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
-        },
-        {
-          "id": "s2-t87",
-          "text": "言ひ",
-          "start": 129,
-          "end": 131,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ハ四「言ふ」:「は・ひ・ふ・ふ・へ・へ」と活用。引用「と+言ふ」の形で発話を表す物語頻出語"
-        },
-        {
-          "id": "s2-t88",
-          "text": "けれ",
-          "start": 131,
-          "end": 133,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "已",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「けり」已然形「けれ」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。「けれ+ば」で「〜たので」の確定条件"
-        },
-        {
-          "id": "s2-t89",
-          "text": "ば",
-          "start": 133,
-          "end": 134,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)"
-        },
-        {
-          "id": "s2-t90",
-          "text": "、",
-          "start": 134,
-          "end": 135,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t91",
-          "text": "女",
-          "start": 135,
-          "end": 136,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t92",
-          "text": "、",
-          "start": 136,
-          "end": 137,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t93",
-          "text": "ふと",
-          "start": 137,
-          "end": 139,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「ふと」:「すぐに・即座に・たちまち」。現代語「ふと (思いつく)」の偶然性とは少し違い、古文では「素早く・直ちに」のニュアンスが強い"
-        },
-        {
-          "id": "s2-t94",
-          "text": "答へ",
-          "start": 139,
-          "end": 141,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ハ下二「答ふ」:「へ・へ・ふ・ふる・ふれ・へよ」と活用。「答える・返答する」の意"
-        },
-        {
-          "id": "s2-t95",
-          "text": "けり",
-          "start": 141,
-          "end": 143,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「けり」: 過去 (〜た・〜たという伝聞) + 詠嘆 (〜だなあ)。連用形接続。物語の地の文で多用"
-        },
-        {
-          "id": "s2-t96",
-          "text": "。",
-          "start": 143,
-          "end": 144,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t97",
-          "text": "われ",
-          "start": 144,
-          "end": 146,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          }
-        },
-        {
-          "id": "s2-t98",
-          "text": "も",
-          "start": 146,
-          "end": 147,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "並列"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「も」: 強意・並列・添加。「われもしか」=私も鹿のように、と類比を表す添加用法。係り結びは起こさない"
-        },
-        {
-          "id": "s2-t99",
-          "text": "しか",
-          "start": 147,
-          "end": 149,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "",
-            "baseForm": "しか"
-          },
-          "hint": "重要語「しか」: (1) 副詞「然」=そのように・あのように、(2) 名詞「鹿」の二重の意味を掛けた掛詞。歌の核となる縁語仕立て。和歌の修辞「掛詞」の典型例"
-        },
-        {
-          "id": "s2-t100",
-          "text": "なき",
-          "start": 149,
-          "end": 151,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "用",
-            "baseForm": "なく"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "カ四「泣く」:「か・き・く・く・け・け」と活用。和歌では獣の「鳴く」と人の「泣く」を掛詞にする (「しか (鹿/然) なきて」=私もそのように泣いて)。形容詞「なし」連体形と要識別"
-        },
-        {
-          "id": "s2-t101",
-          "text": "て",
-          "start": 151,
-          "end": 152,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 連用形接続。単純接続 (〜て・〜ので)。動作の継起や原因・結果を結ぶ。完了「つ」連用形「て」と要識別 (用言の連用形に付くのが助詞、用言が「e 段」になるのが助動詞)"
-        },
-        {
-          "id": "s2-t102",
-          "text": "ぞ",
-          "start": 152,
-          "end": 153,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "強意"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「ぞ」: 強意。係り結びは連体形。訳出は不要が多い。歌中の「ぞ」は和歌の中核を示す目印"
-        },
-        {
-          "id": "s2-t103",
-          "text": "人",
-          "start": 153,
-          "end": 154,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t104",
-          "text": "に",
-          "start": 154,
-          "end": 155,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "受身"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」(受身の対象): 受身・使役の動作主を示す。「人に恋ひられし」=人に恋い慕われた。「に+る/らる」で受身、「に+す/さす」で使役の典型構文"
-        },
-        {
-          "id": "s2-t105",
-          "text": "恋ひ",
-          "start": 155,
-          "end": 157,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ上二",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ハ上二「恋ふ」:「ひ・ひ・ふ・ふる・ふれ・ひよ」と活用。「(人を) 恋い慕う」の意。同じハ行に上二段 (恋ふ・干る) と四段 (思ふ・言ふ) があり要識別"
-        },
-        {
-          "id": "s2-t106",
-          "text": "られ",
-          "start": 157,
-          "end": 159,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "受身"
-          },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
-          "hint": "助動詞「らる」: 受身・尊敬・自発・可能の四義。未然形 (上一・上二・下二・カ変・サ変) に接続。「人に恋ひられし」=人に恋い慕われた、で「に」+「らる」は受身の典型"
-        },
-        {
-          "id": "s2-t107",
-          "text": "し",
-          "start": 159,
-          "end": 160,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「き」連体形「し」: 過去 (〜た) で自分が直接体験した過去を表す。連用形接続 (カ変・サ変は特殊)。伝聞・詠嘆の「けり」と要識別"
-        },
-        {
-          "id": "s2-t108",
-          "text": "今",
-          "start": 160,
-          "end": 161,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t109",
-          "text": "こそ",
-          "start": 161,
-          "end": 163,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "強意"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「こそ」: 強意。係り結びは已然形。訳出は不要が多い。「今こそ〜聞け」で已然形の結び。逆接的なニュアンスも含む"
-        },
-        {
-          "id": "s2-t110",
-          "text": "よそ",
-          "start": 163,
-          "end": 165,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t111",
-          "text": "に",
-          "start": 165,
-          "end": 166,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "場所"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」(場所): 「〜に」で動作・存在の場所を示す。受身の対象「に+る/らる」、原因「に」、断定の助動詞「なり」連用形などとの識別が頻出"
-        },
-        {
-          "id": "s2-t112",
-          "text": "声",
-          "start": 166,
-          "end": 167,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t113",
-          "text": "を",
-          "start": 167,
-          "end": 168,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」(対象): 体言+「を」で他動詞の目的・対象を示す。連体形+「を」だと接続助詞の可能性 (順接・逆接) があるので接続形に注目"
-        },
-        {
-          "id": "s2-t114",
-          "text": "のみ",
-          "start": 168,
-          "end": 170,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "副助詞"
-          },
-          "hint": "副助詞「のみ」: 限定 (〜だけ・〜ばかり) または強意。「声をのみ聞け」=声だけを (今は遠く離れて) 聞く。和歌では限定の哀切感を強める"
-        },
-        {
-          "id": "s2-t115",
-          "text": "聞け",
-          "start": 170,
-          "end": 172,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "已"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "カ四「聞く」已然形「聞け」: 「か・き・く・く・け・け」と活用。係助詞「こそ」の結びとして已然形になっている (係り結びの法則)"
-        },
-        {
-          "id": "s2-t116",
-          "text": "と",
-          "start": 172,
-          "end": 173,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
-        },
-        {
-          "id": "s2-t117",
-          "text": "よみ",
-          "start": 173,
-          "end": 175,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "マ四「詠む」:「ま・み・む・む・め・め」と活用。「(和歌を) 詠む」の意。「歌をよむ」「と+よむ」で和歌の引用に頻出"
-        },
-        {
-          "id": "s2-t118",
-          "text": "たり",
-          "start": 175,
-          "end": 177,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "完了"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「たり」: 完了 (〜た) + 存続 (〜ている)。連用形接続。断定の「たり」(体言接続) と要識別"
-        },
-        {
-          "id": "s2-t119",
+          "id": "s1-t120",
           "text": "けれ",
           "start": 177,
           "end": 179,
@@ -2393,7 +1486,7 @@
           "hint": "助動詞「けり」已然形「けれ」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。「けれ+ば」で「〜たので」の確定条件"
         },
         {
-          "id": "s2-t120",
+          "id": "s1-t121",
           "text": "ば",
           "start": 179,
           "end": 180,
@@ -2404,7 +1497,7 @@
           "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)"
         },
         {
-          "id": "s2-t121",
+          "id": "s1-t122",
           "text": "、",
           "start": 180,
           "end": 181,
@@ -2414,42 +1507,651 @@
           }
         },
         {
-          "id": "s2-t122",
-          "text": "かぎりなく",
+          "id": "s1-t123",
+          "text": "「",
           "start": 181,
-          "end": 186,
-          "layer": 1,
+          "end": 182,
+          "layer": 0,
           "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "ク",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "重要語「かぎりなし」: ク活用形容詞。「この上ない・はなはだしい」。連用形「かぎりなく」+用言で程度を強める"
-        }
-      ]
-    },
-    {
-      "id": "s3",
-      "originalText": "（第一五八段）",
-      "modernTranslation": "と詠んだので、（男は）このうえもなく感嘆して、この新しい妻を送り返して、もとのようにもとの妻とずっと暮らしつづけたのだった。",
-      "tokens": [
-        {
-          "id": "s3-t1",
-          "text": "めで",
-          "start": 0,
-          "end": 2,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "ダ下二"
-          },
-          "hint": "重要語「めづ」: ダ行下二段「で・で・づ・づる・づれ・でよ」と活用。「ほめる・感嘆する・愛でる」の意。「かぎりなくめでて」=この上なく感嘆して。形容詞「めでたし」の語源"
+            "pos": ""
+          }
         },
         {
-          "id": "s3-t2",
+          "id": "s1-t124",
+          "text": "こ",
+          "start": 182,
+          "end": 183,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s1-t125",
+          "text": "の",
+          "start": 183,
+          "end": 184,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
+        },
+        {
+          "id": "s1-t126",
+          "text": "鹿",
+          "start": 184,
+          "end": 185,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t127",
+          "text": "の",
+          "start": 185,
+          "end": 186,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
+        },
+        {
+          "id": "s1-t128",
+          "text": "鳴く",
+          "start": 186,
+          "end": 188,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ四「鳴く」連体形「鳴く」:「か・き・く・く・け・け」と活用。「鹿の鳴くは」=鹿が鳴くのは (連体形が準体言として機能)"
+        },
+        {
+          "id": "s1-t129",
+          "text": "は",
+          "start": 188,
+          "end": 189,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提題・対比・強調。係り結びは起こさない。「鳴くは」=鳴くということに関しては、と話題を提示する用法"
+        },
+        {
+          "id": "s1-t130",
+          "text": "聞き",
+          "start": 189,
+          "end": 191,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ四「聞く」:「か・き・く・く・け・け」と活用。「聞きたうぶ」で尊敬の補助動詞に接続"
+        },
+        {
+          "id": "s1-t131",
+          "text": "たうぶ",
+          "start": 191,
+          "end": 194,
+          "layer": 4,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "バ四",
+            "conjugationForm": "終",
+            "honorific": "尊敬"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たうぶ」(賜ぶ): バ行四段。「たぶ」が音便化した形。動詞連用形+「たうぶ」で「〜なさる」。「たまふ」と並ぶ尊敬補助動詞でやや古風・男性的"
+        },
+        {
+          "id": "s1-t132",
+          "text": "や",
+          "start": 194,
+          "end": 195,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "疑問"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」: 疑問 (〜か) または反語 (〜だろうか、いや〜ない)。文末では結びは連体形。文脈で疑問/反語を判別"
+        },
+        {
+          "id": "s1-t133",
+          "text": "。",
+          "start": 195,
+          "end": 196,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t134",
+          "text": "」",
+          "start": 196,
+          "end": 197,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t135",
+          "text": "と",
+          "start": 197,
+          "end": 198,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
+        },
+        {
+          "id": "s1-t136",
+          "text": "言ひ",
+          "start": 198,
+          "end": 200,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「言ふ」:「は・ひ・ふ・ふ・へ・へ」と活用。引用「と+言ふ」の形で発話を表す物語頻出語"
+        },
+        {
+          "id": "s1-t137",
+          "text": "けれ",
+          "start": 200,
+          "end": 202,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "已",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」已然形「けれ」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。「けれ+ば」で「〜たので」の確定条件"
+        },
+        {
+          "id": "s1-t138",
+          "text": "ば",
+          "start": 202,
+          "end": 203,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)"
+        },
+        {
+          "id": "s1-t139",
+          "text": "、",
+          "start": 203,
+          "end": 204,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t140",
+          "text": "「",
+          "start": 204,
+          "end": 205,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t141",
+          "text": "さ",
+          "start": 205,
+          "end": 206,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「さ」:「そう・そのように」。前述の内容を指して「そのように」と受ける指示副詞。「さ聞きはべり」=そのように (鹿が鳴く声を) 聞いております"
+        },
+        {
+          "id": "s1-t142",
+          "text": "聞き",
+          "start": 206,
+          "end": 208,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ四「聞く」:「か・き・く・く・け・け」と活用。「聞きはべり」で丁寧の補助動詞に接続"
+        },
+        {
+          "id": "s1-t143",
+          "text": "はべり",
+          "start": 208,
+          "end": 211,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "終",
+            "baseForm": "はべり"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "丁寧の補助動詞「はべり」: ラ変。動詞連用形+「はべり」で「〜ます・〜です」と聞き手への丁寧。本動詞では「お控え申し上げる」(謙譲)。会話文・手紙文で多用"
+        },
+        {
+          "id": "s1-t144",
+          "text": "。",
+          "start": 211,
+          "end": 212,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t145",
+          "text": "」",
+          "start": 212,
+          "end": 213,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t146",
+          "text": "と",
+          "start": 213,
+          "end": 214,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
+        },
+        {
+          "id": "s1-t147",
+          "text": "答へ",
+          "start": 214,
+          "end": 216,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ下二「答ふ」:「へ・へ・ふ・ふる・ふれ・へよ」と活用。「答える・返答する」の意"
+        },
+        {
+          "id": "s1-t148",
+          "text": "けり",
+          "start": 216,
+          "end": 218,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」: 過去 (〜た・〜たという伝聞) + 詠嘆 (〜だなあ)。連用形接続。物語の地の文で多用"
+        },
+        {
+          "id": "s1-t149",
+          "text": "。",
+          "start": 218,
+          "end": 219,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t150",
+          "text": "男",
+          "start": 219,
+          "end": 220,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t151",
+          "text": "、",
+          "start": 220,
+          "end": 221,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t152",
+          "text": "「",
+          "start": 221,
+          "end": 222,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t153",
+          "text": "さて",
+          "start": 222,
+          "end": 224,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "接続詞"
+          }
+        },
+        {
+          "id": "s1-t154",
+          "text": "、",
+          "start": 224,
+          "end": 225,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t155",
+          "text": "それ",
+          "start": 225,
+          "end": 227,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s1-t156",
+          "text": "をば",
+          "start": 227,
+          "end": 229,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t157",
+          "text": "いかが",
+          "start": 229,
+          "end": 232,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞",
+            "baseForm": "いかが"
+          },
+          "hint": "副詞「いかが」:「どのように・どうして」の疑問・反語。文中の助動詞や動詞の連体形と呼応して係り結び的に機能。「いかが聞きたまふ」=どのようにお聞きになる (か)"
+        },
+        {
+          "id": "s1-t158",
+          "text": "聞き",
+          "start": 232,
+          "end": 234,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ四「聞く」:「か・き・く・く・け・け」と活用。「聞きたまふ」=お聞きになる"
+        },
+        {
+          "id": "s1-t159",
+          "text": "たまふ",
+          "start": 234,
+          "end": 237,
+          "layer": 4,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "体",
+            "baseForm": "たまふ",
+            "honorific": "尊敬"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」(ハ四): 動詞連用形+「たまふ」で「〜なさる・お〜になる」。動作主への尊敬。連体形「たまふ」は係助詞「いかが」の結び (連体形係り結び的)"
+        },
+        {
+          "id": "s1-t160",
+          "text": "。",
+          "start": 237,
+          "end": 238,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t161",
+          "text": "」",
+          "start": 238,
+          "end": 239,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t162",
+          "text": "と",
+          "start": 239,
+          "end": 240,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
+        },
+        {
+          "id": "s1-t163",
+          "text": "言ひ",
+          "start": 240,
+          "end": 242,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「言ふ」:「は・ひ・ふ・ふ・へ・へ」と活用。引用「と+言ふ」の形で発話を表す物語頻出語"
+        },
+        {
+          "id": "s1-t164",
+          "text": "けれ",
+          "start": 242,
+          "end": 244,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "已",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」已然形「けれ」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。「けれ+ば」で「〜たので」の確定条件"
+        },
+        {
+          "id": "s1-t165",
+          "text": "ば",
+          "start": 244,
+          "end": 245,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)"
+        },
+        {
+          "id": "s1-t166",
+          "text": "、",
+          "start": 245,
+          "end": 246,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t167",
+          "text": "女",
+          "start": 246,
+          "end": 247,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t168",
+          "text": "、",
+          "start": 247,
+          "end": 248,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t169",
+          "text": "ふと",
+          "start": 248,
+          "end": 250,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「ふと」:「すぐに・即座に・たちまち」。現代語「ふと (思いつく)」の偶然性とは少し違い、古文では「素早く・直ちに」のニュアンスが強い"
+        },
+        {
+          "id": "s1-t170",
+          "text": "答へ",
+          "start": 250,
+          "end": 252,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ下二「答ふ」:「へ・へ・ふ・ふる・ふれ・へよ」と活用。「答える・返答する」の意"
+        },
+        {
+          "id": "s1-t171",
+          "text": "けり",
+          "start": 252,
+          "end": 254,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」: 過去 (〜た・〜たという伝聞) + 詠嘆 (〜だなあ)。連用形接続。物語の地の文で多用"
+        },
+        {
+          "id": "s1-t172",
+          "text": "。",
+          "start": 254,
+          "end": 255,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t173",
+          "text": "われ",
+          "start": 255,
+          "end": 257,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s1-t174",
+          "text": "も",
+          "start": 257,
+          "end": 258,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "並列"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 強意・並列・添加。「われもしか」=私も鹿のように、と類比を表す添加用法。係り結びは起こさない"
+        },
+        {
+          "id": "s1-t175",
+          "text": "しか",
+          "start": 258,
+          "end": 260,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "",
+            "baseForm": "しか"
+          },
+          "hint": "重要語「しか」: (1) 副詞「然」=そのように・あのように、(2) 名詞「鹿」の二重の意味を掛けた掛詞。歌の核となる縁語仕立て。和歌の修辞「掛詞」の典型例"
+        },
+        {
+          "id": "s1-t176",
+          "text": "なき",
+          "start": 260,
+          "end": 262,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用",
+            "baseForm": "なく"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ四「泣く」:「か・き・く・く・け・け」と活用。和歌では獣の「鳴く」と人の「泣く」を掛詞にする (「しか (鹿/然) なきて」=私もそのように泣いて)。形容詞「なし」連体形と要識別"
+        },
+        {
+          "id": "s1-t177",
           "text": "て",
-          "start": 2,
-          "end": 3,
+          "start": 262,
+          "end": 263,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -2457,64 +2159,253 @@
           "hint": "接続助詞「て」: 連用形接続。単純接続 (〜て・〜ので)。動作の継起や原因・結果を結ぶ。完了「つ」連用形「て」と要識別 (用言の連用形に付くのが助詞、用言が「e 段」になるのが助動詞)"
         },
         {
-          "id": "s3-t3",
-          "text": "、",
-          "start": 3,
-          "end": 4,
+          "id": "s1-t178",
+          "text": "ぞ",
+          "start": 263,
+          "end": 264,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "強意"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。係り結びは連体形。訳出は不要が多い。歌中の「ぞ」は和歌の中核を示す目印"
+        },
+        {
+          "id": "s1-t179",
+          "text": "人",
+          "start": 264,
+          "end": 265,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t4",
-          "text": "こ",
-          "start": 4,
-          "end": 5,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          }
-        },
-        {
-          "id": "s3-t5",
-          "text": "の",
-          "start": 5,
-          "end": 6,
+          "id": "s1-t180",
+          "text": "に",
+          "start": 265,
+          "end": 266,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
-            "meaning": "体修"
+            "meaning": "受身"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
+          "hint": "格助詞「に」(受身の対象): 受身・使役の動作主を示す。「人に恋ひられし」=人に恋い慕われた。「に+る/らる」で受身、「に+す/さす」で使役の典型構文"
         },
         {
-          "id": "s3-t6",
+          "id": "s1-t181",
+          "text": "恋ひ",
+          "start": 266,
+          "end": 268,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ上二",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ上二「恋ふ」:「ひ・ひ・ふ・ふる・ふれ・ひよ」と活用。「(人を) 恋い慕う」の意。同じハ行に上二段 (恋ふ・干る) と四段 (思ふ・言ふ) があり要識別"
+        },
+        {
+          "id": "s1-t182",
+          "text": "られ",
+          "start": 268,
+          "end": 270,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "受身"
+          },
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「らる」: 受身・尊敬・自発・可能の四義。未然形 (上一・上二・下二・カ変・サ変) に接続。「人に恋ひられし」=人に恋い慕われた、で「に」+「らる」は受身の典型"
+        },
+        {
+          "id": "s1-t183",
+          "text": "し",
+          "start": 270,
+          "end": 271,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」連体形「し」: 過去 (〜た) で自分が直接体験した過去を表す。連用形接続 (カ変・サ変は特殊)。伝聞・詠嘆の「けり」と要識別"
+        },
+        {
+          "id": "s1-t184",
           "text": "今",
-          "start": 6,
-          "end": 7,
+          "start": 271,
+          "end": 272,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t7",
-          "text": "の",
+          "id": "s1-t185",
+          "text": "こそ",
+          "start": 272,
+          "end": 274,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "強意"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。係り結びは已然形。訳出は不要が多い。「今こそ〜聞け」で已然形の結び。逆接的なニュアンスも含む"
+        },
+        {
+          "id": "s1-t186",
+          "text": "よそ",
+          "start": 274,
+          "end": 276,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t187",
+          "text": "に",
+          "start": 276,
+          "end": 277,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(場所): 「〜に」で動作・存在の場所を示す。受身の対象「に+る/らる」、原因「に」、断定の助動詞「なり」連用形などとの識別が頻出"
+        },
+        {
+          "id": "s1-t188",
+          "text": "声",
+          "start": 277,
+          "end": 278,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t189",
+          "text": "を",
+          "start": 278,
+          "end": 279,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 体言+「を」で他動詞の目的・対象を示す。連体形+「を」だと接続助詞の可能性 (順接・逆接) があるので接続形に注目"
+        },
+        {
+          "id": "s1-t190",
+          "text": "のみ",
+          "start": 279,
+          "end": 281,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "副助詞"
+          },
+          "hint": "副助詞「のみ」: 限定 (〜だけ・〜ばかり) または強意。「声をのみ聞け」=声だけを (今は遠く離れて) 聞く。和歌では限定の哀切感を強める"
+        },
+        {
+          "id": "s1-t191",
+          "text": "聞け",
+          "start": 281,
+          "end": 283,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "已"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "カ四「聞く」已然形「聞け」: 「か・き・く・く・け・け」と活用。係助詞「こそ」の結びとして已然形になっている (係り結びの法則)"
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "originalText": "とよみたりければ、かぎりなくめでて、この今の妻をば送りて、もとのごとなむ住みわたりける。（）",
+      "modernTranslation": "われもしか……（わたしもかつてはそのように、鹿が鳴くように泣いて、あなたに恋い慕われたものでした。",
+      "tokens": [
+        {
+          "id": "s2-t1",
+          "text": "と",
+          "start": 0,
+          "end": 1,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 直前の発話・思考内容を承けて「〜と (言ふ/思ふ)」の形で引用。会話文「〜」と訳出。心内文や歌の引用にも使う"
+        },
+        {
+          "id": "s2-t2",
+          "text": "よみ",
+          "start": 1,
+          "end": 3,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ四「詠む」:「ま・み・む・む・め・め」と活用。「(和歌を) 詠む」の意。「歌をよむ」「と+よむ」で和歌の引用に頻出"
+        },
+        {
+          "id": "s2-t3",
+          "text": "たり",
+          "start": 3,
+          "end": 5,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」: 完了 (〜た) + 存続 (〜ている)。連用形接続。断定の「たり」(体言接続) と要識別"
+        },
+        {
+          "id": "s2-t4",
+          "text": "けれ",
+          "start": 5,
+          "end": 7,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "已",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」已然形「けれ」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。「けれ+ば」で「〜たので」の確定条件"
+        },
+        {
+          "id": "s2-t5",
+          "text": "ば",
           "start": 7,
           "end": 8,
           "layer": 3,
           "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
+            "pos": "接続助詞"
           },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
+          "hint": "接続助詞「ば」: 已然形接続で確定条件 (〜ので・〜と・〜したところ)、未然形接続で仮定条件 (もし〜ならば)"
         },
         {
-          "id": "s3-t8",
-          "text": "妻",
+          "id": "s2-t6",
+          "text": "、",
           "start": 8,
           "end": 9,
           "layer": 0,
@@ -2523,20 +2414,122 @@
           }
         },
         {
-          "id": "s3-t9",
-          "text": "をば",
+          "id": "s2-t7",
+          "text": "かぎりなく",
           "start": 9,
-          "end": 11,
+          "end": 14,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「かぎりなし」: ク活用形容詞。「この上ない・はなはだしい」。連用形「かぎりなく」+用言で程度を強める"
+        },
+        {
+          "id": "s2-t8",
+          "text": "めで",
+          "start": 14,
+          "end": 16,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "ダ下二"
+          },
+          "hint": "重要語「めづ」: ダ行下二段「で・で・づ・づる・づれ・でよ」と活用。「ほめる・感嘆する・愛でる」の意。「かぎりなくめでて」=この上なく感嘆して。形容詞「めでたし」の語源"
+        },
+        {
+          "id": "s2-t9",
+          "text": "て",
+          "start": 16,
+          "end": 17,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 連用形接続。単純接続 (〜て・〜ので)。動作の継起や原因・結果を結ぶ。完了「つ」連用形「て」と要識別 (用言の連用形に付くのが助詞、用言が「e 段」になるのが助動詞)"
+        },
+        {
+          "id": "s2-t10",
+          "text": "、",
+          "start": 17,
+          "end": 18,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t10",
+          "id": "s2-t11",
+          "text": "こ",
+          "start": 18,
+          "end": 19,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s2-t12",
+          "text": "の",
+          "start": 19,
+          "end": 20,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
+        },
+        {
+          "id": "s2-t13",
+          "text": "今",
+          "start": 20,
+          "end": 21,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t14",
+          "text": "の",
+          "start": 21,
+          "end": 22,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
+        },
+        {
+          "id": "s2-t15",
+          "text": "妻",
+          "start": 22,
+          "end": 23,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t16",
+          "text": "をば",
+          "start": 23,
+          "end": 25,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t17",
           "text": "送り",
-          "start": 11,
-          "end": 13,
+          "start": 25,
+          "end": 27,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -2547,10 +2540,10 @@
           "hint": "ラ四「送る」:「ら・り・る・る・れ・れ」と活用。本文では「(妻を実家へ) 送り返す」の意で離縁を示す"
         },
         {
-          "id": "s3-t11",
+          "id": "s2-t18",
           "text": "て",
-          "start": 13,
-          "end": 14,
+          "start": 27,
+          "end": 28,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -2558,30 +2551,30 @@
           "hint": "接続助詞「て」: 連用形接続。単純接続 (〜て・〜ので)。動作の継起や原因・結果を結ぶ。完了「つ」連用形「て」と要識別 (用言の連用形に付くのが助詞、用言が「e 段」になるのが助動詞)"
         },
         {
-          "id": "s3-t12",
+          "id": "s2-t19",
           "text": "、",
-          "start": 14,
-          "end": 15,
+          "start": 28,
+          "end": 29,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t13",
+          "id": "s2-t20",
           "text": "もと",
-          "start": 15,
-          "end": 17,
+          "start": 29,
+          "end": 31,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t14",
+          "id": "s2-t21",
           "text": "の",
-          "start": 17,
-          "end": 18,
+          "start": 31,
+          "end": 32,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2591,10 +2584,10 @@
           "hint": "格助詞「の」(連体修飾): 体言+「の」+体言で「〜の〜」の所属・修飾。古文では同格 (〜で〜) や主格 (〜が)、準体格 (〜のもの) の用法もあるので連用部分との関係で判別"
         },
         {
-          "id": "s3-t15",
+          "id": "s2-t22",
           "text": "ごと",
-          "start": 18,
-          "end": 20,
+          "start": 32,
+          "end": 34,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2604,10 +2597,10 @@
           "hint": "助動詞「ごとし」: 比況 (〜のようだ・〜と同じだ)。体言・連体形+「の/が」に接続。語幹「ごと」のみで用いられることもある (「もとのごと」=元のように)"
         },
         {
-          "id": "s3-t16",
+          "id": "s2-t23",
           "text": "なむ",
-          "start": 20,
-          "end": 22,
+          "start": 34,
+          "end": 36,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -2617,20 +2610,20 @@
           "hint": "係助詞「なむ」: 強意を表し、結びは連体形。訳出はほぼ不要。完了「ぬ」未然形+推量「む」、終助詞「なむ」(他者願望) と要識別"
         },
         {
-          "id": "s3-t17",
+          "id": "s2-t24",
           "text": "住みわたり",
-          "start": 22,
-          "end": 27,
+          "start": 36,
+          "end": 41,
           "layer": 1,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t18",
+          "id": "s2-t25",
           "text": "ける",
-          "start": 27,
-          "end": 29,
+          "start": 41,
+          "end": 43,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2641,30 +2634,47 @@
           "hint": "助動詞「けり」連体形「ける」: 過去 (〜た) + 詠嘆 (〜だなあ)。連用形接続。係助詞「なむ」の結びとして連体形 (係り結びの法則)"
         },
         {
-          "id": "s3-t19",
+          "id": "s2-t26",
           "text": "。",
-          "start": 29,
-          "end": 30,
+          "start": 43,
+          "end": 44,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t20",
+          "id": "s2-t27",
           "text": "（",
-          "start": 30,
-          "end": 31,
+          "start": 44,
+          "end": 45,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s3-t21",
+          "id": "s2-t28",
           "text": "）",
-          "start": 31,
-          "end": 32,
+          "start": 45,
+          "end": 46,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "originalText": "（第一五八段）",
+      "modernTranslation": "と詠んだので、（男は）このうえもなく感嘆して、この新しい妻を送り返して、もとのようにもとの妻とずっと暮らしつづけたのだった。",
+      "tokens": [
+        {
+          "id": "s3-t1",
+          "text": "（第一五八段）",
+          "start": 0,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""

@@ -377,6 +377,20 @@
             "pos": "接続助詞"
           },
           "hint": "並列の接続助詞「つ」: 「〜たり〜たり」と並列を表す古い助詞。「行きつ遊ぶ」=「行ったり遊んだり」。完了の助動詞「つ」(連用形接続) と識別注意"
+        },
+        {
+          "id": "s3-t11",
+          "text": "遊ぶ",
+          "start": 12,
+          "end": 14,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "バ四",
+            "conjugationForm": "終"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "バ四「遊ぶ」: 「ば・び・ぶ・ぶ・べ・べ」と活用。古文の「遊ぶ」は「散策する・(管弦・詩歌で)気晴らしする・あてもなくさまよう」と広い意味"
         }
       ]
     },
@@ -387,33 +401,19 @@
       "tokens": [
         {
           "id": "s4-t1",
-          "text": "遊ぶ",
-          "start": 0,
-          "end": 2,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "バ四",
-            "conjugationForm": "終"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "バ四「遊ぶ」: 「ば・び・ぶ・ぶ・べ・べ」と活用。古文の「遊ぶ」は「散策する・(管弦・詩歌で)気晴らしする・あてもなくさまよう」と広い意味"
-        },
-        {
-          "id": "s4-t2",
           "text": "岡",
-          "start": 2,
-          "end": 3,
+          "start": 0,
+          "end": 1,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s4-t3",
+          "id": "s4-t2",
           "text": "の",
-          "start": 3,
-          "end": 4,
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -422,10 +422,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s4-t4",
+          "id": "s4-t3",
           "text": "辺",
-          "start": 4,
-          "end": 5,
+          "start": 2,
+          "end": 3,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s4-t4",
+          "text": "何",
+          "start": 3,
+          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -433,19 +443,9 @@
         },
         {
           "id": "s4-t5",
-          "text": "何",
-          "start": 5,
-          "end": 6,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s4-t6",
           "text": "ぞ",
-          "start": 6,
-          "end": 7,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -455,10 +455,10 @@
           "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。訳出不要が多い。「何ぞ〜連体形」で修辞疑問・詠嘆"
         },
         {
-          "id": "s4-t7",
+          "id": "s4-t6",
           "text": "かく",
-          "start": 7,
-          "end": 9,
+          "start": 5,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -467,10 +467,10 @@
           "hint": "指示副詞「かく」: 「このように・こうして」。近称「かく」/遠称「さ」/中称「しか」のコソアド体系。漢文訓読では「かくのごとし」の形で頻出"
         },
         {
-          "id": "s4-t8",
+          "id": "s4-t7",
           "text": "かなしき",
-          "start": 9,
-          "end": 13,
+          "start": 7,
+          "end": 11,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -582,6 +582,20 @@
           },
           "grammarRefId": "doushi-katsuyo",
           "hint": "カ四「咲く」: 「か・き・く・く・け・け」と活用。連用形「咲き」+助動詞「たる」(存続)で「咲いている」"
+        },
+        {
+          "id": "s5-t9",
+          "text": "たる",
+          "start": 11,
+          "end": 13,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "存続"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」: 存続「〜ている」、完了「〜た」。連用形接続。「て+あり」が縮約した形。連体形「たる」+体言で「〜ている〜」"
         }
       ]
     },
@@ -592,23 +606,9 @@
       "tokens": [
         {
           "id": "s6-t1",
-          "text": "たる",
+          "text": "見る",
           "start": 0,
           "end": 2,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "存続"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「たり」: 存続「〜ている」、完了「〜た」。連用形接続。「て+あり」が縮約した形。連体形「たる」+体言で「〜ている〜」"
-        },
-        {
-          "id": "s6-t2",
-          "text": "見る",
-          "start": 2,
-          "end": 4,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -619,20 +619,20 @@
           "hint": "マ上一「見る」: 「み・み・みる・みる・みれ・みよ」。上一段は「ひいきにみゐる」(干る/居る/着る/似る/煮る/見る/射る/鋳る) で覚える9語"
         },
         {
-          "id": "s6-t3",
+          "id": "s6-t2",
           "text": "人",
-          "start": 4,
-          "end": 5,
+          "start": 2,
+          "end": 3,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s6-t4",
+          "id": "s6-t3",
           "text": "ぞ",
-          "start": 5,
-          "end": 6,
+          "start": 3,
+          "end": 4,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -642,10 +642,10 @@
           "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。「ぞ〜なき」で「〜ない」を強める"
         },
         {
-          "id": "s6-t5",
+          "id": "s6-t4",
           "text": "なき",
-          "start": 6,
-          "end": 8,
+          "start": 4,
+          "end": 6,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -777,6 +777,17 @@
           },
           "grammarRefId": "doushi-katsuyo",
           "hint": "カ四「聞く」: 「か・き・く・く・け・け」と活用。已然形「聞け」+ば(接続助詞)=確定条件「聞くと・聞いたところ」"
+        },
+        {
+          "id": "s7-t10",
+          "text": "ば",
+          "start": 16,
+          "end": 17,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「ば」: 已然形+ば=確定条件 (順接)「〜と・〜ので・〜したところ」。未然形+ば=仮定条件「もし〜なら」。直前の活用形が識別ポイント"
         }
       ]
     },
@@ -787,30 +798,19 @@
       "tokens": [
         {
           "id": "s8-t1",
-          "text": "ば",
+          "text": "友",
           "start": 0,
           "end": 1,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「ば」: 已然形+ば=確定条件 (順接)「〜と・〜ので・〜したところ」。未然形+ば=仮定条件「もし〜なら」。直前の活用形が識別ポイント"
-        },
-        {
-          "id": "s8-t2",
-          "text": "友",
-          "start": 1,
-          "end": 2,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s8-t3",
+          "id": "s8-t2",
           "text": "あり",
-          "start": 2,
-          "end": 4,
+          "start": 1,
+          "end": 3,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -822,10 +822,10 @@
           "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。終止形が「-り」で終わる4動詞 (あり/をり/はべり/いまそかり) の代表"
         },
         {
-          "id": "s8-t4",
+          "id": "s8-t3",
           "text": "き",
-          "start": 4,
-          "end": 5,
+          "start": 3,
+          "end": 4,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -836,20 +836,20 @@
           "hint": "助動詞「き」: 直接過去「〜た」(自分の体験した過去)。連用形接続。活用は「(せ)・〇・き・し・しか・〇」。連体形「し」/已然形「しか」が頻出"
         },
         {
-          "id": "s8-t5",
+          "id": "s8-t4",
           "text": "河",
-          "start": 5,
-          "end": 6,
+          "start": 4,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s8-t6",
+          "id": "s8-t5",
           "text": "を",
-          "start": 6,
-          "end": 7,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -858,10 +858,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s8-t7",
+          "id": "s8-t6",
           "text": "へだて",
-          "start": 7,
-          "end": 10,
+          "start": 6,
+          "end": 9,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -872,10 +872,10 @@
           "hint": "タ下二「隔つ」: 「て・て・つ・つる・つれ・てよ」と活用。「(間に物を置いて) 離す・隔てる」の意。「河を隔てて」で物理的・心理的距離を表す"
         },
         {
-          "id": "s8-t8",
+          "id": "s8-t7",
           "text": "て",
-          "start": 10,
-          "end": 11,
+          "start": 9,
+          "end": 10,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -883,10 +883,10 @@
           "hint": "接続助詞「て」: 単純接続「〜て」。連用形接続。「へだてて住む」で連続動作"
         },
         {
-          "id": "s8-t9",
+          "id": "s8-t8",
           "text": "住み",
-          "start": 11,
-          "end": 13,
+          "start": 10,
+          "end": 12,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -895,19 +895,12 @@
           },
           "grammarRefId": "doushi-katsuyo",
           "hint": "マ四「住む」: 「ま・み・む・む・め・め」と活用。連用形「住み」+完了「に」+過去「き」で「住んでいた(過去経験)」"
-        }
-      ]
-    },
-    {
-      "id": "s9",
-      "originalText": "へげの煙のはとうち散れば西吹く風の",
-      "modernTranslation": "（ある時、）何のものともわからない煙がぱっと散ったところ、西の方向に吹く風が、",
-      "tokens": [
+        },
         {
-          "id": "s9-t1",
+          "id": "s8-t9",
           "text": "に",
-          "start": 0,
-          "end": 1,
+          "start": 12,
+          "end": 13,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -918,10 +911,10 @@
           "hint": "助動詞「ぬ」連用形「に」: 完了「〜てしまった」。「に+き」「に+けり」「に+たり」の連語で過去・存続と複合し、確実な過去を表す重要パターン"
         },
         {
-          "id": "s9-t2",
+          "id": "s8-t10",
           "text": "き",
-          "start": 1,
-          "end": 2,
+          "start": 13,
+          "end": 14,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -930,11 +923,40 @@
           },
           "grammarRefId": "jodoshi-jisei",
           "hint": "助動詞「き」: 直接過去「〜た」(自分の体験した過去)。連用形接続。「にき」=「〜てしまった」の確述過去パターン"
+        }
+      ]
+    },
+    {
+      "id": "s9",
+      "originalText": "へげの煙のはとうち散れば西吹く風の",
+      "modernTranslation": "（ある時、）何のものともわからない煙がぱっと散ったところ、西の方向に吹く風が、",
+      "tokens": [
+        {
+          "id": "s9-t1",
+          "text": "へげ",
+          "start": 0,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s9-t2",
+          "text": "の",
+          "start": 2,
+          "end": 3,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
         },
         {
           "id": "s9-t3",
-          "text": "へげ",
-          "start": 2,
+          "text": "煙",
+          "start": 3,
           "end": 4,
           "layer": 0,
           "grammarTag": {
@@ -949,38 +971,16 @@
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s9-t5",
-          "text": "煙",
-          "start": 5,
-          "end": 6,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s9-t6",
-          "text": "の",
-          "start": 6,
-          "end": 7,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
             "meaning": "主格"
           },
           "grammarRefId": "joshi-kaku",
           "hint": "格助詞「の」主格用法: 連体修飾節内で主語を表す「〜が」。「煙のはと散る」=「煙がぱっと散る」"
         },
         {
-          "id": "s9-t7",
+          "id": "s9-t5",
           "text": "はと",
-          "start": 7,
-          "end": 9,
+          "start": 5,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
@@ -988,10 +988,10 @@
           "hint": "擬態副詞「はと」: 「ぱっと・さっと」の意。煙や火の粉などが急に散る様子を表す。「はと散る」は近世俳文の常套表現"
         },
         {
-          "id": "s9-t8",
+          "id": "s9-t6",
           "text": "うち散れ",
-          "start": 9,
-          "end": 13,
+          "start": 7,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -999,10 +999,10 @@
           "hint": "接頭辞「うち〜」+ラ四「散る」已然形「散れ」: 「うち〜」は語調を強める接頭辞「ぱっと・さっと」。已然形+「ば」で「散ったところ・散ったので」(確定条件)"
         },
         {
-          "id": "s9-t9",
+          "id": "s9-t7",
           "text": "ば",
-          "start": 13,
-          "end": 14,
+          "start": 11,
+          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -1010,20 +1010,20 @@
           "hint": "接続助詞「ば」: 已然形+ば=確定条件「〜と・〜ので・〜したところ」。「うち散れば」=「散ったので/散ったところ」"
         },
         {
-          "id": "s9-t10",
+          "id": "s9-t8",
           "text": "西",
-          "start": 14,
-          "end": 15,
+          "start": 12,
+          "end": 13,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s9-t11",
+          "id": "s9-t9",
           "text": "吹く",
-          "start": 15,
-          "end": 17,
+          "start": 13,
+          "end": 15,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1032,6 +1032,29 @@
           },
           "grammarRefId": "doushi-katsuyo",
           "hint": "カ四「吹く」: 「か・き・く・く・け・け」と活用。連体形「吹く」+体言「風」=連体修飾「吹く風」"
+        },
+        {
+          "id": "s9-t10",
+          "text": "風",
+          "start": 15,
+          "end": 16,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s9-t11",
+          "text": "の",
+          "start": 16,
+          "end": 17,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」主格用法: 連体修飾節内で主語を表す「〜が」。「風のはげしくて」=「風が激しくて」"
         }
       ]
     },
@@ -1042,32 +1065,9 @@
       "tokens": [
         {
           "id": "s10-t1",
-          "text": "風",
-          "start": 0,
-          "end": 1,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t2",
-          "text": "の",
-          "start": 1,
-          "end": 2,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "主格"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」主格用法: 連体修飾節内で主語を表す「〜が」。「風のはげしくて」=「風が激しくて」"
-        },
-        {
-          "id": "s10-t3",
           "text": "はげしく",
-          "start": 2,
-          "end": 6,
+          "start": 0,
+          "end": 4,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1078,10 +1078,10 @@
           "hint": "シク活用形容詞「はげし」: 「(しく)・しく・し・しき・しけれ・〇」と活用。「激しい・程度がはなはだしい」。連用形「はげしく」で動詞修飾"
         },
         {
-          "id": "s10-t4",
+          "id": "s10-t2",
           "text": "て",
-          "start": 6,
-          "end": 7,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -1089,9 +1089,19 @@
           "hint": "接続助詞「て」: 単純接続「〜て」。連用形接続。形容詞連用形「はげしく」+て=「はげしく〜て」"
         },
         {
-          "id": "s10-t5",
+          "id": "s10-t3",
           "text": "小",
-          "start": 7,
+          "start": 5,
+          "end": 6,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s10-t4",
+          "text": "竹原",
+          "start": 6,
           "end": 8,
           "layer": 0,
           "grammarTag": {
@@ -1099,10 +1109,20 @@
           }
         },
         {
-          "id": "s10-t6",
-          "text": "竹原",
+          "id": "s10-t5",
+          "text": "真",
           "start": 8,
-          "end": 10,
+          "end": 9,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s10-t6",
+          "text": "菅原",
+          "start": 9,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1117,29 +1137,9 @@
       "tokens": [
         {
           "id": "s11-t1",
-          "text": "真",
-          "start": 0,
-          "end": 1,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s11-t2",
-          "text": "菅原",
-          "start": 1,
-          "end": 3,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s11-t3",
           "text": "のがる",
-          "start": 3,
-          "end": 6,
+          "start": 0,
+          "end": 3,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1150,10 +1150,10 @@
           "hint": "ラ下二「逃る」: 「れ・れ・る・るる・るれ・れよ」と活用。「逃れる・避ける」の意。終止形「のがる」+「べき」で助動詞接続"
         },
         {
-          "id": "s11-t4",
+          "id": "s11-t2",
           "text": "べき",
-          "start": 6,
-          "end": 8,
+          "start": 3,
+          "end": 5,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1164,14 +1164,42 @@
           "hint": "助動詞「べし」: 推量/意志/可能/当然/命令/適当の6義「スイカトメテ」で覚える。終止形接続(ラ変は連体形)。ここは可能「逃れることができる」"
         },
         {
-          "id": "s11-t5",
+          "id": "s11-t3",
           "text": "方",
-          "start": 8,
-          "end": 9,
+          "start": 5,
+          "end": 6,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
+        },
+        {
+          "id": "s11-t4",
+          "text": "ぞ",
+          "start": 6,
+          "end": 7,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "強意"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。「ぞ〜なき」で「〜ない」を強調する詠嘆的表現"
+        },
+        {
+          "id": "s11-t5",
+          "text": "なき",
+          "start": 7,
+          "end": 9,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "体",
+            "baseForm": "なく"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "ク活用形容詞「なし」: 「く・く・し・き・けれ・〇」と活用。係助詞「ぞ」の結びで連体形「なき」。文末で連体形止めは強意・詠嘆"
         }
       ]
     },
@@ -1182,47 +1210,19 @@
       "tokens": [
         {
           "id": "s12-t1",
-          "text": "ぞ",
+          "text": "友",
           "start": 0,
           "end": 1,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "強意"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。「ぞ〜なき」で「〜ない」を強調する詠嘆的表現"
-        },
-        {
-          "id": "s12-t2",
-          "text": "なき",
-          "start": 1,
-          "end": 3,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "ク",
-            "conjugationForm": "体",
-            "baseForm": "なく"
-          },
-          "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "ク活用形容詞「なし」: 「く・く・し・き・けれ・〇」と活用。係助詞「ぞ」の結びで連体形「なき」。文末で連体形止めは強意・詠嘆"
-        },
-        {
-          "id": "s12-t3",
-          "text": "友",
-          "start": 3,
-          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s12-t4",
+          "id": "s12-t2",
           "text": "あり",
-          "start": 4,
-          "end": 6,
+          "start": 1,
+          "end": 3,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1234,10 +1234,10 @@
           "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。終止形が「-り」で終わる4動詞 (あり/をり/はべり/いまそかり) の代表"
         },
         {
-          "id": "s12-t5",
+          "id": "s12-t3",
           "text": "き",
-          "start": 6,
-          "end": 7,
+          "start": 3,
+          "end": 4,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1248,20 +1248,20 @@
           "hint": "助動詞「き」: 直接過去「〜た」(自分の体験した過去)。連用形接続。活用は「(せ)・〇・き・し・しか・〇」"
         },
         {
-          "id": "s12-t6",
+          "id": "s12-t4",
           "text": "河",
-          "start": 7,
-          "end": 8,
+          "start": 4,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s12-t7",
+          "id": "s12-t5",
           "text": "を",
-          "start": 8,
-          "end": 9,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1270,10 +1270,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s12-t8",
+          "id": "s12-t6",
           "text": "へだて",
-          "start": 9,
-          "end": 12,
+          "start": 6,
+          "end": 9,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1284,10 +1284,10 @@
           "hint": "タ下二「隔つ」: 「て・て・つ・つる・つれ・てよ」と活用。「(間に物を置いて) 離す・隔てる」の意"
         },
         {
-          "id": "s12-t9",
+          "id": "s12-t7",
           "text": "て",
-          "start": 12,
-          "end": 13,
+          "start": 9,
+          "end": 10,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -1295,10 +1295,10 @@
           "hint": "接続助詞「て」: 単純接続「〜て」。連用形接続。前後を順接的につなぐ"
         },
         {
-          "id": "s12-t10",
+          "id": "s12-t8",
           "text": "住み",
-          "start": 13,
-          "end": 15,
+          "start": 10,
+          "end": 12,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1309,10 +1309,10 @@
           "hint": "マ四「住む」: 「ま・み・む・む・め・め」と活用。「住みにき」で「住んでいた」(完了+過去)"
         },
         {
-          "id": "s12-t11",
+          "id": "s12-t9",
           "text": "に",
-          "start": 15,
-          "end": 16,
+          "start": 12,
+          "end": 13,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1321,19 +1321,12 @@
           },
           "grammarRefId": "jodoshi-jisei",
           "hint": "助動詞「ぬ」連用形「に」: 完了「〜てしまった」。「に+き」で「〜てしまった (確述過去)」。格助詞「に」/断定「なり」連用形と識別注意"
-        }
-      ]
-    },
-    {
-      "id": "s13",
-      "originalText": "ほろろとも鳴かぬ",
-      "modernTranslation": "ほろろとも鳴かない。",
-      "tokens": [
+        },
         {
-          "id": "s13-t1",
+          "id": "s12-t10",
           "text": "き",
-          "start": 0,
-          "end": 1,
+          "start": 13,
+          "end": 14,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1344,10 +1337,10 @@
           "hint": "助動詞「き」: 直接過去「〜た」(自分の体験した過去)。連用形接続。「にき」=「〜てしまった」の確述過去"
         },
         {
-          "id": "s13-t2",
+          "id": "s12-t11",
           "text": "けふ",
-          "start": 1,
-          "end": 3,
+          "start": 14,
+          "end": 16,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1355,10 +1348,10 @@
           "hint": "重要語「けふ」: 「今日」の意。歴史的仮名遣い「けふ」を発音「きょう」と区別。「あした(朝/明日)」「ゆふべ(夕)」と並ぶ時間表現"
         },
         {
-          "id": "s13-t3",
+          "id": "s12-t12",
           "text": "は",
-          "start": 3,
-          "end": 4,
+          "start": 16,
+          "end": 17,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1366,12 +1359,19 @@
           },
           "grammarRefId": "joshi-fuku-kakari",
           "hint": "係助詞「は」: 主題提示「〜は」。係り結びはなし。他と区別して取り立てる用法。「けふは」で「(過去とは違って)今日は」と対比的に提示"
-        },
+        }
+      ]
+    },
+    {
+      "id": "s13",
+      "originalText": "ほろろとも鳴かぬ",
+      "modernTranslation": "ほろろとも鳴かない。",
+      "tokens": [
         {
-          "id": "s13-t4",
+          "id": "s13-t1",
           "text": "ほろろ",
-          "start": 4,
-          "end": 7,
+          "start": 0,
+          "end": 3,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
@@ -1379,10 +1379,10 @@
           "hint": "擬声語「ほろろ」: 雉子の鳴き声。古来「ほろろ打つ(雉子が羽ばたく)」「ほろろと鳴く」の慣用。沈黙の暗喩としても用いられる"
         },
         {
-          "id": "s13-t5",
+          "id": "s13-t2",
           "text": "と",
-          "start": 7,
-          "end": 8,
+          "start": 3,
+          "end": 4,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1392,10 +1392,10 @@
           "hint": "引用の格助詞「と」: 直前の語句を引用「〜という・〜と」。擬声語「ほろろと」で「ほろろという(声で)」の意。「Aと言ふ」「Aと思ふ」の頻出形"
         },
         {
-          "id": "s13-t6",
+          "id": "s13-t3",
           "text": "も",
-          "start": 8,
-          "end": 9,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1403,19 +1403,12 @@
           },
           "grammarRefId": "joshi-fuku-kakari",
           "hint": "係助詞「も」: 同類添加・強意。「とも」「だに」と並んで「〜さえも・〜すらも」と最低限の例を示す。「ほろろとも鳴かぬ」=「ほろろとさえ鳴かない」"
-        }
-      ]
-    },
-    {
-      "id": "s14",
-      "originalText": "君あしたに去りぬゆふべの心千々に",
-      "modernTranslation": "あなたは今朝、（にわかに）この世を去ってしまった。",
-      "tokens": [
+        },
         {
-          "id": "s14-t1",
+          "id": "s13-t4",
           "text": "鳴か",
-          "start": 0,
-          "end": 2,
+          "start": 5,
+          "end": 7,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1426,10 +1419,10 @@
           "hint": "カ四「鳴く」: 「か・き・く・く・け・け」と活用。未然形「鳴か」+打消「ぬ」=「鳴かない」。打消の連体形「ぬ」が直後にある=未然形と確定"
         },
         {
-          "id": "s14-t2",
+          "id": "s13-t5",
           "text": "ぬ",
-          "start": 2,
-          "end": 3,
+          "start": 7,
+          "end": 8,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1438,22 +1431,29 @@
           },
           "grammarRefId": "jodoshi-hitei",
           "hint": "助動詞「ず」連体形「ぬ」: 打消「〜ない」。未然形接続。完了「ぬ」終止形と同形だが、未然形接続+連体形=打消、連用形接続+終止形=完了。直前の活用形で識別"
-        },
+        }
+      ]
+    },
+    {
+      "id": "s14",
+      "originalText": "君あしたに去りぬゆふべの心千々に",
+      "modernTranslation": "あなたは今朝、（にわかに）この世を去ってしまった。",
+      "tokens": [
         {
-          "id": "s14-t3",
+          "id": "s14-t1",
           "text": "君",
-          "start": 3,
-          "end": 4,
+          "start": 0,
+          "end": 1,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s14-t4",
+          "id": "s14-t2",
           "text": "あした",
-          "start": 4,
-          "end": 7,
+          "start": 1,
+          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1461,10 +1461,10 @@
           "hint": "重要古今異義語「あした」: 古文では「朝」の意 (現代語の「明日」ではない!)。「あしたゆふべ」=「朝晩」。「あす」が現代の「明日」に相当"
         },
         {
-          "id": "s14-t5",
+          "id": "s14-t3",
           "text": "に",
-          "start": 7,
-          "end": 8,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1473,10 +1473,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s14-t6",
+          "id": "s14-t4",
           "text": "去り",
-          "start": 8,
-          "end": 10,
+          "start": 5,
+          "end": 7,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1487,10 +1487,10 @@
           "hint": "ラ四「去る」: 「ら・り・る・る・れ・れ」と活用。「(この世を)去る=死ぬ」の婉曲表現としても使う。「去りぬ」=「亡くなった」"
         },
         {
-          "id": "s14-t7",
+          "id": "s14-t5",
           "text": "ぬ",
-          "start": 10,
-          "end": 11,
+          "start": 7,
+          "end": 8,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1501,10 +1501,10 @@
           "hint": "助動詞「ぬ」: 完了「〜てしまう・〜た」、強意「きっと〜」。連用形接続。打消「ぬ」(連体形・未然形接続) との識別が頻出"
         },
         {
-          "id": "s14-t8",
+          "id": "s14-t6",
           "text": "ゆふべ",
-          "start": 11,
-          "end": 14,
+          "start": 8,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -1512,16 +1512,40 @@
           "hint": "重要語「ゆふべ」: 「夕方・夜」の意。「あした(朝)/ゆふべ(夕)」が対をなす"
         },
         {
-          "id": "s14-t9",
+          "id": "s14-t7",
           "text": "の",
-          "start": 14,
-          "end": 15,
+          "start": 11,
+          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
           "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s14-t8",
+          "text": "心",
+          "start": 12,
+          "end": 13,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t9",
+          "text": "千々に",
+          "start": 13,
+          "end": 16,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ナリ",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「千々なり」: ナリ活用形容動詞「数限りなく多い・さまざまである」。「心千々に乱る」で『心がさまざまに思い乱れる』の慣用表現"
         }
       ]
     },
@@ -1532,7 +1556,7 @@
       "tokens": [
         {
           "id": "s15-t1",
-          "text": "心",
+          "text": "何",
           "start": 0,
           "end": 1,
           "layer": 0,
@@ -1542,33 +1566,9 @@
         },
         {
           "id": "s15-t2",
-          "text": "千々に",
-          "start": 1,
-          "end": 4,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ナリ",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "重要語「千々なり」: ナリ活用形容動詞「数限りなく多い・さまざまである」。「心千々に乱る」で『心がさまざまに思い乱れる』の慣用表現"
-        },
-        {
-          "id": "s15-t3",
-          "text": "何",
-          "start": 4,
-          "end": 5,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s15-t4",
           "text": "ぞ",
-          "start": 5,
-          "end": 6,
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1578,10 +1578,10 @@
           "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。「何ぞ〜連体形」で修辞疑問・詠嘆"
         },
         {
-          "id": "s15-t5",
+          "id": "s15-t3",
           "text": "はるかなる",
-          "start": 6,
-          "end": 11,
+          "start": 2,
+          "end": 7,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1675,19 +1675,12 @@
           },
           "grammarRefId": "joshi-fuku-kakari",
           "hint": "係助詞「も」: 同類・添加「〜も」。「ともし火も〜花も〜」と並列で「あれもこれも」と列挙する用法"
-        }
-      ]
-    },
-    {
-      "id": "s17",
-      "originalText": "花もまゐらせずすごすごとたたずめる今宵は",
-      "modernTranslation": "私の庵の阿弥陀仏は、（私が寂しさや傷心のために）灯明もともしもせず、",
-      "tokens": [
+        },
         {
-          "id": "s17-t1",
+          "id": "s16-t8",
           "text": "ものせ",
-          "start": 0,
-          "end": 3,
+          "start": 13,
+          "end": 16,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1699,10 +1692,10 @@
           "hint": "サ変動詞「ものす」: 「せ・し・す・する・すれ・せよ」と活用。多義代動詞で「ある・行く・食う・する」など文脈で訳し分ける万能動詞。ここは「(ともし火を)ともす」"
         },
         {
-          "id": "s17-t2",
+          "id": "s16-t9",
           "text": "ず",
-          "start": 3,
-          "end": 4,
+          "start": 16,
+          "end": 17,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1711,22 +1704,29 @@
           },
           "grammarRefId": "jodoshi-hitei",
           "hint": "助動詞「ず」: 打消「〜ない」。未然形接続。活用は「(ず/ざら)・ず/ざり・ず・ぬ/ざる・ね/ざれ・ざれ」。連体形「ぬ」、已然形「ね」が頻出"
-        },
+        }
+      ]
+    },
+    {
+      "id": "s17",
+      "originalText": "花もまゐらせずすごすごとたたずめる今宵は",
+      "modernTranslation": "私の庵の阿弥陀仏は、（私が寂しさや傷心のために）灯明もともしもせず、",
+      "tokens": [
         {
-          "id": "s17-t3",
+          "id": "s17-t1",
           "text": "花",
-          "start": 4,
-          "end": 5,
+          "start": 0,
+          "end": 1,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s17-t4",
+          "id": "s17-t2",
           "text": "も",
-          "start": 5,
-          "end": 6,
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1736,10 +1736,10 @@
           "hint": "係助詞「も」: 同類・添加「〜も」。「ともし火も〜花も〜」と並列で「あれもこれも」と列挙する用法"
         },
         {
-          "id": "s17-t5",
+          "id": "s17-t3",
           "text": "まゐらせ",
-          "start": 6,
-          "end": 10,
+          "start": 2,
+          "end": 6,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -1752,10 +1752,10 @@
           "hint": "謙譲動詞「まゐらす」(サ下二): 「差し上げる・献上する」。動作の対象 (ここは阿弥陀仏=故人) を高める謙譲語。「奉る」と並ぶ献上系敬語の代表"
         },
         {
-          "id": "s17-t6",
+          "id": "s17-t4",
           "text": "ず",
-          "start": 10,
-          "end": 11,
+          "start": 6,
+          "end": 7,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1766,10 +1766,10 @@
           "hint": "助動詞「ず」: 打消「〜ない」。未然形接続。活用は「(ず/ざら)・ず/ざり・ず・ぬ/ざる・ね/ざれ・ざれ」"
         },
         {
-          "id": "s17-t7",
+          "id": "s17-t5",
           "text": "すごすごと",
-          "start": 11,
-          "end": 16,
+          "start": 7,
+          "end": 12,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
@@ -1777,10 +1777,10 @@
           "hint": "副詞「すごすごと」: 「しょんぼりと・がっかりして」の意。語幹「すごし」=「ぞっとする・もの寂しい」が原義。蕪村の悲嘆の佇まいを表す"
         },
         {
-          "id": "s17-t8",
+          "id": "s17-t6",
           "text": "たたずめ",
-          "start": 16,
-          "end": 20,
+          "start": 12,
+          "end": 16,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1789,19 +1789,12 @@
           },
           "grammarRefId": "doushi-katsuyo",
           "hint": "マ四「佇む」: 「ま・み・む・む・め・め」と活用。「立ち止まる・立ちつくす」の意。已然形+「る」で存続「たたずめる」=「立ちつくしている」"
-        }
-      ]
-    },
-    {
-      "id": "s18",
-      "originalText": "ことにたふとき",
-      "modernTranslation": "花も差し上げず、ただしょんぼりと立ちつくしているだけの今宵は、",
-      "tokens": [
+        },
         {
-          "id": "s18-t1",
+          "id": "s17-t7",
           "text": "る",
-          "start": 0,
-          "end": 1,
+          "start": 16,
+          "end": 17,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1812,20 +1805,20 @@
           "hint": "助動詞「り」連体形「る」: 完了・存続「〜ている・〜た」。サ変未然形・四段已然形にのみ接続(サ未四已)。受身「る」(下二段)と識別注意"
         },
         {
-          "id": "s18-t2",
+          "id": "s17-t8",
           "text": "今宵",
-          "start": 1,
-          "end": 3,
+          "start": 17,
+          "end": 19,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s18-t3",
+          "id": "s17-t9",
           "text": "は",
-          "start": 3,
-          "end": 4,
+          "start": 19,
+          "end": 20,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
@@ -1833,12 +1826,19 @@
           },
           "grammarRefId": "joshi-fuku-kakari",
           "hint": "係助詞「は」: 主題提示「〜は」。係り結びはなし。他と区別して取り立てる用法。「今宵は」で「(普段とは違う)今夜こそは」と特立"
-        },
+        }
+      ]
+    },
+    {
+      "id": "s18",
+      "originalText": "ことにたふとき（）",
+      "modernTranslation": "花も差し上げず、ただしょんぼりと立ちつくしているだけの今宵は、",
+      "tokens": [
         {
-          "id": "s18-t4",
+          "id": "s18-t1",
           "text": "ことに",
-          "start": 4,
-          "end": 7,
+          "start": 0,
+          "end": 3,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1847,19 +1847,12 @@
           },
           "grammarRefId": "keiyoshi-katsuyo",
           "hint": "ナリ活用形容動詞「異なり/殊なり」連用形「ことに」: 「特に・格別に・とりわけ」の意。副詞的に用いて後続の語(たふとき)を強調する"
-        }
-      ]
-    },
-    {
-      "id": "s19",
-      "originalText": "釈蕪村百拝書",
-      "modernTranslation": "格別に尊い存在であるよ。",
-      "tokens": [
+        },
         {
-          "id": "s19-t1",
+          "id": "s18-t2",
           "text": "たふとき",
-          "start": 0,
-          "end": 4,
+          "start": 3,
+          "end": 7,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -1870,19 +1863,36 @@
           "hint": "ク活用形容詞「たふとし(尊し/貴し)」: 「尊い・貴重だ・ありがたい」。連体形「たふとき」で文末。連体形止めは詠嘆"
         },
         {
-          "id": "s19-t2",
+          "id": "s18-t3",
           "text": "（",
-          "start": 4,
-          "end": 5,
+          "start": 7,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s19-t3",
+          "id": "s18-t4",
           "text": "）",
-          "start": 5,
+          "start": 8,
+          "end": 9,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s19",
+      "originalText": "釈蕪村百拝書",
+      "modernTranslation": "格別に尊い存在であるよ。",
+      "tokens": [
+        {
+          "id": "s19-t1",
+          "text": "釈蕪村百拝書",
+          "start": 0,
           "end": 6,
           "layer": 0,
           "grammarTag": {
