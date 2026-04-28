@@ -91,7 +91,9 @@ export default function PullToRefresh() {
       }
       const damped = Math.min(MAX_PULL, dy * 0.55);
       setPull(damped);
-      if (dy > 8 && e.cancelable) e.preventDefault();
+      // ブラウザ既定のスクロール (および pull-to-refresh) を完全に止めるため
+      // 縦方向の動きが少しでもあれば preventDefault する
+      if (dy > 0 && e.cancelable) e.preventDefault();
     };
 
     const onTouchEnd = () => {

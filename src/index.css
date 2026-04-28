@@ -150,7 +150,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* フォント設定 */
+/* フォント設定 + 独自 PullToRefresh のためブラウザ標準の引き下げ更新を抑制
+   (overscroll-behavior-y: contain で iOS/Android Chrome のネイティブ pull-to-refresh
+   を無効化し、独自実装が確実に発火するようにする) */
+html, body {
+  overscroll-behavior-y: contain;
+}
 body {
   font-family: 'Noto Sans JP', sans-serif;
 }
