@@ -110,39 +110,44 @@
   "sentences": [
     {
       "id": "s1",
-      "originalText": "世継「三月巳の日の祓へに、やがて逍遥したまふとて、帥殿、河原にさるべき人々あまた具して出でさせたまへり。",
-      "modernTranslation": "三月の最初の巳の日の祓えのときに、そのままひきつづいて河原遊びをされるとのことで、帥殿（＝伊周）が、賀茂河原にしかるべき人々をおおぜい連れてお出ましになった。",
-      "tokens": [
-        {
-          "id": "s1-t1",
-          "text": "世継「三月巳の日の祓へに、やがて逍遥したまふとて、帥殿、河原にさるべき人々あまた具して出でさせたまへり。",
-          "start": 0,
-          "end": 52,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        }
-      ]
-    },
-    {
-      "id": "s2",
-      "originalText": "（世継）﹁三月巳の日の祓へに、やがて逍遥したまふとて、帥殿、河原にさるべき人々あまた具して出でさせたまへり。平張りどもあまたうちわたしたるおはし所に、入道殿も出でさせたまへる。",
+      "originalText": "三月巳の日の祓へに、やがて逍遥したまふとて、帥殿、河原にさるべき人々あまた具して出でさせたまへり。",
       "modernTranslation": "平張りをたくさん張り渡していらっしゃる所へ、入道殿（＝道長）もおいでになられた。",
       "tokens": [
         {
-          "id": "s2-t1",
-          "text": "（世継）",
+          "id": "s1-t1",
+          "text": "三月",
           "start": 0,
-          "end": 4,
+          "end": 2,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t2",
-          "text": "﹁",
+          "id": "s1-t2",
+          "text": "巳",
+          "start": 2,
+          "end": 3,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s1-t3",
+          "text": "の",
+          "start": 3,
+          "end": 4,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s1-t4",
+          "text": "日",
           "start": 4,
           "end": 5,
           "layer": 0,
@@ -151,74 +156,33 @@
           }
         },
         {
-          "id": "s2-t3",
-          "text": "三月",
+          "id": "s1-t5",
+          "text": "の",
           "start": 5,
-          "end": 7,
-          "layer": 0,
+          "end": 6,
+          "layer": 3,
           "grammarTag": {
-            "pos": ""
-          }
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t4",
-          "text": "巳",
-          "start": 7,
+          "id": "s1-t6",
+          "text": "祓へ",
+          "start": 6,
           "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「祓へ(はらへ)」: 神事として穢れを祓う儀式。三月最初の巳の日の祓は陰陽道の「上巳(じょうし)の祓」で、水辺で人形(ひとがた)に穢れを移し流す。後の桃の節句の起源で、貴族は鴨川河原で執り行う慣習。"
         },
         {
-          "id": "s2-t5",
-          "text": "の",
+          "id": "s1-t7",
+          "text": "に",
           "start": 8,
           "end": 9,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s2-t6",
-          "text": "日",
-          "start": 9,
-          "end": 10,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t7",
-          "text": "の",
-          "start": 10,
-          "end": 11,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s2-t8",
-          "text": "祓へ",
-          "start": 11,
-          "end": 13,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t9",
-          "text": "に",
-          "start": 13,
-          "end": 14,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -227,44 +191,46 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t10",
+          "id": "s1-t8",
           "text": "、",
-          "start": 14,
-          "end": 15,
+          "start": 9,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t11",
+          "id": "s1-t9",
           "text": "やがて",
-          "start": 15,
-          "end": 18,
+          "start": 10,
+          "end": 13,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "やがて"
-          }
+          },
+          "hint": "重要語「やがて」: 副詞。「そのまま・ひきつづいて・即座に」。現代語「やがて(=まもなく)」と意味が異なる古今異義語。「祓へに、やがて逍遥したまふ」=「祓えに、そのまま続けて遊覧なさる」。"
         },
         {
-          "id": "s2-t12",
+          "id": "s1-t10",
           "text": "逍遥し",
-          "start": 18,
-          "end": 21,
+          "start": 13,
+          "end": 16,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
             "conjugationType": "サ変",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「逍遥す」: サ変。「気のむくままに歩き回る・遊覧する」(漢語由来)。貴人が郊外や河原などへ出て遊ぶ風流をいう。本作では祓えのあとの河原遊び。"
         },
         {
-          "id": "s2-t13",
+          "id": "s1-t11",
           "text": "たまふ",
-          "start": 21,
-          "end": 24,
+          "start": 16,
+          "end": 19,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -273,13 +239,14 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
-          "id": "s2-t14",
+          "id": "s1-t12",
           "text": "とて",
-          "start": 24,
-          "end": 26,
+          "start": 19,
+          "end": 21,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -288,41 +255,63 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t15",
-          "text": "、帥",
-          "start": 26,
-          "end": 28,
+          "text": "、",
           "layer": 0,
           "grammarTag": {
-            "pos": ""
+            "pos": "記号"
           },
-          "hint": "「帥殿（そちどの）」＝藤原伊周（これちか）。道隆の長男で道長の甥にあたり、当時は内大臣兼大宰権帥（だざいごんのそち）。父・道隆の権勢を背景に若くして大臣となり、叔父・道長より上席にあった。「帥」は大宰府の長官の唐名で、彼の官職を呼称化したもの。本段は伊周が栄華の絶頂にいた頃の場面で、後の左遷・失脚と対比する伏線となる。"
+          "id": "s1-t13",
+          "start": 21,
+          "end": 22
         },
         {
-          "id": "s2-t16",
+          "text": "帥",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "名詞",
+            "baseForm": "帥"
+          },
+          "id": "s1-t14",
+          "start": 22,
+          "end": 23,
+          "hint": "人物名「帥殿(そちどの)」: 大宰権帥(だざいのごんのそち)藤原伊周(これちか)。道隆の長男・道長の甥。一条朝で内大臣にまで昇るが、長徳の変で大宰権帥に左遷されたのでこう呼ぶ。本段時点では栄華の絶頂にある若き内大臣として登場。"
+        },
+        {
+          "id": "s1-t15",
           "text": "殿",
-          "start": 28,
-          "end": 29,
+          "start": 23,
+          "end": 24,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t17",
-          "text": "、河原",
-          "start": 29,
-          "end": 32,
+          "text": "、",
           "layer": 0,
           "grammarTag": {
-            "pos": ""
-          }
+            "pos": "記号"
+          },
+          "id": "s1-t16",
+          "start": 24,
+          "end": 25
         },
         {
-          "id": "s2-t18",
+          "text": "河原",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "名詞",
+            "baseForm": "河原"
+          },
+          "id": "s1-t17",
+          "start": 25,
+          "end": 27
+        },
+        {
+          "id": "s1-t18",
           "text": "に",
-          "start": 32,
-          "end": 33,
+          "start": 27,
+          "end": 28,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -331,10 +320,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t19",
+          "id": "s1-t19",
           "text": "さる",
-          "start": 33,
-          "end": 35,
+          "start": 28,
+          "end": 30,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -344,33 +333,34 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t20",
+          "id": "s1-t20",
           "text": "べき",
-          "start": 35,
-          "end": 37,
+          "start": 30,
+          "end": 32,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
             "conjugationForm": "体",
             "meaning": "当然"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「べし」(当然): 終止形(ラ変は連体)接続。「〜はずだ・〜にちがいない」。「さるべき人々」=「しかるべき人々(それ相応の身分の人)」。"
         },
         {
-          "id": "s2-t21",
+          "id": "s1-t21",
           "text": "人々",
-          "start": 37,
-          "end": 39,
+          "start": 32,
+          "end": 34,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t22",
+          "id": "s1-t22",
           "text": "あまた",
-          "start": 39,
-          "end": 42,
+          "start": 34,
+          "end": 37,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -378,56 +368,59 @@
           }
         },
         {
-          "id": "s2-t23",
+          "id": "s1-t23",
           "text": "具し",
-          "start": 42,
-          "end": 44,
+          "start": 37,
+          "end": 39,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
             "conjugationType": "サ変",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「具す」: サ変。「(人を)伴う・連れ立つ・備わる」。「人々あまた具して」=「(身分相応の)人々を多く連れて」。"
         },
         {
-          "id": "s2-t24",
+          "id": "s1-t24",
           "text": "て",
-          "start": 44,
-          "end": 45,
+          "start": 39,
+          "end": 40,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
-          "id": "s2-t25",
+          "id": "s1-t25",
           "text": "出で",
-          "start": 45,
-          "end": 47,
+          "start": 40,
+          "end": 42,
           "layer": 1,
           "grammarTag": {
             "pos": "ダ下二"
           }
         },
         {
-          "id": "s2-t26",
+          "id": "s1-t26",
           "text": "させ",
-          "start": 47,
-          "end": 49,
+          "start": 42,
+          "end": 44,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
-          "id": "s2-t27",
+          "id": "s1-t27",
           "text": "たまへ",
-          "start": 49,
-          "end": 52,
+          "start": 44,
+          "end": 47,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -436,13 +429,14 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
-          "id": "s2-t28",
+          "id": "s1-t28",
           "text": "り",
-          "start": 52,
-          "end": 53,
+          "start": 47,
+          "end": 48,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -452,40 +446,48 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s2-t29",
+          "id": "s1-t29",
           "text": "。",
-          "start": 53,
-          "end": 54,
+          "start": 48,
+          "end": 49,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "originalText": "平張りどもあまたうちわたしたるおはし所に、入道殿も出でさせたまへる。",
+      "modernTranslation": "（河原に張りめぐらした）平張り（の幔幕）がたくさん張り渡してあるご座所に、入道殿（＝道長）もいらっしゃっていた。",
+      "tokens": [
         {
-          "id": "s2-t30",
+          "id": "s2-t1",
           "text": "平張り",
-          "start": 54,
-          "end": 57,
+          "start": 0,
+          "end": 3,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「平張り(ひらばり)」: 水平に張った幔幕(まんまく)で作る屋根のない仮屋・休憩所。河原での祓えや遊覧の際に貴人の座所として設える。本作で帥殿・入道殿の平張りが河原に並ぶ場面の舞台装置。"
         },
         {
-          "id": "s2-t31",
+          "id": "s2-t2",
           "text": "ども",
-          "start": 57,
-          "end": 59,
+          "start": 3,
+          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t32",
+          "id": "s2-t3",
           "text": "あまた",
-          "start": 59,
-          "end": 62,
+          "start": 5,
+          "end": 8,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞",
@@ -493,20 +495,20 @@
           }
         },
         {
-          "id": "s2-t33",
+          "id": "s2-t4",
           "text": "うち",
-          "start": 62,
-          "end": 64,
+          "start": 8,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t34",
+          "id": "s2-t5",
           "text": "わたし",
-          "start": 64,
-          "end": 67,
+          "start": 10,
+          "end": 13,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -516,33 +518,34 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s2-t35",
+          "id": "s2-t6",
           "text": "たる",
-          "start": 67,
-          "end": 69,
+          "start": 13,
+          "end": 15,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」(存続): 連用形接続。「〜ている・〜てある」。完了「たり」と同形だが、状態の継続(うちわたしたる=張り渡してある)を表すのが存続用法。"
         },
         {
-          "id": "s2-t36",
+          "id": "s2-t7",
           "text": "おはし所",
-          "start": 69,
-          "end": 73,
+          "start": 15,
+          "end": 19,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t37",
+          "id": "s2-t8",
           "text": "に",
-          "start": 73,
-          "end": 74,
+          "start": 19,
+          "end": 20,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -551,20 +554,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t38",
+          "id": "s2-t9",
           "text": "、",
-          "start": 74,
-          "end": 75,
+          "start": 20,
+          "end": 21,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t39",
+          "id": "s2-t10",
           "text": "入道",
-          "start": 75,
-          "end": 77,
+          "start": 21,
+          "end": 23,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -572,55 +575,57 @@
           "hint": "「入道殿」＝藤原道長。「入道」は出家して仏門に入った貴人の呼称で、道長は晩年（一〇一九年）出家後この称で呼ばれた。大鏡執筆時から見れば既に故人の尊称として定着しており、本段の若き日の話を語る際にも一貫してこの呼び名が使われる。本段時点では権大納言で甥・伊周より下位だが、後に内覧→左大臣として政権を独占し、彰子・妍子・威子の三女を皇后とする一家立三后の頂点に立つ。"
         },
         {
-          "id": "s2-t40",
+          "id": "s2-t11",
           "text": "殿",
-          "start": 77,
-          "end": 78,
+          "start": 23,
+          "end": 24,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t41",
+          "id": "s2-t12",
           "text": "も",
-          "start": 78,
-          "end": 79,
+          "start": 24,
+          "end": 25,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
             "meaning": "類似"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
-          "id": "s2-t42",
+          "id": "s2-t13",
           "text": "出で",
-          "start": 79,
-          "end": 81,
+          "start": 25,
+          "end": 27,
           "layer": 1,
           "grammarTag": {
             "pos": "ダ下二"
           }
         },
         {
-          "id": "s2-t43",
+          "id": "s2-t14",
           "text": "させ",
-          "start": 81,
-          "end": 83,
+          "start": 27,
+          "end": 29,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
-          "id": "s2-t44",
+          "id": "s2-t15",
           "text": "たまへ",
-          "start": 83,
-          "end": 86,
+          "start": 29,
+          "end": 32,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -629,13 +634,14 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
-          "id": "s2-t45",
+          "id": "s2-t16",
           "text": "る",
-          "start": 86,
-          "end": 87,
+          "start": 32,
+          "end": 33,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -645,10 +651,10 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s2-t46",
+          "id": "s2-t17",
           "text": "。",
-          "start": 87,
-          "end": 88,
+          "start": 33,
+          "end": 34,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -727,7 +733,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s3-t7",
@@ -760,7 +767,8 @@
             "conjugationType": "ク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「便(びん)なし」: ク活用形容詞。「都合が悪い・具合が悪い・けしからぬ」。「便」=都合・つてが「ない」状態。本作で道長が遠慮の意を「便なきこと」と表し、後に女院が政治的不都合を「便なく」と表す対比に注目。"
         },
         {
           "id": "s3-t10",
@@ -788,7 +796,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "かく"
-          }
+          },
+          "hint": "重要語「懸く(かく)」: カ下二。「掛ける・首に懸ける・心に懸ける」。「御骨をさへこそは懸けさせたまへりしか」=「御骨までもお首にお懸けになっていたものだ」と道長の異例の追慕を表す。"
         },
         {
           "id": "s4-t2",
@@ -823,7 +832,8 @@
             "pos": "終助詞",
             "meaning": "禁止"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「そ」(禁止): 副詞「な」と呼応して「な〜そ」=「〜するな」(柔らかい禁止)。「かくなせそ」=「このようにするな」。命令形「〜よ」より穏やかな依頼的禁止。"
         },
         {
           "id": "s4-t5",
@@ -903,7 +913,8 @@
             "conjugationForm": "未",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「仰す(おほす)」: サ下二。「言ふ」の尊敬「おっしゃる」。「仰せらる」=「おっしゃる」(さらに尊敬の助動詞「らる」を重ねた最高敬語)。"
         },
         {
           "id": "s6-t4",
@@ -916,7 +927,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る/らる」(尊敬): 未然形接続。「〜なさる」。「仰せらる」=「おっしゃる」(尊敬の定型)。受身・可能・自発と要識別、敬意の対象がいるかで判断。"
         },
         {
           "id": "s6-t5",
@@ -929,7 +941,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s6-t6",
@@ -939,7 +952,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「を」: 連体形接続。原因「〜ので」、逆接「〜のに」、単純接続「〜と」と多義。文脈で判断。"
         },
         {
           "id": "s6-t7",
@@ -998,7 +1012,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s6-t12",
@@ -1065,7 +1080,8 @@
             "baseForm": "のたまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「のたまふ(宣ふ)」(尊敬): ハ四段。「言ふ」の尊敬。「おっしゃる」。最高敬語は「のたまはす」。"
         },
         {
           "id": "s6-t18",
@@ -1088,7 +1104,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 体言・連体形に接続。「〜である・〜だ」。連用「に」(～にあり)、終止「なり」、連体「なる」、已然「なれ」。形容動詞ナリ活用と要識別。"
         },
         {
           "id": "s6-t20",
@@ -1100,7 +1117,8 @@
             "pos": "係助詞",
             "meaning": "疑問"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「か」: 疑問・反語。係り結びの結びは連体形。「殿にかあらむ」=「殿でいらっしゃるのだろうか」。"
         },
         {
           "id": "s6-t21",
@@ -1126,7 +1144,8 @@
             "conjugationForm": "体",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(推量): 未然形接続。基本義「〜だろう」。一人称主語なら意志「〜よう」、二人称なら勧誘・適当、連体形+体言で婉曲「〜ような」、仮定「〜なら」。多義要識別。"
         },
         {
           "id": "s6-t23",
@@ -1154,7 +1173,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "かく"
-          }
+          },
+          "hint": "重要語「懸く(かく)」: カ下二。「掛ける・首に懸ける・心に懸ける」。「御骨をさへこそは懸けさせたまへりしか」=「御骨までもお首にお懸けになっていたものだ」と道長の異例の追慕を表す。"
         },
         {
           "id": "s7-t2",
@@ -1168,7 +1188,8 @@
             "conjugationForm": "用",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「聞こす(聞こしめす)」: サ四段。「言ふ・聞く」の尊敬「おっしゃる・お聞きになる」。本作「かく聞こしたまへれば」=「このようにおっしゃるので」。「のたまふ」と同義の尊敬。"
         },
         {
           "id": "s7-t3",
@@ -1183,7 +1204,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s7-t4",
@@ -1196,7 +1218,8 @@
             "conjugationForm": "已",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」(存続): サ変未然・四段已然に接続(「さみしいり」)。「〜ている」。「たまへり」=「お〜になっている」。本作「出でさせたまへり」「させたまへる」で頻出する補助動詞+「り」の形。"
         },
         {
           "id": "s7-t5",
@@ -1206,7 +1229,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s7-t6",
@@ -1260,7 +1284,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s7-t11",
@@ -1285,7 +1310,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s7-t13",
@@ -1311,7 +1337,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。訳出は不要だが断定的口調を強める。「とぞ仰せられける」=「とおっしゃったのだ」。"
         },
         {
           "id": "s7-t15",
@@ -1323,7 +1350,8 @@
             "pos": "終助詞",
             "meaning": "念押"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「かし」: 念押し「〜よ・〜だぞ」。文末で「ぞかし」の形で強い念押しを作る。「不運にはおはするぞかし」=「不運でいらっしゃるのだぞ」。"
         },
         {
           "id": "s7-t16",
@@ -1350,7 +1378,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「わざはひ(禍)」: 名詞。「災難・不幸・困った事態」。本作で従者が主人の遠慮を「わざはひや」と慨嘆する用例で、現代語の「災い」とほぼ同義。"
         },
         {
           "id": "s8-t2",
@@ -1362,7 +1391,8 @@
             "pos": "間投助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「や」: 詠嘆「〜よ・〜なあ」。「わざはひや、わざはひや」=「ああ災難だ、ああ災難だ」。係り結びを作らないので係助詞の「や」と要識別。"
         },
         {
           "id": "s8-t3",
@@ -1382,7 +1412,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「わざはひ(禍)」: 名詞。「災難・不幸・困った事態」。本作で従者が主人の遠慮を「わざはひや」と慨嘆する用例で、現代語の「災い」とほぼ同義。"
         },
         {
           "id": "s8-t5",
@@ -1394,7 +1425,8 @@
             "pos": "間投助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「や」: 詠嘆「〜よ・〜なあ」。「わざはひや、わざはひや」=「ああ災難だ、ああ災難だ」。係り結びを作らないので係助詞の「や」と要識別。"
         },
         {
           "id": "s8-t6",
@@ -1457,7 +1489,8 @@
             "conjugationForm": "用",
             "baseForm": "いたく"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いたし(甚し)」: ク活用形容詞。「(程度が)はなはだしい・激しい」。連用形「いたく」=「ひどく・激しく」。打消と呼応して「いたく〜ず」=「それほど〜ない」となる場合もある。"
         },
         {
           "id": "s9-t5",
@@ -1512,7 +1545,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s9-t10",
@@ -1542,7 +1576,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「平張り(ひらばり)」: 水平に張った幔幕(まんまく)で作る屋根のない仮屋・休憩所。河原での祓えや遊覧の際に貴人の座所として設える。本作で帥殿・入道殿の平張りが河原に並ぶ場面の舞台装置。"
         },
         {
           "id": "s9-t13",
@@ -1589,7 +1624,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。文中ではそこを際立たせ、文末已然の「こそ〜けれ/しか/めれ」が定型。"
         },
         {
           "id": "s9-t17",
@@ -1613,7 +1649,8 @@
             "conjugationForm": "用",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲語「つかうまつる(仕うまつる)」: ラ四段。「仕ふ・す」の謙譲「お仕えする・お〜申し上げる」。動作の受け手(目上)への敬意。本作では従者が主人(道長)の車を寄せる行為に用いる。"
         },
         {
           "id": "s9-t19",
@@ -1639,7 +1676,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」(完了): 連用形接続。「〜た・〜てしまった」。同形の存続「たり」と文脈識別。"
         },
         {
           "id": "s9-t21",
@@ -1652,7 +1690,8 @@
             "conjugationForm": "已",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s9-t22",
@@ -1692,7 +1731,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「辛し(つらし)」: ク活用形容詞。「つらい・薄情だ・恨めしい」。連用形「辛く」のウ音便「辛う」。「辛うもこの男に言はれぬるかな」=「手厳しくもこの男に言われてしまったことよ」。"
         },
         {
           "id": "s10-t3",
@@ -1704,7 +1744,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s10-t4",
@@ -1774,7 +1815,8 @@
             "conjugationForm": "用",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る/らる」(受身): 未然形接続。「〜される」。動作主は「に」で示される。「言はれぬるかな」=「(従者に)言われてしまったことよ」。同形の自発・可能・尊敬と要識別。"
         },
         {
           "id": "s10-t10",
@@ -1787,7 +1829,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」(完了): 連用形接続。自然な変化の完了「〜てしまった」。連体「ぬる」已然「ぬれ」未然「な」連用「に」。「宣旨下りぬ」のように決定的事実を強調。打消「ず」連体「ぬ」と要識別。"
         },
         {
           "id": "s10-t11",
@@ -1799,7 +1842,8 @@
             "pos": "終助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「かな」: 詠嘆「〜だなあ」。連体形・体言に接続。「言はれぬるかな」=「言われてしまったことよ」。話者の感慨を添える。"
         },
         {
           "id": "s10-t12",
@@ -1850,7 +1894,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。訳出は不要だが断定的口調を強める。「とぞ仰せられける」=「とおっしゃったのだ」。"
         },
         {
           "id": "s11-t4",
@@ -1864,7 +1909,8 @@
             "conjugationForm": "未",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「仰す(おほす)」: サ下二。「言ふ」の尊敬「おっしゃる」。「仰せらる」=「おっしゃる」(さらに尊敬の助動詞「らる」を重ねた最高敬語)。"
         },
         {
           "id": "s11-t5",
@@ -1877,7 +1923,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る/らる」(尊敬): 未然形接続。「〜なさる」。「仰せらる」=「おっしゃる」(尊敬の定型)。受身・可能・自発と要識別、敬意の対象がいるかで判断。"
         },
         {
           "id": "s11-t6",
@@ -1890,7 +1937,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s11-t7",
@@ -2002,7 +2050,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いみじ」: シク活用形容詞。「程度がはなはだしい」が原義で、文脈で①すばらしい②ひどい③大変だ などプラス・マイナス両方に振れる。本作「いみじう奏せさせたまふ」=「たいそう強く申し上げなさる」。"
         },
         {
           "id": "s12-t10",
@@ -2015,7 +2064,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「らうたし」: ク活用形容詞。「いとしい・かわいい・大切に思う」。本作「いみじうらうたくせさせたまひ」=「たいそうおかわいがりになり」。「うつくし」(幼い者への愛しさ)と類義。"
         },
         {
           "id": "s12-t11",
@@ -2041,7 +2091,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s12-t13",
@@ -2056,7 +2107,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s12-t14",
@@ -2113,7 +2165,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s12-t19",
@@ -2125,7 +2178,8 @@
             "pos": "係助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(詠嘆): 文末の連体止め+「は」で「〜であるよ」と詠嘆。「御かへりみありしは」=「御目をかけてくださったものだなあ」。"
         },
         {
           "id": "s12-t20",
@@ -2299,7 +2353,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「悪し(あし)」: シク活用形容詞。「悪い・好ましくない・仲が悪い」。「御仲いと悪しかりき」=「(両者の)御仲はたいそう悪かった」。"
         },
         {
           "id": "s13-t15",
@@ -2352,7 +2407,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s14-t3",
@@ -2407,7 +2463,8 @@
             "conjugationType": "カ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「とりわく(取り分く)」: カ下二。「特別に区別する・特別扱いする」。「入道殿をとりわきたてまつらせたまひて」=「入道殿を特別に大切にお扱い申し上げなさって」。"
         },
         {
           "id": "s14-t8",
@@ -2422,7 +2479,8 @@
             "baseForm": "たてまつる",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たてまつる」(謙譲): ラ四段。「〜申し上げる・お〜する」。動作の受け手への敬意。「報じたてまつり」=「お報い申し上げて」。"
         },
         {
           "id": "s14-t9",
@@ -2435,7 +2493,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s14-t10",
@@ -2450,7 +2509,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s14-t11",
@@ -2460,7 +2520,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s14-t12",
@@ -2483,7 +2544,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いみじ」: シク活用形容詞。「程度がはなはだしい」が原義で、文脈で①すばらしい②ひどい③大変だ などプラス・マイナス両方に振れる。本作「いみじう奏せさせたまふ」=「たいそう強く申し上げなさる」。"
         },
         {
           "id": "s14-t14",
@@ -2511,7 +2573,8 @@
             "baseForm": "まうす",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「まうす(申す)」(謙譲): サ四段。「〜申し上げる」。本動詞「言ふ」の謙譲。「思ひまうす」「言ひまうす」の形で動作の受け手(目上)への敬意を示す。"
         },
         {
           "id": "s14-t16",
@@ -2524,7 +2587,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s14-t17",
@@ -2539,7 +2603,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s14-t18",
@@ -2552,7 +2617,8 @@
             "conjugationForm": "用",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」(存続): サ変未然・四段已然に接続(「さみしいり」)。「〜ている」。「たまへり」=「お〜になっている」。本作「出でさせたまへり」「させたまへる」で頻出する補助動詞+「り」の形。"
         },
         {
           "id": "s14-t19",
@@ -2566,7 +2632,8 @@
             "meaning": "過去",
             "baseForm": "しか"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s14-t20",
@@ -2576,7 +2643,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s14-t21",
@@ -2596,7 +2664,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "人物名「帥殿(そちどの)」: 大宰権帥(だざいのごんのそち)藤原伊周(これちか)。道隆の長男・道長の甥。一条朝で内大臣にまで昇るが、長徳の変で大宰権帥に左遷されたのでこう呼ぶ。本段時点では栄華の絶頂にある若き内大臣として登場。"
         },
         {
           "id": "s14-t23",
@@ -2618,7 +2687,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s14-t25",
@@ -2631,7 +2701,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「うとうとし(疎疎し)」: シク活用形容詞。「よそよそしい・親しくない・疎遠だ」。本作で「帥殿はうとうとしくもてなさせたまへりけり」=「帥殿はよそよそしくお扱いになっていた」。"
         },
         {
           "id": "s14-t26",
@@ -2645,7 +2716,8 @@
             "conjugationForm": "未",
             "baseForm": "もてなす"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「もてなす」: サ四段。「扱う・取り扱う・(自分が)振る舞う」。現代語「もてなす(歓待する)」より広く、人や物事の処遇を表す。「うとうとしくもてなさせたまへりけり」=「よそよそしくお扱いになっていた」。"
         },
         {
           "id": "s14-t27",
@@ -2658,7 +2730,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s14-t28",
@@ -2673,7 +2746,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s14-t29",
@@ -2686,7 +2760,8 @@
             "conjugationForm": "用",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」(存続): サ変未然・四段已然に接続(「さみしいり」)。「〜ている」。「たまへり」=「お〜になっている」。本作「出でさせたまへり」「させたまへる」で頻出する補助動詞+「り」の形。"
         },
         {
           "id": "s14-t30",
@@ -2699,7 +2774,8 @@
             "conjugationForm": "終",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s14-t31",
@@ -2753,7 +2829,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「ねむごろなり(懇ろなり)」: ナリ活用形容動詞。「熱心だ・心がこもっている・親しい」。「皇后宮をねむごろにときめかさせたまふ」=「皇后宮を深く愛情をかけて寵愛なさる」。"
         },
         {
           "id": "s15-t4",
@@ -2766,7 +2843,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「ときめかす」: サ四段。「ときめく」(寵愛を受ける)の他動詞「寵愛なさる」。「皇后宮をときめかさせたまふ」=「皇后宮をご寵愛なさる」。後宮文学の鍵語。"
         },
         {
           "id": "s15-t5",
@@ -2779,7 +2857,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s15-t6",
@@ -2794,7 +2873,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s15-t7",
@@ -2836,7 +2916,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "人物名「帥殿(そちどの)」: 大宰権帥(だざいのごんのそち)藤原伊周(これちか)。道隆の長男・道長の甥。一条朝で内大臣にまで昇るが、長徳の変で大宰権帥に左遷されたのでこう呼ぶ。本段時点では栄華の絶頂にある若き内大臣として登場。"
         },
         {
           "id": "s15-t11",
@@ -2858,7 +2939,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s15-t13",
@@ -2869,7 +2951,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "あけくれ"
-          }
+          },
+          "hint": "重要語「あけくれ(明け暮れ)」: 副詞。「明けても暮れても・いつも・常に」。「帥殿はあけくれ御前にさぶらふ」=「帥殿はいつも(帝の)御前に控えて」。"
         },
         {
           "id": "s15-t14",
@@ -2916,7 +2999,8 @@
             "baseForm": "さぶらふ",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「さぶらふ(候ふ・侍ふ)」(謙譲・丁寧): ハ四段。①「あり・仕ふ」の謙譲(目上の側に控える)、②聞き手への丁寧「〜です・〜ます」。本作「御前にさぶらふ」は①、「さぶらはぬ」は②に近い。"
         },
         {
           "id": "s15-t18",
@@ -2929,7 +3013,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s15-t19",
@@ -2944,7 +3029,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s15-t20",
@@ -2954,7 +3040,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s15-t21",
@@ -3005,7 +3092,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "さらに"
-          }
+          },
+          "hint": "重要語「さらに(更に)」: 副詞。打消と呼応して「全く〜ない・少しも〜ない」(陳述副詞)。「入道殿をばさらにも申さず」=「入道殿のことは全く申し上げず」。"
         },
         {
           "id": "s15-t26",
@@ -3017,7 +3105,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s15-t27",
@@ -3031,7 +3120,8 @@
             "conjugationForm": "未",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲語「申す」: サ四段。「言ふ」の謙譲「申し上げる」。動作の受け手(目上)への敬意。「奏す」(対天皇)・「啓す」(対中宮東宮)より敬意の対象が広い汎用謙譲語。"
         },
         {
           "id": "s15-t28",
@@ -3044,7 +3134,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s15-t29",
@@ -3064,7 +3155,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "人物名「女院(にょいん)」: 東三条院・藤原詮子(せんし/あきこ)。兼家の娘・道長の姉・一条天皇の母(国母)。九九一年に史上初の女院号を受ける。本段では弟・道長を偏愛し、夜の御殿に乗り込んで宣旨獲得を強行する政治的キーパーソン。"
         },
         {
           "id": "s15-t31",
@@ -3088,7 +3180,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s15-t33",
@@ -3101,7 +3194,8 @@
             "conjugationType": "ク",
             "conjugationForm": "未"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「よし(良し)」: ク活用形容詞。「良い・好ましい・優れている」。打消「よからず」=「良くない・好ましくない」で人物評価に多用。"
         },
         {
           "id": "s15-t34",
@@ -3114,7 +3208,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s15-t35",
@@ -3170,7 +3265,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s15-t40",
@@ -3184,7 +3280,8 @@
             "conjugationForm": "未",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲語「申す」: サ四段。「言ふ」の謙譲「申し上げる」。動作の受け手(目上)への敬意。「奏す」(対天皇)・「啓す」(対中宮東宮)より敬意の対象が広い汎用謙譲語。"
         },
         {
           "id": "s15-t41",
@@ -3197,7 +3294,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s15-t42",
@@ -3212,7 +3310,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s15-t43",
@@ -3222,7 +3321,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「を」: 連体形接続。原因「〜ので」、逆接「〜のに」、単純接続「〜と」と多義。文脈で判断。"
         },
         {
           "id": "s15-t44",
@@ -3243,7 +3343,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "おのづから"
-          }
+          },
+          "hint": "重要語「おのづから」: 副詞。「自然に・ひとりでに」、まれに「もしかして・万一」。本作「おのづから心得やせさせたまひけむ」=「自然とお気づきになったのだろうか」。"
         },
         {
           "id": "s15-t46",
@@ -3253,7 +3354,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": "ア下二"
-          }
+          },
+          "hint": "重要語「心得(こころう)」: ア下二。「理解する・気づく・心に納得する」。本作「心得やせさせたまひけむ」=「お気づきになったのだろうか」。"
         },
         {
           "id": "s15-t47",
@@ -3265,7 +3367,8 @@
             "pos": "係助詞",
             "meaning": "疑問"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」: 疑問・反語。係り結びの結びは連体形。文末の「や」は間投助詞(詠嘆)の場合もあり要識別。"
         },
         {
           "id": "s15-t48",
@@ -3291,7 +3394,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s15-t50",
@@ -3306,7 +3410,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s15-t51",
@@ -3319,7 +3424,8 @@
             "conjugationForm": "体",
             "meaning": "過去推量"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けむ」(過去推量): 連用形接続。「〜ただろう・〜たという」。過去の事柄の推量。「や」と呼応して「やは〜けむ」「や〜けむ」の形でよく現れる。"
         },
         {
           "id": "s15-t52",
@@ -3353,7 +3459,8 @@
             "conjugationType": "ク",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「本意(ほい)なし」: ク活用形容詞。「不本意だ・心残りだ・思い通りでない」。「本意」=本来の望み。「本意なきこと」=「不本意なこと」と心情を表す重要語。"
         },
         {
           "id": "s15-t55",
@@ -3390,7 +3497,8 @@
             "conjugationForm": "用",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「思しめす(思し召す)」: サ四段。「思ふ」の最高敬語「お思いになる」。天皇・女院・上皇など最上位者に用いる。「思す」より一段重い敬意。"
         },
         {
           "id": "s15-t58",
@@ -3403,7 +3511,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s15-t59",
@@ -3427,7 +3536,8 @@
             "conjugationForm": "終",
             "baseForm": "ことわりなり"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「ことわり(理)」: ナリ活用形容動詞「ことわりなり」=「もっともだ・道理だ」。「ことわりなりな」=「もっともなことだなあ」と語り手・世継の同調的コメント。"
         },
         {
           "id": "s15-t61",
@@ -3498,7 +3608,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「世(よ)」: 多義語。①世間・時代②政権・天下③男女の仲・人生。本作「世をしらせたまふ」=「政権をお執りになる」(=②)、「世の移りしほど」=「政権交替の時期」、「世の人」=「世間の人」と多用。"
         },
         {
           "id": "s16-t5",
@@ -3523,7 +3634,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要表現「世を知る」: 慣用句で「政権を執る・天下を統治する」。摂政・関白として政務を取り仕切ること。「入道殿の世をしらせたまはむこと」=「道長殿が政権をお執りになろうとすること」。"
         },
         {
           "id": "s16-t7",
@@ -3536,7 +3648,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s16-t8",
@@ -3551,7 +3664,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s16-t9",
@@ -3564,7 +3678,8 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(婉曲): 連体形+体言で「〜ような」。直接断定を避けやわらげる用法。「思しおかむによらせたまふ」=「考えになるようなことに左右される」。"
         },
         {
           "id": "s16-t10",
@@ -3620,7 +3735,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いみじ」: シク活用形容詞。「程度がはなはだしい」が原義で、文脈で①すばらしい②ひどい③大変だ などプラス・マイナス両方に振れる。本作「いみじう奏せさせたまふ」=「たいそう強く申し上げなさる」。"
         },
         {
           "id": "s16-t15",
@@ -3646,7 +3762,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s16-t17",
@@ -3661,7 +3778,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s16-t18",
@@ -3674,7 +3792,8 @@
             "conjugationForm": "終",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s16-t19",
@@ -3716,7 +3835,8 @@
             "baseForm": "おはします",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「おはします」(尊敬): サ四段。「あり・行く・来」の最高敬語(おはす+ます)。「父大臣おはしまさで」=「父大臣がおいでにならない(亡くなっている)ので」。"
         },
         {
           "id": "s17-t3",
@@ -3726,7 +3846,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「で」: 未然形接続。打消接続「〜ないで」(「ずて」の音変化)。「申させたまはで」=「申し上げなさらないで」。"
         },
         {
           "id": "s17-t4",
@@ -3769,7 +3890,8 @@
           "grammarTag": {
             "pos": "",
             "baseForm": "ひく"
-          }
+          },
+          "hint": "重要語「ひきかはる(引き換はる)」: ラ四段。「(政権・地位が)他家に移る・交代する」。「世の中をひきかはらせたまはむこと」=「政権が他家へ移っていくことを」。"
         },
         {
           "id": "s17-t8",
@@ -3795,7 +3917,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s17-t10",
@@ -3810,7 +3933,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s17-t11",
@@ -3823,7 +3947,8 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(婉曲): 連体形+体言で「〜ような」。直接断定を避けやわらげる用法。「思しおかむによらせたまふ」=「考えになるようなことに左右される」。"
         },
         {
           "id": "s17-t12",
@@ -3880,7 +4005,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「心苦し」: シク活用形容詞。「気の毒だ・心が痛む」(他者への共感)、または「心配だ・つらい」(自分について)。「いと心苦しう思しめして」=「たいそう気の毒にお思いになって」。"
         },
         {
           "id": "s17-t17",
@@ -3894,7 +4020,8 @@
             "conjugationForm": "用",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「思しめす(思し召す)」: サ四段。「思ふ」の最高敬語「お思いになる」。天皇・女院・上皇など最上位者に用いる。「思す」より一段重い敬意。"
         },
         {
           "id": "s17-t18",
@@ -3904,7 +4031,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s17-t19",
@@ -3959,7 +4087,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s17-t24",
@@ -3979,7 +4108,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "重要語「とみに(頓に)」: 副詞。「すぐに・即座に」。打消・反語と呼応して「すぐには〜ない」の意で用いることが多い。「とみにやは宣旨下させたまひし」=「すぐに宣旨をお下しになっただろうか(いや、すぐには下されなかった)」。"
         },
         {
           "id": "s17-t26",
@@ -3991,7 +4121,8 @@
             "pos": "係助詞",
             "meaning": "反語"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「やは」: 反語専用。「〜だろうか、いや〜ない」。「とみにやは宣旨下させたまひし」=「すぐにお下しになっただろうか、いやお下しにならなかった」。"
         },
         {
           "id": "s17-t27",
@@ -4028,7 +4159,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s17-t30",
@@ -4043,7 +4175,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s17-t31",
@@ -4056,7 +4189,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s17-t32",
@@ -4197,7 +4331,8 @@
             "conjugationForm": "用",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「思しめす(思し召す)」: サ四段。「思ふ」の最高敬語「お思いになる」。天皇・女院・上皇など最上位者に用いる。「思す」より一段重い敬意。"
         },
         {
           "id": "s18-t12",
@@ -4260,7 +4395,8 @@
             "conjugationType": "ク",
             "conjugationForm": "未"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「よし(良し)」: ク活用形容詞。「良い・好ましい・優れている」。打消「よからず」=「良くない・好ましくない」で人物評価に多用。"
         },
         {
           "id": "s18-t18",
@@ -4273,7 +4409,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s18-t19",
@@ -4296,7 +4433,8 @@
           "layer": 4,
           "grammarTag": {
             "pos": "補動"
-          }
+          },
+          "hint": "謙譲語「きこゆ(聞こゆ)」: ヤ下二。「言ふ」の謙譲「申し上げる」。補助動詞用法も多く「思ひきこゆ」=「お思い申し上げる」。「申す」より柔らかく女性的な謙譲。"
         },
         {
           "id": "s18-t21",
@@ -4309,7 +4447,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s18-t22",
@@ -4336,7 +4475,8 @@
             "conjugationForm": "已",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s18-t24",
@@ -4346,7 +4486,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s18-t25",
@@ -4444,7 +4585,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いみじ」: シク活用形容詞。「程度がはなはだしい」が原義で、文脈で①すばらしい②ひどい③大変だ などプラス・マイナス両方に振れる。本作「いみじう奏せさせたまふ」=「たいそう強く申し上げなさる」。"
         },
         {
           "id": "s18-t34",
@@ -4470,7 +4612,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s18-t36",
@@ -4485,7 +4628,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s18-t37",
@@ -4498,7 +4642,8 @@
             "conjugationForm": "已",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s18-t38",
@@ -4508,7 +4653,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ど」: 已然形接続。逆接確定「〜けれども・〜のに」。「しぶらせたまひけれど」=「お渋りになっていらしたが」。"
         },
         {
           "id": "s18-t39",
@@ -4539,7 +4685,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いかで"
-          }
+          },
+          "hint": "重要語「いかで」: 副詞。「どうして」(疑問・反語)、「どうにかして」(願望)。本作「いかでかは」「いかで〜ぞ」は反語、「いかでかは院をおろかに〜まし」=「どうして女院を粗略にお思いになろうか(いや、なさらない)」。"
         },
         {
           "id": "s18-t42",
@@ -4550,7 +4697,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "かく"
-          }
+          },
+          "hint": "重要語「懸く(かく)」: カ下二。「掛ける・首に懸ける・心に懸ける」。「御骨をさへこそは懸けさせたまへりしか」=「御骨までもお首にお懸けになっていたものだ」と道長の異例の追慕を表す。"
         },
         {
           "id": "s18-t43",
@@ -4562,7 +4710,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s18-t44",
@@ -4576,7 +4725,8 @@
             "conjugationForm": "用",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「思しめす(思し召す)」: サ四段。「思ふ」の最高敬語「お思いになる」。天皇・女院・上皇など最上位者に用いる。「思す」より一段重い敬意。"
         },
         {
           "id": "s18-t45",
@@ -4590,7 +4740,8 @@
             "conjugationForm": "未",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「仰す(おほす)」: サ下二。「言ふ」の尊敬「おっしゃる」。「仰せらる」=「おっしゃる」(さらに尊敬の助動詞「らる」を重ねた最高敬語)。"
         },
         {
           "id": "s18-t46",
@@ -4615,7 +4766,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。係り結びの結びは連体形。訳出は不要だが断定的口調を強める。「とぞ仰せられける」=「とおっしゃったのだ」。"
         },
         {
           "id": "s18-t48",
@@ -4652,7 +4804,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": "ヤ下二"
-          }
+          },
+          "hint": "重要語「越ゆ(超ゆ)」: ヤ下二。「(年功・身分を)越える・(年下の者が年上を)追い越す」。「大臣越えられたる」=「(年下の伊周に)大臣の位を越えられた(=越されてしまった)」。"
         },
         {
           "id": "s19-t3",
@@ -4665,7 +4818,8 @@
             "conjugationForm": "用",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る/らる」(受身): 未然形接続。「〜される」。動作主は「に」で示される。「言はれぬるかな」=「(従者に)言われてしまったことよ」。同形の自発・可能・尊敬と要識別。"
         },
         {
           "id": "s19-t4",
@@ -4678,7 +4832,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」(完了): 連用形接続。「〜た・〜てしまった」。同形の存続「たり」と文脈識別。"
         },
         {
           "id": "s19-t5",
@@ -4699,7 +4854,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「だに」: 「〜さえ・〜だけでも」。最小限の例示で類推を促す。「いささかのことだに〜いはむや」=「ほんの些細なことでさえ〜まして」と「いはむや」と呼応する型が頻出。"
         },
         {
           "id": "s19-t7",
@@ -4734,7 +4890,8 @@
             "conjugationForm": "用",
             "baseForm": "いとほし"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いとほし」: シク活用形容詞。「気の毒だ・かわいそうだ・かわいい」。現代語「愛しい」と意味がずれる古今異義語。「いとほしくはべりしに」=「お気の毒なことでございましたのに」。"
         },
         {
           "id": "s19-t10",
@@ -4748,7 +4905,8 @@
             "conjugationForm": "用",
             "baseForm": "はべり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「はべり(侍り)」(丁寧): ラ変。「〜です・〜ます・〜ございます」。聞き手への敬意。本作で世継が聞き手(繁樹ら)に対し「はべり」を用いて改まった口調を作る。"
         },
         {
           "id": "s19-t11",
@@ -4761,7 +4919,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s19-t12",
@@ -4791,7 +4950,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "人物名「父大臣(ちちおとど)」: 文脈で複数を指す。本作s17「父大臣おはしまさで」は皇后宮(定子)・帥殿(伊周)の父=道隆を指し、s19「父大臣のあながちにしはべりしこと」は女院(詮子)・道長の父=兼家を指す。"
         },
         {
           "id": "s19-t15",
@@ -4816,7 +4976,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「あながちなり」: ナリ活用形容動詞。「強引だ・無理を通す・ひたすら」。「父大臣のあながちにしはべりしこと」=「父大臣(=兼家)が強引になさったこと」。"
         },
         {
           "id": "s19-t17",
@@ -4843,7 +5004,8 @@
             "conjugationForm": "用",
             "baseForm": "はべり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「はべり(侍り)」(丁寧): ラ変。「〜です・〜ます・〜ございます」。聞き手への敬意。本作で世継が聞き手(繁樹ら)に対し「はべり」を用いて改まった口調を作る。"
         },
         {
           "id": "s19-t19",
@@ -4856,7 +5018,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s19-t20",
@@ -4881,7 +5044,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 体言・連体形に接続。「〜である・〜だ」。連用「に」(～にあり)、終止「なり」、連体「なる」、已然「なれ」。形容動詞ナリ活用と要識別。"
         },
         {
           "id": "s19-t22",
@@ -4891,7 +5055,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s19-t23",
@@ -4914,7 +5079,8 @@
             "conjugationType": "バ上二",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「いなぶ(否ぶ)」: バ上二。「拒絶する・断る」。「いなびさせたまはずなりにし」=「お断りにならずになってしまった」。"
         },
         {
           "id": "s19-t25",
@@ -4927,7 +5093,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s19-t26",
@@ -4942,7 +5109,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s19-t27",
@@ -4955,7 +5123,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s19-t28",
@@ -4982,7 +5151,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」(完了): 連用形接続。自然な変化の完了「〜てしまった」。連体「ぬる」已然「ぬれ」未然「な」連用「に」。「宣旨下りぬ」のように決定的事実を強調。打消「ず」連体「ぬ」と要識別。"
         },
         {
           "id": "s19-t30",
@@ -4995,7 +5165,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s19-t31",
@@ -5007,7 +5178,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。文中ではそこを際立たせ、文末已然の「こそ〜けれ/しか/めれ」が定型。"
         },
         {
           "id": "s19-t32",
@@ -5021,7 +5193,8 @@
             "conjugationForm": "已",
             "baseForm": "はべる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「はべり(侍り)」(丁寧): ラ変。「〜です・〜ます」。聞き手への敬意。世継の語り口の丁寧な締めを作る。"
         },
         {
           "id": "s19-t33",
@@ -5048,7 +5221,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "人物名「粟田殿(あはたどの)」: 藤原道兼。兼家の次男・道隆の弟・道長の兄。粟田に山荘を構えたためこの呼称。花山天皇出家の立役者で、長徳元年(995)関白宣下を受けるも七日後に疫病で急死し「七日関白」と呼ばれる。"
         },
         {
           "id": "s20-t2",
@@ -5092,7 +5266,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s20-t6",
@@ -5118,7 +5293,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s20-t8",
@@ -5133,7 +5309,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s20-t9",
@@ -5143,7 +5320,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s20-t10",
@@ -5225,7 +5403,8 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(婉曲): 連体形+体言で「〜ような」。直接断定を避けやわらげる用法。「思しおかむによらせたまふ」=「考えになるようなことに左右される」。"
         },
         {
           "id": "s20-t17",
@@ -5237,7 +5416,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s20-t18",
@@ -5258,7 +5438,8 @@
           "grammarTag": {
             "pos": "",
             "baseForm": "いとほし"
-          }
+          },
+          "hint": "重要語「いとほし」: シク活用形容詞。「気の毒だ・かわいそうだ・かわいい」。現代語「愛しい」と意味がずれる古今異義語。「いとほしくはべりしに」=「お気の毒なことでございましたのに」。"
         },
         {
           "id": "s20-t20",
@@ -5293,7 +5474,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s20-t23",
@@ -5335,7 +5517,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「なむ」: 強意。係り結びの結びは連体形。「ぞ」より柔らかく、おおむね女性的・心情を含んだ強意。"
         },
         {
           "id": "s20-t27",
@@ -5369,7 +5552,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「便(びん)なし」: ク活用形容詞。「都合が悪い・具合が悪い・けしからぬ」。「便」=都合・つてが「ない」状態。本作で道長が遠慮の意を「便なきこと」と表し、後に女院が政治的不都合を「便なく」と表す対比に注目。"
         },
         {
           "id": "s20-t30",
@@ -5413,7 +5597,8 @@
             "pos": "係助詞",
             "meaning": "類似"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s20-t34",
@@ -5426,7 +5611,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「言ひなす」: サ四段。「ことさらに言い立てる・うわさをする・言いなす」。「世の人も言ひなしはべらむ」=「世間の人もきっと言いふらすでしょう」。"
         },
         {
           "id": "s20-t35",
@@ -5440,7 +5626,8 @@
             "conjugationForm": "未",
             "baseForm": "はべる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「はべり(侍り)」(丁寧): ラ変。「〜です・〜ます」。聞き手への敬意。世継の語り口の丁寧な締めを作る。"
         },
         {
           "id": "s20-t36",
@@ -5453,7 +5640,8 @@
             "conjugationForm": "体",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(推量): 未然形接続。基本義「〜だろう」。一人称主語なら意志「〜よう」、二人称なら勧誘・適当、連体形+体言で婉曲「〜ような」、仮定「〜なら」。多義要識別。"
         },
         {
           "id": "s20-t37",
@@ -5513,7 +5701,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いみじ」: シク活用形容詞。「程度がはなはだしい」が原義で、文脈で①すばらしい②ひどい③大変だ などプラス・マイナス両方に振れる。本作「いみじう奏せさせたまふ」=「たいそう強く申し上げなさる」。"
         },
         {
           "id": "s21-t5",
@@ -5527,7 +5716,8 @@
             "conjugationForm": "未",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲語「奏す」: サ変。「天皇・上皇に申し上げる」専用の絶対敬語。動作の受け手(=帝)が固定される唯一の敬語。「啓す」(中宮・東宮への絶対敬語)と対をなす。"
         },
         {
           "id": "s21-t6",
@@ -5540,7 +5730,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s21-t7",
@@ -5555,7 +5746,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s21-t8",
@@ -5568,7 +5760,8 @@
             "conjugationForm": "已",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s21-t9",
@@ -5578,7 +5771,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s21-t10",
@@ -5601,7 +5795,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「むつかし」: シク活用形容詞。「不快だ・うっとうしい・面倒だ」。現代語「難しい」とは異なる古今異義語。「むつかしうや思しめしけむ」=「うるさいとお思いになったか」。"
         },
         {
           "id": "s21-t12",
@@ -5613,7 +5808,8 @@
             "pos": "係助詞",
             "meaning": "疑問"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」: 疑問・反語。係り結びの結びは連体形。文末の「や」は間投助詞(詠嘆)の場合もあり要識別。"
         },
         {
           "id": "s21-t13",
@@ -5627,7 +5823,8 @@
             "conjugationForm": "用",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「思しめす(思し召す)」: サ四段。「思ふ」の最高敬語「お思いになる」。天皇・女院・上皇など最上位者に用いる。「思す」より一段重い敬意。"
         },
         {
           "id": "s21-t14",
@@ -5640,7 +5837,8 @@
             "conjugationForm": "体",
             "meaning": "過去推量"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けむ」(過去推量): 連用形接続。「〜ただろう・〜たという」。過去の事柄の推量。「や」と呼応して「やは〜けむ」「や〜けむ」の形でよく現れる。"
         },
         {
           "id": "s21-t15",
@@ -5685,7 +5883,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s21-t19",
@@ -5699,7 +5898,8 @@
             "conjugationForm": "未",
             "baseForm": "わたる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「わたる(渡る)」: ラ四段。①「(場所を)移動する」②「お越しになる(尊敬の補助)」③「ずっと〜する(時間の継続)」。本作「のちにはわたらせたまはざりけり」=「後にはお越しにならなかった」(②)。"
         },
         {
           "id": "s21-t20",
@@ -5712,7 +5912,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s21-t21",
@@ -5727,7 +5928,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s21-t22",
@@ -5740,7 +5942,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s21-t23",
@@ -5753,7 +5956,8 @@
             "conjugationForm": "終",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s21-t24",
@@ -5835,7 +6039,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「のぼる(上る)」: ラ四段。「上に進む・(上の御局・清涼殿などに)参上する」。「上の御局にのぼらせたまひて」=「(女院が)上の御局にお上がりになって」。"
         },
         {
           "id": "s22-t7",
@@ -5848,7 +6053,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s22-t8",
@@ -5863,7 +6069,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s22-t9",
@@ -5873,7 +6080,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s22-t10",
@@ -5966,7 +6174,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s23-t4",
@@ -5980,7 +6189,8 @@
             "conjugationForm": "未",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲語「申す」: サ四段。「言ふ」の謙譲「申し上げる」。動作の受け手(目上)への敬意。「奏す」(対天皇)・「啓す」(対中宮東宮)より敬意の対象が広い汎用謙譲語。"
         },
         {
           "id": "s23-t5",
@@ -5993,7 +6203,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s23-t6",
@@ -6008,7 +6219,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s23-t7",
@@ -6018,7 +6230,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「で」: 未然形接続。打消接続「〜ないで」(「ずて」の音変化)。「申させたまはで」=「申し上げなさらないで」。"
         },
         {
           "id": "s23-t8",
@@ -6106,7 +6319,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s23-t16",
@@ -6121,7 +6335,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s23-t17",
@@ -6131,7 +6346,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s23-t18",
@@ -6165,7 +6381,8 @@
             "conjugationForm": "未",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲語「申す」: サ四段。「言ふ」の謙譲「申し上げる」。動作の受け手(目上)への敬意。「奏す」(対天皇)・「啓す」(対中宮東宮)より敬意の対象が広い汎用謙譲語。"
         },
         {
           "id": "s23-t21",
@@ -6178,7 +6395,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s23-t22",
@@ -6193,7 +6411,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s23-t23",
@@ -6254,7 +6473,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s24-t5",
@@ -6296,7 +6516,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s24-t9",
@@ -6353,7 +6574,8 @@
             "baseForm": "さぶらふ",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「さぶらふ(候ふ・侍ふ)」(謙譲・丁寧): ハ四段。①「あり・仕ふ」の謙譲(目上の側に控える)、②聞き手への丁寧「〜です・〜ます」。本作「御前にさぶらふ」は①、「さぶらはぬ」は②に近い。"
         },
         {
           "id": "s24-t14",
@@ -6366,7 +6588,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s24-t15",
@@ -6381,7 +6604,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s24-t16",
@@ -6445,7 +6669,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s25-t5",
@@ -6460,7 +6685,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s25-t6",
@@ -6473,7 +6699,8 @@
             "conjugationForm": "已",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s25-t7",
@@ -6483,7 +6710,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s25-t8",
@@ -6539,7 +6767,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s25-t13",
@@ -6554,7 +6783,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s25-t14",
@@ -6567,7 +6797,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s25-t15",
@@ -6634,7 +6865,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s25-t21",
@@ -6689,7 +6921,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s25-t26",
@@ -6712,7 +6945,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s25-t28",
@@ -6727,7 +6961,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s25-t29",
@@ -6740,7 +6975,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s25-t30",
@@ -6782,7 +7018,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s25-t34",
@@ -6834,7 +7071,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s25-t38",
@@ -6849,7 +7087,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s25-t39",
@@ -6859,7 +7098,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ながら」: 連用形接続。同時併存「〜ながら」または逆接「〜のに・〜けれども」。「赤み濡れつやめかせたまひながら」=「赤くなり涙でつやめいていらっしゃる一方で」(逆接で口元の笑みと対比)。"
         },
         {
           "id": "s25-t40",
@@ -6901,7 +7141,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s25-t44",
@@ -6940,7 +7181,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s25-t47",
@@ -6955,7 +7197,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s25-t48",
@@ -6965,7 +7208,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s25-t49",
@@ -7031,7 +7275,8 @@
             "conjugationForm": "終",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」(完了): 連用形接続。自然な変化の完了「〜てしまった」。連体「ぬる」已然「ぬれ」未然「な」連用「に」。「宣旨下りぬ」のように決定的事実を強調。打消「ず」連体「ぬ」と要識別。"
         },
         {
           "id": "s25-t55",
@@ -7082,7 +7327,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。文中ではそこを際立たせ、文末已然の「こそ〜けれ/しか/めれ」が定型。"
         },
         {
           "id": "s26-t4",
@@ -7096,7 +7342,8 @@
             "conjugationForm": "未",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲語「申す」: サ四段。「言ふ」の謙譲「申し上げる」。動作の受け手(目上)への敬意。「奏す」(対天皇)・「啓す」(対中宮東宮)より敬意の対象が広い汎用謙譲語。"
         },
         {
           "id": "s26-t5",
@@ -7109,7 +7356,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s26-t6",
@@ -7124,7 +7372,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s26-t7",
@@ -7137,7 +7386,8 @@
             "conjugationForm": "已",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去): 連用形接続。伝聞過去「〜た」。地の文の物語過去で多用。終止「けり」連体「ける」已然「けれ」。係り結び「ぞ・なむ〜ける」「こそ〜けれ」が頻出。"
         },
         {
           "id": "s26-t8",
@@ -7168,7 +7418,8 @@
             "conjugationForm": "語幹",
             "baseForm": "いささか"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いささか」: 副詞。「ほんのわずか・少し」。打消や仮定と呼応して「いささかのことだに」=「些細なことでさえ」と最小限の例示を作る。"
         },
         {
           "id": "s27-t2",
@@ -7201,7 +7452,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「だに」: 「〜さえ・〜だけでも」。最小限の例示で類推を促す。「いささかのことだに〜いはむや」=「ほんの些細なことでさえ〜まして」と「いはむや」と呼応する型が頻出。"
         },
         {
           "id": "s27-t5",
@@ -7243,7 +7495,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「世(よ)」: 多義語。①世間・時代②政権・天下③男女の仲・人生。本作「世をしらせたまふ」=「政権をお執りになる」(=②)、「世の移りしほど」=「政権交替の時期」、「世の人」=「世間の人」と多用。"
         },
         {
           "id": "s27-t9",
@@ -7257,7 +7510,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 体言・連体形に接続。「〜である・〜だ」。連用「に」(～にあり)、終止「なり」、連体「なる」、已然「なれ」。形容動詞ナリ活用と要識別。"
         },
         {
           "id": "s27-t10",
@@ -7270,7 +7524,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s27-t11",
@@ -7284,7 +7539,8 @@
             "conjugationForm": "体",
             "baseForm": "はべる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「はべり(侍り)」(丁寧): ラ変。「〜です・〜ます」。聞き手への敬意。世継の語り口の丁寧な締めを作る。"
         },
         {
           "id": "s27-t12",
@@ -7308,7 +7564,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s27-t14",
@@ -7328,7 +7585,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "重要語「いはむや」: 副詞句。「言うまでもなく・まして」。前出の「だに」と呼応して「だに〜いはむや」(〜でさえ〜、まして)の類推強調を作る。漢文「況や」の訓読体。"
         },
         {
           "id": "s27-t16",
@@ -7393,7 +7651,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s27-t22",
@@ -7459,7 +7718,8 @@
             "conjugationForm": "未",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬語「思しめす(思し召す)」: サ四段。「思ふ」の最高敬語「お思いになる」。天皇・女院・上皇など最上位者に用いる。「思す」より一段重い敬意。"
         },
         {
           "id": "s27-t28",
@@ -7472,7 +7732,8 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(婉曲): 連体形+体言で「〜ような」。直接断定を避けやわらげる用法。「思しおかむによらせたまふ」=「考えになるようなことに左右される」。"
         },
         {
           "id": "s27-t29",
@@ -7511,7 +7772,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s27-t32",
@@ -7526,7 +7788,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s27-t33",
@@ -7539,7 +7802,8 @@
             "conjugationForm": "体",
             "meaning": "当然"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「べし」(当然): 終止形(ラ変は連体)接続。「〜はずだ・〜にちがいない」。「さるべき人々」=「しかるべき人々(それ相応の身分の人)」。"
         },
         {
           "id": "s27-t34",
@@ -7552,7 +7816,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 体言・連体形に接続。「〜である・〜だ」。連用「に」(～にあり)、終止「なり」、連体「なる」、已然「なれ」。形容動詞ナリ活用と要識別。"
         },
         {
           "id": "s27-t35",
@@ -7564,7 +7829,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s27-t36",
@@ -7590,7 +7856,8 @@
             "conjugationForm": "已",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s27-t38",
@@ -7600,7 +7867,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ども」: 已然形接続。逆接確定「〜けれども」。「ど」と同義で同様に用いる。"
         },
         {
           "id": "s27-t39",
@@ -7621,7 +7889,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いかで"
-          }
+          },
+          "hint": "重要語「いかで」: 副詞。「どうして」(疑問・反語)、「どうにかして」(願望)。本作「いかでかは」「いかで〜ぞ」は反語、「いかでかは院をおろかに〜まし」=「どうして女院を粗略にお思いになろうか(いや、なさらない)」。"
         },
         {
           "id": "s27-t41",
@@ -7669,7 +7938,8 @@
             "conjugationForm": "用",
             "baseForm": "おろかなり"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「おろかなり(疎かなり)」: ナリ活用形容動詞。「いいかげんだ・なおざりだ」。現代語「愚か」と異なる古今異義語。「院をおろかに思ひまうさせたまはまし」=「女院をなおざりに(粗略に)お思い申し上げただろうか(いや、しない)」。"
         },
         {
           "id": "s27-t45",
@@ -7697,7 +7967,8 @@
             "baseForm": "まうす",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「まうす(申す)」(謙譲): サ四段。「〜申し上げる」。本動詞「言ふ」の謙譲。「思ひまうす」「言ひまうす」の形で動作の受け手(目上)への敬意を示す。"
         },
         {
           "id": "s27-t47",
@@ -7710,7 +7981,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s27-t48",
@@ -7725,7 +7997,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s27-t49",
@@ -7812,7 +8085,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s28-t6",
@@ -7855,7 +8129,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s28-t10",
@@ -7867,7 +8142,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。文中ではそこを際立たせ、文末已然の「こそ〜けれ/しか/めれ」が定型。"
         },
         {
           "id": "s28-t11",
@@ -7879,7 +8155,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s28-t12",
@@ -7892,7 +8169,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「報ず」: サ変。「お返しする・報恩する・(怨みを)晴らす」。「道理すぎてこそは報じたてまつり」=「道理を超えてご恩返し申し上げ」。"
         },
         {
           "id": "s28-t13",
@@ -7907,7 +8185,8 @@
             "baseForm": "たてまつる",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たてまつる」(謙譲): ラ四段。「〜申し上げる・お〜する」。動作の受け手への敬意。「報じたてまつり」=「お報い申し上げて」。"
         },
         {
           "id": "s28-t14",
@@ -7931,7 +8210,8 @@
             "conjugationForm": "未",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲語「つかうまつる(仕うまつる)」: ラ四段。「仕ふ・す」の謙譲「お仕えする・お〜申し上げる」。動作の受け手(目上)への敬意。本作では従者が主人(道長)の車を寄せる行為に用いる。"
         },
         {
           "id": "s28-t16",
@@ -7944,7 +8224,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s28-t17",
@@ -7959,7 +8240,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s28-t18",
@@ -7973,7 +8255,8 @@
             "meaning": "過去",
             "baseForm": "しか"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s28-t19",
@@ -8032,7 +8315,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「さへ」: 「〜までも・〜さえも」(添加)。既出の事項に重ねて加える。「御骨をさへこそは懸けさせたまへりしか」=「御骨までもお首にお懸けになっていたものだ」と異例の極致を示す。"
         },
         {
           "id": "s29-t5",
@@ -8044,7 +8328,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。文中ではそこを際立たせ、文末已然の「こそ〜けれ/しか/めれ」が定型。"
         },
         {
           "id": "s29-t6",
@@ -8056,7 +8341,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s29-t7",
@@ -8069,7 +8355,8 @@
             "conjugationType": "カ下二",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「懸く(かく)」: カ下二。「掛ける・首に懸ける・心に懸ける」。「御骨をさへこそは懸けさせたまへりしか」=「御骨までもお首にお懸けになっていたものだ」と道長の異例の追慕を表す。"
         },
         {
           "id": "s29-t8",
@@ -8082,7 +8369,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s29-t9",
@@ -8097,7 +8385,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s29-t10",
@@ -8124,7 +8413,8 @@
             "meaning": "過去",
             "baseForm": "しか"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s29-t12",
@@ -8227,7 +8517,8 @@
             "conjugationType": "サ下二",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「うす(失す)」: サ下二。「消える・なくなる・亡くなる(婉曲)」。本作「うせさせたまひて」=「お亡くなりになって」(死の婉曲表現で頻出)。"
         },
         {
           "id": "s30-t9",
@@ -8240,7 +8531,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す/さす」(尊敬): 未然形接続。多くは下に「たまふ」を伴って「せたまふ・させたまふ」=最高敬語(二重尊敬)を作る。本作で帝・女院・入道殿・帥殿に頻出する天皇家・摂関家への最高敬意。"
         },
         {
           "id": "s30-t10",
@@ -8255,7 +8547,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s30-t11",
@@ -8265,7 +8558,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s30-t12",
@@ -8317,7 +8611,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「世(よ)」: 多義語。①世間・時代②政権・天下③男女の仲・人生。本作「世をしらせたまふ」=「政権をお執りになる」(=②)、「世の移りしほど」=「政権交替の時期」、「世の人」=「世間の人」と多用。"
         },
         {
           "id": "s30-t17",
@@ -8355,7 +8650,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s30-t20",
@@ -8378,7 +8674,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s30-t22",
@@ -8431,7 +8728,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s30-t27",
@@ -8474,7 +8772,8 @@
           "grammarTag": {
             "pos": "ヤ下二",
             "baseForm": "おぼえ"
-          }
+          },
+          "hint": "重要語「おぼゆ(覚ゆ)」: ヤ下二。「(自然に)思われる・思い出される・似ている」。「ものおぼえての後」=「物心ついて以降」、「きよきよとおぼえはべりし」=「ひやひやと思われた」。自発の意を含む。"
         },
         {
           "id": "s30-t31",
@@ -8488,7 +8787,8 @@
             "conjugationForm": "用",
             "baseForm": "はべり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「はべり(侍り)」(丁寧): ラ変。「〜です・〜ます・〜ございます」。聞き手への敬意。本作で世継が聞き手(繁樹ら)に対し「はべり」を用いて改まった口調を作る。"
         },
         {
           "id": "s30-t32",
@@ -8501,7 +8801,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s30-t33",
@@ -8524,7 +8825,8 @@
             "pos": "終助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「かな」: 詠嘆「〜だなあ」。連体形・体言に接続。「言はれぬるかな」=「言われてしまったことよ」。話者の感慨を添える。"
         },
         {
           "id": "s30-t35",
@@ -8575,7 +8877,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s31-t4",
@@ -8597,7 +8900,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「世(よ)」: 多義語。①世間・時代②政権・天下③男女の仲・人生。本作「世をしらせたまふ」=「政権をお執りになる」(=②)、「世の移りしほど」=「政権交替の時期」、「世の人」=「世間の人」と多用。"
         },
         {
           "id": "s31-t6",
@@ -8609,7 +8913,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s31-t7",
@@ -8636,7 +8941,8 @@
             "conjugationForm": "未",
             "baseForm": "はべる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「はべり(侍り)」(丁寧): ラ変。「〜です・〜ます」。聞き手への敬意。世継の語り口の丁寧な締めを作る。"
         },
         {
           "id": "s31-t9",
@@ -8649,7 +8955,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s31-t10",
@@ -8681,7 +8988,8 @@
           "grammarTag": {
             "pos": "ヤ下二",
             "baseForm": "おぼえ"
-          }
+          },
+          "hint": "重要語「おぼゆ(覚ゆ)」: ヤ下二。「(自然に)思われる・思い出される・似ている」。「ものおぼえての後」=「物心ついて以降」、「きよきよとおぼえはべりし」=「ひやひやと思われた」。自発の意を含む。"
         },
         {
           "id": "s31-t13",
@@ -8691,7 +8999,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s31-t14",
@@ -8725,7 +9034,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s31-t17",
@@ -8773,7 +9083,8 @@
             "conjugationForm": "未",
             "baseForm": "さぶらふ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「さぶらふ(候ふ・侍ふ)」(謙譲・丁寧): ハ四段。①「あり・仕ふ」の謙譲(目上の側に控える)、②聞き手への丁寧「〜です・〜ます」。本作「御前にさぶらふ」は①、「さぶらはぬ」は②に近い。"
         },
         {
           "id": "s31-t21",
@@ -8786,7 +9097,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s31-t22",
@@ -8810,7 +9122,8 @@
             "pos": "間投助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「や」: 詠嘆「〜よ・〜なあ」。「わざはひや、わざはひや」=「ああ災難だ、ああ災難だ」。係り結びを作らないので係助詞の「や」と要識別。"
         },
         {
           "id": "s31-t24",
@@ -8826,7 +9139,7 @@
     },
     {
       "id": "s32",
-      "originalText": "今の世となりては、一の人の、貞信公・小野宮殿をはなちたてまつりて、十年とおはすることの、近くははべらねば、この入道殿もいかがと思ひまうしはべりしに、いとかかる運におされて、御兄たちは、とりもあへず滅びたまひにしにこそおはすめれ。﹂（）",
+      "originalText": "今の世となりては、一の人の、貞信公・小野宮殿をはなちたてまつりて、十年とおはすることの、近くははべらねば、この入道殿もいかがと思ひまうしはべりしに、いとかかる運におされて、御兄たちは、とりもあへず滅びたまひにしにこそおはすめれ。",
       "modernTranslation": "近代となっては、一の人が、貞信公（＝忠平）・小野宮公（＝実頼）をお除き申し、十年とおいでになることは、この頃はございませんから、この入道殿もどうかと思い申しあげましたが、まったくこのような（入道殿の）ご強運に圧倒されて、御兄君たちは、あっけなくも滅んでおしまいになったのだろう。",
       "tokens": [
         {
@@ -8859,7 +9172,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "重要語「世(よ)」: 多義語。①世間・時代②政権・天下③男女の仲・人生。本作「世をしらせたまふ」=「政権をお執りになる」(=②)、「世の移りしほど」=「政権交替の時期」、「世の人」=「世間の人」と多用。"
         },
         {
           "id": "s32-t4",
@@ -8895,7 +9209,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s32-t7",
@@ -8907,7 +9222,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s32-t8",
@@ -9036,7 +9352,8 @@
             "conjugationType": "タ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「はなつ(放つ)」: タ四段。「離す・除く・放置する」。「貞信公・小野宮殿をはなちたてまつりて」=「貞信公・小野宮殿をお除き申し上げて(別格として除外して)」。"
         },
         {
           "id": "s32-t20",
@@ -9051,7 +9368,8 @@
             "baseForm": "たてまつる",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たてまつる」(謙譲): ラ四段。「〜申し上げる・お〜する」。動作の受け手への敬意。「報じたてまつり」=「お報い申し上げて」。"
         },
         {
           "id": "s32-t21",
@@ -9061,7 +9379,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s32-t22",
@@ -9165,7 +9484,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s32-t31",
@@ -9192,7 +9512,8 @@
             "conjugationForm": "已",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 未然形接続。「〜ない」。連用「ず/ざり」連体「ぬ/ざる」已然「ね/ざれ」未然「ざら」。「ね」は「ねば」「ねども」の形で用いられ、完了「ぬ」連体形と要識別。"
         },
         {
           "id": "s32-t33",
@@ -9202,7 +9523,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」: 未然形接続なら仮定「〜なら」、已然形接続なら順接確定「〜ので・〜したところ」。本作では「〜しかば」「〜けれ(ば)」「〜ねば」など已然+ば(確定)が圧倒的に多い。"
         },
         {
           "id": "s32-t34",
@@ -9266,7 +9588,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」: 提示・並立・添加。「入道殿も」のように「〜もまた」の意で前出と並ぶことを示す。本作で帥殿と入道殿が並び立つ場面の鍵となる。"
         },
         {
           "id": "s32-t40",
@@ -9277,7 +9600,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いかが"
-          }
+          },
+          "hint": "重要語「いかが」: 副詞。「どうして・どのように」(疑問)、反語の場合もある。「いかが」が文末まで響く形で連体形結びを伴うことが多い。"
         },
         {
           "id": "s32-t41",
@@ -9317,7 +9641,8 @@
             "baseForm": "まうす",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「まうす(申す)」(謙譲): サ四段。「〜申し上げる」。本動詞「言ふ」の謙譲。「思ひまうす」「言ひまうす」の形で動作の受け手(目上)への敬意を示す。"
         },
         {
           "id": "s32-t44",
@@ -9331,7 +9656,8 @@
             "conjugationForm": "用",
             "baseForm": "はべり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「はべり(侍り)」(丁寧): ラ変。「〜です・〜ます・〜ございます」。聞き手への敬意。本作で世継が聞き手(繁樹ら)に対し「はべり」を用いて改まった口調を作る。"
         },
         {
           "id": "s32-t45",
@@ -9344,7 +9670,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s32-t46",
@@ -9436,7 +9763,8 @@
             "conjugationForm": "用",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る/らる」(受身): 未然形接続。「〜される」。動作主は「に」で示される。「言はれぬるかな」=「(従者に)言われてしまったことよ」。同形の自発・可能・尊敬と要識別。"
         },
         {
           "id": "s32-t54",
@@ -9446,7 +9774,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 連用形接続。順接的接続「〜て」。動作の連続・並立を表す物語進行の基本助詞。"
         },
         {
           "id": "s32-t55",
@@ -9499,7 +9828,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(提示): 主題提示「〜は」。文の主題を引き出す。本作で「帝、…」「女院は…」「皇后宮、…」と人物を主題にして語る型に注目。"
         },
         {
           "id": "s32-t60",
@@ -9519,7 +9849,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "重要語「とりもあへず」: 副詞。「あっけなく・(間を置かず)即座に」。「とりもあへず滅びたまひにし」=「あっけなく滅んでおしまいになった」と兄たち(道隆・道兼)の急逝を表す。"
         },
         {
           "id": "s32-t62",
@@ -9532,7 +9863,8 @@
             "conjugationType": "バ上二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "重要語「ほろぶ(滅ぶ)」: バ上二。「滅亡する・(身分・命が)絶える」。「とりもあへず滅びたまひにし」=「あっけなく滅び(亡くなって)おしまいになった」。"
         },
         {
           "id": "s32-t63",
@@ -9547,7 +9879,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」(尊敬): ハ四段。「〜なさる・お〜になる」。動作主への敬意。本作で「させたまふ・せたまふ」(=最高敬語/二重尊敬)の形が頻出し、天皇・女院・摂関家への最高敬意を示す。"
         },
         {
           "id": "s32-t64",
@@ -9560,7 +9893,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」(完了): 連用形接続。自然な変化の完了「〜てしまった」。連体「ぬる」已然「ぬれ」未然「な」連用「に」。「宣旨下りぬ」のように決定的事実を強調。打消「ず」連体「ぬ」と要識別。"
         },
         {
           "id": "s32-t65",
@@ -9573,7 +9907,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」(過去): 連用形接続。直接体験の過去「〜た」。連体「し」已然「しか」。語り手・世継が自分の見聞を語る部分は「き」を用い、伝承的に語る部分は「けり」を用いる対比に注意。"
         },
         {
           "id": "s32-t66",
@@ -9586,7 +9921,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定): 体言・連体形に接続。「〜である・〜だ」。連用「に」(～にあり)、終止「なり」、連体「なる」、已然「なれ」。形容動詞ナリ活用と要識別。"
         },
         {
           "id": "s32-t67",
@@ -9598,7 +9934,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「こそ」: 強意。係り結びの結びは已然形。文中ではそこを際立たせ、文末已然の「こそ〜けれ/しか/めれ」が定型。"
         },
         {
           "id": "s32-t68",
@@ -9613,7 +9950,8 @@
             "baseForm": "おはす",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「おはす」(尊敬): サ変。「〜ていらっしゃる」。動作主への敬意。「立ちたまへるぞ」と並んで貴人の存在を表す敬語動詞。"
         },
         {
           "id": "s32-t69",
@@ -9626,60 +9964,14 @@
             "conjugationForm": "已",
             "meaning": "推定"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「めり」(推定): 終止形(ラ変は連体)接続。「〜ように見える・〜ようだ」。視覚に基づく婉曲推定。「こそ〜めれ」係り結び已然形が頻出。"
         },
         {
           "id": "s32-t70",
           "text": "。",
           "start": 113,
           "end": 114,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s32-t71",
-          "text": "﹂",
-          "start": 114,
-          "end": 115,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s32-t72",
-          "text": "（",
-          "start": 115,
-          "end": 116,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s32-t73",
-          "text": "）",
-          "start": 116,
-          "end": 117,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        }
-      ]
-    },
-    {
-      "id": "s33",
-      "originalText": "」　　　　　　　　　　（道長上）",
-      "modernTranslation": "中の関白殿（＝道隆）・粟田殿が、ひきつづいてお亡くなりになり、入道殿に天下の実権が移ったときは、ほんとうにびっくりして、どきっとしたことでしたよ。ずっと古い時代のことは存じませんが、世継の翁が物心がついてから後は、こんなことはなかったですのになあ。近代となっては、一の人が、貞信公（＝忠平）・小野宮公（＝実頼）をお除き申し、十年とおいでになることは、この頃はございませんから、この入道殿もどうかと思い申しあげましたが、まったくこのような（入道殿の）ご強運に圧倒されて、御兄君たちは、あっけなくも滅んでおしまいになったのだろう。",
-      "tokens": [
-        {
-          "id": "s33-t1",
-          "text": "」　　　　　　　　　　（道長上）",
-          "start": 0,
-          "end": 16,
           "layer": 0,
           "grammarTag": {
             "pos": ""
