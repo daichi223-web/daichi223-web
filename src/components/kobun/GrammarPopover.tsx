@@ -6,6 +6,7 @@ import { addVocabEntry } from "@/lib/kobun/progress";
 import VocabModal from "@/components/VocabModal";
 import bundledVocabIndex from "@/data/vocabIndex.json";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
+import { enrichGrammarInfo } from "@/lib/kobun/auxiliaryInfo";
 
 const vocabIndexKeys = new Set(Object.keys(bundledVocabIndex as Record<string, unknown>));
 
@@ -158,38 +159,58 @@ function PopoverContent({
         )}
       </div>
 
-      <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-sm">
-        <span className="text-rw-ink-soft font-bold">品詞</span>
-        <span>{tag.pos}</span>
+      {(() => {
+        // 助動詞・助詞の「接続」、抽象省略表記の「活用形」を補完
+        const enriched = enrichGrammarInfo(
+          tag.pos,
+          token.text,
+          tag.baseForm,
+          tag.conjugationType,
+          tag.conjugationForm,
+        );
+        const isInflectingPos = tag.pos === '動詞' || tag.pos === '形容詞' || tag.pos === '形容動詞' || tag.pos === '助動詞';
+        return (
+          <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-sm">
+            <span className="text-rw-ink-soft font-bold">品詞</span>
+            <span>{tag.pos}</span>
 
-        {tag.meaning && (
-          <>
-            <span className="text-rw-ink-soft font-bold">意味</span>
-            <span>{tag.meaning}</span>
-          </>
-        )}
+            {enriched.connection && (
+              <>
+                <span className="text-rw-ink-soft font-bold">接続</span>
+                <span>{enriched.connection}</span>
+              </>
+            )}
 
-        {token.translation && (
-          <>
-            <span className="text-rw-ink-soft font-bold">訳</span>
-            <span>{token.translation}</span>
-          </>
-        )}
+            {tag.meaning && (
+              <>
+                <span className="text-rw-ink-soft font-bold">意味</span>
+                <span>{tag.meaning}</span>
+              </>
+            )}
 
-        {!isScaffold && tag.conjugationType && (
-          <>
-            <span className="text-rw-ink-soft font-bold">活用型</span>
-            <span>{tag.conjugationType}</span>
-          </>
-        )}
+            {token.translation && (
+              <>
+                <span className="text-rw-ink-soft font-bold">訳</span>
+                <span>{token.translation}</span>
+              </>
+            )}
 
-        {!isScaffold && tag.conjugationForm && (
-          <>
-            <span className="text-rw-ink-soft font-bold">活用形</span>
-            <span>{tag.conjugationForm}</span>
-          </>
-        )}
-      </div>
+            {!isScaffold && isInflectingPos && (
+              <>
+                <span className="text-rw-ink-soft font-bold">活用型</span>
+                <span>{enriched.conjugationType || <span className="text-rw-ink-soft/60">—</span>}</span>
+              </>
+            )}
+
+            {!isScaffold && isInflectingPos && (
+              <>
+                <span className="text-rw-ink-soft font-bold">活用形</span>
+                <span>{enriched.conjugationForm || <span className="text-rw-ink-soft/60">—</span>}</span>
+              </>
+            )}
+          </div>
+        );
+      })()}
 
       {/* 重要ポイント（hint） */}
       {!isScaffold && token.hint && (
