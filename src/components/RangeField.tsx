@@ -50,6 +50,10 @@ const StepperButton: React.FC<StepperButtonProps> = ({
   const timeoutRef = useRef<number | null>(null);
   const intervalRef = useRef<number | null>(null);
   const isRunningRef = useRef(false);
+  const disabledRef = useRef(disabled);
+  disabledRef.current = disabled;
+  const onClickRef = useRef(onClick);
+  onClickRef.current = onClick;
 
   const stopRepeating = useCallback(() => {
     isRunningRef.current = false;
@@ -66,39 +70,63 @@ const StepperButton: React.FC<StepperButtonProps> = ({
   }, []);
 
   const startRepeating = useCallback(() => {
-    if (disabled) return;
-
+    if (disabledRef.current) return;
     // 既に実行中なら何もしない
     if (isRunningRef.current) return;
     isRunningRef.current = true;
 
-    onClick();
+    onClickRef.current();
     setIsPressed(true);
-    speedRef.current = 150;
+    speedRef.current = 200;
 
+    // 長押しと判定するまでの待ち時間を長めに取る (iOS で短いタップが
+    // 誤って auto-repeat と判定されることを防ぐ。短いタップは pointerup で
+    // この timeout が clear される)。
     timeoutRef.current = window.setTimeout(() => {
       if (!isRunningRef.current) return;
 
       const repeat = () => {
         if (!isRunningRef.current) return;
-        onClick();
-        speedRef.current = Math.max(50, speedRef.current - 10);
+        // 値が境界に達して disabled になったら自動停止
+        if (disabledRef.current) {
+          isRunningRef.current = false;
+          setIsPressed(false);
+          return;
+        }
+        onClickRef.current();
+        speedRef.current = Math.max(70, speedRef.current - 10);
         intervalRef.current = window.setTimeout(repeat, speedRef.current);
       };
       repeat();
-    }, 300);
-  }, [onClick, disabled, stopRepeating]);
+    }, 600);
+  }, []);
 
-  // クリーンアップ: タブ切り替え・ウィンドウブラー時も停止
+  // ボタン外で指を離した場合の保険として document に listener を張る
   useEffect(() => {
+    if (!isPressed) return;
     const stop = () => stopRepeating();
+    document.addEventListener("pointerup", stop);
+    document.addEventListener("pointercancel", stop);
     document.addEventListener("visibilitychange", stop);
     window.addEventListener("blur", stop);
     return () => {
+      document.removeEventListener("pointerup", stop);
+      document.removeEventListener("pointercancel", stop);
       document.removeEventListener("visibilitychange", stop);
       window.removeEventListener("blur", stop);
-      stopRepeating();
     };
+  }, [isPressed, stopRepeating]);
+
+  // disabled になったら強制停止 (max/min 到達時のリピート暴走を防ぐ)
+  useEffect(() => {
+    if (disabled && isRunningRef.current) {
+      stopRepeating();
+    }
+  }, [disabled, stopRepeating]);
+
+  // アンマウント時にも確実に停止
+  useEffect(() => {
+    return () => stopRepeating();
   }, [stopRepeating]);
 
   return (
@@ -112,11 +140,11 @@ const StepperButton: React.FC<StepperButtonProps> = ({
           : "bg-white text-slate-600 border-slate-300 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100"
       } ${className}`}
       onPointerDown={(e) => {
-        if (!disabled) {
-          e.preventDefault();
-          e.currentTarget.setPointerCapture?.(e.pointerId);
-          startRepeating();
-        }
+        if (disabled) return;
+        // setPointerCapture は iOS Safari で pointerup が届かなくなる原因になるため使わない。
+        // 代わりに document へグローバル listener を張る (useEffect 側)。
+        e.preventDefault();
+        startRepeating();
       }}
       onPointerUp={stopRepeating}
       onPointerLeave={stopRepeating}
