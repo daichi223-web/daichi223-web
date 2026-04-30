@@ -18,7 +18,11 @@ type Props = {
   polysemyRange: { from: number | null; to: number | null };
   wordQuizTypeLabel: string;
   polysemyQuizTypeLabel: string;
+  weakWordsCount: number;
+  dueWordsCount: number;
   onStartQuiz: () => void;
+  onStartReview: () => void;
+  onStartSrsReview: () => void;
   onSwitchMode: (mode: 'word' | 'polysemy') => void;
   onOpenThemePicker: () => void;
 };
@@ -35,7 +39,11 @@ export default function HomeReiwa({
   polysemyRange,
   wordQuizTypeLabel,
   polysemyQuizTypeLabel,
+  weakWordsCount,
+  dueWordsCount,
   onStartQuiz,
+  onStartReview,
+  onStartSrsReview,
   onSwitchMode,
   onOpenThemePicker,
 }: Props) {
@@ -70,26 +78,45 @@ export default function HomeReiwa({
         </div>
       </div>
 
-      {/* Today's Quest */}
+      {/* Today's Quest — SRS 期日到来があれば優先、なければ通常範囲 */}
       <button
-        onClick={onStartQuiz}
+        onClick={dueWordsCount > 0 ? onStartSrsReview : onStartQuiz}
         className="w-full text-left mb-4 p-5 md:p-6 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
       >
         <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-rw-pop opacity-40" />
         <div className="absolute -bottom-5 right-5 w-20 h-20 rounded-full bg-rw-accent opacity-40" />
         <div className="relative">
           <div className="text-[10px] md:text-xs opacity-90 font-bold tracking-wider uppercase">Today's Quest</div>
-          <div className="text-xl md:text-2xl font-black mt-1.5 leading-tight">
-            {currentMode === 'word' ? '単語クイズ' : '多義語クイズ'}
-            <br />
-            <span className="text-base md:text-lg opacity-90 font-bold">{quizTypeLabel}</span>
-          </div>
-          <div className="flex items-baseline gap-2 mt-3">
-            <span className="text-3xl md:text-4xl font-black">{rangeLabel}</span>
-          </div>
-          <div className="mt-4 inline-block bg-rw-paper text-rw-primary text-sm font-black px-5 py-2 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
-            つづきから ▶
-          </div>
+          {dueWordsCount > 0 ? (
+            <>
+              <div className="text-xl md:text-2xl font-black mt-1.5 leading-tight">
+                今日の復習
+                <br />
+                <span className="text-base md:text-lg opacity-90 font-bold">SRS が選んだ単語</span>
+              </div>
+              <div className="flex items-baseline gap-2 mt-3">
+                <span className="text-3xl md:text-4xl font-black">{dueWordsCount}</span>
+                <span className="text-sm md:text-base opacity-90">語</span>
+              </div>
+              <div className="mt-4 inline-block bg-rw-paper text-rw-primary text-sm font-black px-5 py-2 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
+                復習スタート ▶
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="text-xl md:text-2xl font-black mt-1.5 leading-tight">
+                {currentMode === 'word' ? '単語クイズ' : '多義語クイズ'}
+                <br />
+                <span className="text-base md:text-lg opacity-90 font-bold">{quizTypeLabel}</span>
+              </div>
+              <div className="flex items-baseline gap-2 mt-3">
+                <span className="text-3xl md:text-4xl font-black">{rangeLabel}</span>
+              </div>
+              <div className="mt-4 inline-block bg-rw-paper text-rw-primary text-sm font-black px-5 py-2 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
+                つづきから ▶
+              </div>
+            </>
+          )}
         </div>
       </button>
 
@@ -114,7 +141,24 @@ export default function HomeReiwa({
           active={currentMode === 'polysemy'}
         />
         <TileLink href="/read" emoji="📖" label="読解" stat="本文を読む" iconBg="var(--rw-pop)" fgColor="var(--rw-ink)" />
-        <TileLink href="/read/vocab" emoji="🔄" label="単語帳" stat={`${vocab.length}語`} iconBg="var(--rw-tertiary)" fgColor="var(--rw-paper)" />
+        <Tile
+          emoji="🔁"
+          label="苦手復習"
+          stat={weakWordsCount > 0 ? `${weakWordsCount}語` : 'まだなし'}
+          onClick={() => weakWordsCount > 0 && onStartReview()}
+          iconBg="var(--rw-tertiary)"
+          fgColor="var(--rw-paper)"
+          disabled={weakWordsCount === 0}
+        />
+      </div>
+
+      {/* 単語帳ショートカット */}
+      <div className="mb-3">
+        <TileLinkInline
+          href="/read/vocab"
+          label={vocab.length > 0 ? `単語帳 (${vocab.length}語)` : '単語帳'}
+          emoji="📒"
+        />
       </div>
 
       {/* 気になってる単語 */}
@@ -159,6 +203,7 @@ function Tile({
   iconBg,
   fgColor,
   active,
+  disabled,
 }: {
   emoji: string;
   label: string;
@@ -167,12 +212,18 @@ function Tile({
   iconBg: string;
   fgColor: string;
   active?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       className={`text-left bg-rw-paper border rounded-2xl p-3.5 min-h-[96px] transition-all ${
-        active ? 'border-2 border-rw-ink shadow-md -translate-y-0.5' : 'border-rw-rule hover:border-rw-ink-soft'
+        disabled
+          ? 'border-rw-rule opacity-60 cursor-not-allowed'
+          : active
+          ? 'border-2 border-rw-ink shadow-md -translate-y-0.5'
+          : 'border-rw-rule hover:border-rw-ink-soft'
       }`}
     >
       <div
@@ -186,6 +237,22 @@ function Tile({
         {stat}
       </div>
     </button>
+  );
+}
+
+function TileLinkInline({ href, label, emoji }: { href: string; label: string; emoji: string }) {
+  return (
+    <Link
+      to={href}
+      className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 hover:border-rw-ink-soft transition no-underline text-rw-ink"
+      style={{ textDecoration: 'none' }}
+    >
+      <div className="flex items-center gap-3">
+        <span className="text-xl">{emoji}</span>
+        <span className="font-black text-rw-ink tracking-tight flex-1">{label}</span>
+        <span className="text-rw-ink-soft text-sm">→</span>
+      </div>
+    </Link>
   );
 }
 

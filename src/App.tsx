@@ -10,8 +10,8 @@ import { WordQuizContent } from './components/quiz/WordQuizContent';
 import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
-import { recordAnswer } from './lib/wordStats';
-import { updateSrsState } from './lib/srsEngine';
+import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
+import { updateSrsState, getDueWords } from './lib/srsEngine';
 import VocabModal from './components/VocabModal';
 import { IndexModal } from './components/IndexModal';
 import { chapterFor, chapterColor } from './utils/chapters';
@@ -163,6 +163,67 @@ function App() {
   const [showIndexModal, setShowIndexModal] = useState(false);
   const [showThemePicker, setShowThemePicker] = useState(false);
   const [showHome, setShowHome] = useState(true);
+  // 苦手単語 / SRS 復習用に、特定の qid セットだけで出題する場合に使う
+  const [quizQidFilter, setQuizQidFilter] = useState<string[] | null>(null);
+  const [quizMode, setQuizMode] = useState<'normal' | 'weak' | 'srs'>('normal');
+  const [weakWordsCount, setWeakWordsCount] = useState(0);
+  const [dueWordsCount, setDueWordsCount] = useState(0);
+  // 累計学習統計 (Result 画面で表示)
+  const [cumulativeStats, setCumulativeStats] = useState<{
+    totalAnswered: number;
+    totalCorrect: number;
+    masteredCount: number; // 80%以上正解 + 5回以上挑戦
+  }>({ totalAnswered: 0, totalCorrect: 0, masteredCount: 0 });
+
+  // ホーム表示時に学習履歴ベースの集計を取得
+  useEffect(() => {
+    if (!showHome) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [weak, due] = await Promise.all([getWeakWords(), getDueWords()]);
+        if (!cancelled) {
+          setWeakWordsCount(weak.length);
+          setDueWordsCount(due.length);
+        }
+      } catch {
+        if (!cancelled) {
+          setWeakWordsCount(0);
+          setDueWordsCount(0);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [showHome]);
+
+  // 結果表示時に累計統計を取得
+  useEffect(() => {
+    if (!showResults) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const stats = await getWordStats();
+        if (cancelled) return;
+        let totalAnswered = 0;
+        let totalCorrect = 0;
+        let mastered = 0;
+        for (const s of Object.values(stats)) {
+          const n = s.correct + s.incorrect;
+          totalAnswered += n;
+          totalCorrect += s.correct;
+          if (n >= 5 && s.correct / n >= 0.8) mastered += 1;
+        }
+        setCumulativeStats({ totalAnswered, totalCorrect, masteredCount: mastered });
+      } catch {
+        // silent fail (offline 等)
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [showResults]);
   const [pendingModeSwitch, setPendingModeSwitch] = useState<AppMode | null>(null);
   const [indexSearchQuery, setIndexSearchQuery] = useState('');
 
@@ -314,7 +375,7 @@ function App() {
       .map(([lemma, meanings]) => ({ lemma, meanings }));
   };
 
-  const setupQuiz = async () => {
+  const setupQuiz = async (qidFilterOverride?: string[]) => {
     // Reset all quiz states when switching modes
     setShowResults(false);
     setIsQuizActive(false);
@@ -327,23 +388,35 @@ function App() {
     setWrongAnswers([]);
 
     if (currentMode === 'word') {
-      await setupWordQuiz();
+      await setupWordQuiz(qidFilterOverride);
     } else {
       setupPolysemyQuiz();
     }
   };
 
-  const setupWordQuiz = async () => {
-    const start = wordRange.from ?? 1;
-    const end = wordRange.to ?? 330;
-    const targetWords = allWords.filter(word =>
-      word.group >= start && word.group <= end
-    );
+  const setupWordQuiz = async (qidFilterOverride?: string[]) => {
+    // qid フィルタ (引数優先、次に state)。指定があれば苦手単語 / SRS 復習として
+    // その qid のみ出題、なければ範囲で絞り込む
+    const filter = qidFilterOverride ?? quizQidFilter;
+    let targetWords: Word[];
+    if (filter && filter.length > 0) {
+      const qidSet = new Set(filter);
+      targetWords = allWords.filter((w) => qidSet.has(w.qid));
+    } else {
+      const start = wordRange.from ?? 1;
+      const end = wordRange.to ?? 330;
+      targetWords = allWords.filter(word =>
+        word.group >= start && word.group <= end
+      );
+    }
 
     // 記述式は1単語以上でOK、選択式も1単語以上（前後5単語から選択肢を選ぶ）
     if (targetWords.length < 1) {
       if (allWords.length > 0) {
-        showErrorMessage('出題範囲に単語が見つかりません。');
+        const msg = quizQidFilter
+          ? '対象となる単語が見つかりません。'
+          : '出題範囲に単語が見つかりません。';
+        showErrorMessage(msg);
       }
       return;
     }
@@ -1034,6 +1107,8 @@ function App() {
             onClick={() => {
               setShowHome(true);
               setShowResults(false);
+              setQuizQidFilter(null);
+              setQuizMode('normal');
             }}
             className="bg-rw-ink hover:opacity-90 text-rw-paper font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
             title="ホームに戻る"
@@ -1131,11 +1206,42 @@ function App() {
             polysemyRange={polysemyRange}
             wordQuizTypeLabel={WORD_QUIZ_LABELS[wordQuizType]}
             polysemyQuizTypeLabel={POLYSEMY_QUIZ_LABELS[polysemyQuizType]}
+            weakWordsCount={weakWordsCount}
+            dueWordsCount={dueWordsCount}
             onStartQuiz={() => {
+              setQuizQidFilter(null);
+              setQuizMode('normal');
               setShowHome(false);
               void setupQuiz();
             }}
+            onStartReview={async () => {
+              const weak = await getWeakWords();
+              if (weak.length === 0) return;
+              setQuizQidFilter(weak);
+              setQuizMode('weak');
+              setCurrentMode('word');
+              setShowHome(false);
+              void setupQuiz(weak);
+            }}
+            onStartSrsReview={async () => {
+              const due = await getDueWords();
+              if (due.length === 0) {
+                // フォールバック: 通常クイズ
+                setQuizQidFilter(null);
+                setQuizMode('normal');
+                setShowHome(false);
+                void setupQuiz();
+                return;
+              }
+              setQuizQidFilter(due);
+              setQuizMode('srs');
+              setCurrentMode('word');
+              setShowHome(false);
+              void setupQuiz(due);
+            }}
             onSwitchMode={(mode) => {
+              setQuizQidFilter(null);
+              setQuizMode('normal');
               setCurrentMode(mode);
               setShowHome(false);
             }}
@@ -1327,6 +1433,35 @@ function App() {
                 </div>
               )}
 
+              {/* 累計学習統計 (生徒のがんばり全体像) */}
+              {cumulativeStats.totalAnswered > 0 && (
+                <div className="mb-5 text-left">
+                  <h3 className="text-xs font-black tracking-wider text-rw-ink-soft mb-2 uppercase">
+                    これまでの累計
+                  </h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-accent-soft)' }}>
+                      <div className="text-xs text-rw-ink-soft font-bold">累計正答率</div>
+                      <div className="text-2xl font-black text-rw-accent mt-0.5">
+                        {Math.round((cumulativeStats.totalCorrect / cumulativeStats.totalAnswered) * 100)}%
+                      </div>
+                    </div>
+                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-primary-soft)' }}>
+                      <div className="text-xs text-rw-ink-soft font-bold">挑戦回数</div>
+                      <div className="text-2xl font-black text-rw-primary mt-0.5">
+                        {cumulativeStats.totalAnswered}
+                      </div>
+                    </div>
+                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-pop)', opacity: 0.85 }}>
+                      <div className="text-xs text-rw-ink font-bold">マスター</div>
+                      <div className="text-2xl font-black text-rw-ink mt-0.5">
+                        {cumulativeStats.masteredCount}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* アクションボタン */}
               <div className="space-y-2.5">
                 <button
@@ -1341,6 +1476,8 @@ function App() {
                     setShowHome(true);
                     setShowResults(false);
                     setIsQuizActive(false);
+                    setQuizQidFilter(null);
+                    setQuizMode('normal');
                   }}
                   className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
                 >
