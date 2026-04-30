@@ -18,6 +18,19 @@ import { chapterFor, chapterColor } from './utils/chapters';
 import bundledVocabIndex from './data/vocabIndex.json';
 import { hasAdminSession } from './lib/adminSession';
 import ReiwaThemePicker from './theme/ReiwaThemePicker';
+import HomeReiwa from './components/HomeReiwa';
+
+const WORD_QUIZ_LABELS: Record<WordQuizType, string> = {
+  'word-meaning': '単語の意味を選ぶ',
+  'word-reverse': '意味から単語を選ぶ',
+  'sentence-meaning': '例文から意味を選ぶ',
+  'meaning-writing': '意味を書いて答える',
+};
+const POLYSEMY_QUIZ_LABELS: Record<PolysemyQuizType, string> = {
+  'example-comprehension': '例文と意味を結びつける',
+  'true-false': '例文の訳の正誤を判断',
+  'context-writing': '文脈から意味を書く',
+};
 
 type AppMode = 'word' | 'polysemy';
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
@@ -149,6 +162,7 @@ function App() {
   // Index modal state
   const [showIndexModal, setShowIndexModal] = useState(false);
   const [showThemePicker, setShowThemePicker] = useState(false);
+  const [showHome, setShowHome] = useState(true);
   const [pendingModeSwitch, setPendingModeSwitch] = useState<AppMode | null>(null);
   const [indexSearchQuery, setIndexSearchQuery] = useState('');
 
@@ -1015,6 +1029,18 @@ function App() {
     <>
       {/* Top-right fixed navigation - compact on mobile */}
       <div className="fixed top-2 right-2 z-50 flex gap-1.5">
+        {!showHome && (
+          <button
+            onClick={() => {
+              setShowHome(true);
+              setShowResults(false);
+            }}
+            className="bg-rw-ink hover:opacity-90 text-rw-paper font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+            title="ホームに戻る"
+          >
+            🏠<span className="hidden sm:inline ml-1">ホーム</span>
+          </button>
+        )}
         <button
           onClick={() => setShowThemePicker(true)}
           className="bg-rw-primary hover:opacity-90 text-rw-paper font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
@@ -1088,6 +1114,33 @@ function App() {
         {indexButton}
         <div className="max-w-2xl mx-auto p-4 md:p-8">
           <div className="text-center p-16">データを読み込んでいます...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Reiwa デザイン版ホーム画面 (showHome=true のとき)
+  if (showHome && !showResults) {
+    return (
+      <div className="min-h-dvh bg-rw-bg">
+        {indexButton}
+        <div className="max-w-2xl mx-auto">
+          <HomeReiwa
+            currentMode={currentMode}
+            wordRange={wordRange}
+            polysemyRange={polysemyRange}
+            wordQuizTypeLabel={WORD_QUIZ_LABELS[wordQuizType]}
+            polysemyQuizTypeLabel={POLYSEMY_QUIZ_LABELS[polysemyQuizType]}
+            onStartQuiz={() => {
+              setShowHome(false);
+              void setupQuiz();
+            }}
+            onSwitchMode={(mode) => {
+              setCurrentMode(mode);
+              setShowHome(false);
+            }}
+            onOpenThemePicker={() => setShowThemePicker(true)}
+          />
         </div>
       </div>
     );
