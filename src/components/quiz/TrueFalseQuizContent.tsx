@@ -23,11 +23,13 @@ export interface TrueFalseQuizContentProps {
 export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, onNext }: TrueFalseQuizContentProps) {
   const [answered, setAnswered] = useState(false);
   const [answeredCorrectly, setAnsweredCorrectly] = useState<boolean | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
 
   // Reset state when question changes
   React.useEffect(() => {
     setAnswered(false);
     setAnsweredCorrectly(null);
+    setSelectedAnswer(null);
   }, [question.example, question.meaning]);
 
   // 正解時に自動遷移
@@ -43,19 +45,51 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
   const handleAnswer = (answer: boolean) => {
     if (answered) return;
     setAnswered(true);
+    setSelectedAnswer(answer);
     const isCorrect = answer === question.isCorrect;
     setAnsweredCorrectly(isCorrect);
     onAnswer(answer);
   };
 
+  // ボタンのスタイル決定
+  const getMaruBtnClass = () => {
+    const base = 'flex-1 font-black py-4 px-6 rounded-xl transition border-2 text-lg tracking-widest';
+    if (!answered) {
+      return `${base} bg-rw-paper border-rw-rule text-rw-ink hover:border-rw-accent`;
+    }
+    // 答えた後
+    if (selectedAnswer === true) {
+      // ユーザーが ○ を選んだ
+      return question.isCorrect
+        ? `${base} bg-rw-accent border-rw-accent text-rw-paper opacity-100 pointer-events-none`
+        : `${base} bg-rw-primary border-rw-primary text-rw-paper opacity-100 pointer-events-none`;
+    }
+    // ユーザーが × を選んだ → ○ ボタンは非選択
+    return `${base} bg-rw-paper border-rw-rule text-rw-ink-soft opacity-60 pointer-events-none`;
+  };
+
+  const getBatsuBtnClass = () => {
+    const base = 'flex-1 font-black py-4 px-6 rounded-xl transition border-2 text-lg tracking-widest';
+    if (!answered) {
+      return `${base} bg-rw-paper border-rw-rule text-rw-ink hover:border-rw-primary`;
+    }
+    if (selectedAnswer === false) {
+      // ユーザーが × を選んだ
+      return question.isCorrect === false
+        ? `${base} bg-rw-accent border-rw-accent text-rw-paper opacity-100 pointer-events-none`
+        : `${base} bg-rw-primary border-rw-primary text-rw-paper opacity-100 pointer-events-none`;
+    }
+    return `${base} bg-rw-paper border-rw-rule text-rw-ink-soft opacity-60 pointer-events-none`;
+  };
+
   return (
     <div>
-      <div className="text-center mb-8">
-        <h3 className="text-lg font-bold text-slate-700 mb-2">この組み合わせは正しいですか？</h3>
-        <div className="bg-slate-100 p-3 rounded-lg mb-2">
-          <p className="text-slate-700 mb-2">{question.exampleKobun || question.example}</p>
-          <p className="text-sm text-slate-500 mb-2">意味:</p>
-          <p className="text-lg font-bold text-slate-800">{question.meaning}</p>
+      <div className="text-center mb-6">
+        <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-3">この組み合わせは正しいかな？</h3>
+        <div className="bg-rw-paper p-5 rounded-2xl border-2 border-rw-ink mb-3 text-left">
+          <p className="text-rw-ink font-serif text-lg leading-relaxed mb-3">{question.exampleKobun || question.example}</p>
+          <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">意味</p>
+          <p className="text-lg font-black text-rw-ink tracking-tight">{question.meaning}</p>
         </div>
 
         {/* Example Display - 補助例文は非表示 */}
@@ -66,20 +100,20 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
           className="mb-4"
         />
 
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <button
             onClick={() => handleAnswer(true)}
             disabled={answered}
-            className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg transition disabled:opacity-50"
+            className={getMaruBtnClass()}
           >
-            正しい
+            ○ 正しい
           </button>
           <button
             onClick={() => handleAnswer(false)}
             disabled={answered}
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-lg transition disabled:opacity-50"
+            className={getBatsuBtnClass()}
           >
-            正しくない
+            × 正しくない
           </button>
         </div>
 
@@ -88,9 +122,10 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
           <div className="mt-8 text-center">
             <button
               onClick={onNext}
-              className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-lg transition"
+              className="bg-rw-primary text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
+              style={{ boxShadow: '0 4px 0 var(--rw-ink)' }}
             >
-              次へ
+              つぎへ
             </button>
           </div>
         )}

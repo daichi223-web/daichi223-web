@@ -197,11 +197,20 @@ export function ContextWritingContent({
     return result?.score !== 100 || issues.length > 0;
   });
 
+  // スコアに応じた色を返す（CSS variables）
+  const getScoreColor = (score: number) => {
+    if (score === 100) return 'var(--rw-accent)';
+    if (score >= 85) return 'var(--rw-primary)';
+    if (score >= 65) return 'var(--rw-pop)';
+    if (score >= 60) return 'var(--rw-tertiary)';
+    return 'var(--rw-primary)';
+  };
+
   return (
     <div>
       <div className="text-center mb-4">
-        <p className="text-sm text-slate-500">参考：見出し語</p>
-        <p className="text-xl font-bold text-slate-800">{word.lemma}</p>
+        <p className="text-xs font-black text-rw-ink-soft tracking-widest mb-1">参考：見出し語</p>
+        <p className="text-2xl font-black text-rw-ink tracking-tight">{word.lemma}</p>
       </div>
 
       <div className="space-y-4 mb-4">
@@ -218,27 +227,27 @@ export function ContextWritingContent({
           const exampleKobun = examples.kobun[0] || meaning.examples?.[0]?.jp || '';
           const exampleModern = examples.modern[0] || meaning.examples?.[0]?.translation || '';
 
-          let containerClass = 'p-3 rounded-lg border-2';
+          let containerClass = 'p-5 rounded-2xl border-2';
           if (checked) {
-            containerClass += isCorrect ? ' bg-green-50 border-green-500' : ' bg-red-50 border-red-500';
+            containerClass += isCorrect ? ' bg-rw-accent-soft border-rw-accent' : ' bg-rw-primary-soft border-rw-primary';
           } else {
-            containerClass += ' bg-slate-50 border-slate-200';
+            containerClass += ' bg-rw-paper border-rw-ink';
           }
 
           return (
             <div key={meaning.qid} className={containerClass}>
-              <p className="text-slate-700 mb-3 font-medium">
+              <p className="text-rw-ink font-serif text-base leading-relaxed mb-3">
                 {dataParser.getEmphasizedExample(exampleKobun, word.lemma || '') || 'データなし'}
               </p>
 
               <div className="mb-3">
-                <label className="block text-sm font-medium text-slate-600 mb-2">この文脈での意味を記述:</label>
+                <label className="block text-xs font-black text-rw-ink-soft tracking-wider mb-2">この文脈での意味をかいてね</label>
                 <input
                   type="text"
                   value={userAnswer}
                   onChange={(e) => handleAnswerChange(meaning.qid, e.target.value)}
                   disabled={checked}
-                  className="w-full p-2 border-2 border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
+                  className="w-full p-3 bg-rw-paper border-2 border-rw-ink rounded-xl font-serif text-base text-rw-ink outline-none focus:border-rw-primary transition-colors disabled:opacity-70"
                   placeholder="意味を入力してください"
                 />
               </div>
@@ -247,26 +256,21 @@ export function ContextWritingContent({
               {checked && (
                 <>
                   {/* スコア表示 */}
-                  <div className={`mb-3 p-2 rounded-lg text-center font-bold ${
-                    score === 100 ? 'bg-green-100 text-green-700' :
-                    score === 90 ? 'bg-blue-100 text-blue-700' :
-                    score === 85 ? 'bg-cyan-100 text-cyan-700' :
-                    score === 75 ? 'bg-yellow-100 text-yellow-700' :
-                    score === 65 ? 'bg-orange-100 text-orange-700' :
-                    score === 60 ? 'bg-pink-100 text-pink-700' :
-                    'bg-red-100 text-red-700'
-                  }`}>
-                    {score}点 {result?.detail && `(${result.detail})`}
+                  <div
+                    className="mb-3 p-3 rounded-xl text-center font-black text-rw-paper"
+                    style={{ background: getScoreColor(score) }}
+                  >
+                    {score}<span className="text-sm font-bold ml-1">点</span> {result?.detail && <span className="text-sm font-medium ml-1">({result.detail})</span>}
                   </div>
 
                   {/* 文法のヒント表示 */}
                   {grammarIssues[meaning.qid] && grammarIssues[meaning.qid].length > 0 && (
-                    <div className="mb-3 p-3 rounded-lg bg-blue-50 border border-blue-300">
-                      <p className="text-sm font-bold text-blue-700 mb-2">💡 文法のヒント:</p>
+                    <div className="mb-3 p-4 rounded-xl bg-rw-primary-soft border-l-4 border-rw-primary">
+                      <p className="text-sm font-black text-rw-primary mb-2 tracking-wider">文法のヒント</p>
                       {grammarIssues[meaning.qid].map((issue, idx) => (
-                        <div key={idx} className="text-sm text-blue-800 mb-1">
-                          <span className="font-medium">{issue.token}:</span> {issue.rule}
-                          {issue.where.note && <span className="block text-xs text-blue-600 ml-2">→ {issue.where.note}</span>}
+                        <div key={idx} className="text-sm text-rw-ink mb-1">
+                          <span className="font-black">{issue.token}:</span> {issue.rule}
+                          {issue.where.note && <span className="block text-xs text-rw-ink-soft ml-2 mt-1">→ {issue.where.note}</span>}
                         </div>
                       ))}
                     </div>
@@ -274,20 +278,20 @@ export function ContextWritingContent({
 
                   {/* 採点結果訂正UI - すべてのスコアで利用可能 */}
                   {userJudgment === undefined && (
-                    <div className="mb-3 p-3 rounded-lg bg-blue-50 border border-blue-300">
-                      <p className="text-sm font-medium text-blue-800 mb-2">
-                        採点結果に納得できませんか？あなたの判定を選択してください
+                    <div className="mb-3 p-4 rounded-xl bg-rw-paper border-2 border-rw-rule">
+                      <p className="text-sm font-black text-rw-ink mb-3 text-center">
+                        採点結果に納得できないときは判定してね
                       </p>
-                      <div className="flex gap-2 justify-center">
+                      <div className="flex gap-2 justify-center flex-wrap">
                         <button
                           onClick={() => handleUserJudgment(meaning.qid, true)}
-                          className="px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition"
+                          className="px-6 py-2 bg-rw-accent text-rw-paper border-2 border-rw-accent font-black rounded-full transition hover:-translate-y-0.5"
                         >
                           ○ 正解
                         </button>
                         <button
                           onClick={() => handleUserJudgment(meaning.qid, false)}
-                          className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition"
+                          className="px-6 py-2 bg-rw-primary text-rw-paper border-2 border-rw-primary font-black rounded-full transition hover:-translate-y-0.5"
                         >
                           × 不正解
                         </button>
@@ -297,11 +301,12 @@ export function ContextWritingContent({
 
                   {/* ユーザー判定結果表示と取り消しボタン */}
                   {userJudgment !== undefined && (
-                    <div className="mb-3 p-3 rounded-lg bg-blue-50 border border-blue-200">
-                      <div className="flex items-center justify-between">
-                        <div className={`font-bold ${
-                          userJudgment ? 'text-green-700' : 'text-red-700'
-                        }`}>
+                    <div className="mb-3 p-3 rounded-xl bg-rw-paper border-2 border-rw-rule">
+                      <div className="flex items-center justify-between gap-2">
+                        <div
+                          className="font-black"
+                          style={{ color: userJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)' }}
+                        >
                           {userJudgment ? '○ 正解と判定しました' : '× 不正解と判定しました'}
                         </div>
                         <button
@@ -310,19 +315,23 @@ export function ContextWritingContent({
                             delete next[meaning.qid];
                             return next;
                           })}
-                          className="text-sm text-blue-600 hover:text-blue-800 underline"
+                          className="text-sm text-rw-ink-soft hover:text-rw-ink underline font-bold"
                         >
                           取消
                         </button>
                       </div>
-                      <p className="text-xs text-blue-700 mt-1">この訂正は結果に反映されます</p>
+                      <p className="text-xs text-rw-ink-soft mt-1 font-medium">この訂正は結果に反映されます</p>
                     </div>
                   )}
 
-                  <div className={`p-3 rounded-lg ${isCorrect ? 'bg-green-100 border border-green-300' : 'bg-yellow-50 border border-yellow-300'}`}>
-                    <p className="text-sm font-medium text-slate-700 mb-1">正解:</p>
-                    <p className="text-slate-900 font-bold mb-2">{correctAnswer}</p>
-                    <p className="text-sm text-slate-700">{exampleModern}</p>
+                  <div
+                    className={`p-4 rounded-xl border-2 ${
+                      isCorrect ? 'bg-rw-paper border-rw-accent' : 'bg-rw-paper border-rw-pop'
+                    }`}
+                  >
+                    <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">正解</p>
+                    <p className="text-rw-ink font-black text-base mb-2">{correctAnswer}</p>
+                    <p className="text-sm text-rw-ink-soft font-serif">{exampleModern}</p>
                   </div>
                 </>
               )}
@@ -335,9 +344,10 @@ export function ContextWritingContent({
         <div className="text-center">
           <button
             onClick={handleSubmit}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg transition"
+            className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
+            style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
           >
-            回答を提出
+            採点する
           </button>
         </div>
       )}
@@ -352,30 +362,31 @@ export function ContextWritingContent({
               handleNext();
             }}
             disabled={isSubmitting}
-            className={`font-bold py-3 px-8 rounded-lg transition ${
+            className={`font-black rounded-full px-8 py-3 tracking-widest transition-transform ${
               isSubmitting
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600 active:scale-95'
-            } text-white`}
+                ? 'bg-rw-ink-soft text-rw-paper cursor-not-allowed opacity-70'
+                : 'bg-rw-primary text-rw-paper hover:-translate-y-0.5'
+            }`}
+            style={!isSubmitting ? { boxShadow: '0 4px 0 var(--rw-ink)' } : undefined}
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-rw-paper" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 送信中...
               </span>
-            ) : '次へ'}
+            ) : 'つぎへ'}
           </button>
         </div>
       )}
 
       {checked && (
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-4">
+        <div className="bg-rw-paper p-6 rounded-2xl border-2 border-rw-ink mb-4">
           <div className="text-center mb-2">
-            <h3 className="text-lg font-bold text-slate-800 mb-2">結果</h3>
-            <div className="text-slate-700">
+            <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">結果</h3>
+            <div className="text-rw-ink font-black text-2xl tracking-tight">
               {(() => {
                 const correctAnswers = word.meanings.filter(m => {
                   const result = matchResults[m.qid];
