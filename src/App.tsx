@@ -305,6 +305,12 @@ function App() {
   // Initial quiz setup when data loads or settings change
   useEffect(() => {
     if (allWords.length > 0 && !isGeneratingQuiz) {
+      // フォーカスクイズ (?qid 経由 / 苦手復習 / SRS復習) が処理中は
+      // デフォルト範囲の上書きセットアップを走らせない。
+      // URL に ?qid が残っている場合は qid 効果側がまだ走っていないので
+      // 同様に抑止 (race condition 回避)。
+      if (quizQidFilter || searchParams.get('qid')) return;
+
       let cancelled = false;
 
       const runSetup = async () => {
@@ -328,7 +334,8 @@ function App() {
     currentMode,
     wordQuizType, wordNumQuestions, wordRange.from, wordRange.to,
     polysemyQuizType, polysemyNumQuestions, polysemyRange.from, polysemyRange.to,
-    allWords.length
+    allWords.length,
+    quizQidFilter,
   ]);
 
 
