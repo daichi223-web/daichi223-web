@@ -299,10 +299,10 @@ export default function TextReader() {
         )}
 
         {text.sentences.map((sentence) => (
-          <div key={sentence.id} className="space-y-2">
-            {/* 本文センテンスカード */}
+          <div key={sentence.id} className="space-y-1.5">
+            {/* 本文 (枠なし、行間広めの読み物体裁) */}
             <div
-              className="bg-rw-paper border-2 border-rw-ink rounded-2xl px-4 py-3.5 font-serif"
+              className="font-serif text-rw-ink"
               style={{ fontSize: "17px", lineHeight: 2.2 }}
             >
               <TokenizedText
@@ -319,7 +319,7 @@ export default function TextReader() {
                 }
               />
             </div>
-            {/* 現代語訳パネル */}
+            {/* 現代語訳 (薄背景、枠なし、左ボーダーのみ) */}
             {showTranslation && (
               <div
                 onClick={() =>
@@ -327,15 +327,16 @@ export default function TextReader() {
                     activeSentence === sentence.id ? null : sentence.id
                   )
                 }
-                className="bg-rw-primary text-rw-paper rounded-2xl px-4 py-3 cursor-pointer transition-opacity"
+                className="border-l-4 border-rw-primary pl-3 py-1 cursor-pointer transition-opacity"
                 style={{
+                  background: 'var(--rw-primary-soft)',
                   opacity:
                     activeSentence === null || activeSentence === sentence.id
                       ? 1
-                      : 0.65,
+                      : 0.55,
                 }}
               >
-                <p className="text-sm font-semibold leading-relaxed">
+                <p className="text-sm leading-relaxed text-rw-ink">
                   {sentence.modernTranslation}
                 </p>
               </div>
