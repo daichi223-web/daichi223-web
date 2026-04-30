@@ -73,6 +73,38 @@
   font-weight: 500;
 }
 
+/* 単語帳追加ボタン (Reiwa スタイル) */
+.vocab-modal-add-btn {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 18px;
+  background: var(--rw-paper);
+  color: var(--rw-ink);
+  border: 2px solid var(--rw-ink);
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--rw-primary);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.vocab-modal-add-btn:hover {
+  background: var(--rw-primary-soft);
+}
+.vocab-modal-add-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--rw-primary);
+}
+.vocab-modal-add-btn.is-added {
+  background: var(--rw-accent);
+  color: var(--rw-paper);
+  border-color: var(--rw-accent);
+  box-shadow: none;
+  cursor: default;
+}
+
 .vocab-modal-tabs {
   display: flex;
   border-bottom: 1px solid #e5e5ea;

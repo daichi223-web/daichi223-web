@@ -37,10 +37,11 @@ const sectionLabels: Record<SectionKey, string> = {
   characters: "登場人物・敬語",
 };
 
-const sectionBorders: Record<SectionKey, string> = {
-  background: "border-layer-3",
-  learningPoints: "border-kin",
-  characters: "border-layer-4",
+// 各セクションのインジケータカラー (学習根幹のレイヤーカラーを温存)
+const sectionIndicatorBg: Record<SectionKey, string> = {
+  background: "bg-layer-3",
+  learningPoints: "bg-kin",
+  characters: "bg-layer-4",
 };
 
 export default function TextGuide() {
@@ -109,23 +110,27 @@ export default function TextGuide() {
 
   if (loadError) {
     return (
-      <div className="min-h-dvh flex items-center justify-center p-6">
+      <div className="min-h-dvh bg-rw-bg flex items-center justify-center p-6">
         <div className="max-w-md text-center space-y-4">
-          <Link to={`/read/texts/${textId}?layer=1`} className="text-sm text-scaffold hover:text-sumi">
+          <Link
+            to={`/read/texts/${textId}?layer=1`}
+            className="text-sm font-bold text-rw-ink-soft hover:text-rw-ink transition-colors"
+          >
             ← 本文へ
           </Link>
           {loadError === "not-found" ? (
-            <p>解説が見つかりません</p>
+            <p className="text-rw-ink">解説が見つかりません</p>
           ) : (
             <>
-              <p className="text-base font-bold">解説を読み込めませんでした</p>
-              <p className="text-sm text-scaffold">
+              <p className="text-base font-black text-rw-ink">解説を読み込めませんでした</p>
+              <p className="text-sm text-rw-ink-soft leading-relaxed">
                 学校などのセキュリティ環境から一部リソースが遮断されている可能性があります。
                 時間をおくか、学外ネットワークで再度お試しください。
               </p>
               <button
                 onClick={() => window.location.reload()}
-                className="px-4 py-2 text-sm rounded-lg bg-shu text-white hover:bg-shu/90 transition-colors"
+                className="px-4 py-2 text-sm font-black rounded-full bg-rw-ink text-rw-paper transition-colors"
+                style={{ boxShadow: "0 2px 0 var(--rw-primary)" }}
               >
                 リロード
               </button>
@@ -138,8 +143,8 @@ export default function TextGuide() {
 
   if (!guide) {
     return (
-      <div className="min-h-dvh flex items-center justify-center">
-        <p className="text-scaffold">読み込み中...</p>
+      <div className="min-h-dvh bg-rw-bg flex items-center justify-center">
+        <p className="text-rw-ink-soft">読み込み中...</p>
       </div>
     );
   }
@@ -160,12 +165,14 @@ export default function TextGuide() {
       >
         <button
           onClick={() => toggleSection(key)}
-          className="w-full flex items-center gap-3 text-left py-3"
+          className="w-full flex items-center gap-3 text-left py-2.5"
         >
-          <div className={`w-1 h-6 rounded-full ${sectionBorders[key]} border-l-4`} />
-          <h2 className="text-xl font-bold flex-1">{section.heading}</h2>
+          <div className={`w-1 h-6 rounded-sm ${sectionIndicatorBg[key]}`} />
+          <h2 className="text-[17px] font-black text-rw-ink flex-1">
+            {section.heading}
+          </h2>
           <span
-            className={`text-sm text-sumi/40 transition-transform ${
+            className={`text-xs text-rw-ink-soft transition-transform ${
               isOpen ? "rotate-180" : ""
             }`}
           >
@@ -178,7 +185,8 @@ export default function TextGuide() {
             {section.content?.map((p, i) => (
               <p
                 key={i}
-                className="text-sm leading-relaxed text-sumi/80 whitespace-pre-wrap"
+                className="text-sm text-rw-ink/80 whitespace-pre-wrap"
+                style={{ lineHeight: 1.8 }}
               >
                 {p}
               </p>
@@ -186,30 +194,37 @@ export default function TextGuide() {
 
             {section.glossary && section.glossary.length > 0 && (
               <div className="mt-4">
-                <h3 className="text-sm font-bold mb-2">用語解説</h3>
-                <div className="overflow-x-auto rounded-lg border border-sumi/10">
+                <h3 className="text-xs font-black text-rw-ink mb-2">用語解説</h3>
+                <div className="overflow-hidden rounded-xl border-2 border-rw-ink bg-rw-paper">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-sumi/5">
-                        <th className="text-left px-3 py-2 font-bold whitespace-nowrap">
+                      <tr className="bg-rw-primary-soft text-rw-primary">
+                        <th className="text-left px-3 py-2.5 font-black whitespace-nowrap text-[11px]">
                           語
                         </th>
-                        <th className="text-left px-3 py-2 font-bold whitespace-nowrap">
+                        <th className="text-left px-3 py-2.5 font-black whitespace-nowrap text-[11px]">
                           読み
                         </th>
-                        <th className="text-left px-3 py-2 font-bold">意味</th>
+                        <th className="text-left px-3 py-2.5 font-black text-[11px]">
+                          意味
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {section.glossary.map((entry, i) => (
-                        <tr key={i} className={i % 2 === 1 ? "bg-sumi/[0.02]" : ""}>
-                          <td className="px-3 py-2 font-bold whitespace-nowrap">
+                        <tr
+                          key={i}
+                          className="border-t border-rw-rule"
+                        >
+                          <td className="px-3 py-2.5 font-bold text-rw-ink whitespace-nowrap">
                             {entry.term}
                           </td>
-                          <td className="px-3 py-2 text-scaffold whitespace-nowrap">
+                          <td className="px-3 py-2.5 text-rw-ink-soft whitespace-nowrap">
                             {entry.reading}
                           </td>
-                          <td className="px-3 py-2 text-sumi/70">{entry.meaning}</td>
+                          <td className="px-3 py-2.5 text-rw-ink/80">
+                            {entry.meaning}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -224,46 +239,57 @@ export default function TextGuide() {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col max-w-2xl mx-auto">
+    <div className="min-h-dvh bg-rw-bg flex flex-col max-w-2xl mx-auto">
       {/* ヘッダー */}
-      <header className="sticky top-0 z-20 bg-washi/95 backdrop-blur border-b border-sumi/10">
-        <div className="px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-20 bg-rw-paper border-b-2 border-rw-ink">
+        <div className="px-4 py-3 flex items-center justify-between gap-3">
           <Link
             to={`/read/texts/${textId}?layer=1`}
-            className="text-sm text-scaffold hover:text-sumi transition-colors"
+            className="text-xs font-bold text-rw-ink-soft hover:text-rw-ink transition-colors shrink-0"
           >
             ← 本文へ
           </Link>
-          <div className="text-center">
-            <h1 className="text-base font-bold">{guide.title}</h1>
-            <p className="text-xs text-scaffold">{guide.source} — 解説</p>
+          <div className="text-center min-w-0">
+            <h1 className="text-sm font-black text-rw-ink truncate">
+              {guide.title}
+            </h1>
+            <p className="text-[10px] text-rw-ink-soft truncate">
+              {guide.source} — 解説
+            </p>
           </div>
           <Link
             to="/read"
-            className="text-sm text-scaffold hover:text-sumi transition-colors"
+            className="text-xs font-bold text-rw-ink-soft hover:text-rw-ink transition-colors shrink-0"
           >
             トップ
           </Link>
         </div>
 
         {/* セクションナビ */}
-        <nav className="px-4 pb-3 flex gap-2 overflow-x-auto scrollbar-hide">
+        <nav className="px-4 pb-3 flex gap-1.5 overflow-x-auto scrollbar-hide">
           {sectionKeys
             .filter((key) => !!guide.sections[key])
-            .map((key) => (
-              <button
-                key={key}
-                onClick={() => scrollTo(key)}
-                className={`shrink-0 px-3 py-1.5 text-xs font-bold rounded-full transition-all
-                ${
-                  activeSection === key
-                    ? "bg-sumi text-washi"
-                    : "bg-sumi/5 text-sumi/60 hover:bg-sumi/10"
-                }`}
-              >
-                {sectionLabels[key]}
-              </button>
-            ))}
+            .map((key) => {
+              const active = activeSection === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => scrollTo(key)}
+                  className={`shrink-0 px-3 py-1.5 text-[11px] font-extrabold rounded-full transition-colors ${
+                    active
+                      ? "bg-rw-ink text-rw-paper"
+                      : "bg-rw-paper border border-rw-rule text-rw-ink-soft hover:text-rw-ink"
+                  }`}
+                  style={
+                    active
+                      ? { boxShadow: "0 2px 0 var(--rw-primary)" }
+                      : undefined
+                  }
+                >
+                  {sectionLabels[key]}
+                </button>
+              );
+            })}
         </nav>
       </header>
 
@@ -273,17 +299,18 @@ export default function TextGuide() {
       </main>
 
       {/* フッター */}
-      <footer className="sticky bottom-0 bg-washi/95 backdrop-blur border-t border-sumi/10 px-4 py-3">
-        <div className="flex gap-3 justify-center">
+      <footer className="sticky bottom-0 bg-rw-paper border-t border-rw-rule px-4 py-2">
+        <div className="flex gap-2 justify-center">
           <Link
             to={`/read/texts/${textId}?layer=1`}
-            className="px-4 py-2 text-sm rounded-lg bg-shu text-white hover:bg-shu/90 transition-colors font-bold"
+            className="px-4 py-2 text-xs rounded-full bg-rw-ink text-rw-paper font-black transition-colors"
+            style={{ boxShadow: "0 2px 0 var(--rw-primary)" }}
           >
-            本文を読む
+            📖 本文を読む
           </Link>
           <Link
             to="/read"
-            className="px-4 py-2 text-sm rounded-lg border border-sumi/20 hover:bg-sumi/5 transition-colors"
+            className="px-4 py-2 text-xs rounded-full bg-rw-paper border-2 border-rw-ink text-rw-ink font-bold transition-colors"
           >
             テキスト一覧へ
           </Link>

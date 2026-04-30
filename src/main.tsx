@@ -8,6 +8,7 @@ import { TestGrading } from './TestGrading.tsx'
 import PWAInstallBanner from './components/PWAInstallBanner.tsx'
 import PullToRefresh from './components/PullToRefresh.tsx'
 import { ensureAnonSession } from './lib/anonAuth.ts'
+import { ReiwaThemeProvider } from './theme/ThemeContext'
 import './index.css'
 
 // 読解 v3 と、単語アプリから動線が遠いページは遅延ロード
@@ -21,6 +22,7 @@ const Teacher = lazy(() => import('./pages/Teacher.tsx'))
 const TextDetail = lazy(() => import('./pages/TextDetail.tsx'))
 const TextsIndex = lazy(() => import('./pages/TextsIndex.tsx'))
 const SearchPage = lazy(() => import('./pages/SearchPage.tsx'))
+const StatsPage = lazy(() => import('./pages/StatsPage.tsx'))
 
 // Supabase Anonymous Sign-in を起動時に一度だけ発火する。
 // RLS が auth.uid ベースに締まっているので、学習記録系の書き込み前に
@@ -38,6 +40,7 @@ function Fallback() {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
+      <ReiwaThemeProvider>
       <PullToRefresh />
       <PWAInstallBanner />
       <Suspense fallback={<Fallback />}>
@@ -49,6 +52,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/texts" element={<TextsIndex />} />
           <Route path="/texts/:id" element={<TextDetail />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/stats" element={<StatsPage />} />
 
           {/* 読解 v3（/read 配下） */}
           <Route path="/read" element={<HomeV3 />} />
@@ -59,6 +63,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/vocab" element={<VocabPage />} />
         </Routes>
       </Suspense>
+      </ReiwaThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

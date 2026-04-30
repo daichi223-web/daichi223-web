@@ -18,6 +18,20 @@
   --layer-4: #9333ea;   /* 敬語 */
   --layer-5: #d97706;   /* 読解 */
   --scaffold: #9ca3af;
+
+  /* Reiwa デザイン用カラートークン (デフォルトは「土」プリセット)
+     ReiwaThemeProvider が起動時に上書きするので、ここは SSR/初回描画用フォールバック */
+  --rw-bg: #f6f1ea;
+  --rw-paper: #fdfaf5;
+  --rw-ink: #2a2520;
+  --rw-ink-soft: #7a6f64;
+  --rw-rule: #e3dccf;
+  --rw-primary: #c47868;
+  --rw-primary-soft: #f0e0d8;
+  --rw-accent: #8aaa8e;
+  --rw-accent-soft: #dfe7da;
+  --rw-pop: #d9b574;
+  --rw-tertiary: #8896b8;
 }
 
 /* kobun-v3 リーダー用スタイル */

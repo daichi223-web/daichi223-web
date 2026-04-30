@@ -46,7 +46,7 @@ export function GrammarPopover({
       <div
         data-grammar-popover
         className="hidden sm:block absolute z-20 mt-1 left-0 right-0 max-w-xs mx-auto
-                   bg-white rounded-lg shadow-lg border border-sumi/10 p-4
+                   bg-rw-paper rounded-2xl shadow-lg border-2 border-rw-ink p-4
                    animate-popover-in"
       >
         <PopoverContent
@@ -64,14 +64,14 @@ export function GrammarPopover({
 
       {/* モバイル: ボトムシート */}
       <div className="sm:hidden fixed inset-0 z-50">
-        <div className="absolute inset-0 bg-black/20" onClick={onClose} />
+        <div className="absolute inset-0 bg-black/30" onClick={onClose} />
         <div
           data-grammar-popover
           className="absolute bottom-0 left-0 right-0
-                     bg-white rounded-t-2xl shadow-lg p-5 pb-8
-                     animate-slide-up max-h-[70vh] overflow-y-auto"
+                     bg-rw-paper rounded-t-3xl shadow-2xl p-5 pb-8
+                     animate-slide-up max-h-[75vh] overflow-y-auto border-t-2 border-rw-ink"
         >
-          <div className="w-10 h-1 bg-sumi/20 rounded-full mx-auto mb-4" />
+          <div className="w-10 h-1 bg-rw-ink/20 rounded-full mx-auto mb-4" />
           <PopoverContent
             token={token}
             isScaffold={isScaffold}
@@ -115,6 +115,7 @@ function PopoverContent({
   const nlmUrl = buildNotebookLmUrl({ token, currentLayer });
 
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
+  const [addedToVocab, setAddedToVocab] = useState(false);
   // 見出し語 / 表層形のいずれかが vocab DB にあれば「📖 語彙解説」を出せる
   const vocabCandidate = (() => {
     const base = tag.baseForm;
@@ -133,45 +134,48 @@ function PopoverContent({
       grammarRefId: token.grammarRefId,
       viewedAt: new Date().toISOString(),
     });
+    setAddedToVocab(true);
+    // 1.5秒で自動リセット (再追加可能、無効化はしない)
+    setTimeout(() => setAddedToVocab(false), 1500);
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 text-rw-ink">
       <div className="flex items-baseline justify-between">
-        <p className="text-lg font-bold">{token.text}</p>
+        <p className="text-lg font-black">{token.text}</p>
         {tag.baseForm && tag.baseForm !== token.text && (
-          <p className="text-sm text-scaffold">← {tag.baseForm}</p>
+          <p className="text-sm text-rw-ink-soft">← {tag.baseForm}</p>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-        <span className="text-scaffold">品詞</span>
+      <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-sm">
+        <span className="text-rw-ink-soft font-bold">品詞</span>
         <span>{tag.pos}</span>
 
         {tag.meaning && (
           <>
-            <span className="text-scaffold">意味</span>
+            <span className="text-rw-ink-soft font-bold">意味</span>
             <span>{tag.meaning}</span>
           </>
         )}
 
         {token.translation && (
           <>
-            <span className="text-scaffold">訳</span>
+            <span className="text-rw-ink-soft font-bold">訳</span>
             <span>{token.translation}</span>
           </>
         )}
 
         {!isScaffold && tag.conjugationType && (
           <>
-            <span className="text-scaffold">活用型</span>
+            <span className="text-rw-ink-soft font-bold">活用型</span>
             <span>{tag.conjugationType}</span>
           </>
         )}
 
         {!isScaffold && tag.conjugationForm && (
           <>
-            <span className="text-scaffold">活用形</span>
+            <span className="text-rw-ink-soft font-bold">活用形</span>
             <span>{tag.conjugationForm}</span>
           </>
         )}
@@ -179,51 +183,61 @@ function PopoverContent({
 
       {/* 重要ポイント（hint） */}
       {!isScaffold && token.hint && (
-        <div className="bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
-          <p className="text-xs font-bold text-amber-700 mb-0.5">重要ポイント</p>
-          <p className="text-sm text-amber-900">{token.hint}</p>
+        <div className="rounded-xl px-3 py-2 border-l-4 border-rw-pop" style={{ background: 'var(--rw-pop)' + '33' }}>
+          <p className="text-xs font-black text-rw-ink mb-0.5 tracking-wider">重要ポイント</p>
+          <p className="text-sm text-rw-ink">{token.hint}</p>
         </div>
       )}
 
       {/* 判別の筋道（分析対象のみ） */}
       {!isScaffold && analysis && analysis.reasoning.length > 0 && (
-        <div className="border-t border-sumi/10 pt-3 space-y-2">
-          <p className="text-xs font-bold text-scaffold">判別の筋道</p>
+        <div className="border-t border-rw-rule pt-3 space-y-2">
+          <p className="text-xs font-black text-rw-ink-soft tracking-wider">判別の筋道</p>
           {analysis.reasoning.map((step, i) => (
             <div key={i} className="text-xs space-y-0.5">
-              <p className="text-shu font-bold">Q: {step.question}</p>
-              <p>A: {step.answer}</p>
-              <p className="text-scaffold">{step.explanation}</p>
+              <p className="text-rw-primary font-bold">Q: {step.question}</p>
+              <p className="text-rw-ink">A: {step.answer}</p>
+              <p className="text-rw-ink-soft">{step.explanation}</p>
             </div>
           ))}
         </div>
       )}
 
-      {/* 単語帳追加ボタン */}
-      <div className="border-t border-sumi/10 pt-2">
-        <button
-          className="text-xs text-scaffold hover:text-sumi transition-colors"
-          onClick={handleAddVocab}
-        >
-          + 単語帳に追加
-        </button>
-      </div>
+      {/* 単語帳追加ボタン (大きめ・目立たせる) */}
+      <button
+        onClick={handleAddVocab}
+        disabled={addedToVocab}
+        className={`w-full font-black py-2.5 px-4 rounded-full transition-all border-2 ${
+          addedToVocab
+            ? 'bg-rw-accent text-rw-paper border-rw-accent'
+            : 'bg-rw-paper text-rw-ink border-rw-ink hover:bg-rw-primary-soft active:scale-95'
+        }`}
+        style={addedToVocab ? undefined : { boxShadow: '0 3px 0 var(--rw-primary)' }}
+      >
+        {addedToVocab ? '✓ 単語帳に追加しました' : '+ 単語帳に追加'}
+      </button>
 
       {/* 語彙解説 (vocab DB にある語のみ) */}
       {vocabCandidate && (
         <button
           onClick={() => setVocabLemma(vocabCandidate)}
-          className="w-full text-left px-3 py-2 bg-layer-5/5 hover:bg-layer-5/10 border border-layer-5/20 rounded-md text-sm font-bold text-layer-5 transition-colors"
+          className="w-full text-left px-3 py-2 rounded-xl text-sm font-bold border-2 transition-colors"
+          style={{
+            background: 'color-mix(in srgb, var(--layer-5) 8%, transparent)',
+            borderColor: 'color-mix(in srgb, var(--layer-5) 30%, transparent)',
+            color: 'var(--layer-5)',
+          }}
         >
           📖 「{vocabCandidate}」の語彙解説
         </button>
       )}
 
       {/* リンク3つ横並び */}
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center justify-between text-sm border-t border-rw-rule pt-2">
         {token.grammarRefId ? (
           <button
-            className="text-layer-1 hover:underline font-bold"
+            className="hover:underline font-bold"
+            style={{ color: 'var(--layer-1)' }}
             onClick={() => {
               onClose();
               navigate(`/read/reference/${token.grammarRefId}`);
@@ -235,7 +249,7 @@ function PopoverContent({
           <span />
         )}
         <button
-          className="text-blue-600 hover:underline"
+          className="text-rw-tertiary hover:underline"
           onClick={() => {
             window.open(nlmUrl, "_blank", "noopener,noreferrer");
           }}
@@ -243,7 +257,7 @@ function PopoverContent({
           NLM →
         </button>
         <button
-          className="text-shu hover:text-shu/80 transition-colors"
+          className="text-rw-primary font-bold hover:opacity-80 transition-colors"
           onClick={() => {
             window.open(gemUrl, "_blank", "noopener,noreferrer");
           }}

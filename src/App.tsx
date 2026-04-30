@@ -10,13 +10,27 @@ import { WordQuizContent } from './components/quiz/WordQuizContent';
 import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
-import { recordAnswer } from './lib/wordStats';
-import { updateSrsState } from './lib/srsEngine';
+import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
+import { updateSrsState, getDueWords } from './lib/srsEngine';
 import VocabModal from './components/VocabModal';
 import { IndexModal } from './components/IndexModal';
 import { chapterFor, chapterColor } from './utils/chapters';
 import bundledVocabIndex from './data/vocabIndex.json';
 import { hasAdminSession } from './lib/adminSession';
+import ReiwaThemePicker from './theme/ReiwaThemePicker';
+import HomeReiwa from './components/HomeReiwa';
+
+const WORD_QUIZ_LABELS: Record<WordQuizType, string> = {
+  'word-meaning': '単語の意味を選ぶ',
+  'word-reverse': '意味から単語を選ぶ',
+  'sentence-meaning': '例文から意味を選ぶ',
+  'meaning-writing': '意味を書いて答える',
+};
+const POLYSEMY_QUIZ_LABELS: Record<PolysemyQuizType, string> = {
+  'example-comprehension': '例文と意味を結びつける',
+  'true-false': '例文の訳の正誤を判断',
+  'context-writing': '文脈から意味を書く',
+};
 
 type AppMode = 'word' | 'polysemy';
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
@@ -147,6 +161,69 @@ function App() {
 
   // Index modal state
   const [showIndexModal, setShowIndexModal] = useState(false);
+  const [showThemePicker, setShowThemePicker] = useState(false);
+  const [showHome, setShowHome] = useState(true);
+  // 苦手単語 / SRS 復習用に、特定の qid セットだけで出題する場合に使う
+  const [quizQidFilter, setQuizQidFilter] = useState<string[] | null>(null);
+  const [quizMode, setQuizMode] = useState<'normal' | 'weak' | 'srs'>('normal');
+  const [weakWordsCount, setWeakWordsCount] = useState(0);
+  const [dueWordsCount, setDueWordsCount] = useState(0);
+  // 累計学習統計 (Result 画面で表示)
+  const [cumulativeStats, setCumulativeStats] = useState<{
+    totalAnswered: number;
+    totalCorrect: number;
+    masteredCount: number; // 80%以上正解 + 5回以上挑戦
+  }>({ totalAnswered: 0, totalCorrect: 0, masteredCount: 0 });
+
+  // ホーム表示時に学習履歴ベースの集計を取得
+  useEffect(() => {
+    if (!showHome) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [weak, due] = await Promise.all([getWeakWords(), getDueWords()]);
+        if (!cancelled) {
+          setWeakWordsCount(weak.length);
+          setDueWordsCount(due.length);
+        }
+      } catch {
+        if (!cancelled) {
+          setWeakWordsCount(0);
+          setDueWordsCount(0);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [showHome]);
+
+  // 結果表示時に累計統計を取得
+  useEffect(() => {
+    if (!showResults) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const stats = await getWordStats();
+        if (cancelled) return;
+        let totalAnswered = 0;
+        let totalCorrect = 0;
+        let mastered = 0;
+        for (const s of Object.values(stats)) {
+          const n = s.correct + s.incorrect;
+          totalAnswered += n;
+          totalCorrect += s.correct;
+          if (n >= 5 && s.correct / n >= 0.8) mastered += 1;
+        }
+        setCumulativeStats({ totalAnswered, totalCorrect, masteredCount: mastered });
+      } catch {
+        // silent fail (offline 等)
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [showResults]);
   const [pendingModeSwitch, setPendingModeSwitch] = useState<AppMode | null>(null);
   const [indexSearchQuery, setIndexSearchQuery] = useState('');
 
@@ -298,7 +375,7 @@ function App() {
       .map(([lemma, meanings]) => ({ lemma, meanings }));
   };
 
-  const setupQuiz = async () => {
+  const setupQuiz = async (qidFilterOverride?: string[]) => {
     // Reset all quiz states when switching modes
     setShowResults(false);
     setIsQuizActive(false);
@@ -311,23 +388,35 @@ function App() {
     setWrongAnswers([]);
 
     if (currentMode === 'word') {
-      await setupWordQuiz();
+      await setupWordQuiz(qidFilterOverride);
     } else {
       setupPolysemyQuiz();
     }
   };
 
-  const setupWordQuiz = async () => {
-    const start = wordRange.from ?? 1;
-    const end = wordRange.to ?? 330;
-    const targetWords = allWords.filter(word =>
-      word.group >= start && word.group <= end
-    );
+  const setupWordQuiz = async (qidFilterOverride?: string[]) => {
+    // qid フィルタ (引数優先、次に state)。指定があれば苦手単語 / SRS 復習として
+    // その qid のみ出題、なければ範囲で絞り込む
+    const filter = qidFilterOverride ?? quizQidFilter;
+    let targetWords: Word[];
+    if (filter && filter.length > 0) {
+      const qidSet = new Set(filter);
+      targetWords = allWords.filter((w) => qidSet.has(w.qid));
+    } else {
+      const start = wordRange.from ?? 1;
+      const end = wordRange.to ?? 330;
+      targetWords = allWords.filter(word =>
+        word.group >= start && word.group <= end
+      );
+    }
 
     // 記述式は1単語以上でOK、選択式も1単語以上（前後5単語から選択肢を選ぶ）
     if (targetWords.length < 1) {
       if (allWords.length > 0) {
-        showErrorMessage('出題範囲に単語が見つかりません。');
+        const msg = quizQidFilter
+          ? '対象となる単語が見つかりません。'
+          : '出題範囲に単語が見つかりません。';
+        showErrorMessage(msg);
       }
       return;
     }
@@ -1013,6 +1102,27 @@ function App() {
     <>
       {/* Top-right fixed navigation - compact on mobile */}
       <div className="fixed top-2 right-2 z-50 flex gap-1.5">
+        {!showHome && (
+          <button
+            onClick={() => {
+              setShowHome(true);
+              setShowResults(false);
+              setQuizQidFilter(null);
+              setQuizMode('normal');
+            }}
+            className="bg-rw-ink hover:opacity-90 text-rw-paper font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+            title="ホームに戻る"
+          >
+            🏠<span className="hidden sm:inline ml-1">ホーム</span>
+          </button>
+        )}
+        <button
+          onClick={() => setShowThemePicker(true)}
+          className="bg-rw-primary hover:opacity-90 text-rw-paper font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+          title="テーマ設定 (5色プリセット + カスタム)"
+        >
+          🎨<span className="hidden sm:inline ml-1">テーマ</span>
+        </button>
         <a
           href={searchHref}
           className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
@@ -1045,6 +1155,9 @@ function App() {
           </a>
         )}
       </div>
+
+      {/* Theme Picker (5色プリセット + カスタム) */}
+      <ReiwaThemePicker open={showThemePicker} onClose={() => setShowThemePicker(false)} />
 
       {/* Index Modal */}
       {showIndexModal && (
@@ -1081,6 +1194,64 @@ function App() {
     );
   }
 
+  // Reiwa デザイン版ホーム画面 (showHome=true のとき)
+  if (showHome && !showResults) {
+    return (
+      <div className="min-h-dvh bg-rw-bg">
+        {indexButton}
+        <div className="max-w-2xl mx-auto">
+          <HomeReiwa
+            currentMode={currentMode}
+            wordRange={wordRange}
+            polysemyRange={polysemyRange}
+            wordQuizTypeLabel={WORD_QUIZ_LABELS[wordQuizType]}
+            polysemyQuizTypeLabel={POLYSEMY_QUIZ_LABELS[polysemyQuizType]}
+            weakWordsCount={weakWordsCount}
+            dueWordsCount={dueWordsCount}
+            onStartQuiz={() => {
+              setQuizQidFilter(null);
+              setQuizMode('normal');
+              setShowHome(false);
+              void setupQuiz();
+            }}
+            onStartReview={async () => {
+              const weak = await getWeakWords();
+              if (weak.length === 0) return;
+              setQuizQidFilter(weak);
+              setQuizMode('weak');
+              setCurrentMode('word');
+              setShowHome(false);
+              void setupQuiz(weak);
+            }}
+            onStartSrsReview={async () => {
+              const due = await getDueWords();
+              if (due.length === 0) {
+                // フォールバック: 通常クイズ
+                setQuizQidFilter(null);
+                setQuizMode('normal');
+                setShowHome(false);
+                void setupQuiz();
+                return;
+              }
+              setQuizQidFilter(due);
+              setQuizMode('srs');
+              setCurrentMode('word');
+              setShowHome(false);
+              void setupQuiz(due);
+            }}
+            onSwitchMode={(mode) => {
+              setQuizQidFilter(null);
+              setQuizMode('normal');
+              setCurrentMode(mode);
+              setShowHome(false);
+            }}
+            onOpenThemePicker={() => setShowThemePicker(true)}
+          />
+        </div>
+      </div>
+    );
+  }
+
   if (showResults) {
     const totalScore = getTotalScore();
     const percent = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
@@ -1096,7 +1267,7 @@ function App() {
       (polysemyRange.from === 1 && polysemyRange.to === 330);
 
     return (
-      <div className="bg-slate-50 min-h-screen relative overflow-hidden">
+      <div className="bg-rw-bg min-h-dvh relative overflow-hidden">
         {indexButton}
         {/* 銀杏の葉アニメーション */}
         {showGinkgoAnimation && (
@@ -1144,117 +1315,175 @@ function App() {
           </div>
         )}
 
-        <div className="max-w-2xl mx-auto p-4 md:p-8 relative z-10">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center">
-            <h1 className="text-2xl font-bold text-slate-800 mb-4">クイズ終了！</h1>
-            <p className="text-slate-600 text-lg mb-4">お疲れ様でした。</p>
+        <div className="max-w-2xl mx-auto px-4 py-6 md:px-8 md:py-8 relative z-10 pt-16">
+          {/* スコアカード (rw-paper + ink 太枠 + pop 装飾円) */}
+          <div className="bg-rw-paper border-2 border-rw-ink rounded-3xl p-6 md:p-8 text-center relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-rw-pop opacity-40" />
+            <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-rw-accent opacity-30" />
 
-            {/* Perfect Score Celebration */}
-            {isPerfectScore && (
-              <div className="mb-4">
-                {isUltimateMasterAchievement ? (
-                  <>
-                    <div className="text-9xl font-bold mb-4 animate-pulse" style={{
-                      background: 'linear-gradient(45deg, #FF0000, #FF4500, #FF0000)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      textShadow: '0 0 30px rgba(255, 0, 0, 0.5)'
-                    }}>
-                      🔥👑🔥
-                    </div>
-                    <p className="text-6xl font-black mb-4" style={{
-                      background: 'linear-gradient(45deg, #FF0000, #FF4500, #FF6347)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      letterSpacing: '0.1em'
-                    }}>
-                      単語最強王
-                    </p>
-                    <p className="text-2xl font-bold text-red-600 mb-2">全196問完全制覇！</p>
-                    <p className="text-lg text-slate-700">あなたは最強の単語マスターです！</p>
-                  </>
-                ) : isMasterAchievement ? (
-                  <>
-                    <div className="text-9xl font-bold mb-4 animate-pulse" style={{
-                      background: 'linear-gradient(45deg, #FFD700, #FFA500, #FFD700)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      textShadow: '0 0 30px rgba(255, 215, 0, 0.5)'
-                    }}>
-                      👑
-                    </div>
-                    <p className="text-6xl font-black mb-4" style={{
-                      background: 'linear-gradient(45deg, #FFD700, #FFA500, #FF8C00)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      letterSpacing: '0.1em'
-                    }}>
-                      単語王
-                    </p>
-                    <p className="text-2xl font-bold text-amber-600 mb-2">全330問完全制覇！</p>
-                    <p className="text-lg text-slate-700">あなたは真の単語マスターです！</p>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-8xl text-red-500 font-bold mb-2 animate-bounce">
-                      ○
-                    </div>
-                    <p className="text-xl font-bold text-red-500 mb-2">パーフェクト！</p>
-                    <p className="text-lg text-slate-700">すべて正解です！素晴らしい！</p>
-                    {showGinkgoAnimation && (
-                      <p className="text-md text-amber-600 mt-2">🍂 銀杏の葉が舞っています 🍂</p>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
+            <div className="relative">
+              <div className="text-[10px] tracking-[0.2em] font-black text-rw-ink-soft uppercase mb-1">Quest Cleared</div>
+              <h1 className="text-2xl font-black text-rw-ink mb-2">クイズ終了！</h1>
+              <p className="text-rw-ink-soft text-sm mb-5">お疲れ様でした。</p>
 
-            <div className="mb-8">
-              <p className={`text-5xl font-bold ${isPerfectScore ? 'text-red-500' : 'text-blue-500'}`}>
-                <span>{score}</span> / <span>{totalScore}</span>
-              </p>
-              <p className="text-slate-500 mt-1">正解率 {percent}%</p>
-            </div>
-
-            {/* 間違えた単語の復習リスト */}
-            {wrongAnswers.length > 0 && (
-              <div className="mb-6 text-left">
-                <h3 className="text-sm font-bold text-slate-600 mb-2">間違えた単語（{wrongAnswers.length}語）</h3>
-                <div className="space-y-1 max-h-48 overflow-y-auto">
-                  {wrongAnswers.map(w => (
-                    <div key={w.qid} className="flex items-baseline gap-2 px-3 py-1.5 bg-red-50 rounded text-sm">
-                      <span className="font-bold text-slate-800">{w.lemma}</span>
-                      <span className="text-slate-600">{w.sense}</span>
-                    </div>
-                  ))}
+              {/* Perfect Score Celebration */}
+              {isPerfectScore && (
+                <div className="mb-5">
+                  {isUltimateMasterAchievement ? (
+                    <>
+                      <div className="text-7xl md:text-8xl font-black mb-3 animate-pulse" style={{
+                        background: 'linear-gradient(45deg, var(--rw-primary), var(--rw-pop), var(--rw-primary))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        textShadow: '0 0 30px rgba(255, 0, 0, 0.4)'
+                      }}>
+                        🔥👑🔥
+                      </div>
+                      <p className="text-4xl md:text-5xl font-black mb-3 tracking-widest" style={{
+                        background: 'linear-gradient(45deg, var(--rw-primary), var(--rw-pop))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                      }}>
+                        単語最強王
+                      </p>
+                      <p className="text-base font-black text-rw-primary mb-1">全196問完全制覇！</p>
+                      <p className="text-sm text-rw-ink-soft">あなたは最強の単語マスターです！</p>
+                    </>
+                  ) : isMasterAchievement ? (
+                    <>
+                      <div className="text-7xl md:text-8xl font-black mb-3 animate-pulse" style={{
+                        background: 'linear-gradient(45deg, var(--rw-pop), #FFA500, var(--rw-pop))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        textShadow: '0 0 30px rgba(255, 215, 0, 0.4)'
+                      }}>
+                        👑
+                      </div>
+                      <p className="text-4xl md:text-5xl font-black mb-3 tracking-widest" style={{
+                        background: 'linear-gradient(45deg, var(--rw-pop), #FF8C00)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                      }}>
+                        単語王
+                      </p>
+                      <p className="text-base font-black text-rw-pop mb-1">全330問完全制覇！</p>
+                      <p className="text-sm text-rw-ink-soft">あなたは真の単語マスターです！</p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-7xl font-black mb-2 animate-bounce" style={{ color: 'var(--rw-accent)' }}>
+                        ○
+                      </div>
+                      <p className="text-lg font-black text-rw-accent mb-1">パーフェクト！</p>
+                      <p className="text-sm text-rw-ink-soft">すべて正解です！素晴らしい！</p>
+                      {showGinkgoAnimation && (
+                        <p className="text-xs text-rw-pop mt-1">🍂 銀杏の葉が舞っています 🍂</p>
+                      )}
+                    </>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="space-y-3">
-              <button
-                onClick={restartQuiz}
-                className={`w-full font-bold py-4 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 ${
-                  isPerfectScore
-                    ? 'bg-red-500 hover:bg-red-600 text-white'
-                    : 'bg-blue-500 hover:bg-blue-600 text-white'
-                }`}
-              >
-                同じ範囲を繰り返す
-              </button>
-              <button
-                onClick={() => {
-                  setShowResults(false);
-                  setIsQuizActive(false);
-                }}
-                className="w-full font-bold py-4 px-4 rounded-lg shadow-md bg-slate-600 hover:bg-slate-700 text-white transition-colors"
-              >
-                設定に戻る
-              </button>
+              {/* スコア表示 (大型) */}
+              <div className="mb-5">
+                <div className="flex items-baseline justify-center gap-1">
+                  <span
+                    className="text-6xl md:text-7xl font-black"
+                    style={{
+                      color: isPerfectScore
+                        ? 'var(--rw-accent)'
+                        : percent >= 80
+                        ? 'var(--rw-accent)'
+                        : percent >= 50
+                        ? 'var(--rw-pop)'
+                        : 'var(--rw-primary)',
+                    }}
+                  >
+                    {score}
+                  </span>
+                  <span className="text-2xl font-black text-rw-ink-soft">
+                    / {totalScore}
+                  </span>
+                </div>
+                <p className="text-sm font-bold text-rw-ink-soft mt-1">正解率 {percent}%</p>
+              </div>
+
+              {/* 間違えた単語の復習リスト */}
+              {wrongAnswers.length > 0 && (
+                <div className="mb-5 text-left">
+                  <h3 className="text-xs font-black tracking-wider text-rw-ink-soft mb-2 uppercase">
+                    間違えた単語 ({wrongAnswers.length}語)
+                  </h3>
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                    {wrongAnswers.map(w => (
+                      <div
+                        key={w.qid}
+                        className="flex items-baseline gap-2 px-3 py-2 rounded-xl text-sm border border-rw-rule"
+                        style={{ background: 'var(--rw-primary-soft)' }}
+                      >
+                        <span className="font-bold text-rw-ink">{w.lemma}</span>
+                        <span className="text-rw-ink-soft">{w.sense}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 累計学習統計 (生徒のがんばり全体像) */}
+              {cumulativeStats.totalAnswered > 0 && (
+                <div className="mb-5 text-left">
+                  <h3 className="text-xs font-black tracking-wider text-rw-ink-soft mb-2 uppercase">
+                    これまでの累計
+                  </h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-accent-soft)' }}>
+                      <div className="text-xs text-rw-ink-soft font-bold">累計正答率</div>
+                      <div className="text-2xl font-black text-rw-accent mt-0.5">
+                        {Math.round((cumulativeStats.totalCorrect / cumulativeStats.totalAnswered) * 100)}%
+                      </div>
+                    </div>
+                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-primary-soft)' }}>
+                      <div className="text-xs text-rw-ink-soft font-bold">挑戦回数</div>
+                      <div className="text-2xl font-black text-rw-primary mt-0.5">
+                        {cumulativeStats.totalAnswered}
+                      </div>
+                    </div>
+                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-pop)', opacity: 0.85 }}>
+                      <div className="text-xs text-rw-ink font-bold">マスター</div>
+                      <div className="text-2xl font-black text-rw-ink mt-0.5">
+                        {cumulativeStats.masteredCount}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* アクションボタン */}
+              <div className="space-y-2.5">
+                <button
+                  onClick={restartQuiz}
+                  className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
+                  style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
+                >
+                  同じ範囲を繰り返す ▶
+                </button>
+                <button
+                  onClick={() => {
+                    setShowHome(true);
+                    setShowResults(false);
+                    setIsQuizActive(false);
+                    setQuizQidFilter(null);
+                    setQuizMode('normal');
+                  }}
+                  className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
+                >
+                  ホームに戻る
+                </button>
+              </div>
             </div>
           </div>
         </div>

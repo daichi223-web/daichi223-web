@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import bundledVocabIndex from '../data/vocabIndex.json';
 import bundledTextsIndex from '../data/textsIndex.json';
+import { addVocabEntry, getVocabEntries } from '@/lib/kobun/progress';
 import './VocabModal.css';
 
 type VocabIndexEntry = {
@@ -72,6 +73,28 @@ export default function VocabModal({ lemma, onClose }: Props) {
   const [examples, setExamples] = useState<Example[]>([]);
   const [textsIdx, setTextsIdx] = useState<TextIndexEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  // 単語帳登録状態 (lemma + pos のキーで判定)
+  const [isAddedToVocab, setIsAddedToVocab] = useState(false);
+  useEffect(() => {
+    if (!entry) return;
+    const existing = getVocabEntries();
+    setIsAddedToVocab(
+      existing.some((e) => e.baseForm === lemma && e.pos === entry.pos),
+    );
+  }, [entry, lemma]);
+
+  function handleAddToVocab() {
+    if (!entry) return;
+    addVocabEntry({
+      tokenText: lemma,
+      baseForm: lemma,
+      pos: entry.pos,
+      textId: '', // クイズ画面からの登録なので出典 textId 不明
+      viewedAt: new Date().toISOString(),
+    });
+    setIsAddedToVocab(true);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -204,6 +227,17 @@ export default function VocabModal({ lemma, onClose }: Props) {
               {entry.pos && <span className="badge">{entry.pos}</span>}
               {entry.category && <span className="badge badge-cat">{entry.category}</span>}
             </div>
+          )}
+          {entry && (
+            <button
+              type="button"
+              onClick={handleAddToVocab}
+              disabled={isAddedToVocab}
+              className={`vocab-modal-add-btn ${isAddedToVocab ? 'is-added' : ''}`}
+              aria-label={isAddedToVocab ? '単語帳に追加済み' : '単語帳に追加'}
+            >
+              {isAddedToVocab ? '✓ 単語帳に追加済み' : '+ 単語帳に追加'}
+            </button>
           )}
         </div>
 
