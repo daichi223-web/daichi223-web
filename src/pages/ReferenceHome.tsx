@@ -22,56 +22,74 @@ export default function ReferenceHome() {
   const topics = cat ? getTopicsByCategory(cat) : grammarTopics;
 
   return (
-    <div className="min-h-dvh max-w-2xl mx-auto p-6">
-      {/* ヘッダー */}
-      <div className="flex items-center gap-4 mb-6">
-        <Link to="/read" className="text-sm text-scaffold hover:text-sumi transition-colors">
-          ← 戻る
-        </Link>
-        <h1 className="text-2xl font-bold">文法リファレンス</h1>
-      </div>
-
-      {/* カテゴリタブ */}
-      <div className="flex gap-2 mb-6 flex-wrap">
-        {categories.map((c) => (
+    <div className="min-h-dvh bg-rw-bg">
+      <div className="max-w-2xl mx-auto p-6">
+        {/* ヘッダー */}
+        <div className="flex items-center gap-4 mb-6">
           <Link
-            key={c.key}
-            to={c.key ? `/read/reference?cat=${c.key}` : "/read/reference"}
-            className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-              cat === c.key
-                ? "bg-sumi text-white"
-                : "bg-sumi/5 text-sumi/60 hover:bg-sumi/10"
-            }`}
+            to="/read"
+            className="text-sm font-bold text-rw-ink-soft hover:text-rw-ink transition-colors"
           >
-            {c.label}
+            ← 戻る
           </Link>
-        ))}
-      </div>
+          <h1 className="text-[22px] sm:text-2xl font-black text-rw-ink tracking-tight">
+            文法リファレンス
+          </h1>
+        </div>
 
-      {/* トピック一覧 */}
-      <div className="space-y-3">
-        {topics.map((topic) => (
-          <Link
-            key={topic.id}
-            to={`/read/reference/${topic.id}`}
-            className="block bg-white/60 rounded-xl p-4 shadow-sm border border-sumi/5
-                       hover:bg-white/80 hover:shadow-md transition-all"
-          >
-            <div className="flex items-start gap-3">
+        {/* カテゴリタブ */}
+        <div className="flex gap-1.5 mb-6 flex-wrap">
+          {categories.map((c) => {
+            const active = cat === c.key;
+            return (
+              <Link
+                key={c.key}
+                to={c.key ? `/read/reference?cat=${c.key}` : "/read/reference"}
+                className={`px-3.5 py-2 rounded-full text-xs font-extrabold transition-colors ${
+                  active
+                    ? "bg-rw-ink text-rw-paper"
+                    : "bg-rw-paper text-rw-ink-soft border border-rw-rule hover:text-rw-ink"
+                }`}
+                style={
+                  active
+                    ? { boxShadow: "0 2px 0 var(--rw-primary)" }
+                    : undefined
+                }
+              >
+                {c.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* トピック一覧 */}
+        <div className="flex flex-col gap-2">
+          {topics.map((topic) => (
+            <Link
+              key={topic.id}
+              to={`/read/reference/${topic.id}`}
+              className="group flex items-start gap-3 bg-rw-paper border-2 border-rw-ink rounded-2xl px-3.5 py-3 hover:border-rw-ink-soft transition-colors"
+            >
               <span
-                className={`w-6 h-6 rounded-full text-[10px] font-bold text-white flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                className={`w-7 h-7 rounded-full text-xs font-black text-white flex items-center justify-center flex-shrink-0 ${
                   layerBgColors[topic.layer]
                 }`}
+                style={{ boxShadow: "0 2px 0 var(--rw-ink)" }}
               >
                 {topic.layer}
               </span>
-              <div>
-                <h3 className="font-bold">{topic.title}</h3>
-                <p className="text-sm text-scaffold mt-0.5">{topic.summary}</p>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-extrabold leading-snug text-rw-ink">
+                  {topic.title}
+                </h3>
+                <p className="text-[11px] text-rw-ink-soft mt-0.5 leading-relaxed">
+                  {topic.summary}
+                </p>
               </div>
-            </div>
-          </Link>
-        ))}
+              <div className="text-sm text-rw-ink-soft flex-shrink-0">→</div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
