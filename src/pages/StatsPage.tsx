@@ -233,9 +233,24 @@ export default function StatsPage() {
             {/* 苦手 Top 20 */}
             {weakTop.length > 0 && (
               <section className="mb-6">
-                <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
-                  苦手な単語 Top {weakTop.length} ({weakQids.length}語中)
-                </h2>
+                <div className="flex items-baseline justify-between mb-2">
+                  <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase">
+                    苦手な単語 Top {weakTop.length} ({weakQids.length}語中)
+                  </h2>
+                  {weakQids.length > 0 && (
+                    <Link
+                      to={`/?qid=${encodeURIComponent(weakQids.join(','))}`}
+                      className="text-[11px] font-black px-3 py-1 rounded-full no-underline transition-colors"
+                      style={{
+                        background: 'var(--rw-ink)',
+                        color: 'var(--rw-paper)',
+                      }}
+                      title="苦手単語をまとめてクイズで復習"
+                    >
+                      全部復習 ▶
+                    </Link>
+                  )}
+                </div>
                 <div className="space-y-1.5">
                   {weakTop.map((row) => {
                     const meta = lemmaIndex[row.qid];
@@ -258,12 +273,21 @@ export default function StatsPage() {
                           </div>
                         </div>
                         {/* 誤答率バー */}
-                        <div className="w-20 h-2 rounded-full overflow-hidden bg-rw-rule shrink-0">
+                        <div className="w-16 h-2 rounded-full overflow-hidden bg-rw-rule shrink-0">
                           <div
                             className="h-full bg-rw-primary"
                             style={{ width: `${Math.round(row.errorRate * 100)}%` }}
                           />
                         </div>
+                        {/* この語だけ復習 */}
+                        <Link
+                          to={`/?qid=${encodeURIComponent(row.qid)}`}
+                          className="text-[10px] font-black rounded-full px-2 py-1 shrink-0 no-underline"
+                          style={{ background: 'var(--rw-ink)', color: 'var(--rw-paper)' }}
+                          title={`「${meta?.lemma ?? row.qid}」だけ復習`}
+                        >
+                          🔁
+                        </Link>
                       </div>
                     );
                   })}

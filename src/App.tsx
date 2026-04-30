@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { dataParser } from './utils/dataParser';
 import { Word, MultiMeaningWord } from './types';
 import RangeField from './components/RangeField';
@@ -165,7 +166,8 @@ function App() {
   const [showHome, setShowHome] = useState(true);
   // 苦手単語 / SRS 復習用に、特定の qid セットだけで出題する場合に使う
   const [quizQidFilter, setQuizQidFilter] = useState<string[] | null>(null);
-  const [quizMode, setQuizMode] = useState<'normal' | 'weak' | 'srs'>('normal');
+  const [quizMode, setQuizMode] = useState<'normal' | 'weak' | 'srs' | 'focus'>('normal');
+  const [searchParams, setSearchParams] = useSearchParams();
   const [weakWordsCount, setWeakWordsCount] = useState(0);
   const [dueWordsCount, setDueWordsCount] = useState(0);
   // 累計学習統計 (Result 画面で表示)
@@ -174,6 +176,26 @@ function App() {
     totalCorrect: number;
     masteredCount: number; // 80%以上正解 + 5回以上挑戦
   }>({ totalAnswered: 0, totalCorrect: 0, masteredCount: 0 });
+
+  // URL クエリ ?qid=A,B,C で外部から特定 qid のクイズを起動
+  // 他画面 (TextReader / VocabPage / Stats / Search) からシームレスに飛んでくる経路。
+  useEffect(() => {
+    if (allWords.length === 0) return; // データロード前はスキップ
+    const qidParam = searchParams.get('qid');
+    if (!qidParam) return;
+    const qids = qidParam.split(',').map((s) => s.trim()).filter(Boolean);
+    if (qids.length === 0) return;
+    // 重複起動を防ぐため、URL から qid を消す
+    const next = new URLSearchParams(searchParams);
+    next.delete('qid');
+    setSearchParams(next, { replace: true });
+    setQuizQidFilter(qids);
+    setQuizMode('focus');
+    setCurrentMode('word');
+    setShowHome(false);
+    void setupQuiz(qids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allWords.length]);
 
   // ホーム表示時に学習履歴ベースの集計を取得
   useEffect(() => {
@@ -1415,20 +1437,78 @@ function App() {
               {/* 間違えた単語の復習リスト */}
               {wrongAnswers.length > 0 && (
                 <div className="mb-5 text-left">
-                  <h3 className="text-xs font-black tracking-wider text-rw-ink-soft mb-2 uppercase">
-                    間違えた単語 ({wrongAnswers.length}語)
-                  </h3>
-                  <div className="space-y-1.5 max-h-48 overflow-y-auto">
-                    {wrongAnswers.map(w => (
-                      <div
-                        key={w.qid}
-                        className="flex items-baseline gap-2 px-3 py-2 rounded-xl text-sm border border-rw-rule"
-                        style={{ background: 'var(--rw-primary-soft)' }}
+                  <div className="flex items-baseline justify-between mb-2">
+                    <h3 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase">
+                      間違えた単語 ({wrongAnswers.length}語)
+                    </h3>
+                    {wrongAnswers.length > 0 && (
+                      <button
+                        onClick={() => {
+                          const qids = wrongAnswers.map((w) => w.qid);
+                          setQuizQidFilter(qids);
+                          setQuizMode('focus');
+                          setShowResults(false);
+                          setIsQuizActive(false);
+                          void setupQuiz(qids);
+                        }}
+                        className="text-[11px] font-black px-3 py-1 rounded-full transition-colors"
+                        style={{
+                          background: 'var(--rw-ink)',
+                          color: 'var(--rw-paper)',
+                        }}
+                        title="間違えた単語だけでクイズを再起動"
                       >
-                        <span className="font-bold text-rw-ink">{w.lemma}</span>
-                        <span className="text-rw-ink-soft">{w.sense}</span>
-                      </div>
-                    ))}
+                        全部復習 ▶
+                      </button>
+                    )}
+                  </div>
+                  <div className="space-y-1.5 max-h-56 overflow-y-auto">
+                    {wrongAnswers.map((w) => {
+                      const hasExpl = bundledVocabIndex && w.lemma in (bundledVocabIndex as Record<string, unknown>);
+                      return (
+                        <div
+                          key={w.qid}
+                          className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm border border-rw-rule"
+                          style={{ background: 'var(--rw-primary-soft)' }}
+                        >
+                          <div className="flex-1 min-w-0 flex items-baseline gap-2">
+                            <span className="font-bold text-rw-ink shrink-0">{w.lemma}</span>
+                            <span className="text-rw-ink-soft truncate">{w.sense}</span>
+                          </div>
+                          {hasExpl && (
+                            <button
+                              onClick={() => setVocabLemma(w.lemma)}
+                              className="text-[10px] font-black rounded-full px-2 py-1 shrink-0"
+                              style={{
+                                background: 'color-mix(in srgb, var(--layer-5) 12%, transparent)',
+                                color: 'var(--layer-5)',
+                                border: '1px solid color-mix(in srgb, var(--layer-5) 30%, transparent)',
+                              }}
+                              title={`「${w.lemma}」の詳細解説を開く`}
+                            >
+                              📖
+                            </button>
+                          )}
+                          <button
+                            onClick={() => {
+                              setQuizQidFilter([w.qid]);
+                              setQuizMode('focus');
+                              setShowResults(false);
+                              setIsQuizActive(false);
+                              void setupQuiz([w.qid]);
+                            }}
+                            className="text-[10px] font-black rounded-full px-2 py-1 shrink-0"
+                            style={{
+                              background: 'var(--rw-ink)',
+                              color: 'var(--rw-paper)',
+                            }}
+                            title={`「${w.lemma}」だけで再挑戦`}
+                          >
+                            🔁
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}

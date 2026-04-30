@@ -5,6 +5,7 @@ import { buildGemUrl, buildNotebookLmUrl } from "@/lib/kobun/gem";
 import { addVocabEntry } from "@/lib/kobun/progress";
 import VocabModal from "@/components/VocabModal";
 import bundledVocabIndex from "@/data/vocabIndex.json";
+import { getQuizQidsForLemma } from "@/lib/vocabLookup";
 
 const vocabIndexKeys = new Set(Object.keys(bundledVocabIndex as Record<string, unknown>));
 
@@ -124,6 +125,15 @@ function PopoverContent({
     return null;
   })();
 
+  // クイズ qid 逆引き: この語が単語クイズに出るかどうか
+  const quizQids = (() => {
+    const base = tag.baseForm;
+    let qids = base ? getQuizQidsForLemma(base, tag.pos) : [];
+    if (qids.length === 0 && tag.pos) qids = getQuizQidsForLemma(token.text, tag.pos);
+    if (qids.length === 0) qids = base ? getQuizQidsForLemma(base) : getQuizQidsForLemma(token.text);
+    return qids;
+  })();
+
   function handleAddVocab() {
     addVocabEntry({
       tokenText: token.text,
@@ -229,6 +239,25 @@ function PopoverContent({
           }}
         >
           📖 「{vocabCandidate}」の語彙解説
+        </button>
+      )}
+
+      {/* クイズ起動 (単語クイズに出る語のみ) */}
+      {quizQids.length > 0 && (
+        <button
+          onClick={() => {
+            onClose();
+            navigate(`/?qid=${encodeURIComponent(quizQids.join(','))}`);
+          }}
+          className="w-full text-left px-3 py-2 rounded-xl text-sm font-bold border-2 transition-colors"
+          style={{
+            background: 'color-mix(in srgb, var(--rw-pop) 25%, transparent)',
+            borderColor: 'var(--rw-pop)',
+            color: 'var(--rw-ink)',
+          }}
+          title={`単語クイズで「${tag.baseForm || token.text}」を ${quizQids.length} 問だけ解く`}
+        >
+          🔤 「{tag.baseForm || token.text}」のクイズに挑戦
         </button>
       )}
 

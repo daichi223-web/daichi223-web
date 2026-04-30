@@ -6,6 +6,7 @@ import { chapterFor, chapterColor } from '../utils/chapters';
 import VocabModal from '../components/VocabModal';
 import bundledKobunQ from '../data/kobunQ.json';
 import bundledVocabIndex from '../data/vocabIndex.json';
+import { getQuizQidsForLemma } from '@/lib/vocabLookup';
 import bundledTextsIndex from '../data/textsIndex.json';
 import './SearchPage.css';
 
@@ -388,32 +389,55 @@ export default function SearchPage() {
             {results.vocab.map((v: any) => {
               const ch = chapterFor(v.group);
               const c = chapterColor(ch);
+              const quizQids = getQuizQidsForLemma(v.lemma, v.pos);
               return (
                 <li key={v.lemma}>
-                  <button
-                    type="button"
-                    onClick={() => setOpenVocabLemma(v.lemma)}
-                    className="result-link vocab"
-                    style={{ width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer', font: 'inherit' }}
-                  >
-                    <div className="result-main">
-                      {v.group && (
-                        <span className="group-num">{v.group}</span>
-                      )}
-                      {highlightText(v.title)}
-                      {ch && (
-                        <span
-                          className="result-chapter-badge"
-                          style={{ background: c.bg, color: c.text }}
+                  <div className="result-link vocab" style={{ display: 'block' }}>
+                    <button
+                      type="button"
+                      onClick={() => setOpenVocabLemma(v.lemma)}
+                      style={{ width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer', font: 'inherit', background: 'transparent', padding: 0 }}
+                    >
+                      <div className="result-main">
+                        {v.group && (
+                          <span className="group-num">{v.group}</span>
+                        )}
+                        {highlightText(v.title)}
+                        {ch && (
+                          <span
+                            className="result-chapter-badge"
+                            style={{ background: c.bg, color: c.text }}
+                          >
+                            {ch.short}
+                          </span>
+                        )}
+                      </div>
+                      <div className="result-meta">
+                        {v.pos} · {v.category}
+                      </div>
+                    </button>
+                    {quizQids.length > 0 && (
+                      <div style={{ marginTop: 6, display: 'flex', gap: 6 }}>
+                        <Link
+                          to={`/?qid=${encodeURIComponent(quizQids.join(','))}`}
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 800,
+                            padding: '3px 10px',
+                            borderRadius: 999,
+                            textDecoration: 'none',
+                            background: 'color-mix(in srgb, var(--rw-pop) 25%, transparent)',
+                            color: 'var(--rw-ink)',
+                            border: '1.5px solid var(--rw-pop)',
+                          }}
+                          onClick={(ev) => ev.stopPropagation()}
+                          title={`「${v.lemma}」のクイズに挑戦 (${quizQids.length}問)`}
                         >
-                          {ch.short}
-                        </span>
-                      )}
-                    </div>
-                    <div className="result-meta">
-                      {v.pos} · {v.category}
-                    </div>
-                  </button>
+                          🔤 クイズ
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 </li>
               );
             })}

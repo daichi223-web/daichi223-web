@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import { getVocabEntries, removeVocabEntry, type VocabEntry } from "@/lib/kobun/progress";
 import { getWordStats } from "@/lib/wordStats";
 import bundledKobunQ from "@/data/kobunQ.json";
+import bundledVocabIndex from "@/data/vocabIndex.json";
+import { getQuizQidsForLemma } from "@/lib/vocabLookup";
+import VocabModal from "@/components/VocabModal";
+
+const vocabIndexKeys = new Set(Object.keys(bundledVocabIndex as Record<string, unknown>));
 
 // baseForm + pos → qids[] の逆引き索引 (1 baseForm に複数 sense あり得るため)
 type LemmaPosToQids = Record<string, string[]>;
@@ -26,6 +31,7 @@ type EntryStat = { correct: number; incorrect: number; lastSeen: string | null }
 export default function VocabPage() {
   const [entries, setEntries] = useState<VocabEntry[]>([]);
   const [statsByEntry, setStatsByEntry] = useState<Record<string, EntryStat>>({});
+  const [vocabLemma, setVocabLemma] = useState<string | null>(null);
 
   const lemmaPosIndex = useMemo(buildLemmaPosIndex, []);
 
@@ -160,9 +166,13 @@ export default function VocabPage() {
                           </Link>
                         )}
                         {entry.textId && (
-                          <span className="text-[11px] font-semibold text-rw-ink-soft">
-                            {entry.textId}
-                          </span>
+                          <Link
+                            to={`/read/texts/${entry.textId}`}
+                            className="text-[11px] font-semibold text-rw-ink-soft hover:text-rw-ink hover:underline"
+                            title={`${entry.textId} の本文を開く`}
+                          >
+                            📖 {entry.textId} →
+                          </Link>
                         )}
                         {(() => {
                           const stat = statsByEntry[`${entry.baseForm}:${entry.pos}`];
@@ -189,6 +199,40 @@ export default function VocabPage() {
                           );
                         })()}
                       </div>
+                      {/* アクションボタン: 詳細解説 / クイズ */}
+                      <div className="flex items-center gap-2 mt-2.5 flex-wrap">
+                        {vocabIndexKeys.has(entry.baseForm) && (
+                          <button
+                            onClick={() => setVocabLemma(entry.baseForm)}
+                            className="text-[11px] font-black px-3 py-1 rounded-full border-2 transition-colors"
+                            style={{
+                              background: 'color-mix(in srgb, var(--layer-5) 8%, transparent)',
+                              borderColor: 'color-mix(in srgb, var(--layer-5) 30%, transparent)',
+                              color: 'var(--layer-5)',
+                            }}
+                          >
+                            📖 詳しく
+                          </button>
+                        )}
+                        {(() => {
+                          const qids = getQuizQidsForLemma(entry.baseForm, entry.pos);
+                          if (qids.length === 0) return null;
+                          return (
+                            <Link
+                              to={`/?qid=${encodeURIComponent(qids.join(','))}`}
+                              className="text-[11px] font-black px-3 py-1 rounded-full border-2 no-underline transition-colors"
+                              style={{
+                                background: 'color-mix(in srgb, var(--rw-pop) 25%, transparent)',
+                                borderColor: 'var(--rw-pop)',
+                                color: 'var(--rw-ink)',
+                              }}
+                              title={`「${entry.baseForm}」のクイズに挑戦 (${qids.length}問)`}
+                            >
+                              🔤 クイズ
+                            </Link>
+                          );
+                        })()}
+                      </div>
                     </div>
                     <button
                       onClick={() => handleRemove(entry.baseForm, entry.pos)}
@@ -203,6 +247,9 @@ export default function VocabPage() {
           ))
         )}
       </div>
+      {vocabLemma && (
+        <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} />
+      )}
     </div>
   );
 }
