@@ -152,13 +152,14 @@ export default function HomeReiwa({
         />
       </div>
 
-      {/* 単語帳ショートカット */}
-      <div className="mb-3">
+      {/* 単語帳・学習履歴ショートカット */}
+      <div className="grid grid-cols-2 gap-2.5 mb-3">
         <TileLinkInline
           href="/read/vocab"
-          label={vocab.length > 0 ? `単語帳 (${vocab.length}語)` : '単語帳'}
+          label={vocab.length > 0 ? `単語帳 (${vocab.length})` : '単語帳'}
           emoji="📒"
         />
+        <TileLinkInline href="/stats" label="学習履歴" emoji="📊" />
       </div>
 
       {/* 気になってる単語 */}

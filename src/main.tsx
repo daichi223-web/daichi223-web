@@ -22,6 +22,7 @@ const Teacher = lazy(() => import('./pages/Teacher.tsx'))
 const TextDetail = lazy(() => import('./pages/TextDetail.tsx'))
 const TextsIndex = lazy(() => import('./pages/TextsIndex.tsx'))
 const SearchPage = lazy(() => import('./pages/SearchPage.tsx'))
+const StatsPage = lazy(() => import('./pages/StatsPage.tsx'))
 
 // Supabase Anonymous Sign-in を起動時に一度だけ発火する。
 // RLS が auth.uid ベースに締まっているので、学習記録系の書き込み前に
@@ -51,6 +52,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/texts" element={<TextsIndex />} />
           <Route path="/texts/:id" element={<TextDetail />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/stats" element={<StatsPage />} />
 
           {/* 読解 v3（/read 配下） */}
           <Route path="/read" element={<HomeV3 />} />

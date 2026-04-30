@@ -1,13 +1,71 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { getVocabEntries, removeVocabEntry, type VocabEntry } from "@/lib/kobun/progress";
+import { getWordStats } from "@/lib/wordStats";
+import bundledKobunQ from "@/data/kobunQ.json";
+
+// baseForm + pos → qids[] の逆引き索引 (1 baseForm に複数 sense あり得るため)
+type LemmaPosToQids = Record<string, string[]>;
+function buildLemmaPosIndex(): LemmaPosToQids {
+  const map: LemmaPosToQids = {};
+  for (const w of bundledKobunQ as Array<{ qid: string; lemma: string; pos?: string }>) {
+    if (!w?.qid || !w?.lemma) continue;
+    const key = `${w.lemma}:${w.pos ?? ''}`;
+    (map[key] ??= []).push(w.qid);
+    // pos 不一致でも lemma だけで引けるフォールバック
+    const fallback = `${w.lemma}:`;
+    if (key !== fallback) {
+      (map[fallback] ??= []).push(w.qid);
+    }
+  }
+  return map;
+}
+
+type EntryStat = { correct: number; incorrect: number; lastSeen: string | null };
 
 export default function VocabPage() {
   const [entries, setEntries] = useState<VocabEntry[]>([]);
+  const [statsByEntry, setStatsByEntry] = useState<Record<string, EntryStat>>({});
+
+  const lemmaPosIndex = useMemo(buildLemmaPosIndex, []);
 
   useEffect(() => {
     setEntries(getVocabEntries());
   }, []);
+
+  // word_stats を取得して baseForm:pos → 集計 にマップ
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const stats = await getWordStats();
+        if (cancelled) return;
+        const out: Record<string, EntryStat> = {};
+        for (const e of entries) {
+          const qidsExact = lemmaPosIndex[`${e.baseForm}:${e.pos}`] ?? [];
+          const qidsFallback = lemmaPosIndex[`${e.baseForm}:`] ?? [];
+          const qids = qidsExact.length > 0 ? qidsExact : qidsFallback;
+          let correct = 0;
+          let incorrect = 0;
+          let last: string | null = null;
+          for (const qid of qids) {
+            const s = stats[qid];
+            if (!s) continue;
+            correct += s.correct;
+            incorrect += s.incorrect;
+            if (!last || s.lastSeen > last) last = s.lastSeen;
+          }
+          out[`${e.baseForm}:${e.pos}`] = { correct, incorrect, lastSeen: last };
+        }
+        setStatsByEntry(out);
+      } catch {
+        // silent fail (ログイン無し / オフライン)
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [entries, lemmaPosIndex]);
 
   const handleRemove = (baseForm: string, pos: string) => {
     removeVocabEntry(baseForm, pos);
@@ -101,9 +159,35 @@ export default function VocabPage() {
                             解説 →
                           </Link>
                         )}
-                        <span className="text-[11px] font-semibold text-rw-ink-soft">
-                          {entry.textId}
-                        </span>
+                        {entry.textId && (
+                          <span className="text-[11px] font-semibold text-rw-ink-soft">
+                            {entry.textId}
+                          </span>
+                        )}
+                        {(() => {
+                          const stat = statsByEntry[`${entry.baseForm}:${entry.pos}`];
+                          if (!stat || stat.correct + stat.incorrect === 0) return null;
+                          const total = stat.correct + stat.incorrect;
+                          const accuracy = Math.round((stat.correct / total) * 100);
+                          const tone =
+                            accuracy >= 80
+                              ? 'var(--rw-accent)'
+                              : accuracy >= 50
+                              ? 'var(--rw-pop)'
+                              : 'var(--rw-primary)';
+                          return (
+                            <span
+                              className="text-[11px] font-extrabold rounded-full px-2 py-0.5"
+                              style={{
+                                background: 'color-mix(in srgb, ' + tone + ' 18%, transparent)',
+                                color: tone,
+                              }}
+                              title={`正解 ${stat.correct} / 誤答 ${stat.incorrect}`}
+                            >
+                              {accuracy}% ({total}回)
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
                     <button
