@@ -96,7 +96,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「すごし」: 現代語「すごい」と異なり、古語では「ぞっとするほどもの寂しい・恐ろしい・荒涼としている」が原義。風や月光・景色を形容して凄絶な美を表す。"
         },
         {
           "id": "s1-t3",
@@ -106,7 +107,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "複合動詞「吹き出づ」: 「吹き＋出づ」で「(風が)吹きはじめる・吹き出てくる」。ダ下二で活用。"
         },
         {
           "id": "s1-t4",
@@ -119,7 +121,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」(完了/存続): 連用形接続。ここは連体形「たる」で「夕暮れ」を修飾。完了「(風が)吹き出した」。"
         },
         {
           "id": "s1-t5",
@@ -141,7 +144,8 @@
             "pos": "格助詞",
             "meaning": "時間"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(時間): 「夕暮れに」で時間を示す。古文の「に」は時・場所・対象・原因など多義なので意味を見極める。"
         },
         {
           "id": "s1-t7",
@@ -174,7 +178,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見る」: マ行上一段。古文の上一段は「ひいきにみゐる」(干・射・着・似・煮・干・見・率・居る) の語呂で覚える。"
         },
         {
           "id": "s1-t10",
@@ -189,7 +194,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」: ハ行四段。「〜なさる・お〜になる」。動詞連用形に付き、動作主への尊敬を示す。本作では紫の上・源氏・中宮への敬意。"
         },
         {
           "id": "s1-t11",
@@ -201,20 +207,31 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「とて」: 「と」+「て」の連語。「〜と思って・〜という理由で・〜のために」。発話・思考・目的の引用表現。"
         },
         {
-          "id": "s1-t12",
-          "text": "、脇息",
-          "start": 23,
-          "end": 26,
+          "text": "、",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t12",
+          "start": 23,
+          "end": 24
         },
         {
+          "text": "脇息",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
           "id": "s1-t13",
+          "start": 24,
+          "end": 26
+        },
+        {
+          "id": "s1-t14",
           "text": "に",
           "start": 26,
           "end": 27,
@@ -223,20 +240,22 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(対象): 「脇息に」で「もたれかかる対象」を示す。"
         },
         {
-          "id": "s1-t14",
+          "id": "s1-t15",
           "text": "寄りゐ",
           "start": 27,
           "end": 30,
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "複合動詞「寄りゐる」: 「寄り＋ゐる」で「もたれかかって座る」。「ゐる」はワ行上一段。"
         },
         {
-          "id": "s1-t15",
+          "id": "s1-t16",
           "text": "たまへ",
           "start": 30,
           "end": 33,
@@ -248,10 +267,11 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」已然形: 紫の上が脇息に寄りかかっておいでになる、の意で敬意を示す。下に存続「り」が接続。"
         },
         {
-          "id": "s1-t16",
+          "id": "s1-t17",
           "text": "る",
           "start": 33,
           "end": 34,
@@ -261,10 +281,11 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」(完了/存続): サ変未然・四段已然に接続(「サ未四已」)。連体形「る」で下の「を」につなぐ。「寄りゐたまへる」=「もたれかかっておいでになっている」。"
         },
         {
-          "id": "s1-t17",
+          "id": "s1-t18",
           "text": "を",
           "start": 34,
           "end": 35,
@@ -273,10 +294,11 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「(紫の上が脇息に)寄りかかっておいでになっている(様子)を」と次節の動詞「見たてまつりたまふ」の対象を示す。"
         },
         {
-          "id": "s1-t18",
+          "id": "s1-t19",
           "text": "、",
           "start": 35,
           "end": 36,
@@ -286,7 +308,7 @@
           }
         },
         {
-          "id": "s1-t19",
+          "id": "s1-t20",
           "text": "院",
           "start": 36,
           "end": 37,
@@ -296,7 +318,7 @@
           }
         },
         {
-          "id": "s1-t20",
+          "id": "s1-t21",
           "text": "渡り",
           "start": 37,
           "end": 39,
@@ -306,20 +328,22 @@
             "conjugationType": "ラ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「渡る」: ラ行四段。古文では「(高貴な人が)場所を移動する・出向く・お越しになる」の意で敬意ある往来を表す。源氏の来訪場面で頻出。"
         },
         {
-          "id": "s1-t21",
+          "id": "s1-t22",
           "text": "て",
           "start": 39,
           "end": 40,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続。前の動作と後の動作を順に並べる。"
         },
         {
-          "id": "s1-t22",
+          "id": "s1-t23",
           "text": "、",
           "start": 40,
           "end": 41,
@@ -329,7 +353,7 @@
           }
         },
         {
-          "id": "s1-t23",
+          "id": "s1-t24",
           "text": "見",
           "start": 41,
           "end": 42,
@@ -342,7 +366,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s1-t24",
+          "id": "s1-t25",
           "text": "たてまつり",
           "start": 42,
           "end": 47,
@@ -354,10 +378,11 @@
             "baseForm": "たてまつる",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲の補助動詞「たてまつる」: ラ行四段。「お〜申し上げる」。動作の対象 (ここでは紫の上) への敬意を示す謙譲語。本作では源氏が紫の上を「見たてまつり」拝見する。"
         },
         {
-          "id": "s1-t25",
+          "id": "s1-t26",
           "text": "たまひ",
           "start": 47,
           "end": 50,
@@ -369,10 +394,11 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」連用形: 動作主 (源氏) への敬意。「たてまつり＋たまふ」で謙譲＋尊敬の二重敬語、対象と主体の双方に敬意。"
         },
         {
-          "id": "s1-t26",
+          "id": "s1-t27",
           "text": "て",
           "start": 50,
           "end": 51,
@@ -382,7 +408,7 @@
           }
         },
         {
-          "id": "s1-t27",
+          "id": "s1-t28",
           "text": "、",
           "start": 51,
           "end": 52,
@@ -392,17 +418,27 @@
           }
         },
         {
-          "id": "s1-t28",
-          "text": "「今日",
-          "start": 52,
-          "end": 55,
+          "text": "「",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t29",
+          "start": 52,
+          "end": 53
         },
         {
-          "id": "s1-t29",
+          "text": "今日",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s1-t30",
+          "start": 53,
+          "end": 55
+        },
+        {
+          "id": "s1-t31",
           "text": "は",
           "start": 55,
           "end": 56,
@@ -411,10 +447,11 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(主題提示): 「今日は」で主題を提示し、対比的なニュアンス (普段と違って今日は) を含む。"
         },
         {
-          "id": "s1-t30",
+          "id": "s1-t32",
           "text": "、",
           "start": 56,
           "end": 57,
@@ -424,7 +461,7 @@
           }
         },
         {
-          "id": "s1-t31",
+          "id": "s1-t33",
           "text": "いと",
           "start": 57,
           "end": 59,
@@ -432,30 +469,33 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いと"
-          }
+          },
+          "hint": "副詞「いと」: 「たいそう・非常に・本当に」。古文の最頻出強意副詞。下に肯定・否定を伴って程度を強調。"
         },
         {
-          "id": "s1-t32",
+          "id": "s1-t34",
           "text": "よく",
           "start": 59,
           "end": 61,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「よく」: 「十分に・ちゃんと・うまく」の意。「いとよく起きゐたまふ」で「ほんとうによく(普段と違って)起きていらっしゃる」。"
         },
         {
-          "id": "s1-t33",
+          "id": "s1-t35",
           "text": "起きゐ",
           "start": 61,
           "end": 64,
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "複合動詞「起きゐる」: 「起き＋ゐる」で「起き上がって座っている」。重病の紫の上が珍しく身を起こせていることを示す。"
         },
         {
-          "id": "s1-t34",
+          "id": "s1-t36",
           "text": "たまふ",
           "start": 64,
           "end": 67,
@@ -467,10 +507,11 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」終止形: 紫の上への敬意 (源氏の発話内)。"
         },
         {
-          "id": "s1-t35",
+          "id": "s1-t37",
           "text": "める",
           "start": 67,
           "end": 69,
@@ -480,10 +521,11 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「めり」(婉曲・推定): 終止形接続(ラ変は連体形)。視覚に基づく推定 (「〜のようだ・〜と見える」)。本作は紫の上の様子を直接見ての婉曲表現で、源氏の気遣いをにじませる。"
         },
         {
-          "id": "s1-t36",
+          "id": "s1-t38",
           "text": "は",
           "start": 69,
           "end": 70,
@@ -492,10 +534,11 @@
             "pos": "終助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「は」(詠嘆): 文末の「は」は感動・詠嘆を示し「〜なあ」と訳す。「起きゐたまふめるは」=「起きていらっしゃるようですなあ」。"
         },
         {
-          "id": "s1-t37",
+          "id": "s1-t39",
           "text": "。",
           "start": 70,
           "end": 71,
@@ -505,7 +548,7 @@
           }
         },
         {
-          "id": "s1-t38",
+          "id": "s1-t40",
           "text": "こ",
           "start": 71,
           "end": 72,
@@ -515,7 +558,7 @@
           }
         },
         {
-          "id": "s1-t39",
+          "id": "s1-t41",
           "text": "の",
           "start": 72,
           "end": 73,
@@ -524,10 +567,11 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「この御前」で「中宮 (孫娘) の御前」を体修する。"
         },
         {
-          "id": "s1-t40",
+          "id": "s1-t42",
           "text": "御",
           "start": 73,
           "end": 74,
@@ -537,7 +581,7 @@
           }
         },
         {
-          "id": "s1-t41",
+          "id": "s1-t43",
           "text": "前",
           "start": 74,
           "end": 75,
@@ -547,7 +591,7 @@
           }
         },
         {
-          "id": "s1-t42",
+          "id": "s1-t44",
           "text": "にて",
           "start": 75,
           "end": 77,
@@ -556,10 +600,11 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「にて」(場所): 「〜で・〜において」。場所・手段・原因など。「御前にて」で「(中宮の)御前で」。"
         },
         {
-          "id": "s1-t43",
+          "id": "s1-t45",
           "text": "は",
           "start": 77,
           "end": 78,
@@ -568,10 +613,11 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(主題提示・対比): 「この御前にては」で「(他の場所はともかく)中宮の御前では」と対比的に提示。"
         },
         {
-          "id": "s1-t44",
+          "id": "s1-t46",
           "text": "、",
           "start": 78,
           "end": 79,
@@ -581,7 +627,7 @@
           }
         },
         {
-          "id": "s1-t45",
+          "id": "s1-t47",
           "text": "こよなく",
           "start": 79,
           "end": 83,
@@ -591,10 +637,11 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「こよなし」: 「格段だ・並ぶものがない・このうえない」。プラスにもマイナスにも使う絶対的隔たりの形容。「こよなく〜」で「格段に〜」。"
         },
         {
-          "id": "s1-t46",
+          "id": "s1-t48",
           "text": "御",
           "start": 83,
           "end": 84,
@@ -604,7 +651,7 @@
           }
         },
         {
-          "id": "s1-t47",
+          "id": "s1-t49",
           "text": "心",
           "start": 84,
           "end": 85,
@@ -614,7 +661,7 @@
           }
         },
         {
-          "id": "s1-t48",
+          "id": "s1-t50",
           "text": "も",
           "start": 85,
           "end": 86,
@@ -623,10 +670,11 @@
             "pos": "係助詞",
             "meaning": "類似"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(添加): 「〜もまた」。"
         },
         {
-          "id": "s1-t49",
+          "id": "s1-t51",
           "text": "はればれしげな",
           "start": 86,
           "end": 93,
@@ -636,10 +684,11 @@
             "conjugationType": "ナリ",
             "conjugationForm": "体"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容動詞「はればれしげなり」: 「(気分が)晴れ晴れと明るそうである」。「げ」(様態) を含む派生形容動詞。ナリ活用。"
         },
         {
-          "id": "s1-t50",
+          "id": "s1-t52",
           "text": "めり",
           "start": 93,
           "end": 95,
@@ -649,10 +698,11 @@
             "conjugationForm": "終",
             "meaning": "推定"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「めり」(推定): 終止形接続。視覚推定「〜のように見える」。源氏が紫の上の様子を見て「お心も晴れ晴れしているようですね」と察する婉曲。"
         },
         {
-          "id": "s1-t51",
+          "id": "s1-t53",
           "text": "かし",
           "start": 95,
           "end": 97,
@@ -661,20 +711,31 @@
             "pos": "終助詞",
             "meaning": "念押"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「かし」: 念押しの終助詞「〜だよ・〜ね」。確認・強調を込めて聞き手に同意を求める。"
         },
         {
-          "id": "s1-t52",
-          "text": "。」",
-          "start": 97,
-          "end": 99,
+          "text": "。",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t54",
+          "start": 97,
+          "end": 98
         },
         {
-          "id": "s1-t53",
+          "text": "」",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s1-t55",
+          "start": 98,
+          "end": 99
+        },
+        {
+          "id": "s1-t56",
           "text": "と",
           "start": 99,
           "end": 100,
@@ -683,20 +744,22 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 直前の発話を引用して下の動詞「聞こえたまふ」につなぐ。"
         },
         {
-          "id": "s1-t54",
+          "id": "s1-t57",
           "text": "聞こえ",
           "start": 100,
           "end": 103,
           "layer": 4,
           "grammarTag": {
             "pos": "ヤ下二"
-          }
+          },
+          "hint": "謙譲動詞「聞こゆ」: ヤ行下二段。「申し上げる」(=「言ふ」の謙譲)。動作の相手 (紫の上) への敬意を示す。"
         },
         {
-          "id": "s1-t55",
+          "id": "s1-t58",
           "text": "たまふ",
           "start": 103,
           "end": 106,
@@ -708,10 +771,11 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」: 動作主 (源氏) への敬意。「聞こえ＋たまふ」で謙譲＋尊敬の二重敬語。"
         },
         {
-          "id": "s1-t56",
+          "id": "s1-t59",
           "text": "。",
           "start": 106,
           "end": 107,
@@ -721,17 +785,18 @@
           }
         },
         {
-          "id": "s1-t57",
+          "id": "s1-t60",
           "text": "かばかり",
           "start": 107,
           "end": 111,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「かばかり」: 「これくらい・このほど」。「かばかりのひま」で「これほどのわずかな小康」。"
         },
         {
-          "id": "s1-t58",
+          "id": "s1-t61",
           "text": "の",
           "start": 111,
           "end": 112,
@@ -740,10 +805,11 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「かばかりのひま」を作る。"
         },
         {
-          "id": "s1-t59",
+          "id": "s1-t62",
           "text": "ひま",
           "start": 112,
           "end": 114,
@@ -754,7 +820,7 @@
           }
         },
         {
-          "id": "s1-t60",
+          "id": "s1-t63",
           "text": "ある",
           "start": 114,
           "end": 116,
@@ -765,10 +831,11 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「あり」: ラ行変格。「在る・存在する」。古文ラ変四語「あり・をり・はべり・いまそかり」を覚えておく。"
         },
         {
-          "id": "s1-t61",
+          "id": "s1-t64",
           "text": "を",
           "start": 116,
           "end": 117,
@@ -777,10 +844,11 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象を示すが、ここは下の「も」と組み合わさり「〜をも」(〜さえも) の含意で逆接的に主節へ続く。"
         },
         {
-          "id": "s1-t62",
+          "id": "s1-t65",
           "text": "も",
           "start": 117,
           "end": 118,
@@ -789,10 +857,11 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(強意): 「をも」で「〜さえも・〜のすら」と程度の強調。「かばかりのひまあるをも」=「これほどのわずかな小康があるのさえも」。"
         },
         {
-          "id": "s1-t63",
+          "id": "s1-t66",
           "text": "、",
           "start": 118,
           "end": 119,
@@ -802,7 +871,7 @@
           }
         },
         {
-          "id": "s1-t64",
+          "id": "s1-t67",
           "text": "いと",
           "start": 119,
           "end": 121,
@@ -810,10 +879,11 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いと"
-          }
+          },
+          "hint": "副詞「いと」: 「たいそう・非常に」。"
         },
         {
-          "id": "s1-t65",
+          "id": "s1-t68",
           "text": "うれし",
           "start": 121,
           "end": 124,
@@ -823,10 +893,11 @@
             "conjugationType": "シク",
             "conjugationForm": "終"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「うれし」: シク活用。古今同義で「嬉しい」。紫の上が源氏の見舞いをほんの少しの小康をうれしく思う場面。"
         },
         {
-          "id": "s1-t66",
+          "id": "s1-t69",
           "text": "と",
           "start": 124,
           "end": 125,
@@ -835,10 +906,11 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「いとうれしと」で内心の引用。"
         },
         {
-          "id": "s1-t67",
+          "id": "s1-t70",
           "text": "思ひ",
           "start": 125,
           "end": 127,
@@ -848,20 +920,22 @@
             "conjugationType": "ハ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「思ふ」: ハ行四段。「思う・考える」。"
         },
         {
-          "id": "s1-t68",
+          "id": "s1-t71",
           "text": "きこえ",
           "start": 127,
           "end": 130,
           "layer": 4,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "謙譲の補助動詞「きこゆ」: ヤ行下二段。動作の対象 (源氏) への敬意で「お〜申し上げる」。「思ひきこゆ」=「お思い申し上げる」。"
         },
         {
-          "id": "s1-t69",
+          "id": "s1-t72",
           "text": "たまへ",
           "start": 130,
           "end": 133,
@@ -873,10 +947,11 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」已然形: 動作主 (紫の上) への敬意。下に存続「り」が接続。"
         },
         {
-          "id": "s1-t70",
+          "id": "s1-t73",
           "text": "る",
           "start": 133,
           "end": 134,
@@ -886,10 +961,11 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」(存続): 四段已然・サ変未然に接続。連体形「る」で「御気色」を修飾。「思ひきこえたまへる御気色」=「お思い申し上げていらっしゃるご様子」。"
         },
         {
-          "id": "s1-t71",
+          "id": "s1-t74",
           "text": "御",
           "start": 134,
           "end": 135,
@@ -899,7 +975,7 @@
           }
         },
         {
-          "id": "s1-t72",
+          "id": "s1-t75",
           "text": "気色",
           "start": 135,
           "end": 137,
@@ -909,7 +985,7 @@
           }
         },
         {
-          "id": "s1-t73",
+          "id": "s1-t76",
           "text": "を",
           "start": 137,
           "end": 138,
@@ -918,10 +994,11 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「(紫の上の)御気色を見たまふ」の対象。"
         },
         {
-          "id": "s1-t74",
+          "id": "s1-t77",
           "text": "、",
           "start": 138,
           "end": 139,
@@ -931,7 +1008,7 @@
           }
         },
         {
-          "id": "s1-t75",
+          "id": "s1-t78",
           "text": "見",
           "start": 139,
           "end": 140,
@@ -944,7 +1021,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s1-t76",
+          "id": "s1-t79",
           "text": "たまふ",
           "start": 140,
           "end": 143,
@@ -956,10 +1033,11 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」連体形: 「見たまふ」で源氏への敬意。下の「も」につなぐため連体形。"
         },
         {
-          "id": "s1-t77",
+          "id": "s1-t80",
           "text": "も",
           "start": 143,
           "end": 144,
@@ -968,10 +1046,11 @@
             "pos": "係助詞",
             "meaning": "類似"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(添加): 「(紫の上の様子を)見るのも(また)」。"
         },
         {
-          "id": "s1-t78",
+          "id": "s1-t81",
           "text": "心苦しく",
           "start": 144,
           "end": 148,
@@ -981,10 +1060,11 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「心苦し」: シク活用。「相手の様子を見ていて自分の心がつらい・気の毒だ」。現代語「気の毒だ」に近い。"
         },
         {
-          "id": "s1-t79",
+          "id": "s1-t82",
           "text": "、",
           "start": 148,
           "end": 149,
@@ -994,37 +1074,40 @@
           }
         },
         {
-          "id": "s1-t80",
+          "id": "s1-t83",
           "text": "つひに",
           "start": 149,
           "end": 152,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「つひに」: 「最後には・とうとう・結局」。下に推量「む」を伴うと「最後にはどうなるのだろう」と先行きの不安を示す。"
         },
         {
-          "id": "s1-t81",
+          "id": "s1-t84",
           "text": "いかに",
           "start": 152,
           "end": 155,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「いかに」: 「どのように・どれほど」(疑問)。下の推量「む」と呼応して「どれほど〜だろうか」。"
         },
         {
-          "id": "s1-t82",
+          "id": "s1-t85",
           "text": "思し騒が",
           "start": 155,
           "end": 159,
           "layer": 4,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "尊敬動詞「思し騒ぐ」: 「思ひ騒ぐ」(動揺する) の尊敬語。「思し」は「思ふ」の尊敬語「思す」連用形。源氏が将来 (紫の上の死) にどれほど取り乱すかを描く。"
         },
         {
-          "id": "s1-t83",
+          "id": "s1-t86",
           "text": "む",
           "start": 159,
           "end": 160,
@@ -1034,10 +1117,11 @@
             "conjugationForm": "体",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(推量): 未然形接続、ここは連体形「む」で文中の連体止め。「いかに思し騒がむ」=「どれほどお取り乱しになるだろう」。"
         },
         {
-          "id": "s1-t84",
+          "id": "s1-t87",
           "text": "、",
           "start": 160,
           "end": 161,
@@ -1047,7 +1131,7 @@
           }
         },
         {
-          "id": "s1-t85",
+          "id": "s1-t88",
           "text": "と",
           "start": 161,
           "end": 162,
@@ -1056,10 +1140,11 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 直前の内心を引用して「思ふに」につなぐ。"
         },
         {
-          "id": "s1-t86",
+          "id": "s1-t89",
           "text": "思ふ",
           "start": 162,
           "end": 164,
@@ -1069,20 +1154,22 @@
             "conjugationType": "ハ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「思ふ」連体形: 下に「に」(原因接続助詞) が続く。"
         },
         {
-          "id": "s1-t87",
+          "id": "s1-t90",
           "text": "に",
           "start": 164,
           "end": 165,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「に」(順接確定): 連体形接続。「〜ので・〜と」。「思ふに」=「思うと」。"
         },
         {
-          "id": "s1-t88",
+          "id": "s1-t91",
           "text": "、",
           "start": 165,
           "end": 166,
@@ -1092,7 +1179,7 @@
           }
         },
         {
-          "id": "s1-t89",
+          "id": "s1-t92",
           "text": "あはれなれ",
           "start": 166,
           "end": 171,
@@ -1103,20 +1190,22 @@
             "conjugationForm": "已",
             "baseForm": "あはれ"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容動詞「あはれなり」: ナリ活用。古文重要語「あはれ」=「しみじみとした情趣・感慨深い・気の毒だ・愛しい」。喜怒哀楽すべてを覆う情緒語で、現代語「あわれ (哀れ)」より広い。"
         },
         {
-          "id": "s1-t90",
+          "id": "s1-t93",
           "text": "ば",
           "start": 171,
           "end": 172,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」(順接確定): 已然形接続で「〜ので・〜と」。「あはれなれば」=「しみじみと感じ入るので」。"
         },
         {
-          "id": "s1-t91",
+          "id": "s1-t94",
           "text": "、",
           "start": 172,
           "end": 173,
@@ -1126,7 +1215,7 @@
           }
         },
         {
-          "id": "s1-t92",
+          "id": "s1-t95",
           "text": "おく",
           "start": 173,
           "end": 175,
@@ -1136,10 +1225,11 @@
             "conjugationType": "カ四",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「おく」: カ行四段。「(露・霜などが)置く・降りる」。「露おく」で和歌の定型表現。萩の上に置く露の意。"
         },
         {
-          "id": "s1-t93",
+          "id": "s1-t96",
           "text": "と",
           "start": 175,
           "end": 176,
@@ -1148,10 +1238,11 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「おくと見るほど」=「(露が)置くと見るほどの間」。"
         },
         {
-          "id": "s1-t94",
+          "id": "s1-t97",
           "text": "見る",
           "start": 176,
           "end": 178,
@@ -1161,10 +1252,11 @@
             "conjugationType": "マ上一",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見る」連体形: マ上一。「ほど」を修飾。"
         },
         {
-          "id": "s1-t95",
+          "id": "s1-t98",
           "text": "ほど",
           "start": 178,
           "end": 180,
@@ -1175,7 +1267,7 @@
           }
         },
         {
-          "id": "s1-t96",
+          "id": "s1-t99",
           "text": "ぞ",
           "start": 180,
           "end": 181,
@@ -1184,10 +1276,11 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」(強意): 結びは連体形。ここは「はかなき」(連体形) で結ばれる典型的な係り結び。和歌では「ぞ〜連体」で詠嘆的に強調する。"
         },
         {
-          "id": "s1-t97",
+          "id": "s1-t100",
           "text": "はかなき",
           "start": 181,
           "end": 185,
@@ -1198,20 +1291,22 @@
             "conjugationForm": "体",
             "baseForm": "はかなし"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「はかなし」: ク活用。古今異義語注意。古語の「はかなし」=「あっけない・もろい・むなしい・たよりない・とるにたらない」。露のように消えやすい命の比喩で頻出。"
         },
         {
-          "id": "s1-t98",
+          "id": "s1-t101",
           "text": "ともすれば",
           "start": 185,
           "end": 190,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「ともすれば」: 「どうかすると・ややもすると・しばしば」。「ともすれば風に乱るる」=「どうかすると(すぐ)風に乱れる」。"
         },
         {
-          "id": "s1-t99",
+          "id": "s1-t102",
           "text": "風",
           "start": 190,
           "end": 191,
@@ -1221,7 +1316,7 @@
           }
         },
         {
-          "id": "s1-t100",
+          "id": "s1-t103",
           "text": "に",
           "start": 191,
           "end": 192,
@@ -1230,10 +1325,11 @@
             "pos": "格助詞",
             "meaning": "原因"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(原因): 「風に乱るる」で「風(によって)乱れる」と原因を示す。"
         },
         {
-          "id": "s1-t101",
+          "id": "s1-t104",
           "text": "乱るる",
           "start": 192,
           "end": 195,
@@ -1243,10 +1339,11 @@
             "conjugationType": "ラ下二",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「乱る」: ラ行下二段(自動詞)。「(物が)乱れる」。下二段なので連体形は「乱るる」。四段「乱る (他動詞・乱す)」と区別。"
         },
         {
-          "id": "s1-t102",
+          "id": "s1-t105",
           "text": "萩",
           "start": 195,
           "end": 196,
@@ -1257,7 +1354,7 @@
           "hint": "萩は秋の七草の一つで、細い枝先に紫紅色の花をつけ、夜露を多く宿す。古来より風に揺れる繊細さと、置く露の重みでしなる姿が「はかなさ」「もろさ」の象徴とされ、『万葉集』以来「萩＋露＋秋風」が和歌の定型縁語として確立した。本作で紫の上が自身を「萩のうは露」にたとえるのは、この和歌伝統を背景に死期の近さを暗示する表現である。"
         },
         {
-          "id": "s1-t103",
+          "id": "s1-t106",
           "text": "の",
           "start": 196,
           "end": 197,
@@ -1266,10 +1363,11 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「萩のうは露」で萩の上に置く露を表す。"
         },
         {
-          "id": "s1-t104",
+          "id": "s1-t107",
           "text": "うは露",
           "start": 197,
           "end": 200,
@@ -1280,7 +1378,7 @@
           "hint": "「うは露（上露）」＝草木の葉や花の上に置く露。和歌では「下露（葉の裏や根元の露）」と対にして「うは露」と詠み、軽く触れただけで落ちる極めてはかないものの代表とされる。風に乱れる萩の上露は『古今集』以来「命のはかなさ」の象徴であり、紫の上が我が身を「萩のうは露」にたとえるのは死別の近さを婉曲に告げる定型表現として読む。"
         },
         {
-          "id": "s1-t105",
+          "id": "s1-t108",
           "text": "げに",
           "start": 200,
           "end": 202,
@@ -1288,10 +1386,11 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "げに"
-          }
+          },
+          "hint": "副詞「げに」: 「ほんとうに・なるほど・いかにも」。納得・確認の語。"
         },
         {
-          "id": "s1-t106",
+          "id": "s1-t109",
           "text": "ぞ",
           "start": 202,
           "end": 203,
@@ -1300,10 +1399,11 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」(強意): ここは結びを伴わず連用中止的に余情を残す用法。「げにぞ、折れかへり…」と挿入句的に強める。"
         },
         {
-          "id": "s1-t107",
+          "id": "s1-t110",
           "text": "、",
           "start": 203,
           "end": 204,
@@ -1313,17 +1413,18 @@
           }
         },
         {
-          "id": "s1-t108",
+          "id": "s1-t111",
           "text": "折れかへり",
           "start": 204,
           "end": 209,
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "複合動詞「折れかへる」: 「折れ＋返る」で「(萩が露の重みで)折れ曲がる・たわむ」。萩の枝のしなる様態。"
         },
         {
-          "id": "s1-t109",
+          "id": "s1-t112",
           "text": "、",
           "start": 209,
           "end": 210,
@@ -1333,7 +1434,7 @@
           }
         },
         {
-          "id": "s1-t110",
+          "id": "s1-t113",
           "text": "とまる",
           "start": 210,
           "end": 213,
@@ -1343,10 +1444,11 @@
             "conjugationType": "ラ四",
             "conjugationForm": "終"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「とまる」: ラ行四段。「(露が)とどまる・残る」。"
         },
         {
-          "id": "s1-t111",
+          "id": "s1-t114",
           "text": "べう",
           "start": 213,
           "end": 215,
@@ -1356,10 +1458,11 @@
             "conjugationForm": "用",
             "meaning": "可能"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「べし」(可能): 終止形接続(ラ変は連体形)。連用形「べう」(ウ音便)。「とまるべうもあらぬ」=「とどまることもできない」。可能の打消で「〜できない」を表す。"
         },
         {
-          "id": "s1-t112",
+          "id": "s1-t115",
           "text": "も",
           "start": 215,
           "end": 216,
@@ -1368,10 +1471,11 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(強意): 「べうも」で強意の添加。"
         },
         {
-          "id": "s1-t113",
+          "id": "s1-t116",
           "text": "あら",
           "start": 216,
           "end": 218,
@@ -1381,10 +1485,11 @@
             "conjugationType": "ラ変",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変補助動詞「あり」: 「とまるべう(も)あら(ぬ)」=「とどまることができない」。打消「ぬ」と組んで存在の否定を作る。"
         },
         {
-          "id": "s1-t114",
+          "id": "s1-t117",
           "text": "ぬ",
           "start": 218,
           "end": 219,
@@ -1394,10 +1499,11 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 連体形「ぬ」。直前の「あら」(未然形) に接続して「あらぬ」=「ない」。"
         },
         {
-          "id": "s1-t115",
+          "id": "s1-t118",
           "text": "、",
           "start": 219,
           "end": 220,
@@ -1407,7 +1513,7 @@
           }
         },
         {
-          "id": "s1-t116",
+          "id": "s1-t119",
           "text": "よそへ",
           "start": 220,
           "end": 223,
@@ -1417,10 +1523,11 @@
             "conjugationType": "ハ下二",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「よそふ」: ハ行下二段。「なぞらえる・たとえる」。「よそへられたる」=「(萩の上露に紫の上が)なぞらえられた」。"
         },
         {
-          "id": "s1-t117",
+          "id": "s1-t120",
           "text": "られ",
           "start": 223,
           "end": 225,
@@ -1430,10 +1537,11 @@
             "conjugationForm": "用",
             "meaning": "受身"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「らる」(受身): 未然形接続、四段以外に付く。連用形「られ」。「よそへられ」=「なぞらえられて」。源氏は萩のうは露に紫の上をなぞらえる。"
         },
         {
-          "id": "s1-t118",
+          "id": "s1-t121",
           "text": "たる",
           "start": 225,
           "end": 227,
@@ -1443,10 +1551,11 @@
             "conjugationForm": "体",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」(存続): 連体形「たる」で「をり」を修飾。「よそへられたるをり」=「なぞらえられている折」。"
         },
         {
-          "id": "s1-t119",
+          "id": "s1-t122",
           "text": "をり",
           "start": 227,
           "end": 229,
@@ -1456,17 +1565,18 @@
           }
         },
         {
-          "id": "s1-t120",
+          "id": "s1-t123",
           "text": "さへ",
           "start": 229,
           "end": 231,
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「さへ」: 「〜までも」(添加・極端)。「よそへられたるをりさへ」=「なぞらえられているこの折までも(さらに)」。"
         },
         {
-          "id": "s1-t121",
+          "id": "s1-t124",
           "text": "忍びがたき",
           "start": 231,
           "end": 236,
@@ -1476,20 +1586,22 @@
             "conjugationType": "ク",
             "conjugationForm": "体　"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「忍びがたし」: ク活用。「こらえきれない・耐えがたい」。「忍ぶ」(こらえる)+「がたし」(〜しにくい)。"
         },
         {
-          "id": "s1-t122",
+          "id": "s1-t125",
           "text": "を",
           "start": 236,
           "end": 237,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「を」: 連体形接続で順接・逆接両用。ここは順接「〜ので」あるいは逆接「〜のに」で文脈は逆接気味の余情。"
         },
         {
-          "id": "s1-t123",
+          "id": "s1-t126",
           "text": "、",
           "start": 237,
           "end": 238,
@@ -1499,17 +1611,18 @@
           }
         },
         {
-          "id": "s1-t124",
+          "id": "s1-t127",
           "text": "見出だし",
           "start": 238,
           "end": 242,
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "複合動詞「見出だす」: 「見＋出だす」で「(室内から外を)見やる・眺める」。"
         },
         {
-          "id": "s1-t125",
+          "id": "s1-t128",
           "text": "たまひ",
           "start": 242,
           "end": 245,
@@ -1521,20 +1634,22 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」連用形: 源氏への敬意。"
         },
         {
-          "id": "s1-t126",
+          "id": "s1-t129",
           "text": "て",
           "start": 245,
           "end": 246,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続。"
         },
         {
-          "id": "s1-t127",
+          "id": "s1-t130",
           "text": "も",
           "start": 246,
           "end": 247,
@@ -1543,10 +1658,11 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(添加): 「見出だしたまひても」=「お眺めになっても」。"
         },
         {
-          "id": "s1-t128",
+          "id": "s1-t131",
           "text": "、",
           "start": 247,
           "end": 248,
@@ -1556,17 +1672,18 @@
           }
         },
         {
-          "id": "s1-t129",
+          "id": "s1-t132",
           "text": "ややもせば",
           "start": 248,
           "end": 253,
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「ややもせば」: 「どうかすると・ともすれば」。前の「ともすれば」と同義。連語「ややもす＋ば」由来。"
         },
         {
-          "id": "s1-t130",
+          "id": "s1-t133",
           "text": "消え",
           "start": 253,
           "end": 255,
@@ -1576,7 +1693,7 @@
           }
         },
         {
-          "id": "s1-t131",
+          "id": "s1-t134",
           "text": "を",
           "start": 255,
           "end": 256,
@@ -1585,10 +1702,11 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「消えをあらそふ」=「消えること(の早さ)を競う」。"
         },
         {
-          "id": "s1-t132",
+          "id": "s1-t135",
           "text": "あらそふ",
           "start": 256,
           "end": 260,
@@ -1598,10 +1716,11 @@
             "conjugationType": "ハ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「あらそふ」: ハ行四段。「争う・競う」。"
         },
         {
-          "id": "s1-t133",
+          "id": "s1-t136",
           "text": "露",
           "start": 260,
           "end": 261,
@@ -1611,7 +1730,7 @@
           }
         },
         {
-          "id": "s1-t134",
+          "id": "s1-t137",
           "text": "の",
           "start": 261,
           "end": 262,
@@ -1620,10 +1739,11 @@
             "pos": "格助詞",
             "meaning": "比喩"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(比喩): 「露の世」=「露のような(はかない)世」。"
         },
         {
-          "id": "s1-t135",
+          "id": "s1-t138",
           "text": "世",
           "start": 262,
           "end": 263,
@@ -1633,7 +1753,7 @@
           }
         },
         {
-          "id": "s1-t136",
+          "id": "s1-t139",
           "text": "に",
           "start": 263,
           "end": 264,
@@ -1642,10 +1762,11 @@
             "pos": "格助詞",
             "meaning": "場所"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(場所): 「露の世に」で「この露のような世で」。"
         },
         {
-          "id": "s1-t137",
+          "id": "s1-t140",
           "text": "後れ先立つ",
           "start": 264,
           "end": 269,
@@ -1655,10 +1776,11 @@
             "conjugationType": "タ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "複合動詞「後れ先立つ」: 「後れる(死に遅れる)」+「先立つ(先に死ぬ)」で死別をいう定型。"
         },
         {
-          "id": "s1-t138",
+          "id": "s1-t141",
           "text": "ほど",
           "start": 269,
           "end": 271,
@@ -1669,7 +1791,7 @@
           }
         },
         {
-          "id": "s1-t139",
+          "id": "s1-t142",
           "text": "経",
           "start": 271,
           "end": 272,
@@ -1679,10 +1801,11 @@
             "conjugationType": "ハ下二",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「経」: ハ行下二段。「(時が)経過する・年月が経つ」。未然形「経」+「ず」で「経ない=間が空かない」。"
         },
         {
-          "id": "s1-t140",
+          "id": "s1-t143",
           "text": "ず",
           "start": 272,
           "end": 273,
@@ -1692,10 +1815,11 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消): 連用形。「経ず」=「経過しない」。"
         },
         {
-          "id": "s1-t141",
+          "id": "s1-t144",
           "text": "もがな",
           "start": 273,
           "end": 276,
@@ -1704,7 +1828,8 @@
             "pos": "終助詞",
             "meaning": "願望"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「もがな」: 願望「〜であればなあ・〜してほしい」。実現困難な願いを婉曲に詠嘆する。「経ずもがな」=「(死別の)時間差が経たないでほしい」=「同時に逝きたい」。"
         }
       ]
     },
@@ -1723,7 +1848,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「とて」: 「と＋て」。直前の和歌「ややもせば〜もがな」を引用して下の動作につなぐ。"
         },
         {
           "id": "s2-t2",
@@ -1765,7 +1891,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「御涙を払ふ」の対象。"
         },
         {
           "id": "s2-t6",
@@ -1778,7 +1905,8 @@
             "conjugationType": "ハ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "複合動詞「払ひあふ」: 「払ふ」+補助動詞「敢ふ」(=完遂する)。「あふ」はハ下二で「〜しきる・〜することができる」の意。下に打消で「〜しきれない・〜できない」。"
         },
         {
           "id": "s2-t7",
@@ -1793,7 +1921,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」未然形: 源氏への敬意。"
         },
         {
           "id": "s2-t8",
@@ -1806,7 +1935,8 @@
             "conjugationForm": "終",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消)終止形: 「払ひあへたまはず」=「払いきれずにいらっしゃる」。源氏の涙の激しさを示す。「〜あへず」(〜しきれない) の不可能表現。"
         },
         {
           "id": "s2-t9",
@@ -1863,7 +1993,8 @@
             "pos": "格助詞",
             "meaning": "原因"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(原因): 「秋風に」で「秋風によって」。"
         },
         {
           "id": "s4-t3",
@@ -1873,7 +2004,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「しばし」: 「しばらく・少しの間」。"
         },
         {
           "id": "s4-t4",
@@ -1886,7 +2018,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「とまる」: ラ行四段、未然形。「とまらぬ露」=「とどまらない露」。"
         },
         {
           "id": "s4-t5",
@@ -1899,7 +2032,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消)連体形「ぬ」: 「露」を修飾。「秋風にしばしとまらぬ露」=「秋風にちょっとも吹き残らない露」。"
         },
         {
           "id": "s4-t6",
@@ -1921,7 +2055,8 @@
             "pos": "格助詞",
             "meaning": "比喩"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(比喩): 「露の世」=「露のような世」。三首の歌すべてに登場するキーワード。"
         },
         {
           "id": "s4-t8",
@@ -1943,7 +2078,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 下の「見む」の対象。"
         },
         {
           "id": "s4-t10",
@@ -1953,7 +2089,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "hint": "代名詞「誰」: 疑問・反語の主体。下の「か」と連動。"
         },
         {
           "id": "s4-t11",
@@ -1965,7 +2102,8 @@
             "pos": "係助詞",
             "meaning": "反語"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「か」(反語): 結びは連体形「見む」。「誰か〜見む」=「誰が〜と見ようか、いや誰も見ない」と反語表現。"
         },
         {
           "id": "s4-t12",
@@ -1987,7 +2125,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「草葉のうへ」=「草葉の上(だけのこと)」。"
         },
         {
           "id": "s4-t14",
@@ -2010,7 +2149,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「うへとのみ見む」=「うえのこと(だけだ)と見る」と引用。"
         },
         {
           "id": "s4-t16",
@@ -2020,7 +2160,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "副助詞"
-          }
+          },
+          "hint": "副助詞「のみ」: 限定「〜だけ・〜ばかり」。「草葉のうへとのみ見む」=「草葉の上(だけ)のことと見るだろうか」。"
         },
         {
           "id": "s4-t17",
@@ -2033,7 +2174,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見る」未然形: 下に助動詞「む」が接続。"
         },
         {
           "id": "s4-t18",
@@ -2046,13 +2188,14 @@
             "conjugationForm": "体",
             "meaning": "推量"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(推量・連体形): 係助詞「か」の結び。反語の意「〜だろうか、いや〜ない」。"
         }
       ]
     },
     {
       "id": "s5",
-      "originalText": "と聞こえかはしたまふ御容貌どもあらまほしく、見るかひあるにつけても、かくて千年を過ぐすわざもがな、と思さるれど、心にかなはぬことなれば、かけとめむ方なきぞ悲しかりける。「今は渡らせたまひね。",
+      "originalText": "と聞こえかはしたまふ御容貌どもあらまほしく、見るかひあるにつけても、かくて千年を過ぐすわざもがな、と思さるれど、心にかなはぬことなれば、かけとめむ方なきぞ悲しかりける。",
       "modernTranslation": "ややもせば……どうかすると先を争って消える露にも等しいこの世では、おくれたり先立ったりする間をおかず、いつもいっしょでありたいものです。",
       "tokens": [
         {
@@ -2065,7 +2208,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 直前の中宮の和歌を引用。"
         },
         {
           "id": "s5-t2",
@@ -2079,7 +2223,8 @@
             "conjugationForm": "用",
             "honorific": "謙譲"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "謙譲動詞「聞こえかはす」: 「聞こえ(=申し上げる)」+「かはす(=互いに)」で「お互いに歌を詠み交わす」。サ行四段。紫の上・源氏・中宮三人の唱和を示す。"
         },
         {
           "id": "s5-t3",
@@ -2094,7 +2239,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」連体形: 主語(紫の上と中宮)への敬意。"
         },
         {
           "id": "s5-t4",
@@ -2137,7 +2283,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「あらまほし」: シク活用。「望ましい・理想的だ」。「あら(=あり)」+「まほし(=願望)」由来。"
         },
         {
           "id": "s5-t8",
@@ -2160,7 +2307,8 @@
             "conjugationType": "マ上一",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見る」連体形: マ上一。「かひ」を修飾。"
         },
         {
           "id": "s5-t10",
@@ -2184,7 +2332,8 @@
             "conjugationForm": "体",
             "baseForm": "ある"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 「見るかひある」=「見るだけの価値がある」。"
         },
         {
           "id": "s5-t12",
@@ -2196,7 +2345,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(対象): 「〜につけても」(=〜するにつけても・〜のたびに) の連語の一部。"
         },
         {
           "id": "s5-t13",
@@ -2210,7 +2360,8 @@
             "conjugationForm": "用",
             "baseForm": "つく"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「つく」: カ行下二段「つく」(=関連づける)。「につけて」で「〜に関連して・〜のたびに」の連語。"
         },
         {
           "id": "s5-t14",
@@ -2220,7 +2371,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 「につけて」を作る。"
         },
         {
           "id": "s5-t15",
@@ -2232,7 +2384,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(添加): 「につけても」=「につけても・するにつけても」。"
         },
         {
           "id": "s5-t16",
@@ -2252,7 +2405,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「かくて」: 「このようにして・こうして」。"
         },
         {
           "id": "s5-t18",
@@ -2275,7 +2429,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「千年を過ぐす」の対象。"
         },
         {
           "id": "s5-t20",
@@ -2288,7 +2443,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「過ぐす」: サ行四段(他動詞)。「(時を)過ごす」。「千年を過ぐすわざもがな」=「千年も(共に)過ごせる方法があればなあ」。"
         },
         {
           "id": "s5-t21",
@@ -2311,7 +2467,8 @@
             "pos": "終助詞",
             "meaning": "願望"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「もがな」: 願望「〜であればなあ」。実現困難な願いを示す。"
         },
         {
           "id": "s5-t23",
@@ -2333,7 +2490,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「もがな、と思さるれど」と内心の引用。"
         },
         {
           "id": "s5-t25",
@@ -2347,7 +2505,8 @@
             "conjugationForm": "未",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬動詞「思す」: サ行四段。「思ふ」の尊敬語「お思いになる」。源氏への敬意。"
         },
         {
           "id": "s5-t26",
@@ -2360,7 +2519,8 @@
             "conjugationForm": "已",
             "meaning": "自発"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」(自発): 未然形接続。已然形「るれ」。「思さるれ」=「自然にお思いになる」。「思ふ」系には自発の意が出やすい。"
         },
         {
           "id": "s5-t27",
@@ -2370,7 +2530,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ど」(逆接): 已然形接続。「〜けれども・〜のに」。"
         },
         {
           "id": "s5-t28",
@@ -2402,7 +2563,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(対象): 「心にかなふ」の対象。"
         },
         {
           "id": "s5-t31",
@@ -2415,7 +2577,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「かなふ」: ハ行四段。「(願いに)かなう・思いどおりになる」。"
         },
         {
           "id": "s5-t32",
@@ -2428,7 +2591,8 @@
             "conjugationForm": "体",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消)連体形「ぬ」: 「かなはぬこと」=「思いどおりにならないこと」。"
         },
         {
           "id": "s5-t33",
@@ -2453,7 +2617,8 @@
             "meaning": "断定",
             "baseForm": "なる"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定)已然形「なれ」: 「ことなれば」=「ことなので」。連用形・体言接続。"
         },
         {
           "id": "s5-t35",
@@ -2463,7 +2628,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」(順接確定): 已然形接続で「〜ので」。"
         },
         {
           "id": "s5-t36",
@@ -2486,7 +2652,8 @@
             "conjugationType": "マ下二",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「かけとむ」: マ行下二段(他動詞)「(心に)とどめる・引きとめる」。"
         },
         {
           "id": "s5-t38",
@@ -2499,7 +2666,8 @@
             "conjugationForm": "体",
             "meaning": "婉曲"
           },
-          "grammarRefId": "jodoshi-suiryo"
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」(婉曲): 連体形。「かけとめむ方」=「引きとめるすべ」と婉曲。連体形の「む」は婉曲・仮定。"
         },
         {
           "id": "s5-t39",
@@ -2523,7 +2691,8 @@
             "conjugationForm": "体",
             "baseForm": "なく"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「なし」: ク活用。「かけとめむ方なき」=「引きとめるすべがない」。"
         },
         {
           "id": "s5-t41",
@@ -2535,7 +2704,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」(強意): 結びは連体形「ける」(けりの連体形)。「ぞ〜ける」の係り結びで詠嘆的余韻を強める典型。"
         },
         {
           "id": "s5-t42",
@@ -2548,7 +2718,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「悲し」: シク活用、連用形「悲しかり」+助動詞「けり」=「悲しかった」。"
         },
         {
           "id": "s5-t43",
@@ -2561,7 +2732,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去・詠嘆): 連用形接続。連体形「ける」で係助詞「ぞ」の結び。物語末尾の係り結び「ぞ〜ける」で詠嘆的回想を示す典型構文。"
         },
         {
           "id": "s5-t44",
@@ -2572,58 +2744,68 @@
           "grammarTag": {
             "pos": ""
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "originalText": "「今は渡らせたまひね。",
+      "modernTranslation": "とおっしゃって、涙を払っても払いきれぬほどにお流しになる。",
+      "tokens": [
         {
-          "id": "s5-t45",
           "text": "「",
-          "start": 84,
-          "end": 85,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s6-t1",
+          "start": 0,
+          "end": 1
         },
         {
-          "id": "s5-t46",
           "text": "今は",
-          "start": 85,
-          "end": 87,
           "layer": 0,
           "grammarTag": {
-            "pos": ""
-          }
+            "pos": "副詞",
+            "baseForm": "いまは"
+          },
+          "id": "s6-t2",
+          "start": 1,
+          "end": 3,
+          "hint": "副詞「今は」: 「もう・そろそろ・今となっては」。臨終を悟った紫の上の発話冒頭。"
         },
         {
-          "id": "s5-t47",
           "text": "渡ら",
-          "start": 87,
-          "end": 89,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
             "conjugationType": "ラ四",
-            "conjugationForm": "未"
+            "conjugationForm": "未",
+            "baseForm": "わたる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s6-t3",
+          "start": 3,
+          "end": 5,
+          "hint": "動詞「渡る」: ラ行四段、未然形。「(高貴な人が)場所を移る・退出する・お越しになる」。中宮への退出依頼。"
         },
         {
-          "id": "s5-t48",
           "text": "せ",
-          "start": 89,
-          "end": 90,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
             "conjugationForm": "用",
-            "meaning": "尊敬"
+            "meaning": "尊敬",
+            "baseForm": "す"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-keigo",
+          "id": "s6-t4",
+          "start": 5,
+          "end": 6,
+          "hint": "助動詞「す」(尊敬): 四段・ナ変・ラ変未然形に接続。連用形「せ」。下の「たまひ」と組んで二重尊敬「せたまふ」=最高敬語。中宮(后)に対する最高位の敬意。"
         },
         {
-          "id": "s5-t49",
           "text": "たまひ",
-          "start": 90,
-          "end": 93,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -2632,47 +2814,36 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s6-t5",
+          "start": 6,
+          "end": 9,
+          "hint": "尊敬の補助動詞「たまふ」連用形: 「せたまふ」で二重尊敬。"
         },
         {
-          "id": "s5-t50",
           "text": "ね",
-          "start": 93,
-          "end": 94,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
             "conjugationForm": "命",
-            "meaning": "強意"
+            "meaning": "強意",
+            "baseForm": "ぬ"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "id": "s6-t6",
+          "start": 9,
+          "end": 10,
+          "hint": "助動詞「ぬ」(強意・確述)命令形「ね」: 連用形接続。命令形「ね」は「きっと〜してください・ぜひ〜せよ」の強い依頼。完了「ぬ」と同形だが命令形は強意・確述。「渡らせたまひね」=「ぜひお引き取りください」。"
         },
         {
-          "id": "s5-t51",
           "text": "。",
-          "start": 94,
-          "end": 95,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
-        }
-      ]
-    },
-    {
-      "id": "s6",
-      "originalText": "｢今は渡らせたまひね。",
-      "modernTranslation": "とおっしゃって、涙を払っても払いきれぬほどにお流しになる。",
-      "tokens": [
-        {
-          "id": "s6-t1",
-          "text": "｢今は渡らせたまひね。",
-          "start": 0,
-          "end": 11,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
+          },
+          "id": "s6-t7",
+          "start": 10,
+          "end": 11
         }
       ]
     },
@@ -2700,7 +2871,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いと"
-          }
+          },
+          "hint": "副詞「いと」: 強意「たいそう」。"
         },
         {
           "id": "s7-t3",
@@ -2713,7 +2885,8 @@
             "conjugationType": "シク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「苦し」: シク活用。「(身体的に)つらい・苦しい」。"
         },
         {
           "id": "s7-t4",
@@ -2727,7 +2900,8 @@
             "conjugationForm": "用",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「なる」: ラ行四段。「(状態に)なる」。"
         },
         {
           "id": "s7-t5",
@@ -2741,7 +2915,8 @@
             "conjugationForm": "用",
             "baseForm": "はべり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "丁寧の補助動詞「はべり」: ラ行変格活用。「〜です・〜ます・〜ております」。聞き手 (中宮) への丁寧。"
         },
         {
           "id": "s7-t6",
@@ -2754,7 +2929,8 @@
             "conjugationForm": "終",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」(完了)終止形: 連用形接続。「なりはべりぬ」=「(苦しく)なってしまいました」。完了+丁寧の組合せで臨終の自覚を冷静に伝える。"
         },
         {
           "id": "s7-t7",
@@ -2784,7 +2960,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「言ふかひなし」: ク活用。「言ってもしようがない・どうにもならない・取るに足りない」。「かひ(=甲斐)」が「なし」で「言ってもどうにもならない」。"
         },
         {
           "id": "s8-t2",
@@ -2798,7 +2975,8 @@
             "conjugationForm": "用",
             "baseForm": "なる"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「なる」: ラ行四段、連用形。「言ふかひなくなり」=「どうにもならなくなり」。"
         },
         {
           "id": "s8-t3",
@@ -2811,7 +2989,8 @@
             "conjugationForm": "用",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」(完了)連用形「に」: 連用形接続。下に過去「ける」が続いて「にける」=「〜してしまった」と完了+過去を重ねる。"
         },
         {
           "id": "s8-t4",
@@ -2824,7 +3003,8 @@
             "conjugationForm": "体",
             "meaning": "過去"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けり」(過去)連体形「ける」: 「に＋ける」で「〜してしまった(という)」と過去・確定の状態を示す。"
         },
         {
           "id": "s8-t5",
@@ -2847,7 +3027,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「〜といひながら」を作る。"
         },
         {
           "id": "s8-t7",
@@ -2861,7 +3042,8 @@
             "conjugationForm": "用",
             "baseForm": "いふ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「いふ」: ハ行四段、連用形。"
         },
         {
           "id": "s8-t8",
@@ -2871,7 +3053,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ながら」: 連用形・体言・形容詞語幹接続。逆接「〜のに・〜とはいえ」。「いひながら」=「とはいえ」。"
         },
         {
           "id": "s8-t9",
@@ -2892,7 +3075,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いと"
-          }
+          },
+          "hint": "副詞「いと」: 強意。"
         },
         {
           "id": "s8-t11",
@@ -2905,7 +3089,8 @@
             "conjugationType": "ナリ",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容動詞「なめげなり」: ナリ活用。「無作法だ・失礼だ」。「なめし(=無礼だ)」+「げ(=様態)」由来。"
         },
         {
           "id": "s8-t12",
@@ -2919,7 +3104,8 @@
             "conjugationForm": "終",
             "baseForm": "はべり"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "丁寧の補助動詞「はべり」終止形: 中宮への敬意。"
         },
         {
           "id": "s8-t13",
@@ -2931,7 +3117,8 @@
             "pos": "終助詞",
             "meaning": "詠嘆"
           },
-          "grammarRefId": "joshi-shujoshi"
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「や」(詠嘆): 文末で「〜よ・〜なあ」と詠嘆。「なめげにはべりや」=「無作法でございますことよ」と自嘲。"
         },
         {
           "id": "s8-t14",
@@ -2970,7 +3157,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「とて」: 直前の発話を引用。"
         },
         {
           "id": "s9-t3",
@@ -3013,7 +3201,8 @@
             "conjugationType": "サ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "複合動詞「引き寄す」: 「引き＋寄す」で「(几帳を)引き寄せる」。サ行下二段。"
         },
         {
           "id": "s9-t7",
@@ -3023,7 +3212,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続。"
         },
         {
           "id": "s9-t8",
@@ -3036,7 +3226,8 @@
             "conjugationType": "サ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「臥す」: サ行四段。「横になる・寝る」。"
         },
         {
           "id": "s9-t9",
@@ -3051,7 +3242,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」已然形: 紫の上への敬意。下に存続「り」。"
         },
         {
           "id": "s9-t10",
@@ -3064,7 +3256,8 @@
             "conjugationForm": "体",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」(存続)連体形「る」: 「臥したまへる」=「横におなりになっている」。"
         },
         {
           "id": "s9-t11",
@@ -3087,7 +3280,8 @@
             "pos": "格助詞",
             "meaning": "主格"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(主格): 「臥したまへるさまの〜頼もしげなく見えたまへば」と主語を示す。"
         },
         {
           "id": "s9-t13",
@@ -3120,7 +3314,8 @@
             "meaning": "比較",
             "baseForm": "よる"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「より」(比較): 「常よりも」=「いつもよりも」。比較の基準を示す。"
         },
         {
           "id": "s9-t16",
@@ -3132,7 +3327,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(強意): 「常よりも」を強める。"
         },
         {
           "id": "s9-t17",
@@ -3143,7 +3339,8 @@
           "grammarTag": {
             "pos": "副詞",
             "baseForm": "いと"
-          }
+          },
+          "hint": "副詞「いと」: 強意。"
         },
         {
           "id": "s9-t18",
@@ -3156,7 +3353,8 @@
             "conjugationType": "ク",
             "conjugationForm": "用"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「頼もしげなし」: ク活用。「頼りなさそうだ・心もとない」。「頼もしげ」(=頼もしそうな)+「なし」で「(頼もしそうな様子が)ない」。臨終の予兆を示す。"
         },
         {
           "id": "s9-t19",
@@ -3166,7 +3364,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": "ヤ下二"
-          }
+          },
+          "hint": "動詞「見ゆ」: ヤ行下二段。「(自然に)見える・思える」。「見る」(マ上一・他動詞) と区別。"
         },
         {
           "id": "s9-t20",
@@ -3181,7 +3380,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」已然形: 紫の上への敬意。"
         },
         {
           "id": "s9-t21",
@@ -3191,7 +3391,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」(順接確定): 已然形接続で「〜ので」。"
         },
         {
           "id": "s9-t22",
@@ -3221,7 +3422,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「いかに」: 「どのように・どれほど」(疑問)。"
         },
         {
           "id": "s9-t25",
@@ -3235,7 +3437,8 @@
             "conjugationForm": "未",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬動詞「思す」未然形: 「思ふ」の尊敬語。紫の上への敬意。"
         },
         {
           "id": "s9-t26",
@@ -3248,7 +3451,8 @@
             "conjugationForm": "体",
             "meaning": "自発"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」(自発)連体形「るる」: 「思さるる」=「自然とお思いになる」。「思ふ」系で自発が出やすい典型。"
         },
         {
           "id": "s9-t27",
@@ -3261,7 +3465,8 @@
             "conjugationForm": "用",
             "meaning": "断定"
           },
-          "grammarRefId": "jodoshi-dantei"
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」(断定)連用形「に」: 「思さるるにか」の「に」=「〜であるか」と断定+疑問。「に＋(あらむ)」+「か」の語尾省略形。"
         },
         {
           "id": "s9-t28",
@@ -3273,7 +3478,8 @@
             "pos": "係助詞",
             "meaning": "疑問"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「か」(疑問): 文末で疑問。「(あらむ)」が省略され余情を残す典型「にか」。"
         },
         {
           "id": "s9-t29",
@@ -3312,7 +3518,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「とて」: 引用。"
         },
         {
           "id": "s10-t3",
@@ -3334,7 +3541,8 @@
             "pos": "係助詞",
             "meaning": "提示"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」(主題): 「宮は」で主語(中宮)を提示。"
         },
         {
           "id": "s10-t5",
@@ -3366,7 +3574,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「(紫の上の)御手をとらふ」の対象。"
         },
         {
           "id": "s10-t8",
@@ -3379,7 +3588,8 @@
             "conjugationType": "ハ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「とらふ」: ハ行下二段。「(手を)とる・つかむ・とらえる」。"
         },
         {
           "id": "s10-t9",
@@ -3390,7 +3600,8 @@
           "grammarTag": {
             "pos": "補助",
             "baseForm": "たてまつる"
-          }
+          },
+          "hint": "謙譲の補助動詞「たてまつる」: 動作の対象 (紫の上) への敬意。中宮が紫の上の手をとっているところに敬意を込める。"
         },
         {
           "id": "s10-t10",
@@ -3420,7 +3631,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「泣く泣く」: 「泣きながら」。動詞「泣く」の畳語で副詞化した表現。"
         },
         {
           "id": "s10-t13",
@@ -3444,7 +3656,8 @@
           "grammarTag": {
             "pos": "補助",
             "baseForm": "たてまつる"
-          }
+          },
+          "hint": "謙譲の補助動詞「たてまつる」: 紫の上への敬意。「見たてまつり」=「拝見する」。"
         },
         {
           "id": "s10-t15",
@@ -3459,7 +3672,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」連体形: 中宮への敬意。「見たてまつりたまふ」で謙譲(対象=紫の上)+尊敬(主体=中宮)の二重敬語。"
         },
         {
           "id": "s10-t16",
@@ -3469,7 +3683,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「に」(順接): 連体形接続で「〜と・〜ところ」。"
         },
         {
           "id": "s10-t17",
@@ -3489,7 +3704,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「まことに」: 「ほんとうに・実に」。"
         },
         {
           "id": "s10-t19",
@@ -3502,7 +3718,8 @@
             "conjugationType": "カ四",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "複合動詞「消えゆく」: 「消え＋ゆく」で「(露が)消えていく」。カ行四段。和歌「消えをあらそふ露」と照応。"
         },
         {
           "id": "s10-t20",
@@ -3524,7 +3741,8 @@
             "pos": "格助詞",
             "meaning": "比喩"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(比喩): 「露の心地」=「露のような気持ち」。"
         },
         {
           "id": "s10-t22",
@@ -3547,7 +3765,8 @@
             "conjugationType": "サ変",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "サ変動詞「す」連用形「し」: サ行変格「す」=「する」。「心地して」=「気持ちがして」。"
         },
         {
           "id": "s10-t24",
@@ -3557,7 +3776,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続。"
         },
         {
           "id": "s10-t25",
@@ -3589,7 +3809,8 @@
             "pos": "格助詞",
             "meaning": "状態"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(状態): 「限りに見えたまへば」=「最期(の状態)にお見えになるので」。"
         },
         {
           "id": "s10-t28",
@@ -3599,7 +3820,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": "ヤ下二"
-          }
+          },
+          "hint": "動詞「見ゆ」: ヤ行下二段。「(自然に)見える」。"
         },
         {
           "id": "s10-t29",
@@ -3614,7 +3836,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」已然形: 紫の上への敬意。"
         },
         {
           "id": "s10-t30",
@@ -3624,7 +3847,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ば」(順接確定): 已然形+ばで「〜ので」。"
         },
         {
           "id": "s10-t31",
@@ -3667,7 +3891,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「御誦経の使ひ」=「御誦経のための使者」。"
         },
         {
           "id": "s10-t35",
@@ -3709,7 +3934,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(強意): 「数も知らず」=「数もわからないほど(多く)」。"
         },
         {
           "id": "s10-t39",
@@ -3722,7 +3948,8 @@
             "conjugationType": "ラ四",
             "conjugationForm": "未"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「知る」: ラ行四段、未然形。"
         },
         {
           "id": "s10-t40",
@@ -3735,7 +3962,8 @@
             "conjugationForm": "用",
             "meaning": "打消"
           },
-          "grammarRefId": "jodoshi-hitei"
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」(打消)連用形: 「知らず」=「知らずに・わからないほど」。"
         },
         {
           "id": "s10-t41",
@@ -3748,7 +3976,8 @@
             "conjugationType": "ガ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "複合動詞「立ち騒ぐ」: 「立ち＋騒ぐ」で「立ち上がって慌ただしく動き回る」。ガ行四段。緊急の伝令活動を示す。"
         },
         {
           "id": "s10-t42",
@@ -3761,7 +3990,8 @@
             "conjugationForm": "終",
             "meaning": "存続"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たり」(存続)終止形: 連用形接続。「立ち騒ぎたり」=「慌ただしく立ち回っている」。"
         },
         {
           "id": "s10-t43",
@@ -3777,7 +4007,7 @@
     },
     {
       "id": "s11",
-      "originalText": "さきざきも、かくて生き出でたまふをりにならひたまひて、御物の怪と疑ひたまひて、夜一夜、さまざまのことをし尽くさせたまへど、かひもなく、明けはつるほどに消えはてたまひぬ。（）",
+      "originalText": "さきざきも、かくて生き出でたまふをりにならひたまひて、御物の怪と疑ひたまひて、夜一夜、さまざまのことをし尽くさせたまへど、かひもなく、明けはつるほどに消えはてたまひぬ。",
       "modernTranslation": "とおっしゃって、涙を払っても払いきれぬほどにお流しになる。（明石の）中宮は、",
       "tokens": [
         {
@@ -3800,7 +4030,8 @@
             "pos": "係助詞",
             "meaning": "類似"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(類推): 「さきざきも」=「以前も(同じように)」。過去の蘇生例を引き合いに出す。"
         },
         {
           "id": "s11-t3",
@@ -3820,7 +4051,8 @@
           "layer": 0,
           "grammarTag": {
             "pos": "副詞"
-          }
+          },
+          "hint": "副詞「かくて」: 「このようにして」。"
         },
         {
           "id": "s11-t5",
@@ -3830,7 +4062,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "複合動詞「生き出づ」: 「生き＋出づ」で「(死にかけた人が)蘇生する・生き返る」。ダ行下二段。紫の上は過去にも一度蘇生している。"
         },
         {
           "id": "s11-t6",
@@ -3845,7 +4078,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」連体形: 紫の上への敬意。"
         },
         {
           "id": "s11-t7",
@@ -3867,7 +4101,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(対象): 「をりにならふ」の対象。"
         },
         {
           "id": "s11-t9",
@@ -3881,7 +4116,8 @@
             "conjugationForm": "用",
             "baseForm": "ならひ"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「ならふ」: ハ行四段。「慣れる・経験する」。「をりにならひ」=「(過去の)場合の経験に慣れて(=過去の蘇生例を踏まえて)」。"
         },
         {
           "id": "s11-t10",
@@ -3896,7 +4132,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまひ」: 源氏への敬意。"
         },
         {
           "id": "s11-t11",
@@ -3906,7 +4143,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続。"
         },
         {
           "id": "s11-t12",
@@ -3949,7 +4187,8 @@
             "pos": "格助詞",
             "meaning": "引用"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」(引用): 「物の怪と疑ふ」と引用。"
         },
         {
           "id": "s11-t16",
@@ -3962,7 +4201,8 @@
             "conjugationType": "ハ四",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「疑ふ」: ハ行四段。「(物の怪のせいだろうかと)疑う」。"
         },
         {
           "id": "s11-t17",
@@ -3977,7 +4217,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまひ」: 源氏への敬意。"
         },
         {
           "id": "s11-t18",
@@ -3987,7 +4228,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「て」: 単純接続。"
         },
         {
           "id": "s11-t19",
@@ -4019,7 +4261,8 @@
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「さまざまのこと」=「さまざまなこと」。"
         },
         {
           "id": "s11-t22",
@@ -4042,7 +4285,8 @@
             "pos": "格助詞",
             "meaning": "対象"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」(対象): 「ことをし尽くす」の対象。"
         },
         {
           "id": "s11-t24",
@@ -4052,7 +4296,8 @@
           "layer": 1,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "複合動詞「し尽くす」: 「し(=す)＋尽くす」で「あらゆる手を尽くす」。サ行四段。"
         },
         {
           "id": "s11-t25",
@@ -4065,7 +4310,8 @@
             "conjugationForm": "用",
             "meaning": "尊敬"
           },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「す」(尊敬)連用形: 四段未然形接続。下の「たまへ」と組んで二重尊敬「せたまふ」=最高敬語。源氏(院)への最高敬意。"
         },
         {
           "id": "s11-t26",
@@ -4080,7 +4326,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまふ」已然形: 「せたまへ」で二重尊敬。"
         },
         {
           "id": "s11-t27",
@@ -4090,7 +4337,8 @@
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
-          }
+          },
+          "hint": "接続助詞「ど」(逆接): 已然形接続。「〜けれども」。「し尽くさせたまへど、かひもなく」=「あらゆる手を尽くされたが、その甲斐もなく」。"
         },
         {
           "id": "s11-t28",
@@ -4122,7 +4370,8 @@
             "pos": "係助詞",
             "meaning": "強意"
           },
-          "grammarRefId": "joshi-fuku-kakari"
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「も」(強意): 「かひもなく」=「甲斐もなく」。"
         },
         {
           "id": "s11-t31",
@@ -4136,7 +4385,8 @@
             "conjugationForm": "用",
             "baseForm": "なく"
           },
-          "grammarRefId": "keiyoshi-katsuyo"
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「なし」: ク活用、連用形「なく」。"
         },
         {
           "id": "s11-t32",
@@ -4159,7 +4409,8 @@
             "conjugationType": "タ下二",
             "conjugationForm": "体"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "複合動詞「明けはつ」: 「明け＋はつ」で「すっかり夜が明ける」。タ行下二段。「はつ」は完了的補助動詞。"
         },
         {
           "id": "s11-t34",
@@ -4182,7 +4433,8 @@
             "pos": "格助詞",
             "meaning": "時間"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」(時間): 「明けはつるほどに」=「すっかり夜が明けるころに」。"
         },
         {
           "id": "s11-t36",
@@ -4195,7 +4447,8 @@
             "conjugationType": "タ下二",
             "conjugationForm": "用"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "複合動詞「消えはつ」: 「消え＋はつ」で「すっかり消える=息絶える」。タ行下二段。「明けはつる」と「消えはつる」が音と意味で対応し、夜の終わりと命の終わりを重ねる。"
         },
         {
           "id": "s11-t37",
@@ -4210,7 +4463,8 @@
             "baseForm": "たまふ",
             "honorific": "尊敬"
           },
-          "grammarRefId": "doushi-katsuyo"
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "尊敬の補助動詞「たまひ」: 紫の上への敬意。"
         },
         {
           "id": "s11-t38",
@@ -4223,33 +4477,14 @@
             "conjugationForm": "終",
             "meaning": "完了"
           },
-          "grammarRefId": "jodoshi-jisei"
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「ぬ」(完了)終止形: 連用形接続。「消えはてたまひぬ」=「消え果てなさった(=お亡くなりになった)」。完了「ぬ」が確定的な死を告げる物語の最終文。"
         },
         {
           "id": "s11-t39",
           "text": "。",
           "start": 83,
           "end": 84,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s11-t40",
-          "text": "（",
-          "start": 84,
-          "end": 85,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s11-t41",
-          "text": "）",
-          "start": 85,
-          "end": 86,
           "layer": 0,
           "grammarTag": {
             "pos": ""
