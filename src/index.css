@@ -18,6 +18,20 @@
   --layer-4: #9333ea;   /* 敬語 */
   --layer-5: #d97706;   /* 読解 */
   --scaffold: #9ca3af;
+
+  /* Reiwa デザイン用カラートークン (デフォルトは sakura プリセット)
+     ReiwaThemeProvider が起動時に上書きするので、ここは SSR/初回描画用フォールバック */
+  --rw-bg: #fff8f3;
+  --rw-paper: #ffffff;
+  --rw-ink: #1f1530;
+  --rw-ink-soft: #7a6e8c;
+  --rw-rule: #ebe2d8;
+  --rw-primary: #ff5e8a;
+  --rw-primary-soft: #ffe6ed;
+  --rw-accent: #5dd4ad;
+  --rw-accent-soft: #dff7ed;
+  --rw-pop: #ffd44d;
+  --rw-tertiary: #6ba8ff;
 }
 
 /* kobun-v3 リーダー用スタイル */

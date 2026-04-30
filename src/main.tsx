@@ -8,6 +8,7 @@ import { TestGrading } from './TestGrading.tsx'
 import PWAInstallBanner from './components/PWAInstallBanner.tsx'
 import PullToRefresh from './components/PullToRefresh.tsx'
 import { ensureAnonSession } from './lib/anonAuth.ts'
+import { ReiwaThemeProvider } from './theme/ThemeContext'
 import './index.css'
 
 // 読解 v3 と、単語アプリから動線が遠いページは遅延ロード
@@ -38,6 +39,7 @@ function Fallback() {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
+      <ReiwaThemeProvider>
       <PullToRefresh />
       <PWAInstallBanner />
       <Suspense fallback={<Fallback />}>
@@ -59,6 +61,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/vocab" element={<VocabPage />} />
         </Routes>
       </Suspense>
+      </ReiwaThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

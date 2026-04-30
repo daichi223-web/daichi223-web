@@ -17,6 +17,7 @@ import { IndexModal } from './components/IndexModal';
 import { chapterFor, chapterColor } from './utils/chapters';
 import bundledVocabIndex from './data/vocabIndex.json';
 import { hasAdminSession } from './lib/adminSession';
+import ReiwaThemePicker from './theme/ReiwaThemePicker';
 
 type AppMode = 'word' | 'polysemy';
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
@@ -147,6 +148,7 @@ function App() {
 
   // Index modal state
   const [showIndexModal, setShowIndexModal] = useState(false);
+  const [showThemePicker, setShowThemePicker] = useState(false);
   const [pendingModeSwitch, setPendingModeSwitch] = useState<AppMode | null>(null);
   const [indexSearchQuery, setIndexSearchQuery] = useState('');
 
@@ -1013,6 +1015,13 @@ function App() {
     <>
       {/* Top-right fixed navigation - compact on mobile */}
       <div className="fixed top-2 right-2 z-50 flex gap-1.5">
+        <button
+          onClick={() => setShowThemePicker(true)}
+          className="bg-rw-primary hover:opacity-90 text-rw-paper font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+          title="テーマ設定 (5色プリセット + カスタム)"
+        >
+          🎨<span className="hidden sm:inline ml-1">テーマ</span>
+        </button>
         <a
           href={searchHref}
           className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
@@ -1045,6 +1054,9 @@ function App() {
           </a>
         )}
       </div>
+
+      {/* Theme Picker (5色プリセット + カスタム) */}
+      <ReiwaThemePicker open={showThemePicker} onClose={() => setShowThemePicker(false)} />
 
       {/* Index Modal */}
       {showIndexModal && (
