@@ -31,19 +31,40 @@ type ThemeContextValue = ThemeState & {
 
 const STORAGE_KEY = 'kobun.reiwaTheme';
 
+// 旧パレット ID (sakura/ramune/matcha/yuzu/lavender) を新 ID にマッピング。
+// localStorage に旧 ID が残っているユーザーが起動した際の救済。
+const LEGACY_ID_MAP: Record<string, string> = {
+  sakura: 'hakuou', // pink + mint → 白桜 (パステル系で近い)
+  ramune: 'shuka',  // bright/coral 系 → 朱夏
+  matcha: 'wakaba', // green 系 → 若葉
+  yuzu: 'wakaba',   // yellow → 若葉に寄せる
+  lavender: 'hakuou', // pastel 紫 → 白桜
+};
+
+function normalizeThemeId(id: string): string {
+  if (id === '__custom') return id;
+  // 新 5 プリセットに含まれていればそのまま
+  if (getPresetById(id)) return id;
+  // 旧 ID なら新 ID にマップ
+  if (LEGACY_ID_MAP[id]) return LEGACY_ID_MAP[id];
+  // 未知 → デフォルト
+  return DEFAULT_THEME_ID;
+}
+
 function loadInitialState(): ThemeState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { themeId: DEFAULT_THEME_ID, custom: {}, customBaseId: DEFAULT_THEME_ID };
     const parsed = JSON.parse(raw);
+    const rawThemeId = typeof parsed?.themeId === 'string' ? parsed.themeId : DEFAULT_THEME_ID;
+    const rawBaseId = typeof parsed?.customBaseId === 'string' ? parsed.customBaseId : DEFAULT_THEME_ID;
     return {
-      themeId: typeof parsed?.themeId === 'string' ? parsed.themeId : DEFAULT_THEME_ID,
+      themeId: normalizeThemeId(rawThemeId),
       custom:
         parsed?.custom && typeof parsed.custom === 'object' && !Array.isArray(parsed.custom)
           ? parsed.custom
           : {},
-      customBaseId:
-        typeof parsed?.customBaseId === 'string' ? parsed.customBaseId : DEFAULT_THEME_ID,
+      customBaseId: normalizeThemeId(rawBaseId),
     };
   } catch {
     return { themeId: DEFAULT_THEME_ID, custom: {}, customBaseId: DEFAULT_THEME_ID };

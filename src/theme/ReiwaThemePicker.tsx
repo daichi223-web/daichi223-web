@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useReiwaTheme } from './ThemeContext';
-import { REIWA_PRESETS, ReiwaPalettePreset } from './reiwa';
+import { REIWA_PRESETS, REIWA_QUICK_PRESETS, ReiwaPalettePreset, ReiwaQuickPreset } from './reiwa';
 
 // ボトムシート / モーダル形式のテーマピッカー。
 // 5 色プリセット + カスタム 4 色 (primary / accent / pop / tertiary) を編集できる。
@@ -78,7 +78,7 @@ export default function ReiwaThemePicker({ open, onClose }: Props) {
         )}
 
         {tab === 'custom' && (
-          <div className="px-5 py-5 space-y-4">
+          <div className="px-5 py-5 space-y-5">
             <div>
               <p className="text-xs text-rw-ink-soft mb-2">ベース (背景・墨色を引き継ぎ)</p>
               <div className="flex gap-2 flex-wrap">
@@ -96,6 +96,25 @@ export default function ReiwaThemePicker({ open, onClose }: Props) {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* 8 色クイック切替 (4 色だけ素早く差し替え) */}
+            <div>
+              <p className="text-xs text-rw-ink-soft mb-2">クイック切替 (4色まとめて適用)</p>
+              <QuickPresetGrid
+                onApply={(p) => {
+                  setCustomColor('primary', p.primary);
+                  setCustomColor('accent', p.accent);
+                  setCustomColor('pop', p.pop);
+                  setCustomColor('tertiary', p.tertiary);
+                }}
+                activeMatch={(p) =>
+                  custom.primary === p.primary &&
+                  custom.accent === p.accent &&
+                  custom.pop === p.pop &&
+                  custom.tertiary === p.tertiary
+                }
+              />
             </div>
 
             <div>
@@ -132,7 +151,7 @@ export default function ReiwaThemePicker({ open, onClose }: Props) {
               onClick={resetCustom}
               className="w-full py-2.5 text-sm text-rw-ink-soft border border-rw-rule rounded-lg hover:bg-rw-rule/30"
             >
-              さくらに戻す
+              デフォルト「土」に戻す
             </button>
           </div>
         )}
@@ -222,6 +241,53 @@ function ColorRow({
       </div>
       <div className="font-mono text-[10px] text-rw-ink-soft uppercase">{value}</div>
     </label>
+  );
+}
+
+function QuickPresetGrid({
+  onApply,
+  activeMatch,
+}: {
+  onApply: (p: ReiwaQuickPreset) => void;
+  activeMatch: (p: ReiwaQuickPreset) => boolean;
+}) {
+  const groups: { label: ReiwaQuickPreset['category']; items: ReiwaQuickPreset[] }[] = [
+    { label: '明るい', items: REIWA_QUICK_PRESETS.filter((p) => p.category === '明るい') },
+    { label: '落ち着き', items: REIWA_QUICK_PRESETS.filter((p) => p.category === '落ち着き') },
+    { label: 'パステル', items: REIWA_QUICK_PRESETS.filter((p) => p.category === 'パステル') },
+  ];
+  return (
+    <div className="space-y-2">
+      {groups.map((g) => (
+        <div key={g.label}>
+          <div className="text-[10px] text-rw-ink-soft font-bold tracking-wider mb-1 uppercase">{g.label}</div>
+          <div className="grid grid-cols-3 gap-1.5">
+            {g.items.map((p) => {
+              const isActive = activeMatch(p);
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => onApply(p)}
+                  className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border-2 text-xs transition ${
+                    isActive
+                      ? 'border-rw-ink bg-rw-primary-soft'
+                      : 'border-rw-rule bg-rw-paper hover:border-rw-ink-soft'
+                  }`}
+                  aria-pressed={isActive}
+                >
+                  <span className="flex gap-0.5 shrink-0">
+                    <span className="w-2.5 h-2.5 rounded-sm" style={{ background: p.primary }} />
+                    <span className="w-2.5 h-2.5 rounded-sm" style={{ background: p.accent }} />
+                    <span className="w-2.5 h-2.5 rounded-sm" style={{ background: p.pop }} />
+                  </span>
+                  <span className="font-bold text-rw-ink truncate">{p.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 

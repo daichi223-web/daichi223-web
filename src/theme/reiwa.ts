@@ -22,91 +22,123 @@ export type ReiwaPalettePreset = ReiwaPalette & {
   sub: string;
 };
 
-// 5 色プリセット (handoff/dir-reiwa.jsx と同一)
+// 5 色プリセット (handoff v3/dir-reiwa.jsx 準拠)
+// 3 系統: 明るい / 落ち着き / パステル
 export const REIWA_PRESETS: ReiwaPalettePreset[] = [
+  // 明るい
   {
-    id: 'sakura',
-    name: 'さくら',
-    sub: 'pink + mint',
-    bg: '#fff8f3',
+    id: 'shuka',
+    name: '朱夏',
+    sub: 'coral + teal · 明るい',
+    bg: '#fff5ef',
     paper: '#ffffff',
-    ink: '#1f1530',
-    inkSoft: '#7a6e8c',
-    rule: '#ebe2d8',
-    primary: '#ff5e8a',
-    primarySoft: '#ffe6ed',
-    accent: '#5dd4ad',
-    accentSoft: '#dff7ed',
-    pop: '#ffd44d',
-    tertiary: '#6ba8ff',
+    ink: '#1f1612',
+    inkSoft: '#7a665a',
+    rule: '#ecd9cc',
+    primary: '#e8624e',
+    primarySoft: '#fcdcd4',
+    accent: '#4ab8a0',
+    accentSoft: '#d6efe8',
+    pop: '#ffc94a',
+    tertiary: '#5a8fd6',
   },
   {
-    id: 'ramune',
-    name: 'ラムネ',
-    sub: 'sky + coral',
-    bg: '#f3f9ff',
+    id: 'wakaba',
+    name: '若葉',
+    sub: 'fresh green · 明るい',
+    bg: '#f4f7ec',
     paper: '#ffffff',
-    ink: '#0f2240',
-    inkSoft: '#6f7e96',
-    rule: '#dde5f0',
-    primary: '#4ab8ff',
-    primarySoft: '#dff0ff',
-    accent: '#ff8a6e',
-    accentSoft: '#ffe6df',
-    pop: '#ffd84d',
-    tertiary: '#8b6eff',
+    ink: '#1c2416',
+    inkSoft: '#6e7a5e',
+    rule: '#dde2cc',
+    primary: '#6fb04c',
+    primarySoft: '#dde9cc',
+    accent: '#e88858',
+    accentSoft: '#fadfd0',
+    pop: '#ecd058',
+    tertiary: '#5a9cb8',
+  },
+  // 落ち着き
+  {
+    id: 'tsuchi',
+    name: '土',
+    sub: 'terracotta + sage · 落ち着き',
+    bg: '#f6f1ea',
+    paper: '#fdfaf5',
+    ink: '#2a2520',
+    inkSoft: '#7a6f64',
+    rule: '#e3dccf',
+    primary: '#c47868',
+    primarySoft: '#f0e0d8',
+    accent: '#8aaa8e',
+    accentSoft: '#dfe7da',
+    pop: '#d9b574',
+    tertiary: '#8896b8',
   },
   {
-    id: 'matcha',
-    name: '抹茶',
-    sub: 'matcha + cream',
-    bg: '#f6f4ea',
-    paper: '#ffffff',
-    ink: '#1f2a18',
-    inkSoft: '#7a836e',
-    rule: '#e0ddc7',
-    primary: '#7fb84a',
-    primarySoft: '#e8f3d7',
-    accent: '#e89a3a',
-    accentSoft: '#fbedd6',
-    pop: '#f5d76e',
-    tertiary: '#5fa8a0',
+    id: 'nibi',
+    name: '鈍色',
+    sub: 'slate + ochre · 落ち着き',
+    bg: '#eef0f1',
+    paper: '#fafbfc',
+    ink: '#23272d',
+    inkSoft: '#6c747e',
+    rule: '#d8dce0',
+    primary: '#6c7e94',
+    primarySoft: '#dde2e7',
+    accent: '#b8946a',
+    accentSoft: '#ece1d2',
+    pop: '#d9b264',
+    tertiary: '#9c7e9c',
   },
+  // パステル
   {
-    id: 'yuzu',
-    name: '柚子',
-    sub: 'yuzu + violet',
-    bg: '#fffbef',
+    id: 'hakuou',
+    name: '白桜',
+    sub: 'pink + mint · パステル',
+    bg: '#fcf4f3',
     paper: '#ffffff',
-    ink: '#231538',
-    inkSoft: '#7a6e8a',
-    rule: '#ece4d4',
-    primary: '#f5b800',
-    primarySoft: '#fff1c2',
-    accent: '#9b6bd6',
-    accentSoft: '#ece0fa',
-    pop: '#ff7a4a',
-    tertiary: '#5dd4ad',
-  },
-  {
-    id: 'lavender',
-    name: '薄紫',
-    sub: 'lavender + peach',
-    bg: '#faf6ff',
-    paper: '#ffffff',
-    ink: '#1c1a2e',
-    inkSoft: '#7a738c',
-    rule: '#e8e1f0',
-    primary: '#a87bff',
-    primarySoft: '#ece1ff',
-    accent: '#ffa888',
-    accentSoft: '#ffe6dd',
-    pop: '#ffd84d',
-    tertiary: '#5fcfd4',
+    ink: '#2a1f24',
+    inkSoft: '#80707a',
+    rule: '#ecdde0',
+    primary: '#f0a8b5',
+    primarySoft: '#fce4e8',
+    accent: '#a8d4b8',
+    accentSoft: '#dfeee5',
+    pop: '#f5d890',
+    tertiary: '#b4bce0',
   },
 ];
 
-export const DEFAULT_THEME_ID = 'sakura';
+// 落ち着きの「土」をデフォルトに変更 (handoff 準拠: getRwT() の v || 'tsuchi')
+export const DEFAULT_THEME_ID = 'tsuchi';
+
+// カスタムモードのクイック切替プリセット (4 色のみ: primary / accent / pop / tertiary)。
+// bg/paper/ink などはベースプリセットから引き継いだまま、配色のみ素早く試せる。
+// 5 つは REIWA_PRESETS と同名を持つが、bg などを含まない 4 色定義。
+export type ReiwaQuickPreset = {
+  id: string;
+  name: string;
+  category: '明るい' | '落ち着き' | 'パステル';
+  primary: string;
+  accent: string;
+  pop: string;
+  tertiary: string;
+};
+
+export const REIWA_QUICK_PRESETS: ReiwaQuickPreset[] = [
+  // 明るい
+  { id: 'shuka',   name: '朱夏', category: '明るい',   primary: '#e8624e', accent: '#4ab8a0', pop: '#ffc94a', tertiary: '#5a8fd6' },
+  { id: 'mikan',   name: '蜜柑', category: '明るい',   primary: '#f08850', accent: '#5fa8d4', pop: '#f5cc5e', tertiary: '#b87cc8' },
+  { id: 'wakaba',  name: '若葉', category: '明るい',   primary: '#6fb04c', accent: '#e88858', pop: '#ecd058', tertiary: '#5a9cb8' },
+  // 落ち着き
+  { id: 'tsuchi',  name: '土',   category: '落ち着き', primary: '#c47868', accent: '#8aaa8e', pop: '#d9b574', tertiary: '#8896b8' },
+  { id: 'nibi',    name: '鈍色', category: '落ち着き', primary: '#6c7e94', accent: '#b8946a', pop: '#d9b264', tertiary: '#9c7e9c' },
+  { id: 'sumika',  name: '墨花', category: '落ち着き', primary: '#4a5e74', accent: '#c49860', pop: '#d4b572', tertiary: '#846878' },
+  // パステル
+  { id: 'hakuou',  name: '白桜', category: 'パステル', primary: '#f0a8b5', accent: '#a8d4b8', pop: '#f5d890', tertiary: '#b4bce0' },
+  { id: 'fujikasumi', name: '藤霞', category: 'パステル', primary: '#b8a4dc', accent: '#f4b8a8', pop: '#f0d890', tertiary: '#a8c8d8' },
+];
 
 export function getPresetById(id: string): ReiwaPalettePreset | undefined {
   return REIWA_PRESETS.find((p) => p.id === id);
