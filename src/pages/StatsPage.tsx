@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getWordStats, getWeakWords } from '@/lib/wordStats';
 import { getDueWords } from '@/lib/srsEngine';
+import { readStreak, type StreakSnapshot } from '@/lib/streak';
 import { supabase } from '@/lib/supabase';
 import { currentAuthUid } from '@/lib/anonAuth';
 import bundledKobunQ from '@/data/kobunQ.json';
@@ -32,6 +33,11 @@ export default function StatsPage() {
   const [dueQids, setDueQids] = useState<string[]>([]);
   const [srsRows, setSrsRows] = useState<SrsBoxRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [streak, setStreak] = useState<StreakSnapshot>({ current: 0, longest: 0, lastActiveDate: null });
+
+  useEffect(() => {
+    setStreak(readStreak());
+  }, []);
 
   const lemmaIndex = useMemo(buildLemmaIndex, []);
 
@@ -158,6 +164,39 @@ export default function StatsPage() {
                 bg="color-mix(in srgb, var(--rw-tertiary) 25%, transparent)"
                 fg="var(--rw-tertiary)"
               />
+            </section>
+
+            {/* 連続学習 */}
+            <section className="mb-6">
+              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+                連続学習
+              </h2>
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 flex items-center gap-4">
+                <div
+                  className="flex items-center gap-2 px-4 py-3 rounded-2xl shrink-0"
+                  style={{ background: 'var(--rw-primary-soft)' }}
+                >
+                  <span className="text-2xl">🔥</span>
+                  <div>
+                    <div className="text-[10px] tracking-wider font-bold uppercase text-rw-ink-soft">今</div>
+                    <div className="text-2xl font-black text-rw-primary leading-none">
+                      {streak.current}
+                      <span className="text-sm font-bold ml-1">日</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-rw-ink-soft font-bold">最長連続記録</div>
+                  <div className="text-xl font-black text-rw-ink mt-0.5">
+                    {streak.longest}<span className="text-xs font-bold ml-1">日</span>
+                  </div>
+                  {streak.lastActiveDate && (
+                    <div className="text-[10px] text-rw-ink-soft mt-1">
+                      最終学習: {streak.lastActiveDate}
+                    </div>
+                  )}
+                </div>
+              </div>
             </section>
 
             {/* SRS box 分布 */}

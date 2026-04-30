@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
+import { readStreak } from '@/lib/streak';
 
 // Reiwa デザイン版ホーム画面。
 // handoff/dir-reiwa.jsx の RwHome を本番ロジックと結線したもの。
@@ -48,9 +49,11 @@ export default function HomeReiwa({
   onOpenThemePicker,
 }: Props) {
   const [vocab, setVocab] = useState<VocabEntry[]>([]);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     setVocab(getVocabEntries());
+    setStreak(readStreak().current);
   }, []);
 
   const range = currentMode === 'word' ? wordRange : polysemyRange;
@@ -72,9 +75,12 @@ export default function HomeReiwa({
           <div className="text-2xl md:text-3xl font-black tracking-tight leading-none">kobun.</div>
           <div className="text-[11px] text-rw-ink-soft mt-1">{todayLabel()}</div>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-rw-primary text-rw-paper rounded-full text-xs font-bold">
+        <div
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-rw-primary text-rw-paper rounded-full text-xs font-bold"
+          title={streak > 0 ? `${streak}日連続学習中` : 'クイズで答えると連続日数が増える'}
+        >
           <span>🔥</span>
-          <span>{vocab.length}</span>
+          <span>{streak}</span>
         </div>
       </div>
 

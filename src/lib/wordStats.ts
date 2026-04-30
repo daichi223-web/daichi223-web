@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { currentAuthUid } from './anonAuth';
+import { updateStreak } from './streak';
 
 /**
  * 現在のユーザー ID を返す。
@@ -25,6 +26,12 @@ export async function getUserId(): Promise<string> {
  * Uses upsert to atomically increment the correct/incorrect counter.
  */
 export async function recordAnswer(qid: string, isCorrect: boolean): Promise<void> {
+  // ストリークを localStorage で先に更新 (Supabase 失敗してもストリークは維持)
+  try {
+    updateStreak();
+  } catch {
+    // noop
+  }
   const userId = await getUserId();
 
   // First, try to get the existing record
