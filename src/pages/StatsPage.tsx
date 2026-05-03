@@ -313,17 +313,16 @@ export default function StatsPage() {
 
         {loading ? (
           <p className="text-rw-ink-soft text-center py-12">読み込み中...</p>
-        ) : overall.answered === 0 ? (
-          <div className="bg-rw-paper border-2 border-rw-rule rounded-2xl p-8 text-center">
-            <div className="text-5xl mb-3">📊</div>
-            <p className="text-rw-ink-soft text-sm">
-              まだ履歴がありません。
-              <br />
-              クイズで答えると、ここに累計が表示されます。
-            </p>
-          </div>
         ) : (
           <>
+            {overall.answered === 0 && (
+              <div className="bg-rw-paper border-2 border-rw-rule rounded-2xl p-4 mb-4 text-center">
+                <div className="text-3xl mb-1">📊</div>
+                <p className="text-rw-ink-soft text-xs">
+                  まだ履歴がありません。クイズで答えると累計が記録されていきます。
+                </p>
+              </div>
+            )}
             {/* サマリ 4 カード */}
             <section className="grid grid-cols-2 gap-3 mb-6">
               <SummaryCard
