@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { getWordStats, getWeakWords } from '@/lib/wordStats';
 import { getDueWords } from '@/lib/srsEngine';
@@ -39,14 +39,6 @@ type GroupEntry = {
   incorrect: number;
   total: number;
   mastered: boolean;
-};
-
-type CategoryAgg = {
-  category: string;
-  total: number;
-  touched: number;
-  mastered: number;
-  score: number; // 0..1
 };
 
 type CharacterTheme = 'sakura' | 'ginkgo' | 'robot';
@@ -185,26 +177,6 @@ export default function StatsPage() {
       else buckets['11+'] += 1;
     }
     return buckets;
-  }, [groupAgg, allGroups]);
-
-  // カテゴリ別集計 (ロボット用)
-  const categoryAggMap = useMemo(() => {
-    const m: Record<string, CategoryAgg> = {};
-    for (const g of allGroups) {
-      const e = groupAgg[g];
-      const c = e.category;
-      if (!m[c]) m[c] = { category: c, total: 0, touched: 0, mastered: 0, score: 0 };
-      m[c].total += 1;
-      if (e.total > 0) m[c].touched += 1;
-      if (e.mastered) m[c].mastered += 1;
-    }
-    for (const c of Object.keys(m)) {
-      const a = m[c];
-      const touchedRate = a.total > 0 ? a.touched / a.total : 0;
-      const masteredRate = a.total > 0 ? a.mastered / a.total : 0;
-      a.score = touchedRate * 0.4 + masteredRate * 0.6;
-    }
-    return m;
   }, [groupAgg, allGroups]);
 
   // 全体ハイブリッドスコア (桜・銀杏用)
@@ -432,7 +404,7 @@ export default function StatsPage() {
               {/* キャラクター */}
               <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
                 {theme === 'robot' ? (
-                  <RobotCharacter categoryAggMap={categoryAggMap} />
+                  <RobotCharacter groupAgg={groupAgg} />
                 ) : (
                   <PlantCharacter
                     stages={theme === 'sakura' ? SAKURA_STAGES : GINKGO_STAGES}
@@ -713,32 +685,36 @@ function PlantCharacter({
   );
 }
 
-function RobotCharacter({ categoryAggMap }: { categoryAggMap: Record<string, CategoryAgg> }) {
-  // 各部位のスコア(複数カテゴリ合算)
-  const partLevels = useMemo(() => {
-    const out: Record<string, { score: number; level: number; touched: number; mastered: number; total: number }> = {};
+function RobotCharacter({ groupAgg }: { groupAgg: Record<number, GroupEntry> }) {
+  // 部位 → そのジャンル(カテゴリ群)の集計 + qids
+  const partInfo = useMemo(() => {
+    const out: Record<
+      string,
+      { score: number; level: number; touched: number; mastered: number; total: number; qids: string[] }
+    > = {};
     for (const part of ROBOT_PARTS) {
       let total = 0;
       let touched = 0;
       let mastered = 0;
-      for (const c of part.categories) {
-        const a = categoryAggMap[c];
-        if (!a) continue;
-        total += a.total;
-        touched += a.touched;
-        mastered += a.mastered;
+      const qids: string[] = [];
+      for (const g of Object.values(groupAgg)) {
+        if (!part.categories.includes(g.category)) continue;
+        total += 1;
+        if (g.total > 0) touched += 1;
+        if (g.mastered) mastered += 1;
+        qids.push(...g.qids);
       }
       const touchedRate = total > 0 ? touched / total : 0;
       const masteredRate = total > 0 ? mastered / total : 0;
       const score = touchedRate * 0.4 + masteredRate * 0.6;
-      out[part.key] = { score, level: stageFromScore(score), touched, mastered, total };
+      out[part.key] = { score, level: stageFromScore(score), touched, mastered, total, qids };
     }
     return out;
-  }, [categoryAggMap]);
+  }, [groupAgg]);
 
   const avgLevel =
-    Object.values(partLevels).reduce((sum, p) => sum + p.level, 0) / ROBOT_PARTS.length;
-  const allMaxed = Object.values(partLevels).every((p) => p.level >= 6);
+    Object.values(partInfo).reduce((sum, p) => sum + p.level, 0) / ROBOT_PARTS.length;
+  const allMaxed = Object.values(partInfo).every((p) => p.level >= 6);
 
   const partStyle = (level: number) => {
     const q = QUALITY_STAGES[level];
@@ -749,12 +725,49 @@ function RobotCharacter({ categoryAggMap }: { categoryAggMap: Record<string, Cat
     };
   };
 
-  const get = (key: string) => partLevels[key] ?? { level: 0, score: 0, touched: 0, mastered: 0, total: 0 };
+  const get = (key: string) =>
+    partInfo[key] ?? { level: 0, score: 0, touched: 0, mastered: 0, total: 0, qids: [] };
+
+  // 部位パーツ用の Link ラッパー (qids が空なら span にフォールバック)
+  const PartLink = ({
+    part,
+    className,
+    style,
+    titleSuffix,
+    children,
+  }: {
+    part: { key: string; label: string; categories: string[] };
+    className: string;
+    style: CSSProperties;
+    titleSuffix?: string;
+    children?: ReactNode;
+  }) => {
+    const p = get(part.key);
+    const q = QUALITY_STAGES[p.level];
+    const title = `${part.label}: ${q.name}${titleSuffix ? ` · ${titleSuffix}` : ''} · クリックで「${part.categories.join('・')}」を出題`;
+    if (p.qids.length === 0) {
+      return (
+        <span className={className} style={style} title={title}>
+          {children}
+        </span>
+      );
+    }
+    return (
+      <Link
+        to={`/?qid=${encodeURIComponent(p.qids.join(','))}`}
+        className={className + ' no-underline cursor-pointer'}
+        style={style}
+        title={title}
+      >
+        {children}
+      </Link>
+    );
+  };
 
   return (
     <div>
       <div className="flex items-start gap-4">
-        {/* ロボット組立図 */}
+        {/* ロボット組立図 (各部位クリックで該当ジャンルを出題) */}
         <div
           className="shrink-0 flex flex-col items-center"
           style={{
@@ -762,44 +775,44 @@ function RobotCharacter({ categoryAggMap }: { categoryAggMap: Record<string, Cat
           }}
         >
           {/* 頭 */}
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-[10px] font-black border border-black/10"
+          <PartLink
+            part={ROBOT_PARTS[0]}
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-[10px] font-black border border-black/10 transition-transform hover:scale-110"
             style={partStyle(get('head').level)}
-            title={`頭部: ${QUALITY_STAGES[get('head').level].name}`}
           >
             ⚙
-          </div>
+          </PartLink>
           {/* 胴体 + 腕 */}
           <div className="flex items-center mt-1">
-            <div
-              className="w-3 h-12 rounded-l-md border border-black/10"
+            <PartLink
+              part={ROBOT_PARTS[3]}
+              className="w-3 h-12 rounded-l-md border border-black/10 transition-transform hover:scale-110"
               style={partStyle(get('larm').level)}
-              title={`左腕: ${QUALITY_STAGES[get('larm').level].name}`}
             />
-            <div
-              className="w-12 h-12 rounded-md flex items-center justify-center text-base font-black border border-black/10"
+            <PartLink
+              part={ROBOT_PARTS[1]}
+              className="w-12 h-12 rounded-md flex items-center justify-center text-base font-black border border-black/10 transition-transform hover:scale-110"
               style={partStyle(get('body').level)}
-              title={`胴体: ${QUALITY_STAGES[get('body').level].name}`}
             >
               ★
-            </div>
-            <div
-              className="w-3 h-12 rounded-r-md border border-black/10"
+            </PartLink>
+            <PartLink
+              part={ROBOT_PARTS[2]}
+              className="w-3 h-12 rounded-r-md border border-black/10 transition-transform hover:scale-110"
               style={partStyle(get('rarm').level)}
-              title={`右腕: ${QUALITY_STAGES[get('rarm').level].name}`}
             />
           </div>
           {/* 脚 */}
           <div className="flex gap-1 mt-1">
-            <div
-              className="w-4 h-9 rounded-md border border-black/10"
+            <PartLink
+              part={ROBOT_PARTS[5]}
+              className="w-4 h-9 rounded-md border border-black/10 transition-transform hover:scale-110"
               style={partStyle(get('lleg').level)}
-              title={`左脚: ${QUALITY_STAGES[get('lleg').level].name}`}
             />
-            <div
-              className="w-4 h-9 rounded-md border border-black/10"
+            <PartLink
+              part={ROBOT_PARTS[4]}
+              className="w-4 h-9 rounded-md border border-black/10 transition-transform hover:scale-110"
               style={partStyle(get('rleg').level)}
-              title={`右脚: ${QUALITY_STAGES[get('rleg').level].name}`}
             />
           </div>
         </div>
@@ -817,19 +830,19 @@ function RobotCharacter({ categoryAggMap }: { categoryAggMap: Record<string, Cat
           <div className="text-[11px] text-rw-ink-soft mb-2">
             ジャンルごとに部品の品質が向上していくよ
           </div>
+          <div className="text-[10px] text-rw-ink-soft">
+            👆 部位をタップでそのジャンルを出題
+          </div>
         </div>
       </div>
 
-      {/* 部位リスト */}
+      {/* 部位リスト (タップで該当ジャンル出題) */}
       <div className="grid grid-cols-2 gap-1.5 mt-3">
         {ROBOT_PARTS.map((part) => {
           const p = get(part.key);
           const q = QUALITY_STAGES[p.level];
-          return (
-            <div
-              key={part.key}
-              className="border border-rw-rule rounded-lg p-2 flex items-center gap-2"
-            >
+          const inner = (
+            <>
               <div
                 className="w-6 h-6 rounded shrink-0 border border-black/10"
                 style={partStyle(p.level)}
@@ -842,7 +855,35 @@ function RobotCharacter({ categoryAggMap }: { categoryAggMap: Record<string, Cat
                   {part.categories.join('・')} · 着手{p.touched}/M{p.mastered}/全{p.total}
                 </div>
               </div>
-            </div>
+              {p.qids.length > 0 && (
+                <span
+                  className="text-[10px] font-black rounded-full px-2 py-0.5 shrink-0"
+                  style={{ background: 'var(--rw-ink)', color: 'var(--rw-paper)' }}
+                >
+                  ▶
+                </span>
+              )}
+            </>
+          );
+          if (p.qids.length === 0) {
+            return (
+              <div
+                key={part.key}
+                className="border border-rw-rule rounded-lg p-2 flex items-center gap-2"
+              >
+                {inner}
+              </div>
+            );
+          }
+          return (
+            <Link
+              key={part.key}
+              to={`/?qid=${encodeURIComponent(p.qids.join(','))}`}
+              className="border border-rw-rule rounded-lg p-2 flex items-center gap-2 no-underline hover:bg-rw-bg transition-colors cursor-pointer"
+              title={`「${part.categories.join('・')}」(${p.qids.length}問) をまとめて出題`}
+            >
+              {inner}
+            </Link>
           );
         })}
       </div>
