@@ -9,6 +9,7 @@ import bundledKobunQ from '@/data/kobunQ.json';
 import vocabIndex from '@/data/vocabIndex.json';
 import bundledTextsV3 from '@/data/textsV3Index.json';
 import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
+import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 
 // qid → lemma + sense マップを bundledKobunQ から構築
 type LemmaIndex = Record<string, { lemma: string; sense: string; group: string | null }>;
@@ -46,13 +47,14 @@ type GroupEntry = {
 type CharacterTheme = 'garden' | 'robot';
 const CHARACTER_THEME_KEY = 'kobun-tan:dashboard-character-theme';
 
-// 7段階(score 0..1 → stage 0..6)
-function stageFromScore(score: number): number {
-  if (score >= 0.85) return 6;
-  if (score >= 0.70) return 5;
-  if (score >= 0.50) return 4;
-  if (score >= 0.30) return 3;
-  if (score >= 0.15) return 2;
+// ロボット部位用 7段階しきい値 (より厳しめ)
+// 多義語・記述クイズも組み合わせないと Lv7 (金) には到達しないように設定
+function stageFromRobotScore(score: number): number {
+  if (score >= 0.92) return 6;
+  if (score >= 0.80) return 5;
+  if (score >= 0.60) return 4;
+  if (score >= 0.40) return 3;
+  if (score >= 0.20) return 2;
   if (score >= 0.05) return 1;
   return 0;
 }
@@ -246,13 +248,17 @@ export default function StatsPage() {
       .slice(0, 20);
   }, [groupAgg, allGroups]);
 
-  // === 庭(Garden) 用: 進度データ + 開閉カウンタ + 全作品リスト ===
-  // ローカル localStorage に依存するためレンダリング側で都度読む
+  // === 庭(Garden) + ロボット 用: localStorage を都度読み直す ===
   const [gardenSig, setGardenSig] = useState(0); // ページに戻ってきたら再読する用
+  const [quizTypeStats, setQuizTypeStats] = useState<QuizTypeStats>({});
   useEffect(() => {
-    const onFocus = () => setGardenSig((n) => n + 1);
-    window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
+    const refresh = () => {
+      setGardenSig((n) => n + 1);
+      setQuizTypeStats(getQuizTypeCorrect());
+    };
+    refresh();
+    window.addEventListener('focus', refresh);
+    return () => window.removeEventListener('focus', refresh);
   }, []);
 
   const garden = useMemo<GardenPlant[]>(() => {
@@ -512,7 +518,7 @@ export default function StatsPage() {
               {/* キャラクター */}
               <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
                 {theme === 'robot' ? (
-                  <RobotCharacter groupAgg={groupAgg} />
+                  <RobotCharacter groupAgg={groupAgg} quizTypeStats={quizTypeStats} />
                 ) : (
                   <Garden plants={garden} />
                 )}
@@ -840,32 +846,77 @@ function PlantTile({ plant }: { plant: GardenPlant }) {
   );
 }
 
-function RobotCharacter({ groupAgg }: { groupAgg: Record<number, GroupEntry> }) {
+function RobotCharacter({
+  groupAgg,
+  quizTypeStats,
+}: {
+  groupAgg: Record<number, GroupEntry>;
+  quizTypeStats: QuizTypeStats;
+}) {
   // 部位 → そのジャンル(カテゴリ群)の集計 + qids
+  // 多義語/記述クイズの正答数も加味してスコア化 (ロボット完成のハードルを上げる)
   const partInfo = useMemo(() => {
     const out: Record<
       string,
-      { score: number; level: number; touched: number; mastered: number; total: number; qids: string[] }
+      {
+        score: number;
+        level: number;
+        touched: number;
+        mastered: number;
+        polysemyDone: number;
+        writingDone: number;
+        total: number;
+        qids: string[];
+      }
     > = {};
     for (const part of ROBOT_PARTS) {
       let total = 0;
       let touched = 0;
       let mastered = 0;
+      let polysemyDone = 0;
+      let writingDone = 0;
       const qids: string[] = [];
       for (const g of Object.values(groupAgg)) {
         if (!part.categories.includes(g.category)) continue;
         total += 1;
         if (g.total > 0) touched += 1;
         if (g.mastered) mastered += 1;
+        // group 内のいずれかの qid で多義語 or 記述に正答していれば達成扱い
+        let hasPoly = false;
+        let hasWrite = false;
+        for (const qid of g.qids) {
+          const r = quizTypeStats[qid];
+          if (r?.polysemy && r.polysemy > 0) hasPoly = true;
+          if (r?.writing && r.writing > 0) hasWrite = true;
+        }
+        if (hasPoly) polysemyDone += 1;
+        if (hasWrite) writingDone += 1;
         qids.push(...g.qids);
       }
       const touchedRate = total > 0 ? touched / total : 0;
       const masteredRate = total > 0 ? mastered / total : 0;
-      const score = touchedRate * 0.4 + masteredRate * 0.6;
-      out[part.key] = { score, level: stageFromScore(score), touched, mastered, total, qids };
+      const polysemyRate = total > 0 ? polysemyDone / total : 0;
+      const writingRate = total > 0 ? writingDone / total : 0;
+      // 重み: 着手0.15 / マスター0.30 / 多義語0.275 / 記述0.275 (合計1.0)
+      // 多義語・記述ゼロだと最大 0.45 (= Lv4 銅 で頭打ち)
+      const score =
+        touchedRate * 0.15 +
+        masteredRate * 0.30 +
+        polysemyRate * 0.275 +
+        writingRate * 0.275;
+      out[part.key] = {
+        score,
+        level: stageFromRobotScore(score),
+        touched,
+        mastered,
+        polysemyDone,
+        writingDone,
+        total,
+        qids,
+      };
     }
     return out;
-  }, [groupAgg]);
+  }, [groupAgg, quizTypeStats]);
 
   const avgLevel =
     Object.values(partInfo).reduce((sum, p) => sum + p.level, 0) / ROBOT_PARTS.length;
@@ -881,7 +932,7 @@ function RobotCharacter({ groupAgg }: { groupAgg: Record<number, GroupEntry> }) 
   };
 
   const get = (key: string) =>
-    partInfo[key] ?? { level: 0, score: 0, touched: 0, mastered: 0, total: 0, qids: [] };
+    partInfo[key] ?? { level: 0, score: 0, touched: 0, mastered: 0, polysemyDone: 0, writingDone: 0, total: 0, qids: [] };
 
   // 部位パーツ用の Link ラッパー (qids が空なら span にフォールバック)
   const PartLink = ({
@@ -983,7 +1034,7 @@ function RobotCharacter({ groupAgg }: { groupAgg: Record<number, GroupEntry> }) 
             </span>
           </div>
           <div className="text-[11px] text-rw-ink-soft mb-2">
-            ジャンルごとに部品の品質が向上していくよ
+            選択式・多義語・記述ぜんぶやり込むと部品が金になる
           </div>
           <div className="text-[10px] text-rw-ink-soft">
             👆 部位をタップでそのジャンルを出題
@@ -1007,7 +1058,7 @@ function RobotCharacter({ groupAgg }: { groupAgg: Record<number, GroupEntry> }) 
                   {part.label} <span className="text-rw-ink-soft font-bold">{q.name}</span>
                 </div>
                 <div className="text-[9px] text-rw-ink-soft truncate">
-                  {part.categories.join('・')} · 着手{p.touched}/M{p.mastered}/全{p.total}
+                  {part.categories.join('・')} · 着手{p.touched}/M{p.mastered}/多{p.polysemyDone}/記{p.writingDone}/全{p.total}
                 </div>
               </div>
               {p.qids.length > 0 && (

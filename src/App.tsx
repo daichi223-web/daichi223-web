@@ -12,6 +12,7 @@ import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
+import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import { updateSrsState, getDueWords } from './lib/srsEngine';
 import VocabModal from './components/VocabModal';
 import { IndexModal } from './components/IndexModal';
@@ -803,6 +804,10 @@ function App() {
     // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(correctOption.qid, isCorrect).catch(() => {});
     updateSrsState(correctOption.qid, isCorrect).catch(() => {});
+    // 多義語モード(=例文理解クイズ等の選択式) の正答もカウント
+    if (isCorrect && currentMode === 'polysemy') {
+      recordQuizTypeCorrect(correctOption.qid, 'polysemy');
+    }
     if (isCorrect) {
       setScore(prev => prev + 1);
       setShowCorrectCircle(true);
@@ -826,6 +831,8 @@ function App() {
     // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(question.correctAnswer.qid, isCorrect).catch(() => {});
     updateSrsState(question.correctAnswer.qid, isCorrect).catch(() => {});
+    // true-false は polysemy 専用なので正答時にカウント
+    if (isCorrect) recordQuizTypeCorrect(question.correctAnswer.qid, 'polysemy');
     if (isCorrect) {
       setScore(prev => prev + 1);
       setShowCorrectCircle(true);
@@ -857,6 +864,12 @@ function App() {
     // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(correctQid, evaluation.score >= 60).catch(() => {});
     updateSrsState(correctQid, evaluation.score >= 60).catch(() => {});
+    // 記述クイズの正答カウント (60点以上を正答扱い)
+    if (evaluation.score >= 60) {
+      recordQuizTypeCorrect(correctQid, 'writing');
+      // 多義語モードの記述 (context-writing) なら polysemy にもカウント
+      if (currentMode === 'polysemy') recordQuizTypeCorrect(correctQid, 'polysemy');
+    }
 
     // スコア更新と結果表示（即座に）
     // 60点以上で正解扱い（手動判定で変更可能）
