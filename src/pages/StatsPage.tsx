@@ -7,6 +7,8 @@ import { supabase } from '@/lib/supabase';
 import { currentAuthUid } from '@/lib/anonAuth';
 import bundledKobunQ from '@/data/kobunQ.json';
 import vocabIndex from '@/data/vocabIndex.json';
+import bundledTextsV3 from '@/data/textsV3Index.json';
+import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
 
 // qid → lemma + sense マップを bundledKobunQ から構築
 type LemmaIndex = Record<string, { lemma: string; sense: string; group: string | null }>;
@@ -41,7 +43,7 @@ type GroupEntry = {
   mastered: boolean;
 };
 
-type CharacterTheme = 'sakura' | 'ginkgo' | 'robot';
+type CharacterTheme = 'garden' | 'robot';
 const CHARACTER_THEME_KEY = 'kobun-tan:dashboard-character-theme';
 
 // 7段階(score 0..1 → stage 0..6)
@@ -55,25 +57,78 @@ function stageFromScore(score: number): number {
   return 0;
 }
 
-const SAKURA_STAGES = [
-  { emoji: '🌱', name: '苗木', label: '芽吹き始め' },
-  { emoji: '🌿', name: '若木', label: 'すくすく成長中' },
-  { emoji: '🟢', name: '蕾', label: 'もうすぐ咲くよ' },
-  { emoji: '🌸', name: 'ほころび', label: 'ちらほら咲き' },
-  { emoji: '🌺', name: '五分咲', label: '見頃まであと少し' },
-  { emoji: '🌸🌸', name: '満開', label: '春爛漫!' },
-  { emoji: '🌸✨🌸', name: '千年桜', label: '伝説の老木' },
-];
+// === 庭(Garden) — 1作品=1株。ジャンル別樹種 × 7段階成長 ===
+// 成長指標は「読書進度 + 単語解説/トークンヒント開閉数」のシークレット式
+type PlantSpecies = {
+  key: string;
+  name: string;
+  // 7段階の絵文字 (Lv0=種 〜 Lv6=最大)
+  stages: string[];
+};
 
-const GINKGO_STAGES = [
-  { emoji: '🌰', name: '種', label: 'はじまりの一粒' },
-  { emoji: '🌱', name: '芽', label: 'にょきっ' },
-  { emoji: '🌿', name: '若葉', label: '青々と' },
-  { emoji: '🍃', name: '緑葉', label: '木陰の風' },
-  { emoji: '🍂', name: '黄葉満開', label: '秋の景色' },
-  { emoji: '🟡', name: 'ぎんなん', label: '実りの秋' },
-  { emoji: '🌳✨', name: '浦和の大銀杏', label: '神木の風格' },
-];
+const PLANT_SAKURA: PlantSpecies = {
+  key: 'sakura',
+  name: '桜',
+  stages: ['🟫', '🌱', '🌿', '🟢', '🌸', '🌺', '🌸✨'],
+};
+const PLANT_GINKGO: PlantSpecies = {
+  key: 'ginkgo',
+  name: '銀杏',
+  stages: ['🟫', '🌰', '🌱', '🌿', '🍃', '🍂', '🌳'],
+};
+const PLANT_KUSU: PlantSpecies = {
+  key: 'kusu',
+  name: '楠',
+  stages: ['🟫', '🌱', '🌿', '🌳', '🌳', '🌲', '🌳✨'],
+};
+const PLANT_MOMIJI: PlantSpecies = {
+  key: 'momiji',
+  name: '楓',
+  stages: ['🟫', '🌱', '🌿', '🍂', '🍁', '🍁🍁', '🍁✨'],
+};
+const PLANT_UME: PlantSpecies = {
+  key: 'ume',
+  name: '梅',
+  stages: ['🟫', '🌱', '🌿', '🟢', '🟣', '🌷', '🌷✨'],
+};
+const PLANT_SUNFLOWER: PlantSpecies = {
+  key: 'sunflower',
+  name: '向日葵',
+  stages: ['🟫', '🌱', '🌿', '💚', '🌻', '🌻🌻', '🌻✨'],
+};
+
+// ジャンル → 樹種
+function speciesForText(genre: string | undefined): PlantSpecies {
+  switch (genre) {
+    case '物語': return PLANT_SAKURA;
+    case '随筆': return PLANT_GINKGO;
+    case '日記': return PLANT_GINKGO;
+    case '説話': return PLANT_KUSU;
+    case '軍記': return PLANT_MOMIJI;
+    case '和歌': return PLANT_UME;
+    case '歌物語': return PLANT_UME;
+    default: return PLANT_SUNFLOWER;
+  }
+}
+
+type TextV3Entry = {
+  id: string;
+  title: string;
+  source?: string;
+  genre?: string;
+  era?: string;
+  difficulty?: number;
+};
+
+type GardenPlant = {
+  id: string;
+  title: string;
+  source: string;
+  genre: string;
+  species: PlantSpecies;
+  level: number; // 0..6
+  // 内部スコアはシークレット (UI には出さない)
+};
 
 // ロボット部品: カテゴリ → 部位
 const ROBOT_PARTS: Array<{ key: string; label: string; categories: string[] }> = [
@@ -103,13 +158,15 @@ export default function StatsPage() {
   const [srsRows, setSrsRows] = useState<SrsBoxRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [streak, setStreak] = useState<StreakSnapshot>({ current: 0, longest: 0, lastActiveDate: null });
-  const [theme, setTheme] = useState<CharacterTheme>('sakura');
+  const [theme, setTheme] = useState<CharacterTheme>('garden');
 
   useEffect(() => {
     setStreak(readStreak());
     try {
       const v = localStorage.getItem(CHARACTER_THEME_KEY);
-      if (v === 'sakura' || v === 'ginkgo' || v === 'robot') setTheme(v);
+      if (v === 'garden' || v === 'robot') setTheme(v);
+      // 旧テーマ('sakura'/'ginkgo')は garden に丸める
+      else if (v === 'sakura' || v === 'ginkgo') setTheme('garden');
     } catch {
       /* ignore */
     }
@@ -180,17 +237,6 @@ export default function StatsPage() {
   }, [groupAgg, allGroups]);
 
   // 全体ハイブリッドスコア (桜・銀杏用)
-  const hybridScore = useMemo(() => {
-    const total = allGroups.length || 1;
-    let touched = 0;
-    let mastered = 0;
-    for (const g of allGroups) {
-      if (groupAgg[g].total > 0) touched += 1;
-      if (groupAgg[g].mastered) mastered += 1;
-    }
-    return (touched / total) * 0.4 + (mastered / total) * 0.6;
-  }, [groupAgg, allGroups]);
-
   // よく練習した単語 Top 20
   const mostPracticed = useMemo(() => {
     return allGroups
@@ -199,6 +245,69 @@ export default function StatsPage() {
       .sort((a, b) => b.total - a.total || b.correct - a.correct)
       .slice(0, 20);
   }, [groupAgg, allGroups]);
+
+  // === 庭(Garden) 用: 進度データ + 開閉カウンタ + 全作品リスト ===
+  // ローカル localStorage に依存するためレンダリング側で都度読む
+  const [gardenSig, setGardenSig] = useState(0); // ページに戻ってきたら再読する用
+  useEffect(() => {
+    const onFocus = () => setGardenSig((n) => n + 1);
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, []);
+
+  const garden = useMemo<GardenPlant[]>(() => {
+    if (typeof window === 'undefined') return [];
+    void gardenSig;
+    const allTexts = bundledTextsV3 as TextV3Entry[];
+    const allProgress = loadAllProgress();
+    const counters = getOpenCounters();
+    const out: GardenPlant[] = [];
+    for (const t of allTexts) {
+      // 進度: 完了レイヤー数 (0-5) + currentLayer (1-5) + tokensViewed 件数の対数
+      const prog = allProgress[t.id];
+      const completed = prog ? prog.completedLayers.length : 0; // 0..5
+      const tokensViewed = prog ? prog.tokensViewed.length : 0;
+      const currentLayer = prog ? prog.currentLayer : 0;
+
+      // 開閉カウンタ
+      const vmap = counters.vocab[t.id] || {};
+      const hmap = counters.hint[t.id] || {};
+      const vocabOpens = Object.values(vmap).reduce((s, v) => s + v, 0);
+      const hintOpens = Object.values(hmap).reduce((s, v) => s + v, 0);
+      const uniqueVocabOpened = Object.keys(vmap).length;
+      const uniqueHintOpened = Object.keys(hmap).length;
+
+      // シークレット成長式 — UIには出さない
+      // 完了レイヤー(最大15点) + currentレイヤー(0-5) + ユニーク開閉(各最大10点) +
+      // 累計開閉(対数で頭打ち)
+      const score =
+        completed * 3 +
+        currentLayer * 0.5 +
+        Math.min(10, uniqueVocabOpened) +
+        Math.min(10, uniqueHintOpened) +
+        Math.log2(1 + vocabOpens + hintOpens) * 1.5 +
+        Math.log2(1 + tokensViewed) * 0.5;
+
+      // しきい値 (シークレット): 0/2/5/10/18/30/45 → Lv 0..6
+      let level = 0;
+      if (score >= 45) level = 6;
+      else if (score >= 30) level = 5;
+      else if (score >= 18) level = 4;
+      else if (score >= 10) level = 3;
+      else if (score >= 5) level = 2;
+      else if (score >= 2) level = 1;
+
+      out.push({
+        id: t.id,
+        title: t.title,
+        source: t.source ?? '',
+        genre: t.genre ?? '',
+        species: speciesForText(t.genre),
+        level,
+      });
+    }
+    return out;
+  }, [gardenSig]);
 
   useEffect(() => {
     let cancelled = false;
@@ -395,8 +504,7 @@ export default function StatsPage() {
                   練習量
                 </h2>
                 <div className="flex items-center gap-1 text-[10px] font-bold">
-                  <ThemeButton current={theme} value="sakura" label="🌸 桜" onClick={updateTheme} />
-                  <ThemeButton current={theme} value="ginkgo" label="🍂 銀杏" onClick={updateTheme} />
+                  <ThemeButton current={theme} value="garden" label="🌿 庭" onClick={updateTheme} />
                   <ThemeButton current={theme} value="robot" label="🤖 ロボ" onClick={updateTheme} />
                 </div>
               </div>
@@ -406,10 +514,7 @@ export default function StatsPage() {
                 {theme === 'robot' ? (
                   <RobotCharacter groupAgg={groupAgg} />
                 ) : (
-                  <PlantCharacter
-                    stages={theme === 'sakura' ? SAKURA_STAGES : GINKGO_STAGES}
-                    score={hybridScore}
-                  />
+                  <Garden plants={garden} />
                 )}
               </div>
 
@@ -639,49 +744,99 @@ function ThemeButton({
   );
 }
 
-function PlantCharacter({
-  stages,
-  score,
-}: {
-  stages: typeof SAKURA_STAGES;
-  score: number;
-}) {
-  const stage = stageFromScore(score);
-  const s = stages[stage];
-  const pct = Math.round(score * 100);
-  const nextStageThresholds = [0.05, 0.15, 0.30, 0.50, 0.70, 0.85, 1.0];
-  const nextThreshold = nextStageThresholds[stage] ?? 1;
+// ── 庭(Garden) ──
+// 1作品=1株。タイル状に並べ、レベルに応じた絵文字を表示。
+// シークレット成長式: UIに進度バー・スコア・しきい値を出さない。
+function Garden({ plants }: { plants: GardenPlant[] }) {
+  // 着手済み(Lv >= 1) と 未着手 を分ける
+  const grown = plants.filter((p) => p.level > 0);
+  const dormant = plants.filter((p) => p.level === 0);
+
+  // 並び替え: レベル降順 → タイトル
+  const sortedGrown = [...grown].sort(
+    (a, b) => b.level - a.level || a.title.localeCompare(b.title, 'ja')
+  );
+
   return (
-    <div className="flex items-center gap-4">
-      <div
-        className="text-5xl shrink-0 select-none"
-        style={{
-          filter: stage >= 5 ? 'drop-shadow(0 0 8px rgba(232,193,74,0.4))' : undefined,
-        }}
-        aria-label={s.name}
-      >
-        {s.emoji}
+    <div>
+      <div className="flex items-baseline gap-2 mb-2">
+        <span className="text-base font-black text-rw-ink">🌿 庭</span>
+        <span className="text-[10px] text-rw-ink-soft font-bold">
+          {grown.length} / {plants.length} 株
+        </span>
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-2 mb-1">
-          <span className="text-base font-black text-rw-ink">{s.name}</span>
-          <span className="text-[10px] text-rw-ink-soft font-bold">Lv {stage + 1} / 7</span>
+      <div className="text-[11px] text-rw-ink-soft mb-3">
+        作品を学ぶと、なぜか庭の植物が育っていく…
+      </div>
+
+      {/* 育っている株 */}
+      {sortedGrown.length === 0 ? (
+        <div
+          className="rounded-xl p-4 text-center text-[11px] text-rw-ink-soft"
+          style={{ background: 'color-mix(in srgb, var(--rw-tertiary) 8%, var(--rw-paper))' }}
+        >
+          まだ庭は土だけ。作品を読み始めると、芽が出るかも…
         </div>
-        <div className="text-[11px] text-rw-ink-soft mb-2">{s.label}</div>
-        <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--rw-rule)' }}>
+      ) : (
+        <div
+          className="grid gap-1.5"
+          style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(46px, 1fr))' }}
+        >
+          {sortedGrown.map((p) => (
+            <PlantTile key={p.id} plant={p} />
+          ))}
+        </div>
+      )}
+
+      {/* 未着手 (土に埋もれた種) */}
+      {dormant.length > 0 && (
+        <div className="mt-3">
+          <div className="text-[10px] text-rw-ink-soft font-bold mb-1.5">
+            ねむっている種 {dormant.length}
+          </div>
           <div
-            className="h-full rounded-full transition-all"
-            style={{
-              width: `${Math.min(100, Math.round((score / nextThreshold) * 100))}%`,
-              background: 'var(--rw-primary)',
-            }}
-          />
+            className="grid gap-1"
+            style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(28px, 1fr))' }}
+          >
+            {dormant.slice(0, 60).map((p) => (
+              <Link
+                key={p.id}
+                to={`/read/texts/${encodeURIComponent(p.id)}`}
+                className="aspect-square rounded text-[10px] flex items-center justify-center no-underline opacity-50 hover:opacity-100 transition-opacity"
+                style={{ background: 'color-mix(in srgb, #8b6f47 15%, transparent)', color: '#5a432a' }}
+                title={`${p.title} (${p.source}) — 未着手`}
+              >
+                ·
+              </Link>
+            ))}
+            {dormant.length > 60 && (
+              <span className="text-[10px] text-rw-ink-soft self-center">
+                +{dormant.length - 60}
+              </span>
+            )}
+          </div>
         </div>
-        <div className="text-[10px] text-rw-ink-soft mt-1">
-          達成度 {pct}%{stage < 6 ? ` · 次のステージまで ${Math.max(0, Math.round((nextThreshold - score) * 100))}pt` : ' · 完成!'}
-        </div>
-      </div>
+      )}
     </div>
+  );
+}
+
+function PlantTile({ plant }: { plant: GardenPlant }) {
+  const emoji = plant.species.stages[plant.level] ?? plant.species.stages[0];
+  const isMature = plant.level >= 5;
+  return (
+    <Link
+      to={`/read/texts/${encodeURIComponent(plant.id)}`}
+      className="aspect-square rounded-lg flex flex-col items-center justify-center no-underline transition-transform hover:scale-110 border border-rw-rule"
+      style={{
+        background:
+          'color-mix(in srgb, var(--rw-accent-soft) 60%, var(--rw-paper))',
+        filter: isMature ? 'drop-shadow(0 0 6px rgba(232,193,74,0.4))' : undefined,
+      }}
+      title={`${plant.title} (${plant.source})`}
+    >
+      <div className="text-xl leading-none select-none">{emoji}</div>
+    </Link>
   );
 }
 

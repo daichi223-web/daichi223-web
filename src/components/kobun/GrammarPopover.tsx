@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Token, LayerId, TokenAnalysis } from "@/lib/kobun/types";
 import { buildGemUrl, buildNotebookLmUrl } from "@/lib/kobun/gem";
-import { addVocabEntry } from "@/lib/kobun/progress";
+import { addVocabEntry, recordHintOpen } from "@/lib/kobun/progress";
 import VocabModal from "@/components/VocabModal";
 import bundledVocabIndex from "@/data/vocabIndex.json";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
@@ -38,6 +38,11 @@ export function GrammarPopover({
     document.addEventListener("pointerdown", handleClickOutside);
     return () => document.removeEventListener("pointerdown", handleClickOutside);
   }, [onClose]);
+
+  // 開いた瞬間にカウントを増やす (シークレット指標)
+  useEffect(() => {
+    if (textId && token?.text) recordHintOpen(textId, token.text);
+  }, [textId, token?.text]);
 
   const isScaffold = token.layer > currentLayer;
   const tag = token.grammarTag;
@@ -318,7 +323,7 @@ function PopoverContent({
 
       {/* VocabModal — popover より前面に重ねる */}
       {vocabLemma && (
-        <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} />
+        <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} textId={textId} />
       )}
     </div>
   );

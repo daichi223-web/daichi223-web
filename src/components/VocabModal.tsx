@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import bundledVocabIndex from '../data/vocabIndex.json';
 import bundledTextsIndex from '../data/textsIndex.json';
-import { addVocabEntry, getVocabEntries } from '@/lib/kobun/progress';
+import { addVocabEntry, getVocabEntries, recordVocabOpen } from '@/lib/kobun/progress';
 import './VocabModal.css';
 
 type VocabIndexEntry = {
@@ -62,11 +62,17 @@ export async function hasVocabFor(lemma: string): Promise<boolean> {
 type Props = {
   lemma: string;
   onClose: () => void;
+  textId?: string; // 出典作品ID — あれば「庭」キャラの成長に使われる
 };
 
 type Tab = 'overview' | 'examples';
 
-export default function VocabModal({ lemma, onClose }: Props) {
+export default function VocabModal({ lemma, onClose, textId }: Props) {
+  // この作品由来でこの語の解説を開いた回数をカウント (シークレット指標)
+  useEffect(() => {
+    if (textId) recordVocabOpen(textId, lemma);
+  }, [textId, lemma]);
+
   const [tab, setTab] = useState<Tab>('overview');
   const [html, setHtml] = useState<string | null>(null);
   const [entry, setEntry] = useState<VocabIndexEntry | null>(null);

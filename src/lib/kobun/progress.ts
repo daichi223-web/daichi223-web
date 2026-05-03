@@ -6,6 +6,7 @@ import type { ReadingProgress, LayerId } from "./types";
 
 const STORAGE_KEY = "kobun-yomi-progress";
 const VOCAB_KEY = "kobun-yomi-vocab";
+const OPEN_COUNTER_KEY = "kobun-yomi-opens";
 
 /* ═══════════════════════════════════════════
    単語帳
@@ -139,4 +140,57 @@ export function initProgress(textId: string): ReadingProgress {
     saveAll(all);
   }
   return all[textId];
+}
+
+/* ═══════════════════════════════════════════
+   開閉カウンタ (VocabModal / トークンヒント)
+   作品ごとに「単語解説」「トークンヒント」を何度開いたかを記録
+   ═══════════════════════════════════════════ */
+
+export interface OpenCounters {
+  vocab: Record<string, Record<string, number>>; // textId → lemma → count
+  hint: Record<string, Record<string, number>>; // textId → token → count
+  lastOpenedAt?: string;
+}
+
+export function getOpenCounters(): OpenCounters {
+  if (typeof window === "undefined") return { vocab: {}, hint: {} };
+  try {
+    const raw = localStorage.getItem(OPEN_COUNTER_KEY);
+    if (!raw) return { vocab: {}, hint: {} };
+    const parsed = JSON.parse(raw) as Partial<OpenCounters>;
+    return {
+      vocab: parsed.vocab || {},
+      hint: parsed.hint || {},
+      lastOpenedAt: parsed.lastOpenedAt,
+    };
+  } catch {
+    return { vocab: {}, hint: {} };
+  }
+}
+
+function saveOpenCounters(c: OpenCounters): void {
+  try {
+    localStorage.setItem(OPEN_COUNTER_KEY, JSON.stringify(c));
+  } catch {
+    // storage full
+  }
+}
+
+export function recordVocabOpen(textId: string, lemma: string): void {
+  if (!textId || !lemma) return;
+  const c = getOpenCounters();
+  if (!c.vocab[textId]) c.vocab[textId] = {};
+  c.vocab[textId][lemma] = (c.vocab[textId][lemma] || 0) + 1;
+  c.lastOpenedAt = new Date().toISOString();
+  saveOpenCounters(c);
+}
+
+export function recordHintOpen(textId: string, token: string): void {
+  if (!textId || !token) return;
+  const c = getOpenCounters();
+  if (!c.hint[textId]) c.hint[textId] = {};
+  c.hint[textId][token] = (c.hint[textId][token] || 0) + 1;
+  c.lastOpenedAt = new Date().toISOString();
+  saveOpenCounters(c);
 }

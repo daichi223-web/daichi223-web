@@ -220,6 +220,7 @@ export default function TextDetail() {
         <VocabModal
           lemma={openVocabLemma}
           onClose={() => setOpenVocabLemma(null)}
+          textId={id}
         />
       )}
 
