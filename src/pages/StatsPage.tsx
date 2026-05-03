@@ -909,7 +909,7 @@ function RobotCharacter({ groupAgg }: { groupAgg: Record<number, GroupEntry> }) 
     }
     return (
       <Link
-        to={`/?qid=${encodeURIComponent(p.qids.join(','))}`}
+        to={`/?category=${encodeURIComponent(part.categories.join(','))}`}
         className={className + ' no-underline cursor-pointer'}
         style={style}
         title={title}
@@ -1033,9 +1033,9 @@ function RobotCharacter({ groupAgg }: { groupAgg: Record<number, GroupEntry> }) 
           return (
             <Link
               key={part.key}
-              to={`/?qid=${encodeURIComponent(p.qids.join(','))}`}
+              to={`/?category=${encodeURIComponent(part.categories.join(','))}`}
               className="border border-rw-rule rounded-lg p-2 flex items-center gap-2 no-underline hover:bg-rw-bg transition-colors cursor-pointer"
-              title={`「${part.categories.join('・')}」(${p.qids.length}問) をまとめて出題`}
+              title={`「${part.categories.join('・')}」をクイズ範囲指定に適用して出題`}
             >
               {inner}
             </Link>

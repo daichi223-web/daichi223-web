@@ -107,6 +107,8 @@ function App() {
   const [wordQuizType, setWordQuizType] = useLocalStorageState<WordQuizType>('kobun-wordQuizType', 'word-meaning');
   const [wordNumQuestions, setWordNumQuestions] = useLocalStorageState<number>('kobun-wordNumQuestions', 10);
   const [wordRange, setWordRange] = useLocalStorageState<{from?: number; to?: number}>('kobun-wordRange', { from: 1, to: 50 });
+  // 単語帳カテゴリ絞り込み (重要動詞/敬語動詞/...) — 空配列は「全て」
+  const [categoryFilter, setCategoryFilter] = useLocalStorageState<string[]>('kobun-categoryFilter', []);
 
   // Polysemy mode settings with localStorage persistence
   const [polysemyQuizType, setPolysemyQuizType] = useLocalStorageState<PolysemyQuizType>('kobun-polysemyQuizType', 'example-comprehension');
@@ -194,6 +196,25 @@ function App() {
     setCurrentMode('word');
     setShowHome(false);
     void setupQuiz(qids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allWords.length]);
+
+  // URL クエリ ?category=重要動詞,敬語動詞 でカテゴリ絞り込みクイズを起動
+  // ロボット部位タップなどから流入する経路。
+  useEffect(() => {
+    if (allWords.length === 0) return;
+    const catParam = searchParams.get('category');
+    if (!catParam) return;
+    const cats = catParam.split(',').map((s) => s.trim()).filter(Boolean);
+    if (cats.length === 0) return;
+    const next = new URLSearchParams(searchParams);
+    next.delete('category');
+    setSearchParams(next, { replace: true });
+    setCategoryFilter(cats);
+    setQuizQidFilter(null);
+    setCurrentMode('word');
+    setShowHome(false);
+    void setupQuiz();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allWords.length]);
 
@@ -336,6 +357,7 @@ function App() {
     polysemyQuizType, polysemyNumQuestions, polysemyRange.from, polysemyRange.to,
     allWords.length,
     quizQidFilter,
+    categoryFilter,
   ]);
 
 
@@ -437,6 +459,15 @@ function App() {
       targetWords = allWords.filter(word =>
         word.group >= start && word.group <= end
       );
+      // カテゴリ絞り込み (vocabIndex.json の category と AND)
+      if (categoryFilter.length > 0) {
+        const catSet = new Set(categoryFilter);
+        const vidx = bundledVocabIndex as Record<string, { category?: string }>;
+        targetWords = targetWords.filter((w) => {
+          const c = vidx[w.lemma]?.category;
+          return c ? catSet.has(c) : false;
+        });
+      }
     }
 
     // 記述式は1単語以上でOK、選択式も1単語以上（前後5単語から選択肢を選ぶ）
@@ -1753,6 +1784,14 @@ function App() {
             </div>
           ) : null}
 
+          {/* カテゴリ絞り込み (単語モードのみ・範囲とAND) */}
+          {currentMode === 'word' && (
+            <CategoryFilterChips
+              selected={categoryFilter}
+              onChange={setCategoryFilter}
+            />
+          )}
+
           {currentMode !== 'word' && (
             <div className="grid grid-cols-2 gap-2">
               {/* 左列: モードと問題数 */}
@@ -1945,3 +1984,74 @@ function App() {
 }
 
 export default App;// Cache bust 1761032804
+
+// 単語帳カテゴリ絞り込み chips. 範囲指定とAND条件で動く。空 = 全カテゴリ。
+const ALL_VOCAB_CATEGORIES = [
+  '重要動詞',
+  '重要形容詞',
+  '重要副詞',
+  '重要名詞',
+  '敬語動詞',
+  '多義語',
+  '現古異義語',
+  '接頭辞',
+  '重要形容動詞',
+];
+
+function CategoryFilterChips({
+  selected,
+  onChange,
+}: {
+  selected: string[];
+  onChange: (next: string[]) => void;
+}) {
+  const isAll = selected.length === 0;
+  const toggle = (cat: string) => {
+    if (selected.includes(cat)) {
+      onChange(selected.filter((c) => c !== cat));
+    } else {
+      onChange([...selected, cat]);
+    }
+  };
+  const clear = () => onChange([]);
+  return (
+    <div className="mt-2">
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-xs text-slate-600 font-bold">カテゴリ</span>
+        <span className="text-[10px] text-slate-400">範囲とAND</span>
+      </div>
+      <div className="flex flex-wrap gap-1">
+        <button
+          type="button"
+          onClick={clear}
+          className="text-[11px] font-bold px-2.5 py-1 rounded-full transition-colors"
+          style={{
+            background: isAll ? '#1e293b' : '#f1f5f9',
+            color: isAll ? '#fff' : '#475569',
+            border: `1px solid ${isAll ? '#1e293b' : '#cbd5e1'}`,
+          }}
+        >
+          全て
+        </button>
+        {ALL_VOCAB_CATEGORIES.map((cat) => {
+          const on = selected.includes(cat);
+          return (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => toggle(cat)}
+              className="text-[11px] font-bold px-2.5 py-1 rounded-full transition-colors"
+              style={{
+                background: on ? '#1e293b' : '#f1f5f9',
+                color: on ? '#fff' : '#475569',
+                border: `1px solid ${on ? '#1e293b' : '#cbd5e1'}`,
+              }}
+            >
+              {cat}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
