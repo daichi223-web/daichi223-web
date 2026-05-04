@@ -12,6 +12,14 @@ import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
 import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
+import {
+  isCoachOptedIn,
+  setCoachOptIn,
+  getCoachStatus,
+  ensureDownloaded,
+  destroySession,
+  type CoachStatus,
+} from '@/lib/nanoCoach';
 
 // qid → lemma + sense マップを bundledKobunQ から構築
 type LemmaIndex = Record<string, { lemma: string; sense: string; group: string | null }>;
@@ -689,6 +697,8 @@ export default function StatsPage() {
               </section>
             )}
 
+            <CoachSettingsSection />
+
             <section>
               <p className="text-[11px] text-rw-ink-soft text-center mt-6">
                 履歴は同じ端末・同じブラウザで継続されます。
@@ -756,6 +766,111 @@ function ThemeButton({
     >
       {label}
     </button>
+  );
+}
+
+// ── AI コーチ (Gemini Nano) 設定 ──
+// 既定 OFF。トグル ON 時に状態判定→ DL 必要なら明示ボタン。
+function CoachSettingsSection() {
+  const [opted, setOpted] = useState<boolean>(() => isCoachOptedIn());
+  const [status, setStatus] = useState<CoachStatus>('unsupported');
+  const [progress, setProgress] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!opted) return;
+    let cancelled = false;
+    getCoachStatus().then((s) => {
+      if (!cancelled) setStatus(s);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [opted]);
+
+  const toggle = () => {
+    const next = !opted;
+    setCoachOptIn(next);
+    setOpted(next);
+    if (!next) {
+      destroySession();
+      setProgress(null);
+    }
+  };
+
+  const startDownload = async () => {
+    setProgress(0);
+    setStatus('downloading');
+    const newStatus = await ensureDownloaded((r) => setProgress(r));
+    setStatus(newStatus);
+    setProgress(null);
+  };
+
+  return (
+    <section className="mb-6">
+      <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+        AI コーチ（実験機能）
+      </h2>
+      <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="text-sm font-black text-rw-ink">
+              記述クイズに AI コメント
+            </div>
+            <div className="text-[11px] text-rw-ink-soft mt-0.5">
+              Chrome 内蔵モデルで動く / オフライン / 無料 / 採点スコアには影響しません
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={toggle}
+            className="shrink-0 px-4 py-1.5 rounded-full font-black text-xs"
+            style={{
+              background: opted ? 'var(--rw-accent)' : 'var(--rw-paper)',
+              color: opted ? 'var(--rw-paper)' : 'var(--rw-ink-soft)',
+              border: `2px solid ${opted ? 'var(--rw-accent)' : 'var(--rw-rule)'}`,
+            }}
+            aria-pressed={opted}
+          >
+            {opted ? 'ON' : 'OFF'}
+          </button>
+        </div>
+        {opted && (
+          <div className="mt-3 text-[11px]">
+            {status === 'unsupported' && (
+              <p className="text-rw-ink-soft">
+                この Chrome では未対応です。Chrome 138 以降にアップデートすると使えます。
+              </p>
+            )}
+            {status === 'unavailable' && (
+              <p className="text-rw-ink-soft">
+                この端末では利用できません（GPU/メモリ要件不足）。
+              </p>
+            )}
+            {status === 'downloadable' && (
+              <button
+                type="button"
+                onClick={startDownload}
+                className="px-3 py-1.5 rounded-full font-black text-[11px]"
+                style={{ background: 'var(--rw-ink)', color: 'var(--rw-paper)' }}
+              >
+                モデルをダウンロード（約 2 GB）
+              </button>
+            )}
+            {status === 'downloading' && (
+              <p className="text-rw-ink-soft">
+                ダウンロード中...
+                {progress != null && ` ${Math.round(progress * 100)}%`}
+              </p>
+            )}
+            {status === 'available' && (
+              <p className="font-bold" style={{ color: 'var(--rw-accent)' }}>
+                ✓ 準備完了
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 

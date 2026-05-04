@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
 import { matchSense } from '../../utils/matchSense';
 import { validateConnections } from '../../lib/validateConnectionsFromFile';
+import { coachWriting, isCoachOptedIn } from '../../lib/nanoCoach';
 
 export interface ContextWritingContentProps {
   word: MultiMeaningWord;
@@ -27,6 +28,9 @@ export function ContextWritingContent({
   const [matchResults, setMatchResults] = useState<{[key: string]: any}>({});
   const [userJudgments, setUserJudgments] = useState<{[key: string]: boolean}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [coachComments, setCoachComments] = useState<{[key: string]: string}>({});
+  const [coachLoading, setCoachLoading] = useState<{[key: string]: boolean}>({});
+  const coachFiredRef = useRef<boolean>(false);
 
   // Reset answers when word changes
   React.useEffect(() => {
@@ -36,6 +40,9 @@ export function ContextWritingContent({
     setMatchResults({});
     setUserJudgments({});
     setIsSubmitting(false);
+    setCoachComments({});
+    setCoachLoading({});
+    coachFiredRef.current = false;
   }, [word.lemma]);
 
   const handleAnswerChange = (meaningQid: string, value: string) => {
@@ -172,6 +179,42 @@ export function ContextWritingContent({
     }
   }, [word.meanings, matchResults, userJudgments, answers, onNext]);
 
+  // AI コーチ: 採点直後、グレーゾーン (31-79点) の意味だけに対して
+  // Nano にコメントを依頼。スコア・既存判定 UI には影響させない。
+  useEffect(() => {
+    if (!checked) return;
+    if (coachFiredRef.current) return;
+    if (!isCoachOptedIn()) return;
+    coachFiredRef.current = true;
+
+    word.meanings.forEach(async (meaning) => {
+      const result = matchResults[meaning.qid];
+      const score = result?.score ?? 0;
+      if (score >= 80 || score <= 30) return;
+      const userAnswer = (answers[meaning.qid] || '').trim();
+      if (!userAnswer) return;
+      const correctAnswer = meaning.sense.replace(/〔\s*(.+?)\s*〕/, '$1').trim();
+      const examples = dataParser.getExamplesForSense(meaning, meaning.qid, word);
+      const exampleKobun = examples.kobun[0] || meaning.examples?.[0]?.jp || '';
+
+      setCoachLoading((prev) => ({ ...prev, [meaning.qid]: true }));
+      const comment = await coachWriting({
+        kobun: exampleKobun,
+        lemma: word.lemma,
+        modelAnswer: correctAnswer,
+        userAnswer,
+      });
+      setCoachLoading((prev) => {
+        const next = { ...prev };
+        delete next[meaning.qid];
+        return next;
+      });
+      if (comment) {
+        setCoachComments((prev) => ({ ...prev, [meaning.qid]: comment }));
+      }
+    });
+  }, [checked, word.meanings, matchResults, answers, word.lemma]);
+
   // 100%のみ自動遷移
   useEffect(() => {
     if (checked) {
@@ -262,6 +305,22 @@ export function ContextWritingContent({
                   >
                     {score}<span className="text-sm font-bold ml-1">点</span> {result?.detail && <span className="text-sm font-medium ml-1">({result.detail})</span>}
                   </div>
+
+                  {/* AI コーチコメント (オプトイン時・グレーゾーンのみ) */}
+                  {(coachLoading[meaning.qid] || coachComments[meaning.qid]) && (
+                    <div className="mb-3 p-4 rounded-xl bg-rw-paper border-2 border-dashed border-rw-tertiary">
+                      <p className="text-xs font-black text-rw-tertiary tracking-wider mb-2">
+                        🤖 AI コーチ
+                      </p>
+                      {coachLoading[meaning.qid] ? (
+                        <p className="text-sm text-rw-ink-soft">考え中…</p>
+                      ) : (
+                        <p className="text-sm text-rw-ink whitespace-pre-wrap">
+                          {coachComments[meaning.qid]}
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   {/* 文法のヒント表示 */}
                   {grammarIssues[meaning.qid] && grammarIssues[meaning.qid].length > 0 && (
