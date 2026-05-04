@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPublishedSlugs } from '../lib/textPublications';
+import { hasFullAccess } from '../lib/fullAccess';
 import bundledTextsIndex from '../data/textsIndex.json';
 import './TextDetail.css';
 
@@ -64,9 +65,10 @@ export default function TextsIndex() {
 
   const filtered = useMemo(() => {
     if (!index) return [];
+    const fullAccess = hasFullAccess();
     return index.filter((t) => {
       // When publishedSet is a Set (=table exists), hide non-published texts
-      if (publishedSet && !publishedSet.has(t.slug)) return false;
+      if (!fullAccess && publishedSet && !publishedSet.has(t.slug)) return false;
       if (filterGenre && t.genre !== filterGenre) return false;
       if (filterEra && t.era !== filterEra) return false;
       if (filterAuthor && t.author !== filterAuthor) return false;

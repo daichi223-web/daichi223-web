@@ -4,6 +4,7 @@ import { getGemBaseUrl } from "@/lib/kobun/gem";
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from "react";
 import type { ReadingProgress } from "@/lib/kobun/types";
 import { getPublishedSlugs } from "@/lib/textPublications";
+import { hasFullAccess } from "@/lib/fullAccess";
 import bundledTextsIndex from "@/data/textsIndex.json";
 
 const HOME_SCROLL_KEY = "kobun-home-scroll-v1";
@@ -145,8 +146,9 @@ export default function HomeV3() {
   }, []);
 
   const filtered = useMemo(() => {
+    const fullAccess = hasFullAccess();
     return index.filter((t) => {
-      if (publishedSet && !publishedSet.has(t.slug)) return false;
+      if (!fullAccess && publishedSet && !publishedSet.has(t.slug)) return false;
       if (query) {
         const q = query.toLowerCase();
         return (

@@ -10,6 +10,8 @@ import vocabIndex from '@/data/vocabIndex.json';
 import bundledTextsV3 from '@/data/textsV3Index.json';
 import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
 import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
+import { getPublishedSlugs } from '@/lib/textPublications';
+import { hasFullAccess } from '@/lib/fullAccess';
 
 // qid → lemma + sense マップを bundledKobunQ から構築
 type LemmaIndex = Record<string, { lemma: string; sense: string; group: string | null }>;
@@ -251,6 +253,7 @@ export default function StatsPage() {
   // === 庭(Garden) + ロボット 用: localStorage を都度読み直す ===
   const [gardenSig, setGardenSig] = useState(0); // ページに戻ってきたら再読する用
   const [quizTypeStats, setQuizTypeStats] = useState<QuizTypeStats>({});
+  const [publishedSet, setPublishedSet] = useState<Set<string> | null>(null);
   useEffect(() => {
     const refresh = () => {
       setGardenSig((n) => n + 1);
@@ -260,11 +263,17 @@ export default function StatsPage() {
     window.addEventListener('focus', refresh);
     return () => window.removeEventListener('focus', refresh);
   }, []);
+  useEffect(() => {
+    getPublishedSlugs().then((s) => setPublishedSet(s));
+  }, []);
 
   const garden = useMemo<GardenPlant[]>(() => {
     if (typeof window === 'undefined') return [];
     void gardenSig;
-    const allTexts = bundledTextsV3 as TextV3Entry[];
+    const fullAccess = hasFullAccess();
+    const allTexts = (bundledTextsV3 as TextV3Entry[]).filter(
+      (t) => fullAccess || !publishedSet || publishedSet.has(t.id)
+    );
     const allProgress = loadAllProgress();
     const counters = getOpenCounters();
     const out: GardenPlant[] = [];
@@ -313,7 +322,7 @@ export default function StatsPage() {
       });
     }
     return out;
-  }, [gardenSig]);
+  }, [gardenSig, publishedSet]);
 
   useEffect(() => {
     let cancelled = false;
