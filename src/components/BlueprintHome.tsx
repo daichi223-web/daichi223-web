@@ -1,3 +1,4 @@
+import { useNavigate, type NavigateFunction } from 'react-router-dom';
 import { useReiwaTheme } from '../theme/ThemeContext';
 import type { ReiwaPalette } from '../theme/reiwa';
 import { CHAPTERS } from '../utils/chapters';
@@ -20,12 +21,23 @@ const STAMP_RED = '#a93226';
 // chapters.ts の章 id (ext 含む 6 種) のうち BOM に出すのは 5 章のみ
 export type ChapterId = 'ch1' | 'ch2' | 'ch3' | 'ch4' | 'ch5';
 export const VISIBLE_CHAPTERS = CHAPTERS.filter((c) => c.id !== 'ext') as Array<typeof CHAPTERS[number] & { id: ChapterId }>;
-export type FieldMastery = Record<ChapterId, number>;
+
+// 段位 (★0-3) に基づく章ごとの集計値。
+// - masteredPct: tier3 / total * 100 → BOM 棒グラフ (真にマスターした比率)
+// - avgTierPct:  (avg tier / 3) * 100 → 部位 opacity (なめらかな成長感)
+export type ChapterStats = {
+  total: number;
+  tier1Count: number;   // ★1 認識 以上の数 (tier >= 1)
+  tier3Count: number;   // ★3 定着 の数
+  masteredPct: number;
+  avgTierPct: number;
+};
+export type FieldMastery = Record<ChapterId, ChapterStats>;
 
 export type BlueprintProps = {
-  totalLearned: number;          // 着手 = 正解1回以上の語数 (ステージ判定の根拠)
-  totalMastered: number;         // マスター = total>=5 && acc>=0.8 を満たした語数
-  fieldMastery: FieldMastery;    // 5 章ごとの「マスター済 / 総語数」百分率
+  totalLearned: number;          // 着手 = ★1+ の語数 (ステージ判定の根拠)
+  totalMastered: number;         // マスター = ★3 (定着) の語数
+  fieldMastery: FieldMastery;    // 5 章ごとの段位集計
 };
 
 // 「Key & Point 古文単語330」全 330 語 (5 章) に合わせたステージ閾値。
@@ -219,6 +231,7 @@ function Stage1(_props: BlueprintProps) {
 // =============================================================
 function Stage2(props: BlueprintProps) {
   const { resolved: t } = useReiwaTheme();
+  const navigate = useNavigate();
   const ink = t.ink;
   const paper = t.paper;
   const grid = `repeating-linear-gradient(0deg, transparent 0 19px, ${ink}10 19px 20px), repeating-linear-gradient(90deg, transparent 0 19px, ${ink}10 19px 20px)`;
@@ -254,8 +267,8 @@ function Stage2(props: BlueprintProps) {
 
           <line x1="180" y1="20" x2="180" y2="380" stroke={ink} strokeWidth="0.4" strokeDasharray="4 2 1 2" />
 
-          {/* HEAD CAGE */}
-          <g>
+          {/* HEAD CAGE — ch3 最重要敬語 */}
+          <g {...partInteractive(fm.ch3.avgTierPct, 'ch3', navigate)}>
             <rect x="148" y="34" width="64" height="58" fill="none" stroke={ink} strokeWidth="1.4" />
             <rect x="154" y="40" width="52" height="46" fill="none" stroke={ink} strokeWidth="0.5" strokeDasharray="2 2" />
             <line x1="148" y1="34" x2="154" y2="40" stroke={ink} strokeWidth="0.5" />
@@ -268,8 +281,8 @@ function Stage2(props: BlueprintProps) {
           </g>
           <line x1="180" y1="92" x2="180" y2="116" stroke={ink} strokeWidth="0.7" strokeDasharray="2 2" />
 
-          {/* TORSO */}
-          <g>
+          {/* TORSO — ch1 読解必修 */}
+          <g {...partInteractive(fm.ch1.avgTierPct, 'ch1', navigate)}>
             <rect x="120" y="118" width="120" height="124" fill={`color-mix(in oklab, ${t.primary} 18%, ${paper})`} stroke={ink} strokeWidth="1.6" />
             <rect x="132" y="130" width="96" height="100" fill="none" stroke={ink} strokeWidth="0.6" />
             <line x1="132" y1="130" x2="228" y2="230" stroke={ink} strokeWidth="0.4" strokeDasharray="2 2" />
@@ -284,21 +297,24 @@ function Stage2(props: BlueprintProps) {
             <rect x="240" y="208" width="4" height="8" fill={ink} />
           </g>
 
-          {/* ARMS */}
-          <g>
+          {/* RIGHT ARM (viewer's left side) — ch2 入試必修 */}
+          <g {...partInteractive(fm.ch2.avgTierPct, 'ch2', navigate)}>
             <rect x="56" y="148" width="60" height="16" fill={`color-mix(in oklab, ${t.pop} 25%, ${paper})`} stroke={ink} strokeWidth="1.2" />
             <line x1="56" y1="156" x2="116" y2="156" stroke={ink} strokeWidth="0.4" strokeDasharray="1 2" />
             <text x="86" y="176" textAnchor="middle" fontFamily={FONT_SERIF} fontSize="11" fontWeight="700" fill={ink}>助詞 L</text>
             <circle cx="60" cy="156" r="4" fill="none" stroke={ink} strokeWidth="0.8" />
+          </g>
 
+          {/* LEFT ARM (viewer's right side) — ch4 入試重要 */}
+          <g {...partInteractive(fm.ch4.avgTierPct, 'ch4', navigate)}>
             <rect x="244" y="148" width="60" height="16" fill={`color-mix(in oklab, ${t.pop} 25%, ${paper})`} stroke={ink} strokeWidth="1.2" />
             <line x1="244" y1="156" x2="304" y2="156" stroke={ink} strokeWidth="0.4" strokeDasharray="1 2" />
             <text x="274" y="176" textAnchor="middle" fontFamily={FONT_SERIF} fontSize="11" fontWeight="700" fill={ink}>助詞 R</text>
             <circle cx="300" cy="156" r="4" fill="none" stroke={ink} strokeWidth="0.8" />
           </g>
 
-          {/* LEGS */}
-          <g>
+          {/* LEGS (両足) — ch5 入試攻略 */}
+          <g {...partInteractive(fm.ch5.avgTierPct, 'ch5', navigate)}>
             <rect x="138" y="246" width="36" height="92" fill={`color-mix(in oklab, ${t.tertiary} 18%, ${paper})`} stroke={ink} strokeWidth="1.4" />
             <rect x="186" y="246" width="36" height="92" fill={`color-mix(in oklab, ${t.tertiary} 18%, ${paper})`} stroke={ink} strokeWidth="1.4" />
             <line x1="138" y1="290" x2="174" y2="290" stroke={ink} strokeWidth="0.4" strokeDasharray="1 2" />
@@ -350,6 +366,7 @@ function Stage2(props: BlueprintProps) {
 // =============================================================
 function Stage3(props: BlueprintProps) {
   const { resolved: t } = useReiwaTheme();
+  const navigate = useNavigate();
   const ink = t.ink;
   const paper = t.paper;
   const grid = `repeating-linear-gradient(0deg, transparent 0 19px, ${ink}10 19px 20px), repeating-linear-gradient(90deg, transparent 0 19px, ${ink}10 19px 20px)`;
@@ -395,8 +412,8 @@ function Stage3(props: BlueprintProps) {
 
           <line x1="180" y1="14" x2="180" y2="430" stroke={ink} strokeWidth="0.4" strokeDasharray="4 2 1 2" />
 
-          {/* HEAD MODULE — exploded */}
-          <g>
+          {/* HEAD MODULE — ch3 最重要敬語 */}
+          <g {...partInteractive(fm.ch3.avgTierPct, 'ch3', navigate)}>
             <rect x="148" y="38" width="64" height="14" fill="url(#hatch3)" stroke={ink} strokeWidth="0.9" />
             <line x1="180" y1="52" x2="180" y2="58" stroke={ink} strokeWidth="0.4" strokeDasharray="1 1" />
             <rect x="148" y="60" width="64" height="44" fill={`color-mix(in oklab, ${t.accent} 50%, ${paper})`} stroke={ink} strokeWidth="1.3" />
@@ -414,8 +431,8 @@ function Stage3(props: BlueprintProps) {
             <path d="M0 7 q -16 -2 -22 8" stroke={ink} strokeWidth="0.7" fill="none" />
           </g>
 
-          {/* TORSO */}
-          <g>
+          {/* TORSO — ch1 読解必修 */}
+          <g {...partInteractive(fm.ch1.avgTierPct, 'ch1', navigate)}>
             <rect x="124" y="124" width="112" height="120" fill={`color-mix(in oklab, ${t.primary} 30%, ${paper})`} stroke={ink} strokeWidth="1.6" />
             <rect x="138" y="138" width="84" height="68" fill="none" stroke={ink} strokeWidth="0.6" />
             <text x="180" y="188" textAnchor="middle" fontFamily={FONT_SERIF} fontSize="40" fontWeight="700" fill={t.primary}>用</text>
@@ -431,64 +448,62 @@ function Stage3(props: BlueprintProps) {
             </g>
           </g>
 
-          {/* SHOULDER SERVO L */}
-          <g transform="translate(40 156)">
-            <circle cx="14" cy="14" r="13" fill={paper} stroke={ink} strokeWidth="1.1" />
-            <circle cx="14" cy="14" r="6" fill={`color-mix(in oklab, ${t.pop} 40%, ${paper})`} stroke={ink} strokeWidth="0.7" />
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
-              <line
-                key={a}
-                x1={14 + 10 * Math.cos((a * Math.PI) / 180)}
-                y1={14 + 10 * Math.sin((a * Math.PI) / 180)}
-                x2={14 + 13 * Math.cos((a * Math.PI) / 180)}
-                y2={14 + 13 * Math.sin((a * Math.PI) / 180)}
-                stroke={ink}
-                strokeWidth="0.4"
-              />
-            ))}
-            <rect x="-12" y="11" width="12" height="6" fill={paper} stroke={ink} strokeWidth="0.7" />
-            <line x1="27" y1="14" x2="44" y2="14" stroke={ink} strokeWidth="0.5" strokeDasharray="1 1.5" />
-          </g>
-          <g>
+          {/* RIGHT ARM (viewer's left side) — ch2 入試必修 */}
+          <g {...partInteractive(fm.ch2.avgTierPct, 'ch2', navigate)}>
+            <g transform="translate(40 156)">
+              <circle cx="14" cy="14" r="13" fill={paper} stroke={ink} strokeWidth="1.1" />
+              <circle cx="14" cy="14" r="6" fill={`color-mix(in oklab, ${t.pop} 40%, ${paper})`} stroke={ink} strokeWidth="0.7" />
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+                <line
+                  key={a}
+                  x1={14 + 10 * Math.cos((a * Math.PI) / 180)}
+                  y1={14 + 10 * Math.sin((a * Math.PI) / 180)}
+                  x2={14 + 13 * Math.cos((a * Math.PI) / 180)}
+                  y2={14 + 13 * Math.sin((a * Math.PI) / 180)}
+                  stroke={ink}
+                  strokeWidth="0.4"
+                />
+              ))}
+              <rect x="-12" y="11" width="12" height="6" fill={paper} stroke={ink} strokeWidth="0.7" />
+              <line x1="27" y1="14" x2="44" y2="14" stroke={ink} strokeWidth="0.5" strokeDasharray="1 1.5" />
+            </g>
             <rect x="86" y="160" width="40" height="40" fill={`color-mix(in oklab, ${t.pop} 50%, ${paper})`} stroke={ink} strokeWidth="1.3" />
             <text x="106" y="184" textAnchor="middle" fontFamily={FONT_SERIF} fontSize="13" fontWeight="700" fill={ink}>助詞</text>
             <line x1="86" y1="180" x2="126" y2="180" stroke={ink} strokeWidth="0.4" strokeDasharray="1 2" />
           </g>
 
-          {/* SHOULDER SERVO R */}
-          <g transform="translate(294 156)">
-            <circle cx="12" cy="14" r="13" fill={paper} stroke={ink} strokeWidth="1.1" />
-            <circle cx="12" cy="14" r="6" fill={`color-mix(in oklab, ${t.pop} 40%, ${paper})`} stroke={ink} strokeWidth="0.7" />
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
-              <line
-                key={a}
-                x1={12 + 10 * Math.cos((a * Math.PI) / 180)}
-                y1={14 + 10 * Math.sin((a * Math.PI) / 180)}
-                x2={12 + 13 * Math.cos((a * Math.PI) / 180)}
-                y2={14 + 13 * Math.sin((a * Math.PI) / 180)}
-                stroke={ink}
-                strokeWidth="0.4"
-              />
-            ))}
-            <rect x="24" y="11" width="12" height="6" fill={paper} stroke={ink} strokeWidth="0.7" />
-            <line x1="-2" y1="14" x2="-16" y2="14" stroke={ink} strokeWidth="0.5" strokeDasharray="1 1.5" />
-          </g>
-          <g>
+          {/* LEFT ARM (viewer's right side) — ch4 入試重要 */}
+          <g {...partInteractive(fm.ch4.avgTierPct, 'ch4', navigate)}>
+            <g transform="translate(294 156)">
+              <circle cx="12" cy="14" r="13" fill={paper} stroke={ink} strokeWidth="1.1" />
+              <circle cx="12" cy="14" r="6" fill={`color-mix(in oklab, ${t.pop} 40%, ${paper})`} stroke={ink} strokeWidth="0.7" />
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+                <line
+                  key={a}
+                  x1={12 + 10 * Math.cos((a * Math.PI) / 180)}
+                  y1={14 + 10 * Math.sin((a * Math.PI) / 180)}
+                  x2={12 + 13 * Math.cos((a * Math.PI) / 180)}
+                  y2={14 + 13 * Math.sin((a * Math.PI) / 180)}
+                  stroke={ink}
+                  strokeWidth="0.4"
+                />
+              ))}
+              <rect x="24" y="11" width="12" height="6" fill={paper} stroke={ink} strokeWidth="0.7" />
+              <line x1="-2" y1="14" x2="-16" y2="14" stroke={ink} strokeWidth="0.5" strokeDasharray="1 1.5" />
+            </g>
             <rect x="234" y="160" width="40" height="40" fill={`color-mix(in oklab, ${t.pop} 50%, ${paper})`} stroke={ink} strokeWidth="1.3" />
             <text x="254" y="184" textAnchor="middle" fontFamily={FONT_SERIF} fontSize="13" fontWeight="700" fill={ink}>助詞</text>
             <line x1="234" y1="180" x2="274" y2="180" stroke={ink} strokeWidth="0.4" strokeDasharray="1 2" />
           </g>
 
-          {/* HIP + LEGS */}
+          {/* HIP + LEGS (両足) — ch5 入試攻略 */}
           <line x1="180" y1="244" x2="180" y2="262" stroke={ink} strokeWidth="0.6" strokeDasharray="2 2" />
-          <g>
+          <g {...partInteractive(fm.ch5.avgTierPct, 'ch5', navigate)}>
             <rect x="156" y="262" width="48" height="14" fill="url(#hatch3)" stroke={ink} strokeWidth="1" />
             <circle cx="166" cy="269" r="2" fill={paper} stroke={ink} strokeWidth="0.5" />
             <circle cx="194" cy="269" r="2" fill={paper} stroke={ink} strokeWidth="0.5" />
             <line x1="156" y1="269" x2="138" y2="290" stroke={ink} strokeWidth="0.5" />
             <line x1="204" y1="269" x2="222" y2="290" stroke={ink} strokeWidth="0.5" />
-          </g>
-          <g>
             <rect x="134" y="290" width="40" height="68" fill={`color-mix(in oklab, ${t.tertiary} 28%, ${paper})`} stroke={ink} strokeWidth="1.3" />
             <rect x="186" y="290" width="40" height="68" fill={`color-mix(in oklab, ${t.tertiary} 28%, ${paper})`} stroke={ink} strokeWidth="1.3" />
             <circle cx="154" cy="324" r="4" fill={paper} stroke={ink} strokeWidth="0.7" />
@@ -581,6 +596,7 @@ function Stage3(props: BlueprintProps) {
 // =============================================================
 function Stage4(props: BlueprintProps) {
   const { resolved: t } = useReiwaTheme();
+  const navigate = useNavigate();
   const ink = t.ink;
   const paper = t.paper;
   const fineGrid = `repeating-linear-gradient(0deg, transparent 0 9px, ${ink}08 9px 10px), repeating-linear-gradient(90deg, transparent 0 9px, ${ink}08 9px 10px), repeating-linear-gradient(0deg, transparent 0 49px, ${ink}18 49px 50px), repeating-linear-gradient(90deg, transparent 0 49px, ${ink}18 49px 50px)`;
@@ -632,8 +648,8 @@ function Stage4(props: BlueprintProps) {
 
           <line x1="180" y1="10" x2="180" y2="310" stroke={ink} strokeWidth="0.4" strokeDasharray="6 2 1 2" />
 
-          {/* HEAD */}
-          <g>
+          {/* HEAD — ch3 最重要敬語 */}
+          <g {...partInteractive(fm.ch3.avgTierPct, 'ch3', navigate)}>
             <path d="M156 22 L204 22 L210 34 L210 64 L204 70 L156 70 L150 64 L150 34 Z" fill={`color-mix(in oklab, ${t.accent} 75%, ${paper})`} stroke={ink} strokeWidth="1.5" />
             <rect x="160" y="32" width="40" height="8" fill="url(#hatch4)" stroke={ink} strokeWidth="0.4" />
             <rect x="158" y="44" width="44" height="3" fill={ink} />
@@ -642,8 +658,8 @@ function Stage4(props: BlueprintProps) {
             <circle cx="204" cy="68" r="1.4" fill={ink} />
           </g>
 
-          {/* TORSO ARMOR */}
-          <g>
+          {/* TORSO ARMOR — ch1 読解必修 */}
+          <g {...partInteractive(fm.ch1.avgTierPct, 'ch1', navigate)}>
             <rect x="124" y="78" width="112" height="124" fill={`color-mix(in oklab, ${t.primary} 70%, ${paper})`} stroke={ink} strokeWidth="1.6" />
             <path d="M126 80 L172 80 L172 134 L130 144 L126 138 Z" fill="url(#hex4)" stroke={ink} strokeWidth="0.7" />
             <path d="M188 80 L234 80 L234 138 L230 144 L188 134 Z" fill="url(#hex4)" stroke={ink} strokeWidth="0.7" />
@@ -659,14 +675,17 @@ function Stage4(props: BlueprintProps) {
             {[130, 142, 154, 168, 192, 206, 218, 230].map((x) => <circle key={'b' + x} cx={x} cy="196" r="1.1" fill={ink} />)}
           </g>
 
-          {/* arms */}
-          <g>
+          {/* RIGHT ARM (viewer's left side) — ch2 入試必修 */}
+          <g {...partInteractive(fm.ch2.avgTierPct, 'ch2', navigate)}>
             <rect x="86" y="106" width="40" height="60" fill={`color-mix(in oklab, ${t.pop} 70%, ${paper})`} stroke={ink} strokeWidth="1.4" />
             <line x1="86" y1="124" x2="126" y2="124" stroke={ink} strokeWidth="0.4" />
             <text x="106" y="142" textAnchor="middle" fontFamily={FONT_SERIF} fontSize="12" fontWeight="700" fill={ink}>助詞</text>
             <rect x="86" y="166" width="40" height="22" fill={`color-mix(in oklab, ${t.pop} 90%, ${paper})`} stroke={ink} strokeWidth="1.2" />
             <rect x="92" y="190" width="28" height="14" fill="url(#hatch4b)" stroke={ink} strokeWidth="1" />
+          </g>
 
+          {/* LEFT ARM (viewer's right side) — ch4 入試重要 */}
+          <g {...partInteractive(fm.ch4.avgTierPct, 'ch4', navigate)}>
             <rect x="234" y="106" width="40" height="60" fill={`color-mix(in oklab, ${t.pop} 70%, ${paper})`} stroke={ink} strokeWidth="1.4" />
             <line x1="234" y1="124" x2="274" y2="124" stroke={ink} strokeWidth="0.4" />
             <text x="254" y="142" textAnchor="middle" fontFamily={FONT_SERIF} fontSize="12" fontWeight="700" fill={ink}>助詞</text>
@@ -674,8 +693,8 @@ function Stage4(props: BlueprintProps) {
             <rect x="240" y="190" width="28" height="14" fill="url(#hatch4b)" stroke={ink} strokeWidth="1" />
           </g>
 
-          {/* legs */}
-          <g>
+          {/* LEGS (両足) — ch5 入試攻略 */}
+          <g {...partInteractive(fm.ch5.avgTierPct, 'ch5', navigate)}>
             <rect x="134" y="208" width="40" height="74" fill={`color-mix(in oklab, ${t.tertiary} 65%, ${paper})`} stroke={ink} strokeWidth="1.4" />
             <rect x="186" y="208" width="40" height="74" fill={`color-mix(in oklab, ${t.tertiary} 65%, ${paper})`} stroke={ink} strokeWidth="1.4" />
             <rect x="134" y="240" width="40" height="10" fill="url(#hatch4)" stroke={ink} strokeWidth="0.6" />
@@ -773,7 +792,7 @@ function Stage4(props: BlueprintProps) {
 
       <div style={{ margin: '0 12px 10px', display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr', gap: 6, fontSize: 9 }}>
         <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
-          <div style={{ fontSize: 7, color: t.inkSoft }}>WORDS · 着手 / マスター</div>
+          <div style={{ fontSize: 7, color: t.inkSoft }}>WORDS · ★1 / ★3</div>
           <div style={{ fontSize: 14, fontWeight: 800 }}>
             {props.totalLearned}
             <span style={{ fontSize: 11, color: t.inkSoft, fontWeight: 700, margin: '0 3px' }}>/</span>
@@ -845,15 +864,35 @@ function CornerTicks({ ink, top, left }: { ink: string; top: number; left: numbe
   );
 }
 
-// 章 id → BOM 行の表示色 (令和テーマ色に揃え、章の重要度感を反映)
+// 章 id → 表示色。ロボット各部位 (頭/胴/腕/脚/装甲) の塗り色と一致させる:
+//   ch1 読解必修 → 胴 (primary)
+//   ch2 入試必修 → 腕 (pop)
+//   ch3 最重要敬語 → 頭 (accent)
+//   ch4 入試重要 → 脚 (tertiary)
+//   ch5 入試攻略 → 装甲・PCB・検印 (inkSoft)
 function colorFor(id: ChapterId, t: ReiwaPalette): string {
   switch (id) {
-    case 'ch1': return t.primary;    // 読解必修
-    case 'ch2': return t.accent;     // 入試必修
-    case 'ch3': return t.tertiary;   // 最重要敬語
-    case 'ch4': return t.pop;        // 入試重要
-    case 'ch5': return t.inkSoft;    // 入試攻略 (最終関門)
+    case 'ch1': return t.primary;    // 胴体
+    case 'ch2': return t.pop;        // 腕
+    case 'ch3': return t.accent;     // 頭
+    case 'ch4': return t.tertiary;   // 脚
+    case 'ch5': return t.inkSoft;    // 装甲・最終仕上げ
   }
+}
+
+// 平均段位 (%) → 部位 opacity (0% で 0.20, 100% で 1.00 に線形補間)。
+// 完全に消さず幽霊状の枠線は残すことで「下書き → 完成」の成長感を出す。
+function partOpacity(pct: number): number {
+  return 0.20 + 0.80 * (Math.max(0, Math.min(100, pct)) / 100);
+}
+
+// 部位タップ → その章の出題範囲でクイズ開始 + 視覚 props 一式
+function partInteractive(avgTierPct: number, chapterId: ChapterId, navigate: NavigateFunction) {
+  return {
+    opacity: partOpacity(avgTierPct),
+    onClick: () => navigate(`/?chapter=${chapterId}`),
+    style: { cursor: 'pointer' as const },
+  };
 }
 
 function Bom({ palette: t, fm }: { palette: ReiwaPalette; fm: FieldMastery }) {
@@ -863,7 +902,7 @@ function Bom({ palette: t, fm }: { palette: ReiwaPalette; fm: FieldMastery }) {
         <span>NO.</span><span>章</span><span style={{ textAlign: 'right' }}>語数</span><span>習熟度</span><span style={{ textAlign: 'right' }}>%</span>
       </div>
       {VISIBLE_CHAPTERS.map((ch, i) => {
-        const m = fm[ch.id];
+        const stat = fm[ch.id];
         const c = colorFor(ch.id, t);
         return (
           <div key={ch.id} style={{ display: 'grid', gridTemplateColumns: '28px 1fr 60px 70px 36px', padding: '4px 8px', borderBottom: `1px dotted ${t.rule}`, alignItems: 'center' }}>
@@ -871,9 +910,9 @@ function Bom({ palette: t, fm }: { palette: ReiwaPalette; fm: FieldMastery }) {
             <span style={{ fontFamily: FONT_SERIF, fontSize: 11, fontWeight: 700 }}>{ch.short}</span>
             <span style={{ textAlign: 'right', fontFamily: FONT_MONO, fontSize: 9, color: t.inkSoft }}>{ch.count}</span>
             <span style={{ position: 'relative', height: 4, background: t.rule }}>
-              <span style={{ position: 'absolute', inset: 0, width: m + '%', background: c }} />
+              <span style={{ position: 'absolute', inset: 0, width: stat.masteredPct + '%', background: c }} />
             </span>
-            <span style={{ textAlign: 'right', fontWeight: 700, color: c }}>{m}</span>
+            <span style={{ textAlign: 'right', fontWeight: 700, color: c }}>{stat.masteredPct}</span>
           </div>
         );
       })}
@@ -888,7 +927,7 @@ function BomFull({ palette: t, fm }: { palette: ReiwaPalette; fm: FieldMastery }
         <span>NO.</span><span>章 · 完全展開</span><span style={{ textAlign: 'right' }}>範囲</span><span>習熟度</span><span style={{ textAlign: 'right' }}>%</span>
       </div>
       {VISIBLE_CHAPTERS.map((ch, i) => {
-        const m = fm[ch.id];
+        const stat = fm[ch.id];
         const c = colorFor(ch.id, t);
         return (
           <div key={ch.id}>
@@ -899,9 +938,9 @@ function BomFull({ palette: t, fm }: { palette: ReiwaPalette; fm: FieldMastery }
                 #{ch.start}-{ch.end}
               </span>
               <span style={{ position: 'relative', height: 4, background: t.rule }}>
-                <span style={{ position: 'absolute', inset: 0, width: m + '%', background: c }} />
+                <span style={{ position: 'absolute', inset: 0, width: stat.masteredPct + '%', background: c }} />
               </span>
-              <span style={{ textAlign: 'right', fontWeight: 700, color: c }}>{m}</span>
+              <span style={{ textAlign: 'right', fontWeight: 700, color: c }}>{stat.masteredPct}</span>
             </div>
           </div>
         );
@@ -926,7 +965,7 @@ function Metrics({
   return (
     <div style={{ margin: '0 12px 10px', display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr', gap: 6, fontSize: 9, color: t.inkSoft, letterSpacing: 1 }}>
       <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
-        <div style={{ fontSize: 7 }}>WORDS · 着手 / マスター</div>
+        <div style={{ fontSize: 7 }}>WORDS · ★1 / ★3</div>
         <div style={{ fontSize: 14, fontWeight: 800, color: t.ink }}>
           {learned}
           <span style={{ fontSize: 11, color: t.inkSoft, fontWeight: 700, margin: '0 3px' }}>/</span>

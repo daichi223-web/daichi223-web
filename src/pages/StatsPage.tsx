@@ -9,6 +9,7 @@ import bundledKobunQ from '@/data/kobunQ.json';
 import vocabIndex from '@/data/vocabIndex.json';
 import bundledTextsV3 from '@/data/textsV3Index.json';
 import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
+import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
 import BlueprintHome, { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS } from '@/components/BlueprintHome';
@@ -219,35 +220,95 @@ export default function StatsPage() {
   }, [groupAgg, allGroups]);
 
   // 設計図 (BlueprintHome) 用: 「Key & Point 古文単語330」5 章 (#1-330) のみ集計。
-  // 追加語 (#331-) はステージ判定にも BOM にも含めない (単語帳のスコープ外)。
-  // 二層モデル: 着手 (correct>=1) でステージ進行、マスター (groupAgg.mastered: total>=5 && acc>=0.8) で BOM 棒。
+  // 4 段階マスタリ (★0-3) で段階成長を表現:
+  //   ★0 未着手: correct=0
+  //   ★1 認識:  単語クイズ correct>=1
+  //   ★2 区別:  単語クイズ total>=3 && acc>=0.7  かつ  (多義語 OR 記述) で正答1回以上
+  //   ★3 定着:  単語クイズ total>=5 && acc>=0.8
+  //              かつ (単義 || 多義語正答>=1)
+  //              かつ 記述正答>=1
+  //              かつ SRS Box>=3
+  // ※ 多義語/記述データが無い単語はその条件を「適用外で自動クリア」扱い。
+  const [quizTypeStats, setQuizTypeStats] = useState<QuizTypeStats>({});
+  const srsBoxByQid = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const r of srsRows) m.set(r.qid, r.box);
+    return m;
+  }, [srsRows]);
+
+  function computeTier(g: GroupEntry): 0 | 1 | 2 | 3 {
+    const total = g.total;
+    const correct = g.correct;
+    if (correct < 1) return 0;
+    const acc = total > 0 ? correct / total : 0;
+    const isPolysemous = g.qids.length > 1; // group 内に複数 meaning があれば多義
+    let polysemyDone = false;
+    let writingDone = false;
+    let srsBoxOk = false;
+    for (const qid of g.qids) {
+      const r = quizTypeStats[qid];
+      if (r?.polysemy && r.polysemy > 0) polysemyDone = true;
+      if (r?.writing && r.writing > 0) writingDone = true;
+      const b = srsBoxByQid.get(qid);
+      if (b != null && b >= 3) srsBoxOk = true;
+    }
+    // ★3 定着
+    if (
+      total >= 5 && acc >= 0.8
+      && (!isPolysemous || polysemyDone)
+      && writingDone
+      && srsBoxOk
+    ) return 3;
+    // ★2 区別
+    if (total >= 3 && acc >= 0.7 && (polysemyDone || writingDone)) return 2;
+    // ★1 認識
+    return 1;
+  }
+
   const blueprintMetrics = useMemo(() => {
     const ids: ChapterId[] = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5'];
-    const tot = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0 } as Record<ChapterId, number>;
-    const learnedByCh = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0 } as Record<ChapterId, number>;
-    const masteredByCh = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0 } as Record<ChapterId, number>;
+    type Acc = { total: number; tier1: number; tier3: number; tierSum: number };
+    const acc = {
+      ch1: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
+      ch2: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
+      ch3: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
+      ch4: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
+      ch5: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
+    } as Record<ChapterId, Acc>;
     let totalLearned = 0;
     let totalMastered = 0;
     for (const g of allGroups) {
       const ch = chapterFor(g);
       if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
       const id = ch.id as ChapterId;
-      const e = groupAgg[g];
-      tot[id] += 1;
-      if (e.correct >= 1) {
-        learnedByCh[id] += 1;
+      const tier = computeTier(groupAgg[g]);
+      const a = acc[id];
+      a.total += 1;
+      a.tierSum += tier;
+      if (tier >= 1) {
+        a.tier1 += 1;
         totalLearned += 1;
       }
-      if (e.mastered) {
-        masteredByCh[id] += 1;
+      if (tier === 3) {
+        a.tier3 += 1;
         totalMastered += 1;
       }
     }
     const pct = (n: number, d: number) => (d > 0 ? Math.round((n / d) * 100) : 0);
     const fieldMastery = {} as FieldMastery;
-    for (const id of ids) fieldMastery[id] = pct(masteredByCh[id], tot[id]);
+    for (const id of ids) {
+      const a = acc[id];
+      fieldMastery[id] = {
+        total: a.total,
+        tier1Count: a.tier1,
+        tier3Count: a.tier3,
+        masteredPct: pct(a.tier3, a.total),
+        avgTierPct: a.total > 0 ? Math.round((a.tierSum / (a.total * 3)) * 100) : 0,
+      };
+    }
     return { totalLearned, totalMastered, fieldMastery };
-  }, [groupAgg, allGroups]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupAgg, allGroups, quizTypeStats, srsBoxByQid]);
 
   const totalLearned = blueprintMetrics.totalLearned;
   const totalMastered = blueprintMetrics.totalMastered;
@@ -269,6 +330,7 @@ export default function StatsPage() {
   useEffect(() => {
     const refresh = () => {
       setGardenSig((n) => n + 1);
+      setQuizTypeStats(getQuizTypeCorrect());
     };
     refresh();
     window.addEventListener('focus', refresh);

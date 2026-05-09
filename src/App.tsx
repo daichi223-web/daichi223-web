@@ -16,7 +16,7 @@ import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import { updateSrsState, getDueWords } from './lib/srsEngine';
 import VocabModal from './components/VocabModal';
 import { IndexModal } from './components/IndexModal';
-import { chapterFor, chapterColor } from './utils/chapters';
+import { CHAPTERS, chapterFor, chapterColor } from './utils/chapters';
 import bundledVocabIndex from './data/vocabIndex.json';
 import { hasAdminSession } from './lib/adminSession';
 import ReiwaThemePicker from './theme/ReiwaThemePicker';
@@ -212,6 +212,26 @@ function App() {
     next.delete('category');
     setSearchParams(next, { replace: true });
     setCategoryFilter(cats);
+    setQuizQidFilter(null);
+    setCurrentMode('word');
+    setShowHome(false);
+    void setupQuiz();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allWords.length]);
+
+  // URL クエリ ?chapter=ch1 で章範囲のクイズを起動。
+  // 設計図ロボの各部位タップ (BlueprintHome) → その章 (例 ch2 → group 51-150) に飛ぶ。
+  useEffect(() => {
+    if (allWords.length === 0) return;
+    const chParam = searchParams.get('chapter');
+    if (!chParam) return;
+    const ch = CHAPTERS.find((c) => c.id === chParam);
+    if (!ch) return;
+    const next = new URLSearchParams(searchParams);
+    next.delete('chapter');
+    setSearchParams(next, { replace: true });
+    setWordRange({ from: ch.start, to: ch.end });
+    setCategoryFilter([]); // 章絞り込み時はカテゴリは外す (範囲のみで出題)
     setQuizQidFilter(null);
     setCurrentMode('word');
     setShowHome(false);
