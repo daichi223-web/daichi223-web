@@ -221,15 +221,13 @@ export default function StatsPage() {
   }, [groupAgg, allGroups]);
 
   // 設計図 (BlueprintHome) 用: 「Key & Point 古文単語330」5 章 (#1-330) のみ集計。
-  // 4 段階マスタリ (★0-3) で段階成長を表現:
-  //   ★0 未着手: correct=0
-  //   ★1 認識:  単語クイズ correct>=1
-  //   ★2 区別:  単語クイズ total>=3 && acc>=0.7  かつ  (多義語 OR 記述) で正答1回以上
-  //   ★3 定着:  単語クイズ total>=5 && acc>=0.8
-  //              かつ (単義 || 多義語正答>=1)
-  //              かつ 記述正答>=1
-  //              かつ SRS Box>=3
-  // ※ 多義語/記述データが無い単語はその条件を「適用外で自動クリア」扱い。
+  // 10 段階マスタリ (古文貴族階級・3 大階層):
+  //   地下:  ★0 無位 / ★1 雑色 / ★2 舎人 / ★3 衛士
+  //   殿上:  ★4 蔵人 / ★5 侍従 / ★6 弁官
+  //   公卿:  ★7 参議 / ★8 中納言 / ★9 大納言 (= マスター)
+  // 詳細条件は computeTier() を参照。
+  // ※ Box 5 = 14日後復習を突破 = 時間を空けて5連続正解の代理。
+  // ※ 多義語が無い単語は多義条件を自動クリア扱い。
   const [quizTypeStats, setQuizTypeStats] = useState<QuizTypeStats>({});
   const srsBoxByQid = useMemo(() => {
     const m = new Map<string, number>();
@@ -237,47 +235,70 @@ export default function StatsPage() {
     return m;
   }, [srsRows]);
 
-  function computeTier(g: GroupEntry): 0 | 1 | 2 | 3 {
+  function computeTier(g: GroupEntry): number {
     const total = g.total;
     const correct = g.correct;
     if (correct < 1) return 0;
     const acc = total > 0 ? correct / total : 0;
     const isPolysemous = g.qids.length > 1; // group 内に複数 meaning があれば多義
-    let polysemyDone = false;
-    let writingDone = false;
-    let srsBoxOk = false;
+    let polysemyCorrect = 0;
+    let writingCorrect = 0;
+    let maxBox = 0;
     for (const qid of g.qids) {
       const r = quizTypeStats[qid];
-      if (r?.polysemy && r.polysemy > 0) polysemyDone = true;
-      if (r?.writing && r.writing > 0) writingDone = true;
+      if (r?.polysemy) polysemyCorrect += r.polysemy;
+      if (r?.writing) writingCorrect += r.writing;
       const b = srsBoxByQid.get(qid);
-      if (b != null && b >= 3) srsBoxOk = true;
+      if (b != null && b > maxBox) maxBox = b;
     }
-    // ★3 定着
+    // 公卿 (★7-9)
     if (
-      total >= 5 && acc >= 0.8
-      && (!isPolysemous || polysemyDone)
-      && writingDone
-      && srsBoxOk
-    ) return 3;
-    // ★2 区別
-    if (total >= 3 && acc >= 0.7 && (polysemyDone || writingDone)) return 2;
-    // ★1 認識
-    return 1;
+      total >= 50 && acc >= 0.9
+      && (!isPolysemous || polysemyCorrect >= 3)
+      && writingCorrect >= 5
+      && maxBox >= 5
+    ) return 9; // 大納言
+    if (
+      total >= 40 && acc >= 0.9
+      && (!isPolysemous || polysemyCorrect >= 2)
+      && writingCorrect >= 3
+      && maxBox >= 4
+    ) return 8; // 中納言
+    if (
+      total >= 30 && acc >= 0.85
+      && (!isPolysemous || polysemyCorrect >= 2)
+      && writingCorrect >= 2
+      && maxBox >= 3
+    ) return 7; // 参議
+    // 殿上人 (★4-6)
+    if (
+      total >= 20 && acc >= 0.85
+      && (!isPolysemous || polysemyCorrect >= 1)
+      && writingCorrect >= 1
+      && maxBox >= 3
+    ) return 6; // 弁官
+    if (total >= 15 && acc >= 0.8 && (polysemyCorrect >= 1 || writingCorrect >= 1)) return 5; // 侍従
+    if (total >= 10 && acc >= 0.75) return 4; // 蔵人
+    // 地下 (★1-3)
+    if (total >= 5 && acc >= 0.7) return 3; // 衛士
+    if (total >= 3) return 2; // 舎人
+    return 1; // 雑色
   }
 
   const blueprintMetrics = useMemo(() => {
     const ids: ChapterId[] = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5'];
-    type Acc = { total: number; tier1: number; tier3: number; tierSum: number };
-    const acc = {
-      ch1: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
-      ch2: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
-      ch3: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
-      ch4: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
-      ch5: { total: 0, tier1: 0, tier3: 0, tierSum: 0 },
-    } as Record<ChapterId, Acc>;
+    type Acc = {
+      total: number;
+      jige: number;     // ★1-3 (地下)
+      tenjou: number;   // ★4-6 (殿上人)
+      kugyou: number;   // ★7-9 (公卿)
+      master: number;   // ★9 (大納言 = マスター)
+      tierSum: number;
+    };
+    const mkZero = (): Acc => ({ total: 0, jige: 0, tenjou: 0, kugyou: 0, master: 0, tierSum: 0 });
+    const acc = { ch1: mkZero(), ch2: mkZero(), ch3: mkZero(), ch4: mkZero(), ch5: mkZero() } as Record<ChapterId, Acc>;
     let totalLearned = 0;
-    let totalMastered = 0;
+    let totalMastered = 0; // 「マスター」= ★9 大納言
     for (const g of allGroups) {
       const ch = chapterFor(g);
       if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
@@ -286,12 +307,12 @@ export default function StatsPage() {
       const a = acc[id];
       a.total += 1;
       a.tierSum += tier;
-      if (tier >= 1) {
-        a.tier1 += 1;
-        totalLearned += 1;
-      }
-      if (tier === 3) {
-        a.tier3 += 1;
+      if (tier >= 1) totalLearned += 1;
+      if (tier >= 1 && tier <= 3) a.jige += 1;
+      else if (tier >= 4 && tier <= 6) a.tenjou += 1;
+      else if (tier >= 7 && tier <= 9) a.kugyou += 1;
+      if (tier === 9) {
+        a.master += 1;
         totalMastered += 1;
       }
     }
@@ -301,10 +322,13 @@ export default function StatsPage() {
       const a = acc[id];
       fieldMastery[id] = {
         total: a.total,
-        tier1Count: a.tier1,
-        tier3Count: a.tier3,
-        masteredPct: pct(a.tier3, a.total),
-        avgTierPct: a.total > 0 ? Math.round((a.tierSum / (a.total * 3)) * 100) : 0,
+        jigeCount: a.jige,
+        tenjouCount: a.tenjou,
+        kugyouCount: a.kugyou,
+        masterCount: a.master,
+        masteredPct: pct(a.master, a.total),
+        // tier 範囲は 0..9 (10 段階)。avgTier / 9 で 0..1 正規化して 100 倍
+        avgTierPct: a.total > 0 ? Math.round((a.tierSum / (a.total * 9)) * 100) : 0,
       };
     }
     return { totalLearned, totalMastered, fieldMastery };

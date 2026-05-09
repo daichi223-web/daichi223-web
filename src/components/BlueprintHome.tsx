@@ -22,13 +22,23 @@ const STAMP_RED = '#a93226';
 export type ChapterId = 'ch1' | 'ch2' | 'ch3' | 'ch4' | 'ch5';
 export const VISIBLE_CHAPTERS = CHAPTERS.filter((c) => c.id !== 'ext') as Array<typeof CHAPTERS[number] & { id: ChapterId }>;
 
-// 段位 (★0-3) に基づく章ごとの集計値。
-// - masteredPct: tier3 / total * 100 → BOM 棒グラフ (真にマスターした比率)
-// - avgTierPct:  (avg tier / 3) * 100 → 部位 opacity (なめらかな成長感)
+// 段位 (★0-9 = 10 段階・3 大階層。古文貴族の位階・官職に擬えた階級制):
+//   地下:  ★0 無位 / ★1 雑色 / ★2 舎人 / ★3 衛士
+//   殿上:  ★4 蔵人 / ★5 侍従 / ★6 弁官
+//   公卿:  ★7 参議 / ★8 中納言 / ★9 大納言 (= マスター)
+// - masteredPct: master / total * 100 → BOM 棒グラフ (★9 大納言 = 真にマスター)
+// - avgTierPct:  (avg tier / 9) * 100 → 部位 opacity (なめらかな成長感)
+export const TIER_LABELS = [
+  '無位', '雑色', '舎人', '衛士',         // 地下
+  '蔵人', '侍従', '弁官',                  // 殿上
+  '参議', '中納言', '大納言',              // 公卿
+] as const;
 export type ChapterStats = {
   total: number;
-  tier1Count: number;   // ★1 認識 以上の数 (tier >= 1)
-  tier3Count: number;   // ★3 定着 の数
+  jigeCount: number;     // 地下 ★1-3
+  tenjouCount: number;   // 殿上 ★4-6
+  kugyouCount: number;   // 公卿 ★7-9
+  masterCount: number;   // ★9 大納言
   masteredPct: number;
   avgTierPct: number;
 };
@@ -36,7 +46,7 @@ export type FieldMastery = Record<ChapterId, ChapterStats>;
 
 export type BlueprintProps = {
   totalLearned: number;          // 着手 = ★1+ の語数 (ステージ判定の根拠)
-  totalMastered: number;         // マスター = ★3 (定着) の語数
+  totalMastered: number;         // マスター = ★4 (達人) の語数
   fieldMastery: FieldMastery;    // 5 章ごとの段位集計
 };
 
@@ -370,7 +380,7 @@ function Stage2(props: BlueprintProps) {
 
       <Bom palette={t} fm={fm} />
 
-      <Metrics palette={t} learned={props.totalLearned} mastered={props.totalMastered} next={`+${next}`} parts={`${partsCompleted(2)}`} />
+      <Metrics palette={t} fm={fm} next={`+${next}`} parts={`${partsCompleted(2)}`} />
 
       <AssembleBar ink={ink} paper={paper} inkSoft={t.inkSoft} />
 
@@ -600,7 +610,7 @@ function Stage3(props: BlueprintProps) {
 
       <Bom palette={t} fm={fm} />
 
-      <Metrics palette={t} learned={props.totalLearned} mastered={props.totalMastered} next={`+${next}`} parts={`${partsCompleted(3)}`} />
+      <Metrics palette={t} fm={fm} next={`+${next}`} parts={`${partsCompleted(3)}`} />
 
       <AssembleBar ink={ink} paper={paper} inkSoft={t.inkSoft} />
 
@@ -808,27 +818,33 @@ function Stage4(props: BlueprintProps) {
       {/* full BOM with subs */}
       <BomFull palette={t} fm={fm} />
 
-      <div style={{ margin: '0 12px 10px', display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr', gap: 6, fontSize: 9 }}>
-        <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
-          <div style={{ fontSize: 7, color: t.inkSoft }}>WORDS · ★1 / ★3</div>
-          <div style={{ fontSize: 14, fontWeight: 800 }}>
-            {props.totalLearned}
-            <span style={{ fontSize: 11, color: t.inkSoft, fontWeight: 700, margin: '0 3px' }}>/</span>
-            <span style={{ color: t.primary }}>{props.totalMastered}</span>
-            <span style={{ fontSize: 9, color: t.primary, marginLeft: 1 }}>★</span>
+      {(() => {
+        const { jige, tenjou, kugyou } = aggregateTiers(fm);
+        return (
+          <div style={{ margin: '0 12px 10px', display: 'grid', gridTemplateColumns: '1.6fr 1fr 1fr', gap: 6, fontSize: 9 }}>
+            <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
+              <div style={{ fontSize: 7, color: t.inkSoft }}>地下 / 殿上 / 公卿</div>
+              <div style={{ fontSize: 13, fontWeight: 800 }}>
+                {jige}
+                <span style={{ fontSize: 10, color: t.inkSoft, fontWeight: 700, margin: '0 2px' }}>/</span>
+                <span style={{ color: t.accent }}>{tenjou}</span>
+                <span style={{ fontSize: 10, color: t.inkSoft, fontWeight: 700, margin: '0 2px' }}>/</span>
+                <span style={{ color: t.primary }}>{kugyou}</span>
+              </div>
+            </div>
+            <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
+              <div style={{ fontSize: 7, color: t.inkSoft }}>STATUS</div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: STAMP_RED }}>完成</div>
+            </div>
+            <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
+              <div style={{ fontSize: 7, color: t.inkSoft }}>PARTS</div>
+              <div style={{ fontSize: 14, fontWeight: 800 }}>
+                32<span style={{ fontSize: 8, color: t.inkSoft, marginLeft: 2 }}>/32</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
-          <div style={{ fontSize: 7, color: t.inkSoft }}>STATUS</div>
-          <div style={{ fontSize: 14, fontWeight: 800, color: STAMP_RED }}>完成</div>
-        </div>
-        <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
-          <div style={{ fontSize: 7, color: t.inkSoft }}>PARTS</div>
-          <div style={{ fontSize: 14, fontWeight: 800 }}>
-            32<span style={{ fontSize: 8, color: t.inkSoft, marginLeft: 2 }}>/32</span>
-          </div>
-        </div>
-      </div>
+        );
+      })()}
 
       <AssembleBar ink={ink} paper={paper} inkSoft={t.inkSoft} />
 
@@ -967,28 +983,38 @@ function BomFull({ palette: t, fm }: { palette: ReiwaPalette; fm: FieldMastery }
   );
 }
 
+function aggregateTiers(fm: FieldMastery): { jige: number; tenjou: number; kugyou: number } {
+  let jige = 0, tenjou = 0, kugyou = 0;
+  for (const c of Object.values(fm)) {
+    jige += c.jigeCount;
+    tenjou += c.tenjouCount;
+    kugyou += c.kugyouCount;
+  }
+  return { jige, tenjou, kugyou };
+}
+
 function Metrics({
   palette: t,
-  learned,
-  mastered,
+  fm,
   next,
   parts,
 }: {
   palette: ReiwaPalette;
-  learned: number;
-  mastered: number;
+  fm: FieldMastery;
   next: string;
   parts: string;
 }) {
+  const { jige, tenjou, kugyou } = aggregateTiers(fm);
   return (
-    <div style={{ margin: '0 12px 10px', display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr', gap: 6, fontSize: 9, color: t.inkSoft, letterSpacing: 1 }}>
+    <div style={{ margin: '0 12px 10px', display: 'grid', gridTemplateColumns: '1.6fr 1fr 1fr', gap: 6, fontSize: 9, color: t.inkSoft, letterSpacing: 1 }}>
       <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
-        <div style={{ fontSize: 7 }}>WORDS · ★1 / ★3</div>
-        <div style={{ fontSize: 14, fontWeight: 800, color: t.ink }}>
-          {learned}
-          <span style={{ fontSize: 11, color: t.inkSoft, fontWeight: 700, margin: '0 3px' }}>/</span>
-          <span style={{ color: t.primary }}>{mastered}</span>
-          <span style={{ fontSize: 9, color: t.primary, marginLeft: 1 }}>★</span>
+        <div style={{ fontSize: 7 }}>地下 / 殿上 / 公卿</div>
+        <div style={{ fontSize: 13, fontWeight: 800, color: t.ink }}>
+          {jige}
+          <span style={{ fontSize: 10, color: t.inkSoft, fontWeight: 700, margin: '0 2px' }}>/</span>
+          <span style={{ color: t.accent }}>{tenjou}</span>
+          <span style={{ fontSize: 10, color: t.inkSoft, fontWeight: 700, margin: '0 2px' }}>/</span>
+          <span style={{ color: t.primary }}>{kugyou}</span>
         </div>
       </div>
       <div style={{ border: `1px dotted ${t.rule}`, padding: '4px 6px' }}>
