@@ -13,6 +13,7 @@ import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
 import BlueprintHome, { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS } from '@/components/BlueprintHome';
+import BackupSection from '@/components/BackupSection';
 import { chapterFor } from '@/utils/chapters';
 import {
   isCoachOptedIn,
@@ -766,11 +767,14 @@ export default function StatsPage() {
 
             <CoachSettingsSection />
 
+            <BackupSection />
+
             <section>
               <p className="text-[11px] text-rw-ink-soft text-center mt-6">
                 履歴は同じ端末・同じブラウザで継続されます。
                 <br />
-                端末を変えると別ユーザー扱いになります。
+                端末を変えるときや、ブラウザデータを消す前に
+                上の「エクスポート」で JSON を保存しておいてください。
               </p>
             </section>
           </>
