@@ -110,6 +110,8 @@ function Stage1(_props: BlueprintProps) {
   // ステージ 1 はテーマ色を使わず、ノート裏のセピア風固定色
   const ink = '#3a2818';
   const paper = '#f3ead8';
+  const navigate = useNavigate();
+  const goChapter = (id: ChapterId) => navigate(`/?chapter=${id}`);
   return (
     <div style={{ background: paper, fontFamily: FONT_KLEE, color: ink, position: 'relative' }}>
       {/* coffee stain accent */}
@@ -202,6 +204,20 @@ function Stage1(_props: BlueprintProps) {
 
           <circle cx="332" cy="386" r="14" fill="none" stroke="#8a5a3a55" strokeWidth="1.2" />
           <circle cx="332" cy="386" r="9" fill="none" stroke="#8a5a3a30" strokeWidth="0.8" />
+
+          {/* ヒット判定用の透明 rect。
+              fill="none" のスケッチは内部クリックを拾わないため、各部位の上に
+              透明な rect を重ねて章クイズへ navigate するボタン化する。 */}
+          <rect x="144" y="32" width="72" height="68" fill="transparent" style={{ cursor: 'pointer' }}
+                onClick={() => goChapter('ch3')}><title>最重要敬語 (30 語) のクイズへ</title></rect>
+          <rect x="120" y="120" width="120" height="118" fill="transparent" style={{ cursor: 'pointer' }}
+                onClick={() => goChapter('ch1')}><title>読解必修 (50 語) のクイズへ</title></rect>
+          <rect x="80" y="146" width="50" height="34" fill="transparent" style={{ cursor: 'pointer' }}
+                onClick={() => goChapter('ch2')}><title>入試必修 (100 語) のクイズへ</title></rect>
+          <rect x="230" y="146" width="50" height="34" fill="transparent" style={{ cursor: 'pointer' }}
+                onClick={() => goChapter('ch4')}><title>入試重要 (100 語) のクイズへ</title></rect>
+          <rect x="148" y="238" width="80" height="104" fill="transparent" style={{ cursor: 'pointer' }}
+                onClick={() => goChapter('ch5')}><title>入試攻略 (50 語) のクイズへ</title></rect>
         </svg>
       </div>
 
@@ -269,6 +285,8 @@ function Stage2(props: BlueprintProps) {
 
           {/* HEAD CAGE — ch3 最重要敬語 */}
           <g {...partInteractive(fm.ch3.avgTierPct, 'ch3', navigate)}>
+            {/* hit-area: 線描のみだと内部クリックが拾えないので透明 rect で覆う */}
+            <rect x="148" y="34" width="64" height="62" fill="transparent" />
             <rect x="148" y="34" width="64" height="58" fill="none" stroke={ink} strokeWidth="1.4" />
             <rect x="154" y="40" width="52" height="46" fill="none" stroke={ink} strokeWidth="0.5" strokeDasharray="2 2" />
             <line x1="148" y1="34" x2="154" y2="40" stroke={ink} strokeWidth="0.5" />
