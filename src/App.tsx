@@ -1817,13 +1817,9 @@ function App() {
             </div>
           ) : null}
 
-          {/* カテゴリ絞り込み (単語モードのみ・範囲とAND) */}
-          {currentMode === 'word' && (
-            <CategoryFilterChips
-              selected={categoryFilter}
-              onChange={setCategoryFilter}
-            />
-          )}
+          {/* カテゴリ絞り込み chips は非表示 (章範囲指定で代替)。
+              CategoryFilterChips コンポーネント自体と URL ?category= ハンドラは
+              残しているので、必要になったらここを再表示するだけで戻せる。 */}
 
           {currentMode !== 'word' && (
             <div className="grid grid-cols-2 gap-2">
