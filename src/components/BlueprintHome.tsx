@@ -22,16 +22,16 @@ const STAMP_RED = '#a93226';
 export type ChapterId = 'ch1' | 'ch2' | 'ch3' | 'ch4' | 'ch5';
 export const VISIBLE_CHAPTERS = CHAPTERS.filter((c) => c.id !== 'ext') as Array<typeof CHAPTERS[number] & { id: ChapterId }>;
 
-// 段位 (★0-9 = 10 段階・3 大階層。古文貴族の位階・官職に擬えた階級制):
+// 段位 (★0-10 = 11 段階・3 大階層。古文貴族の位階・官職に擬えた階級制):
 //   地下:  ★0 無位 / ★1 雑色 / ★2 舎人 / ★3 衛士
 //   殿上:  ★4 蔵人 / ★5 侍従 / ★6 弁官
-//   公卿:  ★7 参議 / ★8 中納言 / ★9 大納言 (= マスター)
-// - masteredPct: master / total * 100 → BOM 棒グラフ (★9 大納言 = 真にマスター)
-// - avgTierPct:  (avg tier / 9) * 100 → 部位 opacity (なめらかな成長感)
+//   公卿:  ★7 参議 / ★8 中納言 / ★9 大納言 / ★10 太政大臣 (= 真のマスター)
+// - masteredPct: master / total * 100 → BOM 棒グラフ (★10 太政大臣 = 真にマスター)
+// - avgTierPct:  (avg tier / 10) * 100 → 部位 opacity (なめらかな成長感)
 export const TIER_LABELS = [
-  '無位', '雑色', '舎人', '衛士',         // 地下
-  '蔵人', '侍従', '弁官',                  // 殿上
-  '参議', '中納言', '大納言',              // 公卿
+  '無位', '雑色', '舎人', '衛士',         // 地下 (★0-3)
+  '蔵人', '侍従', '弁官',                  // 殿上 (★4-6)
+  '参議', '中納言', '大納言', '太政大臣',  // 公卿 (★7-10)
 ] as const;
 export type ChapterStats = {
   total: number;

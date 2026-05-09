@@ -12,9 +12,17 @@ import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
 import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
-import BlueprintHome, { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS } from '@/components/BlueprintHome';
+import BlueprintHome, { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS, TIER_LABELS } from '@/components/BlueprintHome';
 import BackupSection from '@/components/BackupSection';
 import { chapterFor } from '@/utils/chapters';
+
+// 段位バッジ用の色マッピング (★0-10 を 3 階層に分けて視覚化)
+function tierBadge(tier: number): { bg: string; fg: string; tone: '無' | '地下' | '殿上' | '公卿' } {
+  if (tier >= 7) return { bg: 'var(--rw-primary-soft)', fg: 'var(--rw-primary)', tone: '公卿' };
+  if (tier >= 4) return { bg: 'var(--rw-accent-soft)', fg: 'var(--rw-accent)', tone: '殿上' };
+  if (tier >= 1) return { bg: 'var(--rw-rule)', fg: 'var(--rw-ink-soft)', tone: '地下' };
+  return { bg: 'transparent', fg: 'var(--rw-ink-soft)', tone: '無' };
+}
 import {
   isCoachOptedIn,
   setCoachOptIn,
@@ -221,10 +229,10 @@ export default function StatsPage() {
   }, [groupAgg, allGroups]);
 
   // 設計図 (BlueprintHome) 用: 「Key & Point 古文単語330」5 章 (#1-330) のみ集計。
-  // 10 段階マスタリ (古文貴族階級・3 大階層):
+  // 11 段階マスタリ (古文貴族階級・3 大階層):
   //   地下:  ★0 無位 / ★1 雑色 / ★2 舎人 / ★3 衛士
   //   殿上:  ★4 蔵人 / ★5 侍従 / ★6 弁官
-  //   公卿:  ★7 参議 / ★8 中納言 / ★9 大納言 (= マスター)
+  //   公卿:  ★7 参議 / ★8 中納言 / ★9 大納言 / ★10 太政大臣 (= マスター)
   // 詳細条件は computeTier() を参照。
   // ※ Box 5 = 14日後復習を突破 = 時間を空けて5連続正解の代理。
   // ※ 多義語が無い単語は多義条件を自動クリア扱い。
@@ -251,7 +259,13 @@ export default function StatsPage() {
       const b = srsBoxByQid.get(qid);
       if (b != null && b > maxBox) maxBox = b;
     }
-    // 公卿 (★7-9)
+    // 公卿 (★7-10)
+    if (
+      total >= 75 && acc >= 0.95
+      && (!isPolysemous || polysemyCorrect >= 5)
+      && writingCorrect >= 7
+      && maxBox >= 5
+    ) return 10; // 太政大臣
     if (
       total >= 50 && acc >= 0.9
       && (!isPolysemous || polysemyCorrect >= 3)
@@ -310,9 +324,9 @@ export default function StatsPage() {
       if (tier >= 1) totalLearned += 1;
       if (tier >= 1 && tier <= 3) a.jige += 1;
       else if (tier >= 4 && tier <= 6) a.tenjou += 1;
-      else if (tier >= 7 && tier <= 9) a.kugyou += 1;
-      if (tier === 9) {
-        a.master += 1;
+      else if (tier >= 7 && tier <= 10) a.kugyou += 1; // ★7-10 が公卿
+      if (tier === 10) {
+        a.master += 1; // 「真のマスター」= 太政大臣
         totalMastered += 1;
       }
     }
@@ -327,8 +341,8 @@ export default function StatsPage() {
         kugyouCount: a.kugyou,
         masterCount: a.master,
         masteredPct: pct(a.master, a.total),
-        // tier 範囲は 0..9 (10 段階)。avgTier / 9 で 0..1 正規化して 100 倍
-        avgTierPct: a.total > 0 ? Math.round((a.tierSum / (a.total * 9)) * 100) : 0,
+        // tier 範囲は 0..10 (11 段階)。avgTier / 10 で 0..1 正規化して 100 倍
+        avgTierPct: a.total > 0 ? Math.round((a.tierSum / (a.total * 10)) * 100) : 0,
       };
     }
     return { totalLearned, totalMastered, fieldMastery };
@@ -338,6 +352,19 @@ export default function StatsPage() {
   const totalLearned = blueprintMetrics.totalLearned;
   const totalMastered = blueprintMetrics.totalMastered;
   const fieldMastery = blueprintMetrics.fieldMastery;
+
+  // 段位別 単語数 (★0-10 のヒストグラム。「Key & Point 古文単語330」5章のみ集計)
+  const tierDistribution = useMemo(() => {
+    const counts = new Array(11).fill(0) as number[];
+    for (const g of allGroups) {
+      const ch = chapterFor(g);
+      if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
+      const tier = computeTier(groupAgg[g]);
+      counts[tier] += 1;
+    }
+    return counts;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupAgg, allGroups, quizTypeStats, srsBoxByQid]);
 
   // 全体ハイブリッドスコア (桜・銀杏用)
   // よく練習した単語 Top 20
@@ -671,6 +698,46 @@ export default function StatsPage() {
               </div>
             </section>
 
+            {/* 段位別 単語数 (★0-10 のヒストグラム) */}
+            <section className="mb-6">
+              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+                段位別 単語数 ({tierDistribution.reduce((s, n) => s + n, 0)}語中)
+              </h2>
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 space-y-1">
+                {[10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].map((tier) => {
+                  const count = tierDistribution[tier];
+                  const total = tierDistribution.reduce((s, n) => s + n, 0);
+                  const pct = total > 0 ? (count / total) * 100 : 0;
+                  const badge = tierBadge(tier);
+                  // 大階層の境界に薄い区切りを入れる
+                  const tierBefore = tier === 6 || tier === 3 || tier === 0;
+                  return (
+                    <div key={tier}>
+                      {tierBefore && <div className="border-t border-rw-rule/50 my-1" />}
+                      <div className="flex items-center gap-2 py-0.5">
+                        <span className="text-[10px] font-mono text-rw-ink-soft w-7 shrink-0">★{tier}</span>
+                        <span className="text-xs font-bold w-16 shrink-0" style={{ color: badge.fg }}>
+                          {TIER_LABELS[tier]}
+                        </span>
+                        <div className="flex-1 h-2 rounded-full bg-rw-rule/40 overflow-hidden">
+                          <div className="h-full rounded-full transition-all"
+                               style={{ width: `${Math.max(pct, count > 0 ? 1.5 : 0)}%`, background: badge.fg }} />
+                        </div>
+                        <span className="text-xs font-black text-rw-ink w-10 text-right shrink-0">
+                          {count}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div className="flex justify-between text-[9px] text-rw-ink-soft mt-2 pt-2 border-t border-rw-rule/40">
+                  <span>地下: {tierDistribution[1] + tierDistribution[2] + tierDistribution[3]}</span>
+                  <span>殿上: {tierDistribution[4] + tierDistribution[5] + tierDistribution[6]}</span>
+                  <span>公卿: {tierDistribution[7] + tierDistribution[8] + tierDistribution[9] + tierDistribution[10]}</span>
+                </div>
+              </div>
+            </section>
+
             {/* 苦手 Top 20 */}
             {weakTop.length > 0 && (
               <section className="mb-6">
@@ -747,6 +814,8 @@ export default function StatsPage() {
                 <div className="space-y-1.5">
                   {mostPracticed.map((row) => {
                     const accuracy = row.total > 0 ? row.correct / row.total : 0;
+                    const tier = computeTier(row);
+                    const badge = tierBadge(tier);
                     return (
                       <div
                         key={row.group}
@@ -755,14 +824,13 @@ export default function StatsPage() {
                         <div className="flex-1 min-w-0">
                           <div className="font-bold text-rw-ink truncate text-sm flex items-center gap-1.5">
                             {row.lemma}
-                            {row.mastered && (
-                              <span
-                                className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
-                                style={{ background: 'var(--rw-accent-soft)', color: 'var(--rw-accent)' }}
-                              >
-                                MASTER
-                              </span>
-                            )}
+                            <span
+                              className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
+                              style={{ background: badge.bg, color: badge.fg }}
+                              title={`★${tier} ${TIER_LABELS[tier]} (${badge.tone})`}
+                            >
+                              ★{tier} {TIER_LABELS[tier]}
+                            </span>
                           </div>
                           <div className="text-[10px] text-rw-ink-soft mt-0.5">
                             {row.category} · 正解 {row.correct} / 誤答 {row.incorrect} (正答率 {Math.round(accuracy * 100)}%)
