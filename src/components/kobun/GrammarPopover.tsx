@@ -4,11 +4,9 @@ import type { Token, LayerId, TokenAnalysis } from "@/lib/kobun/types";
 import { buildGemUrl, buildNotebookLmUrl } from "@/lib/kobun/gem";
 import { addVocabEntry, recordHintOpen } from "@/lib/kobun/progress";
 import VocabModal from "@/components/VocabModal";
-import bundledVocabIndex from "@/data/vocabIndex.json";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
 import { enrichGrammarInfo } from "@/lib/kobun/auxiliaryInfo";
-
-const vocabIndexKeys = new Set(Object.keys(bundledVocabIndex as Record<string, unknown>));
+import { resolveVocabKey } from "@/lib/vocabAlias";
 
 interface GrammarPopoverProps {
   token: Token;
@@ -123,13 +121,8 @@ function PopoverContent({
 
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
   const [addedToVocab, setAddedToVocab] = useState(false);
-  // 見出し語 / 表層形のいずれかが vocab DB にあれば「📖 語彙解説」を出せる
-  const vocabCandidate = (() => {
-    const base = tag.baseForm;
-    if (base && vocabIndexKeys.has(base)) return base;
-    if (vocabIndexKeys.has(token.text)) return token.text;
-    return null;
-  })();
+  // 見出し語 / 表層形 / 漢字表記揺れ / 派生形の解決を vocabAlias に集約。
+  const vocabCandidate = resolveVocabKey(token.text, tag.baseForm);
 
   // クイズ qid 逆引き: この語が単語クイズに出るかどうか
   const quizQids = (() => {
