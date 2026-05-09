@@ -9,6 +9,7 @@ export default {
       fontFamily: {
         'noto': ['Noto Sans JP', 'sans-serif'],
         'serif': ['"Noto Serif JP"', '"Yu Mincho"', '"Hiragino Mincho Pro"', 'serif'],
+        'kobun': ['"Zen Maru Gothic"', '"Noto Serif JP"', 'serif'],
       },
       colors: {
         // kobun-v3 palette

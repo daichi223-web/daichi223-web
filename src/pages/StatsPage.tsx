@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getWordStats, getWeakWords } from '@/lib/wordStats';
 import { getDueWords } from '@/lib/srsEngine';
@@ -9,9 +9,10 @@ import bundledKobunQ from '@/data/kobunQ.json';
 import vocabIndex from '@/data/vocabIndex.json';
 import bundledTextsV3 from '@/data/textsV3Index.json';
 import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
-import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
+import BlueprintHome, { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS } from '@/components/BlueprintHome';
+import { chapterFor } from '@/utils/chapters';
 import {
   isCoachOptedIn,
   setCoachOptIn,
@@ -57,17 +58,7 @@ type GroupEntry = {
 type CharacterTheme = 'garden' | 'robot';
 const CHARACTER_THEME_KEY = 'kobun-tan:dashboard-character-theme';
 
-// ロボット部位用 7段階しきい値 (より厳しめ)
-// 多義語・記述クイズも組み合わせないと Lv7 (金) には到達しないように設定
-function stageFromRobotScore(score: number): number {
-  if (score >= 0.92) return 6;
-  if (score >= 0.80) return 5;
-  if (score >= 0.60) return 4;
-  if (score >= 0.40) return 3;
-  if (score >= 0.20) return 2;
-  if (score >= 0.05) return 1;
-  return 0;
-}
+const VISIBLE_CHAPTER_IDS = new Set<ChapterId>(VISIBLE_CHAPTERS.map((c) => c.id));
 
 // === 庭(Garden) — 1作品=1株。ジャンル別樹種 × 7段階成長 ===
 // 成長指標は「読書進度 + 単語解説/トークンヒント開閉数」のシークレット式
@@ -141,27 +132,6 @@ type GardenPlant = {
   level: number; // 0..6
   // 内部スコアはシークレット (UI には出さない)
 };
-
-// ロボット部品: カテゴリ → 部位
-const ROBOT_PARTS: Array<{ key: string; label: string; categories: string[] }> = [
-  { key: 'head', label: '頭部', categories: ['敬語動詞'] },
-  { key: 'body', label: '胴体', categories: ['重要動詞'] },
-  { key: 'rarm', label: '右腕', categories: ['重要形容詞'] },
-  { key: 'larm', label: '左腕', categories: ['重要副詞'] },
-  { key: 'rleg', label: '右脚', categories: ['重要名詞'] },
-  { key: 'lleg', label: '左脚', categories: ['多義語', '現古異義語', '接頭辞', '重要形容動詞'] },
-];
-
-// 7段階クオリティ (Lv1 影 → Lv7 金)
-const QUALITY_STAGES = [
-  { name: '影', bg: 'rgba(40,40,40,0.18)', text: '#888', glow: '' },
-  { name: '紙', bg: '#f6efe2', text: '#a89372', glow: '' },
-  { name: '木', bg: '#a9764b', text: '#fff', glow: '' },
-  { name: '銅', bg: '#c97a3a', text: '#fff', glow: '0 0 6px rgba(201,122,58,0.5)' },
-  { name: '鉄', bg: '#6e7787', text: '#fff', glow: '0 0 6px rgba(110,119,135,0.5)' },
-  { name: '銀', bg: '#cfd6dc', text: '#222', glow: '0 0 8px rgba(207,214,220,0.9)' },
-  { name: '金', bg: '#e8c14a', text: '#3a2a00', glow: '0 0 12px rgba(232,193,74,0.9)' },
-];
 
 export default function StatsPage() {
   const [stats, setStats] = useState<Record<string, WordStat>>({});
@@ -248,6 +218,41 @@ export default function StatsPage() {
     return buckets;
   }, [groupAgg, allGroups]);
 
+  // 設計図 (BlueprintHome) 用: 「Key & Point 古文単語330」5 章 (#1-330) のみ集計。
+  // 追加語 (#331-) はステージ判定にも BOM にも含めない (単語帳のスコープ外)。
+  // 二層モデル: 着手 (correct>=1) でステージ進行、マスター (groupAgg.mastered: total>=5 && acc>=0.8) で BOM 棒。
+  const blueprintMetrics = useMemo(() => {
+    const ids: ChapterId[] = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5'];
+    const tot = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0 } as Record<ChapterId, number>;
+    const learnedByCh = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0 } as Record<ChapterId, number>;
+    const masteredByCh = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0 } as Record<ChapterId, number>;
+    let totalLearned = 0;
+    let totalMastered = 0;
+    for (const g of allGroups) {
+      const ch = chapterFor(g);
+      if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
+      const id = ch.id as ChapterId;
+      const e = groupAgg[g];
+      tot[id] += 1;
+      if (e.correct >= 1) {
+        learnedByCh[id] += 1;
+        totalLearned += 1;
+      }
+      if (e.mastered) {
+        masteredByCh[id] += 1;
+        totalMastered += 1;
+      }
+    }
+    const pct = (n: number, d: number) => (d > 0 ? Math.round((n / d) * 100) : 0);
+    const fieldMastery = {} as FieldMastery;
+    for (const id of ids) fieldMastery[id] = pct(masteredByCh[id], tot[id]);
+    return { totalLearned, totalMastered, fieldMastery };
+  }, [groupAgg, allGroups]);
+
+  const totalLearned = blueprintMetrics.totalLearned;
+  const totalMastered = blueprintMetrics.totalMastered;
+  const fieldMastery = blueprintMetrics.fieldMastery;
+
   // 全体ハイブリッドスコア (桜・銀杏用)
   // よく練習した単語 Top 20
   const mostPracticed = useMemo(() => {
@@ -260,12 +265,10 @@ export default function StatsPage() {
 
   // === 庭(Garden) + ロボット 用: localStorage を都度読み直す ===
   const [gardenSig, setGardenSig] = useState(0); // ページに戻ってきたら再読する用
-  const [quizTypeStats, setQuizTypeStats] = useState<QuizTypeStats>({});
   const [publishedSet, setPublishedSet] = useState<Set<string> | null>(null);
   useEffect(() => {
     const refresh = () => {
       setGardenSig((n) => n + 1);
-      setQuizTypeStats(getQuizTypeCorrect());
     };
     refresh();
     window.addEventListener('focus', refresh);
@@ -533,13 +536,15 @@ export default function StatsPage() {
               </div>
 
               {/* キャラクター */}
-              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
-                {theme === 'robot' ? (
-                  <RobotCharacter groupAgg={groupAgg} quizTypeStats={quizTypeStats} />
-                ) : (
+              {theme === 'robot' ? (
+                <div className="bg-rw-paper border border-rw-rule rounded-2xl overflow-hidden mb-3">
+                  <BlueprintHome totalLearned={totalLearned} totalMastered={totalMastered} fieldMastery={fieldMastery} />
+                </div>
+              ) : (
+                <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
                   <Garden plants={garden} />
-                )}
-              </div>
+                </div>
+              )}
 
               {/* 累計回答数 + 分布 */}
               <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
@@ -967,257 +972,6 @@ function PlantTile({ plant }: { plant: GardenPlant }) {
     >
       <div className="text-xl leading-none select-none">{emoji}</div>
     </Link>
-  );
-}
-
-function RobotCharacter({
-  groupAgg,
-  quizTypeStats,
-}: {
-  groupAgg: Record<number, GroupEntry>;
-  quizTypeStats: QuizTypeStats;
-}) {
-  // 部位 → そのジャンル(カテゴリ群)の集計 + qids
-  // 多義語/記述クイズの正答数も加味してスコア化 (ロボット完成のハードルを上げる)
-  const partInfo = useMemo(() => {
-    const out: Record<
-      string,
-      {
-        score: number;
-        level: number;
-        touched: number;
-        mastered: number;
-        polysemyDone: number;
-        writingDone: number;
-        total: number;
-        qids: string[];
-      }
-    > = {};
-    for (const part of ROBOT_PARTS) {
-      let total = 0;
-      let touched = 0;
-      let mastered = 0;
-      let polysemyDone = 0;
-      let writingDone = 0;
-      const qids: string[] = [];
-      for (const g of Object.values(groupAgg)) {
-        if (!part.categories.includes(g.category)) continue;
-        total += 1;
-        if (g.total > 0) touched += 1;
-        if (g.mastered) mastered += 1;
-        // group 内のいずれかの qid で多義語 or 記述に正答していれば達成扱い
-        let hasPoly = false;
-        let hasWrite = false;
-        for (const qid of g.qids) {
-          const r = quizTypeStats[qid];
-          if (r?.polysemy && r.polysemy > 0) hasPoly = true;
-          if (r?.writing && r.writing > 0) hasWrite = true;
-        }
-        if (hasPoly) polysemyDone += 1;
-        if (hasWrite) writingDone += 1;
-        qids.push(...g.qids);
-      }
-      const touchedRate = total > 0 ? touched / total : 0;
-      const masteredRate = total > 0 ? mastered / total : 0;
-      const polysemyRate = total > 0 ? polysemyDone / total : 0;
-      const writingRate = total > 0 ? writingDone / total : 0;
-      // 重み: 着手0.15 / マスター0.30 / 多義語0.275 / 記述0.275 (合計1.0)
-      // 多義語・記述ゼロだと最大 0.45 (= Lv4 銅 で頭打ち)
-      const score =
-        touchedRate * 0.15 +
-        masteredRate * 0.30 +
-        polysemyRate * 0.275 +
-        writingRate * 0.275;
-      out[part.key] = {
-        score,
-        level: stageFromRobotScore(score),
-        touched,
-        mastered,
-        polysemyDone,
-        writingDone,
-        total,
-        qids,
-      };
-    }
-    return out;
-  }, [groupAgg, quizTypeStats]);
-
-  const avgLevel =
-    Object.values(partInfo).reduce((sum, p) => sum + p.level, 0) / ROBOT_PARTS.length;
-  const allMaxed = Object.values(partInfo).every((p) => p.level >= 6);
-
-  const partStyle = (level: number) => {
-    const q = QUALITY_STAGES[level];
-    return {
-      background: q.bg,
-      color: q.text,
-      boxShadow: q.glow ? q.glow : undefined,
-    };
-  };
-
-  const get = (key: string) =>
-    partInfo[key] ?? { level: 0, score: 0, touched: 0, mastered: 0, polysemyDone: 0, writingDone: 0, total: 0, qids: [] };
-
-  // 部位パーツ用の Link ラッパー (qids が空なら span にフォールバック)
-  const PartLink = ({
-    part,
-    className,
-    style,
-    titleSuffix,
-    children,
-  }: {
-    part: { key: string; label: string; categories: string[] };
-    className: string;
-    style: CSSProperties;
-    titleSuffix?: string;
-    children?: ReactNode;
-  }) => {
-    const p = get(part.key);
-    const q = QUALITY_STAGES[p.level];
-    const title = `${part.label}: ${q.name}${titleSuffix ? ` · ${titleSuffix}` : ''} · クリックで「${part.categories.join('・')}」を出題`;
-    if (p.qids.length === 0) {
-      return (
-        <span className={className} style={style} title={title}>
-          {children}
-        </span>
-      );
-    }
-    return (
-      <Link
-        to={`/?category=${encodeURIComponent(part.categories.join(','))}`}
-        className={className + ' no-underline cursor-pointer'}
-        style={style}
-        title={title}
-      >
-        {children}
-      </Link>
-    );
-  };
-
-  return (
-    <div>
-      <div className="flex items-start gap-4">
-        {/* ロボット組立図 (各部位クリックで該当ジャンルを出題) */}
-        <div
-          className="shrink-0 flex flex-col items-center"
-          style={{
-            filter: allMaxed ? 'drop-shadow(0 0 10px rgba(232,193,74,0.6))' : undefined,
-          }}
-        >
-          {/* 頭 */}
-          <PartLink
-            part={ROBOT_PARTS[0]}
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-[10px] font-black border border-black/10 transition-transform hover:scale-110"
-            style={partStyle(get('head').level)}
-          >
-            ⚙
-          </PartLink>
-          {/* 胴体 + 腕 */}
-          <div className="flex items-center mt-1">
-            <PartLink
-              part={ROBOT_PARTS[3]}
-              className="w-3 h-12 rounded-l-md border border-black/10 transition-transform hover:scale-110"
-              style={partStyle(get('larm').level)}
-            />
-            <PartLink
-              part={ROBOT_PARTS[1]}
-              className="w-12 h-12 rounded-md flex items-center justify-center text-base font-black border border-black/10 transition-transform hover:scale-110"
-              style={partStyle(get('body').level)}
-            >
-              ★
-            </PartLink>
-            <PartLink
-              part={ROBOT_PARTS[2]}
-              className="w-3 h-12 rounded-r-md border border-black/10 transition-transform hover:scale-110"
-              style={partStyle(get('rarm').level)}
-            />
-          </div>
-          {/* 脚 */}
-          <div className="flex gap-1 mt-1">
-            <PartLink
-              part={ROBOT_PARTS[5]}
-              className="w-4 h-9 rounded-md border border-black/10 transition-transform hover:scale-110"
-              style={partStyle(get('lleg').level)}
-            />
-            <PartLink
-              part={ROBOT_PARTS[4]}
-              className="w-4 h-9 rounded-md border border-black/10 transition-transform hover:scale-110"
-              style={partStyle(get('rleg').level)}
-            />
-          </div>
-        </div>
-
-        {/* ステータス */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-base font-black text-rw-ink">
-              {allMaxed ? '🤖 完全覚醒!' : 'ロボット建造中'}
-            </span>
-            <span className="text-[10px] text-rw-ink-soft font-bold">
-              平均 Lv {avgLevel.toFixed(1)} / 7
-            </span>
-          </div>
-          <div className="text-[11px] text-rw-ink-soft mb-2">
-            選択式・多義語・記述ぜんぶやり込むと部品が金になる
-          </div>
-          <div className="text-[10px] text-rw-ink-soft">
-            👆 部位をタップでそのジャンルを出題
-          </div>
-        </div>
-      </div>
-
-      {/* 部位リスト (タップで該当ジャンル出題) */}
-      <div className="grid grid-cols-2 gap-1.5 mt-3">
-        {ROBOT_PARTS.map((part) => {
-          const p = get(part.key);
-          const q = QUALITY_STAGES[p.level];
-          const inner = (
-            <>
-              <div
-                className="w-6 h-6 rounded shrink-0 border border-black/10"
-                style={partStyle(p.level)}
-              />
-              <div className="flex-1 min-w-0">
-                <div className="text-[11px] font-black text-rw-ink truncate">
-                  {part.label} <span className="text-rw-ink-soft font-bold">{q.name}</span>
-                </div>
-                <div className="text-[9px] text-rw-ink-soft truncate">
-                  {part.categories.join('・')} · 着手{p.touched}/M{p.mastered}/多{p.polysemyDone}/記{p.writingDone}/全{p.total}
-                </div>
-              </div>
-              {p.qids.length > 0 && (
-                <span
-                  className="text-[10px] font-black rounded-full px-2 py-0.5 shrink-0"
-                  style={{ background: 'var(--rw-ink)', color: 'var(--rw-paper)' }}
-                >
-                  ▶
-                </span>
-              )}
-            </>
-          );
-          if (p.qids.length === 0) {
-            return (
-              <div
-                key={part.key}
-                className="border border-rw-rule rounded-lg p-2 flex items-center gap-2"
-              >
-                {inner}
-              </div>
-            );
-          }
-          return (
-            <Link
-              key={part.key}
-              to={`/?category=${encodeURIComponent(part.categories.join(','))}`}
-              className="border border-rw-rule rounded-lg p-2 flex items-center gap-2 no-underline hover:bg-rw-bg transition-colors cursor-pointer"
-              title={`「${part.categories.join('・')}」をクイズ範囲指定に適用して出題`}
-            >
-              {inner}
-            </Link>
-          );
-        })}
-      </div>
-    </div>
   );
 }
 
