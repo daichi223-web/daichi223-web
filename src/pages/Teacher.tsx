@@ -750,6 +750,143 @@ type TextEntry = {
   author?: string;
 };
 
+function DiagnosticPanel({ cohort }: { cohort: string }) {
+  const [rows, setRows] = useState<Array<{ slug: string; published: boolean; cohort?: string }>>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [fullAccess, setFullAccess] = useState(() =>
+    typeof window !== 'undefined' && localStorage.getItem('kobun:full-access') === '1'
+  );
+  const [browserCohort, setBrowserCohort] = useState(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('kobun:cohort') ?? 'default' : 'default'
+  );
+
+  const refresh = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await callAPI(`/api/textPublications?cohort=${encodeURIComponent(cohort)}`);
+      setRows(data.rows || []);
+    } catch (e: any) {
+      setError(String(e?.message || e));
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cohort]);
+
+  const clearFullAccess = () => {
+    localStorage.removeItem('kobun:full-access');
+    setFullAccess(false);
+  };
+
+  const setCohortDefault = () => {
+    localStorage.removeItem('kobun:cohort');
+    setBrowserCohort('default');
+  };
+
+  const setCohortToCurrent = () => {
+    if (cohort === 'default') {
+      localStorage.removeItem('kobun:cohort');
+    } else {
+      localStorage.setItem('kobun:cohort', cohort);
+    }
+    setBrowserCohort(cohort);
+  };
+
+  const publishedCount = rows.filter((r) => r.published).length;
+  const totalRows = rows.length;
+  const isMatch = browserCohort === cohort;
+
+  return (
+    <div className="mb-3 p-3 bg-yellow-50 border border-yellow-300 rounded">
+      <div className="text-sm font-bold text-yellow-900 mb-2">🔍 診断パネル（生徒画面と DB の状態）</div>
+      <div className="text-xs space-y-1.5">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-bold text-slate-700">📱 このブラウザの cohort:</span>
+          <code className="bg-white border border-slate-200 px-1.5 py-0.5 rounded font-mono">
+            {browserCohort}
+          </code>
+          {!isMatch && (
+            <button
+              onClick={setCohortToCurrent}
+              className="text-[11px] px-2 py-0.5 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            >
+              編集中の {cohort} に切替
+            </button>
+          )}
+          {browserCohort !== 'default' && (
+            <button
+              onClick={setCohortDefault}
+              className="text-[11px] px-2 py-0.5 bg-slate-500 text-white rounded hover:bg-slate-600"
+            >
+              default に戻す
+            </button>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-bold text-slate-700">🔓 fullAccess (全公開フラグ):</span>
+          <code className={`px-1.5 py-0.5 rounded font-mono ${fullAccess ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}`}>
+            {fullAccess ? '有効 ⚠️' : '無効 ✓'}
+          </code>
+          {fullAccess && (
+            <button
+              onClick={clearFullAccess}
+              className="text-[11px] px-2 py-0.5 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              無効化する（cohort フィルタを効かせる）
+            </button>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-bold text-slate-700">🗄️ DB (cohort={cohort}):</span>
+          {error ? (
+            <span className="text-red-700 font-mono">エラー: {error}</span>
+          ) : loading ? (
+            <span className="text-slate-500">読み込み中…</span>
+          ) : (
+            <>
+              <code className="bg-white border border-slate-200 px-1.5 py-0.5 rounded">
+                公開 {publishedCount} / 全 {totalRows} 件
+              </code>
+              {totalRows === 0 && (
+                <span className="text-amber-700 text-[11px]">
+                  ⚠️ この cohort の行がまだ DB にありません。教材を ON すると登録されます。
+                </span>
+              )}
+            </>
+          )}
+          <button
+            onClick={refresh}
+            className="text-[11px] px-2 py-0.5 bg-blue-600 text-white rounded hover:bg-blue-700 ml-auto"
+          >
+            🔄 再取得
+          </button>
+        </div>
+
+        {fullAccess && (
+          <div className="mt-2 p-2 bg-red-50 border-l-4 border-red-400 text-red-800 text-[11px]">
+            <strong>fullAccess が有効</strong>のため、cohort 設定に関係なく <strong>全教材が表示</strong>されます。
+            これが「公開設定が効かない」原因の最有力候補です。上のボタンで無効化してください。
+          </div>
+        )}
+        {error && error.includes('schema cache') && (
+          <div className="mt-2 p-2 bg-orange-50 border-l-4 border-orange-400 text-orange-800 text-[11px]">
+            <strong>スキーマキャッシュが古い</strong>状態です。Supabase Dashboard の SQL Editor で
+            <code className="bg-white border border-orange-300 px-1 rounded mx-1">notify pgrst, 'reload schema';</code>
+            を実行してください。
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function CohortUrlList({ cohorts }: { cohorts: string[] }) {
   const [copied, setCopied] = useState<string | null>(null);
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
@@ -975,6 +1112,9 @@ function TextsManageView() {
             ＋ 新規 cohort
           </button>
         </div>
+
+        {/* 診断パネル: 生徒側の見え方をトラブルシュートする */}
+        <DiagnosticPanel cohort={cohort} />
 
         {/* 全 cohort の生徒 URL コピー一覧 */}
         <CohortUrlList cohorts={cohortOptions} />
