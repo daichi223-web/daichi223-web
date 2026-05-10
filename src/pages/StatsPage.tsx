@@ -713,56 +713,119 @@ export default function StatsPage() {
               <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
                 段位別 単語数 ({tierDistribution.reduce((s, n) => s + n, 0)}語中)
               </h2>
-              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 space-y-1">
-                {[10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].map((tier) => {
-                  const count = tierDistribution[tier];
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-3">
+                {(() => {
                   const total = tierDistribution.reduce((s, n) => s + n, 0);
-                  const pct = total > 0 ? (count / total) * 100 : 0;
-                  const badge = tierBadge(tier);
-                  // 大階層の境界に薄い区切りを入れる
-                  const tierBefore = tier === 6 || tier === 3 || tier === 0;
-                  const qids = tierQids[tier];
-                  const tappable = count > 0 && qids.length > 0;
-                  const rowInner = (
-                    <div className="flex items-center gap-2 py-0.5">
-                      <span className="text-[10px] font-mono text-rw-ink-soft w-7 shrink-0">★{tier}</span>
-                      <span className="text-xs font-bold w-16 shrink-0" style={{ color: badge.fg }}>
-                        {TIER_LABELS[tier]}
-                      </span>
-                      <div className="flex-1 h-2 rounded-full bg-rw-rule/40 overflow-hidden">
-                        <div className="h-full rounded-full transition-all"
-                             style={{ width: `${Math.max(pct, count > 0 ? 1.5 : 0)}%`, background: badge.fg }} />
+                  type Section = {
+                    label: string;
+                    desc: string;
+                    tiers: number[];
+                    bg: string;
+                    accentColor: string;
+                    elevated: boolean; // 殿上以上は強調
+                  };
+                  const sections: Section[] = [
+                    {
+                      label: '公卿', desc: '三位以上の最高位', tiers: [10, 9, 8, 7],
+                      bg: 'color-mix(in srgb, var(--rw-primary) 12%, var(--rw-paper))',
+                      accentColor: 'var(--rw-primary)',
+                      elevated: true,
+                    },
+                    {
+                      label: '殿上人', desc: '清涼殿に上がれる', tiers: [6, 5, 4],
+                      bg: 'color-mix(in srgb, var(--rw-accent) 14%, var(--rw-paper))',
+                      accentColor: 'var(--rw-accent)',
+                      elevated: true,
+                    },
+                    {
+                      label: '地下', desc: '殿上に上がれない下位', tiers: [3, 2, 1],
+                      bg: 'transparent',
+                      accentColor: 'var(--rw-ink-soft)',
+                      elevated: false,
+                    },
+                    {
+                      label: '未着手', desc: '未挑戦', tiers: [0],
+                      bg: 'transparent',
+                      accentColor: 'var(--rw-ink-soft)',
+                      elevated: false,
+                    },
+                  ];
+                  return sections.map((sec, secIdx) => {
+                    const sumCount = sec.tiers.reduce((s, t) => s + tierDistribution[t], 0);
+                    const isJigeBoundary = sec.label === '地下'; // 殿上人と地下の間で太い区切り
+                    return (
+                      <div
+                        key={sec.label}
+                        className={`rounded-xl px-2 py-2 ${secIdx > 0 ? 'mt-1.5' : ''} ${
+                          isJigeBoundary ? 'border-t-[3px] border-rw-ink/15 pt-3 mt-2' : ''
+                        }`}
+                        style={{ background: sec.bg }}
+                      >
+                        <div className="flex items-baseline justify-between mb-1.5 px-1">
+                          <div className="flex items-baseline gap-2">
+                            <span
+                              className="text-sm font-black tracking-wider"
+                              style={{ color: sec.accentColor }}
+                            >
+                              {sec.label}
+                            </span>
+                            <span className="text-[10px] text-rw-ink-soft font-bold">
+                              {sec.desc}
+                            </span>
+                          </div>
+                          <span
+                            className="text-xs font-black"
+                            style={{ color: sec.accentColor }}
+                          >
+                            {sumCount}<span className="text-[10px] text-rw-ink-soft ml-0.5">語</span>
+                          </span>
+                        </div>
+                        <div className="space-y-0.5">
+                          {sec.tiers.map((tier) => {
+                            const count = tierDistribution[tier];
+                            const pct = total > 0 ? (count / total) * 100 : 0;
+                            const badge = tierBadge(tier);
+                            const qids = tierQids[tier];
+                            const tappable = count > 0 && qids.length > 0;
+                            // 殿上以上は文字 / バー大きめ、地下は controlled smaller
+                            const fontWeight = sec.elevated ? 'text-[13px]' : 'text-xs';
+                            const barH = sec.elevated ? 'h-2.5' : 'h-1.5';
+                            const rowInner = (
+                              <div className={`flex items-center gap-2 py-0.5 ${sec.elevated ? '' : 'opacity-80'}`}>
+                                <span className="text-[10px] font-mono text-rw-ink-soft w-7 shrink-0">★{tier}</span>
+                                <span className={`${fontWeight} font-bold w-16 shrink-0`} style={{ color: badge.fg }}>
+                                  {TIER_LABELS[tier]}
+                                </span>
+                                <div className={`flex-1 ${barH} rounded-full bg-rw-rule/40 overflow-hidden`}>
+                                  <div className="h-full rounded-full transition-all"
+                                       style={{ width: `${Math.max(pct, count > 0 ? 1.5 : 0)}%`, background: badge.fg }} />
+                                </div>
+                                <span className={`${fontWeight} font-black text-rw-ink w-10 text-right shrink-0`}>
+                                  {count}
+                                </span>
+                                <span className="text-[10px] text-rw-ink-soft w-4 shrink-0 text-right">
+                                  {tappable ? '▶' : ''}
+                                </span>
+                              </div>
+                            );
+                            return tappable ? (
+                              <Link
+                                key={tier}
+                                to={`/?qid=${encodeURIComponent(qids.join(','))}`}
+                                className="block px-1 -mx-1 rounded hover:bg-rw-paper active:scale-[0.99] transition no-underline"
+                                title={`★${tier} ${TIER_LABELS[tier]} の ${count} 語をクイズに出題`}
+                              >
+                                {rowInner}
+                              </Link>
+                            ) : (
+                              <div key={tier}>{rowInner}</div>
+                            );
+                          })}
+                        </div>
                       </div>
-                      <span className="text-xs font-black text-rw-ink w-10 text-right shrink-0">
-                        {count}
-                      </span>
-                      <span className="text-[10px] text-rw-ink-soft w-4 shrink-0 text-right">
-                        {tappable ? '▶' : ''}
-                      </span>
-                    </div>
-                  );
-                  return (
-                    <div key={tier}>
-                      {tierBefore && <div className="border-t border-rw-rule/50 my-1" />}
-                      {tappable ? (
-                        <Link
-                          to={`/?qid=${encodeURIComponent(qids.join(','))}`}
-                          className="block px-1 -mx-1 rounded hover:bg-rw-primary-soft active:scale-[0.99] transition no-underline"
-                          title={`★${tier} ${TIER_LABELS[tier]} の ${count} 語をクイズに出題`}
-                        >
-                          {rowInner}
-                        </Link>
-                      ) : (
-                        rowInner
-                      )}
-                    </div>
-                  );
-                })}
-                <div className="flex justify-between text-[9px] text-rw-ink-soft mt-2 pt-2 border-t border-rw-rule/40">
-                  <span>地下: {tierDistribution[1] + tierDistribution[2] + tierDistribution[3]}</span>
-                  <span>殿上: {tierDistribution[4] + tierDistribution[5] + tierDistribution[6]}</span>
-                  <span>公卿: {tierDistribution[7] + tierDistribution[8] + tierDistribution[9] + tierDistribution[10]}</span>
-                </div>
+                    );
+                  });
+                })()}
               </div>
             </section>
 
