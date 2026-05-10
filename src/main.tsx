@@ -9,12 +9,15 @@ import PWAInstallBanner from './components/PWAInstallBanner.tsx'
 import PullToRefresh from './components/PullToRefresh.tsx'
 import { ensureAnonSession } from './lib/anonAuth.ts'
 import { applyUnlockFromUrl } from './lib/fullAccess.ts'
+import { applyCohortFromUrl } from './lib/cohort.ts'
 import { ReiwaThemeProvider } from './theme/ThemeContext'
 import './index.css'
 
 // `?unlock=<合言葉>` を消費して localStorage フラグに変換する。
 // React マウント前に処理して、ページ初描画から反映させる。
 applyUnlockFromUrl()
+// `?cohort=<コホート名>` を消費して localStorage に保存。学年・学校別教材セットの選択。
+applyCohortFromUrl()
 
 // 読解 v3 と、単語アプリから動線が遠いページは遅延ロード
 const HomeV3 = lazy(() => import('./pages/HomeV3.tsx'))

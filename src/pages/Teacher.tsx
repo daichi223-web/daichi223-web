@@ -758,12 +758,20 @@ function TextsManageView() {
   const [showOnly, setShowOnly] = useState<"all" | "published" | "unpublished">("all");
   const [genreFilter, setGenreFilter] = useState<string>("");
   const [eraFilter, setEraFilter] = useState<string>("");
+  // 編集対象の cohort (学年・学校・クラス別教材セット)
+  const [cohort, setCohort] = useState<string>("default");
+  // すでに使われている cohort 一覧 (DB から取得した distinct)
+  const [cohortOptions, setCohortOptions] = useState<string[]>(["default"]);
 
   useEffect(() => {
     setIndex(bundledTextsIndex as TextEntry[]);
+  }, []);
+
+  // cohort が変わるたびに publishedMap を再ロード
+  useEffect(() => {
     (async () => {
       try {
-        const pubs = await callAPI("/api/textPublications");
+        const pubs = await callAPI(`/api/textPublications?cohort=${encodeURIComponent(cohort)}`);
         const m: Record<string, boolean> = {};
         for (const row of pubs.rows || []) {
           m[row.slug] = !!row.published;
@@ -771,6 +779,22 @@ function TextsManageView() {
         setPublishedMap(m);
       } catch (e) {
         console.error(e);
+      }
+    })();
+  }, [cohort]);
+
+  // 起動時に cohort 一覧を取得 (全 row から distinct cohort)
+  useEffect(() => {
+    (async () => {
+      try {
+        const pubs = await callAPI("/api/textPublications");
+        const set = new Set<string>(["default"]);
+        for (const row of pubs.rows || []) {
+          if (row.cohort) set.add(row.cohort);
+        }
+        setCohortOptions(Array.from(set).sort());
+      } catch {
+        /* noop */
       }
     })();
   }, []);
@@ -782,6 +806,7 @@ function TextsManageView() {
         slug: t.slug,
         published: nextPublished,
         title: t.title,
+        cohort,
       });
       setPublishedMap((m) => ({ ...m, [t.slug]: nextPublished }));
     } catch (e: any) {
@@ -792,7 +817,7 @@ function TextsManageView() {
   };
 
   const bulkSet = async (filterFn: (t: TextEntry) => boolean, publish: boolean) => {
-    if (!confirm(`対象 ${index.filter(filterFn).length} 件を${publish ? "公開" : "非公開"}にします`)) return;
+    if (!confirm(`対象 ${index.filter(filterFn).length} 件を cohort=${cohort} に${publish ? "公開" : "非公開"}にします`)) return;
     for (const t of index.filter(filterFn)) {
       setBusy(t.slug);
       try {
@@ -800,17 +825,29 @@ function TextsManageView() {
           slug: t.slug,
           published: publish,
           title: t.title,
+          cohort,
         });
       } catch (e: any) {
         console.warn(`${t.slug}: ${e.message}`);
       }
     }
     // Refresh
-    const pubs = await callAPI("/api/textPublications");
+    const pubs = await callAPI(`/api/textPublications?cohort=${encodeURIComponent(cohort)}`);
     const m: Record<string, boolean> = {};
     for (const row of pubs.rows || []) m[row.slug] = !!row.published;
     setPublishedMap(m);
     setBusy(null);
+  };
+
+  const onAddCohort = () => {
+    const name = window.prompt('新しい cohort 名 (例: 2A-2026, 高1甲府, kobun-pilot)');
+    if (!name) return;
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    if (!cohortOptions.includes(trimmed)) {
+      setCohortOptions((arr) => Array.from(new Set([...arr, trimmed])).sort());
+    }
+    setCohort(trimmed);
   };
 
   const filtered = index.filter((t) => {
@@ -845,8 +882,35 @@ function TextsManageView() {
       <div className="bg-white rounded-lg shadow p-4">
         <h3 className="font-bold text-slate-800 mb-2">📚 教材公開管理</h3>
         <p className="text-sm text-slate-600 mb-3">
-          デフォルトは<strong>非公開</strong>。公開したい教材のみ ON にすると生徒画面に表示されます。
+          デフォルトは<strong>非公開</strong>。公開したい教材のみ ON にすると、
+          選択中の cohort の生徒に表示されます。
+          <br />
+          生徒側は URL に <code className="bg-slate-100 px-1 rounded">?cohort=&lt;名前&gt;</code> を踏めば
+          そのコホートの公開セットを見られます。<code>default</code> は全員共通公開。
         </p>
+        {/* cohort セレクタ */}
+        <div className="flex flex-wrap items-center gap-2 mb-3 p-3 bg-indigo-50 rounded border border-indigo-200">
+          <span className="text-sm font-bold text-indigo-900">編集中の cohort:</span>
+          <select
+            value={cohort}
+            onChange={(e) => setCohort(e.target.value)}
+            className="px-2 py-1 border rounded text-sm font-mono"
+          >
+            {cohortOptions.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={onAddCohort}
+            className="text-xs px-2 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+          >
+            ＋ 新規 cohort
+          </button>
+          <span className="text-xs text-indigo-700 ml-auto">
+            生徒の URL: <code className="bg-white px-1 rounded">/?cohort={cohort}</code>
+          </span>
+        </div>
         <div className="grid grid-cols-3 gap-3 mb-3">
           <div className="bg-blue-50 rounded p-3">
             <div className="text-2xl font-bold text-blue-700">{index.length}</div>

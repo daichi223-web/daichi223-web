@@ -95,34 +95,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { actor } = await requireStaff(req);
 
     if (req.method === "GET") {
-      const { data, error } = await supabaseAdmin
+      // ?cohort=2A-2026 で絞り込み。指定なしは全 cohort 返却 (UI で振り分ける)。
+      const cohortFilter = typeof req.query.cohort === "string" ? req.query.cohort : null;
+      let q = supabaseAdmin
         .from("text_publications")
-        .select("slug, published, title, note, updated_at, updated_by")
+        .select("slug, cohort, published, title, note, updated_at, updated_by")
         .order("updated_at", { ascending: false });
+      if (cohortFilter) q = q.eq("cohort", cohortFilter);
+      const { data, error } = await q;
       if (error) throw error;
       return res.json({ rows: data ?? [] });
     }
 
     if (req.method === "POST") {
-      const { slug, published, title, note } = req.body as {
+      const { slug, published, title, note, cohort } = req.body as {
         slug: string;
         published: boolean;
         title?: string;
         note?: string;
+        cohort?: string;
       };
       if (!slug || typeof published !== "boolean") {
         return res.status(400).json({ error: "slug and published required" });
       }
+      const cohortName = (cohort && cohort.trim()) || "default";
       const { error } = await supabaseAdmin.from("text_publications").upsert(
         {
           slug,
+          cohort: cohortName,
           published,
           title: title || null,
           note: note || null,
           updated_by: actor,
           updated_at: new Date().toISOString(),
         },
-        { onConflict: "slug" }
+        { onConflict: "slug,cohort" }
       );
       if (error) throw error;
       return res.json({ ok: true });
