@@ -353,18 +353,22 @@ export default function StatsPage() {
   const totalMastered = blueprintMetrics.totalMastered;
   const fieldMastery = blueprintMetrics.fieldMastery;
 
-  // 段位別 単語数 (★0-10 のヒストグラム。「Key & Point 古文単語330」5章のみ集計)
-  const tierDistribution = useMemo(() => {
+  // 段位別 単語数 (★0-10 のヒストグラム) と段位別 qid リスト (タップ→クイズ用)
+  const tierBuckets = useMemo(() => {
     const counts = new Array(11).fill(0) as number[];
+    const qidsByTier: string[][] = Array.from({ length: 11 }, () => []);
     for (const g of allGroups) {
       const ch = chapterFor(g);
       if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
       const tier = computeTier(groupAgg[g]);
       counts[tier] += 1;
+      for (const qid of groupAgg[g].qids) qidsByTier[tier].push(qid);
     }
-    return counts;
+    return { counts, qidsByTier };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupAgg, allGroups, quizTypeStats, srsBoxByQid]);
+  const tierDistribution = tierBuckets.counts;
+  const tierQids = tierBuckets.qidsByTier;
 
   // 全体ハイブリッドスコア (桜・銀杏用)
   // よく練習した単語 Top 20
@@ -717,22 +721,40 @@ export default function StatsPage() {
                   const badge = tierBadge(tier);
                   // 大階層の境界に薄い区切りを入れる
                   const tierBefore = tier === 6 || tier === 3 || tier === 0;
+                  const qids = tierQids[tier];
+                  const tappable = count > 0 && qids.length > 0;
+                  const rowInner = (
+                    <div className="flex items-center gap-2 py-0.5">
+                      <span className="text-[10px] font-mono text-rw-ink-soft w-7 shrink-0">★{tier}</span>
+                      <span className="text-xs font-bold w-16 shrink-0" style={{ color: badge.fg }}>
+                        {TIER_LABELS[tier]}
+                      </span>
+                      <div className="flex-1 h-2 rounded-full bg-rw-rule/40 overflow-hidden">
+                        <div className="h-full rounded-full transition-all"
+                             style={{ width: `${Math.max(pct, count > 0 ? 1.5 : 0)}%`, background: badge.fg }} />
+                      </div>
+                      <span className="text-xs font-black text-rw-ink w-10 text-right shrink-0">
+                        {count}
+                      </span>
+                      <span className="text-[10px] text-rw-ink-soft w-4 shrink-0 text-right">
+                        {tappable ? '▶' : ''}
+                      </span>
+                    </div>
+                  );
                   return (
                     <div key={tier}>
                       {tierBefore && <div className="border-t border-rw-rule/50 my-1" />}
-                      <div className="flex items-center gap-2 py-0.5">
-                        <span className="text-[10px] font-mono text-rw-ink-soft w-7 shrink-0">★{tier}</span>
-                        <span className="text-xs font-bold w-16 shrink-0" style={{ color: badge.fg }}>
-                          {TIER_LABELS[tier]}
-                        </span>
-                        <div className="flex-1 h-2 rounded-full bg-rw-rule/40 overflow-hidden">
-                          <div className="h-full rounded-full transition-all"
-                               style={{ width: `${Math.max(pct, count > 0 ? 1.5 : 0)}%`, background: badge.fg }} />
-                        </div>
-                        <span className="text-xs font-black text-rw-ink w-10 text-right shrink-0">
-                          {count}
-                        </span>
-                      </div>
+                      {tappable ? (
+                        <Link
+                          to={`/?qid=${encodeURIComponent(qids.join(','))}`}
+                          className="block px-1 -mx-1 rounded hover:bg-rw-primary-soft active:scale-[0.99] transition no-underline"
+                          title={`★${tier} ${TIER_LABELS[tier]} の ${count} 語をクイズに出題`}
+                        >
+                          {rowInner}
+                        </Link>
+                      ) : (
+                        rowInner
+                      )}
                     </div>
                   );
                 })}
