@@ -557,6 +557,12 @@ export default function StatsPage() {
                 value={`${overall.uniqueWords}語`}
                 bg="var(--rw-primary-soft)"
                 fg="var(--rw-primary)"
+                to={
+                  overall.uniqueWords > 0
+                    ? `/?qid=${encodeURIComponent(Object.keys(stats).join(','))}`
+                    : undefined
+                }
+                hint={overall.uniqueWords > 0 ? 'タップで復習クイズ' : undefined}
               />
               <SummaryCard
                 label="マスター数"
@@ -817,9 +823,11 @@ export default function StatsPage() {
                     const tier = computeTier(row);
                     const badge = tierBadge(tier);
                     return (
-                      <div
+                      <Link
                         key={row.group}
-                        className="bg-rw-paper border border-rw-rule rounded-xl px-3 py-2.5 flex items-center gap-3"
+                        to={`/?qid=${encodeURIComponent(row.qids.join(','))}`}
+                        className="bg-rw-paper border border-rw-rule rounded-xl px-3 py-2.5 flex items-center gap-3 no-underline text-rw-ink hover:bg-rw-primary-soft active:scale-[0.99] transition cursor-pointer"
+                        title={`「${row.lemma}」のクイズへ`}
                       >
                         <div className="flex-1 min-w-0">
                           <div className="font-bold text-rw-ink truncate text-sm flex items-center gap-1.5">
@@ -842,15 +850,14 @@ export default function StatsPage() {
                           </div>
                           <div className="text-[9px] text-rw-ink-soft font-bold">回</div>
                         </div>
-                        <Link
-                          to={`/?qid=${encodeURIComponent(row.qids.join(','))}`}
-                          className="text-[10px] font-black rounded-full px-2 py-1 shrink-0 no-underline"
+                        <span
+                          className="text-[10px] font-black rounded-full px-2 py-1 shrink-0"
                           style={{ background: 'var(--rw-ink)', color: 'var(--rw-paper)' }}
-                          title={`「${row.lemma}」だけ復習`}
+                          aria-hidden="true"
                         >
                           🔁
-                        </Link>
-                      </div>
+                        </span>
+                      </Link>
                     );
                   })}
                 </div>
@@ -882,26 +889,40 @@ function SummaryCard({
   bg,
   fg,
   hintTone,
+  to,
+  hint,
 }: {
   label: string;
   value: string;
   bg: string;
   fg: string;
   hintTone?: number;
+  to?: string;     // 指定すると Link 化してクイズ等へ遷移可能に
+  hint?: string;   // 右下に小さく「タップで…」表示
 }) {
-  return (
-    <div
-      className="rounded-2xl p-4 border border-rw-rule"
-      style={{ background: bg, opacity: hintTone ?? 1 }}
-    >
+  const inner = (
+    <>
       <div className="text-[10px] tracking-wider font-bold uppercase text-rw-ink-soft">
         {label}
       </div>
       <div className="text-3xl font-black mt-1" style={{ color: fg }}>
         {value}
       </div>
-    </div>
+      {hint && (
+        <div className="text-[10px] text-rw-ink-soft mt-1 font-bold">{hint} ▶</div>
+      )}
+    </>
   );
+  const baseClass = 'rounded-2xl p-4 border border-rw-rule block';
+  const style = { background: bg, opacity: hintTone ?? 1 };
+  if (to) {
+    return (
+      <Link to={to} className={baseClass + ' no-underline hover:brightness-95 active:scale-[0.98] transition cursor-pointer'} style={{ ...style, color: fg }}>
+        {inner}
+      </Link>
+    );
+  }
+  return <div className={baseClass} style={style}>{inner}</div>;
 }
 
 function ThemeButton({
