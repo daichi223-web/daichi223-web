@@ -750,6 +750,73 @@ type TextEntry = {
   author?: string;
 };
 
+function CohortUrlList({ cohorts }: { cohorts: string[] }) {
+  const [copied, setCopied] = useState<string | null>(null);
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+
+  const buildUrl = (c: string) =>
+    c === 'default' ? `${origin}/` : `${origin}/?cohort=${encodeURIComponent(c)}`;
+
+  const onCopy = async (c: string) => {
+    const url = buildUrl(c);
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(c);
+      setTimeout(() => setCopied(null), 1500);
+    } catch {
+      // clipboard 利用不可 (HTTPS でない / 旧ブラウザ) → fallback
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      setCopied(c);
+      setTimeout(() => setCopied(null), 1500);
+    }
+  };
+
+  return (
+    <div className="mb-3 p-3 bg-slate-50 rounded border border-slate-200">
+      <div className="text-sm font-bold text-slate-800 mb-2">
+        🔗 生徒に配る URL ({cohorts.length} 件)
+      </div>
+      <div className="space-y-1.5">
+        {cohorts.map((c) => {
+          const url = buildUrl(c);
+          const isCopied = copied === c;
+          return (
+            <div
+              key={c}
+              className="flex items-center gap-2 bg-white border border-slate-200 rounded px-2 py-1.5"
+            >
+              <span className="text-xs font-mono font-bold text-indigo-700 w-24 truncate shrink-0">
+                {c}
+              </span>
+              <code className="text-xs text-slate-700 flex-1 truncate">{url}</code>
+              <button
+                type="button"
+                onClick={() => onCopy(c)}
+                className={`text-xs px-2 py-1 rounded shrink-0 transition-colors ${
+                  isCopied
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+              >
+                {isCopied ? '✓ コピーしました' : '📋 コピー'}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+      <div className="text-[11px] text-slate-500 mt-2">
+        生徒がこの URL を踏むとブラウザに cohort 情報が保存され、以後はその cohort の公開教材だけが見えます。
+        <code className="bg-white px-1 rounded">default</code> は全員共通の URL。
+      </div>
+    </div>
+  );
+}
+
 function TextsManageView() {
   const [index, setIndex] = useState<TextEntry[]>([]);
   const [publishedMap, setPublishedMap] = useState<Record<string, boolean>>({});
@@ -888,7 +955,7 @@ function TextsManageView() {
           生徒側は URL に <code className="bg-slate-100 px-1 rounded">?cohort=&lt;名前&gt;</code> を踏めば
           そのコホートの公開セットを見られます。<code>default</code> は全員共通公開。
         </p>
-        {/* cohort セレクタ */}
+        {/* cohort セレクタ + 編集対象切替 */}
         <div className="flex flex-wrap items-center gap-2 mb-3 p-3 bg-indigo-50 rounded border border-indigo-200">
           <span className="text-sm font-bold text-indigo-900">編集中の cohort:</span>
           <select
@@ -907,10 +974,10 @@ function TextsManageView() {
           >
             ＋ 新規 cohort
           </button>
-          <span className="text-xs text-indigo-700 ml-auto">
-            生徒の URL: <code className="bg-white px-1 rounded">/?cohort={cohort}</code>
-          </span>
         </div>
+
+        {/* 全 cohort の生徒 URL コピー一覧 */}
+        <CohortUrlList cohorts={cohortOptions} />
         <div className="grid grid-cols-3 gap-3 mb-3">
           <div className="bg-blue-50 rounded p-3">
             <div className="text-2xl font-bold text-blue-700">{index.length}</div>
