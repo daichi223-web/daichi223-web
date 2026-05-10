@@ -12,7 +12,7 @@ import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
 import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
-import BlueprintHome, { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS, TIER_LABELS } from '@/components/BlueprintHome';
+import BlueprintHome, { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS, TIER_LABELS, TIER_KAII } from '@/components/BlueprintHome';
 import BackupSection from '@/components/BackupSection';
 import { chapterFor } from '@/utils/chapters';
 
@@ -229,10 +229,10 @@ export default function StatsPage() {
   }, [groupAgg, allGroups]);
 
   // 設計図 (BlueprintHome) 用: 「Key & Point 古文単語330」5 章 (#1-330) のみ集計。
-  // 11 段階マスタリ (古文貴族階級・3 大階層):
+  // 13 段階マスタリ (古文常識・代表官職を位階順に。3 大階層):
   //   地下:  ★0 無位 / ★1 雑色 / ★2 舎人 / ★3 衛士
-  //   殿上:  ★4 蔵人 / ★5 侍従 / ★6 弁官
-  //   公卿:  ★7 参議 / ★8 中納言 / ★9 大納言 / ★10 太政大臣 (= マスター)
+  //   殿上:  ★4 蔵人 / ★5 受領 / ★6 弁官 / ★7 中将 / ★8 頭中将
+  //   公卿:  ★9 参議 / ★10 大将 / ★11 大納言 / ★12 大臣 (= マスター)
   // 詳細条件は computeTier() を参照。
   // ※ Box 5 = 14日後復習を突破 = 時間を空けて5連続正解の代理。
   // ※ 多義語が無い単語は多義条件を自動クリア扱い。
@@ -259,39 +259,46 @@ export default function StatsPage() {
       const b = srsBoxByQid.get(qid);
       if (b != null && b > maxBox) maxBox = b;
     }
-    // 公卿 (★7-10)
+    // 公卿 (★9-12)
     if (
-      total >= 75 && acc >= 0.95
+      total >= 85 && acc >= 0.95
       && (!isPolysemous || polysemyCorrect >= 5)
       && writingCorrect >= 7
       && maxBox >= 5
-    ) return 10; // 太政大臣
+    ) return 12; // 大臣 (= マスター)
+    if (
+      total >= 65 && acc >= 0.9
+      && (!isPolysemous || polysemyCorrect >= 3)
+      && writingCorrect >= 4
+      && maxBox >= 5
+    ) return 11; // 大納言
     if (
       total >= 50 && acc >= 0.9
-      && (!isPolysemous || polysemyCorrect >= 3)
-      && writingCorrect >= 5
-      && maxBox >= 5
-    ) return 9; // 大納言
-    if (
-      total >= 40 && acc >= 0.9
       && (!isPolysemous || polysemyCorrect >= 2)
       && writingCorrect >= 3
       && maxBox >= 4
-    ) return 8; // 中納言
+    ) return 10; // 大将
     if (
-      total >= 30 && acc >= 0.85
+      total >= 40 && acc >= 0.85
       && (!isPolysemous || polysemyCorrect >= 2)
       && writingCorrect >= 2
       && maxBox >= 3
-    ) return 7; // 参議
-    // 殿上人 (★4-6)
+    ) return 9; // 参議
+    // 殿上人 (★4-8)
     if (
-      total >= 20 && acc >= 0.85
+      total >= 32 && acc >= 0.85
+      && (!isPolysemous || polysemyCorrect >= 1)
+      && writingCorrect >= 2
+      && maxBox >= 3
+    ) return 8; // 頭中将
+    if (
+      total >= 25 && acc >= 0.85
       && (!isPolysemous || polysemyCorrect >= 1)
       && writingCorrect >= 1
       && maxBox >= 3
-    ) return 6; // 弁官
-    if (total >= 15 && acc >= 0.8 && (polysemyCorrect >= 1 || writingCorrect >= 1)) return 5; // 侍従
+    ) return 7; // 中将
+    if (total >= 20 && acc >= 0.8 && (polysemyCorrect >= 1 || writingCorrect >= 1)) return 6; // 弁官
+    if (total >= 15 && acc >= 0.8) return 5; // 受領
     if (total >= 10 && acc >= 0.75) return 4; // 蔵人
     // 地下 (★1-3)
     if (total >= 5 && acc >= 0.7) return 3; // 衛士
@@ -323,10 +330,10 @@ export default function StatsPage() {
       a.tierSum += tier;
       if (tier >= 1) totalLearned += 1;
       if (tier >= 1 && tier <= 3) a.jige += 1;
-      else if (tier >= 4 && tier <= 6) a.tenjou += 1;
-      else if (tier >= 7 && tier <= 10) a.kugyou += 1; // ★7-10 が公卿
-      if (tier === 10) {
-        a.master += 1; // 「真のマスター」= 太政大臣
+      else if (tier >= 4 && tier <= 8) a.tenjou += 1;       // 殿上人: ★4-8
+      else if (tier >= 9 && tier <= 12) a.kugyou += 1;       // 公卿: ★9-12
+      if (tier === 12) {
+        a.master += 1; // 「真のマスター」= 大臣 (おとど)
         totalMastered += 1;
       }
     }
@@ -341,8 +348,8 @@ export default function StatsPage() {
         kugyouCount: a.kugyou,
         masterCount: a.master,
         masteredPct: pct(a.master, a.total),
-        // tier 範囲は 0..10 (11 段階)。avgTier / 10 で 0..1 正規化して 100 倍
-        avgTierPct: a.total > 0 ? Math.round((a.tierSum / (a.total * 10)) * 100) : 0,
+        // tier 範囲は 0..12 (13 段階)。avgTier / 12 で 0..1 正規化して 100 倍
+        avgTierPct: a.total > 0 ? Math.round((a.tierSum / (a.total * 12)) * 100) : 0,
       };
     }
     return { totalLearned, totalMastered, fieldMastery };
@@ -353,10 +360,10 @@ export default function StatsPage() {
   const totalMastered = blueprintMetrics.totalMastered;
   const fieldMastery = blueprintMetrics.fieldMastery;
 
-  // 段位別 単語数 (★0-10 のヒストグラム) と段位別 qid リスト (タップ→クイズ用)
+  // 段位別 単語数 (★0-12 のヒストグラム) と段位別 qid リスト (タップ→クイズ用)
   const tierBuckets = useMemo(() => {
-    const counts = new Array(11).fill(0) as number[];
-    const qidsByTier: string[][] = Array.from({ length: 11 }, () => []);
+    const counts = new Array(13).fill(0) as number[];
+    const qidsByTier: string[][] = Array.from({ length: 13 }, () => []);
     for (const g of allGroups) {
       const ch = chapterFor(g);
       if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
@@ -726,13 +733,13 @@ export default function StatsPage() {
                   };
                   const sections: Section[] = [
                     {
-                      label: '公卿', desc: '三位以上の最高位', tiers: [10, 9, 8, 7],
+                      label: '公卿', desc: '三位以上の最高位', tiers: [12, 11, 10, 9],
                       bg: 'color-mix(in srgb, var(--rw-primary) 12%, var(--rw-paper))',
                       accentColor: 'var(--rw-primary)',
                       elevated: true,
                     },
                     {
-                      label: '殿上人', desc: '清涼殿に上がれる', tiers: [6, 5, 4],
+                      label: '殿上人', desc: '清涼殿に上がれる', tiers: [8, 7, 6, 5, 4],
                       bg: 'color-mix(in srgb, var(--rw-accent) 14%, var(--rw-paper))',
                       accentColor: 'var(--rw-accent)',
                       elevated: true,
@@ -793,8 +800,11 @@ export default function StatsPage() {
                             const rowInner = (
                               <div className={`flex items-center gap-2 py-0.5 ${sec.elevated ? '' : 'opacity-80'}`}>
                                 <span className="text-[10px] font-mono text-rw-ink-soft w-7 shrink-0">★{tier}</span>
-                                <span className={`${fontWeight} font-bold w-16 shrink-0`} style={{ color: badge.fg }}>
+                                <span className={`${fontWeight} font-bold w-14 shrink-0`} style={{ color: badge.fg }}>
                                   {TIER_LABELS[tier]}
+                                </span>
+                                <span className="text-[9px] text-rw-ink-soft font-mono w-16 shrink-0 truncate">
+                                  {TIER_KAII[tier]}
                                 </span>
                                 <div className={`flex-1 ${barH} rounded-full bg-rw-rule/40 overflow-hidden`}>
                                   <div className="h-full rounded-full transition-all"
