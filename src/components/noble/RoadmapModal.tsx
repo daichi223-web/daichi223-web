@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { STAGES, ROBE_LV } from '@/lib/nobleData';
+import { STAGES, robeColorOf } from '@/lib/nobleData';
 
 // 出世絵巻 — 21 階全図。現在の階位にスクロール、過去はくすませて表示。
 type Props = {
@@ -128,19 +128,31 @@ export default function RoadmapModal({ currentN, onClose }: Props) {
                     {s.apex && <span className="text-[9px]">👑</span>}
                   </div>
                   <div className="text-[11px] text-rw-ink-soft tracking-wide mt-0.5">{s.post}</div>
-                  <div className="flex gap-2 mt-1.5 text-[9px] text-rw-ink-soft tracking-wide">
-                    <span>頭 <b className="text-rw-ink">{s.head}</b>/7</span>
-                    <span>袍 <b className="text-rw-ink">{s.robe}</b>/9</span>
-                    <span>裾 <b className="text-rw-ink">{s.train}</b>/5</span>
-                    <span>持 <b className="text-rw-ink">{s.item}</b>/5</span>
-                    <span>帯 <b className="text-rw-ink">{s.belt}</b>/5</span>
+                  <div className="mt-1 text-[9px] text-rw-ink-soft leading-tight">
+                    <span className="text-rw-ink font-bold">{s.display.head}</span>
+                    <span className="mx-1">・</span>
+                    <span className="text-rw-ink font-bold">{s.display.robe}</span>
+                    <span className="mx-1">・</span>
+                    {s.display.train !== 'なし' && (
+                      <>
+                        <span>裾{s.display.train}</span>
+                        <span className="mx-1">・</span>
+                      </>
+                    )}
+                    <span>{s.display.item}</span>
+                    {s.display.belt !== 'なし' && (
+                      <>
+                        <span className="mx-1">・</span>
+                        <span>{s.display.belt}</span>
+                      </>
+                    )}
                   </div>
                 </div>
 
                 {/* 袍の色サンプル */}
                 <div
                   className="w-2 self-stretch rounded-sm"
-                  style={{ background: ROBE_LV[s.robe - 1].color }}
+                  style={{ background: robeColorOf(s.display.robe) }}
                 />
               </div>
             );

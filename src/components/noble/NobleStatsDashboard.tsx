@@ -3,11 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   type PartLevels,
   type PartKey,
-  HEAD_LV,
-  ROBE_LV,
-  TRAIN_LV,
-  ITEM_LV,
-  BELT_LV,
   GENRES,
   PORTRAITS,
   PART_CHARTS,
@@ -17,6 +12,7 @@ import {
   effectiveStage,
   nextStage,
   portraitForStage,
+  robeColorOf,
   TIER_TONE,
 } from '@/lib/nobleData';
 import { recordPromotion } from '@/lib/promotionHistory';
@@ -240,8 +236,8 @@ export default function NobleStatsDashboard({ parts }: Props) {
           {(['head', 'robe', 'train', 'item', 'belt'] as PartKey[]).map((k) => {
             const lv = parts[k];
             const cap = PART_MAX_LV[k];
-            const name = partName(k, lv);
-            const accent = k === 'robe' ? ROBE_LV[lv - 1].color : 'var(--rw-ink-soft)';
+            const name = stage.display[k];
+            const accent = k === 'robe' ? robeColorOf(name) : 'var(--rw-ink-soft)';
             return (
               <div
                 key={k}
@@ -377,16 +373,6 @@ export default function NobleStatsDashboard({ parts }: Props) {
       {showHistory && <HistoryDrawer onClose={() => setShowHistory(false)} />}
     </div>
   );
-}
-
-function partName(k: PartKey, lv: number): string {
-  switch (k) {
-    case 'head':  return HEAD_LV[lv - 1].name;
-    case 'robe':  return ROBE_LV[lv - 1].name;
-    case 'train': return TRAIN_LV[lv - 1].name;
-    case 'item':  return ITEM_LV[lv - 1].name.split('+')[0];
-    case 'belt':  return BELT_LV[lv - 1].name.split('・')[0];
-  }
 }
 
 // ── 絵姿図鑑モーダル — 全8幅 ──

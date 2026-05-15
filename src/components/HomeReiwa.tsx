@@ -88,6 +88,16 @@ export default function HomeReiwa({
         </div>
       </div>
 
+      {/* 装束で見る学習の蓄積 — 学習履歴を貴族の出世階位で可視化。ホーム最上位に配置 */}
+      {!masteryLoading && (
+        <NobleHomeWidget
+          parts={partsFromFieldMastery(fieldMastery)}
+          streak={streak}
+          totalAnswered={totalAnswered}
+          masterCount={totalMastered}
+        />
+      )}
+
       {/* Today's Quest — SRS 期日到来があれば優先、なければ通常範囲 */}
       <button
         onClick={dueWordsCount > 0 ? onStartSrsReview : onStartQuiz}
@@ -171,16 +181,6 @@ export default function HomeReiwa({
         />
         <TileLinkInline href="/stats" label="学習履歴" emoji="📊" />
       </div>
-
-      {/* 装束で見る学習の蓄積 — 学習履歴を貴族の出世階位で可視化 */}
-      {!masteryLoading && (
-        <NobleHomeWidget
-          parts={partsFromFieldMastery(fieldMastery)}
-          streak={streak}
-          totalAnswered={totalAnswered}
-          masterCount={totalMastered}
-        />
-      )}
 
       {/* 気になってる単語 */}
       {vocab.length > 0 && (

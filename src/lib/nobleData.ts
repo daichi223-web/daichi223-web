@@ -7,60 +7,21 @@ export type Tier = '地下' | '殿上人' | '公卿' | '極位';
 
 export type PartLevels = Record<PartKey, number>;
 
-export type LvDef = { lv: number; name: string; desc: string };
-export type RobeDef = LvDef & { color: string };
-export type TrainDef = LvDef & { length: number };
-
-export const HEAD_LV: LvDef[] = [
-  { lv: 1, name: '髷', desc: '無位無冠の象徴' },
-  { lv: 2, name: '折烏帽子', desc: '柔らかく頭に沿う' },
-  { lv: 3, name: '立烏帽子', desc: '地下官人の標準' },
-  { lv: 4, name: '立烏帽子・紋付', desc: '上位の地下' },
-  { lv: 5, name: '冠(短纓)', desc: '殿上人デビュー' },
-  { lv: 6, name: '冠+垂纓', desc: '正式な殿上人' },
-  { lv: 7, name: '冠+垂纓・銀飾', desc: '公卿〜極位' },
-];
-
-export const ROBE_LV: RobeDef[] = [
-  { lv: 1, name: '白水干',     color: '#f3ecdc', desc: '麻の水干' },
-  { lv: 2, name: '浅縹',       color: '#a7c4d8', desc: 'うすはなだ・平絹' },
-  { lv: 3, name: '深縹',       color: '#3d5c80', desc: '濃い藍・平絹' },
-  { lv: 4, name: '浅緑',       color: '#a4b97a', desc: '浅緑・平絹' },
-  { lv: 5, name: '深緑(綾)',   color: '#4b6b3a', desc: '深緑・綾織' },
-  { lv: 6, name: '浅緋(綾)',   color: '#cf6a4e', desc: '明るい朱赤・綾' },
-  { lv: 7, name: '深緋(地紋)', color: '#9c2e2a', desc: '濃い茜・立涌文' },
-  { lv: 8, name: '浅紫(雲鶴)', color: '#8a6aa6', desc: '雲鶴文の地紋' },
-  { lv: 9, name: '深紫(鳳凰)', color: '#4a2a5c', desc: '雲鶴鳳凰・最高級' },
-];
-
-export const TRAIN_LV: TrainDef[] = [
-  { lv: 1, name: 'なし',   length: 0,   desc: '裾を引かない' },
-  { lv: 2, name: '短い裾', length: 0.4, desc: '3尺・地下の格' },
-  { lv: 3, name: '標準',   length: 0.7, desc: '4尺・殿上人' },
-  { lv: 4, name: '長い裾', length: 1.1, desc: '5〜6尺・参議格' },
-  { lv: 5, name: '最長',   length: 1.6, desc: '7〜8尺・大臣格' },
-];
-
-export const ITEM_LV: LvDef[] = [
-  { lv: 1, name: '巻紙の束',          desc: 'まだ官人ではない' },
-  { lv: 2, name: '木笏',              desc: '地下官人の標準' },
-  { lv: 3, name: '木笏+紙扇',         desc: '中堅の地下' },
-  { lv: 4, name: '象牙笏+檜扇',       desc: '殿上人の正装' },
-  { lv: 5, name: '象牙笏+蒔絵檜扇',   desc: '公卿の威信品' },
-];
-
-export const BELT_LV: LvDef[] = [
-  { lv: 1, name: '帯のみ',         desc: '水干の紐' },
-  { lv: 2, name: '平緒',           desc: '絹帯' },
-  { lv: 3, name: '細太刀・黒漆',   desc: '殿上人の佩刀' },
-  { lv: 4, name: '飾太刀・銀装',   desc: '四位〜従三位' },
-  { lv: 5, name: '儀仗太刀・金装', desc: '大臣・極位' },
-];
-
+// パーツ Lv の上限。partLevelFromPct() の正規化で使う。
+// (具体的な per-stage の見た目は各 STAGE.display を参照)
 export const PART_MAX_LV: PartLevels = { head: 7, robe: 9, train: 5, item: 5, belt: 5 };
 
 export const PART_LABEL: Record<PartKey, string> = {
   head: '頭', robe: '袍', train: '裾', item: '持物', belt: '帯',
+};
+
+// 21 階位ごとの各部位の正式名称 (表の通り)。Lv 番号は段位進行の math 用、display は表示用。
+export type StageDisplay = {
+  head: string;
+  robe: string;
+  train: string;
+  item: string;
+  belt: string;
 };
 
 export type Stage = {
@@ -73,33 +34,71 @@ export type Stage = {
   train: number;
   item: number;
   belt: number;
+  display: StageDisplay;
   milestone?: Tier; // 節目 (殿上人/公卿/極位デビュー)
   apex?: boolean;
 };
 
 export const STAGES: Stage[] = [
-  { n: 1,  rank: '無位',   post: '雑任',                head: 1, robe: 1, train: 1, item: 1, belt: 1, era: '地下' },
-  { n: 2,  rank: '八位',   post: '少録',                head: 2, robe: 2, train: 1, item: 1, belt: 1, era: '地下' },
-  { n: 3,  rank: '七位',   post: '大允',                head: 2, robe: 3, train: 1, item: 2, belt: 1, era: '地下' },
-  { n: 4,  rank: '従六下', post: '下国守',              head: 3, robe: 4, train: 2, item: 2, belt: 2, era: '地下' },
-  { n: 5,  rank: '従六上', post: '上国介',              head: 3, robe: 5, train: 2, item: 2, belt: 2, era: '地下' },
-  { n: 6,  rank: '正六下', post: '中国守',              head: 3, robe: 5, train: 2, item: 3, belt: 2, era: '地下' },
-  { n: 7,  rank: '正六上', post: '大国介・大丞',        head: 4, robe: 5, train: 2, item: 3, belt: 2, era: '地下' },
-  { n: 8,  rank: '従五下', post: '上国守・少納言',      head: 5, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人', milestone: '殿上人' },
-  { n: 9,  rank: '従五上', post: '大国守・侍従',        head: 5, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人' },
-  { n: 10, rank: '正五下', post: '少弁・近衛少将',      head: 6, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人' },
-  { n: 11, rank: '正五上', post: '中弁・大判事',        head: 6, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人' },
-  { n: 12, rank: '従四下', post: '八省輔・近衛中将',    head: 6, robe: 7, train: 4, item: 4, belt: 4, era: '殿上人' },
-  { n: 13, rank: '従四上', post: '京大夫・大宰大弐',    head: 6, robe: 7, train: 4, item: 4, belt: 4, era: '殿上人' },
-  { n: 14, rank: '正四下', post: '七省卿・参議',        head: 6, robe: 7, train: 4, item: 5, belt: 4, era: '殿上人' },
-  { n: 15, rank: '正四上', post: '中務卿・左右大弁',    head: 6, robe: 7, train: 4, item: 5, belt: 4, era: '殿上人' },
-  { n: 16, rank: '従三',   post: '中納言・大宰帥',      head: 7, robe: 8, train: 4, item: 5, belt: 4, era: '公卿', milestone: '公卿' },
-  { n: 17, rank: '正三',   post: '大納言',              head: 7, robe: 8, train: 5, item: 5, belt: 5, era: '公卿' },
-  { n: 18, rank: '従二',   post: '内大臣',              head: 7, robe: 8, train: 5, item: 5, belt: 5, era: '公卿' },
-  { n: 19, rank: '正二',   post: '左大臣・右大臣',      head: 7, robe: 8, train: 5, item: 5, belt: 5, era: '公卿' },
-  { n: 20, rank: '従一',   post: '摂政・関白',          head: 7, robe: 9, train: 5, item: 5, belt: 5, era: '公卿' },
-  { n: 21, rank: '正一',   post: '太政大臣',            head: 7, robe: 9, train: 5, item: 5, belt: 5, era: '極位', milestone: '極位', apex: true },
+  { n: 1,  rank: '無位',   post: '雑任',                head: 1, robe: 1, train: 1, item: 1, belt: 1, era: '地下',
+    display: { head: '髷',                robe: '白水干',         train: 'なし',       item: '紙',                belt: 'なし' } },
+  { n: 2,  rank: '八位',   post: '少録',                head: 2, robe: 2, train: 1, item: 1, belt: 1, era: '地下',
+    display: { head: '折烏帽子',          robe: '浅縹',           train: 'なし',       item: '紙',                belt: 'なし' } },
+  { n: 3,  rank: '七位',   post: '大允',                head: 2, robe: 3, train: 1, item: 2, belt: 1, era: '地下',
+    display: { head: '折烏帽子',          robe: '深縹',           train: 'なし',       item: '木笏',              belt: 'なし' } },
+  { n: 4,  rank: '従六下', post: '下国守',              head: 3, robe: 4, train: 2, item: 2, belt: 2, era: '地下',
+    display: { head: '立烏帽子',          robe: '浅緑',           train: '短',         item: '木笏',              belt: '平緒' } },
+  { n: 5,  rank: '従六上', post: '上国介',              head: 3, robe: 5, train: 2, item: 2, belt: 2, era: '地下',
+    display: { head: '立烏帽子',          robe: '深緑',           train: '短',         item: '木笏',              belt: '平緒' } },
+  { n: 6,  rank: '正六下', post: '中国守',              head: 3, robe: 5, train: 2, item: 3, belt: 2, era: '地下',
+    display: { head: '立烏帽子',          robe: '深緑(綾)',       train: '短',         item: '木笏+紙扇',         belt: '平緒' } },
+  { n: 7,  rank: '正六上', post: '大国介・大丞',        head: 4, robe: 5, train: 2, item: 3, belt: 2, era: '地下',
+    display: { head: '立烏帽子(紋付)',    robe: '深緑(地紋)',     train: '短',         item: '木笏+紙扇',         belt: '平緒' } },
+  { n: 8,  rank: '従五下', post: '上国守・少納言',      head: 5, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人', milestone: '殿上人',
+    display: { head: '冠(纓短)',          robe: '浅緋',           train: '中',         item: '象牙笏+檜扇',       belt: '細太刀(黒漆)' } },
+  { n: 9,  rank: '従五上', post: '大国守・侍従',        head: 5, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人',
+    display: { head: '冠(纓中)',          robe: '浅緋',           train: '中',         item: '象牙笏+檜扇',       belt: '細太刀' } },
+  { n: 10, rank: '正五下', post: '少弁・近衛少将',      head: 6, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人',
+    display: { head: '冠(垂纓)',          robe: '浅緋(綾)',       train: '中',         item: '象牙笏+檜扇',       belt: '細太刀' } },
+  { n: 11, rank: '正五上', post: '中弁・大判事',        head: 6, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人',
+    display: { head: '冠(垂纓)',          robe: '浅緋(地紋)',     train: '中',         item: '象牙笏+檜扇',       belt: '細太刀' } },
+  { n: 12, rank: '従四下', post: '八省輔・近衛中将',    head: 6, robe: 7, train: 4, item: 4, belt: 4, era: '殿上人',
+    display: { head: '冠(垂纓)',          robe: '深緋',           train: '長',         item: '象牙笏+檜扇',       belt: '飾太刀(銀)' } },
+  { n: 13, rank: '従四上', post: '京大夫・大宰大弐',    head: 6, robe: 7, train: 4, item: 4, belt: 4, era: '殿上人',
+    display: { head: '冠(垂纓)',          robe: '深緋(綾)',       train: '長',         item: '象牙笏+檜扇',       belt: '飾太刀(銀)' } },
+  { n: 14, rank: '正四下', post: '七省卿・参議',        head: 6, robe: 7, train: 4, item: 5, belt: 4, era: '殿上人',
+    display: { head: '冠(垂纓・格上)',    robe: '深緋(地紋)',     train: '長',         item: '象牙笏+蒔絵檜扇',   belt: '飾太刀(銀)' } },
+  { n: 15, rank: '正四上', post: '中務卿・左右大弁',    head: 6, robe: 7, train: 4, item: 5, belt: 4, era: '殿上人',
+    display: { head: '冠(垂纓・格上)',    robe: '深緋(地紋)',     train: '長',         item: '象牙笏+蒔絵檜扇',   belt: '飾太刀(銀)' } },
+  { n: 16, rank: '従三',   post: '中納言・大宰帥',      head: 7, robe: 8, train: 4, item: 5, belt: 4, era: '公卿', milestone: '公卿',
+    display: { head: '冠(高位垂纓)',      robe: '浅紫',           train: '長',         item: '象牙笏+蒔絵檜扇',   belt: '飾太刀(銀金)' } },
+  { n: 17, rank: '正三',   post: '大納言',              head: 7, robe: 8, train: 5, item: 5, belt: 5, era: '公卿',
+    display: { head: '冠(高位垂纓)',      robe: '浅紫(綾)',       train: '最長',       item: '象牙笏+極上檜扇',   belt: '飾太刀(金)' } },
+  { n: 18, rank: '従二',   post: '内大臣',              head: 7, robe: 8, train: 5, item: 5, belt: 5, era: '公卿',
+    display: { head: '冠(極位垂纓)',      robe: '浅紫(地紋)',     train: '最長',       item: '象牙笏+極上檜扇',   belt: '飾太刀(金)' } },
+  { n: 19, rank: '正二',   post: '左大臣・右大臣',      head: 7, robe: 8, train: 5, item: 5, belt: 5, era: '公卿',
+    display: { head: '冠(極位垂纓)',      robe: '浅紫(雲鶴)',     train: '最長',       item: '象牙笏+極上檜扇',   belt: '飾太刀(金)' } },
+  { n: 20, rank: '従一',   post: '摂政・関白',          head: 7, robe: 9, train: 5, item: 5, belt: 5, era: '公卿',
+    display: { head: '冠(極位)',          robe: '深紫',           train: '最長',       item: '象牙笏+至高檜扇',   belt: '儀仗太刀(金)' } },
+  { n: 21, rank: '正一',   post: '太政大臣',            head: 7, robe: 9, train: 5, item: 5, belt: 5, era: '極位', milestone: '極位', apex: true,
+    display: { head: '冠(極位・銀飾)',    robe: '深紫(雲鶴鳳凰)', train: '最長(8尺)',  item: '象牙笏+至高檜扇',   belt: '儀仗太刀(金銀)' } },
 ];
+
+// 袍 (robe) の色名先頭一致で代表色を返す。stage.display.robe を渡す。
+// 全 19 種類の robe 名 (浅縹/深縹/浅緑/深緑/深緑(綾)/深緋/深緋(地紋)/浅紫(雲鶴) 等) の
+// 基調色を 9 つに丸めて表示用に使う。
+export function robeColorOf(robeName: string): string {
+  if (robeName.startsWith('白'))    return '#f3ecdc';
+  if (robeName.startsWith('浅縹'))  return '#a7c4d8';
+  if (robeName.startsWith('深縹'))  return '#3d5c80';
+  if (robeName.startsWith('浅緑'))  return '#a4b97a';
+  if (robeName.startsWith('深緑'))  return '#4b6b3a';
+  if (robeName.startsWith('浅緋'))  return '#cf6a4e';
+  if (robeName.startsWith('深緋'))  return '#9c2e2a';
+  if (robeName.startsWith('浅紫'))  return '#8a6aa6';
+  if (robeName.startsWith('深紫'))  return '#4a2a5c';
+  return 'var(--rw-ink-soft)';
+}
 
 // 章 (ch1-5) と部位の対応 + クイズ動線情報。
 // kobun-tan の「Key&Point 古文単語330」5 章にマッピング。

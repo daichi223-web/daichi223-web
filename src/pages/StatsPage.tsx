@@ -67,9 +67,6 @@ type GroupEntry = {
   mastered: boolean;
 };
 
-type CharacterTheme = 'garden' | 'noble';
-const CHARACTER_THEME_KEY = 'kobun-tan:dashboard-character-theme';
-
 const VISIBLE_CHAPTER_IDS = new Set<ChapterId>(VISIBLE_CHAPTERS.map((c) => c.id));
 
 // === 庭(Garden) — 1作品=1株。ジャンル別樹種 × 7段階成長 ===
@@ -152,29 +149,10 @@ export default function StatsPage() {
   const [srsRows, setSrsRows] = useState<SrsBoxRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [streak, setStreak] = useState<StreakSnapshot>({ current: 0, longest: 0, lastActiveDate: null });
-  const [theme, setTheme] = useState<CharacterTheme>('garden');
 
   useEffect(() => {
     setStreak(readStreak());
-    try {
-      const v = localStorage.getItem(CHARACTER_THEME_KEY);
-      if (v === 'garden' || v === 'noble') setTheme(v);
-      // 旧テーマ ('sakura'/'ginkgo' → garden, 'robot' → noble) を丸める
-      else if (v === 'sakura' || v === 'ginkgo') setTheme('garden');
-      else if (v === 'robot') setTheme('noble');
-    } catch {
-      /* ignore */
-    }
   }, []);
-
-  const updateTheme = (t: CharacterTheme) => {
-    setTheme(t);
-    try {
-      localStorage.setItem(CHARACTER_THEME_KEY, t);
-    } catch {
-      /* ignore */
-    }
-  };
 
   const lemmaIndex = useMemo(buildLemmaIndex, []);
 
@@ -556,6 +534,12 @@ export default function StatsPage() {
                 </p>
               </div>
             )}
+
+            {/* 装束ダッシュボード — 学習履歴の核として最上部に配置 */}
+            <section className="mb-6">
+              <NobleStatsDashboard parts={partsFromFieldMastery(fieldMastery)} />
+            </section>
+
             {/* サマリ 4 カード */}
             <section className="grid grid-cols-2 gap-3 mb-6">
               <SummaryCard
@@ -655,28 +639,14 @@ export default function StatsPage() {
               </div>
             </section>
 
-            {/* 練習量 セクション */}
+            {/* 練習量 セクション — 装束は上部に移動済。ここは庭表示を残す */}
             <section className="mb-6">
-              <div className="flex items-baseline justify-between mb-2">
-                <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase">
-                  練習量
-                </h2>
-                <div className="flex items-center gap-1 text-[10px] font-bold">
-                  <ThemeButton current={theme} value="garden" label="🌿 庭" onClick={updateTheme} />
-                  <ThemeButton current={theme} value="noble" label="🎎 装束" onClick={updateTheme} />
-                </div>
+              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+                読解の庭
+              </h2>
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
+                <Garden plants={garden} />
               </div>
-
-              {/* キャラクター */}
-              {theme === 'noble' ? (
-                <div className="mb-3">
-                  <NobleStatsDashboard parts={partsFromFieldMastery(fieldMastery)} />
-                </div>
-              ) : (
-                <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
-                  <Garden plants={garden} />
-                </div>
-              )}
 
               {/* 累計回答数 + 分布 */}
               <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
@@ -1019,34 +989,6 @@ function SummaryCard({
     );
   }
   return <div className={baseClass} style={style}>{inner}</div>;
-}
-
-function ThemeButton({
-  current,
-  value,
-  label,
-  onClick,
-}: {
-  current: CharacterTheme;
-  value: CharacterTheme;
-  label: string;
-  onClick: (t: CharacterTheme) => void;
-}) {
-  const active = current === value;
-  return (
-    <button
-      type="button"
-      onClick={() => onClick(value)}
-      className="px-2.5 py-1 rounded-full transition-colors"
-      style={{
-        background: active ? 'var(--rw-ink)' : 'var(--rw-paper)',
-        color: active ? 'var(--rw-paper)' : 'var(--rw-ink-soft)',
-        border: `1px solid ${active ? 'var(--rw-ink)' : 'var(--rw-rule)'}`,
-      }}
-    >
-      {label}
-    </button>
-  );
 }
 
 // ── AI コーチ (Gemini Nano) 設定 ──
