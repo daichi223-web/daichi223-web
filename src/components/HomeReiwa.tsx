@@ -4,7 +4,7 @@ import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
 import { readStreak } from '@/lib/streak';
 import { useFieldMastery } from '@/lib/fieldMastery';
 import { partsFromFieldMastery } from '@/lib/nobleData';
-import NobleHomeWidget from './noble/NobleHomeWidget';
+import NobleStatusBar from './noble/NobleStatusBar';
 
 // Reiwa デザイン版ホーム画面。
 // handoff/dir-reiwa.jsx の RwHome を本番ロジックと結線したもの。
@@ -73,28 +73,20 @@ export default function HomeReiwa({
 
   return (
     <div className="bg-rw-bg min-h-dvh -mx-3 md:-mx-6 -mt-16 md:mt-0 px-4 md:px-6 pt-4 md:pt-6 pb-8 text-rw-ink">
-      {/* ヘッダ */}
-      <div className="flex items-center justify-between pt-12 md:pt-0 mb-4 md:mb-5">
-        <div>
-          <div className="text-2xl md:text-3xl font-black tracking-tight leading-none">kobun.</div>
-          <div className="text-[11px] text-rw-ink-soft mt-1">{todayLabel()}</div>
-        </div>
-        <div
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-rw-primary text-rw-paper rounded-full text-xs font-bold"
-          title={streak > 0 ? `${streak}日連続学習中` : 'クイズで答えると連続日数が増える'}
-        >
-          <span>🔥</span>
-          <span>{streak}</span>
-        </div>
+      {/* 最小ヘッダ: 日付のみ。streak/位階は NobleStatusBar に集約 */}
+      <div className="pt-12 md:pt-0 mb-2 flex items-baseline justify-between">
+        <div className="text-2xl md:text-3xl font-black tracking-tight leading-none">kobun.</div>
+        <div className="text-[10px] text-rw-ink-soft font-mono">{todayLabel()}</div>
       </div>
 
-      {/* 装束で見る学習の蓄積 — 学習履歴を貴族の出世階位で可視化。ホーム最上位に配置 */}
+      {/* 統合ステータスバー — 位階 + 次昇進 + 3 KPI (連続/回答/master)。タップで /stats */}
       {!masteryLoading && (
-        <NobleHomeWidget
+        <NobleStatusBar
           parts={partsFromFieldMastery(fieldMastery)}
           streak={streak}
           totalAnswered={totalAnswered}
           masterCount={totalMastered}
+          linkToStats
         />
       )}
 

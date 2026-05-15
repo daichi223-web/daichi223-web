@@ -1,4 +1,4 @@
-// 5 章 × 13 段マスタリ計算 — StatsPage / NobleStatsDashboard / NobleHomeWidget 共通の集計ロジック。
+// 5 章 × 13 段マスタリ計算 — StatsPage / NobleStatsDashboard / NobleStatusBar 共通の集計ロジック。
 // 「Key & Point 古文単語330」の章 ch1-ch5 のみを集計対象とする (ext は除外)。
 // 段位は古文常識の代表官職を位階順に並べた 13 段階 (★0-12):
 //   地下:  ★0 無位 / ★1 雑色 / ★2 舎人 / ★3 衛士
@@ -189,7 +189,7 @@ export const EMPTY_FIELD_MASTERY: FieldMastery = {
   ch5: { total: 0, jigeCount: 0, tenjouCount: 0, kugyouCount: 0, masterCount: 0, masteredPct: 0, avgTierPct: 0 },
 };
 
-// HomeReiwa / NobleHomeWidget 用フック: 内部で wordStats / SRS / quizTypeStats を取得し
+// HomeReiwa / NobleStatusBar 用フック: 内部で wordStats / SRS / quizTypeStats を取得し
 // fieldMastery と累計を返す。loading=true 中は EMPTY_FIELD_MASTERY を返す。
 export function useFieldMastery(): FieldMasteryResult & { loading: boolean; totalAnswered: number } {
   const [stats, setStats] = useState<Record<string, WordStat>>({});

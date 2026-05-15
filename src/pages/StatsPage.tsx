@@ -15,6 +15,7 @@ import { hasFullAccess } from '@/lib/fullAccess';
 import { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS, TIER_LABELS, TIER_KAII } from '@/lib/fieldMastery';
 import { partsFromFieldMastery } from '@/lib/nobleData';
 import NobleStatsDashboard from '@/components/noble/NobleStatsDashboard';
+import NobleStatusBar from '@/components/noble/NobleStatusBar';
 import BackupSection from '@/components/BackupSection';
 import { chapterFor } from '@/utils/chapters';
 
@@ -535,13 +536,22 @@ export default function StatsPage() {
               </div>
             )}
 
-            {/* 装束ダッシュボード — 学習履歴の核として最上部に配置 */}
+            {/* 統合ステータスバー — 位階+次昇進+3 KPI を 1段に集約 */}
+            <NobleStatusBar
+              parts={partsFromFieldMastery(fieldMastery)}
+              streak={streak.current}
+              totalAnswered={overall.answered}
+              masterCount={overall.mastered}
+              linkToStats={false}
+            />
+
+            {/* 装束ダッシュボード — 学習履歴の核 */}
             <section className="mb-6">
               <NobleStatsDashboard parts={partsFromFieldMastery(fieldMastery)} />
             </section>
 
-            {/* サマリ 4 カード */}
-            <section className="grid grid-cols-2 gap-3 mb-6">
+            {/* サマリ 3 カード (マスター/連続日数はステータスバーで表示済のため除外) */}
+            <section className="grid grid-cols-3 gap-2 mb-6">
               <SummaryCard
                 label="累計正答率"
                 value={`${Math.round(overall.accuracy * 100)}%`}
@@ -549,8 +559,8 @@ export default function StatsPage() {
                 fg="var(--rw-accent)"
               />
               <SummaryCard
-                label="挑戦した単語"
-                value={`${overall.uniqueWords}語`}
+                label="挑戦単語"
+                value={`${overall.uniqueWords}`}
                 bg="var(--rw-primary-soft)"
                 fg="var(--rw-primary)"
                 to={
@@ -558,55 +568,31 @@ export default function StatsPage() {
                     ? `/?qid=${encodeURIComponent(Object.keys(stats).join(','))}`
                     : undefined
                 }
-                hint={overall.uniqueWords > 0 ? 'タップで復習クイズ' : undefined}
-              />
-              <SummaryCard
-                label="マスター数"
-                value={`${overall.mastered}語`}
-                bg="var(--rw-pop)"
-                fg="var(--rw-ink)"
-                hintTone={0.85}
+                hint={overall.uniqueWords > 0 ? 'タップで復習' : undefined}
               />
               <SummaryCard
                 label="今日の復習"
-                value={`${dueQids.length}語`}
+                value={`${dueQids.length}`}
                 bg="color-mix(in srgb, var(--rw-tertiary) 25%, transparent)"
                 fg="var(--rw-tertiary)"
               />
             </section>
 
-            {/* 連続学習 */}
-            <section className="mb-6">
-              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
-                連続学習
-              </h2>
-              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 flex items-center gap-4">
-                <div
-                  className="flex items-center gap-2 px-4 py-3 rounded-2xl shrink-0"
-                  style={{ background: 'var(--rw-primary-soft)' }}
-                >
-                  <span className="text-2xl">🔥</span>
-                  <div>
-                    <div className="text-[10px] tracking-wider font-bold uppercase text-rw-ink-soft">今</div>
-                    <div className="text-2xl font-black text-rw-primary leading-none">
-                      {streak.current}
-                      <span className="text-sm font-bold ml-1">日</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-rw-ink-soft font-bold">最長連続記録</div>
-                  <div className="text-xl font-black text-rw-ink mt-0.5">
-                    {streak.longest}<span className="text-xs font-bold ml-1">日</span>
-                  </div>
+            {/* 連続学習 (longest のみ — 現在連続はバーに集約済) */}
+            {streak.longest > 0 && (
+              <section className="mb-6">
+                <div className="bg-rw-paper border border-rw-rule rounded-xl px-4 py-2.5 flex items-center justify-between text-[11px] text-rw-ink-soft">
+                  <span>
+                    最長連続記録{' '}
+                    <b className="text-base text-rw-ink font-black ml-1">{streak.longest}</b>
+                    <span className="ml-0.5">日</span>
+                  </span>
                   {streak.lastActiveDate && (
-                    <div className="text-[10px] text-rw-ink-soft mt-1">
-                      最終学習: {streak.lastActiveDate}
-                    </div>
+                    <span className="font-mono">最終学習: {streak.lastActiveDate}</span>
                   )}
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
 
             {/* SRS box 分布 */}
             <section className="mb-6">
@@ -648,24 +634,15 @@ export default function StatsPage() {
                 <Garden plants={garden} />
               </div>
 
-              {/* 累計回答数 + 分布 */}
+              {/* 練習頻度分布 (累計回答はバーに集約済) */}
               <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
-                <div className="flex items-baseline justify-between mb-3">
-                  <div>
-                    <div className="text-[10px] tracking-wider font-bold uppercase text-rw-ink-soft">
-                      累計回答数
-                    </div>
-                    <div className="text-2xl font-black text-rw-ink mt-0.5">
-                      {overall.answered}<span className="text-xs font-bold ml-1">回</span>
-                    </div>
+                <div className="flex items-baseline justify-between mb-2">
+                  <div className="text-[11px] font-bold text-rw-ink">
+                    練習頻度の分布
                   </div>
-                  <div className="text-right">
-                    <div className="text-[10px] tracking-wider font-bold uppercase text-rw-ink-soft">
-                      着手 / 全{allGroups.length}語
-                    </div>
-                    <div className="text-2xl font-black text-rw-ink mt-0.5">
-                      {allGroups.length - distribution['0']}<span className="text-xs font-bold ml-1">語</span>
-                    </div>
+                  <div className="text-[10px] text-rw-ink-soft">
+                    着手 <b className="text-rw-ink text-sm font-black">{allGroups.length - distribution['0']}</b>
+                    <span className="text-[9px] ml-0.5">/ 全{allGroups.length}語</span>
                   </div>
                 </div>
                 <DistributionBars distribution={distribution} total={allGroups.length} />
