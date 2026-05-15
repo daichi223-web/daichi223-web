@@ -98,127 +98,144 @@ export default function HomeReiwa({
         <div className="text-[10px] text-rw-ink-soft font-mono">{todayLabel()}</div>
       </div>
 
-      {/* Today's Quest — 上部に装束ストリップ (位階 + 次昇進 + 3 KPI)、下部にクイズ CTA */}
+      {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}
       <button
         onClick={dueWordsCount > 0 ? onStartSrsReview : onStartQuiz}
-        className="w-full text-left mb-4 p-4 md:p-5 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
+        className="w-full text-left mb-4 p-4 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
       >
-        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-rw-pop opacity-40" />
-        <div className="absolute -bottom-5 right-5 w-20 h-20 rounded-full bg-rw-accent opacity-40" />
-        <div className="relative">
-          {/* 装束ストリップ */}
-          {nobleStage && noblePortrait && (
-            <div className="flex items-stretch gap-2.5 pb-3 mb-3 border-b border-white/25">
-              <div
-                className="shrink-0 relative overflow-hidden rounded-md"
-                style={{
-                  width: 44,
-                  height: 58,
-                  background: '#f6efe0',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                <img
-                  src={noblePortrait.src}
-                  alt={noblePortrait.label}
-                  draggable={false}
+        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-rw-pop opacity-30 pointer-events-none" />
+        <div className="absolute -bottom-5 right-5 w-20 h-20 rounded-full bg-rw-accent opacity-30 pointer-events-none" />
+        <div className="relative grid grid-cols-[auto_1fr] gap-3 items-stretch">
+          {/* LEFT: 装束ストリップ (肖像 + 位階 + 進捗 + KPI) */}
+          {nobleStage && noblePortrait ? (
+            <div className="flex flex-col gap-1.5" style={{ width: 140 }}>
+              <div className="flex items-stretch gap-2">
+                <div
+                  className="shrink-0 relative overflow-hidden rounded-md"
                   style={{
-                    position: 'absolute',
-                    inset: 0,
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: `${noblePortrait.focusX}% ${noblePortrait.focusY}%`,
-                    pointerEvents: 'none',
+                    width: 40,
+                    height: 54,
+                    background: '#f6efe0',
+                    border: '1px solid rgba(255,255,255,0.3)',
                   }}
-                />
-              </div>
-              <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-                <div>
-                  <div className="flex items-baseline gap-1.5 text-[9px]">
+                >
+                  <img
+                    src={noblePortrait.src}
+                    alt={noblePortrait.label}
+                    draggable={false}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: `${noblePortrait.focusX}% ${noblePortrait.focusY}%`,
+                      pointerEvents: 'none',
+                    }}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[9px] flex items-baseline gap-1">
                     <span className="opacity-90 font-bold tracking-wider">{nobleStage.era}</span>
-                    <span className="opacity-70 font-mono">第{nobleStage.n}階</span>
+                    <span className="opacity-70 font-mono text-[8px]">第{nobleStage.n}</span>
                   </div>
-                  <div className="text-base font-black leading-none truncate mt-0.5" style={{ fontFamily: '"Noto Serif JP", serif' }}>
+                  <div
+                    className="text-[15px] font-black leading-none mt-0.5 truncate"
+                    style={{ fontFamily: '"Noto Serif JP", serif' }}
+                  >
                     {nobleStage.rank}
-                    <span className="text-[9px] font-normal opacity-80 ml-1.5">
-                      {nobleStage.post.split('・')[0]}
-                    </span>
+                  </div>
+                  <div className="text-[9px] opacity-80 truncate mt-0.5">
+                    {nobleStage.post.split('・')[0]}
                   </div>
                 </div>
-                {nobleNext ? (
-                  <div className="mt-1">
-                    <div className="flex items-center gap-1 text-[9px]">
-                      <span className="opacity-70">次</span>
-                      <span className="opacity-95 truncate flex-1 font-bold">
-                        {nobleNext.stage.milestone && <span>★</span>}
-                        {nobleNext.stage.rank}
-                      </span>
-                      <span className="font-mono font-black">{nobleProgress}%</span>
-                    </div>
-                    <div className="h-0.5 mt-0.5 rounded-full bg-white/25">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{ width: `${nobleProgress}%`, background: 'var(--rw-pop)' }}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-[10px] font-black mt-1" style={{ color: 'var(--rw-pop)' }}>
-                    👑 極位達成
-                  </div>
-                )}
               </div>
-              <div className="shrink-0 flex flex-col justify-between text-right py-0.5 text-[10px] leading-none gap-0.5">
+
+              {/* 次の昇進 */}
+              {nobleNext ? (
                 <div>
-                  <span>🔥</span>
-                  <b className="text-[11px] ml-0.5">{streak}</b>
-                  <span className="opacity-70 text-[8px] ml-0.5">日</span>
+                  <div className="flex items-center gap-1 text-[9px]">
+                    <span className="opacity-70">次</span>
+                    <span className="opacity-95 truncate flex-1 font-bold">
+                      {nobleNext.stage.milestone && <span>★</span>}
+                      {nobleNext.stage.rank}
+                    </span>
+                    <span className="font-mono font-black">{nobleProgress}%</span>
+                  </div>
+                  <div className="h-0.5 mt-0.5 rounded-full bg-white/25">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: `${nobleProgress}%`, background: 'var(--rw-pop)' }}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <span>📚</span>
-                  <b className="text-[11px] ml-0.5">{totalAnswered.toLocaleString()}</b>
+              ) : (
+                <div className="text-[10px] font-black" style={{ color: 'var(--rw-pop)' }}>
+                  👑 極位達成
                 </div>
-                <div>
-                  <span>👑</span>
-                  <b className="text-[11px] ml-0.5">{totalMastered}</b>
-                  <span className="opacity-70 text-[8px] ml-0.5">語</span>
-                </div>
+              )}
+
+              {/* 3 KPI 横並び */}
+              <div className="flex justify-between text-[10px] leading-none pt-0.5">
+                <span>
+                  🔥<b className="text-[11px] ml-0.5">{streak}</b>
+                </span>
+                <span>
+                  📚<b className="text-[11px] ml-0.5">{totalAnswered.toLocaleString()}</b>
+                </span>
+                <span>
+                  👑<b className="text-[11px] ml-0.5">{totalMastered}</b>
+                </span>
               </div>
             </div>
+          ) : (
+            <div style={{ width: 140 }} />
           )}
 
-          <div className="text-[10px] md:text-xs opacity-90 font-bold tracking-wider uppercase">Today's Quest</div>
-          {dueWordsCount > 0 ? (
-            <>
-              <div className="text-xl md:text-2xl font-black mt-1.5 leading-tight">
-                今日の復習
-                <br />
-                <span className="text-base md:text-lg opacity-90 font-bold">SRS が選んだ単語</span>
+          {/* 区切り線 */}
+          <div className="relative flex flex-col min-w-0">
+            <div
+              className="absolute left-0 top-2 bottom-2 w-px"
+              style={{ background: 'rgba(255,255,255,0.25)', marginLeft: -6 }}
+              aria-hidden
+            />
+
+            {/* RIGHT: クイズ CTA */}
+            <div className="flex flex-col justify-between min-w-0 h-full">
+              <div>
+                <div className="text-[10px] opacity-90 font-bold tracking-wider uppercase">
+                  Today's Quest
+                </div>
+                {dueWordsCount > 0 ? (
+                  <>
+                    <div className="text-base md:text-lg font-black mt-1 leading-tight">
+                      今日の復習
+                    </div>
+                    <div className="text-[11px] opacity-90 font-bold leading-tight">
+                      SRS が選んだ単語
+                    </div>
+                    <div className="flex items-baseline gap-1 mt-1.5">
+                      <span className="text-3xl font-black">{dueWordsCount}</span>
+                      <span className="text-xs opacity-90">語</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-base md:text-lg font-black mt-1 leading-tight truncate">
+                      {currentMode === 'word' ? '単語クイズ' : '多義語クイズ'}
+                    </div>
+                    <div className="text-[11px] opacity-90 font-bold leading-tight truncate">
+                      {quizTypeLabel}
+                    </div>
+                    <div className="text-xl font-black mt-1.5 truncate">{rangeLabel}</div>
+                  </>
+                )}
               </div>
-              <div className="flex items-baseline gap-2 mt-3">
-                <span className="text-3xl md:text-4xl font-black">{dueWordsCount}</span>
-                <span className="text-sm md:text-base opacity-90">語</span>
+              <div className="mt-2 inline-block self-start bg-rw-paper text-rw-primary text-xs font-black px-3.5 py-1.5 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
+                {dueWordsCount > 0 ? '復習スタート ▶' : 'つづきから ▶'}
               </div>
-              <div className="mt-4 inline-block bg-rw-paper text-rw-primary text-sm font-black px-5 py-2 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
-                復習スタート ▶
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="text-xl md:text-2xl font-black mt-1.5 leading-tight">
-                {currentMode === 'word' ? '単語クイズ' : '多義語クイズ'}
-                <br />
-                <span className="text-base md:text-lg opacity-90 font-bold">{quizTypeLabel}</span>
-              </div>
-              <div className="flex items-baseline gap-2 mt-3">
-                <span className="text-3xl md:text-4xl font-black">{rangeLabel}</span>
-              </div>
-              <div className="mt-4 inline-block bg-rw-paper text-rw-primary text-sm font-black px-5 py-2 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
-                つづきから ▶
-              </div>
-            </>
-          )}
+            </div>
+          </div>
         </div>
       </button>
 
