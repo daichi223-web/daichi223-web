@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
 import { readStreak } from '@/lib/streak';
+import { useFieldMastery } from '@/lib/fieldMastery';
+import { partsFromFieldMastery } from '@/lib/nobleData';
+import NobleHomeWidget from './noble/NobleHomeWidget';
 
 // Reiwa デザイン版ホーム画面。
 // handoff/dir-reiwa.jsx の RwHome を本番ロジックと結線したもの。
@@ -50,6 +53,7 @@ export default function HomeReiwa({
 }: Props) {
   const [vocab, setVocab] = useState<VocabEntry[]>([]);
   const [streak, setStreak] = useState(0);
+  const { fieldMastery, totalAnswered, totalMastered, loading: masteryLoading } = useFieldMastery();
 
   useEffect(() => {
     setVocab(getVocabEntries());
@@ -167,6 +171,16 @@ export default function HomeReiwa({
         />
         <TileLinkInline href="/stats" label="学習履歴" emoji="📊" />
       </div>
+
+      {/* 装束で見る学習の蓄積 — 学習履歴を貴族の出世階位で可視化 */}
+      {!masteryLoading && (
+        <NobleHomeWidget
+          parts={partsFromFieldMastery(fieldMastery)}
+          streak={streak}
+          totalAnswered={totalAnswered}
+          masterCount={totalMastered}
+        />
+      )}
 
       {/* 気になってる単語 */}
       {vocab.length > 0 && (

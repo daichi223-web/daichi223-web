@@ -13,7 +13,7 @@ export const STORAGE_KEYS = {
 
   // === 表示設定 (任意で export/import) ===
   reiwaTheme: 'kobun.reiwaTheme',                       // 令和テーマ
-  characterTheme: 'kobun-tan:dashboard-character-theme', // 庭/ロボ
+  characterTheme: 'kobun-tan:dashboard-character-theme', // 庭/装束
   wordRange: 'kobun-wordRange',
   polysemyRange: 'kobun-polysemyRange',
   wordQuizType: 'kobun-wordQuizType',

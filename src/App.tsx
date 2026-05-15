@@ -201,7 +201,7 @@ function App() {
   }, [allWords.length]);
 
   // URL クエリ ?category=重要動詞,敬語動詞 でカテゴリ絞り込みクイズを起動
-  // ロボット部位タップなどから流入する経路。
+  // 単語帳カテゴリタップなどから流入する経路。
   useEffect(() => {
     if (allWords.length === 0) return;
     const catParam = searchParams.get('category');
@@ -220,7 +220,7 @@ function App() {
   }, [allWords.length]);
 
   // URL クエリ ?chapter=ch1 で章範囲のクイズを起動。
-  // 設計図ロボの各部位タップ (BlueprintHome) → その章 (例 ch2 → group 51-150) に飛ぶ。
+  // 装束ダッシュボード (NobleStatsDashboard) の5ジャンルタップ → 該当章のクイズへ飛ぶ。
   useEffect(() => {
     if (allWords.length === 0) return;
     const chParam = searchParams.get('chapter');

@@ -12,7 +12,9 @@ import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
 import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
-import BlueprintHome, { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS, TIER_LABELS, TIER_KAII } from '@/components/BlueprintHome';
+import { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS, TIER_LABELS, TIER_KAII } from '@/lib/fieldMastery';
+import { partsFromFieldMastery } from '@/lib/nobleData';
+import NobleStatsDashboard from '@/components/noble/NobleStatsDashboard';
 import BackupSection from '@/components/BackupSection';
 import { chapterFor } from '@/utils/chapters';
 
@@ -65,7 +67,7 @@ type GroupEntry = {
   mastered: boolean;
 };
 
-type CharacterTheme = 'garden' | 'robot';
+type CharacterTheme = 'garden' | 'noble';
 const CHARACTER_THEME_KEY = 'kobun-tan:dashboard-character-theme';
 
 const VISIBLE_CHAPTER_IDS = new Set<ChapterId>(VISIBLE_CHAPTERS.map((c) => c.id));
@@ -156,9 +158,10 @@ export default function StatsPage() {
     setStreak(readStreak());
     try {
       const v = localStorage.getItem(CHARACTER_THEME_KEY);
-      if (v === 'garden' || v === 'robot') setTheme(v);
-      // 旧テーマ('sakura'/'ginkgo')は garden に丸める
+      if (v === 'garden' || v === 'noble') setTheme(v);
+      // 旧テーマ ('sakura'/'ginkgo' → garden, 'robot' → noble) を丸める
       else if (v === 'sakura' || v === 'ginkgo') setTheme('garden');
+      else if (v === 'robot') setTheme('noble');
     } catch {
       /* ignore */
     }
@@ -228,7 +231,7 @@ export default function StatsPage() {
     return buckets;
   }, [groupAgg, allGroups]);
 
-  // 設計図 (BlueprintHome) 用: 「Key & Point 古文単語330」5 章 (#1-330) のみ集計。
+  // 装束ダッシュボード用: 「Key & Point 古文単語330」5 章 (#1-330) のみ集計。
   // 13 段階マスタリ (古文常識・代表官職を位階順に。3 大階層):
   //   地下:  ★0 無位 / ★1 雑色 / ★2 舎人 / ★3 衛士
   //   殿上:  ★4 蔵人 / ★5 受領 / ★6 弁官 / ★7 中将 / ★8 頭中将
@@ -356,8 +359,6 @@ export default function StatsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupAgg, allGroups, quizTypeStats, srsBoxByQid]);
 
-  const totalLearned = blueprintMetrics.totalLearned;
-  const totalMastered = blueprintMetrics.totalMastered;
   const fieldMastery = blueprintMetrics.fieldMastery;
 
   // 段位別 単語数 (★0-12 のヒストグラム) と段位別 qid リスト (タップ→クイズ用)
@@ -387,7 +388,7 @@ export default function StatsPage() {
       .slice(0, 20);
   }, [groupAgg, allGroups]);
 
-  // === 庭(Garden) + ロボット 用: localStorage を都度読み直す ===
+  // === 庭(Garden) + 装束 用: localStorage を都度読み直す ===
   const [gardenSig, setGardenSig] = useState(0); // ページに戻ってきたら再読する用
   const [publishedSet, setPublishedSet] = useState<Set<string> | null>(null);
   useEffect(() => {
@@ -662,14 +663,14 @@ export default function StatsPage() {
                 </h2>
                 <div className="flex items-center gap-1 text-[10px] font-bold">
                   <ThemeButton current={theme} value="garden" label="🌿 庭" onClick={updateTheme} />
-                  <ThemeButton current={theme} value="robot" label="🤖 ロボ" onClick={updateTheme} />
+                  <ThemeButton current={theme} value="noble" label="🎎 装束" onClick={updateTheme} />
                 </div>
               </div>
 
               {/* キャラクター */}
-              {theme === 'robot' ? (
-                <div className="bg-rw-paper border border-rw-rule rounded-2xl overflow-hidden mb-3">
-                  <BlueprintHome totalLearned={totalLearned} totalMastered={totalMastered} fieldMastery={fieldMastery} />
+              {theme === 'noble' ? (
+                <div className="mb-3">
+                  <NobleStatsDashboard parts={partsFromFieldMastery(fieldMastery)} />
                 </div>
               ) : (
                 <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
