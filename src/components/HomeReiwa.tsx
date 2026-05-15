@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom';
 import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
 import { readStreak } from '@/lib/streak';
 import { useFieldMastery } from '@/lib/fieldMastery';
-import { partsFromFieldMastery } from '@/lib/nobleData';
-import NobleStatusBar from './noble/NobleStatusBar';
+import {
+  partsFromFieldMastery,
+  effectiveStage,
+  nextStage,
+  portraitForStage,
+} from '@/lib/nobleData';
+import { recordPromotion } from '@/lib/promotionHistory';
 
 // Reiwa デザイン版ホーム画面。
 // handoff/dir-reiwa.jsx の RwHome を本番ロジックと結線したもの。
@@ -60,6 +65,20 @@ export default function HomeReiwa({
     setStreak(readStreak().current);
   }, []);
 
+  // 装束ステータス (Today's Quest 内で表示する位階情報) を導出。
+  const parts = !masteryLoading ? partsFromFieldMastery(fieldMastery) : null;
+  const nobleStage = parts ? effectiveStage(parts) : null;
+  const nobleNext = parts && nobleStage ? nextStage(parts, nobleStage.n) : null;
+  const noblePortrait = nobleStage ? portraitForStage(nobleStage.n) : null;
+  const nobleProgress = nobleNext
+    ? Math.round(((5 - nobleNext.blocking.length) / 5) * 100)
+    : 100;
+
+  // 到達した階位を localStorage に記録 (昇進履歴用)。
+  useEffect(() => {
+    if (nobleStage) recordPromotion(nobleStage.n);
+  }, [nobleStage?.n]);
+
   const range = currentMode === 'word' ? wordRange : polysemyRange;
   const quizTypeLabel = currentMode === 'word' ? wordQuizTypeLabel : polysemyQuizTypeLabel;
   const rangeLabel =
@@ -73,31 +92,102 @@ export default function HomeReiwa({
 
   return (
     <div className="bg-rw-bg min-h-dvh -mx-3 md:-mx-6 -mt-16 md:mt-0 px-4 md:px-6 pt-4 md:pt-6 pb-8 text-rw-ink">
-      {/* 最小ヘッダ: 日付のみ。streak/位階は NobleStatusBar に集約 */}
-      <div className="pt-12 md:pt-0 mb-2 flex items-baseline justify-between">
+      {/* 最小ヘッダ: 日付のみ。位階情報は Today's Quest 内に集約 */}
+      <div className="pt-12 md:pt-0 mb-3 flex items-baseline justify-between">
         <div className="text-2xl md:text-3xl font-black tracking-tight leading-none">kobun.</div>
         <div className="text-[10px] text-rw-ink-soft font-mono">{todayLabel()}</div>
       </div>
 
-      {/* 統合ステータスバー — 位階 + 次昇進 + 3 KPI (連続/回答/master)。タップで /stats */}
-      {!masteryLoading && (
-        <NobleStatusBar
-          parts={partsFromFieldMastery(fieldMastery)}
-          streak={streak}
-          totalAnswered={totalAnswered}
-          masterCount={totalMastered}
-          linkToStats
-        />
-      )}
-
-      {/* Today's Quest — SRS 期日到来があれば優先、なければ通常範囲 */}
+      {/* Today's Quest — 上部に装束ストリップ (位階 + 次昇進 + 3 KPI)、下部にクイズ CTA */}
       <button
         onClick={dueWordsCount > 0 ? onStartSrsReview : onStartQuiz}
-        className="w-full text-left mb-4 p-5 md:p-6 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
+        className="w-full text-left mb-4 p-4 md:p-5 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
       >
         <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-rw-pop opacity-40" />
         <div className="absolute -bottom-5 right-5 w-20 h-20 rounded-full bg-rw-accent opacity-40" />
         <div className="relative">
+          {/* 装束ストリップ */}
+          {nobleStage && noblePortrait && (
+            <div className="flex items-stretch gap-2.5 pb-3 mb-3 border-b border-white/25">
+              <div
+                className="shrink-0 relative overflow-hidden rounded-md"
+                style={{
+                  width: 44,
+                  height: 58,
+                  background: '#f6efe0',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                }}
+              >
+                <img
+                  src={noblePortrait.src}
+                  alt={noblePortrait.label}
+                  draggable={false}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: `${noblePortrait.focusX}% ${noblePortrait.focusY}%`,
+                    pointerEvents: 'none',
+                  }}
+                />
+              </div>
+              <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                <div>
+                  <div className="flex items-baseline gap-1.5 text-[9px]">
+                    <span className="opacity-90 font-bold tracking-wider">{nobleStage.era}</span>
+                    <span className="opacity-70 font-mono">第{nobleStage.n}階</span>
+                  </div>
+                  <div className="text-base font-black leading-none truncate mt-0.5" style={{ fontFamily: '"Noto Serif JP", serif' }}>
+                    {nobleStage.rank}
+                    <span className="text-[9px] font-normal opacity-80 ml-1.5">
+                      {nobleStage.post.split('・')[0]}
+                    </span>
+                  </div>
+                </div>
+                {nobleNext ? (
+                  <div className="mt-1">
+                    <div className="flex items-center gap-1 text-[9px]">
+                      <span className="opacity-70">次</span>
+                      <span className="opacity-95 truncate flex-1 font-bold">
+                        {nobleNext.stage.milestone && <span>★</span>}
+                        {nobleNext.stage.rank}
+                      </span>
+                      <span className="font-mono font-black">{nobleProgress}%</span>
+                    </div>
+                    <div className="h-0.5 mt-0.5 rounded-full bg-white/25">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{ width: `${nobleProgress}%`, background: 'var(--rw-pop)' }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-[10px] font-black mt-1" style={{ color: 'var(--rw-pop)' }}>
+                    👑 極位達成
+                  </div>
+                )}
+              </div>
+              <div className="shrink-0 flex flex-col justify-between text-right py-0.5 text-[10px] leading-none gap-0.5">
+                <div>
+                  <span>🔥</span>
+                  <b className="text-[11px] ml-0.5">{streak}</b>
+                  <span className="opacity-70 text-[8px] ml-0.5">日</span>
+                </div>
+                <div>
+                  <span>📚</span>
+                  <b className="text-[11px] ml-0.5">{totalAnswered.toLocaleString()}</b>
+                </div>
+                <div>
+                  <span>👑</span>
+                  <b className="text-[11px] ml-0.5">{totalMastered}</b>
+                  <span className="opacity-70 text-[8px] ml-0.5">語</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="text-[10px] md:text-xs opacity-90 font-bold tracking-wider uppercase">Today's Quest</div>
           {dueWordsCount > 0 ? (
             <>
