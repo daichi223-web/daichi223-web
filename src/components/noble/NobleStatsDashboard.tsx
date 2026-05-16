@@ -31,6 +31,24 @@ export default function NobleStatsDashboard({ parts }: Props) {
   const [showRefs, setShowRefs] = useState(false);
   const [showRoadmap, setShowRoadmap] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  // 掛軸ヒーローの開閉。デフォルト畳む (大きいため)。状態は localStorage に永続化。
+  const [showKakejiku, setShowKakejiku] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('kobun.noble.showKakejiku') === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleKakejiku = () => {
+    const next = !showKakejiku;
+    setShowKakejiku(next);
+    try {
+      localStorage.setItem('kobun.noble.showKakejiku', next ? '1' : '0');
+    } catch {
+      /* noop */
+    }
+  };
 
   const stage = effectiveStage(parts);
   const next = nextStage(parts, stage.n);
@@ -46,6 +64,20 @@ export default function NobleStatsDashboard({ parts }: Props) {
 
   return (
     <div className="bg-rw-paper border border-rw-rule rounded-2xl overflow-hidden">
+      {/* 掛軸トグル */}
+      <button
+        type="button"
+        onClick={toggleKakejiku}
+        className="w-full flex items-center justify-between px-4 py-2.5 text-[11px] font-bold tracking-wider text-rw-ink-soft hover:bg-rw-primary-soft/30 transition"
+      >
+        <span>
+          {showKakejiku ? '装束 (掛軸) を畳む' : '装束 (掛軸) を見る'}
+        </span>
+        <span className="text-rw-ink-soft">{showKakejiku ? '▴' : '▾'}</span>
+      </button>
+
+      {showKakejiku && (
+      <>
       {/* === 掛軸 (Kakejiku) ヒーロー === */}
       <div className="relative px-3 pt-3">
         {/* 上の軸木 */}
@@ -219,6 +251,8 @@ export default function NobleStatsDashboard({ parts }: Props) {
           />
         </div>
       </div>
+      </>
+      )}
 
       {/* === 五部の装ひ === */}
       <div className="px-4 pt-4">

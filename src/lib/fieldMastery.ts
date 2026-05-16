@@ -199,7 +199,7 @@ export function useFieldMastery(): FieldMasteryResult & { loading: boolean; tota
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    const fetchAll = async () => {
       try {
         const s = await getWordStats();
         if (cancelled) return;
@@ -207,20 +207,32 @@ export function useFieldMastery(): FieldMasteryResult & { loading: boolean; tota
         setQuizTypeStats(getQuizTypeCorrect());
         const userId = (await currentAuthUid()) ?? '';
         if (userId) {
-          const { data } = await supabase
+          const { data, error } = await supabase
             .from('srs_state')
             .select('qid, box')
             .eq('user_id', userId);
+          if (error) console.warn('[useFieldMastery] srs_state fetch failed:', error);
           if (!cancelled) setSrsRows((data ?? []) as SrsBoxRow[]);
         }
-      } catch {
-        // silent
+      } catch (e) {
+        console.warn('[useFieldMastery] fetch error:', e);
       } finally {
         if (!cancelled) setLoading(false);
       }
-    })();
+    };
+    void fetchAll();
+    // タブ復帰時 (window.focus) と表示状態復帰時 (visibilitychange) に再 fetch。
+    // クイズ画面から戻った時に最新の累計を反映させる。
+    const onRefresh = () => {
+      if (document.visibilityState === 'hidden') return;
+      void fetchAll();
+    };
+    window.addEventListener('focus', onRefresh);
+    document.addEventListener('visibilitychange', onRefresh);
     return () => {
       cancelled = true;
+      window.removeEventListener('focus', onRefresh);
+      document.removeEventListener('visibilitychange', onRefresh);
     };
   }, []);
 

@@ -822,8 +822,8 @@ function App() {
   const handleAnswer = (selectedOption: Word, correctOption: Word, isReverse = false) => {
     const isCorrect = selectedOption.qid === correctOption.qid;
     // Track word stats and SRS in Supabase (fire-and-forget)
-    recordAnswer(correctOption.qid, isCorrect).catch(() => {});
-    updateSrsState(correctOption.qid, isCorrect).catch(() => {});
+    recordAnswer(correctOption.qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
+    updateSrsState(correctOption.qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
     // 多義語モード(=例文理解クイズ等の選択式) の正答もカウント
     if (isCorrect && currentMode === 'polysemy') {
       recordQuizTypeCorrect(correctOption.qid, 'polysemy');
@@ -849,8 +849,8 @@ function App() {
     const question = currentQuizData[currentQuestionIndex] as TrueFalseQuestion;
     const isCorrect = userAnswer === question.isCorrect;
     // Track word stats and SRS in Supabase (fire-and-forget)
-    recordAnswer(question.correctAnswer.qid, isCorrect).catch(() => {});
-    updateSrsState(question.correctAnswer.qid, isCorrect).catch(() => {});
+    recordAnswer(question.correctAnswer.qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
+    updateSrsState(question.correctAnswer.qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
     // true-false は polysemy 専用なので正答時にカウント
     if (isCorrect) recordQuizTypeCorrect(question.correctAnswer.qid, 'polysemy');
     if (isCorrect) {
@@ -882,8 +882,8 @@ function App() {
     setWritingUserJudgment(undefined);
 
     // Track word stats and SRS in Supabase (fire-and-forget)
-    recordAnswer(correctQid, evaluation.score >= 60).catch(() => {});
-    updateSrsState(correctQid, evaluation.score >= 60).catch(() => {});
+    recordAnswer(correctQid, evaluation.score >= 60).catch((e) => console.warn('[recordAnswer] failed:', e));
+    updateSrsState(correctQid, evaluation.score >= 60).catch((e) => console.warn('[updateSrsState] failed:', e));
     // 記述クイズの正答カウント (60点以上を正答扱い)
     if (evaluation.score >= 60) {
       recordQuizTypeCorrect(correctQid, 'writing');
@@ -963,7 +963,7 @@ function App() {
     // Override SRS with manual judgment (fire-and-forget)
     // partial は自動評価のまま据え置く
     if (currentWritingQid && judgment !== 'partial') {
-      updateSrsState(currentWritingQid, judgment === true).catch(() => {});
+      updateSrsState(currentWritingQid, judgment === true).catch((e) => console.warn('[updateSrsState] failed:', e));
     }
 
     // Save to Firestore（バックグラウンド）- answerIdがあれば保存
