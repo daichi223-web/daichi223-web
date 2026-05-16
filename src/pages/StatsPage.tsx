@@ -681,7 +681,7 @@ export default function StatsPage() {
                   };
                   const sections: Section[] = [
                     {
-                      label: '公卿', desc: '三位以上の最高位', tiers: [12, 11, 10, 9],
+                      label: '公卿 (上達部)', desc: '三位以上の議政官', tiers: [12, 11, 10, 9],
                       bg: 'color-mix(in srgb, var(--rw-primary) 12%, var(--rw-paper))',
                       accentColor: 'var(--rw-primary)',
                       elevated: true,
