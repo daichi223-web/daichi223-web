@@ -1,6 +1,18 @@
 import { WordData, Word, MultiMeaningWord, ExamplesBySense } from '../types';
 import bundledKobunQ from '../data/kobunQ.json';
 
+// 例文が意図的に空のエントリ (副 sense で出典確定の例文が無いもの)。
+// これらは validateExamples の警告対象から除外する。
+// UI 側 (setupTrueFalseQuiz / setupPolysemyQuiz) は空例文を skip 済み。
+// 将来例文が補完されたら、この set から該当 qid を外せば再度警告対象に戻る。
+// TODO(data): 出典付きの例文が見つかったら data/kobunQ.json を直接編集
+const KNOWN_EMPTY_EXAMPLE_QIDS = new Set<string>([
+  '341-3', // こころなし 「なんとなく」
+  '343-3', // さらに   「あらためて」
+  '347-2', // つひに   「結局」
+  '350-2', // まさに   「ちょうど」
+]);
+
 export class DataParser {
   private wordData: WordData[] = [];
   private multiMeaningWords: MultiMeaningWord[] = [];
@@ -61,15 +73,18 @@ export class DataParser {
     const warnings: string[] = [];
     const { kobun, modern } = this.processExamples(word);
 
-    if (kobun.length === 0) {
+    // 意図的に例文が空のエントリは警告対象から除外
+    const isKnownEmpty = KNOWN_EMPTY_EXAMPLE_QIDS.has(word.qid);
+
+    if (kobun.length === 0 && !isKnownEmpty) {
       warnings.push(`${word.lemma}(${word.qid}): 古文例文がありません`);
     }
 
-    if (modern.length === 0) {
+    if (modern.length === 0 && !isKnownEmpty) {
       warnings.push(`${word.lemma}(${word.qid}): 現代語訳がありません`);
     }
 
-    if (kobun.length !== modern.length) {
+    if (kobun.length !== modern.length && !isKnownEmpty) {
       warnings.push(`${word.lemma}(${word.qid}): 古文例文(${kobun.length}件)と現代語訳(${modern.length}件)の数が一致しません`);
     }
 
