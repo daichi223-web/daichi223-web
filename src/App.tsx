@@ -636,9 +636,12 @@ function App() {
             }
           }
 
-          // If still not enough, fall back to all words
+          // If still not enough, fall back to all words (試行上限付き)
           if (incorrectOptions.length < 3) {
-            while (incorrectOptions.length < 3) {
+            let attempts = 0;
+            const MAX_ATTEMPTS = 200;
+            while (incorrectOptions.length < 3 && attempts < MAX_ATTEMPTS) {
+              attempts++;
               const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
               if (!randomWord || !randomWord.lemma || !randomWord.sense) continue;
 
@@ -670,9 +673,12 @@ function App() {
             }
           }
 
-          // If still not enough, fall back to all words
+          // If still not enough, fall back to all words (試行上限付き)
           if (incorrectOptions.length < 3) {
-            while (incorrectOptions.length < 3) {
+            let attempts = 0;
+            const MAX_ATTEMPTS = 200;
+            while (incorrectOptions.length < 3 && attempts < MAX_ATTEMPTS) {
+              attempts++;
               const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
               if (!randomWord || !randomWord.lemma || !randomWord.sense) continue;
 
@@ -1019,6 +1025,10 @@ function App() {
     setWritingUserJudgment(judgment);
     setNextButtonVisible(false); // 次へボタンを非表示
 
+    // 最終判定 (partial は自動評価そのまま、true/false はユーザー判断を優先)
+    const isCorrectFinal: boolean =
+      judgment === 'partial' ? writingResult.score >= 60 : judgment === true;
+
     // Update score based on user judgment (○表示なし)
     if (judgment === true && writingResult.score < 60) {
       // User says correct but auto said wrong
@@ -1033,6 +1043,24 @@ function App() {
     // partial は自動評価のまま据え置く
     if (currentWritingQid && judgment !== 'partial') {
       updateSrsState(currentWritingQid, judgment === true).catch((e) => console.warn('[updateSrsState] failed:', e));
+    }
+
+    // wrongAnswers を最終判定に同期 (自動評価で追加/未追加されていたものを補正)。
+    // セッション末復習リストがユーザーの最終判断と矛盾しないようにする。
+    if (currentWritingQid) {
+      setWrongAnswers(prev => {
+        const exists = prev.some(w => w.qid === currentWritingQid);
+        if (isCorrectFinal && exists) {
+          return prev.filter(w => w.qid !== currentWritingQid);
+        }
+        if (!isCorrectFinal && !exists) {
+          const word = allWords.find(w => w.qid === currentWritingQid);
+          if (word) {
+            return [...prev, { lemma: word.lemma, sense: word.sense, qid: currentWritingQid }];
+          }
+        }
+        return prev;
+      });
     }
 
     // Save to Firestore（バックグラウンド）- answerIdがあれば保存
