@@ -761,6 +761,10 @@ function App() {
     const questions: TrueFalseQuestion[] = [];
     const numQuestions = words.length * 3;
     const MAX_RANDOM_ATTEMPTS = 50;
+    // 失敗 (空例文 / wrongMeaning 確保不可) で continue した場合に再試行できるよう、
+    // for ループではなく questions.length ベースの while で回す。
+    // 上限を numQuestions * 10 に設定してデータ全空例文の極端ケースでも止まる。
+    const MAX_TOTAL_ATTEMPTS = numQuestions * 10;
 
     // 例文が空の meaning は出題対象から除外するヘルパ。
     const firstExampleText = (m: Word): string | null => {
@@ -768,8 +772,10 @@ function App() {
       return ex?.jp ?? null;
     };
 
-    for (let i = 0; i < numQuestions; i++) {
-      const wordGroup = words[i % words.length];
+    let totalAttempts = 0;
+    while (questions.length < numQuestions && totalAttempts < MAX_TOTAL_ATTEMPTS) {
+      totalAttempts++;
+      const wordGroup = words[questions.length % words.length];
       const isCorrect = Math.random() < 0.5;
 
       if (isCorrect) {
@@ -837,6 +843,13 @@ function App() {
       }
     }
 
+    if (totalAttempts >= MAX_TOTAL_ATTEMPTS && questions.length < numQuestions) {
+      console.warn(
+        `[setupTrueFalseQuiz] 試行上限 (${MAX_TOTAL_ATTEMPTS}) に達しました。` +
+        `要求 ${numQuestions} 問に対し ${questions.length} 問のみ生成。` +
+        `データに例文不足の meaning が多い可能性。`
+      );
+    }
     setCurrentQuizData(questions.sort(() => Math.random() - 0.5));
   };
 

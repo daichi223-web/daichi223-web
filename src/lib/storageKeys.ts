@@ -10,8 +10,12 @@ export const STORAGE_KEYS = {
   streakDays: 'kobun.streak.days',
   streakLongest: 'kobun.streak.longest',
   quizTypeCorrect: 'kobun-quiz-type-correct',   // 多義語/記述クイズの per-qid 正答カウント
+  noblePeakTiers: 'kobun.noble.peakTiers',      // 単語ごとの最高到達 ★段位 (peak-lock)
+  noblePromotionHistory: 'kobun.noble.history', // 段位昇進の記録 (PromotionRecord[])
+  noblePeakStage: 'kobun.noble.peakStage',      // 装束 stage の最高到達 (1-21)
 
   // === 表示設定 (任意で export/import) ===
+  noblShowKakejiku: 'kobun.noble.showKakejiku', // 装束 (掛軸) ヒーローの開閉状態
   reiwaTheme: 'kobun.reiwaTheme',                       // 令和テーマ
   characterTheme: 'kobun-tan:dashboard-character-theme', // 庭/装束
   wordRange: 'kobun-wordRange',
