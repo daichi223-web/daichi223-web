@@ -557,7 +557,7 @@ export default function StatsPage() {
               </div>
             )}
 
-            {/* 統合ステータスバー — 位階+次昇進+3 KPI を 1段に集約 */}
+            {/* ① 統合ステータスバー — 位階+次昇進+3 KPI を 1段に集約 (最上部、固定) */}
             <NobleStatusBar
               parts={partsFromFieldMastery(fieldMastery)}
               streak={streak.current}
@@ -566,19 +566,8 @@ export default function StatsPage() {
               linkToStats={false}
             />
 
-            {/* 装束ダッシュボード — 学習履歴の核 */}
-            <section className="mb-6">
-              <NobleStatsDashboard parts={partsFromFieldMastery(fieldMastery)} />
-            </section>
-
-            {/* サマリ 3 カード (マスター/連続日数はステータスバーで表示済のため除外) */}
-            <section className="grid grid-cols-3 gap-2 mb-6">
-              <SummaryCard
-                label="累計正答率"
-                value={`${Math.round(overall.accuracy * 100)}%`}
-                bg="var(--rw-accent-soft)"
-                fg="var(--rw-accent)"
-              />
+            {/* ② 簡易表示 — 2 カード (挑戦単語 / 今日の復習)。累計正答率は単独セクションへ */}
+            <section className="grid grid-cols-2 gap-2 mb-6">
               <SummaryCard
                 label="挑戦単語"
                 value={`${overall.uniqueWords}`}
@@ -599,89 +588,9 @@ export default function StatsPage() {
               />
             </section>
 
-            {/* 連続学習 (longest のみ — 現在連続はバーに集約済) */}
-            {streak.longest > 0 && (
-              <section className="mb-6">
-                <div className="bg-rw-paper border border-rw-rule rounded-xl px-4 py-2.5 flex items-center justify-between text-[11px] text-rw-ink-soft">
-                  <span>
-                    最長連続記録{' '}
-                    <b className="text-base text-rw-ink font-black ml-1">{streak.longest}</b>
-                    <span className="ml-0.5">日</span>
-                  </span>
-                  {streak.lastActiveDate && (
-                    <span className="font-mono">最終学習: {streak.lastActiveDate}</span>
-                  )}
-                </div>
-              </section>
-            )}
-
-            {/* SRS box 分布 */}
+            {/* ③ 装束ダッシュボード — 学習履歴の核 */}
             <section className="mb-6">
-              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
-                SRS 進行状況
-              </h2>
-              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4">
-                <div className="flex items-end gap-1 h-24">
-                  {boxCounts.map((count, i) => {
-                    const max = Math.max(...boxCounts, 1);
-                    const heightPct = (count / max) * 100;
-                    return (
-                      <div key={i} className="flex-1 flex flex-col items-center justify-end gap-1">
-                        <div className="text-[10px] text-rw-ink-soft font-bold">{count}</div>
-                        <div
-                          className="w-full rounded-t-md transition-all"
-                          style={{
-                            height: `${Math.max(heightPct, 2)}%`,
-                            background: `var(--layer-${i + 1})`,
-                          }}
-                        />
-                        <div className="text-[10px] text-rw-ink-soft font-bold">B{i + 1}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="mt-3 text-[11px] text-rw-ink-soft text-center">
-                  Box 1: 毎回復習 · Box 2: 1日後 · Box 3: 3日後 · Box 4: 7日後 · Box 5: 14日後
-                </div>
-              </div>
-            </section>
-
-            {/* 練習量 セクション — 装束は上部に移動済。ここは庭表示を残す */}
-            <section className="mb-6">
-              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
-                読解の庭
-              </h2>
-              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
-                <Garden plants={garden} />
-              </div>
-
-              {/* 練習頻度分布 (累計回答はバーに集約済) */}
-              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
-                <div className="flex items-baseline justify-between mb-2">
-                  <div className="text-[11px] font-bold text-rw-ink">
-                    練習頻度の分布
-                  </div>
-                  <div className="text-[10px] text-rw-ink-soft">
-                    着手 <b className="text-rw-ink text-sm font-black">{allGroups.length - distribution['0']}</b>
-                    <span className="text-[9px] ml-0.5">/ 全{allGroups.length}語</span>
-                  </div>
-                </div>
-                <DistributionBars distribution={distribution} total={allGroups.length} />
-              </div>
-
-              {/* ヒートマップ */}
-              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-3">
-                <div className="flex items-baseline justify-between mb-2">
-                  <div className="text-[11px] font-bold text-rw-ink">
-                    全 {allGroups.length} 語ヒートマップ
-                  </div>
-                  <div className="text-[9px] text-rw-ink-soft">
-                    タップで復習
-                  </div>
-                </div>
-                <Heatmap groups={allGroups.map((g) => groupAgg[g])} />
-                <HeatmapLegend />
-              </div>
+              <NobleStatsDashboard parts={partsFromFieldMastery(fieldMastery)} />
             </section>
 
             {/* 段位別 単語数 (★0-10 のヒストグラム) */}
@@ -805,6 +714,120 @@ export default function StatsPage() {
                     );
                   });
                 })()}
+              </div>
+            </section>
+
+            {/* ⑤ ヒートマップ */}
+            <section className="mb-6">
+              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+                ヒートマップ
+              </h2>
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4">
+                <div className="flex items-baseline justify-between mb-2">
+                  <div className="text-[11px] font-bold text-rw-ink">
+                    全 {allGroups.length} 語ヒートマップ
+                  </div>
+                  <div className="text-[9px] text-rw-ink-soft">タップで復習</div>
+                </div>
+                <Heatmap groups={allGroups.map((g) => groupAgg[g])} />
+                <HeatmapLegend />
+              </div>
+            </section>
+
+            {/* ⑥ 練習頻度の分布 */}
+            <section className="mb-6">
+              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+                練習頻度の分布
+              </h2>
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4">
+                <div className="flex items-baseline justify-between mb-2">
+                  <div className="text-[11px] font-bold text-rw-ink">
+                    挑戦回数別の単語数
+                  </div>
+                  <div className="text-[10px] text-rw-ink-soft">
+                    着手 <b className="text-rw-ink text-sm font-black">{allGroups.length - distribution['0']}</b>
+                    <span className="text-[9px] ml-0.5">/ 全{allGroups.length}語</span>
+                  </div>
+                </div>
+                <DistributionBars distribution={distribution} total={allGroups.length} />
+              </div>
+            </section>
+
+            {/* ⑦ 累計正答率 — 単独セクションで強調表示 */}
+            <section className="mb-6">
+              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+                累計正答率
+              </h2>
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4 flex items-baseline justify-between">
+                <div>
+                  <div className="text-4xl font-black leading-none" style={{ color: 'var(--rw-accent)' }}>
+                    {Math.round(overall.accuracy * 100)}<span className="text-xl">%</span>
+                  </div>
+                  <div className="text-[10px] text-rw-ink-soft mt-1.5">
+                    全クイズ累計 ({overall.correct.toLocaleString()} / {overall.answered.toLocaleString()} 問)
+                  </div>
+                </div>
+                <div className="text-right text-[10px] text-rw-ink-soft">
+                  <div>過去 acc は変動表示</div>
+                  <div>段位は <b className="text-rw-ink">peak-lock</b></div>
+                </div>
+              </div>
+            </section>
+
+            {/* ⑧ 読解の庭 */}
+            <section className="mb-6">
+              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+                読解の庭
+              </h2>
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4">
+                <Garden plants={garden} />
+              </div>
+            </section>
+
+            {/* 連続学習 (longest のみ — 現在連続はバーに集約済) */}
+            {streak.longest > 0 && (
+              <section className="mb-6">
+                <div className="bg-rw-paper border border-rw-rule rounded-xl px-4 py-2.5 flex items-center justify-between text-[11px] text-rw-ink-soft">
+                  <span>
+                    最長連続記録{' '}
+                    <b className="text-base text-rw-ink font-black ml-1">{streak.longest}</b>
+                    <span className="ml-0.5">日</span>
+                  </span>
+                  {streak.lastActiveDate && (
+                    <span className="font-mono">最終学習: {streak.lastActiveDate}</span>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* SRS box 分布 */}
+            <section className="mb-6">
+              <h2 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase mb-2">
+                SRS 進行状況
+              </h2>
+              <div className="bg-rw-paper border border-rw-rule rounded-2xl p-4">
+                <div className="flex items-end gap-1 h-24">
+                  {boxCounts.map((count, i) => {
+                    const max = Math.max(...boxCounts, 1);
+                    const heightPct = (count / max) * 100;
+                    return (
+                      <div key={i} className="flex-1 flex flex-col items-center justify-end gap-1">
+                        <div className="text-[10px] text-rw-ink-soft font-bold">{count}</div>
+                        <div
+                          className="w-full rounded-t-md transition-all"
+                          style={{
+                            height: `${Math.max(heightPct, 2)}%`,
+                            background: `var(--layer-${i + 1})`,
+                          }}
+                        />
+                        <div className="text-[10px] text-rw-ink-soft font-bold">B{i + 1}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-3 text-[11px] text-rw-ink-soft text-center">
+                  Box 1: 毎回復習 · Box 2: 1日後 · Box 3: 3日後 · Box 4: 7日後 · Box 5: 14日後
+                </div>
               </div>
             </section>
 
