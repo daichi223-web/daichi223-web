@@ -1080,11 +1080,20 @@ function App() {
       setScore(prev => prev + 1);
       setShowCorrectCircle(true);
       setTimeout(() => {
-        setPolysemyState(prev => ({
-          ...prev,
-          currentWordIndex: prev.currentWordIndex + 1
-        }));
         setShowCorrectCircle(false);
+        // 最終問題なら index を進めず結果画面へ。それ以外は次の単語へ。
+        // (進めると 6/5 のような表示になり、useEffect 終了判定が
+        //  currentQuizData.length===0 で抜けるため終わらないバグの修正)
+        const nextIdx = polysemyState.currentWordIndex + 1;
+        if (nextIdx >= polysemyState.words.length) {
+          setShowResults(true);
+          setIsQuizActive(false);
+        } else {
+          setPolysemyState(prev => ({
+            ...prev,
+            currentWordIndex: nextIdx,
+          }));
+        }
       }, 500);
     }
 
