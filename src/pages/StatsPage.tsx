@@ -14,6 +14,7 @@ import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
 import { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS, TIER_LABELS, TIER_KAII } from '@/lib/fieldMastery';
 import { partsFromFieldMastery } from '@/lib/nobleData';
+import { readPeakTiers, updatePeakTiers } from '@/lib/peakTiers';
 import NobleStatsDashboard from '@/components/noble/NobleStatsDashboard';
 import NobleStatusBar from '@/components/noble/NobleStatusBar';
 import BackupSection from '@/components/BackupSection';
@@ -288,6 +289,28 @@ export default function StatsPage() {
     return 1; // 雑色
   }
 
+  // 各 group の peak-lock 後の段位を一元計算 (blueprintMetrics と tierBuckets で共通利用)。
+  // 副作用: 現在 tier が peak を上回ったら localStorage 更新 (冪等)。
+  const tierByGroup = useMemo(() => {
+    const peaks = readPeakTiers();
+    const updates: Array<{ group: number; tier: number }> = [];
+    const out: Record<number, number> = {};
+    for (const g of allGroups) {
+      const ch = chapterFor(g);
+      if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) {
+        out[g] = 0;
+        continue;
+      }
+      const currentTier = computeTier(groupAgg[g]);
+      const peakTier = peaks[String(g)] ?? 0;
+      if (currentTier > peakTier) updates.push({ group: g, tier: currentTier });
+      out[g] = currentTier > peakTier ? currentTier : peakTier;
+    }
+    if (updates.length > 0) updatePeakTiers(updates);
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupAgg, allGroups, quizTypeStats, srsBoxByQid]);
+
   const blueprintMetrics = useMemo(() => {
     const ids: ChapterId[] = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5'];
     type Acc = {
@@ -306,7 +329,7 @@ export default function StatsPage() {
       const ch = chapterFor(g);
       if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
       const id = ch.id as ChapterId;
-      const tier = computeTier(groupAgg[g]);
+      const tier = tierByGroup[g] ?? 0; // peak-lock 済
       const a = acc[id];
       a.total += 1;
       a.tierSum += tier;
@@ -335,8 +358,7 @@ export default function StatsPage() {
       };
     }
     return { totalLearned, totalMastered, fieldMastery };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groupAgg, allGroups, quizTypeStats, srsBoxByQid]);
+  }, [allGroups, tierByGroup]);
 
   const fieldMastery = blueprintMetrics.fieldMastery;
 
@@ -347,13 +369,12 @@ export default function StatsPage() {
     for (const g of allGroups) {
       const ch = chapterFor(g);
       if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
-      const tier = computeTier(groupAgg[g]);
+      const tier = tierByGroup[g] ?? 0;
       counts[tier] += 1;
       for (const qid of groupAgg[g].qids) qidsByTier[tier].push(qid);
     }
     return { counts, qidsByTier };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groupAgg, allGroups, quizTypeStats, srsBoxByQid]);
+  }, [groupAgg, allGroups, tierByGroup]);
   const tierDistribution = tierBuckets.counts;
   const tierQids = tierBuckets.qidsByTier;
 

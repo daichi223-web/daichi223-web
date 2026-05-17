@@ -13,6 +13,7 @@ import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { supabase } from '@/lib/supabase';
 import { currentAuthUid } from '@/lib/anonAuth';
 import { CHAPTERS, chapterFor } from '@/utils/chapters';
+import { readPeakTiers, updatePeakTiers } from '@/lib/peakTiers';
 
 export type ChapterId = 'ch1' | 'ch2' | 'ch3' | 'ch4' | 'ch5';
 
@@ -112,7 +113,9 @@ export type FieldMasteryResult = {
   totalMastered: number;
 };
 
-// 純粋関数: 集計済データから fieldMastery を計算
+// 集計済データから fieldMastery を計算。
+// per-group の tier には peak-lock を適用 (一度達成した段位は下がらない)。
+// 副作用: 現在 tier が peak を上回った場合のみ localStorage に書込み (冪等)。
 export function computeFieldMastery(
   stats: Record<string, WordStat>,
   quizTypeStats: QuizTypeStats,
@@ -136,6 +139,10 @@ export function computeFieldMastery(
   }
   const groups = Object.values(m);
 
+  // peak-lock: 既存の最高到達段位を読み、現在 tier と max を取る
+  const peaks = readPeakTiers();
+  const peakUpdates: Array<{ group: number; tier: number }> = [];
+
   // 章ごと集計
   type Acc = { total: number; jige: number; tenjou: number; kugyou: number; master: number; tierSum: number };
   const mk = (): Acc => ({ total: 0, jige: 0, tenjou: 0, kugyou: 0, master: 0, tierSum: 0 });
@@ -149,7 +156,12 @@ export function computeFieldMastery(
     const ch = chapterFor(g.group);
     if (!ch || !VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId)) continue;
     const id = ch.id as ChapterId;
-    const tier = computeTier(g, quizTypeStats, srsBoxByQid);
+    const currentTier = computeTier(g, quizTypeStats, srsBoxByQid);
+    const peakTier = peaks[String(g.group)] ?? 0;
+    if (currentTier > peakTier) {
+      peakUpdates.push({ group: g.group, tier: currentTier });
+    }
+    const tier = currentTier > peakTier ? currentTier : peakTier;
     const a = acc[id];
     a.total += 1;
     a.tierSum += tier;
@@ -162,6 +174,9 @@ export function computeFieldMastery(
       totalMastered += 1;
     }
   }
+
+  // 副作用: peak を更新 (差分があった場合のみ書込み)
+  if (peakUpdates.length > 0) updatePeakTiers(peakUpdates);
 
   const pct = (n: number, d: number) => (d > 0 ? Math.round((n / d) * 100) : 0);
   const fieldMastery = {} as FieldMastery;
