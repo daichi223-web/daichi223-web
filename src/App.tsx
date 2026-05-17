@@ -761,6 +761,13 @@ function App() {
   const setupTrueFalseQuiz = (words: MultiMeaningWord[]) => {
     const questions: TrueFalseQuestion[] = [];
     const numQuestions = words.length * 3;
+    const MAX_RANDOM_ATTEMPTS = 50;
+
+    // 例文が空の meaning は出題対象から除外するヘルパ。
+    const firstExampleText = (m: Word): string | null => {
+      const ex = m.examples?.[0];
+      return ex?.jp ?? null;
+    };
 
     for (let i = 0; i < numQuestions; i++) {
       const wordGroup = words[i % words.length];
@@ -768,13 +775,15 @@ function App() {
 
       if (isCorrect) {
         const correctMeaning = wordGroup.meanings[Math.floor(Math.random() * wordGroup.meanings.length)];
+        const exampleText = firstExampleText(correctMeaning);
+        if (!exampleText) continue; // 例文無し → スキップ
 
         // Get examples for the correct meaning (sense-priority)
         const examples = dataParser.getExamplesForSense(correctMeaning, correctMeaning.qid, wordGroup);
         const exampleIndex = examples.kobun.length > 0 ? Math.floor(Math.random() * examples.kobun.length) : 0;
 
         questions.push({
-          example: correctMeaning.examples[0].jp,
+          example: exampleText,
           meaning: correctMeaning.sense,
           isCorrect: true,
           correctAnswer: correctMeaning,
@@ -785,29 +794,39 @@ function App() {
         });
       } else {
         const randomExample = wordGroup.meanings[Math.floor(Math.random() * wordGroup.meanings.length)];
-        let wrongMeaning: Word;
+        const exampleText = firstExampleText(randomExample);
+        if (!exampleText) continue; // 例文無し → スキップ
+        let wrongMeaning: Word | null = null;
 
         if (Math.random() < 0.5 && wordGroup.meanings.length > 1) {
+          // 同じ wordGroup 内の別の意味から選ぶ
+          let attempts = 0;
           do {
             wrongMeaning = wordGroup.meanings[Math.floor(Math.random() * wordGroup.meanings.length)];
-          } while (wrongMeaning.qid === randomExample.qid);
+          } while (wrongMeaning.qid === randomExample.qid && ++attempts < MAX_RANDOM_ATTEMPTS);
+          if (wrongMeaning.qid === randomExample.qid) wrongMeaning = null;
         } else {
-          wrongMeaning = allWords[Math.floor(Math.random() * allWords.length)];
-          while (wrongMeaning && wrongMeaning.lemma === wordGroup.lemma) {
-            wrongMeaning = allWords[Math.floor(Math.random() * allWords.length)];
-            // Prevent infinite loop if no valid words are found
-            if (!wrongMeaning || !wrongMeaning.lemma) {
+          // 全単語からランダムに別 lemma を選ぶ。試行上限と最終 null guard で
+          // 無限ループ・undefined アクセスを防ぐ
+          let attempts = 0;
+          while (attempts < MAX_RANDOM_ATTEMPTS) {
+            const candidate = allWords[Math.floor(Math.random() * allWords.length)];
+            attempts++;
+            if (!candidate || !candidate.lemma || !candidate.sense) continue;
+            if (candidate.lemma !== wordGroup.lemma) {
+              wrongMeaning = candidate;
               break;
             }
           }
         }
+        if (!wrongMeaning || !wrongMeaning.sense) continue; // 確保できなければスキップ
 
         // Get examples for the random example (sense-priority)
         const examples = dataParser.getExamplesForSense(randomExample, randomExample.qid, wordGroup);
         const exampleIndex = examples.kobun.length > 0 ? Math.floor(Math.random() * examples.kobun.length) : 0;
 
         questions.push({
-          example: randomExample.examples[0].jp,
+          example: exampleText,
           meaning: wrongMeaning.sense,
           isCorrect: false,
           correctAnswer: randomExample,
@@ -1041,20 +1060,26 @@ function App() {
     const currentWord = polysemyState.words[polysemyState.currentWordIndex];
     let correctCount = 0;
 
-    // 正誤判定
+    // 各 meaning の正誤を判定し、word_stats / SRS / quiz_type_correct に per-qid で記録。
+    // (元実装では記録漏れがあり、例文理解だけ累計に反映されなかった)
     for (const meaning of currentWord.meanings) {
       const userAnswer = answers[meaning.qid];
       const isCorrect = userAnswer === meaning.qid;
       if (isCorrect) correctCount++;
+      recordAnswer(meaning.qid, isCorrect).catch((e) =>
+        console.warn('[recordAnswer] failed:', e)
+      );
+      updateSrsState(meaning.qid, isCorrect).catch((e) =>
+        console.warn('[updateSrsState] failed:', e)
+      );
+      if (isCorrect) recordQuizTypeCorrect(meaning.qid, 'polysemy');
     }
 
     // 全問正解の場合のみスコア加算と○表示
     const isAllCorrect = correctCount === currentWord.meanings.length;
     if (isAllCorrect) {
       setScore(prev => prev + 1);
-      // 全問正解時は●を表示
       setShowCorrectCircle(true);
-      // 0.5秒後に遷移（○は遷移時に自動的に消える）
       setTimeout(() => {
         setPolysemyState(prev => ({
           ...prev,
@@ -1064,8 +1089,7 @@ function App() {
       }, 500);
     }
 
-    // 例文理解モードはFirestoreに保存しない（選択式なので記述データではない）
-    // 不正解がある場合は、ExampleComprehensionContentで「次へ」ボタンを表示
+    // 不正解がある場合は、ExampleComprehensionContent で「次へ」ボタンを表示
   };
 
   const handleExampleComprehensionNext = () => {
