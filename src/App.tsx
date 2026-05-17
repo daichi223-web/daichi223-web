@@ -1177,31 +1177,26 @@ function App() {
   };
 
   const getProgress = () => {
-    if (currentMode === 'word') {
+    // 進捗 % 計算ヘルパ: 分母 0 で Infinity になるのを防ぐ + 表示は total を超えない
+    const calc = (rawCurrent: number, total: number) => {
+      if (total <= 0) return { current: 0, total: 0, percent: 0 };
+      const current = Math.min(rawCurrent, total);
       return {
-        current: currentQuestionIndex + 1,
-        total: currentQuizData.length,
-        percent: Math.round(((currentQuestionIndex + 1) / currentQuizData.length) * 100)
+        current,
+        total,
+        percent: Math.round((current / total) * 100),
       };
+    };
+    if (currentMode === 'word') {
+      return calc(currentQuestionIndex + 1, currentQuizData.length);
     } else if (currentMode === 'polysemy') {
       if (polysemyQuizType === 'true-false') {
-        return {
-          current: currentQuestionIndex + 1,
-          total: currentQuizData.length,
-          percent: Math.round(((currentQuestionIndex + 1) / currentQuizData.length) * 100)
-        };
-      } else if (polysemyQuizType === 'example-comprehension') {
-        return {
-          current: polysemyState.currentWordIndex + 1,
-          total: polysemyState.words.length,
-          percent: Math.round(((polysemyState.currentWordIndex + 1) / polysemyState.words.length) * 100)
-        };
-      } else if (polysemyQuizType === 'context-writing') {
-        return {
-          current: polysemyState.currentWordIndex + 1,
-          total: polysemyState.words.length,
-          percent: Math.round(((polysemyState.currentWordIndex + 1) / polysemyState.words.length) * 100)
-        };
+        return calc(currentQuestionIndex + 1, currentQuizData.length);
+      } else if (
+        polysemyQuizType === 'example-comprehension' ||
+        polysemyQuizType === 'context-writing'
+      ) {
+        return calc(polysemyState.currentWordIndex + 1, polysemyState.words.length);
       }
     }
     return { current: 1, total: 1, percent: 100 };
