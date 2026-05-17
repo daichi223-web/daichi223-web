@@ -289,6 +289,9 @@ function App() {
     };
   }, [showResults]);
   const [pendingModeSwitch, setPendingModeSwitch] = useState<AppMode | null>(null);
+  // モード切替時に「同じ語」を新モードの第一問に引き継ぐための seed lemma。
+  // currentMode 変更を契機に useEffect が setupQuiz(undefined, seed) を呼ぶ。
+  const [pendingSeedLemma, setPendingSeedLemma] = useState<string | null>(null);
   const [indexSearchQuery, setIndexSearchQuery] = useState('');
 
   // Polysemy mode state
@@ -358,7 +361,10 @@ function App() {
       const runSetup = async () => {
         setIsGeneratingQuiz(true);
         try {
-          await setupQuiz();
+          // モード切替で seed lemma が設定されていれば第1問に同じ語を引き継ぐ
+          const seed = pendingSeedLemma;
+          if (seed) setPendingSeedLemma(null);
+          await setupQuiz(undefined, seed);
         } finally {
           if (!cancelled) {
             setIsGeneratingQuiz(false);
@@ -372,6 +378,8 @@ function App() {
         cancelled = true;
       };
     }
+    // pendingSeedLemma は意図的に依存に入れない (mode/range 変更時に最新値を closure で拾う)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     currentMode,
     wordQuizType, wordNumQuestions, wordRange.from, wordRange.to,
@@ -447,7 +455,7 @@ function App() {
       .map(([lemma, meanings]) => ({ lemma, meanings }));
   };
 
-  const setupQuiz = async (qidFilterOverride?: string[]) => {
+  const setupQuiz = async (qidFilterOverride?: string[], seedLemma?: string | null) => {
     // Reset all quiz states when switching modes
     setShowResults(false);
     setIsQuizActive(false);
@@ -460,13 +468,28 @@ function App() {
     setWrongAnswers([]);
 
     if (currentMode === 'word') {
-      await setupWordQuiz(qidFilterOverride);
+      await setupWordQuiz(qidFilterOverride, seedLemma ?? undefined);
     } else {
-      setupPolysemyQuiz();
+      setupPolysemyQuiz(seedLemma ?? undefined);
     }
   };
 
-  const setupWordQuiz = async (qidFilterOverride?: string[]) => {
+  // 現在のクイズで出題中の lemma を返す (モード切替の seed 用)。
+  const getCurrentLemma = (): string | null => {
+    if (currentMode === 'word' && currentQuizData[currentQuestionIndex]) {
+      const q = currentQuizData[currentQuestionIndex] as QuizQuestion;
+      return q.correct?.lemma ?? null;
+    }
+    if (currentMode === 'polysemy') {
+      const tf = currentQuizData[currentQuestionIndex] as TrueFalseQuestion | undefined;
+      if (tf?.correctAnswer?.lemma) return tf.correctAnswer.lemma;
+      const w = polysemyState.words[polysemyState.currentWordIndex];
+      if (w?.lemma) return w.lemma;
+    }
+    return null;
+  };
+
+  const setupWordQuiz = async (qidFilterOverride?: string[], seedLemma?: string) => {
     // qid フィルタ (引数優先、次に state)。指定があれば苦手単語 / SRS 復習として
     // その qid のみ出題、なければ範囲で絞り込む
     const filter = qidFilterOverride ?? quizQidFilter;
@@ -513,10 +536,18 @@ function App() {
     // 問題データを事前準備
     const questionPrepData = [];
     for (let i = 0; i < actualNumQuestions; i++) {
-      let correctWordIndex;
-      do {
-        correctWordIndex = Math.floor(Math.random() * targetWords.length);
-      } while (usedIndexes.has(targetWords[correctWordIndex].qid));
+      let correctWordIndex = -1;
+      // 第1問: seedLemma が範囲内にあれば優先採用 (モード切替時の語引継ぎ)
+      if (i === 0 && seedLemma) {
+        correctWordIndex = targetWords.findIndex(
+          (w) => w.lemma === seedLemma && !usedIndexes.has(w.qid)
+        );
+      }
+      if (correctWordIndex < 0) {
+        do {
+          correctWordIndex = Math.floor(Math.random() * targetWords.length);
+        } while (usedIndexes.has(targetWords[correctWordIndex].qid));
+      }
 
       usedIndexes.add(targetWords[correctWordIndex].qid);
       const correctWord = targetWords[correctWordIndex];
@@ -682,7 +713,7 @@ function App() {
     setShowWritingResult(false);
   };
 
-  const setupPolysemyQuiz = () => {
+  const setupPolysemyQuiz = (seedLemma?: string) => {
     const start = polysemyRange.from ?? 1;
     const end = polysemyRange.to ?? 330;
     const polysemyWords = getPolysemyWords(allWords, start, end);
@@ -694,9 +725,16 @@ function App() {
       return;
     }
 
-    // シャッフルしてから選択
+    // シャッフルしてから選択。seedLemma があれば先頭に固定 (モード切替時の語引継ぎ)。
     const shuffled = [...polysemyWords].sort(() => Math.random() - 0.5);
-    const selectedWords = shuffled.slice(0, Math.min(polysemyNumQuestions, polysemyWords.length));
+    let ordered = shuffled;
+    if (seedLemma) {
+      const seedIdx = shuffled.findIndex((w) => w.lemma === seedLemma);
+      if (seedIdx > 0) {
+        ordered = [shuffled[seedIdx], ...shuffled.filter((_, i) => i !== seedIdx)];
+      }
+    }
+    const selectedWords = ordered.slice(0, Math.min(polysemyNumQuestions, ordered.length));
 
     setPolysemyState({
       currentWordIndex: 0,
@@ -1681,10 +1719,13 @@ function App() {
         <div className="flex justify-center border-b border-slate-200 mb-4 bg-white rounded-t-2xl shadow-sm">
           <button
             onClick={() => {
+              const lemma = getCurrentLemma();
               if (isQuizActive && currentMode !== 'word') {
                 setPendingModeSwitch('word');
-              } else {
+                if (lemma) setPendingSeedLemma(lemma);
+              } else if (currentMode !== 'word') {
                 setShowResults(false);
+                if (lemma) setPendingSeedLemma(lemma);
                 setCurrentMode('word');
               }
             }}
@@ -1703,10 +1744,13 @@ function App() {
           </button>
           <button
             onClick={() => {
+              const lemma = getCurrentLemma();
               if (isQuizActive && currentMode !== 'polysemy') {
                 setPendingModeSwitch('polysemy');
-              } else {
+                if (lemma) setPendingSeedLemma(lemma);
+              } else if (currentMode !== 'polysemy') {
                 setShowResults(false);
+                if (lemma) setPendingSeedLemma(lemma);
                 setCurrentMode('polysemy');
               }
             }}
@@ -1737,13 +1781,17 @@ function App() {
                   setShowResults(false);
                   setCurrentMode(pendingModeSwitch);
                   setPendingModeSwitch(null);
+                  // pendingSeedLemma は残す — currentMode 変更後の useEffect が拾う
                 }}
                 className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded transition"
               >
                 切り替える
               </button>
               <button
-                onClick={() => setPendingModeSwitch(null)}
+                onClick={() => {
+                  setPendingModeSwitch(null);
+                  setPendingSeedLemma(null);
+                }}
                 className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded transition"
               >
                 キャンセル
