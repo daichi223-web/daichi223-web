@@ -288,7 +288,6 @@ function App() {
       cancelled = true;
     };
   }, [showResults]);
-  const [pendingModeSwitch, setPendingModeSwitch] = useState<AppMode | null>(null);
   // モード切替時に「同じ語」を新モードの第一問に引き継ぐための seed lemma。
   // currentMode 変更を契機に useEffect が setupQuiz(undefined, seed) を呼ぶ。
   const [pendingSeedLemma, setPendingSeedLemma] = useState<string | null>(null);
@@ -1743,15 +1742,11 @@ function App() {
         <div className="flex justify-center border-b border-slate-200 mb-4 bg-white rounded-t-2xl shadow-sm">
           <button
             onClick={() => {
+              if (currentMode === 'word') return;
               const lemma = getCurrentLemma();
-              if (isQuizActive && currentMode !== 'word') {
-                setPendingModeSwitch('word');
-                if (lemma) setPendingSeedLemma(lemma);
-              } else if (currentMode !== 'word') {
-                setShowResults(false);
-                if (lemma) setPendingSeedLemma(lemma);
-                setCurrentMode('word');
-              }
+              setShowResults(false);
+              if (lemma) setPendingSeedLemma(lemma);
+              setCurrentMode('word');
             }}
             className={`mode-tab ${currentMode === 'word' ? 'active-tab' : ''}`}
             style={{
@@ -1768,15 +1763,11 @@ function App() {
           </button>
           <button
             onClick={() => {
+              if (currentMode === 'polysemy') return;
               const lemma = getCurrentLemma();
-              if (isQuizActive && currentMode !== 'polysemy') {
-                setPendingModeSwitch('polysemy');
-                if (lemma) setPendingSeedLemma(lemma);
-              } else if (currentMode !== 'polysemy') {
-                setShowResults(false);
-                if (lemma) setPendingSeedLemma(lemma);
-                setCurrentMode('polysemy');
-              }
+              setShowResults(false);
+              if (lemma) setPendingSeedLemma(lemma);
+              setCurrentMode('polysemy');
             }}
             className={`mode-tab ${currentMode === 'polysemy' ? 'active-tab' : ''}`}
             style={{
@@ -1792,37 +1783,6 @@ function App() {
             多義語モード
           </button>
         </div>
-
-        {/* Mode Switch Confirmation */}
-        {pendingModeSwitch && (
-          <div className="flex items-center justify-between bg-amber-50 border border-amber-300 rounded-lg p-3 mb-2 text-sm">
-            <span className="text-amber-800">
-              モードを切り替えると、進行中のクイズがリセットされます。
-            </span>
-            <div className="flex gap-2 ml-4 shrink-0">
-              <button
-                onClick={() => {
-                  setShowResults(false);
-                  setCurrentMode(pendingModeSwitch);
-                  setPendingModeSwitch(null);
-                  // pendingSeedLemma は残す — currentMode 変更後の useEffect が拾う
-                }}
-                className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded transition"
-              >
-                切り替える
-              </button>
-              <button
-                onClick={() => {
-                  setPendingModeSwitch(null);
-                  setPendingSeedLemma(null);
-                }}
-                className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded transition"
-              >
-                キャンセル
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Settings Area */}
         <div className="bg-white p-3 rounded-b-2xl shadow-sm border-x border-b border-slate-200 mb-2">
