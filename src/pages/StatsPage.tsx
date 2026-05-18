@@ -390,7 +390,11 @@ export default function StatsPage() {
 
   // === 庭(Garden) + 装束 用: localStorage を都度読み直す ===
   const [gardenSig, setGardenSig] = useState(0); // ページに戻ってきたら再読する用
-  const [publishedSet, setPublishedSet] = useState<Set<string> | null>(null);
+  // publishedSet の状態:
+  //   undefined = 初期ロード中 (fetch 未完了)
+  //   null      = テーブル未作成 or fetch エラー (フォールバック: 全表示)
+  //   Set       = 取得済の公開 slug 一覧
+  const [publishedSet, setPublishedSet] = useState<Set<string> | null | undefined>(undefined);
   useEffect(() => {
     const refresh = () => {
       setGardenSig((n) => n + 1);
@@ -408,8 +412,11 @@ export default function StatsPage() {
     if (typeof window === 'undefined') return [];
     void gardenSig;
     const fullAccess = hasFullAccess();
+    // 初期ロード中 (publishedSet === undefined) は何も表示しない。
+    // null (テーブル未作成 fallback) なら全表示、Set なら該当のみ表示。
+    if (!fullAccess && publishedSet === undefined) return [];
     const allTexts = (bundledTextsV3 as TextV3Entry[]).filter(
-      (t) => fullAccess || !publishedSet || publishedSet.has(t.id)
+      (t) => fullAccess || publishedSet === null || publishedSet.has(t.id)
     );
     const allProgress = loadAllProgress();
     const counters = getOpenCounters();

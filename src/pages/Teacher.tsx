@@ -2,6 +2,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { dataParser } from "../utils/dataParser";
 import bundledTextsIndex from "../data/textsIndex.json";
+import {
+  STAGES,
+  PORTRAITS,
+  PART_CHARTS,
+  portraitForStage,
+  robeColorOf,
+  TIER_TONE,
+  type Tier,
+} from "../lib/nobleData";
 
 function getToken(): string | null {
   // URL ?token=... → localStorage 保存（次回からURLに出さなくてOK）
@@ -63,7 +72,7 @@ async function callAPI(path: string, body?: any) {
 
 export default function Teacher() {
   const [token, setToken] = useState<string | null>(() => getToken());
-  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts">("answers");
+  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble">("answers");
   const [rows, setRows] = useState<any[]>([]);
   const [candidates, setCandidates] = useState<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
@@ -374,6 +383,16 @@ export default function Teacher() {
         >
           📚 教材公開管理
         </button>
+        <button
+          onClick={() => setActiveTab("noble")}
+          className={`px-4 py-2 font-medium transition ${
+            activeTab === "noble"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-slate-600 hover:text-slate-800"
+          }`}
+        >
+          🎎 段位プレビュー
+        </button>
       </div>
       </div>
 
@@ -612,6 +631,8 @@ export default function Teacher() {
       )}
 
       {activeTab === "texts" && <TextsManageView />}
+
+      {activeTab === "noble" && <NoblePreviewView />}
     </div>
   );
 }
@@ -1433,6 +1454,183 @@ function AnalyticsView({
             ))}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// === 段位プレビュー — 21 階位の水彩肖像 + 部位構成を一覧表示 ===
+// 教員が「生徒が段位上昇したらどんな画像/位階が表示されるか」を事前確認するための画面。
+function NoblePreviewView() {
+  const [tierFilter, setTierFilter] = useState<Tier | 'all'>('all');
+  const [showCharts, setShowCharts] = useState(false);
+
+  const filteredStages = tierFilter === 'all'
+    ? STAGES
+    : STAGES.filter((s) => s.era === tierFilter);
+
+  return (
+    <div className="bg-white rounded-lg shadow p-5">
+      <div className="mb-4 flex items-baseline justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-slate-800">段位プレビュー (二十一階)</h3>
+          <p className="text-xs text-slate-500 mt-1">
+            生徒が段位上昇したときに表示される水彩肖像と装束構成を一覧確認できます。
+          </p>
+        </div>
+        <button
+          onClick={() => setShowCharts((v) => !v)}
+          className="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded hover:bg-slate-50"
+        >
+          {showCharts ? '装束図解を畳む' : '装束図解 (5部位)'}
+        </button>
+      </div>
+
+      <div className="flex gap-2 mb-4 text-xs">
+        {(['all', '地下', '殿上人', '公卿', '極位'] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTierFilter(t)}
+            className="px-3 py-1.5 font-bold rounded border transition"
+            style={{
+              background: tierFilter === t ? '#1e293b' : '#fff',
+              color: tierFilter === t ? '#fff' : '#475569',
+              borderColor: tierFilter === t ? '#1e293b' : '#cbd5e1',
+            }}
+          >
+            {t === 'all' ? '全て' : t}
+          </button>
+        ))}
+      </div>
+
+      {showCharts && (
+        <div className="mb-5 grid grid-cols-2 md:grid-cols-5 gap-3 p-3 bg-slate-50 rounded">
+          {PART_CHARTS.map((c) => (
+            <div key={c.key} className="bg-white border border-slate-200 rounded overflow-hidden">
+              <img src={c.src} alt={c.label} style={{ display: 'block', width: '100%', height: 'auto' }} />
+              <div className="px-2 py-1.5 text-[10px] text-slate-600 text-center">
+                {c.label} <span className="text-slate-400 ml-1">全 {c.cap} 段</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {filteredStages.map((s) => {
+          const portrait = portraitForStage(s.n);
+          const tone = TIER_TONE[s.era];
+          return (
+            <div
+              key={s.n}
+              className="border rounded-lg overflow-hidden bg-white flex"
+              style={{ borderColor: s.apex ? '#b08841' : '#e2e8f0' }}
+            >
+              <div
+                className="shrink-0 relative overflow-hidden"
+                style={{ width: 96, height: 132, background: '#f6efe0', borderRight: '1px solid #e2e8f0' }}
+              >
+                <img
+                  src={portrait.src}
+                  alt={portrait.label}
+                  draggable={false}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: `${portrait.focusX}% ${portrait.focusY}%`,
+                  }}
+                />
+                <div
+                  className="absolute top-1 left-1 text-[10px] font-black px-1.5 py-0.5 rounded"
+                  style={{ background: '#1e293b', color: '#fff' }}
+                >
+                  第{s.n}階
+                </div>
+                {s.milestone && (
+                  <div
+                    className="absolute bottom-1 left-1 text-[9px] font-black px-1.5 py-0.5 rounded text-white"
+                    style={{ background: s.apex ? '#b08841' : '#b8423a' }}
+                  >
+                    {s.apex ? '👑 極位' : '★ ' + s.milestone + 'デビュー'}
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0 p-2.5">
+                <div className="flex items-baseline gap-1.5 mb-1">
+                  <span
+                    className="text-[9px] font-black px-1.5 py-0.5 border rounded"
+                    style={{ color: tone.fg, borderColor: tone.fg }}
+                  >
+                    {s.era}
+                  </span>
+                  <span className="text-base font-black" style={{ fontFamily: '"Noto Serif JP", serif' }}>
+                    {s.rank}
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-600 mb-2 truncate" title={s.post}>
+                  {s.post}
+                </div>
+                <table className="w-full text-[10px] text-slate-700">
+                  <tbody>
+                    {[
+                      ['頭', s.display.head, s.head, 7],
+                      ['袍', s.display.robe, s.robe, 9],
+                      ['裾', s.display.train, s.train, 5],
+                      ['持', s.display.item, s.item, 5],
+                      ['帯', s.display.belt, s.belt, 5],
+                    ].map(([label, name, lv, cap]) => (
+                      <tr key={String(label)} className="border-t border-slate-100">
+                        <td className="py-0.5 pr-1 text-slate-400 w-6">{label}</td>
+                        <td className="py-0.5 truncate" title={String(name)}>{name}</td>
+                        <td className="py-0.5 text-right text-slate-400 font-mono w-12">
+                          {label === '袍' && (
+                            <span
+                              className="inline-block w-2 h-2 mr-1 rounded-sm align-middle"
+                              style={{ background: robeColorOf(String(name)), border: '1px solid #ccc' }}
+                            />
+                          )}
+                          {lv}/{cap}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-6">
+        <h4 className="text-sm font-bold text-slate-800 mb-2">
+          8 幅の水彩 (各 portrait の担当ステージ範囲)
+        </h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {PORTRAITS.map((p, i) => (
+            <div key={i} className="border border-slate-200 rounded overflow-hidden bg-white">
+              <img
+                src={p.src}
+                alt={p.label}
+                draggable={false}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  height: 100,
+                  objectFit: 'cover',
+                  objectPosition: `${p.focusX}% ${p.focusY}%`,
+                }}
+              />
+              <div className="px-2 py-1.5 text-[10px]">
+                <div className="font-bold text-slate-800">第{i + 1}幅 ・ {p.label}</div>
+                <div className="text-slate-500 mt-0.5">第{p.fromN}–{p.toN}階</div>
+                <div className="text-slate-600 mt-1 leading-tight">{p.note}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
