@@ -1606,7 +1606,7 @@ function NoblePreviewView() {
 
       <div className="mt-6">
         <h4 className="text-sm font-bold text-slate-800 mb-2">
-          8 幅の水彩 (各 portrait の担当ステージ範囲)
+          {PORTRAITS.length} 幅の水彩 (各 portrait の担当ステージ範囲)
         </h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {PORTRAITS.map((p, i) => (
