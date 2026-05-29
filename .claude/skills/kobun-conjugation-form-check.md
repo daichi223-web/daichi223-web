@@ -1,0 +1,212 @@
+---
+name: kobun-conjugation-form-check
+description: kobun-tan の texts-v3/{id}.json で動詞・助動詞・形容詞・形容動詞の grammarTag.conjugationForm が直後の接続要素から導かれる活用形と整合するかを検査・修復するスキル。「得まじ」「死にけり」「うつくしき名」のような接続パターンから期待される活用形を導出し、誤タグを検出する。
+triggers:
+  - "活用形"
+  - "活用形チェック"
+  - "活用形 確認"
+  - "活用形 間違い"
+  - "conjugationForm"
+  - "未然形 正しい"
+  - "終止形接続"
+  - "連体形接続"
+  - "kobun conjugation"
+---
+
+# kobun-tan 活用形整合性チェックスキル
+
+## 背景
+
+`public/texts-v3/{id}.json` の各 token には `grammarTag.conjugationForm`（未/用/終/体/已/命）が付与されている。しかしこれが**直後の接続要素から導出される活用形と矛盾**しているケースが散見される。
+
+### 実例 (2026-05-29)
+
+- **芥川 (`3d0d7bf6ee`) s2-t4「得」**: 直後が「まじかり」(助動詞「まじ」終止形接続) だが `conjugationForm: "未"` になっていた。「得」はア下二で終止形「う」、よって正しくは `"終"`。しかも同 token の hint には「え・え・う・うる・うれ・えよ」と正しい活用表が書かれており、**タグ単独で内部矛盾**していた。
+
+このタイプの誤りは `kobun-token-alignment-fix` (構造破損) でも `kobun-canonical-verification` (本文異変) でも検出できない**意味論的タグ誤り**。本スキルで体系的に検査する。
+
+## 接続規則一覧 (検査の基礎)
+
+### 助動詞の接続
+
+| 助動詞 | 接続 | 例 |
+|---|---|---|
+| る・らる | 未然形 | 知ら**る**、見**らる** |
+| す・さす・しむ | 未然形 | 言は**す**、見**さす** |
+| ず | 未然形 | 知ら**ず** |
+| む・むず | 未然形 | 行か**む**、行か**むず** |
+| じ | 未然形 | 行か**じ** |
+| まし | 未然形 | 知ら**まし** |
+| まほし | 未然形 | 行か**まほし** |
+| き・けり | 連用形 | 行き**き**、行き**けり** |
+| つ・ぬ | 連用形 | 行き**つ**、行き**ぬ** |
+| たり (完了) | 連用形 | 行き**たり** |
+| けむ | 連用形 | 行き**けむ** |
+| たし | 連用形 | 行き**たし** |
+| べし | 終止形 (ラ変型→連体形) | 行く**べし**、あん**べし** |
+| らむ | 終止形 (ラ変型→連体形) | 行く**らむ** |
+| らし | 終止形 (ラ変型→連体形) | 行く**らし** |
+| めり | 終止形 (ラ変型→連体形) | 行く**めり**、ある**めり** |
+| なり (伝聞・推定) | 終止形 (ラ変型→連体形) | 行く**なり**、ある**なり** |
+| **まじ** | **終止形 (ラ変型→連体形)** | **得**(終)**まじ**、ある**まじ** |
+| なり (断定) | 体言・連体形 | 学生**なり**、行く**なり** |
+| たり (断定) | 体言 | 男**たり** |
+| ごとし | 体言・連体形 +「の」/「が」 | 雪**のごとし** |
+| り | サ変未然/四段已然 | せ**り**、咲け**り** |
+
+### 助詞・補助動詞の接続パターン
+
+| 後続要素 | 期待される接続 |
+|---|---|
+| ば (順接仮定) | 未然形 |
+| ば (順接確定) | 已然形 |
+| ども・ど | 已然形 |
+| とも | 終止形 (形容詞は連用形) |
+| て・して・つつ・ながら | 連用形 |
+| を・に・が (接続助詞) | 連体形 |
+| 体言が直後に来る | 連体形 |
+| 文末 (句点で終わる) | 終止形 (係結なら連体/已然) |
+| 係助詞「ぞ・なむ・や・か」の結び | 連体形 |
+| 係助詞「こそ」の結び | 已然形 |
+| 命令文末 | 命令形 |
+
+## 検出スクリプト
+
+```bash
+cd "F:\A2A\apps-released\kobun-tan"
+node scripts/check-conjugation-forms.cjs
+```
+
+スクリプトの骨子は次のとおり (まだ存在しない場合は新規作成):
+
+```javascript
+// scripts/check-conjugation-forms.cjs
+const fs = require('fs');
+const path = require('path');
+
+// 助動詞ごとの「期待される直前の活用形」テーブル
+const JODOSHI_RULES = {
+  'ず': '未', 'む': '未', 'むず': '未', 'じ': '未',
+  'まし': '未', 'まほし': '未',
+  'る': '未', 'らる': '未', 'す': '未', 'さす': '未', 'しむ': '未',
+  'き': '用', 'けり': '用', 'つ': '用', 'ぬ': '用',
+  'たり': '用', // 完了 (断定の「たり」は別途判定)
+  'けむ': '用', 'たし': '用',
+  'べし': '終', 'らむ': '終', 'らし': '終',
+  'めり': '終', 'まじ': '終',
+  // 'なり' は伝聞推定(終)と断定(体/連体)の二択 — 単独では判定不可
+};
+
+const dir = './public/texts-v3';
+const files = fs.readdirSync(dir).filter(f => f.endsWith('.json') && f !== 'index.json');
+const issues = [];
+
+for (const f of files) {
+  const t = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+  if (!t.sentences) continue;
+  for (const s of t.sentences) {
+    for (let i = 0; i < s.tokens.length - 1; i++) {
+      const tk = s.tokens[i];
+      const next = s.tokens[i + 1];
+      const gt = tk.grammarTag;
+      if (!gt || !gt.conjugationForm) continue;
+      // 直後が助動詞で接続規則がある場合
+      const nextBase = next.grammarTag?.baseForm || next.text;
+      const expected = JODOSHI_RULES[nextBase];
+      if (expected && expected !== gt.conjugationForm) {
+        // ラ変型例外（べし・らむ・らし・めり・なり(推定)・まじ はラ変型なら連体）
+        const raHen = ['ラ変', 'ラ行変格'].includes(gt.conjugationType);
+        const isShushiKei = ['べし','らむ','らし','めり','なり','まじ'].includes(nextBase);
+        if (isShushiKei && raHen && gt.conjugationForm === '体') continue;
+        issues.push({
+          file: f, sid: s.id, tid: tk.id,
+          text: tk.text, type: gt.conjugationType,
+          actual: gt.conjugationForm, expected, next: next.text, nextBase,
+        });
+      }
+    }
+  }
+}
+
+console.log(`検出件数: ${issues.length}`);
+for (const x of issues) {
+  console.log(`${x.file} ${x.sid}/${x.tid} 「${x.text}」(${x.type}) ${x.actual}→${x.expected} 直後:「${x.next}」(${x.nextBase})`);
+}
+```
+
+## 修復フロー
+
+### 1. 検出
+
+上記スクリプトで全教材を一括スキャン。
+
+### 2. 個別検証
+
+検出された各ケースについて、以下を確認:
+
+- **直後の語が本当にその接続規則の助動詞か** (e.g.「なり」が伝聞推定か断定かは meaning から判別)
+- **活用型がラ変型例外に該当するか** (べし・らむ・らし・めり・まじ・伝聞なり はラ変型のみ連体形接続)
+- **token の hint と矛盾していないか** (hint に正しい活用表が書いてある場合は強い証拠)
+
+### 3. 修正
+
+`Edit` ツールで該当 token の `conjugationForm` を期待値に修正。
+
+例:
+```json
+"grammarTag": {
+  "pos": "動詞",
+  "conjugationType": "ア下二",
+  "conjugationForm": "未"   // ← 「終」に修正
+}
+```
+
+### 4. dist ミラー同期
+
+```bash
+cp public/texts-v3/{id}.json dist/texts-v3/{id}.json
+```
+
+### 5. 検証
+
+修正後にもう一度検出スクリプトを実行し、対象ケースが消えていることを確認。
+
+## スコープ外（このスキルで扱わないもの）
+
+- **構造破損** (tokens 連結 ≠ originalText、start/end ズレ) → `kobun-token-alignment-fix`
+- **本文異変** (正典との差) → `kobun-canonical-verification`
+- **品詞の誤り** (動詞 vs 助動詞 など) → 別途手動チェック
+- **hint 文の誤り** → 別途手動チェック
+
+本スキルは**「pos と conjugationType は正しいが conjugationForm のみ誤っている」**ケースに集中する。
+
+## 既知の限界
+
+接続規則だけでは判定できないケース:
+- 文末（次トークンがないか句点）の場合 → 係結を要解析
+- 「なり」「たり」のような多義助動詞 → meaning フィールドが必要
+- 連用中止法 (文の途中で連用形止め) → 文脈解析が必要
+- 係結 (ぞ・なむ・や・か → 連体形、こそ → 已然形) → 係助詞検出が必要
+
+ヒューリスティクスで検出して**最終判断は人手**で行う設計とする。
+
+## 既知の誤り例
+
+| 教材 | sentence/token | text | 旧 | 新 | 直後 |
+|---|---|---|---|---|---|
+| 芥川 (3d0d7bf6ee) | s2-t4 | 得 | 未 | 終 | まじかり (まじ・終止形接続) |
+
+新規発見があれば本表に追加する。
+
+## コミットメッセージ例
+
+```
+fix(芥川): 「得」の活用形を未然形→終止形に修正
+
+「え得まじかりける」の「得」(ア下二) は直後の「まじ」が
+終止形接続のため、活用形は終止形「う」が正しい。
+hint 文には「え・え・う・うる・うれ・えよ」と正しい活用表が
+書かれており、タグ単独の内部矛盾だった。
+
+public/texts-v3/3d0d7bf6ee.json と dist ミラーを同期。
+```
