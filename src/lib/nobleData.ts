@@ -180,7 +180,7 @@ export const PORTRAITS: PortraitBand[] = [
     note: '深紫の袍 ・ 摂政関白 ・ 一の人',
     focusX: 60, focusY: 55,
     palette: ['#a78bbf', '#6a4889', '#2c1640'] },
-  { src: '/portraits/20-kyokui-seal.png',  fromN: 21, toN: 21,
+  { src: '/portraits/21-shoichi.webp',     fromN: 21, toN: 21,
     label: '正 一 位 ・ 太 政 大 臣',
     note: '深紫鳳凰の極位 ・ 七尺の長き裾 ・ 太政大臣の威容',
     focusX: 60, focusY: 55,
