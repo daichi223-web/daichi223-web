@@ -21,7 +21,8 @@ const JODOSHI_RULES = {
   'まし': '未', 'まほし': '未',
   'る': '未', 'らる': '未', 'す': '未', 'さす': '未', 'しむ': '未',
   // 連用形接続
-  'き': '用', 'けり': '用', 'つ': '用',
+  'き': '用', 'けり': '用', 'つ': '用', 'ぬ': '用',
+  'たり': '用', // 完了「たり」(断定「たり」は別途処理)
   'けむ': '用', 'たし': '用',
   // 終止形接続 (ラ変型は連体形)
   'べし': '終', 'らむ': '終', 'らし': '終',
@@ -34,7 +35,17 @@ const SHUSHI_RA_HEN_EXCEPTION = new Set(['べし', 'らむ', 'らし', 'めり',
 function isRaHenType(type) {
   if (!type) return false;
   // ラ変、形容詞カリ活用、形容動詞タリ/ナリ活用 はラ変型
-  return /ラ変|ラ行変格|カリ|タリ|ナリ/.test(type);
+  return /ラ変|ラ行変格|カリ|タリ活用|ナリ活用/.test(type);
+}
+
+// 形容詞カリ活用の連体形語尾: 〜かる / 〜しかる / 〜かり (連用) / 〜かれ (已然・命令)
+function isKariRentai(text) {
+  return /(?:し)?かる$/.test(text);
+}
+
+// ラ変型助動詞の text 連体形検出 (なる/ざる/べかる/たる/たれ/ごとくなる など)
+function isAuxRentaiRaHen(text) {
+  return /(?:なる|ざる|べかる|たる|めれ|べけれ|ざれ|ごとくなる|たれ)$/.test(text);
 }
 
 function isYodanType(type) {
@@ -51,6 +62,55 @@ function isSaHenType(type) {
 function endsInEDan(text) {
   const last = text[text.length - 1];
   return /[えけげせぜてでねへべぺめれゑ]/.test(last);
+}
+
+// 活用形の表記揺れを正規化: 未/未然/未然形 → "未", 用/連用/連用形 → "用" など
+function normalizeForm(s) {
+  if (!s) return s;
+  const cleaned = String(s).replace(/[\s　形]/g, '');
+  const map = { '未然': '未', '連用': '用', '終止': '終', '連体': '体', '已然': '已', '命令': '命' };
+  return map[cleaned] || cleaned;
+}
+
+// 助動詞の baseForm が抜けているケースのために、text + meaning から baseForm を推定
+function inferAuxBaseForm(text, meaning) {
+  if (!text) return null;
+  const t = text;
+  const m = meaning || '';
+  // 完了「ぬ」: な/に/ぬ/ぬる/ぬれ/ね
+  if (/完了/.test(m) && /^(な|に|ぬ|ぬる|ぬれ|ね)$/.test(t)) return 'ぬ';
+  // 打消「ず」: (な/に/ず) /ず/ぬ/ね /ざら/ざり/ざる/ざれ
+  if (/打消/.test(m) && /^(ず|ぬ|ね|ざら|ざり|ざる|ざれ|ざ)$/.test(t)) return 'ず';
+  // 完了「つ」: て/て/つ/つる/つれ/てよ
+  if (/完了/.test(m) && /^(て|つ|つる|つれ|てよ)$/.test(t)) return 'つ';
+  // 過去「き」: (せ)/_/き/し/しか/_
+  if (/過去/.test(m) && /^(き|し|しか|せ)$/.test(t)) return 'き';
+  // 過去「けり」: (けら)/_/けり/ける/けれ/_
+  if (/(過去|詠嘆)/.test(m) && /^(けり|ける|けれ|けら)$/.test(t)) return 'けり';
+  // 完了存続「たり」: たら/たり/たり/たる/たれ/たれ
+  if (/(完了|存続)/.test(m) && /^(たら|たり|たる|たれ)$/.test(t)) return 'たり';
+  // 過去推量「けむ」: _/_/けむ/けむ/けめ/_
+  if (/(過去推量|過去の|過去)/.test(m) && /^(けむ|けめ)$/.test(t)) return 'けむ';
+  // 推量「む」「むず」「じ」「まし」「まほし」
+  if (/推量|意志|婉曲|仮定/.test(m) && /^(む|め|ん)$/.test(t)) return 'む';
+  if (/反実仮想/.test(m) && /^(まし|ましか|ませ)$/.test(t)) return 'まし';
+  // 推量「べし」: べから/べく・べかり/べし/べき・べかる/べけれ/_
+  if (/推量|当然|意志|可能|命令|適当/.test(m) && /^(べし|べき|べく|べかり|べから|べかる|べけれ)$/.test(t)) return 'べし';
+  // 現在推量「らむ」
+  if (/現在推量/.test(m) && /^(らむ|らめ|らん)$/.test(t)) return 'らむ';
+  // 推定「めり」
+  if (/推定|婉曲/.test(m) && /^(めり|める|めれ)$/.test(t)) return 'めり';
+  // 打消推量「まじ」
+  if (/(打消推量|打消意志|打消当然|不可能)/.test(m) && /^(まじ|まじき|まじく|まじかり|まじから|まじかる|まじけれ)$/.test(t)) return 'まじ';
+  // 受身/自発/可能/尊敬「る」「らる」
+  if (/(受身|自発|可能|尊敬)/.test(m) && /^(る|れ|るる|るれ|られ)$/.test(t)) return /^ら/.test(t) ? 'らる' : 'る';
+  // 使役/尊敬「す」「さす」「しむ」
+  if (/(使役|尊敬)/.test(m)) {
+    if (/^(す|せ|する|すれ|せよ)$/.test(t)) return 'す';
+    if (/^(さす|させ|さする|さすれ|させよ)$/.test(t)) return 'さす';
+    if (/^(しむ|しめ|しむる|しむれ|しめよ)$/.test(t)) return 'しむ';
+  }
+  return null;
 }
 
 const dir = path.join(__dirname, '..', 'public', 'texts-v3');
@@ -76,12 +136,14 @@ for (const f of files) {
 
       const nextGt = next.grammarTag || {};
       const nextPos = nextGt.pos;
-      const nextBase = nextGt.baseForm;
+      let nextBase = nextGt.baseForm;
       const nextMeaning = nextGt.meaning;
       const nextForm = nextGt.conjugationForm;
 
       // 直後が助動詞でない場合は判定しない (精度優先)
       if (nextPos !== '助動詞') continue;
+      // baseForm 欠落時は text+meaning から推定
+      if (!nextBase) nextBase = inferAuxBaseForm(next.text, nextMeaning);
       if (!nextBase) continue;
 
       let expected = JODOSHI_RULES[nextBase];
@@ -120,16 +182,32 @@ for (const f of files) {
       if (!expected) continue;
 
       let acceptable = [expected];
-      // ラ変型例外: 終止形接続の助動詞 + 前語がラ変型 → 連体形
-      if (SHUSHI_RA_HEN_EXCEPTION.has(nextBase) && isRaHenType(gt.conjugationType)) {
-        acceptable = ['体'];
+      // ラ変型例外: 終止形接続の助動詞 (べし/めり/まじ/らむ/らし) は
+      // ラ変型語尾の語の後では連体形に接続する。
+      // 加えて、平安以降は撥音便化により連体形末尾「る」が脱落する現象もある
+      // (「なるめり→なめり」「べかるめり→べかめり」「多かるめり→多かめり」など)。
+      // そのため、conjugationForm が「体」と明示的にタグされていて、かつ
+      // 次が終止接続例外助動詞であれば、ラ変型接続パターンとして許容する。
+      if (SHUSHI_RA_HEN_EXCEPTION.has(nextBase)) {
+        const raHen =
+          isRaHenType(gt.conjugationType) ||
+          (gt.pos === '形容詞' && isKariRentai(tk.text)) ||
+          (gt.pos === '助動詞' && isAuxRentaiRaHen(tk.text));
+        if (raHen) acceptable = ['体'];
+        // 明示的に連体形タグされている場合 (撥音便を含む) は許容
+        if (normalizeForm(gt.conjugationForm) === '体') acceptable = ['体'];
+      }
+      // 「き」の特殊接続: カ変・サ変の未然形にも接続する
+      if (nextBase === 'き' && /(カ変|サ変|カ行変格|サ行変格)/.test(gt.conjugationType || '')) {
+        acceptable = ['未', '用'];
       }
       // 「断定なり」は体言・連体形両方 OK だが、判定は省略
 
-      // 既存タグの全角スペース等のクリーン化
-      const actualClean = (gt.conjugationForm || '').replace(/[\s　]/g, '');
+      // 既存タグの表記揺れ正規化 (未然/未然形/未 などを統一)
+      const actualClean = normalizeForm(gt.conjugationForm);
+      const acceptableNorm = acceptable.map(normalizeForm);
 
-      if (!acceptable.includes(actualClean)) {
+      if (!acceptableNorm.includes(actualClean)) {
         issues.push({
           file: f, title: t.title, sid: s.id, tid: tk.id,
           text: tk.text,
