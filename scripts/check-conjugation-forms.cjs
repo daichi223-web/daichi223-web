@@ -306,6 +306,108 @@ for (const f of files) {
         });
       }
     }
+
+    // === 文末判定 + 係結 ===
+    // 文末の述語 (動詞/助動詞/形容詞/形容動詞 with conjugationForm) を特定し、
+    // 係助詞 ぞ/なむ/なん/や/か/かは/やは → 連体形結び
+    // 係助詞 こそ → 已然形結び
+    // それ以外 → 終止形
+    checkSentenceEnd(s, t, f, issues);
+  }
+}
+
+// 文末述語の活用形チェック (係結のみ)
+// 注: 係助詞のない文末は 終止/連体/連用 (中止法)/命令 等の判別困難なケースが
+//     非常に多いため (命令文、連体形止め、和歌・連用中止法 等)、
+//     誤検出回避のため**係助詞を含む文のみ**を対象とする。
+// さらに以下の場合は skip:
+//  - 係助詞と文末の間に引用助詞「と」「とて」「など」 → 引用句内で係結完結
+//  - 係助詞と文末の間に期待される結び形 (体/已) が既に出現 → 係結成立済み
+function checkSentenceEnd(s, t, file, issues) {
+  if (!s.tokens || s.tokens.length === 0) return;
+
+  // 係助詞を最終出現のみ採用 (最も後発が結びを支配)
+  let kakari = null;
+  let kakariIdx = -1;
+  for (let i = 0; i < s.tokens.length; i++) {
+    const tk = s.tokens[i];
+    if (tk.grammarTag?.pos !== '係助詞') continue;
+    const txt = (tk.text || '').replace(/[、。]/g, '');
+    if (/^(ぞ|なむ|なん|や|か|かは|やは)$/.test(txt)) { kakari = { type: '体', text: txt }; kakariIdx = i; }
+    else if (/^こそ$/.test(txt)) { kakari = { type: '已', text: txt }; kakariIdx = i; }
+  }
+  if (!kakari) return;
+
+  // 文末: 最後の conjugationForm を持つ token
+  let lastIdx = -1;
+  for (let i = s.tokens.length - 1; i >= 0; i--) {
+    const tk = s.tokens[i];
+    if (tk.grammarTag?.conjugationForm) { lastIdx = i; break; }
+  }
+  if (lastIdx < 0 || lastIdx <= kakariIdx) return;
+
+  // lastIdx より後ろが句読点/空のみであれば文末扱い
+  for (let i = lastIdx + 1; i < s.tokens.length; i++) {
+    const tx = s.tokens[i].text || '';
+    if (!/^[、。「」 　・]*$/.test(tx)) return;
+  }
+
+  // 係助詞 → 文末 の間に引用助詞「と」「とて」「など」「と思ふ/言ふ」 系が
+  // あれば引用句内で係結完結とみなして skip
+  for (let i = kakariIdx + 1; i < lastIdx; i++) {
+    const tk2 = s.tokens[i];
+    const tx = (tk2.text || '').replace(/[、。「」]/g, '');
+    if (/^(と|とて|など|とぞ|とや|とか|となむ|とこそ)$/.test(tx)) return;
+  }
+
+  // 係助詞 → 文末 の間に期待結び形を持つ conjugating token が既に出現していたら
+  // 係結が中途で成立した可能性が高いので skip
+  // 引用詞「と」が無くても、長い複文では係結が前で閉じることが多い
+  const expected = kakari.type;
+  for (let i = kakariIdx + 1; i < lastIdx; i++) {
+    const tk2 = s.tokens[i];
+    const cf = tk2.grammarTag?.conjugationForm;
+    if (!cf) continue;
+    if (normalizeForm(cf) === expected) return; // 既に結び成立
+  }
+  // 「こそ」の場合、形タグが無い「らめ/けめ/めれ」等の已然形相当 text が中間にあれば結び成立とみなす
+  if (kakari.type === '已') {
+    for (let i = kakariIdx + 1; i < lastIdx; i++) {
+      const tx = (s.tokens[i].text || '').replace(/[、。「」]/g, '');
+      if (/^(らめ|けめ|けれ|つれ|ぬれ|たれ|めれ|ざれ|なれ|べけれ|まじけれ|たけれ)$/.test(tx)) return;
+    }
+  }
+
+  // 係助詞「や」「か」の直前が「に」「と」(=断定なり連用 or 引用) の場合は
+  // 「~体言/連体形+に+や(あらむ)」「~と+や」 等の 結びの省略パターン → 文末影響なしで skip
+  // 係助詞直前が conjugationForm '体' の場合も、その連体形が結びを担っているとみなして skip
+  if (kakariIdx > 0) {
+    const prev = s.tokens[kakariIdx - 1];
+    const prevText = (prev.text || '').replace(/[、。「」]/g, '');
+    const prevForm = prev.grammarTag?.conjugationForm;
+    if (/^や|か|やは|かは$/.test(kakari.text) && /^(に|と)$/.test(prevText)) return;
+    if (prevForm && normalizeForm(prevForm) === '体') return;
+  }
+
+  const tk = s.tokens[lastIdx];
+  const gt = tk.grammarTag;
+  // 命令形は係結を破る場合がある (命令文末) — 一律 OK
+  const allowedExtra = ['命'];
+
+  const actualClean = normalizeForm(gt.conjugationForm);
+  const acceptable = [expected, ...allowedExtra].map(normalizeForm);
+  if (!acceptable.includes(actualClean)) {
+    issues.push({
+      file, title: t.title, sid: s.id, tid: tk.id,
+      text: tk.text,
+      pos: gt.pos,
+      type: gt.conjugationType,
+      actual: gt.conjugationForm,
+      expected,
+      next: '(文末)',
+      nextBase: `(係結:${kakari.text}→${expected})`,
+      nextMeaning: null,
+    });
   }
 }
 
