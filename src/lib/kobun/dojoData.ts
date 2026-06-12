@@ -42,10 +42,10 @@ function toDrill(r: {
   };
 }
 
-/** sort の100の位 = 難度レベル（<100=Lv1, 100台=Lv2, 200台=Lv3） */
+/** sort の100の位 = 難度レベル（<100=Lv1, 100台=Lv2, …, 400台=Lv5 難関） */
 export function drillLevel(d: GrammarDrill): number {
   const s = d.sort ?? 0;
-  return s >= 200 ? 3 : s >= 100 ? 2 : 1;
+  return Math.min(5, Math.floor(s / 100) + 1);
 }
 
 /** バケット内パス → 公開 URL */

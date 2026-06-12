@@ -40,12 +40,13 @@ export function WordQuizContent({
   writingUserJudgment,
   handleWritingUserJudgment
 }: WordQuizContentProps) {
-  // 多義語は文脈なしでは「どの意味か」が決まらないため、例文を最初から表示する
-  const polysemous = (question.senseCount ?? 1) > 1;
+  // 多義語は文脈なしでは「どの意味か」が決まらない。
+  // 教材実戦例文（corpusExample）も文脈判断が前提なので、どちらも例文を最初から表示する。
+  const contextRequired = (question.senseCount ?? 1) > 1 || question.corpusExample === true;
   const [userAnswer, setUserAnswer] = useState('');
   const [answeredCorrectly, setAnsweredCorrectly] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState<Word | null>(null);
-  const [showExample, setShowExample] = useState(polysemous);
+  const [showExample, setShowExample] = useState(contextRequired);
   const [showModernTranslation, setShowModernTranslation] = useState(false);
 
   // Reset state when question changes
@@ -53,9 +54,9 @@ export function WordQuizContent({
     setAnsweredCorrectly(null);
     setSelectedOption(null);
     setUserAnswer('');
-    setShowExample(polysemous);
+    setShowExample(contextRequired);
     setShowModernTranslation(false);
-  }, [question.correct.qid, polysemous]);
+  }, [question.correct.qid, contextRequired]);
 
   // 正解時に自動遷移
   React.useEffect(() => {

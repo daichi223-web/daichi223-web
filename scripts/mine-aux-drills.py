@@ -16,6 +16,7 @@ random.seed(42)  # 再現可能に
 
 MAX_LV2_PER_TOPIC = 8
 MAX_LV3_PER_TOPIC = 6
+MAX_LV4_PER_TOPIC = 6  # 文脈総合（長文・助動詞密度の高い文）
 MAX_PER_SURFACE_MEANING = 2
 MAX_SENT = 60  # これを超える文はトークン周辺を切り出す
 
@@ -167,13 +168,13 @@ IDENTITY = {
     },
 }
 
-def clip(sent, start, end):
+def clip(sent, start, end, window=24, maxlen=MAX_SENT):
     """トークンを【 】で強調し、長文はトークン周辺を切り出す"""
     marked = sent[:start] + "【" + sent[start:end] + "】" + sent[end:]
-    if len(marked) <= MAX_SENT + 2:
+    if len(marked) <= maxlen + 2:
         return marked
-    s = max(0, start - 24)
-    e = min(len(sent), end + 24)
+    s = max(0, start - window)
+    e = min(len(sent), end + window)
     out = ("…" if s > 0 else "") + sent[s:start] + "【" + sent[start:end] + "】" + sent[end:e] + ("…" if e < len(sent) else "")
     return out
 
@@ -191,23 +192,41 @@ for f in sorted(glob.glob("public/texts-v3/*.json")):
         continue
     title = d.get("title", "")
     if title in TITLE_BAN: continue
+    # 同じ訳文が複数の文で共有されている教材＝訳が文単位でない（段落訳・冒頭訳の繰り返し）。
+    # その訳は文と対応しないので解説に載せない。
+    trans_count = collections.Counter()
     for sen in d.get("sentences") or []:
+        if isinstance(sen, dict):
+            t = (sen.get("modernTranslation") or "").strip()
+            if t: trans_count[t] += 1
+    for si, sen in enumerate(d.get("sentences") or []):
         if not isinstance(sen, dict): continue
         sent = sen.get("originalText") or ""
-        trans = sen.get("modernTranslation") or ""
+        trans = (sen.get("modernTranslation") or "").strip()
         if not sentence_ok(sent, trans): continue
-        for tk in sen.get("tokens") or []:
-            if not isinstance(tk, dict): continue
+        if trans_count[trans] >= 2:
+            trans = ""
+        toks = [tk for tk in (sen.get("tokens") or []) if isinstance(tk, dict)]
+        naux = sum(1 for tk in toks if isinstance(tk.get("grammarTag"), dict) and tk["grammarTag"].get("pos") == "助動詞")
+        for tk in toks:
             g = tk.get("grammarTag") or {}
             if not (isinstance(g, dict) and g.get("pos") == "助動詞"): continue
             s, m, c = tk.get("text", ""), g.get("meaning", ""), g.get("conjugationForm", "")
             t = topic_for(s, m)
             if not t or not sent or tk.get("start") is None: continue
             instances[t].append({
-                "surface": s, "meaning": m, "form": c, "title": title,
-                "ctx": clip(sent, tk["start"], tk["end"]), "trans": trans_clip(trans),
-                "sentlen": len(sent),
+                "surface": s, "meaning": m, "form": c, "title": title, "sent": sent,
+                "ctx": clip(sent, tk["start"], tk["end"]),
+                "ctx_wide": clip(sent, tk["start"], tk["end"], window=46, maxlen=100),
+                "trans": trans_clip(trans, 50), "trans_l": trans_clip(trans, 110), "sentlen": len(sent), "naux": naux,
             })
+
+def cite(inst, long=False):
+    """解説末尾の出典表記。訳が信頼できない教材では訳を載せない"""
+    t = inst["trans_l"] if long else inst["trans"]
+    if t:
+        return f"訳:「{t}」（{inst['title']}）"
+    return f"（{inst['title']}）"
 
 # ---- 生成 ----
 drills = []
@@ -223,7 +242,7 @@ for topic in sorted(instances):
     for inst in pool:
         if len(lv2) >= MAX_LV2_PER_TOPIC: break
         key = (inst["surface"], inst["meaning"])
-        if inst["ctx"] in used_ctx or used_sm[key] >= MAX_PER_SURFACE_MEANING: continue
+        if not inst["trans"] or inst["ctx"] in used_ctx or used_sm[key] >= MAX_PER_SURFACE_MEANING: continue
         if topic == "jodoshi-zu":
             if inst["form"] not in FORM_NAME: continue
             ans = FORM_NAME[inst["form"]]
@@ -231,7 +250,7 @@ for topic in sorted(instances):
             q = {"kind": "katsuyo-fill",
                  "prompt": f"この「{inst['surface']}」は打消「ず」の何形？",
                  "answer": ans, "choices": choices,
-                 "explanation": f"打消「ず」（ず・ず・ず・ぬ・ね／ザリ活用）。訳:「{inst['trans']}」（{inst['title']}）"}
+                 "explanation": f"打消「ず」（ず・ず・ず・ぬ・ね／ザリ活用）。{cite(inst)}"}
         else:
             ans = inst["meaning"]
             base = MEANING_CHOICES[topic]
@@ -241,7 +260,7 @@ for topic in sorted(instances):
             q = {"kind": "imi",
                  "prompt": f"この文の「{inst['surface']}」の意味は？",
                  "answer": ans, "choices": choices,
-                 "explanation": f"{hint}訳:「{inst['trans']}」（{inst['title']}）"}
+                 "explanation": f"{hint}{cite(inst)}"}
         used_ctx.add(inst["ctx"]); used_sm[key] += 1
         lv2.append((q, inst))
 
@@ -259,7 +278,7 @@ for topic in sorted(instances):
         q = {"kind": "shikibetsu",
              "prompt": f"この「{inst['surface']}」の正体は？",
              "answer": ans, "choices": list(ident["choices"]),
-             "explanation": f"{HINT.get((topic, inst['meaning']), '')}訳:「{inst['trans']}」（{inst['title']}）"}
+             "explanation": f"{HINT.get((topic, inst['meaning']), '')}{cite(inst)}"}
         used_ctx.add(inst["ctx"]); used_sm3[key] += 1
         lv3.append((q, inst))
 
@@ -273,7 +292,41 @@ for topic in sorted(instances):
                        "prompt": q["prompt"], "context": inst["ctx"], "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
                        "ref_heading": REF3.get(topic, REF2.get(topic)), "sort": 200 + i})
-    report.append(f"{topic}: 候補{len(pool)} → Lv2={len(lv2)} Lv3={len(lv3)}")
+
+    # Lv4: 文脈総合（長文 or 助動詞が3つ以上の密な文。広いウィンドウで出題）
+    lv4 = []
+    used_sm4 = collections.Counter()
+    used_sent = set(i["sent"] for _, i in lv2) | set(i["sent"] for _, i in lv3)
+    for inst in sorted(pool, key=lambda x: -x["naux"]):
+        if len(lv4) >= MAX_LV4_PER_TOPIC: break
+        if not (55 <= inst["sentlen"] <= 160 or (inst["naux"] >= 3 and inst["sentlen"] <= 160)): continue
+        if inst["sent"] in used_sent: continue
+        key = (inst["surface"], inst["meaning"])
+        if inst["ctx_wide"] in used_ctx or inst["ctx"] in used_ctx or used_sm4[key] >= MAX_PER_SURFACE_MEANING: continue
+        if topic == "jodoshi-zu":
+            if inst["form"] not in FORM_NAME: continue
+            ans = FORM_NAME[inst["form"]]
+            choices = [ans] + [v for v in ["未然形", "連用形", "終止形", "連体形", "已然形"] if v != ans][:3]
+            q = {"kind": "katsuyo-fill", "prompt": f"この「{inst['surface']}」は打消「ず」の何形？",
+                 "answer": ans, "choices": choices,
+                 "explanation": f"打消「ず」（ず・ず・ず・ぬ・ね／ザリ活用）。{cite(inst, long=True)}"}
+        else:
+            ans = inst["meaning"]
+            base = MEANING_CHOICES[topic]
+            if ans not in base: continue
+            choices = [ans] + [v for v in base if v != ans][:3]
+            hint = HINT.get((topic, ans), "文脈と訳から判断。")
+            q = {"kind": "imi", "prompt": f"この文の「{inst['surface']}」の意味は？",
+                 "answer": ans, "choices": choices,
+                 "explanation": f"{hint}{cite(inst, long=True)}"}
+        used_ctx.add(inst["ctx_wide"]); used_sm4[key] += 1; used_sent.add(inst["sent"])
+        lv4.append((q, inst))
+    for i, (q, inst) in enumerate(lv4, 1):
+        drills.append({"id": f"{topic}-d{i:02}", "topic_id": topic, "kind": q["kind"],
+                       "prompt": q["prompt"], "context": inst["ctx_wide"], "choices": q["choices"],
+                       "answer": q["answer"], "explanation": q["explanation"],
+                       "ref_heading": REF2.get(topic), "sort": 300 + i})
+    report.append(f"{topic}: 候補{len(pool)} → Lv2={len(lv2)} Lv3={len(lv3)} Lv4={len(lv4)}")
 
 out = "supabase/seeds/grammar-corpus-lv23.json"
 json.dump(drills, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
