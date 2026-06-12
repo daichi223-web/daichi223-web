@@ -2,7 +2,7 @@
 # 元pptxをコピー → 除外スライド削除 → 《文》ページ参照を削除 → 各スライドに音声埋め込み
 # → 音声の長さでスライド送り → mp4 書き出し
 # 使い方: pwsh scripts/build-narrated-videos.ps1 [deckKey ...]（無指定で全デッキ）
-param([string[]]$Only = @(), [int]$Height = 720)
+param([string[]]$Only = @(), [int]$Height = 720, [int]$Fps = 30)
 $ErrorActionPreference = "Stop"
 $proj = "F:\A2A\apps-released\kobun-tan"
 $base = "F:\古文スライド集"
@@ -84,7 +84,7 @@ try {
 
     # 4) 動画書き出し（タイミング＋ナレーション使用）。埋め込みメディア確定のため先に保存
     $pres.Save()
-    $pres.CreateVideo($out, $true, 5, $Height, 30, 85)
+    $pres.CreateVideo($out, $true, 5, $Height, $Fps, 85)
     while ($pres.CreateVideoStatus -eq 1 -or $pres.CreateVideoStatus -eq 2) { Start-Sleep -Seconds 5 }
     $status = $pres.CreateVideoStatus
     $pres.Close()
