@@ -29,6 +29,8 @@ $decks = [ordered]@{
 
 $narr = Get-Content "$proj\scripts\narrations.json" -Raw -Encoding utf8 | ConvertFrom-Json
 New-Item -ItemType Directory -Force "$proj\videos\narrated" | Out-Null
+# 長尺デッキはサイズ調整（Storage 50MB 制限）
+$special = @{ "doushi-katsuyo" = @(360, 15); "keigo" = @(480, 30) }
 $pp = New-Object -ComObject PowerPoint.Application
 $ok = 0
 try {
@@ -84,7 +86,9 @@ try {
 
     # 4) 動画書き出し（タイミング＋ナレーション使用）。埋め込みメディア確定のため先に保存
     $pres.Save()
-    $pres.CreateVideo($out, $true, 5, $Height, $Fps, 85)
+    $h = $Height; $f = $Fps
+    if ($special.ContainsKey($key)) { $h = $special[$key][0]; $f = $special[$key][1] }
+    $pres.CreateVideo($out, $true, 5, $h, $f, 85)
     while ($pres.CreateVideoStatus -eq 1 -or $pres.CreateVideoStatus -eq 2) { Start-Sleep -Seconds 5 }
     $status = $pres.CreateVideoStatus
     $pres.Close()
