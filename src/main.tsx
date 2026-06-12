@@ -25,6 +25,9 @@ const TextReader = lazy(() => import('./pages/TextReader.tsx'))
 const TextGuide = lazy(() => import('./pages/TextGuide.tsx'))
 const ReferenceHome = lazy(() => import('./pages/ReferenceHome.tsx'))
 const ReferenceTopic = lazy(() => import('./pages/ReferenceTopic.tsx'))
+const GrammarDojoHome = lazy(() => import('./pages/GrammarDojoHome.tsx'))
+const GrammarDojoReview = lazy(() => import('./pages/GrammarDojoReview.tsx'))
+const GrammarDojoTopic = lazy(() => import('./pages/GrammarDojoTopic.tsx'))
 const VocabPage = lazy(() => import('./pages/VocabPage.tsx'))
 const Teacher = lazy(() => import('./pages/Teacher.tsx'))
 const TextDetail = lazy(() => import('./pages/TextDetail.tsx'))
@@ -68,6 +71,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/texts/:textId/guide" element={<TextGuide />} />
           <Route path="/read/reference" element={<ReferenceHome />} />
           <Route path="/read/reference/:topicId" element={<ReferenceTopic />} />
+          <Route path="/read/grammar" element={<GrammarDojoHome />} />
+          <Route path="/read/grammar/review" element={<GrammarDojoReview />} />
+          <Route path="/read/grammar/:topicId" element={<GrammarDojoTopic />} />
           <Route path="/read/vocab" element={<VocabPage />} />
         </Routes>
       </Suspense>

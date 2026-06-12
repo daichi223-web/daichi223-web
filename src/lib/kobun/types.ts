@@ -146,3 +146,48 @@ export interface ReadingProgress {
   lastReadAt: string;
   tokensViewed: string[];
 }
+
+/* ═══════════════════════════════════════════
+   文法道場（Grammar Dojo）— Supabase 駆動の学習層
+   解説は既存 reference(static JSON) を流用し、
+   動画(mp4)・ドリル・進捗を Supabase で管理する。
+   ═══════════════════════════════════════════ */
+
+/** 講義動画。mp4 は Supabase Storage バケット `grammar-videos` に格納 */
+export interface GrammarMedia {
+  kind: "mp4"; // 将来 "youtube" 等へ拡張可
+  storagePath: string; // バケット内パス 例 "jodoshi-mu.mp4"
+  title: string;
+  sec?: number; // 尺（秒）
+  posterPath?: string; // サムネ（バケット内パス）
+}
+
+export type GrammarDrillKind =
+  | "katsuyo-type" // 活用の種類判別（四段/上二…・ク/シク・ナリ/タリ）
+  | "katsuyo-fill" // 活用形を答える（空欄補充）
+  | "table-complete" // 活用表の複数空欄
+  | "setsuzoku" // 接続を答える（助動詞）
+  | "imi" // 意味判別（文脈つき）
+  | "shikibetsu"; // 紛らわしい語の識別
+
+/** ドリル1問。id は SRS(srs_state)/word_stats の qid に流用（例 "jodoshi-mu-01"） */
+export interface GrammarDrill {
+  id: string;
+  topicId: string;
+  kind: GrammarDrillKind;
+  prompt: string;
+  context?: string; // 例文（意味判別・識別で使用）
+  choices?: string[]; // 選択式の選択肢
+  answer: string | string[];
+  explanation: string;
+  refHeading?: string; // 該当リファレンス節の heading へジャンプ
+}
+
+/** 単元到達度（per-user, grammar_topic_progress） */
+export interface TopicProgress {
+  topicId: string;
+  watched: boolean;
+  drillTotal: number;
+  drillCorrect: number;
+  masteryPct: number; // 0-100
+}

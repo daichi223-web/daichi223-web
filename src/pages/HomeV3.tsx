@@ -341,6 +341,17 @@ export default function HomeV3() {
         </div>
       </div>
 
+      {/* 文法道場 */}
+      <div className="px-[18px] pt-3.5 pb-1.5">
+        <Link
+          to="/read/grammar"
+          className="block w-full text-center px-3 py-3 bg-rw-ink text-rw-paper rounded-2xl text-sm font-black no-underline hover:opacity-95 transition-opacity"
+          style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
+        >
+          ⚔️ 文法道場（動画＋ドリル）
+        </Link>
+      </div>
+
       {/* 単語帳 */}
       <div className="px-[18px] pt-3.5 pb-1.5">
         <Link
