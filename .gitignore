@@ -18,6 +18,7 @@ tsconfig.node.tsbuildinfo
 !src/data/*.json
 !supabase/seeds/*.json
 !data/*.json
+!scripts/*.json
 
 # 動画の中間生成物（Storage にアップロードするので git には入れない）
 videos/
