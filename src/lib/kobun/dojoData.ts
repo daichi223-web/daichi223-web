@@ -26,6 +26,7 @@ function toDrill(r: {
   answer: unknown;
   explanation: string;
   ref_heading: string | null;
+  sort?: number | null;
 }): GrammarDrill {
   return {
     id: r.id,
@@ -37,7 +38,14 @@ function toDrill(r: {
     answer: r.answer as string | string[],
     explanation: r.explanation,
     refHeading: r.ref_heading ?? undefined,
+    sort: r.sort ?? undefined,
   };
+}
+
+/** sort の100の位 = 難度レベル（<100=Lv1, 100台=Lv2, 200台=Lv3） */
+export function drillLevel(d: GrammarDrill): number {
+  const s = d.sort ?? 0;
+  return s >= 200 ? 3 : s >= 100 ? 2 : 1;
 }
 
 /** バケット内パス → 公開 URL */
@@ -73,7 +81,7 @@ export async function fetchDueDrills(limit = 20): Promise<GrammarDrill[]> {
 
   const { data, error } = await supabase
     .from("grammar_drills")
-    .select("id, topic_id, kind, prompt, context, choices, answer, explanation, ref_heading")
+    .select("id, topic_id, kind, prompt, context, choices, answer, explanation, ref_heading, sort")
     .in("id", dueQids);
 
   if (error || !data) {

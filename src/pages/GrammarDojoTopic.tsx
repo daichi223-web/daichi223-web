@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { GrammarTopic, GrammarMedia, GrammarDrill, TopicProgress } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
-import { fetchMedia, fetchDrills, markWatched, saveTopicResult, getAllTopicProgress } from "@/lib/kobun/dojoData";
+import { fetchMedia, fetchDrills, markWatched, saveTopicResult, getAllTopicProgress, drillLevel } from "@/lib/kobun/dojoData";
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
+
+const LEVEL_LABEL: Record<number, string> = { 1: "Lv1 型", 2: "Lv2 教材読解", 3: "Lv3 識別" };
+
+/** レベル別到達度の保存キー（Lv1 は従来どおり topicId、Lv2/3 はサフィックス付き） */
+const levelKey = (topicId: string, level: number) => (level === 1 ? topicId : `${topicId}@${level}`);
 import { VideoEmbed } from "@/components/grammar/VideoEmbed";
 import { DrillSession, type DrillResult } from "@/components/grammar/DrillSession";
 
@@ -20,6 +25,19 @@ export default function GrammarDojoTopic() {
   const [phase, setPhase] = useState<Phase>("learn");
   const [result, setResult] = useState<DrillResult | null>(null);
   const [levelUp, setLevelUp] = useState<number | null>(null);
+  const [selLevel, setSelLevel] = useState(1);
+
+  // この単元に存在する難度レベルと、解放済み最大レベル（前レベル定着85%で解放）
+  const levels = [1, 2, 3].filter((L) => drills.some((d) => drillLevel(d) === L));
+  const isMastered = (key: string) => (progress[key]?.masteryPct ?? 0) >= 85;
+  const unlockedMax = !topicId
+    ? 1
+    : levels.includes(3) && isMastered(levelKey(topicId, 2))
+    ? 3
+    : levels.includes(2) && isMastered(topicId)
+    ? 2
+    : 1;
+  const levelDrills = drills.filter((d) => drillLevel(d) === selLevel);
 
   useEffect(() => {
     if (!topicId) return;
@@ -39,6 +57,12 @@ export default function GrammarDojoTopic() {
       setMedia(m);
       setDrills(d);
       setProgress(p);
+      // 解放済みの最高レベルを初期選択にする
+      const lvls = [1, 2, 3].filter((L) => d.some((x) => drillLevel(x) === L));
+      const m85 = (key: string) => ((p as Record<string, TopicProgress>)[key]?.masteryPct ?? 0) >= 85;
+      setSelLevel(
+        lvls.includes(3) && m85(`${topicId}@2`) ? 3 : lvls.includes(2) && m85(topicId) ? 2 : 1
+      );
       setLoading(false);
     });
     return () => {
@@ -50,14 +74,15 @@ export default function GrammarDojoTopic() {
     setResult(r);
     setPhase("done");
     if (!topicId) return;
-    const prev = progress[topicId];
+    const key = levelKey(topicId, selLevel);
+    const prev = progress[key];
     // 到達度は自己ベスト（一度上げた帯は剥奪しない → レベルも下がらない）
     const bestPct = Math.max(prev?.masteryPct ?? 0, r.masteryPct);
     const before = computeDojoLevel(progress).level;
     const next = {
       ...progress,
-      [topicId]: {
-        topicId,
+      [key]: {
+        topicId: key,
         watched: prev?.watched ?? false,
         drillTotal: r.total,
         drillCorrect: r.correct,
@@ -67,7 +92,7 @@ export default function GrammarDojoTopic() {
     setProgress(next);
     const after = computeDojoLevel(next).level;
     setLevelUp(after > before ? after : null);
-    void saveTopicResult(topicId, {
+    void saveTopicResult(key, {
       drillTotal: r.total,
       drillCorrect: r.correct,
       masteryPct: bestPct,
@@ -150,14 +175,46 @@ export default function GrammarDojoTopic() {
               </div>
             )}
 
+            {/* 難度レベル選択（複数レベルがある単元のみ） */}
+            {levels.length > 1 && (
+              <div className="flex gap-2 mb-3">
+                {levels.map((L) => {
+                  const locked = L > unlockedMax;
+                  const done85 = topicId ? isMastered(levelKey(topicId, L)) : false;
+                  return (
+                    <button
+                      key={L}
+                      disabled={locked}
+                      onClick={() => setSelLevel(L)}
+                      className={`flex-1 rounded-xl px-2 py-2.5 text-xs font-black border-2 transition ${
+                        locked
+                          ? "bg-rw-bg border-rw-rule text-rw-ink-soft opacity-60 cursor-not-allowed"
+                          : selLevel === L
+                          ? "bg-rw-ink border-rw-ink text-rw-paper"
+                          : "bg-rw-paper border-rw-rule text-rw-ink hover:border-rw-ink-soft"
+                      }`}
+                    >
+                      {locked ? "🔒 " : done85 ? "✅ " : ""}
+                      {LEVEL_LABEL[L]}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {levels.length > 1 && selLevel < 3 && unlockedMax === selLevel && (
+              <p className="text-[11px] text-rw-ink-soft mb-3 text-center">
+                85%以上で定着すると次のレベルが解放される
+              </p>
+            )}
+
             {/* ドリル開始 */}
-            {drills.length > 0 ? (
+            {levelDrills.length > 0 ? (
               <button
                 onClick={() => setPhase("drill")}
                 className="block w-full text-center bg-rw-primary text-rw-paper font-black rounded-2xl px-6 py-4 tracking-wider transition-transform hover:-translate-y-0.5"
                 style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
               >
-                ⚔️ ドリルを始める（{drills.length}問）
+                ⚔️ {levels.length > 1 ? `${LEVEL_LABEL[selLevel]} を始める` : "ドリルを始める"}（{levelDrills.length}問）
               </button>
             ) : (
               <div className="text-center bg-rw-paper border-2 border-rw-rule rounded-2xl p-6">
@@ -173,7 +230,7 @@ export default function GrammarDojoTopic() {
           </>
         )}
 
-        {phase === "drill" && <DrillSession drills={drills} onComplete={handleComplete} />}
+        {phase === "drill" && <DrillSession drills={levelDrills} onComplete={handleComplete} />}
 
         {phase === "done" && result && (
           <div className="text-center">
@@ -196,6 +253,20 @@ export default function GrammarDojoTopic() {
               </p>
             </div>
             <div className="flex flex-col gap-2">
+              {/* 定着して次レベルが解放されたら、その場で挑戦できる */}
+              {selLevel < Math.max(...levels, 1) && unlockedMax > selLevel && (
+                <button
+                  onClick={() => {
+                    setSelLevel(selLevel + 1);
+                    setResult(null);
+                    setPhase("drill");
+                  }}
+                  className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
+                  style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
+                >
+                  🔓 {LEVEL_LABEL[selLevel + 1]} に挑戦
+                </button>
+              )}
               <button
                 onClick={() => {
                   setResult(null);

@@ -181,6 +181,7 @@ export interface GrammarDrill {
   answer: string | string[];
   explanation: string;
   refHeading?: string; // 該当リファレンス節の heading へジャンプ
+  sort?: number; // 出題順。100の位で難度レベルを表す（<100=Lv1, 100台=Lv2, 200台=Lv3）
 }
 
 /** 単元到達度（per-user, grammar_topic_progress） */

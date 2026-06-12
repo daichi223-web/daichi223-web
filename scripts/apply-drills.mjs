@@ -6,6 +6,7 @@
 //
 // 使い方:
 //   node --env-file=.env.local scripts/apply-drills.mjs supabase/seeds/<batch>.json
+//   --merge を付けると topic 削除をせず id で upsert（既存レベルの問題を残したまま追加）
 //
 // JSON 形式（1要素 = 1ドリル）:
 //   { "id","topic_id","kind","prompt","context"|null,"choices":[...],
@@ -45,13 +46,18 @@ for (const r of rows) {
 }
 
 const topics = [...new Set(rows.map((r) => r.topic_id))];
-console.log(`対象 topic: ${topics.join(", ")}（${rows.length}問）`);
+const merge = process.argv.includes("--merge");
+console.log(`対象 topic: ${topics.join(", ")}（${rows.length}問${merge ? "・merge" : ""}）`);
 
-const del = await sb.from("grammar_drills").delete().in("topic_id", topics);
-if (del.error) { console.error("✘ delete失敗:", del.error.message); process.exit(1); }
-
-const ins = await sb.from("grammar_drills").insert(rows);
-if (ins.error) { console.error("✘ insert失敗:", ins.error.message); process.exit(1); }
+if (merge) {
+  const up = await sb.from("grammar_drills").upsert(rows, { onConflict: "id" });
+  if (up.error) { console.error("✘ upsert失敗:", up.error.message); process.exit(1); }
+} else {
+  const del = await sb.from("grammar_drills").delete().in("topic_id", topics);
+  if (del.error) { console.error("✘ delete失敗:", del.error.message); process.exit(1); }
+  const ins = await sb.from("grammar_drills").insert(rows);
+  if (ins.error) { console.error("✘ insert失敗:", ins.error.message); process.exit(1); }
+}
 
 // 検証
 const { data, error } = await sb
