@@ -2,13 +2,16 @@
 # 元pptxをコピー → 除外スライド削除 → 《文》ページ参照を削除 → 各スライドに音声埋め込み
 # → 音声の長さでスライド送り → mp4 書き出し
 # 使い方: pwsh scripts/build-narrated-videos.ps1 [deckKey ...]（無指定で全デッキ）
-param([string[]]$Only = @())
+param([string[]]$Only = @(), [int]$Height = 720)
 $ErrorActionPreference = "Stop"
 $proj = "F:\A2A\apps-released\kobun-tan"
 $base = "F:\古文スライド集"
 $jd = "$base\★古典文法\④助動詞"
 
 $decks = [ordered]@{
+  "doushi-katsuyo"         = "$base\★古典文法\②動詞の活用\デ板「動詞の活用」 .pptx"
+  "keiyoshi-katsuyo"       = "$base\★古典文法\③形容詞・形容動詞\デ板形容詞形容動詞.pptx"
+  "keigo"                  = "$base\★敬語\デ板「敬語マスター」.pptx"
   "jodoshi-intro"          = "$jd\デ板①助動詞とは➁歌③活用.pptx"
   "jodoshi-ki-keri-zu"     = "$jd\デ板④「き」「けり」「ず」.pptx"
   "jodoshi-tsu-nu-tari-ri" = "$jd\デ板⑤「つ」「ぬ」⑥「たり」「り」.pptx"
@@ -81,7 +84,7 @@ try {
 
     # 4) 動画書き出し（タイミング＋ナレーション使用）。埋め込みメディア確定のため先に保存
     $pres.Save()
-    $pres.CreateVideo($out, $true, 5, 720, 30, 85)
+    $pres.CreateVideo($out, $true, 5, $Height, 30, 85)
     while ($pres.CreateVideoStatus -eq 1 -or $pres.CreateVideoStatus -eq 2) { Start-Sleep -Seconds 5 }
     $status = $pres.CreateVideoStatus
     $pres.Close()
