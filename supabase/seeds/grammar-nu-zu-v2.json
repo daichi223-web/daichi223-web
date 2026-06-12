@@ -1,0 +1,308 @@
+[
+ {
+  "id": "jodoshi-nu-01",
+  "topic_id": "jodoshi-nu",
+  "kind": "katsuyo-fill",
+  "prompt": "「暮れにけり」「散りにき」の「に」は、完了「ぬ」の何形？",
+  "context": null,
+  "choices": [
+   "未然形",
+   "連用形",
+   "終止形",
+   "連体形"
+  ],
+  "answer": "連用形",
+  "explanation": "下の「けり」「き」が連用形接続だから「に」＝連用形。「にけり」＝〜てしまった。",
+  "ref_heading": "接続と活用",
+  "sort": 1
+ },
+ {
+  "id": "jodoshi-nu-02",
+  "topic_id": "jodoshi-nu",
+  "kind": "katsuyo-fill",
+  "prompt": "「とく行きね」（早く行ってしまえ）の「ね」は、完了「ぬ」の何形？",
+  "context": null,
+  "choices": [
+   "命令形",
+   "已然形",
+   "連体形",
+   "未然形"
+  ],
+  "answer": "命令形",
+  "explanation": "直前「行き」＝連用形→完了「ぬ」。命令形「ね」＝「〜してしまえ」。（已然形の「ね」は打消「ず」の方）",
+  "ref_heading": "接続と活用",
+  "sort": 2
+ },
+ {
+  "id": "jodoshi-nu-03",
+  "topic_id": "jodoshi-nu",
+  "kind": "setsuzoku",
+  "prompt": "「咲く」に完了「ぬ」を付けて「咲いた」と言うと？",
+  "context": null,
+  "choices": [
+   "咲きぬ",
+   "咲かぬ",
+   "咲くぬ",
+   "咲けぬ"
+  ],
+  "answer": "咲きぬ",
+  "explanation": "完了「ぬ」は連用形接続→「咲き＋ぬ」。「咲かぬ」だと未然形＋ぬ＝打消「咲かない」になる。",
+  "ref_heading": "接続と活用",
+  "sort": 3
+ },
+ {
+  "id": "jodoshi-nu-04",
+  "topic_id": "jodoshi-nu",
+  "kind": "setsuzoku",
+  "prompt": "「きっと散ってしまうだろう」＝「散り＿べし」。空欄に入る形は？",
+  "context": null,
+  "choices": [
+   "ぬ",
+   "な",
+   "に",
+   "ね"
+  ],
+  "answer": "ぬ",
+  "explanation": "「ぬ＋べし」＝強意＋推量「きっと〜」。「べし」は終止形接続なので終止形「ぬ」。",
+  "ref_heading": "意味",
+  "sort": 4
+ },
+ {
+  "id": "jodoshi-nu-05",
+  "topic_id": "jodoshi-nu",
+  "kind": "imi",
+  "prompt": "「ぬ」の意味は？",
+  "context": "花咲きぬ",
+  "choices": [
+   "完了",
+   "打消",
+   "強意",
+   "尊敬"
+  ],
+  "answer": "完了",
+  "explanation": "直前「咲き」＝連用形→完了。「花が咲いた」。",
+  "ref_heading": "打消「ぬ」との識別",
+  "sort": 5
+ },
+ {
+  "id": "jodoshi-nu-06",
+  "topic_id": "jodoshi-nu",
+  "kind": "imi",
+  "prompt": "「ぬ」の意味は？",
+  "context": "咲かぬ花",
+  "choices": [
+   "打消",
+   "完了",
+   "強意",
+   "受身"
+  ],
+  "answer": "打消",
+  "explanation": "直前「咲か」＝未然形→打消「ず」の連体形。下が体言「花」なのも打消の証拠（完了なら連体形は「ぬる」）。",
+  "ref_heading": "打消「ぬ」との識別",
+  "sort": 6
+ },
+ {
+  "id": "jodoshi-nu-07",
+  "topic_id": "jodoshi-nu",
+  "kind": "imi",
+  "prompt": "文末の「ぬ」の意味は？",
+  "context": "年も暮れぬ。",
+  "choices": [
+   "完了",
+   "打消",
+   "推量",
+   "断定"
+  ],
+  "answer": "完了",
+  "explanation": "下二段「暮る」は未然形も連用形も「暮れ」なので接続では決まらない。係り結びのない文末＝終止形→完了（打消の「ぬ」は連体形なので文末に来ない）。",
+  "ref_heading": "打消「ぬ」との識別",
+  "sort": 7
+ },
+ {
+  "id": "jodoshi-nu-08",
+  "topic_id": "jodoshi-nu",
+  "kind": "shikibetsu",
+  "prompt": "「別れぬる」「散りぬれば」のように「ぬる・ぬれ」の形で出てくる「ぬ」は？",
+  "context": null,
+  "choices": [
+   "必ず完了",
+   "必ず打消",
+   "文脈次第",
+   "係り結びの時だけ完了"
+  ],
+  "answer": "必ず完了",
+  "explanation": "打消「ず」の活用（ず・ず・ず・ぬ・ね）に「ぬる・ぬれ」は無い。ナ変型に活用していたら完了で確定。",
+  "ref_heading": "打消「ぬ」との識別",
+  "sort": 8
+ },
+ {
+  "id": "jodoshi-nu-09",
+  "topic_id": "jodoshi-nu",
+  "kind": "shikibetsu",
+  "prompt": "「行かねば」と「とく行きね」。打消の「ね」はどちら？",
+  "context": null,
+  "choices": [
+   "「行かねば」のね",
+   "「行きね」のね",
+   "両方",
+   "どちらも違う"
+  ],
+  "answer": "「行かねば」のね",
+  "explanation": "未然形「行か」＋ね＝打消の已然形（行かないので）。連用形「行き」＋ね＝完了の命令形（行ってしまえ）。",
+  "ref_heading": "打消「ぬ」との識別",
+  "sort": 9
+ },
+ {
+  "id": "jodoshi-nu-10",
+  "topic_id": "jodoshi-nu",
+  "kind": "shikibetsu",
+  "prompt": "「風吹きなむ」と「風吹かなむ」。「きっと吹くだろう」はどちら？",
+  "context": null,
+  "choices": [
+   "風吹きなむ",
+   "風吹かなむ",
+   "両方",
+   "どちらも違う"
+  ],
+  "answer": "風吹きなむ",
+  "explanation": "連用形「吹き」＋なむ＝強意「ぬ」＋推量「む」（きっと〜）。未然形「吹か」＋なむ＝願望の終助詞（吹いてほしい）。",
+  "ref_heading": "意味",
+  "sort": 10
+ },
+ {
+  "id": "jodoshi-zu-01",
+  "topic_id": "jodoshi-zu",
+  "kind": "katsuyo-fill",
+  "prompt": "「行かぬ人」「あらぬ方」のように体言の前で使われる「ぬ」は、打消「ず」の何形？",
+  "context": null,
+  "choices": [
+   "連体形",
+   "終止形",
+   "已然形",
+   "未然形"
+  ],
+  "answer": "連体形",
+  "explanation": "下に体言→連体形。「ず」の連体形が「ぬ」（ず・ず・ず・ぬ・ね・○）。",
+  "ref_heading": "接続と活用",
+  "sort": 1
+ },
+ {
+  "id": "jodoshi-zu-02",
+  "topic_id": "jodoshi-zu",
+  "kind": "katsuyo-fill",
+  "prompt": "「人こそ見えね」の「ね」は、打消「ず」の何形？",
+  "context": null,
+  "choices": [
+   "已然形",
+   "命令形",
+   "連体形",
+   "終止形"
+  ],
+  "answer": "已然形",
+  "explanation": "係助詞「こそ」の結びは已然形。「ず」の已然形が「ね」。",
+  "ref_heading": "接続と活用",
+  "sort": 2
+ },
+ {
+  "id": "jodoshi-zu-03",
+  "topic_id": "jodoshi-zu",
+  "kind": "setsuzoku",
+  "prompt": "「あり」に「ず」を付けて「ない」と言い切ると？",
+  "context": null,
+  "choices": [
+   "あらず",
+   "ありず",
+   "あれず",
+   "あらぬ"
+  ],
+  "answer": "あらず",
+  "explanation": "「ず」は未然形接続→「あら＋ず」。「あらぬ」は連体形なので言い切りには使わない。",
+  "ref_heading": "接続と活用",
+  "sort": 3
+ },
+ {
+  "id": "jodoshi-zu-04",
+  "topic_id": "jodoshi-zu",
+  "kind": "setsuzoku",
+  "prompt": "「寝（ぬ）」に打消＋推量で「寝ないだろう」＝「寝＿む」。空欄は？",
+  "context": null,
+  "choices": [
+   "ざら",
+   "ず",
+   "ざり",
+   "ね"
+  ],
+  "answer": "ざら",
+  "explanation": "下に助動詞が続くときはザリ活用。「む」は未然形接続→「ざら」。『児のそら寝』の「寝ざらむも」がこの形。",
+  "ref_heading": "接続と活用",
+  "sort": 4
+ },
+ {
+  "id": "jodoshi-zu-05",
+  "topic_id": "jodoshi-zu",
+  "kind": "imi",
+  "prompt": "「ぬ」の意味は？",
+  "context": "きぬものなれば（＝ふだん着ない物なので）",
+  "choices": [
+   "打消",
+   "完了",
+   "強意",
+   "過去"
+  ],
+  "answer": "打消",
+  "explanation": "下に体言「もの」があるのに「ぬ」のまま→打消の連体形（完了なら連体形は「ぬる」になるはず）。",
+  "ref_heading": "重要な識別",
+  "sort": 5
+ },
+ {
+  "id": "jodoshi-zu-06",
+  "topic_id": "jodoshi-zu",
+  "kind": "imi",
+  "prompt": "「ぬ」の意味は？",
+  "context": "花の散らぬ間に",
+  "choices": [
+   "打消",
+   "完了",
+   "推量",
+   "婉曲"
+  ],
+  "answer": "打消",
+  "explanation": "直前「散ら」＝未然形→打消。「散らない間に」。",
+  "ref_heading": "重要な識別",
+  "sort": 6
+ },
+ {
+  "id": "jodoshi-zu-07",
+  "topic_id": "jodoshi-zu",
+  "kind": "shikibetsu",
+  "prompt": "「咲かぬ」と「咲きぬ」。「咲かない」はどちら？",
+  "context": null,
+  "choices": [
+   "咲かぬ",
+   "咲きぬ",
+   "両方",
+   "どちらも違う"
+  ],
+  "answer": "咲かぬ",
+  "explanation": "未然形＋ぬ＝打消、連用形＋ぬ＝完了。直前の活用形が判別のすべて。",
+  "ref_heading": "重要な識別",
+  "sort": 7
+ },
+ {
+  "id": "jodoshi-zu-08",
+  "topic_id": "jodoshi-zu",
+  "kind": "shikibetsu",
+  "prompt": "「あらざりけり」で、本活用「ず」でなくザリ活用「ざり」が使われているのはなぜ？",
+  "context": null,
+  "choices": [
+   "下に助動詞「けり」が続くから",
+   "「あり」がラ変だから",
+   "已然形だから",
+   "係り結びだから"
+  ],
+  "answer": "下に助動詞「けり」が続くから",
+  "explanation": "助動詞に接続するときはザリ活用を使う（ざら・ざり・ざる・ざれ）。本活用は文を切る・助詞に続くとき。",
+  "ref_heading": "接続と活用",
+  "sort": 8
+ }
+]
