@@ -19,5 +19,8 @@ tsconfig.node.tsbuildinfo
 !supabase/seeds/*.json
 !data/*.json
 
+# 動画の中間生成物（Storage にアップロードするので git には入れない）
+videos/
+
 # Reference designs (not part of build)
 handoff/
