@@ -260,6 +260,14 @@ export default function HomeReiwa({
           active={currentMode === 'polysemy'}
         />
         <TileLink href="/read" emoji="📖" label="読解" stat="本文を読む" iconBg="var(--rw-pop)" fgColor="var(--rw-ink)" />
+        <TileLink
+          href="/read/grammar"
+          emoji="⚔️"
+          label="文法道場"
+          stat="ドリル＋識別"
+          iconBg="var(--rw-primary)"
+          fgColor="var(--rw-paper)"
+        />
         <Tile
           emoji="🔁"
           label="苦手復習"
@@ -269,16 +277,29 @@ export default function HomeReiwa({
           fgColor="var(--rw-paper)"
           disabled={weakWordsCount === 0}
         />
+        <TileLink
+          href="/read/vocab"
+          emoji="📒"
+          label="単語帳"
+          stat={vocab.length > 0 ? `${vocab.length}語` : 'ことばの記録'}
+          iconBg="var(--rw-accent-soft)"
+          fgColor="var(--rw-accent)"
+        />
       </div>
 
-      {/* 単語帳・学習履歴ショートカット */}
+      {/* 学習履歴ショートカット */}
       <div className="grid grid-cols-2 gap-2.5 mb-3">
-        <TileLinkInline
-          href="/read/vocab"
-          label={vocab.length > 0 ? `単語帳 (${vocab.length})` : '単語帳'}
-          emoji="📒"
-        />
         <TileLinkInline href="/stats" label="学習履歴" emoji="📊" />
+        <button
+          onClick={onOpenThemePicker}
+          className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 hover:border-rw-ink-soft transition text-rw-ink text-left"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🎨</span>
+            <span className="font-black text-rw-ink tracking-tight flex-1">テーマ</span>
+            <span className="text-rw-ink-soft text-sm">▸</span>
+          </div>
+        </button>
       </div>
 
       {/* 気になってる単語 */}
@@ -300,17 +321,6 @@ export default function HomeReiwa({
         </div>
       )}
 
-      {/* テーマピッカー誘導 (詳細設定は「つづきから」後のクイズ画面で利用) */}
-      <button
-        onClick={onOpenThemePicker}
-        className="w-full mt-2 flex items-center justify-between py-2.5 px-4 bg-rw-paper rounded-xl border border-rw-rule text-sm font-bold text-rw-ink-soft hover:bg-rw-primary-soft transition"
-      >
-        <span className="flex items-center gap-2">
-          <span>🎨</span>
-          <span>テーマを変更</span>
-        </span>
-        <span>▸</span>
-      </button>
     </div>
   );
 }
