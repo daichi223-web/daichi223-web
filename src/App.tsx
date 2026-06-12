@@ -1338,6 +1338,13 @@ function App() {
         >
           📚<span className="hidden sm:inline ml-1">読解</span>
         </a>
+        <a
+          href="/read/grammar"
+          className="bg-rose-600 hover:bg-rose-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+          title="文法道場（ドリル＋識別）"
+        >
+          ⚔️<span className="hidden sm:inline ml-1">文法</span>
+        </a>
         <button
           onClick={() => setShowIndexModal(true)}
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
