@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import type { GrammarTopic, GrammarMedia, GrammarDrill } from "@/lib/kobun/types";
+import type { GrammarTopic, GrammarMedia, GrammarDrill, TopicProgress } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
-import { fetchMedia, fetchDrills, markWatched, saveTopicResult } from "@/lib/kobun/dojoData";
+import { fetchMedia, fetchDrills, markWatched, saveTopicResult, getAllTopicProgress } from "@/lib/kobun/dojoData";
+import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 import { VideoEmbed } from "@/components/grammar/VideoEmbed";
 import { DrillSession, type DrillResult } from "@/components/grammar/DrillSession";
 
@@ -14,9 +15,11 @@ export default function GrammarDojoTopic() {
   const [topic, setTopic] = useState<GrammarTopic | null>(null);
   const [media, setMedia] = useState<GrammarMedia[]>([]);
   const [drills, setDrills] = useState<GrammarDrill[]>([]);
+  const [progress, setProgress] = useState<Record<string, TopicProgress>>({});
   const [loading, setLoading] = useState(true);
   const [phase, setPhase] = useState<Phase>("learn");
   const [result, setResult] = useState<DrillResult | null>(null);
+  const [levelUp, setLevelUp] = useState<number | null>(null);
 
   useEffect(() => {
     if (!topicId) return;
@@ -24,15 +27,18 @@ export default function GrammarDojoTopic() {
     setLoading(true);
     setPhase("learn");
     setResult(null);
+    setLevelUp(null);
     Promise.all([
       fetchJsonAsset<GrammarTopic>(`/grammar/${topicId}.json`),
       fetchMedia(topicId),
       fetchDrills(topicId),
-    ]).then(([t, m, d]) => {
+      getAllTopicProgress(),
+    ]).then(([t, m, d, p]) => {
       if (cancelled) return;
       setTopic(t.ok ? t.data : null);
       setMedia(m);
       setDrills(d);
+      setProgress(p);
       setLoading(false);
     });
     return () => {
@@ -43,13 +49,29 @@ export default function GrammarDojoTopic() {
   const handleComplete = (r: DrillResult) => {
     setResult(r);
     setPhase("done");
-    if (topicId) {
-      void saveTopicResult(topicId, {
+    if (!topicId) return;
+    const prev = progress[topicId];
+    // 到達度は自己ベスト（一度上げた帯は剥奪しない → レベルも下がらない）
+    const bestPct = Math.max(prev?.masteryPct ?? 0, r.masteryPct);
+    const before = computeDojoLevel(progress).level;
+    const next = {
+      ...progress,
+      [topicId]: {
+        topicId,
+        watched: prev?.watched ?? false,
         drillTotal: r.total,
         drillCorrect: r.correct,
-        masteryPct: r.masteryPct,
-      });
-    }
+        masteryPct: bestPct,
+      },
+    };
+    setProgress(next);
+    const after = computeDojoLevel(next).level;
+    setLevelUp(after > before ? after : null);
+    void saveTopicResult(topicId, {
+      drillTotal: r.total,
+      drillCorrect: r.correct,
+      masteryPct: bestPct,
+    });
   };
 
   if (!topicId) {
@@ -155,6 +177,14 @@ export default function GrammarDojoTopic() {
 
         {phase === "done" && result && (
           <div className="text-center">
+            {levelUp !== null && (
+              <div
+                className="bg-rw-primary text-rw-paper font-black rounded-2xl px-6 py-4 mb-4 text-lg tracking-wider"
+                style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
+              >
+                ⬆️ レベルアップ！ 道場 Lv.{levelUp}
+              </div>
+            )}
             <div className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-8 mb-5">
               <div className="text-5xl mb-3">{result.masteryPct >= 85 ? "🎉" : "📚"}</div>
               <p className="text-3xl font-black text-rw-ink">{result.masteryPct}%</p>

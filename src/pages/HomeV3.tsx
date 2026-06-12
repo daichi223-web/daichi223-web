@@ -208,6 +208,17 @@ export default function HomeV3() {
         </div>
       </div>
 
+      {/* 文法道場（最上部・メイン導線） */}
+      <div className="px-[18px] pb-3">
+        <Link
+          to="/read/grammar"
+          className="block w-full text-center px-3 py-3 bg-rw-ink text-rw-paper rounded-2xl text-sm font-black no-underline hover:opacity-95 transition-opacity"
+          style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
+        >
+          ⚔️ 文法道場（ドリル＋識別）
+        </Link>
+      </div>
+
       {/* 検索バー */}
       <div className="px-[18px] pb-3">
         <div className="flex items-center gap-2 px-3.5 py-2.5 bg-rw-paper border-2 border-rw-ink rounded-2xl">
@@ -339,17 +350,6 @@ export default function HomeV3() {
             </Link>
           ))}
         </div>
-      </div>
-
-      {/* 文法道場 */}
-      <div className="px-[18px] pt-3.5 pb-1.5">
-        <Link
-          to="/read/grammar"
-          className="block w-full text-center px-3 py-3 bg-rw-ink text-rw-paper rounded-2xl text-sm font-black no-underline hover:opacity-95 transition-opacity"
-          style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
-        >
-          ⚔️ 文法道場（動画＋ドリル）
-        </Link>
       </div>
 
       {/* 単語帳 */}

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import type { GrammarTopic, LayerId, TopicProgress } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 import { fetchDojoTopicIds, getAllTopicProgress, fetchDueDrillCount } from "@/lib/kobun/dojoData";
+import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 
 interface Unit {
   id: string;
@@ -67,6 +68,21 @@ export default function GrammarDojoHome() {
             ← 戻る
           </Link>
           <h1 className="text-[22px] sm:text-2xl font-black text-rw-ink tracking-tight">⚔️ 文法道場</h1>
+          {!loading &&
+            (() => {
+              const lv = computeDojoLevel(progress);
+              return (
+                <span className="ml-auto flex flex-col items-end gap-1">
+                  <span className="text-sm font-black text-rw-primary leading-none">Lv.{lv.level}</span>
+                  <span className="w-16 h-1.5 rounded-full bg-rw-rule overflow-hidden">
+                    <span
+                      className="block h-full bg-rw-primary"
+                      style={{ width: `${Math.round((lv.xpInto / lv.xpForNext) * 100)}%` }}
+                    />
+                  </span>
+                </span>
+              );
+            })()}
         </div>
         <p className="text-xs text-rw-ink-soft mb-6 leading-relaxed">
           講義動画 → 要点 → ドリルで、用言・助動詞の活用と意味を鍛える。
