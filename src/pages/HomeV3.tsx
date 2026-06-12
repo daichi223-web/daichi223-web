@@ -6,6 +6,8 @@ import type { ReadingProgress } from "@/lib/kobun/types";
 import { getPublishedSlugs } from "@/lib/textPublications";
 import { hasFullAccess } from "@/lib/fullAccess";
 import bundledTextsIndex from "@/data/textsIndex.json";
+import { getAllTopicProgress, fetchDueDrillCount } from "@/lib/kobun/dojoData";
+import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 
 const HOME_SCROLL_KEY = "kobun-home-scroll-v1";
 
@@ -87,9 +89,15 @@ export default function HomeV3() {
   const matrixWrapRef = useRef<HTMLDivElement>(null);
   const restoredRef = useRef(false);
 
+  const [dojo, setDojo] = useState<{ level: number; due: number } | null>(null);
+
   useEffect(() => {
     setProgress(loadAllProgress());
     getPublishedSlugs().then((s) => setPublishedSet(s));
+    // 道場の状態（レベル・復習期日）— 失敗してもカード自体は表示する
+    Promise.all([getAllTopicProgress(), fetchDueDrillCount()])
+      .then(([p, due]) => setDojo({ level: computeDojoLevel(p).level, due }))
+      .catch(() => {});
   }, []);
 
   // 検索/作品詳細から戻った際にスクロール位置を復元
@@ -208,14 +216,30 @@ export default function HomeV3() {
         </div>
       </div>
 
-      {/* 文法道場（最上部・メイン導線） */}
-      <div className="px-[18px] pb-3">
+      {/* クイックナビ（最上部・メイン導線）: 文法道場 + 単語帳 */}
+      <div className="px-[18px] pb-3 grid grid-cols-[1.6fr_1fr] gap-2">
         <Link
           to="/read/grammar"
-          className="block w-full text-center px-3 py-3 bg-rw-ink text-rw-paper rounded-2xl text-sm font-black no-underline hover:opacity-95 transition-opacity"
+          className="relative flex items-center justify-center gap-2 px-3 py-3 bg-rw-ink text-rw-paper rounded-2xl text-sm font-black no-underline hover:opacity-95 transition-opacity"
           style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
         >
-          ⚔️ 文法道場（ドリル＋識別）
+          <span>⚔️ 文法道場</span>
+          {dojo && (
+            <span className="text-[10px] font-black bg-rw-paper/20 rounded-full px-2 py-0.5">
+              Lv.{dojo.level}
+            </span>
+          )}
+          {dojo !== null && dojo.due > 0 && (
+            <span className="absolute -top-2 -right-2 min-w-6 h-6 px-1.5 rounded-full bg-rw-primary text-rw-paper text-[11px] font-black flex items-center justify-center border-2 border-rw-paper">
+              {dojo.due}
+            </span>
+          )}
+        </Link>
+        <Link
+          to="/read/vocab"
+          className="flex items-center justify-center px-3 py-3 bg-rw-paper border-2 border-rw-ink rounded-2xl text-sm font-black text-rw-ink no-underline hover:bg-rw-primary-soft/40 transition-colors"
+        >
+          📖 単語帳
         </Link>
       </div>
 
@@ -350,16 +374,6 @@ export default function HomeV3() {
             </Link>
           ))}
         </div>
-      </div>
-
-      {/* 単語帳 */}
-      <div className="px-[18px] pt-3.5 pb-1.5">
-        <Link
-          to="/read/vocab"
-          className="block w-full text-center px-3 py-3 bg-rw-paper border-2 border-rw-ink rounded-2xl text-sm font-black text-rw-ink no-underline hover:bg-rw-primary-soft/40 transition-colors"
-        >
-          📖 単語帳
-        </Link>
       </div>
 
       {/* 先生AI (段差ボタン) */}
