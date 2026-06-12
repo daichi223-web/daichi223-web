@@ -22,6 +22,22 @@ function loadQuestionsOnce() {
   return QMAP!;
 }
 
+// 現代語の罠（古今異義語）。lemma → 罠の意味文字列[]
+let TRAPS: Record<string, string[]> | null = null;
+
+function loadTrapsOnce(): Record<string, string[]> {
+  if (TRAPS) return TRAPS;
+  try {
+    const p = path.join(process.cwd(), "data", "modern_traps.json");
+    const raw = JSON.parse(fs.readFileSync(p, "utf-8"));
+    delete raw._comment;
+    TRAPS = raw;
+  } catch {
+    TRAPS = {};
+  }
+  return TRAPS!;
+}
+
 type Choice = {
   qid: string;
   lemma: string;
@@ -80,9 +96,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const allWords = Array.from(qmap.values());
+
+    // 弁別を鍛える誤答の優先注入（選択肢が「意味」のモードのみ。
+    // word-reverse は選択肢が語なので、同一語・罠は成立しない）
+    const mode = String(req.query.mode || "");
+    const senseAnswerMode = mode !== "word-reverse";
+
+    // ① 同一 lemma の別 sense（多義語内の弁別。例文が文脈を与える前提）
+    let sameLemmaPick: Choice[] = [];
+    // ② 現代語の罠（古今異義語）
+    let trapPick: Choice[] = [];
+    if (senseAnswerMode) {
+      const sameLemma = allWords.filter(w =>
+        w.lemma === correctData.lemma &&
+        w.qid !== correctQidStr &&
+        !exclude.includes(w.qid) &&
+        w.sense && w.sense !== correctData.sense
+      );
+      if (sameLemma.length > 0) {
+        const w = sameLemma[Math.floor(Math.random() * sameLemma.length)];
+        sameLemmaPick = [{ qid: w.qid, lemma: w.lemma || "", sense: w.sense || "", isFromCandidates: false }];
+      }
+      const traps = loadTrapsOnce()[correctData.lemma] || [];
+      if (traps.length > 0) {
+        const t = traps[Math.floor(Math.random() * traps.length)];
+        trapPick = [{
+          qid: `trap:${correctData.lemma}`,
+          lemma: correctData.lemma || "",
+          sense: `〔 ${t} 〕`,
+          isFromCandidates: false,
+        }];
+      }
+    }
+    const fixedPicks = [...trapPick, ...sameLemmaPick].slice(0, 2);
+    const fixedQids = new Set(fixedPicks.map(c => c.qid));
+
     const candidateQids = new Set(candidateChoices.map(c => c.qid));
     const availableRandom = allWords.filter(w =>
       w.qid !== correctQidStr &&
+      w.lemma !== correctData.lemma && // 同一語はランダム枠に混ぜない（①で管理）
       !exclude.includes(w.qid) &&
       !candidateQids.has(w.qid)
     );
@@ -94,11 +146,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       isFromCandidates: false,
     }));
 
-    const numFromCandidates = Math.min(2, candidateChoices.length);
-    const numFromRandom = 3 - numFromCandidates;
-    const selectedCandidates = weightedSample(candidateChoices, numFromCandidates);
+    const remainAfterFixed = 3 - fixedPicks.length;
+    const eligibleCandidates = candidateChoices.filter(c => !fixedQids.has(c.qid));
+    const numFromCandidates = Math.min(2, eligibleCandidates.length, remainAfterFixed);
+    const selectedCandidates = weightedSample(eligibleCandidates, numFromCandidates);
+    const numFromRandom = remainAfterFixed - selectedCandidates.length;
     const selectedRandom = randomChoices.slice(0, numFromRandom);
-    const incorrectOptions = [...selectedCandidates, ...selectedRandom];
+    const incorrectOptions = [...fixedPicks, ...selectedCandidates, ...selectedRandom];
 
     const choices: Choice[] = [
       {
@@ -117,6 +171,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       meta: {
         candidatesUsed: selectedCandidates.length,
         randomUsed: selectedRandom.length,
+        trapUsed: trapPick.length,
+        sameLemmaUsed: sameLemmaPick.length,
       },
     });
   } catch (e: any) {
