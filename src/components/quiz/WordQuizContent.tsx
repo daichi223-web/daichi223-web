@@ -9,6 +9,8 @@ interface QuizQuestion {
   exampleKobun?: string;
   exampleModern?: string;
   senseCount?: number; // 同一 lemma の意味数（多義語判定用）
+  srsBox?: number; // 単語レベル（SRS箱 1-5）
+  corpusExample?: boolean; // 例文が教材実文
 }
 
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
@@ -291,6 +293,14 @@ export function WordQuizContent({
 
   return (
     <div>
+      {/* 単語レベルが上がった語は教材の実戦例文で出題されていることを示す */}
+      {question.corpusExample && (
+        <div className="mb-2 text-center">
+          <span className="inline-block text-[11px] font-black px-3 py-1 rounded-full bg-rw-primary-soft text-rw-primary">
+            📕 教材の実戦例文 — 単語Lv{question.srsBox ?? 3}
+          </span>
+        </div>
+      )}
       <div className="mb-4">
         {quizType === 'word-meaning' ? (
           <div className="text-center">

@@ -67,6 +67,24 @@ export async function getDueWords(): Promise<string[]> {
 }
 
 /**
+ * 指定 qid 群の現在の箱(1-5)を返す。未学習の qid は結果に含まれない。
+ * （箱＝単語のレベル。箱が上がった語は教材の実戦例文に切り替える等に使う）
+ */
+export async function getSrsBoxes(qids: string[]): Promise<Record<string, number>> {
+  if (qids.length === 0) return {};
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from('srs_state')
+    .select('qid, box')
+    .eq('user_id', userId)
+    .in('qid', qids);
+  if (error || !data) return {};
+  const out: Record<string, number> = {};
+  for (const r of data) out[r.qid as string] = r.box as number;
+  return out;
+}
+
+/**
  * Get count of words due for review (useful for badge display).
  */
 export async function getDueCount(): Promise<number> {

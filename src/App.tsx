@@ -13,7 +13,21 @@ import { ExampleComprehensionContent } from './components/quiz/ExampleComprehens
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
-import { updateSrsState, getDueWords } from './lib/srsEngine';
+import { updateSrsState, getDueWords, getSrsBoxes } from './lib/srsEngine';
+
+// 教材実例文（qid → 例文[]）。箱(単語レベル)が上がった語の出題に使う
+type CorpusExample = { jp: string; translation: string };
+let corpusExamplesCache: Record<string, CorpusExample[]> | null = null;
+async function loadCorpusExamples(): Promise<Record<string, CorpusExample[]>> {
+  if (corpusExamplesCache) return corpusExamplesCache;
+  try {
+    const res = await fetch('/corpus-examples.json');
+    corpusExamplesCache = res.ok ? await res.json() : {};
+  } catch {
+    corpusExamplesCache = {};
+  }
+  return corpusExamplesCache!;
+}
 import VocabModal from './components/VocabModal';
 import { IndexModal } from './components/IndexModal';
 import { CHAPTERS, chapterFor, chapterColor } from './utils/chapters';
@@ -45,6 +59,8 @@ interface QuizQuestion {
   exampleKobun?: string;
   exampleModern?: string;
   senseCount?: number; // 同一 lemma の意味数（多義語は例文を最初から表示）
+  srsBox?: number; // 単語レベル（SRS箱 1-5）
+  corpusExample?: boolean; // 例文が教材実文（箱3以上で切替）
 }
 
 interface TrueFalseQuestion {
@@ -565,8 +581,29 @@ function App() {
         correctWord,
         exampleIndex,
         exampleKobun,
-        exampleModern
+        exampleModern,
+        srsBox: 1,
+        corpusExample: false
       });
+    }
+
+    // 単語レベル（SRS箱）が3以上に育った語は、単語帳の基本例文 → 教材の実戦例文に差し替える。
+    // 暗記した例文の再認ではなく、初見の実文で意味が取れるか（転移）を試すため。
+    try {
+      const prepQids = questionPrepData.map((p) => p.correctWord.qid);
+      const [boxes, corpus] = await Promise.all([getSrsBoxes(prepQids), loadCorpusExamples()]);
+      for (const prep of questionPrepData) {
+        prep.srsBox = boxes[prep.correctWord.qid] ?? 1;
+        const pool = corpus[prep.correctWord.qid];
+        if (prep.srsBox >= 3 && pool && pool.length > 0) {
+          const e = pool[Math.floor(Math.random() * pool.length)];
+          prep.exampleKobun = e.jp;
+          prep.exampleModern = e.translation;
+          prep.corpusExample = true;
+        }
+      }
+    } catch {
+      /* 取得失敗時は基本例文のまま出題 */
     }
 
     // 記述モード以外では選択肢をAPIから並列取得
@@ -707,7 +744,9 @@ function App() {
         exampleIndex: prep.exampleIndex,
         exampleKobun: dataParser.getEmphasizedExample(prep.exampleKobun, prep.correctWord.lemma),
         exampleModern: prep.exampleModern,
-        senseCount: allWords.reduce((n, w) => n + (w.lemma === prep.correctWord.lemma ? 1 : 0), 0)
+        senseCount: allWords.reduce((n, w) => n + (w.lemma === prep.correctWord.lemma ? 1 : 0), 0),
+        srsBox: prep.srsBox,
+        corpusExample: prep.corpusExample
       });
     }
 
