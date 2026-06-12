@@ -27,7 +27,8 @@ TITLE_BAN = {"花山院の出家", "萩のうは露", "廃院の怪", "里にま
              "宣耀殿の女御", "賀茂の祭りを見物する翁", "鷲にさらわれた赤子", "渚の院", "千早城の戦い"}
 # 個別に訳ズレ・タグ疑義を確認した文（部分一致で除外）
 SUBSTR_BAN = ["刈る早飯", "御局は桐壺", "年も返りぬ", "同じ所に住まむ限り",
-              "おどろかせたまへ", "寝入りたまひにけり", "紙燭持て参れり", "とぞ付けたりける"]
+              "おどろかせたまへ", "寝入りたまひにけり", "紙燭持て参れり", "とぞ付けたりける",
+              "予が趣向", "人心うしみつ", "御車ども立てつづけ"]
 
 def sentence_ok(sent, trans):
     """引用符の壊れ・訳の欠落を弾く"""
@@ -218,6 +219,7 @@ for f in sorted(glob.glob("public/texts-v3/*.json")):
                 "surface": s, "meaning": m, "form": c, "title": title, "sent": sent,
                 "ctx": clip(sent, tk["start"], tk["end"]),
                 "ctx_wide": clip(sent, tk["start"], tk["end"], window=46, maxlen=100),
+                "ctx_full": sent[:tk["start"]] + "【" + sent[tk["start"]:tk["end"]] + "】" + sent[tk["end"]:],
                 "trans": trans_clip(trans, 50), "trans_l": trans_clip(trans, 110), "sentlen": len(sent), "naux": naux,
             })
 
@@ -239,10 +241,13 @@ for topic in sorted(instances):
 
     # Lv2: 意味判別（zu は活用形）
     lv2 = []
+    lv2_sent = set()
     for inst in pool:
         if len(lv2) >= MAX_LV2_PER_TOPIC: break
         key = (inst["surface"], inst["meaning"])
         if not inst["trans"] or inst["ctx"] in used_ctx or used_sm[key] >= MAX_PER_SURFACE_MEANING: continue
+        if topic != "jodoshi-zu" and inst["sentlen"] > MAX_SENT: continue  # 意味判断は全文が見える文のみ
+        if inst["sent"] in lv2_sent: continue
         if topic == "jodoshi-zu":
             if inst["form"] not in FORM_NAME: continue
             ans = FORM_NAME[inst["form"]]
@@ -261,7 +266,7 @@ for topic in sorted(instances):
                  "prompt": f"この文の「{inst['surface']}」の意味は？",
                  "answer": ans, "choices": choices,
                  "explanation": f"{hint}{cite(inst)}"}
-        used_ctx.add(inst["ctx"]); used_sm[key] += 1
+        used_ctx.add(inst["ctx"]); used_sm[key] += 1; lv2_sent.add(inst["sent"])
         lv2.append((q, inst))
 
     # Lv3: 同形の正体識別
@@ -323,10 +328,34 @@ for topic in sorted(instances):
         lv4.append((q, inst))
     for i, (q, inst) in enumerate(lv4, 1):
         drills.append({"id": f"{topic}-d{i:02}", "topic_id": topic, "kind": q["kind"],
-                       "prompt": q["prompt"], "context": inst["ctx_wide"], "choices": q["choices"],
+                       "prompt": q["prompt"], "context": inst["ctx_full"], "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
                        "ref_heading": REF2.get(topic), "sort": 300 + i})
     report.append(f"{topic}: 候補{len(pool)} → Lv2={len(lv2)} Lv3={len(lv3)} Lv4={len(lv4)}")
+
+# 識別クラスターの Lv4（教材実文での正体判別。単元横断なのでヒントが消える）
+CLUSTER = {"に": "shikibetsu-ni", "ぬ": "shikibetsu-nu-ne", "ね": "shikibetsu-nu-ne",
+           "る": "shikibetsu-ru-re", "れ": "shikibetsu-ru-re", "なり": "shikibetsu-nari"}
+cl_used = collections.defaultdict(set)
+cl_n = collections.Counter()
+all_insts = [(t, i) for t in sorted(instances) for i in instances[t]]
+all_insts.sort(key=lambda x: x[1]["sentlen"])
+for topic, inst in all_insts:
+    cl = CLUSTER.get(inst["surface"])
+    if not cl: continue
+    ident = IDENTITY[inst["surface"]]
+    ans = ident["answer"].get((topic, inst["meaning"]))
+    if not ans: continue
+    if cl_n[cl] >= 8 or inst["sent"] in cl_used[cl] or inst["sentlen"] < 25: continue
+    cl_used[cl].add(inst["sent"]); cl_n[cl] += 1
+    drills.append({
+        "id": f"{cl}-c{cl_n[cl]:02}", "topic_id": cl, "kind": "shikibetsu",
+        "prompt": f"この「{inst['surface']}」の正体は？", "context": inst["ctx_full"],
+        "choices": list(ident["choices"]), "answer": ans,
+        "explanation": f"{HINT.get((topic, inst['meaning']), '')}{cite(inst, long=True)}",
+        "ref_heading": "判別の手順", "sort": 300 + cl_n[cl],
+    })
+report.append("clusters Lv4: " + ", ".join(f"{k}={v}" for k, v in sorted(cl_n.items())))
 
 out = "supabase/seeds/grammar-corpus-lv23.json"
 json.dump(drills, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
