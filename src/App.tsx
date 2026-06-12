@@ -44,6 +44,7 @@ interface QuizQuestion {
   exampleIndex?: number;
   exampleKobun?: string;
   exampleModern?: string;
+  senseCount?: number; // 同一 lemma の意味数（多義語は例文を最初から表示）
 }
 
 interface TrueFalseQuestion {
@@ -705,7 +706,8 @@ function App() {
         options,
         exampleIndex: prep.exampleIndex,
         exampleKobun: dataParser.getEmphasizedExample(prep.exampleKobun, prep.correctWord.lemma),
-        exampleModern: prep.exampleModern
+        exampleModern: prep.exampleModern,
+        senseCount: allWords.reduce((n, w) => n + (w.lemma === prep.correctWord.lemma ? 1 : 0), 0)
       });
     }
 

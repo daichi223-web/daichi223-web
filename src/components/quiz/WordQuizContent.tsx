@@ -8,6 +8,7 @@ interface QuizQuestion {
   exampleIndex?: number;
   exampleKobun?: string;
   exampleModern?: string;
+  senseCount?: number; // 同一 lemma の意味数（多義語判定用）
 }
 
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
@@ -37,10 +38,12 @@ export function WordQuizContent({
   writingUserJudgment,
   handleWritingUserJudgment
 }: WordQuizContentProps) {
+  // 多義語は文脈なしでは「どの意味か」が決まらないため、例文を最初から表示する
+  const polysemous = (question.senseCount ?? 1) > 1;
   const [userAnswer, setUserAnswer] = useState('');
   const [answeredCorrectly, setAnsweredCorrectly] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState<Word | null>(null);
-  const [showExample, setShowExample] = useState(false);
+  const [showExample, setShowExample] = useState(polysemous);
   const [showModernTranslation, setShowModernTranslation] = useState(false);
 
   // Reset state when question changes
@@ -48,9 +51,9 @@ export function WordQuizContent({
     setAnsweredCorrectly(null);
     setSelectedOption(null);
     setUserAnswer('');
-    setShowExample(false);
+    setShowExample(polysemous);
     setShowModernTranslation(false);
-  }, [question.correct.qid]);
+  }, [question.correct.qid, polysemous]);
 
   // 正解時に自動遷移
   React.useEffect(() => {
