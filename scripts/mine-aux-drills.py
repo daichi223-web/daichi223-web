@@ -9,7 +9,7 @@
 出力: supabase/seeds/grammar-corpus-lv23.json（apply-drills.mjs で投入）
 使い方: python -X utf8 scripts/mine-aux-drills.py
 """
-import json, glob, collections, io, sys, random
+import json, glob, collections, io, sys, random, re
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 random.seed(42)  # 再現可能に
@@ -209,19 +209,84 @@ for f in sorted(glob.glob("public/texts-v3/*.json")):
             trans = ""
         toks = [tk for tk in (sen.get("tokens") or []) if isinstance(tk, dict)]
         naux = sum(1 for tk in toks if isinstance(tk.get("grammarTag"), dict) and tk["grammarTag"].get("pos") == "助動詞")
-        for tk in toks:
+        PUNCT = set("、。「」『』・！？　")
+        words = [t for t in toks if t.get("text") and t["text"] not in PUNCT and t.get("start") is not None]
+        for ti, tk in enumerate(toks):
             g = tk.get("grammarTag") or {}
             if not (isinstance(g, dict) and g.get("pos") == "助動詞"): continue
             s, m, c = tk.get("text", ""), g.get("meaning", ""), g.get("conjugationForm", "")
             t = topic_for(s, m)
             if not t or not sent or tk.get("start") is None: continue
+            # 呼応ハイライト用: 直前語・直後の助動詞・直後の語
+            wi = next((i for i, w in enumerate(words) if w is tk), None)
+            prev_sp = nexttok_sp = nextaux_sp = None
+            nextaux_info = ("", "")
+            if wi is not None:
+                if wi > 0:
+                    pw = words[wi - 1]; prev_sp = (pw["start"], pw["end"])
+                if wi + 1 < len(words):
+                    nw = words[wi + 1]; nexttok_sp = (nw["start"], nw["end"])
+                for w in words[wi + 1:]:
+                    gg = w.get("grammarTag") or {}
+                    if isinstance(gg, dict) and gg.get("pos") == "助動詞":
+                        nextaux_sp = (w["start"], w["end"]); nextaux_info = (w.get("text", ""), gg.get("meaning", ""))
+                        break
             instances[t].append({
+                "prev": prev_sp, "nextaux": nextaux_sp, "nextaux_text": nextaux_info[0],
+                "nextaux_meaning": nextaux_info[1], "nexttok": nexttok_sp,
                 "surface": s, "meaning": m, "form": c, "title": title, "sent": sent,
+                "tstart": tk["start"], "tend": tk["end"],
                 "ctx": clip(sent, tk["start"], tk["end"]),
                 "ctx_wide": clip(sent, tk["start"], tk["end"], window=46, maxlen=100),
                 "ctx_full": sent[:tk["start"]] + "【" + sent[tk["start"]:tk["end"]] + "】" + sent[tk["end"]:],
                 "trans": trans_clip(trans, 50), "trans_l": trans_clip(trans, 110), "sentlen": len(sent), "naux": naux,
             })
+
+def mark(sent, tspan, cue=None):
+    """対象語を【 】、呼応の手がかりを《 》で囲んで全文を返す"""
+    spans = [(tspan[0], tspan[1], "【", "】")]
+    if cue and not (cue[0] < tspan[1] and tspan[0] < cue[1]):  # 重なりは無視
+        spans.append((cue[0], cue[1], "《", "》"))
+    out = sent
+    for s0, e0, a, b in sorted(spans, key=lambda x: -x[0]):
+        out = out[:s0] + a + out[s0:e0] + b + out[e0:]
+    return out
+
+SUIRYO_AUX = ("べ", "む", "ん", "まし", "らむ", "けむ", "じ", "まじ")
+NEG_AUX = ("ず", "じ", "まじ", "ね", "ざ")
+
+def cue_for(topic, inst):
+    """(topic, meaning) から呼応先スパンを返す。無ければ None"""
+    m = inst["meaning"]
+    if m == "強意" and inst["nextaux"] and inst["nextaux_text"].startswith(SUIRYO_AUX):
+        return inst["nextaux"]
+    if m == "完了" and inst["nextaux"] and inst["nextaux_text"] and (
+        inst["nextaux_text"][0] in "きけたし" and inst["nextaux_meaning"] in ("過去", "詠嘆", "完了", "存続")
+    ) and inst["surface"] in ("に", "て"):
+        return inst["nextaux"]
+    if m == "可能" and inst["nextaux"] and inst["nextaux_text"].startswith(NEG_AUX):
+        return inst["nextaux"]
+    if m == "尊敬":
+        mt = re.search(r"(たまは|たまひ|たまふ|たまへ|給は|給ひ|給ふ|給へ|おはしま)", inst["sent"][inst["tend"]:inst["tend"] + 8])
+        if mt:
+            return (inst["tend"] + mt.start(), inst["tend"] + mt.end())
+    if m == "自発" and inst["prev"]:
+        return inst["prev"]
+    if m == "婉曲" and inst["nexttok"]:
+        return inst["nexttok"]
+    if m == "打消" and inst["prev"]:
+        return inst["prev"]
+    return None
+
+def cue_identity(topic, inst):
+    """正体識別問題の手がかり: 原則直前の語（接続）。に＋き/けり等は後続も優先"""
+    if inst["surface"] in ("に", "て") and inst["nextaux"] and inst["nextaux_text"] and inst["nextaux_text"][0] in "きけたし":
+        return inst["nextaux"]
+    if inst["surface"] == "に":
+        mt = re.search(r"(あら|あり|ある|あれ|はべ|侍|候|さぶら)", inst["sent"][inst["tend"]:inst["tend"] + 6])
+        if mt:
+            return (inst["tend"] + mt.start(), inst["tend"] + mt.end())
+    return inst["prev"]
 
 def cite(inst, long=False):
     """解説末尾の出典表記。訳が信頼できない教材では訳を載せない"""
@@ -246,7 +311,7 @@ for topic in sorted(instances):
         if len(lv2) >= MAX_LV2_PER_TOPIC: break
         key = (inst["surface"], inst["meaning"])
         if not inst["trans"] or inst["ctx"] in used_ctx or used_sm[key] >= MAX_PER_SURFACE_MEANING: continue
-        if topic != "jodoshi-zu" and inst["sentlen"] > MAX_SENT: continue  # 意味判断は全文が見える文のみ
+        if inst["sentlen"] > (70 if topic == "jodoshi-zu" else MAX_SENT): continue  # 全文が見える文のみ
         if inst["sent"] in lv2_sent: continue
         if topic == "jodoshi-zu":
             if inst["form"] not in FORM_NAME: continue
@@ -274,6 +339,7 @@ for topic in sorted(instances):
     used_sm3 = collections.Counter()
     for inst in pool:
         if len(lv3) >= MAX_LV3_PER_TOPIC: break
+        if inst["sentlen"] > 70: continue
         ident = IDENTITY.get(inst["surface"])
         if not ident: continue
         ans = ident["answer"].get((topic, inst["meaning"]))
@@ -288,13 +354,15 @@ for topic in sorted(instances):
         lv3.append((q, inst))
 
     for i, (q, inst) in enumerate(lv2, 1):
+        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_for(topic, inst))
         drills.append({"id": f"{topic}-c{i:02}", "topic_id": topic, "kind": q["kind"],
-                       "prompt": q["prompt"], "context": inst["ctx"], "choices": q["choices"],
+                       "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
                        "ref_heading": REF2.get(topic), "sort": 100 + i})
     for i, (q, inst) in enumerate(lv3, 1):
+        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_identity(topic, inst))
         drills.append({"id": f"{topic}-x{i:02}", "topic_id": topic, "kind": q["kind"],
-                       "prompt": q["prompt"], "context": inst["ctx"], "choices": q["choices"],
+                       "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
                        "ref_heading": REF3.get(topic, REF2.get(topic)), "sort": 200 + i})
 
@@ -327,8 +395,9 @@ for topic in sorted(instances):
         used_ctx.add(inst["ctx_wide"]); used_sm4[key] += 1; used_sent.add(inst["sent"])
         lv4.append((q, inst))
     for i, (q, inst) in enumerate(lv4, 1):
+        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_for(topic, inst))
         drills.append({"id": f"{topic}-d{i:02}", "topic_id": topic, "kind": q["kind"],
-                       "prompt": q["prompt"], "context": inst["ctx_full"], "choices": q["choices"],
+                       "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
                        "ref_heading": REF2.get(topic), "sort": 300 + i})
     report.append(f"{topic}: 候補{len(pool)} → Lv2={len(lv2)} Lv3={len(lv3)} Lv4={len(lv4)}")
@@ -350,7 +419,8 @@ for topic, inst in all_insts:
     cl_used[cl].add(inst["sent"]); cl_n[cl] += 1
     drills.append({
         "id": f"{cl}-c{cl_n[cl]:02}", "topic_id": cl, "kind": "shikibetsu",
-        "prompt": f"この「{inst['surface']}」の正体は？", "context": inst["ctx_full"],
+        "prompt": f"この「{inst['surface']}」の正体は？",
+        "context": mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_identity(topic, inst)),
         "choices": list(ident["choices"]), "answer": ans,
         "explanation": f"{HINT.get((topic, inst['meaning']), '')}{cite(inst, long=True)}",
         "ref_heading": "判別の手順", "sort": 300 + cl_n[cl],

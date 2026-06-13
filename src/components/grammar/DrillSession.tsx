@@ -14,6 +14,31 @@ function isAnswerCorrect(drill: GrammarDrill, choice: string): boolean {
 }
 
 /**
+ * 例文の描画。【 】＝問われている語（赤太字）、《 》＝呼応・判断の手がかり（下線）。
+ * どこと呼応して意味を形成しているかを視覚的に示す。
+ */
+function renderContext(text: string) {
+  const parts = text.split(/(【[^】]*】|《[^》]*》)/);
+  return parts.map((p, i) => {
+    if (p.startsWith("【")) {
+      return (
+        <span key={i} className="font-black text-rw-primary px-0.5 border-b-4" style={{ borderColor: "var(--rw-primary)" }}>
+          {p.slice(1, -1)}
+        </span>
+      );
+    }
+    if (p.startsWith("《")) {
+      return (
+        <span key={i} className="font-bold text-rw-accent underline decoration-2 underline-offset-4">
+          {p.slice(1, -1)}
+        </span>
+      );
+    }
+    return <span key={i}>{p}</span>;
+  });
+}
+
+/**
  * 文法ドリルのセッション。選択式の小問を1問ずつ出題し、
  * 正誤を recordDrillAnswer（word_stats + srs_state）に記録、
  * 完了時に到達度を onComplete で返す。
@@ -72,9 +97,18 @@ export function DrillSession({
       {/* 設問 */}
       <div className="bg-rw-paper p-5 rounded-2xl border-2 border-rw-ink mb-4">
         {drill.context && (
-          <p className="text-rw-ink font-serif text-base leading-relaxed mb-3 pb-3 border-b border-rw-rule">
-            {drill.context}
-          </p>
+          <>
+            <p className="text-rw-ink font-serif text-base leading-loose mb-1">
+              {renderContext(drill.context)}
+            </p>
+            {drill.context.includes("《") && (
+              <p className="text-[10px] text-rw-ink-soft mb-2">
+                <span className="font-black text-rw-primary">赤太字</span>＝問われている語
+                <span className="font-bold text-rw-accent underline decoration-2 underline-offset-2">下線</span>＝呼応・判断の手がかり
+              </p>
+            )}
+            <div className="border-b border-rw-rule mb-3" />
+          </>
         )}
         <p className="text-base font-black text-rw-ink leading-relaxed">{drill.prompt}</p>
       </div>
