@@ -39,9 +39,9 @@ function renderContext(text: string) {
 }
 
 /**
- * 文法ドリルのセッション。選択式の小問を1問ずつ出題し、
- * 正誤を recordDrillAnswer（word_stats + srs_state）に記録、
- * 完了時に到達度を onComplete で返す。
+ * 文法ドリルのセッション。1問が iPhone 1 画面に収まるよう、
+ * 全体を縦フレックス（h-full）で組み、長い例文・解説だけ内部スクロールにする。
+ * 選択肢と「つぎへ」は常に画面内に見える。
  */
 export function DrillSession({
   drills,
@@ -83,38 +83,39 @@ export function DrillSession({
   };
 
   const choices = drill.choices ?? [];
+  const hasCue = !!drill.context && drill.context.includes("《");
 
   return (
-    <div>
+    <div className="flex flex-col flex-1 min-h-0">
       {/* 進捗 */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-2 shrink-0">
         <span className="text-[11px] font-black text-rw-ink-soft tracking-wider">
           {idx + 1} / {drills.length}
         </span>
         <span className="text-[11px] font-black text-rw-ink-soft">正解 {correctCount}</span>
       </div>
 
-      {/* 設問 */}
-      <div className="bg-rw-paper p-5 rounded-2xl border-2 border-rw-ink mb-4">
+      {/* 設問（例文が長いときだけ内部スクロール） */}
+      <div className="bg-rw-paper p-3.5 rounded-2xl border-2 border-rw-ink mb-2.5 shrink-0">
         {drill.context && (
           <>
-            <p className="text-rw-ink font-serif text-base leading-loose mb-1">
-              {renderContext(drill.context)}
-            </p>
-            {drill.context.includes("《") && (
-              <p className="text-[10px] text-rw-ink-soft mb-2">
-                <span className="font-black text-rw-primary">赤太字</span>＝問われている語
-                <span className="font-bold text-rw-accent underline decoration-2 underline-offset-2">下線</span>＝意味・活用を決める手がかり
+            <div className="max-h-[26vh] overflow-y-auto">
+              <p className="text-rw-ink font-serif text-[15px] leading-relaxed">{renderContext(drill.context)}</p>
+            </div>
+            {hasCue && (
+              <p className="text-[10px] text-rw-ink-soft mt-1 leading-snug">
+                <span className="font-black text-rw-primary">赤太字</span>＝問われる語{"　"}
+                <span className="font-bold text-rw-accent underline decoration-2 underline-offset-2">下線</span>＝意味を決める手がかり
               </p>
             )}
-            <div className="border-b border-rw-rule mb-3" />
+            <div className="border-b border-rw-rule my-2" />
           </>
         )}
-        <p className="text-base font-black text-rw-ink leading-relaxed">{drill.prompt}</p>
+        <p className="text-[15px] font-black text-rw-ink leading-snug">{drill.prompt}</p>
       </div>
 
       {/* 選択肢 */}
-      <div className="grid grid-cols-1 gap-2">
+      <div className="grid grid-cols-1 gap-1.5 shrink-0">
         {choices.map((choice) => {
           const chosen = selected === choice;
           const correctChoice = isAnswerCorrect(drill, choice);
@@ -129,7 +130,7 @@ export function DrillSession({
               key={choice}
               onClick={() => handleSelect(choice)}
               disabled={answered}
-              className={`text-left font-black py-3.5 px-4 rounded-xl border-2 transition ${cls}`}
+              className={`text-left font-bold py-2.5 px-3.5 rounded-xl border-2 transition text-sm leading-snug ${cls}`}
             >
               {choice}
             </button>
@@ -137,29 +138,29 @@ export function DrillSession({
         })}
       </div>
 
-      {/* 解説（誤答時のみ） */}
-      {answered && !isCorrect && (
-        <div
-          className="mt-4 p-4 rounded-2xl border-l-4 bg-rw-primary-soft"
-          style={{ borderLeftColor: "var(--rw-primary)" }}
-        >
-          <p className="text-xs font-black text-rw-primary mb-1">解説</p>
-          <p className="text-sm text-rw-ink leading-relaxed">{drill.explanation}</p>
-        </div>
-      )}
-
-      {/* つぎへ / けっか */}
-      {answered && (
-        <div className="mt-6 text-center">
-          <button
-            onClick={handleNext}
-            className="bg-rw-primary text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
-            style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
+      {/* 解説（誤答時）＋「つぎへ」: 残りの高さに置き、解説は長ければスクロール */}
+      <div className="flex flex-col flex-1 min-h-0 mt-2.5">
+        {answered && !isCorrect && (
+          <div
+            className="p-3 rounded-xl border-l-4 bg-rw-primary-soft overflow-y-auto min-h-0"
+            style={{ borderLeftColor: "var(--rw-primary)" }}
           >
-            {idx + 1 >= drills.length ? "けっか" : "つぎへ"}
-          </button>
-        </div>
-      )}
+            <p className="text-[11px] font-black text-rw-primary mb-0.5">解説</p>
+            <p className="text-[13px] text-rw-ink leading-relaxed">{drill.explanation}</p>
+          </div>
+        )}
+        {answered && (
+          <div className="mt-auto pt-2.5 shrink-0">
+            <button
+              onClick={handleNext}
+              className="w-full bg-rw-primary text-rw-paper font-black rounded-full py-2.5 tracking-widest transition-transform hover:-translate-y-0.5"
+              style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
+            >
+              {idx + 1 >= drills.length ? "けっか" : "つぎへ"}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

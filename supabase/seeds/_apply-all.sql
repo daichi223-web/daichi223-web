@@ -131,7 +131,7 @@ insert into grammar_drills (id, topic_id, kind, prompt, context, choices, answer
 
 -- ===== 上一段活用 =====
   ('doushi-kami-ichidan-01','doushi-kami-ichidan','shikibetsu','上一段動詞を覚える語呂合わせはどれ？', null,
-   '["ひいきにみゐる","すいかかえ","いろはにほへと","たちつてと"]'::jsonb, '"ひいきにみゐる"'::jsonb,
+   '["ひいきにみゐる","すいかかえて","いろはにほへと","たちつてと"]'::jsonb, '"ひいきにみゐる"'::jsonb,
    '干る・射る・着る・似る・見る・居る（率る）＝「ひいきにみゐる」。','暗記すべき上一段動詞',1),
   ('doushi-kami-ichidan-02','doushi-kami-ichidan','katsuyo-type','「見る」に「ず」を付けると「見（み・イ段1音）」。活用型は？', null,
    '["上一段活用","上二段活用","四段活用","下二段活用"]'::jsonb, '"上一段活用"'::jsonb,
@@ -214,7 +214,7 @@ insert into grammar_drills (id, topic_id, kind, prompt, context, choices, answer
    '傍線部「む」の意味として最も適切なものは？',
    '（児が心の中で）「いま一声呼ばれて、いらへむ」と思ひて、',
    '["推量","意志","勧誘","婉曲"]'::jsonb, '"意志"'::jsonb,
-   '主語が一人称（児）の動作なので意志「〜しよう」。「すいかかえ」で判別。', '意味の判別', 2),
+   '主語が一人称（児）の動作なので意志「〜しよう」。「すいかかえて」で判別。', '意味の判別', 2),
   ('jodoshi-mu-03', 'jodoshi-mu', 'imi',
    '傍線部「む」の意味として最も適切なものは？',
    '法師ばら「いざ、ぼたもちを作らむ」と言ひて、',
@@ -225,9 +225,9 @@ insert into grammar_drills (id, topic_id, kind, prompt, context, choices, answer
    '["終止形「む」","連体形「む」","已然形「め」","命令形「め」"]'::jsonb, '"已然形「め」"'::jsonb,
    '係り結び：「こそ」の結びは已然形。「む」の已然形は「め」。', '接続と活用', 4),
   ('jodoshi-mu-05', 'jodoshi-mu', 'shikibetsu',
-   '「む」の意味（すいかかえ）に含まれないものはどれ？', null,
+   '「む」の意味（すいかかえて）に含まれないものはどれ？', null,
    '["推量","意志","詠嘆","婉曲"]'::jsonb, '"詠嘆"'::jsonb,
-   '「む」は 推量・意志・勧誘・仮定・婉曲（すいかかえ）。詠嘆は含まない。', '意味の判別', 5),
+   '「む」は 推量・意志・勧誘・仮定・婉曲・適当（すいかかえて）。詠嘆は含まない。', '意味の判別', 5),
 
 -- ===== 形容詞・形容動詞（総論／ナリ・タリ） =====
   ('keiyoshi-katsuyo-01','keiyoshi-katsuyo','shikibetsu','古文の形容詞の活用は何種類？', null,

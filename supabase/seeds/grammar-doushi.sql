@@ -53,7 +53,7 @@ insert into grammar_drills (id, topic_id, kind, prompt, context, choices, answer
 
 -- 上一段活用
   ('doushi-kami-ichidan-01','doushi-kami-ichidan','shikibetsu','上一段動詞を覚える語呂合わせはどれ？', null,
-   '["ひいきにみゐる","すいかかえ","いろはにほへと","たちつてと"]'::jsonb, '"ひいきにみゐる"'::jsonb,
+   '["ひいきにみゐる","すいかかえて","いろはにほへと","たちつてと"]'::jsonb, '"ひいきにみゐる"'::jsonb,
    '干る・射る・着る・似る・見る・居る（率る）＝「ひいきにみゐる」。','暗記すべき上一段動詞',1),
   ('doushi-kami-ichidan-02','doushi-kami-ichidan','katsuyo-type','「見る」に「ず」を付けると「見（み・イ段1音）」。活用型は？', null,
    '["上一段活用","上二段活用","四段活用","下二段活用"]'::jsonb, '"上一段活用"'::jsonb,

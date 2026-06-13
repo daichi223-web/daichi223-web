@@ -30,6 +30,17 @@ function maxUnlockedLevel(
   }
   return max;
 }
+
+/** 1セッションで出題する問題数（5倍のバンクからシャッフルして抽出） */
+const SESSION_SIZE = 10;
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 import { VideoEmbed } from "@/components/grammar/VideoEmbed";
 import { DrillSession, type DrillResult } from "@/components/grammar/DrillSession";
 
@@ -47,6 +58,7 @@ export default function GrammarDojoTopic() {
   const [result, setResult] = useState<DrillResult | null>(null);
   const [levelUp, setLevelUp] = useState<number | null>(null);
   const [selLevel, setSelLevel] = useState(1);
+  const [sessionDrills, setSessionDrills] = useState<GrammarDrill[]>([]);
 
   // この単元に存在する難度レベルと、解放済み最大レベル（前レベル定着85%で解放）
   const levels = [1, 2, 3, 4, 5].filter((L) => drills.some((d) => drillLevel(d) === L));
@@ -54,6 +66,15 @@ export default function GrammarDojoTopic() {
   const unlockedMax = !topicId ? 1 : maxUnlockedLevel(levels, progress, topicId);
   const levelDrills = drills.filter((d) => drillLevel(d) === selLevel);
   const nextLevel = levels[levels.indexOf(selLevel) + 1];
+
+  /** バンクからシャッフルしてセッション分を取り出し、ドリル開始 */
+  const startDrill = (level: number) => {
+    const pool = drills.filter((d) => drillLevel(d) === level);
+    setSessionDrills(shuffle(pool).slice(0, SESSION_SIZE));
+    setSelLevel(level);
+    setResult(null);
+    setPhase("drill");
+  };
 
   useEffect(() => {
     if (!topicId) return;
@@ -120,6 +141,34 @@ export default function GrammarDojoTopic() {
     return (
       <div className="min-h-dvh bg-rw-bg flex items-center justify-center">
         <p className="text-rw-ink-soft">読み込み中...</p>
+      </div>
+    );
+  }
+
+  // ドリル中は iPhone 1 画面に収める専用レイアウト（上部の大見出しを出さない）
+  if (phase === "drill") {
+    return (
+      <div className="h-dvh flex flex-col bg-rw-bg">
+        <div className="w-full max-w-2xl mx-auto flex flex-col flex-1 min-h-0 px-4 pt-3 pb-3">
+          <div className="flex items-center gap-3 mb-2 shrink-0">
+            <button
+              onClick={() => {
+                setResult(null);
+                setPhase("learn");
+              }}
+              className="text-xs font-bold text-rw-ink-soft hover:text-rw-ink transition-colors"
+            >
+              ← やめる
+            </button>
+            <span className="text-xs font-black text-rw-ink truncate min-w-0">{topic?.title ?? topicId}</span>
+            {levels.length > 1 && (
+              <span className="ml-auto shrink-0 text-[10px] font-black text-rw-paper bg-rw-primary px-2 py-0.5 rounded-full">
+                {LEVEL_LABEL[selLevel]}
+              </span>
+            )}
+          </div>
+          <DrillSession drills={sessionDrills} onComplete={handleComplete} />
+        </div>
       </div>
     );
   }
@@ -223,11 +272,11 @@ export default function GrammarDojoTopic() {
             {/* ドリル開始 */}
             {levelDrills.length > 0 ? (
               <button
-                onClick={() => setPhase("drill")}
+                onClick={() => startDrill(selLevel)}
                 className="block w-full text-center bg-rw-primary text-rw-paper font-black rounded-2xl px-6 py-4 tracking-wider transition-transform hover:-translate-y-0.5"
                 style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
               >
-                ⚔️ {levels.length > 1 ? `${LEVEL_LABEL[selLevel]} を始める` : "ドリルを始める"}（{levelDrills.length}問）
+                ⚔️ {levels.length > 1 ? `${LEVEL_LABEL[selLevel]} を始める` : "ドリルを始める"}（{Math.min(SESSION_SIZE, levelDrills.length)}問・シャッフル）
               </button>
             ) : (
               <div className="text-center bg-rw-paper border-2 border-rw-rule rounded-2xl p-6">
@@ -242,8 +291,6 @@ export default function GrammarDojoTopic() {
             </div>
           </>
         )}
-
-        {phase === "drill" && <DrillSession drills={levelDrills} onComplete={handleComplete} />}
 
         {phase === "done" && result && (
           <div className="text-center">
@@ -269,11 +316,7 @@ export default function GrammarDojoTopic() {
               {/* 定着して次レベルが解放されたら、その場で挑戦できる */}
               {nextLevel !== undefined && unlockedMax >= nextLevel && (
                 <button
-                  onClick={() => {
-                    setSelLevel(nextLevel);
-                    setResult(null);
-                    setPhase("drill");
-                  }}
+                  onClick={() => startDrill(nextLevel)}
                   className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
                   style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
                 >
@@ -281,10 +324,7 @@ export default function GrammarDojoTopic() {
                 </button>
               )}
               <button
-                onClick={() => {
-                  setResult(null);
-                  setPhase("drill");
-                }}
+                onClick={() => startDrill(selLevel)}
                 className="bg-rw-primary text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
                 style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
               >

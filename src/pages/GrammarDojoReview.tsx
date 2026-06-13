@@ -34,6 +34,23 @@ export default function GrammarDojoReview() {
     setPhase("done");
   };
 
+  // ドリル中は iPhone 1 画面に収める専用レイアウト
+  if (phase === "drill") {
+    return (
+      <div className="h-dvh flex flex-col bg-rw-bg">
+        <div className="w-full max-w-2xl mx-auto flex flex-col flex-1 min-h-0 px-4 pt-3 pb-3">
+          <div className="flex items-center gap-3 mb-2 shrink-0">
+            <Link to="/read/grammar" className="text-xs font-bold text-rw-ink-soft hover:text-rw-ink transition-colors">
+              ← やめる
+            </Link>
+            <span className="text-xs font-black text-rw-ink">🔁 復習</span>
+          </div>
+          <DrillSession drills={drills} onComplete={handleComplete} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-dvh bg-rw-bg">
       <div className="max-w-2xl mx-auto p-5">
@@ -78,8 +95,6 @@ export default function GrammarDojoReview() {
             🔁 復習を始める（{drills.length}問）
           </button>
         )}
-
-        {phase === "drill" && <DrillSession drills={drills} onComplete={handleComplete} />}
 
         {phase === "done" && result && (
           <div className="text-center">
