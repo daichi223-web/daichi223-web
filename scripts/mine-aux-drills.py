@@ -280,8 +280,8 @@ def cue_for(topic, inst):
         return inst["prev"]
     if m == "婉曲" and inst["nexttok"]:
         return inst["nexttok"]
-    if m == "打消" and inst["prev"]:
-        return inst["prev"]
+    if m in ("打消", "完了", "存続", "断定", "伝聞推定") and inst["prev"]:
+        return inst["prev"]  # 接続（直前の語）が判断の根拠
     return None
 
 def cue_identity(topic, inst):
