@@ -427,14 +427,16 @@ for topic in sorted(instances):
     # Lv4: 文脈総合（長文 or 助動詞が3つ以上の密な文。広いウィンドウで出題）
     lv4 = []
     used_sm4 = collections.Counter()
+    lv4_meaning = collections.Counter()
     used_sent = set(i["sent"] for _, i, _ in lv2) | set(i["sent"] for _, i, _ in lv3)
     for inst in sorted(pool, key=lambda x: -x["naux"]):
         if len(lv4) >= MAX_LV4_PER_TOPIC: break
-        # Lv4＝手がかりなし。長文／助動詞密／Lv2に入れなかった（手がかりが取れない）意味判別を集める
+        # Lv4＝長文の意味判別。1語義に偏らせない（可能ばかり等を防ぐ）
         cued = cue_for(topic, inst) is not None
         if not (30 <= inst["sentlen"] <= 160): continue
         if not (inst["sentlen"] >= 55 or inst["naux"] >= 3 or not cued): continue
         if inst["sent"] in used_sent: continue
+        if topic != "jodoshi-zu" and lv4_meaning[inst["meaning"]] >= 4: continue
         key = (inst["surface"], inst["meaning"])
         if inst["ctx_wide"] in used_ctx or inst["ctx"] in used_ctx or used_sm4[key] >= MAX_PER_SURFACE_MEANING: continue
         if topic == "jodoshi-zu":
@@ -453,7 +455,7 @@ for topic in sorted(instances):
             q = {"kind": "imi", "prompt": f"この文の「{inst['surface']}」の意味は？",
                  "answer": ans, "choices": choices,
                  "explanation": f"{hint}{cite(inst, long=True)}"}
-        used_ctx.add(inst["ctx_wide"]); used_sm4[key] += 1; used_sent.add(inst["sent"])
+        used_ctx.add(inst["ctx_wide"]); used_sm4[key] += 1; used_sent.add(inst["sent"]); lv4_meaning[inst["meaning"]] += 1
         lv4.append((q, inst))
     for i, (q, inst) in enumerate(lv4, 1):
         # Lv4も「意味を決める文脈」に下線（取れる場合）。長文での手がかり探しを助ける

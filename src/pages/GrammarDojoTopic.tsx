@@ -8,7 +8,7 @@ import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 const LEVEL_LABEL: Record<number, string> = {
   1: "Lv1 型",
   2: "Lv2 活用・識別",
-  3: "Lv3 意味判別",
+  3: "Lv3 意味・応用",
   4: "Lv4 文脈総合",
   5: "Lv5 難関",
 };
