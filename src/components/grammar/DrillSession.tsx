@@ -14,7 +14,7 @@ function isAnswerCorrect(drill: GrammarDrill, choice: string): boolean {
 }
 
 /**
- * 例文の描画。【 】＝問われている語（赤太字）、《 》＝呼応・判断の手がかり（下線）。
+ * 例文の描画。【 】＝問われている語（赤太字）、《 》＝意味・活用を決める手がかり（下線）。
  * どこと呼応して意味を形成しているかを視覚的に示す。
  */
 function renderContext(text: string) {
@@ -104,7 +104,7 @@ export function DrillSession({
             {drill.context.includes("《") && (
               <p className="text-[10px] text-rw-ink-soft mb-2">
                 <span className="font-black text-rw-primary">赤太字</span>＝問われている語
-                <span className="font-bold text-rw-accent underline decoration-2 underline-offset-2">下線</span>＝呼応・判断の手がかり
+                <span className="font-bold text-rw-accent underline decoration-2 underline-offset-2">下線</span>＝意味・活用を決める手がかり
               </p>
             )}
             <div className="border-b border-rw-rule mb-3" />
