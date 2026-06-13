@@ -65,7 +65,18 @@ try {
           $tr = $sh.TextFrame.TextRange
           for ($pi = 1; $pi -le $tr.Paragraphs().Count; $pi++) {
             $para = $tr.Paragraphs($pi)
-            if ($para.Text -match "《文》") { $para.Text = [char]13 }
+            $ptxt = $para.Text
+            # 文法書/教科書のページ参照トークンを検出（《文》ｐ112～115・○教ｐ40～41・文ｐ54～61・続きの ｐ100～103）
+            $refTok = '[○●・]?\s*《?[文教書]》?\s*[ｐＰpP][0-9０-９]+(\s*[～〜~ー－—\-]\s*[0-9０-９]+)?[，,、]*'
+            $bareTok = '[ｐＰpP][0-9０-９]+\s*[～〜~ー－—\-]\s*[0-9０-９]+[，,、]*'
+            if ($ptxt -match $refTok -or $ptxt -match $bareTok) {
+              $stripped = ($ptxt -replace $refTok, '') -replace $bareTok, ''
+              if (($stripped -replace '[\s　○●・]', '') -eq '') {
+                $para.Text = [char]13          # 段落まるごとページ参照 → 空行に
+              } else {
+                $para.Text = $stripped         # 本文と同じ行のページ参照 → 参照のみ除去
+              }
+            }
           }
         }
       }
