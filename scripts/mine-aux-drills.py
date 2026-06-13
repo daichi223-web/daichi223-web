@@ -200,10 +200,15 @@ for f in sorted(glob.glob("public/texts-v3/*.json")):
         if isinstance(sen, dict):
             t = (sen.get("modernTranslation") or "").strip()
             if t: trans_count[t] += 1
+    prev_sent_text = ""
     for si, sen in enumerate(d.get("sentences") or []):
         if not isinstance(sen, dict): continue
         sent = sen.get("originalText") or ""
         trans = (sen.get("modernTranslation") or "").strip()
+        # 直前の文（表示に耐えるものだけ文脈として使う）
+        my_prev = prev_sent_text
+        if sent:
+            prev_sent_text = sent if (sent[0] not in "」』、）" and "「」" not in sent) else ""
         if not sentence_ok(sent, trans): continue
         if trans_count[trans] >= 2:
             trans = ""
@@ -232,6 +237,7 @@ for f in sorted(glob.glob("public/texts-v3/*.json")):
                         nextaux_sp = (w["start"], w["end"]); nextaux_info = (w.get("text", ""), gg.get("meaning", ""))
                         break
             instances[t].append({
+                "prev_sent": my_prev,
                 "prev": prev_sp, "nextaux": nextaux_sp, "nextaux_text": nextaux_info[0],
                 "nextaux_meaning": nextaux_info[1], "nexttok": nexttok_sp,
                 "surface": s, "meaning": m, "form": c, "title": title, "sent": sent,
@@ -288,6 +294,14 @@ def cue_identity(topic, inst):
             return (inst["tend"] + mt.start(), inst["tend"] + mt.end())
     return inst["prev"]
 
+def with_context(inst, marked, always=False, cap=150):
+    """意味判別は文の外に根拠があることが多い。短い文には直前の文を文脈として前置する"""
+    prev = inst.get("prev_sent") or ""
+    need = always or len(inst["sent"]) < 30
+    if need and prev and len(prev) + len(marked) <= cap:
+        return prev + marked
+    return marked
+
 def cite(inst, long=False):
     """解説末尾の出典表記。訳が信頼できない教材では訳を載せない"""
     t = inst["trans_l"] if long else inst["trans"]
@@ -312,6 +326,10 @@ for topic in sorted(instances):
         key = (inst["surface"], inst["meaning"])
         if not inst["trans"] or inst["ctx"] in used_ctx or used_sm[key] >= MAX_PER_SURFACE_MEANING: continue
         if inst["sentlen"] > (70 if topic == "jodoshi-zu" else MAX_SENT): continue  # 全文が見える文のみ
+        # 意味判別は文脈が命: 短文で前の文も付けられないものは出題しない
+        if topic != "jodoshi-zu" and inst["sentlen"] < 30 and not (
+            inst.get("prev_sent") and len(inst["prev_sent"]) + inst["sentlen"] <= 150
+        ): continue
         if inst["sent"] in lv2_sent: continue
         if topic == "jodoshi-zu":
             if inst["form"] not in FORM_NAME: continue
@@ -355,6 +373,8 @@ for topic in sorted(instances):
 
     for i, (q, inst) in enumerate(lv2, 1):
         ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_for(topic, inst))
+        if q["kind"] == "imi":
+            ctx_marked = with_context(inst, ctx_marked)
         drills.append({"id": f"{topic}-c{i:02}", "topic_id": topic, "kind": q["kind"],
                        "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
@@ -395,7 +415,10 @@ for topic in sorted(instances):
         used_ctx.add(inst["ctx_wide"]); used_sm4[key] += 1; used_sent.add(inst["sent"])
         lv4.append((q, inst))
     for i, (q, inst) in enumerate(lv4, 1):
-        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_for(topic, inst))
+        # Lv4以上はハイライトを外し、呼応を自分で探させる（スキャフォールディングの撤去）
+        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]))
+        if q["kind"] == "imi":
+            ctx_marked = with_context(inst, ctx_marked, always=True, cap=200)
         drills.append({"id": f"{topic}-d{i:02}", "topic_id": topic, "kind": q["kind"],
                        "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
@@ -420,7 +443,7 @@ for topic, inst in all_insts:
     drills.append({
         "id": f"{cl}-c{cl_n[cl]:02}", "topic_id": cl, "kind": "shikibetsu",
         "prompt": f"この「{inst['surface']}」の正体は？",
-        "context": mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_identity(topic, inst)),
+        "context": mark(inst["sent"], (inst["tstart"], inst["tend"])),
         "choices": list(ident["choices"]), "answer": ans,
         "explanation": f"{HINT.get((topic, inst['meaning']), '')}{cite(inst, long=True)}",
         "ref_heading": "判別の手順", "sort": 300 + cl_n[cl],

@@ -133,7 +133,7 @@ for topic, pool in per_topic.items():
         drills.append({
             "id": f"{topic}-d{n:02}", "topic_id": topic, "kind": "katsuyo-fill",
             "prompt": f"この文の「{i['surface']}」（{label}「{i['base']}」）の活用形は？",
-            "context": mark(i["sent"], i["ts"], i["te"], i["nxt"]), "choices": choices, "answer": ans,
+            "context": mark(i["sent"], i["ts"], i["te"]), "choices": choices, "answer": ans,
             "explanation": f"{label}「{i['base']}」の{ans}。下に続く語から判断する。（{i['title']}）",
             "ref_heading": REF.get(topic, "活用表"), "sort": 300 + n,
         })
