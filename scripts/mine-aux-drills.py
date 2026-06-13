@@ -404,6 +404,10 @@ for topic in sorted(instances):
             used_sent3.add(inst["sent"]); used_ctx.add(inst["ctx"]); used_form3[inst["form"]] += 1
             lv3.append((q, inst, cue))
 
+    # レベル設計（2026-06-13 入替）:
+    #   Lv2(sort 100台)=活用・識別（旧lv3リスト）, Lv3(sort 200台)=意味判別（旧lv2リスト）
+    # zu は意味判別が無い（常に打消）ので、活用形はLv2のまま。他は 意味→Lv3
+    lv2_band = 100 if topic == "jodoshi-zu" else 200
     for i, (q, inst, cue) in enumerate(lv2, 1):
         ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue)
         if q["kind"] == "imi":
@@ -411,14 +415,14 @@ for topic in sorted(instances):
         drills.append({"id": f"{topic}-c{i:02}", "topic_id": topic, "kind": q["kind"],
                        "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
-                       "ref_heading": REF2.get(topic), "sort": 100 + i})
-    for i, (q, inst, cue) in enumerate(lv3, 1):
+                       "ref_heading": REF2.get(topic), "sort": lv2_band + i})
+    for i, (q, inst, cue) in enumerate(lv3, 1):  # 活用・識別 → Lv2
         c = cue if cue is not None else cue_identity(topic, inst)
         ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), c)
         drills.append({"id": f"{topic}-x{i:02}", "topic_id": topic, "kind": q["kind"],
                        "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
-                       "ref_heading": REF3.get(topic, REF2.get(topic)), "sort": 200 + i})
+                       "ref_heading": REF3.get(topic, REF2.get(topic)), "sort": 100 + i})
 
     # Lv4: 文脈総合（長文 or 助動詞が3つ以上の密な文。広いウィンドウで出題）
     lv4 = []
@@ -452,8 +456,8 @@ for topic in sorted(instances):
         used_ctx.add(inst["ctx_wide"]); used_sm4[key] += 1; used_sent.add(inst["sent"])
         lv4.append((q, inst))
     for i, (q, inst) in enumerate(lv4, 1):
-        # Lv4以上はハイライトを外し、呼応を自分で探させる（スキャフォールディングの撤去）
-        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]))
+        # Lv4も「意味を決める文脈」に下線（取れる場合）。長文での手がかり探しを助ける
+        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_for(topic, inst))
         if q["kind"] == "imi":
             ctx_marked = with_context(inst, ctx_marked, always=True, cap=200)
         drills.append({"id": f"{topic}-d{i:02}", "topic_id": topic, "kind": q["kind"],
@@ -480,7 +484,7 @@ for topic, inst in all_insts:
     drills.append({
         "id": f"{cl}-c{cl_n[cl]:02}", "topic_id": cl, "kind": "shikibetsu",
         "prompt": f"この「{inst['surface']}」の正体は？",
-        "context": mark(inst["sent"], (inst["tstart"], inst["tend"])),
+        "context": mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_identity(topic, inst)),
         "choices": list(ident["choices"]), "answer": ans,
         "explanation": f"{HINT.get((topic, inst['meaning']), '')}{cite(inst, long=True)}",
         "ref_heading": "判別の手順", "sort": 300 + cl_n[cl],
