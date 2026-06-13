@@ -1,359 +1,41 @@
 [
- {
-  "id": "jodoshi-mu-m01",
-  "topic_id": "jodoshi-mu",
-  "kind": "imi",
-  "prompt": "「む」の意味は？（下線部が手がかり）",
-  "context": "《いざ》、かいもちひせ【む】。",
-  "choices": [
-   "勧誘",
-   "意志",
-   "推量",
-   "婉曲"
-  ],
-  "answer": "勧誘",
-  "explanation": "呼びかけの「いざ」が相手を誘う文脈を作る→勧誘「さあ、ぼた餅を作ろう」。意味を決めるのは下線の「いざ」。",
-  "ref_heading": "意味の判別",
-  "sort": 150
- },
- {
-  "id": "jodoshi-mu-m02",
-  "topic_id": "jodoshi-mu",
-  "kind": "imi",
-  "prompt": "「む」の意味は？（下線部が手がかり）",
-  "context": "《われ》、この一矢に定むべしと思へ【む】。",
-  "choices": [
-   "意志",
-   "推量",
-   "勧誘",
-   "婉曲"
-  ],
-  "answer": "意志",
-  "explanation": "主語が一人称「われ」→自分の決意＝意志「定めよう」。主語の人称が意味を決める。",
-  "ref_heading": "意味の判別",
-  "sort": 151
- },
- {
-  "id": "jodoshi-mu-m03",
-  "topic_id": "jodoshi-mu",
-  "kind": "imi",
-  "prompt": "「む」の意味は？（下線部が手がかり）",
-  "context": "《この花》、咲か【む】ときには告げよ。",
-  "choices": [
-   "婉曲",
-   "意志",
-   "推量",
-   "勧誘"
-  ],
-  "answer": "婉曲",
-  "explanation": "「む」の直後に体言「とき」が続く（連体形）→婉曲「咲くような」。下線の体言の存在が婉曲を生む。",
-  "ref_heading": "意味の判別",
-  "sort": 152
- },
- {
-  "id": "jodoshi-mu-m04",
-  "topic_id": "jodoshi-mu",
-  "kind": "imi",
-  "prompt": "「む」の意味は？（下線部が手がかり）",
-  "context": "《大納言》、深きゆゑあら【む】とのたまふ。",
-  "choices": [
-   "推量",
-   "意志",
-   "勧誘",
-   "婉曲"
-  ],
-  "answer": "推量",
-  "explanation": "主語が第三者「大納言」（自分でない）→推量「あるのだろう」。一人称なら意志、三人称なら推量。",
-  "ref_heading": "意味の判別",
-  "sort": 153
- },
- {
-  "id": "jodoshi-beshi-m01",
-  "topic_id": "jodoshi-beshi",
-  "kind": "imi",
-  "prompt": "「べし」の意味は？（下線部が手がかり）",
-  "context": "羽なければ、空をも飛ぶ【べから】《ず》。",
-  "choices": [
-   "可能",
-   "当然",
-   "意志",
-   "命令"
-  ],
-  "answer": "可能",
-  "explanation": "下に打消「ず」がある→可能「飛ぶことができない」。打消・反語を伴う「べし」は可能を疑う。",
-  "ref_heading": "意味の判別",
-  "sort": 154
- },
- {
-  "id": "jodoshi-beshi-m02",
-  "topic_id": "jodoshi-beshi",
-  "kind": "imi",
-  "prompt": "「べし」の意味は？（下線部が手がかり）",
-  "context": "《われ》こそ先に立ち向かは【べけれ】。",
-  "choices": [
-   "意志",
-   "当然",
-   "推量",
-   "適当"
-  ],
-  "answer": "意志",
-  "explanation": "主語が一人称「われ」→意志「自分が立ち向かおう」。「べし」も主語の人称で意志を判定する。",
-  "ref_heading": "意味の判別",
-  "sort": 155
- },
- {
-  "id": "jodoshi-beshi-m03",
-  "topic_id": "jodoshi-beshi",
-  "kind": "imi",
-  "prompt": "「べし」の意味は？（下線部が手がかり）",
-  "context": "《子は》、親に従ふ【べし】。",
-  "choices": [
-   "当然",
-   "可能",
-   "意志",
-   "命令"
-  ],
-  "answer": "当然",
-  "explanation": "「子は親に従う」という道理を述べる文脈→当然「従うべきだ」。一般的な道理が当然を生む。",
-  "ref_heading": "意味の判別",
-  "sort": 156
- },
- {
-  "id": "jodoshi-beshi-m04",
-  "topic_id": "jodoshi-beshi",
-  "kind": "imi",
-  "prompt": "「べし」の意味は？（下線部が手がかり）",
-  "context": "《いかでか》逃る【べき】。",
-  "choices": [
-   "可能",
-   "当然",
-   "意志",
-   "命令"
-  ],
-  "answer": "可能",
-  "explanation": "反語「いかでか〜べき」（どうして逃げられようか、いや逃げられない）→可能。反語の文脈が可能を生む。",
-  "ref_heading": "意味の判別",
-  "sort": 157
- },
- {
-  "id": "jodoshi-keri-m01",
-  "topic_id": "jodoshi-keri",
-  "kind": "imi",
-  "prompt": "「けり」の意味は？（下線部が手がかり）",
-  "context": "《昔》、男あり【けり】。",
-  "choices": [
-   "過去",
-   "詠嘆",
-   "完了",
-   "推量"
-  ],
-  "answer": "過去",
-  "explanation": "地の文で「昔〜」と物語を語り出す→過去（伝聞過去）。語り手が伝える過去であることを「昔」が示す。",
-  "ref_heading": "意味の判別",
-  "sort": 158
- },
- {
-  "id": "jodoshi-keri-m02",
-  "topic_id": "jodoshi-keri",
-  "kind": "imi",
-  "prompt": "「けり」の意味は？（下線部が手がかり）",
-  "context": "見渡せば花も紅葉もなかり【けり】《浦の苫屋の秋の夕暮》。",
-  "choices": [
-   "詠嘆",
-   "過去",
-   "完了",
-   "伝聞"
-  ],
-  "answer": "詠嘆",
-  "explanation": "和歌（五七五七七）の中の「けり」→詠嘆「ないのだなあ」。下線部が和歌の下の句で、詩的な感動の文脈を示す。",
-  "ref_heading": "意味の判別",
-  "sort": 159
- },
- {
-  "id": "jodoshi-keri-m03",
-  "topic_id": "jodoshi-keri",
-  "kind": "imi",
-  "prompt": "「けり」の意味は？（下線部が手がかり）",
-  "context": "今見れば、かうこそ燃え【けれ】と、《心得つる》なり。",
-  "choices": [
-   "詠嘆",
-   "過去",
-   "完了",
-   "断定"
-  ],
-  "answer": "詠嘆",
-  "explanation": "「今〜こそ〜けれ」と、初めて気づいた感動の文脈→詠嘆。下線「心得つる（理解した）」が気づきを示す（絵仏師良秀）。",
-  "ref_heading": "意味の判別",
-  "sort": 160
- },
- {
-  "id": "jodoshi-ru-m01",
-  "topic_id": "jodoshi-ru",
-  "kind": "imi",
-  "prompt": "「る」「らる」の意味は？（下線部が手がかり）",
-  "context": "この男、《人に》笑は【る】。",
-  "choices": [
-   "受身",
-   "尊敬",
-   "自発",
-   "可能"
-  ],
-  "answer": "受身",
-  "explanation": "動作主「人に」が示されている→受身「人に笑われる」。「〜に」＋動作で受身。下線の動作主が決め手。",
-  "ref_heading": "意味の判別",
-  "sort": 161
- },
- {
-  "id": "jodoshi-ru-m02",
-  "topic_id": "jodoshi-ru",
-  "kind": "imi",
-  "prompt": "「る」「らる」の意味は？（下線部が手がかり）",
-  "context": "《帝》、花を御覧ぜ【らる】。",
-  "choices": [
-   "尊敬",
-   "受身",
-   "自発",
-   "可能"
-  ],
-  "answer": "尊敬",
-  "explanation": "主語が貴人「帝」→尊敬「ご覧になる」。最高位の人物が主語のとき「らる」は尊敬。下線の主語が決め手。",
-  "ref_heading": "意味の判別",
-  "sort": 162
- },
- {
-  "id": "jodoshi-ru-m03",
-  "topic_id": "jodoshi-ru",
-  "kind": "imi",
-  "prompt": "「る」「らる」の意味は？（下線部が手がかり）",
-  "context": "古里おのづから《思ひ出で》らる。",
-  "choices": [
-   "自発",
-   "受身",
-   "尊敬",
-   "可能"
-  ],
-  "answer": "自発",
-  "explanation": "心情・知覚の動詞「思ひ出づ」＋「おのづから」→自発「自然と思い出される」。下線の心情動詞が自発を生む。",
-  "ref_heading": "意味の判別",
-  "sort": 163
- },
- {
-  "id": "jodoshi-ru-m04",
-  "topic_id": "jodoshi-ru",
-  "kind": "imi",
-  "prompt": "「る」「らる」の意味は？（下線部が手がかり）",
-  "context": "恐ろしくて、え答へ【られ】《ず》。",
-  "choices": [
-   "可能",
-   "受身",
-   "尊敬",
-   "自発"
-  ],
-  "answer": "可能",
-  "explanation": "下に打消「ず」、上に「え」→不可能「答えることができない」。下線の打消が可能を生む。",
-  "ref_heading": "意味の判別",
-  "sort": 164
- },
- {
-  "id": "jodoshi-su-m01",
-  "topic_id": "jodoshi-su",
-  "kind": "imi",
-  "prompt": "「す」「さす」の意味は？（下線部が手がかり）",
-  "context": "《仏師に》仏を作ら【せ】たまふ。",
-  "choices": [
-   "使役",
-   "尊敬",
-   "受身",
-   "自発"
-  ],
-  "answer": "使役",
-  "explanation": "動作させる相手「仏師に」がある→使役「仏師に作らせなさる」。下に「たまふ」があっても、相手があれば使役。下線の相手が決め手。",
-  "ref_heading": "意味の判別",
-  "sort": 165
- },
- {
-  "id": "jodoshi-su-m02",
-  "topic_id": "jodoshi-su",
-  "kind": "imi",
-  "prompt": "「す」「さす」の意味は？（下線部が手がかり）",
-  "context": "《帝》、笑は【せ】《たまふ》。",
-  "choices": [
-   "尊敬",
-   "使役",
-   "受身",
-   "自発"
-  ],
-  "answer": "尊敬",
-  "explanation": "主語が帝で、下に尊敬語「たまふ」があり、動作させる相手がいない→尊敬（最高敬語「せたまふ」）。主語と「たまふ」が決め手。",
-  "ref_heading": "意味の判別",
-  "sort": 166
- },
- {
-  "id": "jodoshi-su-m03",
-  "topic_id": "jodoshi-su",
-  "kind": "imi",
-  "prompt": "「す」「さす」の意味は？（下線部が手がかり）",
-  "context": "《人々に》物語せ【させ】たまふ。",
-  "choices": [
-   "使役",
-   "尊敬",
-   "受身",
-   "自発"
-  ],
-  "answer": "使役",
-  "explanation": "「させたまふ」でも動作させる相手「人々に」があれば使役「人々に語らせなさる」。「させ給ふ＝必ず尊敬」ではない。",
-  "ref_heading": "意味の判別",
-  "sort": 167
- },
- {
-  "id": "jodoshi-tsu-m01",
-  "topic_id": "jodoshi-tsu",
-  "kind": "imi",
-  "prompt": "「つ」の意味は？（下線部が手がかり）",
-  "context": "今ぞ言ひ【つ】《べき》。",
-  "choices": [
-   "強意",
-   "完了",
-   "打消",
-   "受身"
-  ],
-  "answer": "強意",
-  "explanation": "下に推量「べし」→強意（確述）「きっと言うだろう」。下線の推量の助動詞が強意を生む。",
-  "ref_heading": "意味",
-  "sort": 168
- },
- {
-  "id": "jodoshi-nu-m01",
-  "topic_id": "jodoshi-nu",
-  "kind": "imi",
-  "prompt": "「ぬ」の意味は？（下線部が手がかり）",
-  "context": "風吹か【な】《む》。",
-  "choices": [
-   "強意",
-   "完了",
-   "打消",
-   "断定"
-  ],
-  "answer": "強意",
-  "explanation": "連用形＋「な」＋推量「む」→強意「きっと吹くだろう」。下線の「む」が強意を生む（未然形＋なむ＝願望と区別）。",
-  "ref_heading": "意味",
-  "sort": 169
- },
- {
-  "id": "jodoshi-tsu-m03",
-  "topic_id": "jodoshi-tsu",
-  "kind": "imi",
-  "prompt": "「つ」の意味は？（下線部が手がかり）",
-  "context": "船に乗り【て】《き》。",
-  "choices": [
-   "完了",
-   "強意",
-   "打消",
-   "存続"
-  ],
-  "answer": "完了",
-  "explanation": "下にあるのが過去「き」で推量ではない→ふつうの完了「乗った」。下が推量（べし・む）なら強意。下線の語の種類が決め手。",
-  "ref_heading": "意味",
-  "sort": 170
- }
+  {"id":"jodoshi-beshi-m01","topic_id":"jodoshi-beshi","kind":"imi","prompt":"「べし」の意味は？（下線部が手がかり）","context":"羽なければ、空をも飛ぶ【べから】《ず》。","choices":["可能","推量","意志","当然"],"answer":"可能","explanation":"下に打消「ず」→可能「飛ぶことができない」。打消・反語を伴う「べし」は可能を疑う。","ref_heading":"意味の判別","sort":150},
+  {"id":"jodoshi-beshi-m02","topic_id":"jodoshi-beshi","kind":"imi","prompt":"「べし」の意味は？（下線部が手がかり）","context":"《いかでか》逃る【べき】。","choices":["可能","推量","当然","命令"],"answer":"可能","explanation":"反語「いかでか〜べき」（どうして逃げられようか、いや逃げられない）→可能。反語の文脈が可能を生む。","ref_heading":"意味の判別","sort":151},
+  {"id":"jodoshi-beshi-m03","topic_id":"jodoshi-beshi","kind":"imi","prompt":"「べし」の意味は？（下線部が手がかり）","context":"《われ》、先陣をかけ【べし】。","choices":["意志","推量","当然","可能"],"answer":"意志","explanation":"主語が一人称「われ」→意志「自分が先陣をかけよう」。主語の人称が決め手。","ref_heading":"意味の判別","sort":152},
+  {"id":"jodoshi-beshi-m04","topic_id":"jodoshi-beshi","kind":"imi","prompt":"「べし」の意味は？（下線部が手がかり）","context":"《我こそ》、まづ参る【べけれ】。","choices":["意志","当然","推量","適当"],"answer":"意志","explanation":"主語が一人称「我こそ」→意志「自分がまず参ろう」。「こそ」の結びで已然形「べけれ」。","ref_heading":"意味の判別","sort":153},
+  {"id":"jodoshi-beshi-m05","topic_id":"jodoshi-beshi","kind":"imi","prompt":"「べし」の意味は？（下線部が手がかり）","context":"《子は》、親に従ふ【べし】。","choices":["当然","可能","意志","推量"],"answer":"当然","explanation":"「子は親に従う」という一般的な道理を述べる文脈→当然「従うべきだ」。","ref_heading":"意味の判別","sort":154},
+  {"id":"jodoshi-beshi-m06","topic_id":"jodoshi-beshi","kind":"imi","prompt":"「べし」の意味は？（下線部が手がかり）","context":"人はみな、恥を知る【べき】《ものなり》。","choices":["当然","推量","可能","意志"],"answer":"当然","explanation":"「〜べきものなり」と道理・義務を述べる→当然「知るべきだ」。下線が道理の言い切り。","ref_heading":"意味の判別","sort":155},
+  {"id":"jodoshi-beshi-m07","topic_id":"jodoshi-beshi","kind":"imi","prompt":"「べし」の意味は？（下線部が手がかり）","context":"《敵は》、ほどなく攻め寄す【べし】。","choices":["推量","意志","当然","可能"],"answer":"推量","explanation":"主語が三人称「敵」で確信のある予測→推量「攻め寄せるだろう」。一人称なら意志、三人称なら推量。","ref_heading":"意味の判別","sort":156},
+  {"id":"jodoshi-beshi-m08","topic_id":"jodoshi-beshi","kind":"imi","prompt":"「べし」の意味は？（下線部が手がかり）","context":"《さだめて》、勝つ【べし】とぞ思ひける。","choices":["推量","意志","命令","可能"],"answer":"推量","explanation":"確信の副詞「さだめて（きっと）」→推量「きっと勝つだろう」。下線の副詞が確信の推量を示す。","ref_heading":"意味の判別","sort":157},
+
+  {"id":"jodoshi-mu-m01","topic_id":"jodoshi-mu","kind":"imi","prompt":"「む」の意味は？（下線部が手がかり）","context":"《いざ》、かいもちひせ【む】。","choices":["勧誘","意志","推量","婉曲"],"answer":"勧誘","explanation":"呼びかけの「いざ」が相手を誘う文脈を作る→勧誘「さあ、作ろう」。意味を決めるのは下線の「いざ」。","ref_heading":"意味の判別","sort":160},
+  {"id":"jodoshi-mu-m02","topic_id":"jodoshi-mu","kind":"imi","prompt":"「む」の意味は？（下線部が手がかり）","context":"《いざ給へ》、出雲拝みに。かいもちひ召さ【せ】む。","choices":["勧誘","意志","推量","使役"],"answer":"勧誘","explanation":"「いざ給へ」と相手を誘う呼びかけ→勧誘。聖海上人が一行を誘う場面（徒然草）。","ref_heading":"意味の判別","sort":161},
+  {"id":"jodoshi-mu-m03","topic_id":"jodoshi-mu","kind":"imi","prompt":"「む」の意味は？（下線部が手がかり）","context":"《われ》、この一矢に定む【む】と思へ。","choices":["意志","推量","勧誘","婉曲"],"answer":"意志","explanation":"主語が一人称「われ」→自分の決意＝意志「定めよう」。主語の人称が意味を決める。","ref_heading":"意味の判別","sort":162},
+  {"id":"jodoshi-mu-m04","topic_id":"jodoshi-mu","kind":"imi","prompt":"「む」の意味は？（下線部が手がかり）","context":"かれ、《われ》見はべら【む】。","choices":["意志","勧誘","推量","婉曲"],"answer":"意志","explanation":"話し手（一人称）が「自分が見よう」と述べる→意志。「はべらむ」の主語が一人称。","ref_heading":"意味の判別","sort":163},
+  {"id":"jodoshi-mu-m05","topic_id":"jodoshi-mu","kind":"imi","prompt":"「む」の意味は？（下線部が手がかり）","context":"《大納言》、深きゆゑあら【む】とのたまふ。","choices":["推量","意志","勧誘","婉曲"],"answer":"推量","explanation":"主語が第三者「大納言」→推量「あるのだろう」。一人称なら意志、三人称なら推量。","ref_heading":"意味の判別","sort":164},
+  {"id":"jodoshi-mu-m06","topic_id":"jodoshi-mu","kind":"imi","prompt":"「む」の意味は？（下線部が手がかり）","context":"その中の人、現し心あら【む】《や》。","choices":["推量","意志","勧誘","仮定"],"answer":"推量","explanation":"三人称＋反語「〜や」→推量「正気でいられようか、いや、いられないだろう」（方丈記）。","ref_heading":"意味の判別","sort":165},
+  {"id":"jodoshi-mu-m07","topic_id":"jodoshi-mu","kind":"imi","prompt":"「む」の意味は？（下線部が手がかり）","context":"思は【む】《子》を法師になしたらむこそ、心苦しけれ。","choices":["婉曲","意志","推量","勧誘"],"answer":"婉曲","explanation":"「む」の直後に体言「子」（連体形）→婉曲「かわいく思うような子」。下線の体言が婉曲を生む（枕草子）。","ref_heading":"意味の判別","sort":166},
+  {"id":"jodoshi-mu-m08","topic_id":"jodoshi-mu","kind":"imi","prompt":"「む」の意味は？（下線部が手がかり）","context":"二人して打た【む】《には》、はべりなむや。","choices":["仮定","婉曲","意志","推量"],"answer":"仮定","explanation":"「〜むには」の形→仮定「打ったとしたら」。下線「には」が仮定を示す。","ref_heading":"意味の判別","sort":167},
+
+  {"id":"jodoshi-keri-m01","topic_id":"jodoshi-keri","kind":"imi","prompt":"「けり」の意味は？（下線部が手がかり）","context":"《昔》、男あり【けり】。","choices":["過去","詠嘆","完了","推量"],"answer":"過去","explanation":"地の文で「昔〜」と物語を語り出す→過去（伝聞過去）。語り手が伝える過去であることを「昔」が示す（伊勢物語）。","ref_heading":"意味の判別","sort":170},
+  {"id":"jodoshi-keri-m02","topic_id":"jodoshi-keri","kind":"imi","prompt":"「けり」の意味は？（下線部が手がかり）","context":"「とくこそ試みさせたまはめ」と《申し》【ける】。","choices":["過去","詠嘆","完了","伝聞"],"answer":"過去","explanation":"地の文の叙述「〜と申しける」→過去（伝聞過去）。会話を受けた語り手の地の文。","ref_heading":"意味の判別","sort":171},
+  {"id":"jodoshi-keri-m03","topic_id":"jodoshi-keri","kind":"imi","prompt":"「けり」の意味は？（下線部が手がかり）","context":"惟喬の親王、例の狩りしにおはします《供に》、馬頭なる翁仕うまつれ【り】けり。","choices":["過去","詠嘆","完了","推量"],"answer":"過去","explanation":"地の文で出来事を語る叙述→過去。和歌でなく地の文なら原則過去（伊勢物語）。","ref_heading":"意味の判別","sort":172},
+  {"id":"jodoshi-keri-m04","topic_id":"jodoshi-keri","kind":"imi","prompt":"「けり」の意味は？（下線部が手がかり）","context":"見渡せば花も紅葉もなかり【けり】《浦の苫屋の秋の夕暮》。","choices":["詠嘆","過去","完了","伝聞"],"answer":"詠嘆","explanation":"和歌（五七五七七）の中の「けり」→詠嘆「ないのだなあ」。下線が和歌の下の句（藤原定家）。","ref_heading":"意味の判別","sort":173},
+  {"id":"jodoshi-keri-m05","topic_id":"jodoshi-keri","kind":"imi","prompt":"「けり」の意味は？（下線部が手がかり）","context":"今見れば、かうこそ燃え【けれ】と、《心得つる》なり。","choices":["詠嘆","過去","完了","断定"],"answer":"詠嘆","explanation":"「今〜こそ〜けれ」と初めて気づいた感動→詠嘆。下線「心得つる（理解した）」が気づきを示す（絵仏師良秀）。","ref_heading":"意味の判別","sort":174},
+  {"id":"jodoshi-keri-m06","topic_id":"jodoshi-keri","kind":"imi","prompt":"「けり」の意味は？（下線部が手がかり）","context":"《あはれ》、ありがたきものは、よき主・親・友なり、と言ひ【けり】。","choices":["詠嘆","過去","完了","伝聞"],"answer":"詠嘆","explanation":"感動詞「あはれ」を含む感慨の文脈→詠嘆。会話・心情の「けり」は詠嘆になりやすい。","ref_heading":"意味の判別","sort":175},
+
+  {"id":"jodoshi-ru-m01","topic_id":"jodoshi-ru","kind":"imi","prompt":"「る」「らる」の意味は？（下線部が手がかり）","context":"この男、《人に》笑は【る】。","choices":["受身","尊敬","自発","可能"],"answer":"受身","explanation":"動作主「人に」が示されている→受身「人に笑われる」。「〜に」＋動作で受身。下線の動作主が決め手。","ref_heading":"意味の判別","sort":180},
+  {"id":"jodoshi-ru-m02","topic_id":"jodoshi-ru","kind":"imi","prompt":"「る」「らる」の意味は？（下線部が手がかり）","context":"袴垂、《保昌に》捕らへ【られ】て後、語りける。","choices":["受身","尊敬","自発","可能"],"answer":"受身","explanation":"動作主「保昌に」がある→受身「捕らえられる」。「〜に〜らる」は受身（宇治拾遺）。","ref_heading":"意味の判別","sort":181},
+  {"id":"jodoshi-ru-m03","topic_id":"jodoshi-ru","kind":"imi","prompt":"「る」「らる」の意味は？（下線部が手がかり）","context":"《帝》、花を御覧ぜ【らる】。","choices":["尊敬","受身","自発","可能"],"answer":"尊敬","explanation":"主語が貴人「帝」→尊敬「ご覧になる」。最高位の人物が主語のとき「らる」は尊敬。下線の主語が決め手。","ref_heading":"意味の判別","sort":182},
+  {"id":"jodoshi-ru-m04","topic_id":"jodoshi-ru","kind":"imi","prompt":"「る」「らる」の意味は？（下線部が手がかり）","context":"《大臣》、つねづね仰せ【られ】けり。","choices":["尊敬","受身","自発","可能"],"answer":"尊敬","explanation":"主語が貴人「大臣」＋「仰せらる」→尊敬。「仰せらる」は例外なく尊敬。","ref_heading":"意味の判別","sort":183},
+  {"id":"jodoshi-ru-m05","topic_id":"jodoshi-ru","kind":"imi","prompt":"「る」「らる」の意味は？（下線部が手がかり）","context":"古里、《おのづから》思ひ出で【らる】。","choices":["自発","受身","尊敬","可能"],"answer":"自発","explanation":"心情・知覚の動詞「思ひ出づ」＋「おのづから」→自発「自然と思い出される」。下線が自発を生む。","ref_heading":"意味の判別","sort":184},
+  {"id":"jodoshi-ru-m06","topic_id":"jodoshi-ru","kind":"imi","prompt":"「る」「らる」の意味は？（下線部が手がかり）","context":"昔のことども、《しのば》【れ】て涙ぐむ。","choices":["自発","受身","尊敬","可能"],"answer":"自発","explanation":"心情動詞「しのぶ（偲ぶ）」＋「れ」→自発「自然と偲ばれる」。心情語が自発の目印。","ref_heading":"意味の判別","sort":185},
+  {"id":"jodoshi-ru-m07","topic_id":"jodoshi-ru","kind":"imi","prompt":"「る」「らる」の意味は？（下線部が手がかり）","context":"恐ろしくて、え答へ【られ】《ず》。","choices":["可能","受身","尊敬","自発"],"answer":"可能","explanation":"下に打消「ず」、上に「え」→不可能「答えることができない」。下線の打消が可能を生む。","ref_heading":"意味の判別","sort":186},
+  {"id":"jodoshi-ru-m08","topic_id":"jodoshi-ru","kind":"imi","prompt":"「る」「らる」の意味は？（下線部が手がかり）","context":"《さらにこそ》信ぜ【られ】ね。","choices":["可能","受身","尊敬","自発"],"answer":"可能","explanation":"「さらに〜ね（打消）」→不可能「まったく信じられない」。下線の打消・強調が可能を示す。","ref_heading":"意味の判別","sort":187},
+
+  {"id":"jodoshi-su-m01","topic_id":"jodoshi-su","kind":"imi","prompt":"「す」「さす」の意味は？（下線部が手がかり）","context":"《仏師に》仏を作ら【せ】たまふ。","choices":["使役","尊敬","受身","自発"],"answer":"使役","explanation":"動作させる相手「仏師に」がある→使役「仏師に作らせなさる」。下に「たまふ」があっても、相手があれば使役。","ref_heading":"意味の判別","sort":190},
+  {"id":"jodoshi-su-m02","topic_id":"jodoshi-su","kind":"imi","prompt":"「す」「さす」の意味は？（下線部が手がかり）","context":"殿、《人々に》物語せ【させ】たまふ。","choices":["使役","尊敬","受身","自発"],"answer":"使役","explanation":"「させたまふ」でも動作させる相手「人々に」があれば使役「人々に語らせなさる」。「させ給ふ＝必ず尊敬」ではない。","ref_heading":"意味の判別","sort":191},
+  {"id":"jodoshi-su-m03","topic_id":"jodoshi-su","kind":"imi","prompt":"「す」「さす」の意味は？（下線部が手がかり）","context":"清少納言、《女官に》御格子上げ【させ】て、御簾を高くあぐ。","choices":["使役","尊敬","受身","自発"],"answer":"使役","explanation":"下に尊敬語がなく、動作させる相手「女官に」が補える→使役。香炉峰の雪の場面（枕草子）。","ref_heading":"意味の判別","sort":192},
+  {"id":"jodoshi-su-m04","topic_id":"jodoshi-su","kind":"imi","prompt":"「す」「さす」の意味は？（下線部が手がかり）","context":"《帝》、いみじう笑は【せ】《たまふ》。","choices":["尊敬","使役","受身","自発"],"answer":"尊敬","explanation":"主語が帝で下に尊敬語「たまふ」があり、動作させる相手がいない→尊敬（最高敬語「せたまふ」）。","ref_heading":"意味の判別","sort":193},
+  {"id":"jodoshi-su-m05","topic_id":"jodoshi-su","kind":"imi","prompt":"「す」「さす」の意味は？（下線部が手がかり）","context":"《院》、御心地なやましとて出で【させ】たまふ。","choices":["尊敬","使役","受身","自発"],"answer":"尊敬","explanation":"主語が貴人「院」＋「させたまふ」で動作させる相手なし→尊敬「お出ましになる」。","ref_heading":"意味の判別","sort":194}
 ]

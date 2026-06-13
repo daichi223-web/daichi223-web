@@ -318,13 +318,19 @@ for topic in sorted(instances):
     pool.sort(key=lambda x: x["sentlen"])
     used_ctx, used_sm = set(), collections.Counter()
 
-    # Lv2: 意味判別（zu は活用形）
+    # Lv2: 意味判別（zu は活用形）。1語義に偏らないよう per-meaning でも上限を掛ける
     lv2 = []
     lv2_sent = set()
+    lv2_meaning = collections.Counter()
+    lv2_form = collections.Counter()
     for inst in pool:
         if len(lv2) >= MAX_LV2_PER_TOPIC: break
         key = (inst["surface"], inst["meaning"])
         if not inst["trans"] or inst["ctx"] in used_ctx or used_sm[key] >= MAX_PER_SURFACE_MEANING: continue
+        # 偏り防止: zu は活用形(form)で、それ以外は語義(meaning)で上限を掛ける
+        if topic == "jodoshi-zu":
+            if lv2_form[inst["form"]] >= 4: continue
+        elif lv2_meaning[inst["meaning"]] >= 2: continue  # 1語義で偏らせない（べしが可能だけ等を防ぐ）
         if inst["sentlen"] > (70 if topic == "jodoshi-zu" else MAX_SENT): continue  # 全文が見える文のみ
         # 意味判別は文脈が命: 短文で前の文も付けられないものは出題しない
         if topic != "jodoshi-zu" and inst["sentlen"] < 30 and not (
@@ -354,9 +360,10 @@ for topic in sorted(instances):
                  "answer": ans, "choices": choices,
                  "explanation": f"{hint}{cite(inst)}"}
         used_ctx.add(inst["ctx"]); used_sm[key] += 1; lv2_sent.add(inst["sent"])
+        lv2_meaning[inst["meaning"]] += 1; lv2_form[inst["form"]] += 1
         lv2.append((q, inst, cue))
 
-    # Lv3: 同形の正体識別
+    # Lv3: 同形の正体識別（cue=None で後で cue_identity を当てる）
     lv3 = []
     used_sm3 = collections.Counter()
     for inst in pool:
@@ -373,7 +380,29 @@ for topic in sorted(instances):
              "answer": ans, "choices": list(ident["choices"]),
              "explanation": f"{HINT.get((topic, inst['meaning']), '')}{cite(inst)}"}
         used_ctx.add(inst["ctx"]); used_sm3[key] += 1
-        lv3.append((q, inst))
+        lv3.append((q, inst, None))
+
+    # Lv3 補充: 活用形判別（下に続く語＝手がかり）。識別の無い単元(べし等)にも Lv3 を用意する
+    FORMS_ALL = ["未然形", "連用形", "終止形", "連体形", "已然形", "命令形"]
+    used_sent3 = set(i["sent"] for _, i, _ in lv3)
+    used_form3 = collections.Counter()
+    if topic != "jodoshi-zu":  # zu は Lv2 が活用形なので重複させない
+        for inst in pool:
+            if len(lv3) >= MAX_LV3_PER_TOPIC: break
+            if inst["form"] not in FORM_NAME: continue
+            cue = inst["nexttok"]
+            if not cue: continue  # 下に続く語がないと手がかりにならない
+            if inst["sentlen"] > 70 or not inst["trans"]: continue
+            if inst["sent"] in used_sent3 or inst["ctx"] in used_ctx: continue
+            if used_form3[inst["form"]] >= 4: continue  # 活用形も偏らせない
+            ans = FORM_NAME[inst["form"]]
+            choices = [ans] + [v for v in FORMS_ALL if v != ans][:3]
+            q = {"kind": "katsuyo-fill",
+                 "prompt": f"この文の「{inst['surface']}」の活用形は？",
+                 "answer": ans, "choices": choices,
+                 "explanation": f"下に続く下線の語から判断して{ans}。{cite(inst)}"}
+            used_sent3.add(inst["sent"]); used_ctx.add(inst["ctx"]); used_form3[inst["form"]] += 1
+            lv3.append((q, inst, cue))
 
     for i, (q, inst, cue) in enumerate(lv2, 1):
         ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue)
@@ -383,8 +412,9 @@ for topic in sorted(instances):
                        "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
                        "ref_heading": REF2.get(topic), "sort": 100 + i})
-    for i, (q, inst) in enumerate(lv3, 1):
-        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_identity(topic, inst))
+    for i, (q, inst, cue) in enumerate(lv3, 1):
+        c = cue if cue is not None else cue_identity(topic, inst)
+        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), c)
         drills.append({"id": f"{topic}-x{i:02}", "topic_id": topic, "kind": q["kind"],
                        "prompt": q["prompt"], "context": ctx_marked, "choices": q["choices"],
                        "answer": q["answer"], "explanation": q["explanation"],
@@ -393,7 +423,7 @@ for topic in sorted(instances):
     # Lv4: 文脈総合（長文 or 助動詞が3つ以上の密な文。広いウィンドウで出題）
     lv4 = []
     used_sm4 = collections.Counter()
-    used_sent = set(i["sent"] for _, i, _ in lv2) | set(i["sent"] for _, i in lv3)
+    used_sent = set(i["sent"] for _, i, _ in lv2) | set(i["sent"] for _, i, _ in lv3)
     for inst in sorted(pool, key=lambda x: -x["naux"]):
         if len(lv4) >= MAX_LV4_PER_TOPIC: break
         # Lv4＝手がかりなし。長文／助動詞密／Lv2に入れなかった（手がかりが取れない）意味判別を集める

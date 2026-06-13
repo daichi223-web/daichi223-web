@@ -31,8 +31,8 @@ function maxUnlockedLevel(
   return max;
 }
 
-/** 1セッションで出題する問題数（5倍のバンクからシャッフルして抽出） */
-const SESSION_SIZE = 10;
+/** 1セッションで出題する問題数（各レベル約20問のバンクからシャッフルして抽出） */
+const SESSION_SIZE = 6;
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
