@@ -1,0 +1,546 @@
+[
+ {
+  "id": "doushi-katsuyo-01",
+  "topic_id": "doushi-katsuyo",
+  "kind": "shikibetsu",
+  "prompt": "古文の動詞の活用型は全部で何種類？",
+  "context": null,
+  "choices": [
+   "6種類",
+   "7種類",
+   "8種類",
+   "9種類"
+  ],
+  "answer": "9種類",
+  "explanation": "四段・上二段・下二段・上一段・下一段・カ変・サ変・ナ変・ラ変 の9種類。",
+  "ref_heading": "活用の種類",
+  "sort": 1
+ },
+ {
+  "id": "doushi-katsuyo-02",
+  "topic_id": "doushi-katsuyo",
+  "kind": "katsuyo-type",
+  "prompt": "「書く」に「ず」を付けると「書か（ア段）」。活用型は？",
+  "context": null,
+  "choices": [
+   "四段活用",
+   "上二段活用",
+   "下二段活用",
+   "上一段活用"
+  ],
+  "answer": "四段活用",
+  "explanation": "「ず」を付けて未然形がア段＝四段活用。",
+  "ref_heading": "活用の見分け方",
+  "sort": 2
+ },
+ {
+  "id": "doushi-katsuyo-03",
+  "topic_id": "doushi-katsuyo",
+  "kind": "katsuyo-type",
+  "prompt": "「起く」に「ず」を付けると「起き（イ段）」。活用型は？",
+  "context": null,
+  "choices": [
+   "四段活用",
+   "上二段活用",
+   "下二段活用",
+   "カ変"
+  ],
+  "answer": "上二段活用",
+  "explanation": "未然形がイ段＝上二段活用。",
+  "ref_heading": "活用の見分け方",
+  "sort": 3
+ },
+ {
+  "id": "doushi-katsuyo-04",
+  "topic_id": "doushi-katsuyo",
+  "kind": "katsuyo-type",
+  "prompt": "「受く」に「ず」を付けると「受け（エ段）」。活用型は？",
+  "context": null,
+  "choices": [
+   "四段活用",
+   "上二段活用",
+   "下二段活用",
+   "下一段活用"
+  ],
+  "answer": "下二段活用",
+  "explanation": "未然形がエ段＝下二段活用。",
+  "ref_heading": "活用の見分け方",
+  "sort": 4
+ },
+ {
+  "id": "doushi-katsuyo-05",
+  "topic_id": "doushi-katsuyo",
+  "kind": "katsuyo-type",
+  "prompt": "終止形と連体形が同じ形になる活用型はどれ？",
+  "context": null,
+  "choices": [
+   "四段活用",
+   "下二段活用",
+   "上二段活用",
+   "サ変"
+  ],
+  "answer": "四段活用",
+  "explanation": "四段は終止＝連体（書く＝書く）。二段系やサ変は終止≠連体。",
+  "ref_heading": "活用の見分け方",
+  "sort": 5
+ },
+ {
+  "id": "doushi-yodan-01",
+  "topic_id": "doushi-yodan",
+  "kind": "katsuyo-type",
+  "prompt": "四段活用の未然形は何段の音になる？",
+  "context": null,
+  "choices": [
+   "ア段",
+   "イ段",
+   "ウ段",
+   "エ段"
+  ],
+  "answer": "ア段",
+  "explanation": "四段の未然形はア段（書か・思は）。",
+  "ref_heading": "見分け方",
+  "sort": 1
+ },
+ {
+  "id": "doushi-yodan-02",
+  "topic_id": "doushi-yodan",
+  "kind": "katsuyo-fill",
+  "prompt": "「書く」（カ行四段）の已然形はどれ？",
+  "context": null,
+  "choices": [
+   "書か",
+   "書き",
+   "書く",
+   "書け"
+  ],
+  "answer": "書け",
+  "explanation": "四段の已然形はエ段＝書け。",
+  "ref_heading": "活用表",
+  "sort": 2
+ },
+ {
+  "id": "doushi-yodan-03",
+  "topic_id": "doushi-yodan",
+  "kind": "katsuyo-fill",
+  "prompt": "「思ふ」に「ず」を付けた未然形はどれ？",
+  "context": null,
+  "choices": [
+   "思は",
+   "思ひ",
+   "思へ",
+   "思ふ"
+  ],
+  "answer": "思は",
+  "explanation": "ハ行四段の未然形はア段＝思は。",
+  "ref_heading": "見分け方",
+  "sort": 3
+ },
+ {
+  "id": "doushi-yodan-04",
+  "topic_id": "doushi-yodan",
+  "kind": "katsuyo-type",
+  "prompt": "次のうち四段活用の動詞はどれ？",
+  "context": null,
+  "choices": [
+   "書く",
+   "受く",
+   "見る",
+   "来"
+  ],
+  "answer": "書く",
+  "explanation": "書く＝カ行四段。受く＝下二段、見る＝上一段、来＝カ変。",
+  "ref_heading": "活用の種類",
+  "sort": 4
+ },
+ {
+  "id": "doushi-yodan-05",
+  "topic_id": "doushi-yodan",
+  "kind": "imi",
+  "prompt": "傍線部「言ひ」の活用形は？",
+  "context": "…と言ひけるを",
+  "choices": [
+   "未然形",
+   "連用形",
+   "終止形",
+   "連体形"
+  ],
+  "answer": "連用形",
+  "explanation": "「言ふ」（ハ行四段）の連用形。助動詞「けり」に接続するため連用形。",
+  "ref_heading": "活用表",
+  "sort": 5
+ },
+ {
+  "id": "doushi-kami-ichidan-01",
+  "topic_id": "doushi-kami-ichidan",
+  "kind": "shikibetsu",
+  "prompt": "上一段動詞を覚える語呂合わせはどれ？",
+  "context": null,
+  "choices": [
+   "ひいきにみゐる",
+   "すいかかえて",
+   "いろはにほへと",
+   "たちつてと"
+  ],
+  "answer": "ひいきにみゐる",
+  "explanation": "干る・射る・着る・似る・見る・居る（率る）＝「ひいきにみゐる」。",
+  "ref_heading": "暗記すべき上一段動詞",
+  "sort": 1
+ },
+ {
+  "id": "doushi-kami-ichidan-02",
+  "topic_id": "doushi-kami-ichidan",
+  "kind": "katsuyo-type",
+  "prompt": "「見る」に「ず」を付けると「見（み・イ段1音）」。活用型は？",
+  "context": null,
+  "choices": [
+   "上一段活用",
+   "上二段活用",
+   "四段活用",
+   "下二段活用"
+  ],
+  "answer": "上一段活用",
+  "explanation": "未然形がイ段1音＝上一段。上二段は未然形が2音以上（起き等）。",
+  "ref_heading": "見分け方",
+  "sort": 2
+ },
+ {
+  "id": "doushi-kami-ichidan-03",
+  "topic_id": "doushi-kami-ichidan",
+  "kind": "shikibetsu",
+  "prompt": "次のうち上一段活用の動詞はどれ？",
+  "context": null,
+  "choices": [
+   "着る",
+   "起く",
+   "受く",
+   "書く"
+  ],
+  "answer": "着る",
+  "explanation": "着る＝カ行上一段（ひいきにみゐるの「き」）。起く＝上二段、受く＝下二段。",
+  "ref_heading": "暗記すべき上一段動詞",
+  "sort": 3
+ },
+ {
+  "id": "doushi-kami-ichidan-04",
+  "topic_id": "doushi-kami-ichidan",
+  "kind": "katsuyo-fill",
+  "prompt": "「見る」（マ行上一段）の命令形はどれ？",
+  "context": null,
+  "choices": [
+   "見よ",
+   "見ろ",
+   "見れ",
+   "見"
+  ],
+  "answer": "見よ",
+  "explanation": "上一段の命令形は「〜よ」＝見よ。",
+  "ref_heading": "活用表",
+  "sort": 4
+ },
+ {
+  "id": "doushi-kami-ichidan-05",
+  "topic_id": "doushi-kami-ichidan",
+  "kind": "shikibetsu",
+  "prompt": "現代語の「起きる」は古文では何活用？",
+  "context": null,
+  "choices": [
+   "上二段活用",
+   "上一段活用",
+   "四段活用",
+   "下二段活用"
+  ],
+  "answer": "上二段活用",
+  "explanation": "現代語の「起きる」は古文では上一段ではなく上二段活用。",
+  "ref_heading": "暗記すべき上一段動詞",
+  "sort": 5
+ },
+ {
+  "id": "doushi-shimo-nidan-01",
+  "topic_id": "doushi-shimo-nidan",
+  "kind": "katsuyo-type",
+  "prompt": "「受く」に「ず」を付けると「受け（エ段）」。活用型は？",
+  "context": null,
+  "choices": [
+   "下二段活用",
+   "上二段活用",
+   "四段活用",
+   "下一段活用"
+  ],
+  "answer": "下二段活用",
+  "explanation": "未然形がエ段＝下二段活用。",
+  "ref_heading": "見分け方",
+  "sort": 1
+ },
+ {
+  "id": "doushi-shimo-nidan-02",
+  "topic_id": "doushi-shimo-nidan",
+  "kind": "katsuyo-fill",
+  "prompt": "下二段「受く」の連体形はどれ？",
+  "context": null,
+  "choices": [
+   "受く",
+   "受くる",
+   "受け",
+   "受くれ"
+  ],
+  "answer": "受くる",
+  "explanation": "下二段の連体形はウル＝受くる。",
+  "ref_heading": "活用表",
+  "sort": 2
+ },
+ {
+  "id": "doushi-shimo-nidan-03",
+  "topic_id": "doushi-shimo-nidan",
+  "kind": "shikibetsu",
+  "prompt": "四段活用と下二段活用を見分けるポイントは？",
+  "context": null,
+  "choices": [
+   "終止形と連体形が異なる",
+   "未然形がア段になる",
+   "命令形がない",
+   "語幹がない"
+  ],
+  "answer": "終止形と連体形が異なる",
+  "explanation": "下二段は終止「受く」≠連体「受くる」。四段は終止＝連体。",
+  "ref_heading": "見分け方",
+  "sort": 3
+ },
+ {
+  "id": "doushi-shimo-nidan-04",
+  "topic_id": "doushi-shimo-nidan",
+  "kind": "katsuyo-fill",
+  "prompt": "下二段の活用語尾（え・え・う・うる・うれ・えよ）。已然形は？",
+  "context": null,
+  "choices": [
+   "う",
+   "うる",
+   "うれ",
+   "えよ"
+  ],
+  "answer": "うれ",
+  "explanation": "下二段の已然形はウレ。",
+  "ref_heading": "活用表",
+  "sort": 4
+ },
+ {
+  "id": "doushi-shimo-nidan-05",
+  "topic_id": "doushi-shimo-nidan",
+  "kind": "shikibetsu",
+  "prompt": "次のうち下二段活用の動詞はどれ？",
+  "context": null,
+  "choices": [
+   "いらふ（答ふ）",
+   "言ふ",
+   "見る",
+   "来"
+  ],
+  "answer": "いらふ（答ふ）",
+  "explanation": "いらふ＝ハ行下二段（いらへ・ず）。言ふ＝ハ行四段。",
+  "ref_heading": "代表的な下二段動詞",
+  "sort": 5
+ },
+ {
+  "id": "doushi-kahen-01",
+  "topic_id": "doushi-kahen",
+  "kind": "shikibetsu",
+  "prompt": "カ行変格活用の動詞はどれ？",
+  "context": null,
+  "choices": [
+   "来（く）",
+   "す",
+   "あり",
+   "死ぬ"
+  ],
+  "answer": "来（く）",
+  "explanation": "カ変は「来（く）」一語のみ。",
+  "ref_heading": "カ行変格活用とは",
+  "sort": 1
+ },
+ {
+  "id": "doushi-kahen-02",
+  "topic_id": "doushi-kahen",
+  "kind": "katsuyo-fill",
+  "prompt": "「来」の活用（こ・き・く・くる・くれ・こよ）。連体形は？",
+  "context": null,
+  "choices": [
+   "く",
+   "くる",
+   "こ",
+   "くれ"
+  ],
+  "answer": "くる",
+  "explanation": "カ変の連体形は「くる」。",
+  "ref_heading": "活用表",
+  "sort": 2
+ },
+ {
+  "id": "doushi-kahen-03",
+  "topic_id": "doushi-kahen",
+  "kind": "katsuyo-fill",
+  "prompt": "「来」の未然形はどれ？",
+  "context": null,
+  "choices": [
+   "こ",
+   "き",
+   "く",
+   "くる"
+  ],
+  "answer": "こ",
+  "explanation": "カ変の未然形は「こ」。",
+  "ref_heading": "活用表",
+  "sort": 3
+ },
+ {
+  "id": "doushi-kahen-04",
+  "topic_id": "doushi-kahen",
+  "kind": "shikibetsu",
+  "prompt": "複合動詞「出で来（いでく）」の活用型は？",
+  "context": null,
+  "choices": [
+   "カ変",
+   "四段",
+   "サ変",
+   "下二段"
+  ],
+  "answer": "カ変",
+  "explanation": "「来」を含む複合動詞もカ変。",
+  "ref_heading": "複合動詞",
+  "sort": 4
+ },
+ {
+  "id": "doushi-sahen-01",
+  "topic_id": "doushi-sahen",
+  "kind": "shikibetsu",
+  "prompt": "サ行変格活用の動詞（基本2語）はどれ？",
+  "context": null,
+  "choices": [
+   "す・おはす",
+   "来・あり",
+   "見る・着る",
+   "死ぬ・往ぬ"
+  ],
+  "answer": "す・おはす",
+  "explanation": "サ変は「す」「おはす」。",
+  "ref_heading": "サ行変格活用とは",
+  "sort": 1
+ },
+ {
+  "id": "doushi-sahen-02",
+  "topic_id": "doushi-sahen",
+  "kind": "katsuyo-fill",
+  "prompt": "「す」の活用（せ・し・す・する・すれ・せよ）。已然形は？",
+  "context": null,
+  "choices": [
+   "する",
+   "すれ",
+   "せよ",
+   "し"
+  ],
+  "answer": "すれ",
+  "explanation": "サ変の已然形は「すれ」。",
+  "ref_heading": "活用表",
+  "sort": 2
+ },
+ {
+  "id": "doushi-sahen-03",
+  "topic_id": "doushi-sahen",
+  "kind": "shikibetsu",
+  "prompt": "「奏す」「念ず」などの活用型は？",
+  "context": null,
+  "choices": [
+   "サ変",
+   "四段",
+   "カ変",
+   "下二段"
+  ],
+  "answer": "サ変",
+  "explanation": "「〜す」を含む複合動詞はすべてサ変。",
+  "ref_heading": "「す」と複合動詞",
+  "sort": 3
+ },
+ {
+  "id": "doushi-sahen-04",
+  "topic_id": "doushi-sahen",
+  "kind": "imi",
+  "prompt": "傍線部「せ」の活用形は？",
+  "context": "ぼたもちをせむ",
+  "choices": [
+   "未然形",
+   "連用形",
+   "終止形",
+   "連体形"
+  ],
+  "answer": "未然形",
+  "explanation": "「す」（サ変）の未然形「せ」。「む」に接続するため未然形。",
+  "ref_heading": "活用表",
+  "sort": 4
+ },
+ {
+  "id": "doushi-rahen-01",
+  "topic_id": "doushi-rahen",
+  "kind": "shikibetsu",
+  "prompt": "ラ行変格活用の4語はどれ？",
+  "context": null,
+  "choices": [
+   "あり・をり・はべり・いまそかり",
+   "す・おはす",
+   "来・死ぬ",
+   "見る・着る"
+  ],
+  "answer": "あり・をり・はべり・いまそかり",
+  "explanation": "ラ変は存在を表す4語。",
+  "ref_heading": "ラ変動詞一覧",
+  "sort": 1
+ },
+ {
+  "id": "doushi-rahen-02",
+  "topic_id": "doushi-rahen",
+  "kind": "katsuyo-type",
+  "prompt": "ラ変の最大の特徴はどれ？",
+  "context": null,
+  "choices": [
+   "終止形が「り」で終わる",
+   "未然形がない",
+   "命令形が2つある",
+   "語幹がない"
+  ],
+  "answer": "終止形が「り」で終わる",
+  "explanation": "他の動詞はウ段で終止するが、ラ変は終止形が「り」（イ段）。助動詞接続の判断で重要。",
+  "ref_heading": "活用表",
+  "sort": 2
+ },
+ {
+  "id": "doushi-rahen-03",
+  "topic_id": "doushi-rahen",
+  "kind": "katsuyo-fill",
+  "prompt": "「あり」の活用（ら・り・り・る・れ・れ）。連体形は？",
+  "context": null,
+  "choices": [
+   "り",
+   "る",
+   "れ",
+   "ら"
+  ],
+  "answer": "る",
+  "explanation": "ラ変の連体形は「る」（あ＋る）。",
+  "ref_heading": "活用表",
+  "sort": 3
+ },
+ {
+  "id": "doushi-rahen-04",
+  "topic_id": "doushi-rahen",
+  "kind": "shikibetsu",
+  "prompt": "「はべり」の種類・意味は？",
+  "context": null,
+  "choices": [
+   "丁寧語「おります」",
+   "尊敬語「いらっしゃる」",
+   "打消の助動詞",
+   "完了の助動詞"
+  ],
+  "answer": "丁寧語「おります」",
+  "explanation": "「はべり」は丁寧語。「いまそかり」は尊敬語。",
+  "ref_heading": "ラ変動詞一覧",
+  "sort": 4
+ }
+]

@@ -14,10 +14,10 @@ import json, glob, collections, io, sys, random, re
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 random.seed(42)  # 再現可能に
 
-MAX_LV2_PER_TOPIC = 8
-MAX_LV3_PER_TOPIC = 6
-MAX_LV4_PER_TOPIC = 6  # 文脈総合（長文・助動詞密度の高い文）
-MAX_PER_SURFACE_MEANING = 2
+MAX_LV2_PER_TOPIC = 24  # 5倍バンク（シャッフル出題のため多めに）
+MAX_LV3_PER_TOPIC = 16
+MAX_LV4_PER_TOPIC = 24
+MAX_PER_SURFACE_MEANING = 6
 MAX_SENT = 60  # これを超える文はトークン周辺を切り出す
 
 FORM_NAME = {"未": "未然形", "用": "連用形", "終": "終止形", "体": "連体形", "已": "已然形", "命": "命令形"}
@@ -333,13 +333,17 @@ for topic in sorted(instances):
         if inst["sent"] in lv2_sent: continue
         if topic == "jodoshi-zu":
             if inst["form"] not in FORM_NAME: continue
+            cue = inst["nexttok"]  # 下に続く語が活用形を決める＝手がかり
+            if not cue: continue
             ans = FORM_NAME[inst["form"]]
             choices = [ans] + [v for v in ["未然形", "連用形", "終止形", "連体形", "已然形"] if v != ans][:3]
             q = {"kind": "katsuyo-fill",
                  "prompt": f"この「{inst['surface']}」は打消「ず」の何形？",
                  "answer": ans, "choices": choices,
-                 "explanation": f"打消「ず」（ず・ず・ず・ぬ・ね／ザリ活用）。{cite(inst)}"}
+                 "explanation": f"打消「ず」（ず・ず・ず・ぬ・ね／ザリ活用）。下に続く語から活用形を判断。{cite(inst)}"}
         else:
+            cue = cue_for(topic, inst)
+            if cue is None: continue  # Lv2 は手がかり必須（取れない意味判別は Lv4 へ）
             ans = inst["meaning"]
             base = MEANING_CHOICES[topic]
             if ans not in base: continue
@@ -350,7 +354,7 @@ for topic in sorted(instances):
                  "answer": ans, "choices": choices,
                  "explanation": f"{hint}{cite(inst)}"}
         used_ctx.add(inst["ctx"]); used_sm[key] += 1; lv2_sent.add(inst["sent"])
-        lv2.append((q, inst))
+        lv2.append((q, inst, cue))
 
     # Lv3: 同形の正体識別
     lv3 = []
@@ -371,8 +375,8 @@ for topic in sorted(instances):
         used_ctx.add(inst["ctx"]); used_sm3[key] += 1
         lv3.append((q, inst))
 
-    for i, (q, inst) in enumerate(lv2, 1):
-        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue_for(topic, inst))
+    for i, (q, inst, cue) in enumerate(lv2, 1):
+        ctx_marked = mark(inst["sent"], (inst["tstart"], inst["tend"]), cue)
         if q["kind"] == "imi":
             ctx_marked = with_context(inst, ctx_marked)
         drills.append({"id": f"{topic}-c{i:02}", "topic_id": topic, "kind": q["kind"],
@@ -389,10 +393,13 @@ for topic in sorted(instances):
     # Lv4: 文脈総合（長文 or 助動詞が3つ以上の密な文。広いウィンドウで出題）
     lv4 = []
     used_sm4 = collections.Counter()
-    used_sent = set(i["sent"] for _, i in lv2) | set(i["sent"] for _, i in lv3)
+    used_sent = set(i["sent"] for _, i, _ in lv2) | set(i["sent"] for _, i in lv3)
     for inst in sorted(pool, key=lambda x: -x["naux"]):
         if len(lv4) >= MAX_LV4_PER_TOPIC: break
-        if not (55 <= inst["sentlen"] <= 160 or (inst["naux"] >= 3 and inst["sentlen"] <= 160)): continue
+        # Lv4＝手がかりなし。長文／助動詞密／Lv2に入れなかった（手がかりが取れない）意味判別を集める
+        cued = cue_for(topic, inst) is not None
+        if not (30 <= inst["sentlen"] <= 160): continue
+        if not (inst["sentlen"] >= 55 or inst["naux"] >= 3 or not cued): continue
         if inst["sent"] in used_sent: continue
         key = (inst["surface"], inst["meaning"])
         if inst["ctx_wide"] in used_ctx or inst["ctx"] in used_ctx or used_sm4[key] >= MAX_PER_SURFACE_MEANING: continue
@@ -438,7 +445,7 @@ for topic, inst in all_insts:
     ident = IDENTITY[inst["surface"]]
     ans = ident["answer"].get((topic, inst["meaning"]))
     if not ans: continue
-    if cl_n[cl] >= 8 or inst["sent"] in cl_used[cl] or inst["sentlen"] < 25: continue
+    if cl_n[cl] >= 16 or inst["sent"] in cl_used[cl] or inst["sentlen"] < 25: continue
     cl_used[cl].add(inst["sent"]); cl_n[cl] += 1
     drills.append({
         "id": f"{cl}-c{cl_n[cl]:02}", "topic_id": cl, "kind": "shikibetsu",
