@@ -138,14 +138,24 @@ export function DrillSession({
         })}
       </div>
 
-      {/* 解説（誤答時）＋「つぎへ」: 残りの高さに置き、解説は長ければスクロール */}
+      {/* 解説（正誤どちらでも表示）＋「つぎへ」: 残りの高さに置き、長ければスクロール */}
       <div className="flex flex-col flex-1 min-h-0 mt-2.5">
-        {answered && !isCorrect && (
+        {answered && (
           <div
-            className="p-3 rounded-xl border-l-4 bg-rw-primary-soft overflow-y-auto min-h-0"
-            style={{ borderLeftColor: "var(--rw-primary)" }}
+            className="p-3 rounded-xl border-l-4 overflow-y-auto min-h-0"
+            style={{
+              background: isCorrect
+                ? "color-mix(in srgb, var(--rw-accent) 14%, transparent)"
+                : "var(--rw-primary-soft)",
+              borderLeftColor: isCorrect ? "var(--rw-accent)" : "var(--rw-primary)",
+            }}
           >
-            <p className="text-[11px] font-black text-rw-primary mb-0.5">解説</p>
+            <p
+              className="text-[11px] font-black mb-0.5"
+              style={{ color: isCorrect ? "var(--rw-accent)" : "var(--rw-primary)" }}
+            >
+              {isCorrect ? "◎ 正解！　解説" : "解説"}
+            </p>
             <p className="text-[13px] text-rw-ink leading-relaxed">{drill.explanation}</p>
           </div>
         )}
