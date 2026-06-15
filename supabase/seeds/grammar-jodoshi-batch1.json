@@ -1,31 +1,257 @@
 [
-  {"id":"jodoshi-zu-01","topic_id":"jodoshi-zu","kind":"setsuzoku","prompt":"打消の助動詞「ず」は何形に接続する？","context":null,"choices":["未然形","連用形","終止形","連体形"],"answer":"未然形","explanation":"「ず」は未然形接続。例:「行か＋ず」「見え＋ず」。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-zu-02","topic_id":"jodoshi-zu","kind":"katsuyo-fill","prompt":"「ず」の活用（ず・ず・ず・ぬ・ね・○）。連体形はどれ？","context":null,"choices":["ず","ぬ","ね","ざる"],"answer":"ぬ","explanation":"「ず」本活用の連体形は「ぬ」。已然形は「ね」。","ref_heading":"接続と活用","sort":2},
-  {"id":"jodoshi-zu-03","topic_id":"jodoshi-zu","kind":"shikibetsu","prompt":"「ず」が下に助動詞を取るとき使う活用はどれ？","context":null,"choices":["ザリ活用（ざら・ざり・ざる・ざれ）","本活用の終止形","語幹のみ","已然形"],"answer":"ザリ活用（ざら・ざり・ざる・ざれ）","explanation":"助動詞に接続するときはザリ活用（補助活用）を使う。例:「ざら＋む」。","ref_heading":"接続と活用","sort":3},
-  {"id":"jodoshi-zu-04","topic_id":"jodoshi-zu","kind":"shikibetsu","prompt":"連体形「ぬ」が打消か完了かを見分ける方法は？","context":null,"choices":["直前が未然形なら打消、連用形なら完了","直前が終止形なら打消","文末にあれば打消","語幹で判断"],"answer":"直前が未然形なら打消、連用形なら完了","explanation":"打消「ず」の連体形「ぬ」は未然形接続、完了「ぬ」は連用形接続。直前の活用形で判別。","ref_heading":"重要な識別","sort":4},
-  {"id":"jodoshi-zu-05","topic_id":"jodoshi-zu","kind":"imi","prompt":"傍線部「ぬ」の意味は？","context":"きぬものなれば","choices":["打消","完了","強意","推量"],"answer":"打消","explanation":"未然形「き」に接続しているので打消「ず」の連体形「ぬ」。","ref_heading":"重要な識別","sort":5},
-
-  {"id":"jodoshi-keri-01","topic_id":"jodoshi-keri","kind":"setsuzoku","prompt":"「けり」は何形に接続する？","context":null,"choices":["未然形","連用形","終止形","連体形"],"answer":"連用形","explanation":"「けり」は連用形接続。例:「あり＋けり」。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-keri-02","topic_id":"jodoshi-keri","kind":"katsuyo-fill","prompt":"係助詞「ぞ」「なむ」を受けるとき、文末の「けり」はどの形になる？","context":null,"choices":["けり","ける","けれ","けら"],"answer":"ける","explanation":"係り結び：「ぞ・なむ」の結びは連体形。「けり」の連体形は「ける」。","ref_heading":"係り結びとの関係","sort":2},
-  {"id":"jodoshi-keri-03","topic_id":"jodoshi-keri","kind":"katsuyo-fill","prompt":"係助詞「こそ」を受けるとき、文末の「けり」はどの形になる？","context":null,"choices":["ける","けれ","けり","けら"],"answer":"けれ","explanation":"「こそ」の結びは已然形。「けり」の已然形は「けれ」。","ref_heading":"係り結びとの関係","sort":3},
-  {"id":"jodoshi-keri-04","topic_id":"jodoshi-keri","kind":"shikibetsu","prompt":"過去の「き」と「けり」の違いとして正しいのは？","context":null,"choices":["きは体験過去、けりは伝聞過去","きは未来、けりは現在","意味は同じ","きは打消"],"answer":"きは体験過去、けりは伝聞過去","explanation":"「き」は自分が経験した過去、「けり」は他人から聞いた・物語の過去（＋詠嘆）。","ref_heading":"意味の判別","sort":4},
-  {"id":"jodoshi-keri-05","topic_id":"jodoshi-keri","kind":"imi","prompt":"物語の地の文「むかし、男ありけり」の「けり」の意味は？","context":null,"choices":["過去（伝聞）","詠嘆","打消","完了"],"answer":"過去（伝聞）","explanation":"物語の語り出しの「けり」は語り手が伝える過去（伝聞過去）。","ref_heading":"意味の判別","sort":5},
-
-  {"id":"jodoshi-tsu-01","topic_id":"jodoshi-tsu","kind":"setsuzoku","prompt":"完了の助動詞「つ」は何形に接続する？","context":null,"choices":["未然形","連用形","終止形","連体形"],"answer":"連用形","explanation":"「つ」は連用形接続。例:「果て＋つ」。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-tsu-02","topic_id":"jodoshi-tsu","kind":"katsuyo-fill","prompt":"「つ」の活用（て・て・つ・つる・つれ・てよ）。連体形はどれ？","context":null,"choices":["つ","つる","つれ","てよ"],"answer":"つる","explanation":"「つ」は下二段型。連体形は「つる」、已然形は「つれ」。","ref_heading":"接続と活用","sort":2},
-  {"id":"jodoshi-tsu-03","topic_id":"jodoshi-tsu","kind":"imi","prompt":"「てむ」（つ＋む）の「つ」の意味として最も適切なものは？","context":null,"choices":["強意","打消","過去","可能"],"answer":"強意","explanation":"「て＋む」は強意＋推量で「きっと〜だろう」。完了「つ」が強意に転じる頻出形。","ref_heading":"意味","sort":3},
-  {"id":"jodoshi-tsu-04","topic_id":"jodoshi-tsu","kind":"shikibetsu","prompt":"完了「つ」と完了「ぬ」のニュアンスの違いは？","context":null,"choices":["つは意図的、ぬは自然な完了","つは打消、ぬは完了","意味が正反対","つは未来"],"answer":"つは意図的、ぬは自然な完了","explanation":"「つ」は人為的・意図的な完了、「ぬ」は自然な・なりゆきの完了（区別は厳密でない）。","ref_heading":"意味","sort":4},
-  {"id":"jodoshi-tsu-05","topic_id":"jodoshi-tsu","kind":"imi","prompt":"傍線部「つる」の意味は？","context":"得つることあり","choices":["完了","打消","使役","尊敬"],"answer":"完了","explanation":"完了「つ」の連体形「つる」。「〜してしまった」の意。","ref_heading":"意味","sort":5},
-
-  {"id":"jodoshi-nu-01","topic_id":"jodoshi-nu","kind":"setsuzoku","prompt":"完了の助動詞「ぬ」は何形に接続する？","context":null,"choices":["未然形","連用形","終止形","連体形"],"answer":"連用形","explanation":"完了「ぬ」は連用形接続。打消「ず」の連体形「ぬ」は未然形接続なので区別。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-nu-02","topic_id":"jodoshi-nu","kind":"katsuyo-fill","prompt":"「ぬ」の活用（な・に・ぬ・ぬる・ぬれ・ね）。已然形はどれ？","context":null,"choices":["ぬ","ぬる","ぬれ","ね"],"answer":"ぬれ","explanation":"完了「ぬ」はナ変型。連体形「ぬる」、已然形「ぬれ」。","ref_heading":"接続と活用","sort":2},
-  {"id":"jodoshi-nu-03","topic_id":"jodoshi-nu","kind":"shikibetsu","prompt":"完了「ぬ」と打消「ず」の連体形「ぬ」を見分ける方法は？","context":null,"choices":["直前が連用形なら完了、未然形なら打消","直前が終止形なら完了","文頭なら完了","語幹で判断"],"answer":"直前が連用形なら完了、未然形なら打消","explanation":"完了「ぬ」は連用形接続、打消「ぬ」は未然形接続。直前の活用形で判別。","ref_heading":"打消「ぬ」との識別","sort":3},
-  {"id":"jodoshi-nu-04","topic_id":"jodoshi-nu","kind":"imi","prompt":"傍線部「ぬ」の意味は？","context":"花咲きぬ","choices":["完了","打消","推量","使役"],"answer":"完了","explanation":"連用形「咲き」に接続しているので完了「ぬ」（花が咲いた）。","ref_heading":"打消「ぬ」との識別","sort":4},
-  {"id":"jodoshi-nu-05","topic_id":"jodoshi-nu","kind":"imi","prompt":"「なむ」（な＋む）の「な」の意味として最も適切なものは？","context":null,"choices":["強意","打消","過去","尊敬"],"answer":"強意","explanation":"強意「ぬ」の未然形「な」＋推量「む」で「きっと〜だろう」。","ref_heading":"意味","sort":5},
-
-  {"id":"jodoshi-beshi-01","topic_id":"jodoshi-beshi","kind":"setsuzoku","prompt":"「べし」は何形に接続する？（ラ変型は連体形）","context":null,"choices":["未然形","連用形","終止形","已然形"],"answer":"終止形","explanation":"「べし」は終止形接続。ただしラ変型の語には連体形に付く（例:「あるべし」）。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-beshi-02","topic_id":"jodoshi-beshi","kind":"katsuyo-type","prompt":"「べし」の活用型はどれ？","context":null,"choices":["形容詞ク活用型","形容詞シク活用型","四段型","ラ変型"],"answer":"形容詞ク活用型","explanation":"「べし」はベク・ベシ・ベキ…と形容詞ク活用型に活用する。","ref_heading":"接続と活用","sort":2},
-  {"id":"jodoshi-beshi-03","topic_id":"jodoshi-beshi","kind":"shikibetsu","prompt":"「べし」の6つの意味を覚える語呂はどれ？","context":null,"choices":["すいかとめて","ひいきにみゐる","すいかかえて","なまにこえる"],"answer":"すいかとめて","explanation":"推量・意志・可能・当然・命令・適当＝「すいかとめて」。","ref_heading":"意味の判別","sort":3},
-  {"id":"jodoshi-beshi-04","topic_id":"jodoshi-beshi","kind":"imi","prompt":"傍線部「べき」の意味として最も適切なものは？","context":"人はまさにあるべきさまにこそあれ","choices":["当然","打消","過去","完了"],"answer":"当然","explanation":"「〜すべきだ・あるのが当然だ」という当然の「べし」。","ref_heading":"意味の判別","sort":4},
-  {"id":"jodoshi-beshi-05","topic_id":"jodoshi-beshi","kind":"shikibetsu","prompt":"「べし」の意味に含まれないものはどれ？","context":null,"choices":["推量","当然","可能","詠嘆"],"answer":"詠嘆","explanation":"「べし」は 推量・意志・可能・当然・命令・適当（すいかとめて）。詠嘆は含まない。","ref_heading":"意味の判別","sort":5}
+  {
+    "id": "jodoshi-keri-01",
+    "topic_id": "jodoshi-keri",
+    "kind": "setsuzoku",
+    "prompt": "「けり」は何形に接続する？",
+    "context": null,
+    "choices": [
+      "未然形",
+      "連用形",
+      "終止形",
+      "連体形"
+    ],
+    "answer": "連用形",
+    "explanation": "「けり」は連用形接続。例:「あり＋けり」。",
+    "ref_heading": "接続と活用",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-keri-02",
+    "topic_id": "jodoshi-keri",
+    "kind": "katsuyo-fill",
+    "prompt": "係助詞「ぞ」「なむ」を受けるとき、文末の「けり」はどの形になる？",
+    "context": null,
+    "choices": [
+      "けり",
+      "ける",
+      "けれ",
+      "けら"
+    ],
+    "answer": "ける",
+    "explanation": "係り結び：「ぞ・なむ」の結びは連体形。「けり」の連体形は「ける」。",
+    "ref_heading": "係り結びとの関係",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-keri-03",
+    "topic_id": "jodoshi-keri",
+    "kind": "katsuyo-fill",
+    "prompt": "係助詞「こそ」を受けるとき、文末の「けり」はどの形になる？",
+    "context": null,
+    "choices": [
+      "ける",
+      "けれ",
+      "けり",
+      "けら"
+    ],
+    "answer": "けれ",
+    "explanation": "「こそ」の結びは已然形。「けり」の已然形は「けれ」。",
+    "ref_heading": "係り結びとの関係",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-keri-04",
+    "topic_id": "jodoshi-keri",
+    "kind": "shikibetsu",
+    "prompt": "過去の「き」と「けり」の違いとして正しいのは？",
+    "context": null,
+    "choices": [
+      "きは体験過去、けりは伝聞過去",
+      "きは未来、けりは現在",
+      "意味は同じ",
+      "きは打消"
+    ],
+    "answer": "きは体験過去、けりは伝聞過去",
+    "explanation": "「き」は自分が経験した過去、「けり」は他人から聞いた・物語の過去（＋詠嘆）。",
+    "ref_heading": "意味の判別",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-keri-05",
+    "topic_id": "jodoshi-keri",
+    "kind": "imi",
+    "prompt": "物語の地の文「むかし、男ありけり」の「けり」の意味は？",
+    "context": null,
+    "choices": [
+      "過去（伝聞）",
+      "詠嘆",
+      "打消",
+      "完了"
+    ],
+    "answer": "過去（伝聞）",
+    "explanation": "物語の語り出しの「けり」は語り手が伝える過去（伝聞過去）。",
+    "ref_heading": "意味の判別",
+    "sort": 5
+  },
+  {
+    "id": "jodoshi-tsu-01",
+    "topic_id": "jodoshi-tsu",
+    "kind": "setsuzoku",
+    "prompt": "完了の助動詞「つ」は何形に接続する？",
+    "context": null,
+    "choices": [
+      "未然形",
+      "連用形",
+      "終止形",
+      "連体形"
+    ],
+    "answer": "連用形",
+    "explanation": "「つ」は連用形接続。例:「果て＋つ」。",
+    "ref_heading": "接続と活用",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-tsu-02",
+    "topic_id": "jodoshi-tsu",
+    "kind": "katsuyo-fill",
+    "prompt": "「つ」の活用（て・て・つ・つる・つれ・てよ）。連体形はどれ？",
+    "context": null,
+    "choices": [
+      "つ",
+      "つる",
+      "つれ",
+      "てよ"
+    ],
+    "answer": "つる",
+    "explanation": "「つ」は下二段型。連体形は「つる」、已然形は「つれ」。",
+    "ref_heading": "接続と活用",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-tsu-03",
+    "topic_id": "jodoshi-tsu",
+    "kind": "imi",
+    "prompt": "「てむ」（つ＋む）の「つ」の意味として最も適切なものは？",
+    "context": null,
+    "choices": [
+      "強意",
+      "打消",
+      "過去",
+      "可能"
+    ],
+    "answer": "強意",
+    "explanation": "「て＋む」は強意＋推量で「きっと〜だろう」。完了「つ」が強意に転じる頻出形。",
+    "ref_heading": "意味",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-tsu-04",
+    "topic_id": "jodoshi-tsu",
+    "kind": "shikibetsu",
+    "prompt": "完了「つ」と完了「ぬ」のニュアンスの違いは？",
+    "context": null,
+    "choices": [
+      "つは意図的、ぬは自然な完了",
+      "つは打消、ぬは完了",
+      "意味が正反対",
+      "つは未来"
+    ],
+    "answer": "つは意図的、ぬは自然な完了",
+    "explanation": "「つ」は人為的・意図的な完了、「ぬ」は自然な・なりゆきの完了（区別は厳密でない）。",
+    "ref_heading": "意味",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-tsu-05",
+    "topic_id": "jodoshi-tsu",
+    "kind": "imi",
+    "prompt": "傍線部「つる」の意味は？",
+    "context": "得つることあり",
+    "choices": [
+      "完了",
+      "打消",
+      "使役",
+      "尊敬"
+    ],
+    "answer": "完了",
+    "explanation": "完了「つ」の連体形「つる」。「〜してしまった」の意。",
+    "ref_heading": "意味",
+    "sort": 201
+  },
+  {
+    "id": "jodoshi-beshi-01",
+    "topic_id": "jodoshi-beshi",
+    "kind": "setsuzoku",
+    "prompt": "「べし」は何形に接続する？（ラ変型は連体形）",
+    "context": null,
+    "choices": [
+      "未然形",
+      "連用形",
+      "終止形",
+      "已然形"
+    ],
+    "answer": "終止形",
+    "explanation": "「べし」は終止形接続。ただしラ変型の語には連体形に付く（例:「あるべし」）。",
+    "ref_heading": "接続と活用",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-beshi-02",
+    "topic_id": "jodoshi-beshi",
+    "kind": "katsuyo-type",
+    "prompt": "「べし」の活用型はどれ？",
+    "context": null,
+    "choices": [
+      "形容詞ク活用型",
+      "形容詞シク活用型",
+      "四段型",
+      "ラ変型"
+    ],
+    "answer": "形容詞ク活用型",
+    "explanation": "「べし」はベク・ベシ・ベキ…と形容詞ク活用型に活用する。",
+    "ref_heading": "接続と活用",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-beshi-03",
+    "topic_id": "jodoshi-beshi",
+    "kind": "shikibetsu",
+    "prompt": "「べし」の6つの意味を覚える語呂はどれ？",
+    "context": null,
+    "choices": [
+      "すいかとめて",
+      "ひいきにみゐる",
+      "すいかかえて",
+      "なまにこえる"
+    ],
+    "answer": "すいかとめて",
+    "explanation": "推量・意志・可能・当然・命令・適当＝「すいかとめて」。",
+    "ref_heading": "意味の判別",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-beshi-04",
+    "topic_id": "jodoshi-beshi",
+    "kind": "imi",
+    "prompt": "傍線部「べき」の意味として最も適切なものは？",
+    "context": "人はまさにあるべきさまにこそあれ",
+    "choices": [
+      "当然",
+      "打消",
+      "過去",
+      "完了"
+    ],
+    "answer": "当然",
+    "explanation": "「〜すべきだ・あるのが当然だ」という当然の「べし」。",
+    "ref_heading": "意味の判別",
+    "sort": 201
+  },
+  {
+    "id": "jodoshi-beshi-05",
+    "topic_id": "jodoshi-beshi",
+    "kind": "shikibetsu",
+    "prompt": "「べし」の意味に含まれないものはどれ？",
+    "context": null,
+    "choices": [
+      "推量",
+      "当然",
+      "可能",
+      "詠嘆"
+    ],
+    "answer": "詠嘆",
+    "explanation": "「べし」は 推量・意志・可能・当然・命令・適当（すいかとめて）。詠嘆は含まない。",
+    "ref_heading": "意味の判別",
+    "sort": 4
+  }
 ]

@@ -1,6 +1,16 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { GrammarDrill } from "@/lib/kobun/types";
 import { recordDrillAnswer } from "@/lib/kobun/dojoData";
+
+/** 選択肢の表示順をシャッフル（正解が先頭に固定されるのを防ぐ）。入力は破壊しない。 */
+function shuffleChoices(arr: string[]): string[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export interface DrillResult {
   total: number;
@@ -55,6 +65,8 @@ export function DrillSession({
   const [correctCount, setCorrectCount] = useState(0);
 
   const drill = drills[idx];
+  // 問題ごとに選択肢順をシャッフル。idx/drill が変わるまで（＝解答中は）安定。
+  const displayChoices = useMemo(() => shuffleChoices(drill?.choices ?? []), [drill?.id, idx]);
   const answered = selected !== null;
   const isCorrect = answered && drill ? isAnswerCorrect(drill, selected) : false;
 
@@ -82,7 +94,7 @@ export function DrillSession({
     setSelected(null);
   };
 
-  const choices = drill.choices ?? [];
+  const choices = displayChoices;
   const hasCue = !!drill.context && drill.context.includes("《");
 
   return (

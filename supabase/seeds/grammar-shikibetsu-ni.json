@@ -1,12 +1,172 @@
 [
-  {"id":"shikibetsu-ni-01","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「に」の正体は？","context":"日も暮れにけり","choices":["完了「ぬ」の連用形","断定「なり」の連用形","格助詞","接続助詞"],"answer":"完了「ぬ」の連用形","explanation":"連用形「暮れ」＋に＋けり。下に「き・けり・たり」→完了「ぬ」。「〜てしまった」。","ref_heading":"判別の手順","sort":1},
-  {"id":"shikibetsu-ni-02","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「に」の正体は？","context":"京に着きぬ","choices":["格助詞","完了「ぬ」の連用形","断定「なり」の連用形","ナリ活用の語尾"],"answer":"格助詞","explanation":"体言「京」＋に（場所）→格助詞。","ref_heading":"判別の手順","sort":2},
-  {"id":"shikibetsu-ni-03","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「に」の正体は？","context":"夢にやあらむ","choices":["断定「なり」の連用形","完了「ぬ」の連用形","格助詞","副詞の一部"],"answer":"断定「なり」の連用形","explanation":"下に「あらむ」（あり系）→断定「なり」の連用形「に」。「にや・にか・にこそ」は断定のサイン。","ref_heading":"判別の手順","sort":3},
-  {"id":"shikibetsu-ni-04","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「に」の正体は？","context":"静かに眠る","choices":["ナリ活用形容動詞の語尾","格助詞","完了「ぬ」の連用形","接続助詞"],"answer":"ナリ活用形容動詞の語尾","explanation":"「静かに」で一語（状態の意味）。「に」を切り離すと意味が壊れる→形容動詞の連用形語尾。","ref_heading":"6つの「に」","sort":4},
-  {"id":"shikibetsu-ni-05","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「げに」の「に」の正体は？","context":"げにあはれなり","choices":["副詞の一部","格助詞","断定「なり」の連用形","完了「ぬ」の連用形"],"answer":"副詞の一部","explanation":"「げに」（なるほど）で一語の副詞。「さらに・つひに・すでに」も同類で、「に」だけ取り出せない。","ref_heading":"6つの「に」","sort":5},
-  {"id":"shikibetsu-ni-06","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「散りにけり」と「見るに涙落つ」。完了の「に」はどちら？","context":null,"choices":["「散りにけり」のに","「見るに」のに","両方","どちらも違う"],"answer":"「散りにけり」のに","explanation":"連用形「散り」＋に＋けり＝完了。「見るに」は連体形＋に＝接続助詞（〜すると）。","ref_heading":"判別の手順","sort":6},
-  {"id":"shikibetsu-ni-07","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「に」の正体は？","context":"これは夢にこそあれ","choices":["断定「なり」の連用形","完了「ぬ」の連用形","格助詞","ナリ活用の語尾"],"answer":"断定「なり」の連用形","explanation":"「に＋こそ＋あれ（あり）」→下にあり系が来たら断定。「夢であるなあ」。","ref_heading":"判別の手順","sort":7},
-  {"id":"shikibetsu-ni-08","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「あはれに思ふ」と「夕暮れに思ふ」。形容動詞の語尾はどちら？","context":null,"choices":["「あはれに」のに","「夕暮れに」のに","両方","どちらも違う"],"answer":"「あはれに」のに","explanation":"「あはれに」＝しみじみと（一語の状態）→ナリ活用語尾。「夕暮れに」＝体言＋に（時）→格助詞。","ref_heading":"6つの「に」","sort":8},
-  {"id":"shikibetsu-ni-09","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「散りにき」の「に」と同じものを含むのはどれ？","context":null,"choices":["散りぬ","散らず","散るなり","散れり"],"answer":"散りぬ","explanation":"「散りにき」の「に」＝完了「ぬ」の連用形。「散りぬ」の「ぬ」＝同じ助動詞の終止形。","ref_heading":"判別の手順","sort":9},
-  {"id":"shikibetsu-ni-10","topic_id":"shikibetsu-ni","kind":"shikibetsu","prompt":"「に」の正体は？","context":"待つに、人来ず","choices":["接続助詞","格助詞","完了「ぬ」の連用形","断定「なり」の連用形"],"answer":"接続助詞","explanation":"連体形「待つ」＋に、下に文が続く（待つのに/待っていると）→接続助詞。","ref_heading":"判別の手順","sort":10}
+  {
+    "id": "shikibetsu-ni-01",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「に」の正体は？",
+    "context": "日も暮れにけり",
+    "choices": [
+      "完了「ぬ」の連用形",
+      "断定「なり」の連用形",
+      "格助詞",
+      "接続助詞"
+    ],
+    "answer": "完了「ぬ」の連用形",
+    "explanation": "連用形「暮れ」＋に＋けり。下に「き・けり・たり」→完了「ぬ」。「〜てしまった」。",
+    "ref_heading": "判別の手順",
+    "sort": 101
+  },
+  {
+    "id": "shikibetsu-ni-02",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「に」の正体は？",
+    "context": "京に着きぬ",
+    "choices": [
+      "格助詞",
+      "完了「ぬ」の連用形",
+      "断定「なり」の連用形",
+      "ナリ活用の語尾"
+    ],
+    "answer": "格助詞",
+    "explanation": "体言「京」＋に（場所）→格助詞。",
+    "ref_heading": "判別の手順",
+    "sort": 102
+  },
+  {
+    "id": "shikibetsu-ni-03",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「に」の正体は？",
+    "context": "夢にやあらむ",
+    "choices": [
+      "断定「なり」の連用形",
+      "完了「ぬ」の連用形",
+      "格助詞",
+      "副詞の一部"
+    ],
+    "answer": "断定「なり」の連用形",
+    "explanation": "下に「あらむ」（あり系）→断定「なり」の連用形「に」。「にや・にか・にこそ」は断定のサイン。",
+    "ref_heading": "判別の手順",
+    "sort": 103
+  },
+  {
+    "id": "shikibetsu-ni-04",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「に」の正体は？",
+    "context": "静かに眠る",
+    "choices": [
+      "ナリ活用形容動詞の語尾",
+      "格助詞",
+      "完了「ぬ」の連用形",
+      "接続助詞"
+    ],
+    "answer": "ナリ活用形容動詞の語尾",
+    "explanation": "「静かに」で一語（状態の意味）。「に」を切り離すと意味が壊れる→形容動詞の連用形語尾。",
+    "ref_heading": "6つの「に」",
+    "sort": 104
+  },
+  {
+    "id": "shikibetsu-ni-05",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「げに」の「に」の正体は？",
+    "context": "げにあはれなり",
+    "choices": [
+      "副詞の一部",
+      "格助詞",
+      "断定「なり」の連用形",
+      "完了「ぬ」の連用形"
+    ],
+    "answer": "副詞の一部",
+    "explanation": "「げに」（なるほど）で一語の副詞。「さらに・つひに・すでに」も同類で、「に」だけ取り出せない。",
+    "ref_heading": "6つの「に」",
+    "sort": 105
+  },
+  {
+    "id": "shikibetsu-ni-06",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「散りにけり」と「見るに涙落つ」。完了の「に」はどちら？",
+    "context": null,
+    "choices": [
+      "「散りにけり」のに",
+      "「見るに」のに",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "「散りにけり」のに",
+    "explanation": "連用形「散り」＋に＋けり＝完了。「見るに」は連体形＋に＝接続助詞（〜すると）。",
+    "ref_heading": "判別の手順",
+    "sort": 1
+  },
+  {
+    "id": "shikibetsu-ni-07",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「に」の正体は？",
+    "context": "これは夢にこそあれ",
+    "choices": [
+      "断定「なり」の連用形",
+      "完了「ぬ」の連用形",
+      "格助詞",
+      "ナリ活用の語尾"
+    ],
+    "answer": "断定「なり」の連用形",
+    "explanation": "「に＋こそ＋あれ（あり）」→下にあり系が来たら断定。「夢であるなあ」。",
+    "ref_heading": "判別の手順",
+    "sort": 106
+  },
+  {
+    "id": "shikibetsu-ni-08",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「あはれに思ふ」と「夕暮れに思ふ」。形容動詞の語尾はどちら？",
+    "context": null,
+    "choices": [
+      "「あはれに」のに",
+      "「夕暮れに」のに",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "「あはれに」のに",
+    "explanation": "「あはれに」＝しみじみと（一語の状態）→ナリ活用語尾。「夕暮れに」＝体言＋に（時）→格助詞。",
+    "ref_heading": "6つの「に」",
+    "sort": 2
+  },
+  {
+    "id": "shikibetsu-ni-09",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「散りにき」の「に」と同じものを含むのはどれ？",
+    "context": null,
+    "choices": [
+      "散りぬ",
+      "散らず",
+      "散るなり",
+      "散れり"
+    ],
+    "answer": "散りぬ",
+    "explanation": "「散りにき」の「に」＝完了「ぬ」の連用形。「散りぬ」の「ぬ」＝同じ助動詞の終止形。",
+    "ref_heading": "判別の手順",
+    "sort": 3
+  },
+  {
+    "id": "shikibetsu-ni-10",
+    "topic_id": "shikibetsu-ni",
+    "kind": "shikibetsu",
+    "prompt": "「に」の正体は？",
+    "context": "待つに、人来ず",
+    "choices": [
+      "接続助詞",
+      "格助詞",
+      "完了「ぬ」の連用形",
+      "断定「なり」の連用形"
+    ],
+    "answer": "接続助詞",
+    "explanation": "連体形「待つ」＋に、下に文が続く（待つのに/待っていると）→接続助詞。",
+    "ref_heading": "判別の手順",
+    "sort": 107
+  }
 ]

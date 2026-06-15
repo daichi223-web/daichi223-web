@@ -1,46 +1,682 @@
 [
-  {"id":"jodoshi-ru-01","topic_id":"jodoshi-ru","kind":"katsuyo-fill","prompt":"「思はるる人」の「るる」は、「る」の何形？","context":null,"choices":["連体形","終止形","已然形","未然形"],"answer":"連体形","explanation":"下に体言「人」→連体形。「る」は下二段型（れ・れ・る・るる・るれ・れよ）。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-ru-02","topic_id":"jodoshi-ru","kind":"katsuyo-fill","prompt":"「思ひ出でられけり」の「られ」は、「らる」の何形？","context":null,"choices":["連用形","未然形","終止形","已然形"],"answer":"連用形","explanation":"下の「けり」が連用形接続だから「られ」＝連用形。","ref_heading":"接続と活用","sort":2},
-  {"id":"jodoshi-ru-03","topic_id":"jodoshi-ru","kind":"setsuzoku","prompt":"「書く」（四段)に受身を付けて「書かれる」と言うと？","context":null,"choices":["書かる","書からる","書きる","書くらる"],"answer":"書かる","explanation":"四段・ナ変・ラ変には「る」→未然形「書か」＋る。それ以外の動詞なら「らる」。","ref_heading":"接続と活用","sort":3},
-  {"id":"jodoshi-ru-04","topic_id":"jodoshi-ru","kind":"setsuzoku","prompt":"「見る」（上一段）に受身を付けて「見られる」と言うと？","context":null,"choices":["見らる","見る","見れる","見るる"],"answer":"見らる","explanation":"四段・ナ変・ラ変以外には「らる」→未然形「見」＋らる。","ref_heading":"接続と活用","sort":4},
-  {"id":"jodoshi-ru-05","topic_id":"jodoshi-ru","kind":"imi","prompt":"「らる」の意味は？","context":"故郷おのづから思ひ出でらる","choices":["自発","受身","可能","尊敬"],"answer":"自発","explanation":"「思ひ出づ」＝心の動きの動詞→自然と〜される（自発）。心理動詞が来たらまず自発を疑う。","ref_heading":"意味の判別","sort":5},
-  {"id":"jodoshi-ru-06","topic_id":"jodoshi-ru","kind":"imi","prompt":"「れ」の意味は？","context":"起こされたらば（＝起こされたなら）","choices":["受身","自発","可能","尊敬"],"answer":"受身","explanation":"「（人に）起こされる」＝動作を受ける側が主語→受身。","ref_heading":"意味の判別","sort":6},
-  {"id":"jodoshi-ru-07","topic_id":"jodoshi-ru","kind":"imi","prompt":"「られ」の意味は？","context":"恐ろしくて答へられず","choices":["可能","受身","自発","尊敬"],"answer":"可能","explanation":"下に打消「ず」→「答えられない」の可能。可能の「る・らる」は打消とセットが基本。","ref_heading":"意味の判別","sort":7},
-  {"id":"jodoshi-ru-08","topic_id":"jodoshi-ru","kind":"shikibetsu","prompt":"「る」の意味は？","context":"大臣、笑はる","choices":["尊敬","受身","自発","可能"],"answer":"尊敬","explanation":"判別の優先順位：①主語が高貴→尊敬 ②心理動詞→自発 ③打消を伴う→可能 ④その他→受身。ここは大臣が主語で「お笑いになる」。","ref_heading":"意味の判別","sort":8},
-
-  {"id":"jodoshi-su-01","topic_id":"jodoshi-su","kind":"katsuyo-fill","prompt":"「仏を作らせける」の「せ」は、「す」の何形？","context":"仏を作らせける","choices":["連用形","未然形","終止形","已然形"],"answer":"連用形","explanation":"下の「けり」が連用形接続だから「せ」＝連用形。使役「す」は下二段型（せ・せ・す・する・すれ・せよ）。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-su-02","topic_id":"jodoshi-su","kind":"katsuyo-fill","prompt":"「子に学ばせよ」の「せよ」は、「す」の何形？","context":null,"choices":["命令形","已然形","連体形","終止形"],"answer":"命令形","explanation":"「学ばせよ」＝学ばせろ、と命じる文末→命令形「せよ」。","ref_heading":"接続と活用","sort":2},
-  {"id":"jodoshi-su-03","topic_id":"jodoshi-su","kind":"setsuzoku","prompt":"「書く」（四段）に使役を付けて「書かせる」と言うと？","context":null,"choices":["書かす","書かさす","書きす","書くさす"],"answer":"書かす","explanation":"四段・ナ変・ラ変には「す」→未然形「書か」＋す。それ以外なら「さす」。","ref_heading":"接続と活用","sort":3},
-  {"id":"jodoshi-su-04","topic_id":"jodoshi-su","kind":"setsuzoku","prompt":"「着る」（上一段）に使役を付けて「着させる」と言うと？","context":null,"choices":["着さす","着す","着らす","着せさす"],"answer":"着さす","explanation":"上一段は四段・ナ変・ラ変以外→「さす」。未然形「着」＋さす。","ref_heading":"接続と活用","sort":4},
-  {"id":"jodoshi-su-05","topic_id":"jodoshi-su","kind":"imi","prompt":"「せ」の意味は？","context":"仏師に仏を作らせける","choices":["使役","尊敬","受身","自発"],"answer":"使役","explanation":"「仏師に〜を作らせる」＝AにBを〜させる構文→使役。動作させる相手（に）がいるのが目印。","ref_heading":"意味の判別","sort":5},
-  {"id":"jodoshi-su-06","topic_id":"jodoshi-su","kind":"imi","prompt":"「せ」の意味は？","context":"帝、笑はせ給ふ","choices":["尊敬","使役","受身","可能"],"answer":"尊敬","explanation":"「せ給ふ」＋主語が帝（最高位）→尊敬。「す」＋「給ふ」の二重敬語は最高クラスの人物に使う。","ref_heading":"意味の判別","sort":6},
-  {"id":"jodoshi-su-07","topic_id":"jodoshi-su","kind":"shikibetsu","prompt":"「させ」の意味は？","context":"殿、人に門を開けさせ給ふ","choices":["使役","尊敬","受身","自発"],"answer":"使役","explanation":"「させ給ふ」でも「人に」と動作させる相手がいれば使役。「せ給ふ・させ給ふ＝必ず尊敬」ではない——相手の有無を見る。","ref_heading":"意味の判別","sort":7},
-  {"id":"jodoshi-su-08","topic_id":"jodoshi-su","kind":"shikibetsu","prompt":"「書かす」と「書かる」。「書かせる」（使役）はどちら？","context":null,"choices":["書かす","書かる","両方","どちらも違う"],"answer":"書かす","explanation":"す＝使役系、る＝受身系。一字違いで「させる／される」が正反対になる。","ref_heading":"意味の判別","sort":8},
-
-  {"id":"jodoshi-nari-01","topic_id":"jodoshi-nari","kind":"katsuyo-fill","prompt":"「春なれば」（春であるので）の「なれ」は、断定「なり」の何形？","context":null,"choices":["已然形","未然形","連体形","命令形"],"answer":"已然形","explanation":"已然形＋ば＝確定条件（〜ので）。断定「なり」の已然形は「なれ」。","ref_heading":"断定の「なり」","sort":1},
-  {"id":"jodoshi-nari-02","topic_id":"jodoshi-nari","kind":"katsuyo-fill","prompt":"断定「なり」の連用形には「なり」のほかにもう1つ形がある。どれ？","context":null,"choices":["に","な","の","と"],"answer":"に","explanation":"連用形「に」＋あり系（にあり・にて・にや・にこそ）で使う。「に」の識別で最重要の知識。","ref_heading":"断定の「なり」","sort":2},
-  {"id":"jodoshi-nari-03","topic_id":"jodoshi-nari","kind":"setsuzoku","prompt":"「起く」（上二段）で「起きるのである」と断定で言うと？","context":null,"choices":["起くるなり","起くなり","起きなり","起こるなり"],"answer":"起くるなり","explanation":"断定は連体形接続→「起くる」＋なり。終止形「起く」＋なりだと伝聞推定（起きるようだ）になる。","ref_heading":"判別のポイント","sort":3},
-  {"id":"jodoshi-nari-04","topic_id":"jodoshi-nari","kind":"setsuzoku","prompt":"「起く」（上二段）で「（音から察して）起きるようだ」と伝聞推定で言うと？","context":null,"choices":["起くなり","起くるなり","起きなり","起こなり"],"answer":"起くなり","explanation":"伝聞推定は終止形接続→「起く」＋なり。連体形＋なりは断定。接続が正体を決める。","ref_heading":"判別のポイント","sort":4},
-  {"id":"jodoshi-nari-05","topic_id":"jodoshi-nari","kind":"imi","prompt":"「なり」の意味は？","context":"心得つるなり","choices":["断定","伝聞推定","存続","完了"],"answer":"断定","explanation":"直前「つる」＝完了「つ」の連体形→連体形＋なり＝断定「〜のだ」。","ref_heading":"判別のポイント","sort":5},
-  {"id":"jodoshi-nari-06","topic_id":"jodoshi-nari","kind":"imi","prompt":"「すなる」の「なり」の意味は？","context":"男もすなる日記といふものを","choices":["伝聞推定","断定","存続","過去"],"answer":"伝聞推定","explanation":"サ変終止形「す」＋なり＝伝聞推定。「（男が）するという日記」（『土佐日記』冒頭）。","ref_heading":"判別のポイント","sort":6},
-  {"id":"jodoshi-nari-07","topic_id":"jodoshi-nari","kind":"imi","prompt":"「するなり」の「なり」の意味は？","context":"女もしてみむとてするなり","choices":["断定","伝聞推定","完了","推量"],"answer":"断定","explanation":"サ変連体形「する」＋なり＝断定「するのである」。前問「すなる」（終止形＋伝聞）との対比が『土佐日記』冒頭の仕掛け。","ref_heading":"判別のポイント","sort":7},
-  {"id":"jodoshi-nari-08","topic_id":"jodoshi-nari","kind":"shikibetsu","prompt":"「あなり」（あんなり）の「なり」は？","context":null,"choices":["伝聞推定","断定","ナリ活用の語尾","動詞「成る」"],"answer":"伝聞推定","explanation":"ラ変「あり」に伝聞「なり」が付くと「あるなり→あんなり→あなり」と撥音便化する。「あなり・なんなり・ざんなり」の形→伝聞推定のサイン。","ref_heading":"判別のポイント","sort":8},
-
-  {"id":"jodoshi-tari-01","topic_id":"jodoshi-tari","kind":"katsuyo-fill","prompt":"「起こしたらば」（起こしたなら）の「たら」は、「たり」の何形？","context":"起こしたらば","choices":["未然形","連用形","已然形","連体形"],"answer":"未然形","explanation":"未然形＋ば＝仮定条件（〜たなら）。「たり」の未然形は「たら」。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-tari-02","topic_id":"jodoshi-tari","kind":"katsuyo-fill","prompt":"「来たる者ども」の「たる」は、「たり」の何形？","context":"来たる者ども","choices":["連体形","終止形","已然形","未然形"],"answer":"連体形","explanation":"下に体言「者ども」→連体形「たる」。","ref_heading":"接続と活用","sort":2},
-  {"id":"jodoshi-tari-03","topic_id":"jodoshi-tari","kind":"setsuzoku","prompt":"「咲く」に「たり」を付けて「咲いている」と言うと？","context":null,"choices":["咲きたり","咲かたり","咲くたり","咲けたり"],"answer":"咲きたり","explanation":"「たり」は連用形接続→「咲き」＋たり。","ref_heading":"接続と活用","sort":3},
-  {"id":"jodoshi-tari-04","topic_id":"jodoshi-tari","kind":"setsuzoku","prompt":"「咲いているので」（確定条件）と言うと？","context":null,"choices":["咲きたれば","咲きたらば","咲きたりば","咲きたるば"],"answer":"咲きたれば","explanation":"已然形「たれ」＋ば＝確定（〜ので）。「たらば」だと未然形＋ば＝仮定（〜たなら）。","ref_heading":"接続と活用","sort":4},
-  {"id":"jodoshi-tari-05","topic_id":"jodoshi-tari","kind":"imi","prompt":"「たり」の意味は？","context":"壁に絵をかけたり","choices":["存続","完了","断定","打消"],"answer":"存続","explanation":"「掛けてある」＝結果が残っている状態→存続。動作がその場で終わるなら完了。","ref_heading":"意味の判別","sort":5},
-  {"id":"jodoshi-tari-06","topic_id":"jodoshi-tari","kind":"imi","prompt":"「たる」の意味は？","context":"来たる者ども","choices":["存続","完了","断定","伝聞"],"answer":"存続","explanation":"「（その場に）来ている者たち」＝状態の継続→存続。","ref_heading":"意味の判別","sort":6},
-  {"id":"jodoshi-tari-07","topic_id":"jodoshi-tari","kind":"shikibetsu","prompt":"「将軍たり」と「咲きたり」。断定の「たり」はどちら？","context":null,"choices":["将軍たり","咲きたり","両方","どちらも違う"],"answer":"将軍たり","explanation":"体言＋たり＝断定（〜である。漢文調）。連用形＋たり＝完了・存続。接続がすべて。","ref_heading":"意味の判別","sort":7},
-  {"id":"jodoshi-tari-08","topic_id":"jodoshi-tari","kind":"shikibetsu","prompt":"「咲けり」と「咲きたり」。どちらも「咲いている」。「り」が使われているのは？","context":null,"choices":["咲けり","咲きたり","両方","どちらも違う"],"answer":"咲けり","explanation":"「り」は四段已然形「咲け」に接続。「たり」は連用形「咲き」に接続。同じ意味でも接続で見分ける。","ref_heading":"意味の判別","sort":8},
-
-  {"id":"jodoshi-ri-01","topic_id":"jodoshi-ri","kind":"katsuyo-fill","prompt":"「咲ける花」の「る」は、「り」の何形？","context":null,"choices":["連体形","終止形","已然形","未然形"],"answer":"連体形","explanation":"下に体言「花」→連体形「る」。「咲け（四段已然）＋る」＝咲いている花。","ref_heading":"接続と活用","sort":1},
-  {"id":"jodoshi-ri-02","topic_id":"jodoshi-ri","kind":"katsuyo-fill","prompt":"「花こそ咲けれ」の「れ」は、「り」の何形？","context":null,"choices":["已然形","命令形","連用形","終止形"],"answer":"已然形","explanation":"係助詞「こそ」の結び＝已然形。「り」の已然形は「れ」。","ref_heading":"接続と活用","sort":2},
-  {"id":"jodoshi-ri-03","topic_id":"jodoshi-ri","kind":"setsuzoku","prompt":"「咲く」（四段）に「り」を付けて「咲いている」と言うと？","context":null,"choices":["咲けり","咲きり","咲かり","咲くり"],"answer":"咲けり","explanation":"「り」は四段の已然形に接続→「咲け」＋り。（サ変未然・四段已然＝「さみしい」）","ref_heading":"接続と活用","sort":3},
-  {"id":"jodoshi-ri-04","topic_id":"jodoshi-ri","kind":"setsuzoku","prompt":"サ変「す」に「り」を付けて「している」と言うと？","context":null,"choices":["せり","しり","すり","せらり"],"answer":"せり","explanation":"サ変には未然形「せ」＋り。四段なら已然形＋り。この2つにしか付けないのが「り」。","ref_heading":"接続と活用","sort":4},
-  {"id":"jodoshi-ri-05","topic_id":"jodoshi-ri","kind":"imi","prompt":"「り」の意味は？","context":"門の前に立てり","choices":["存続","完了","受身","断定"],"answer":"存続","explanation":"「立っている」＝状態の継続→存続。「たり」と同じく完了・存続の2つの意味を持つ。","ref_heading":"意味","sort":5},
-  {"id":"jodoshi-ri-06","topic_id":"jodoshi-ri","kind":"shikibetsu","prompt":"「咲ける花」の「る」と「思はるる人」の「るる」。完了・存続「り」はどちら？","context":null,"choices":["「咲ける」のる","「思はるる」のるる","両方","どちらも違う"],"answer":"「咲ける」のる","explanation":"e段（咲け＝已然形）＋る→「り」。a段（思は＝未然形）＋る→受身の「る」。直前の母音で見分ける。","ref_heading":"接続と活用","sort":6},
-  {"id":"jodoshi-ri-07","topic_id":"jodoshi-ri","kind":"shikibetsu","prompt":"「見る」（上一段）に完了を付けるなら、「り」と「たり」のどちらが使える？","context":null,"choices":["たり（見たり）","り（見れり）","両方","どちらも不可"],"answer":"たり（見たり）","explanation":"「り」はサ変・四段専用。上一段には付けられない→連用形「見」＋たり。","ref_heading":"「たり」との違い","sort":7},
-  {"id":"jodoshi-ri-08","topic_id":"jodoshi-ri","kind":"shikibetsu","prompt":"「立てる木」（立っている木）の「る」の正体は？","context":null,"choices":["完了・存続「り」の連体形","受身「る」","可能「る」","ラ変動詞の一部"],"answer":"完了・存続「り」の連体形","explanation":"「立て」＝四段已然形（e段）＋る＋体言→「り」の連体形。受身なら未然形（a段）「立たる」のはず。","ref_heading":"「たり」との違い","sort":8}
+  {
+    "id": "jodoshi-ru-01",
+    "topic_id": "jodoshi-ru",
+    "kind": "katsuyo-fill",
+    "prompt": "「思はるる人」の「るる」は、「る」の何形？",
+    "context": null,
+    "choices": [
+      "連体形",
+      "終止形",
+      "已然形",
+      "未然形"
+    ],
+    "answer": "連体形",
+    "explanation": "下に体言「人」→連体形。「る」は下二段型（れ・れ・る・るる・るれ・れよ）。",
+    "ref_heading": "接続と活用",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-ru-02",
+    "topic_id": "jodoshi-ru",
+    "kind": "katsuyo-fill",
+    "prompt": "「思ひ出でられけり」の「られ」は、「らる」の何形？",
+    "context": null,
+    "choices": [
+      "連用形",
+      "未然形",
+      "終止形",
+      "已然形"
+    ],
+    "answer": "連用形",
+    "explanation": "下の「けり」が連用形接続だから「られ」＝連用形。",
+    "ref_heading": "接続と活用",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-ru-03",
+    "topic_id": "jodoshi-ru",
+    "kind": "setsuzoku",
+    "prompt": "「書く」（四段)に受身を付けて「書かれる」と言うと？",
+    "context": null,
+    "choices": [
+      "書かる",
+      "書からる",
+      "書きる",
+      "書くらる"
+    ],
+    "answer": "書かる",
+    "explanation": "四段・ナ変・ラ変には「る」→未然形「書か」＋る。それ以外の動詞なら「らる」。",
+    "ref_heading": "接続と活用",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-ru-04",
+    "topic_id": "jodoshi-ru",
+    "kind": "setsuzoku",
+    "prompt": "「見る」（上一段）に受身を付けて「見られる」と言うと？",
+    "context": null,
+    "choices": [
+      "見らる",
+      "見る",
+      "見れる",
+      "見るる"
+    ],
+    "answer": "見らる",
+    "explanation": "四段・ナ変・ラ変以外には「らる」→未然形「見」＋らる。",
+    "ref_heading": "接続と活用",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-ru-05",
+    "topic_id": "jodoshi-ru",
+    "kind": "imi",
+    "prompt": "「らる」の意味は？",
+    "context": "故郷おのづから思ひ出でらる",
+    "choices": [
+      "自発",
+      "受身",
+      "可能",
+      "尊敬"
+    ],
+    "answer": "自発",
+    "explanation": "「思ひ出づ」＝心の動きの動詞→自然と〜される（自発）。心理動詞が来たらまず自発を疑う。",
+    "ref_heading": "意味の判別",
+    "sort": 101
+  },
+  {
+    "id": "jodoshi-ru-06",
+    "topic_id": "jodoshi-ru",
+    "kind": "imi",
+    "prompt": "「れ」の意味は？",
+    "context": "起こされたらば（＝起こされたなら）",
+    "choices": [
+      "受身",
+      "自発",
+      "可能",
+      "尊敬"
+    ],
+    "answer": "受身",
+    "explanation": "「（人に）起こされる」＝動作を受ける側が主語→受身。",
+    "ref_heading": "意味の判別",
+    "sort": 201
+  },
+  {
+    "id": "jodoshi-ru-07",
+    "topic_id": "jodoshi-ru",
+    "kind": "imi",
+    "prompt": "「られ」の意味は？",
+    "context": "恐ろしくて答へられず",
+    "choices": [
+      "可能",
+      "受身",
+      "自発",
+      "尊敬"
+    ],
+    "answer": "可能",
+    "explanation": "下に打消「ず」→「答えられない」の可能。可能の「る・らる」は打消とセットが基本。",
+    "ref_heading": "意味の判別",
+    "sort": 202
+  },
+  {
+    "id": "jodoshi-ru-08",
+    "topic_id": "jodoshi-ru",
+    "kind": "shikibetsu",
+    "prompt": "「る」の意味は？",
+    "context": "大臣、笑はる",
+    "choices": [
+      "尊敬",
+      "受身",
+      "自発",
+      "可能"
+    ],
+    "answer": "尊敬",
+    "explanation": "判別の優先順位：①主語が高貴→尊敬 ②心理動詞→自発 ③打消を伴う→可能 ④その他→受身。ここは大臣が主語で「お笑いになる」。",
+    "ref_heading": "意味の判別",
+    "sort": 5
+  },
+  {
+    "id": "jodoshi-su-01",
+    "topic_id": "jodoshi-su",
+    "kind": "katsuyo-fill",
+    "prompt": "「仏を作らせける」の「せ」は、「す」の何形？",
+    "context": "仏を作らせける",
+    "choices": [
+      "連用形",
+      "未然形",
+      "終止形",
+      "已然形"
+    ],
+    "answer": "連用形",
+    "explanation": "下の「けり」が連用形接続だから「せ」＝連用形。使役「す」は下二段型（せ・せ・す・する・すれ・せよ）。",
+    "ref_heading": "接続と活用",
+    "sort": 101
+  },
+  {
+    "id": "jodoshi-su-02",
+    "topic_id": "jodoshi-su",
+    "kind": "katsuyo-fill",
+    "prompt": "「子に学ばせよ」の「せよ」は、「す」の何形？",
+    "context": null,
+    "choices": [
+      "命令形",
+      "已然形",
+      "連体形",
+      "終止形"
+    ],
+    "answer": "命令形",
+    "explanation": "「学ばせよ」＝学ばせろ、と命じる文末→命令形「せよ」。",
+    "ref_heading": "接続と活用",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-su-03",
+    "topic_id": "jodoshi-su",
+    "kind": "setsuzoku",
+    "prompt": "「書く」（四段）に使役を付けて「書かせる」と言うと？",
+    "context": null,
+    "choices": [
+      "書かす",
+      "書かさす",
+      "書きす",
+      "書くさす"
+    ],
+    "answer": "書かす",
+    "explanation": "四段・ナ変・ラ変には「す」→未然形「書か」＋す。それ以外なら「さす」。",
+    "ref_heading": "接続と活用",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-su-04",
+    "topic_id": "jodoshi-su",
+    "kind": "setsuzoku",
+    "prompt": "「着る」（上一段）に使役を付けて「着させる」と言うと？",
+    "context": null,
+    "choices": [
+      "着さす",
+      "着す",
+      "着らす",
+      "着せさす"
+    ],
+    "answer": "着さす",
+    "explanation": "上一段は四段・ナ変・ラ変以外→「さす」。未然形「着」＋さす。",
+    "ref_heading": "接続と活用",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-su-05",
+    "topic_id": "jodoshi-su",
+    "kind": "imi",
+    "prompt": "「せ」の意味は？",
+    "context": "仏師に仏を作らせける",
+    "choices": [
+      "使役",
+      "尊敬",
+      "受身",
+      "自発"
+    ],
+    "answer": "使役",
+    "explanation": "「仏師に〜を作らせる」＝AにBを〜させる構文→使役。動作させる相手（に）がいるのが目印。",
+    "ref_heading": "意味の判別",
+    "sort": 201
+  },
+  {
+    "id": "jodoshi-su-06",
+    "topic_id": "jodoshi-su",
+    "kind": "imi",
+    "prompt": "「せ」の意味は？",
+    "context": "帝、笑はせ給ふ",
+    "choices": [
+      "尊敬",
+      "使役",
+      "受身",
+      "可能"
+    ],
+    "answer": "尊敬",
+    "explanation": "「せ給ふ」＋主語が帝（最高位）→尊敬。「す」＋「給ふ」の二重敬語は最高クラスの人物に使う。",
+    "ref_heading": "意味の判別",
+    "sort": 202
+  },
+  {
+    "id": "jodoshi-su-07",
+    "topic_id": "jodoshi-su",
+    "kind": "shikibetsu",
+    "prompt": "「させ」の意味は？",
+    "context": "殿、人に門を開けさせ給ふ",
+    "choices": [
+      "使役",
+      "尊敬",
+      "受身",
+      "自発"
+    ],
+    "answer": "使役",
+    "explanation": "「させ給ふ」でも「人に」と動作させる相手がいれば使役。「せ給ふ・させ給ふ＝必ず尊敬」ではない——相手の有無を見る。",
+    "ref_heading": "意味の判別",
+    "sort": 102
+  },
+  {
+    "id": "jodoshi-su-08",
+    "topic_id": "jodoshi-su",
+    "kind": "shikibetsu",
+    "prompt": "「書かす」と「書かる」。「書かせる」（使役）はどちら？",
+    "context": null,
+    "choices": [
+      "書かす",
+      "書かる",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "書かす",
+    "explanation": "す＝使役系、る＝受身系。一字違いで「させる／される」が正反対になる。",
+    "ref_heading": "意味の判別",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-nari-01",
+    "topic_id": "jodoshi-nari",
+    "kind": "katsuyo-fill",
+    "prompt": "「春なれば」（春であるので）の「なれ」は、断定「なり」の何形？",
+    "context": null,
+    "choices": [
+      "已然形",
+      "未然形",
+      "連体形",
+      "命令形"
+    ],
+    "answer": "已然形",
+    "explanation": "已然形＋ば＝確定条件（〜ので）。断定「なり」の已然形は「なれ」。",
+    "ref_heading": "断定の「なり」",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-nari-02",
+    "topic_id": "jodoshi-nari",
+    "kind": "katsuyo-fill",
+    "prompt": "断定「なり」の連用形には「なり」のほかにもう1つ形がある。どれ？",
+    "context": null,
+    "choices": [
+      "に",
+      "な",
+      "の",
+      "と"
+    ],
+    "answer": "に",
+    "explanation": "連用形「に」＋あり系（にあり・にて・にや・にこそ）で使う。「に」の識別で最重要の知識。",
+    "ref_heading": "断定の「なり」",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-nari-03",
+    "topic_id": "jodoshi-nari",
+    "kind": "setsuzoku",
+    "prompt": "「起く」（上二段）で「起きるのである」と断定で言うと？",
+    "context": null,
+    "choices": [
+      "起くるなり",
+      "起くなり",
+      "起きなり",
+      "起こるなり"
+    ],
+    "answer": "起くるなり",
+    "explanation": "断定は連体形接続→「起くる」＋なり。終止形「起く」＋なりだと伝聞推定（起きるようだ）になる。",
+    "ref_heading": "判別のポイント",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-nari-04",
+    "topic_id": "jodoshi-nari",
+    "kind": "setsuzoku",
+    "prompt": "「起く」（上二段）で「（音から察して）起きるようだ」と伝聞推定で言うと？",
+    "context": null,
+    "choices": [
+      "起くなり",
+      "起くるなり",
+      "起きなり",
+      "起こなり"
+    ],
+    "answer": "起くなり",
+    "explanation": "伝聞推定は終止形接続→「起く」＋なり。連体形＋なりは断定。接続が正体を決める。",
+    "ref_heading": "判別のポイント",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-nari-05",
+    "topic_id": "jodoshi-nari",
+    "kind": "imi",
+    "prompt": "「なり」の意味は？",
+    "context": "心得つるなり",
+    "choices": [
+      "断定",
+      "伝聞推定",
+      "存続",
+      "完了"
+    ],
+    "answer": "断定",
+    "explanation": "直前「つる」＝完了「つ」の連体形→連体形＋なり＝断定「〜のだ」。",
+    "ref_heading": "判別のポイント",
+    "sort": 201
+  },
+  {
+    "id": "jodoshi-nari-06",
+    "topic_id": "jodoshi-nari",
+    "kind": "imi",
+    "prompt": "「すなる」の「なり」の意味は？",
+    "context": "男もすなる日記といふものを",
+    "choices": [
+      "伝聞推定",
+      "断定",
+      "存続",
+      "過去"
+    ],
+    "answer": "伝聞推定",
+    "explanation": "サ変終止形「す」＋なり＝伝聞推定。「（男が）するという日記」（『土佐日記』冒頭）。",
+    "ref_heading": "判別のポイント",
+    "sort": 202
+  },
+  {
+    "id": "jodoshi-nari-07",
+    "topic_id": "jodoshi-nari",
+    "kind": "imi",
+    "prompt": "「するなり」の「なり」の意味は？",
+    "context": "女もしてみむとてするなり",
+    "choices": [
+      "断定",
+      "伝聞推定",
+      "完了",
+      "推量"
+    ],
+    "answer": "断定",
+    "explanation": "サ変連体形「する」＋なり＝断定「するのである」。前問「すなる」（終止形＋伝聞）との対比が『土佐日記』冒頭の仕掛け。",
+    "ref_heading": "判別のポイント",
+    "sort": 203
+  },
+  {
+    "id": "jodoshi-nari-08",
+    "topic_id": "jodoshi-nari",
+    "kind": "shikibetsu",
+    "prompt": "「あなり」（あんなり）の「なり」は？",
+    "context": null,
+    "choices": [
+      "伝聞推定",
+      "断定",
+      "ナリ活用の語尾",
+      "動詞「成る」"
+    ],
+    "answer": "伝聞推定",
+    "explanation": "ラ変「あり」に伝聞「なり」が付くと「あるなり→あんなり→あなり」と撥音便化する。「あなり・なんなり・ざんなり」の形→伝聞推定のサイン。",
+    "ref_heading": "判別のポイント",
+    "sort": 5
+  },
+  {
+    "id": "jodoshi-tari-01",
+    "topic_id": "jodoshi-tari",
+    "kind": "katsuyo-fill",
+    "prompt": "「起こしたらば」（起こしたなら）の「たら」は、「たり」の何形？",
+    "context": "起こしたらば",
+    "choices": [
+      "未然形",
+      "連用形",
+      "已然形",
+      "連体形"
+    ],
+    "answer": "未然形",
+    "explanation": "未然形＋ば＝仮定条件（〜たなら）。「たり」の未然形は「たら」。",
+    "ref_heading": "接続と活用",
+    "sort": 101
+  },
+  {
+    "id": "jodoshi-tari-02",
+    "topic_id": "jodoshi-tari",
+    "kind": "katsuyo-fill",
+    "prompt": "「来たる者ども」の「たる」は、「たり」の何形？",
+    "context": "来たる者ども",
+    "choices": [
+      "連体形",
+      "終止形",
+      "已然形",
+      "未然形"
+    ],
+    "answer": "連体形",
+    "explanation": "下に体言「者ども」→連体形「たる」。",
+    "ref_heading": "接続と活用",
+    "sort": 102
+  },
+  {
+    "id": "jodoshi-tari-03",
+    "topic_id": "jodoshi-tari",
+    "kind": "setsuzoku",
+    "prompt": "「咲く」に「たり」を付けて「咲いている」と言うと？",
+    "context": null,
+    "choices": [
+      "咲きたり",
+      "咲かたり",
+      "咲くたり",
+      "咲けたり"
+    ],
+    "answer": "咲きたり",
+    "explanation": "「たり」は連用形接続→「咲き」＋たり。",
+    "ref_heading": "接続と活用",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-tari-04",
+    "topic_id": "jodoshi-tari",
+    "kind": "setsuzoku",
+    "prompt": "「咲いているので」（確定条件）と言うと？",
+    "context": null,
+    "choices": [
+      "咲きたれば",
+      "咲きたらば",
+      "咲きたりば",
+      "咲きたるば"
+    ],
+    "answer": "咲きたれば",
+    "explanation": "已然形「たれ」＋ば＝確定（〜ので）。「たらば」だと未然形＋ば＝仮定（〜たなら）。",
+    "ref_heading": "接続と活用",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-tari-05",
+    "topic_id": "jodoshi-tari",
+    "kind": "imi",
+    "prompt": "「たり」の意味は？",
+    "context": "壁に絵をかけたり",
+    "choices": [
+      "存続",
+      "完了",
+      "断定",
+      "打消"
+    ],
+    "answer": "存続",
+    "explanation": "「掛けてある」＝結果が残っている状態→存続。動作がその場で終わるなら完了。",
+    "ref_heading": "意味の判別",
+    "sort": 201
+  },
+  {
+    "id": "jodoshi-tari-06",
+    "topic_id": "jodoshi-tari",
+    "kind": "imi",
+    "prompt": "「たる」の意味は？",
+    "context": "来たる者ども",
+    "choices": [
+      "存続",
+      "完了",
+      "断定",
+      "伝聞"
+    ],
+    "answer": "存続",
+    "explanation": "「（その場に）来ている者たち」＝状態の継続→存続。",
+    "ref_heading": "意味の判別",
+    "sort": 202
+  },
+  {
+    "id": "jodoshi-tari-07",
+    "topic_id": "jodoshi-tari",
+    "kind": "shikibetsu",
+    "prompt": "「将軍たり」と「咲きたり」。断定の「たり」はどちら？",
+    "context": null,
+    "choices": [
+      "将軍たり",
+      "咲きたり",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "将軍たり",
+    "explanation": "体言＋たり＝断定（〜である。漢文調）。連用形＋たり＝完了・存続。接続がすべて。",
+    "ref_heading": "意味の判別",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-tari-08",
+    "topic_id": "jodoshi-tari",
+    "kind": "shikibetsu",
+    "prompt": "「咲けり」と「咲きたり」。どちらも「咲いている」。「り」が使われているのは？",
+    "context": null,
+    "choices": [
+      "咲けり",
+      "咲きたり",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "咲けり",
+    "explanation": "「り」は四段已然形「咲け」に接続。「たり」は連用形「咲き」に接続。同じ意味でも接続で見分ける。",
+    "ref_heading": "意味の判別",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-ri-01",
+    "topic_id": "jodoshi-ri",
+    "kind": "katsuyo-fill",
+    "prompt": "「咲ける花」の「る」は、「り」の何形？",
+    "context": null,
+    "choices": [
+      "連体形",
+      "終止形",
+      "已然形",
+      "未然形"
+    ],
+    "answer": "連体形",
+    "explanation": "下に体言「花」→連体形「る」。「咲け（四段已然）＋る」＝咲いている花。",
+    "ref_heading": "接続と活用",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-ri-02",
+    "topic_id": "jodoshi-ri",
+    "kind": "katsuyo-fill",
+    "prompt": "「花こそ咲けれ」の「れ」は、「り」の何形？",
+    "context": null,
+    "choices": [
+      "已然形",
+      "命令形",
+      "連用形",
+      "終止形"
+    ],
+    "answer": "已然形",
+    "explanation": "係助詞「こそ」の結び＝已然形。「り」の已然形は「れ」。",
+    "ref_heading": "接続と活用",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-ri-03",
+    "topic_id": "jodoshi-ri",
+    "kind": "setsuzoku",
+    "prompt": "「咲く」（四段）に「り」を付けて「咲いている」と言うと？",
+    "context": null,
+    "choices": [
+      "咲けり",
+      "咲きり",
+      "咲かり",
+      "咲くり"
+    ],
+    "answer": "咲けり",
+    "explanation": "「り」は四段の已然形に接続→「咲け」＋り。（サ変未然・四段已然＝「さみしい」）",
+    "ref_heading": "接続と活用",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-ri-04",
+    "topic_id": "jodoshi-ri",
+    "kind": "setsuzoku",
+    "prompt": "サ変「す」に「り」を付けて「している」と言うと？",
+    "context": null,
+    "choices": [
+      "せり",
+      "しり",
+      "すり",
+      "せらり"
+    ],
+    "answer": "せり",
+    "explanation": "サ変には未然形「せ」＋り。四段なら已然形＋り。この2つにしか付けないのが「り」。",
+    "ref_heading": "接続と活用",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-ri-05",
+    "topic_id": "jodoshi-ri",
+    "kind": "imi",
+    "prompt": "「り」の意味は？",
+    "context": "門の前に立てり",
+    "choices": [
+      "存続",
+      "完了",
+      "受身",
+      "断定"
+    ],
+    "answer": "存続",
+    "explanation": "「立っている」＝状態の継続→存続。「たり」と同じく完了・存続の2つの意味を持つ。",
+    "ref_heading": "意味",
+    "sort": 201
+  },
+  {
+    "id": "jodoshi-ri-06",
+    "topic_id": "jodoshi-ri",
+    "kind": "shikibetsu",
+    "prompt": "「咲ける花」の「る」と「思はるる人」の「るる」。完了・存続「り」はどちら？",
+    "context": null,
+    "choices": [
+      "「咲ける」のる",
+      "「思はるる」のるる",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "「咲ける」のる",
+    "explanation": "e段（咲け＝已然形）＋る→「り」。a段（思は＝未然形）＋る→受身の「る」。直前の母音で見分ける。",
+    "ref_heading": "接続と活用",
+    "sort": 5
+  },
+  {
+    "id": "jodoshi-ri-07",
+    "topic_id": "jodoshi-ri",
+    "kind": "shikibetsu",
+    "prompt": "「見る」（上一段）に完了を付けるなら、「り」と「たり」のどちらが使える？",
+    "context": null,
+    "choices": [
+      "たり（見たり）",
+      "り（見れり）",
+      "両方",
+      "どちらも不可"
+    ],
+    "answer": "たり（見たり）",
+    "explanation": "「り」はサ変・四段専用。上一段には付けられない→連用形「見」＋たり。",
+    "ref_heading": "「たり」との違い",
+    "sort": 6
+  },
+  {
+    "id": "jodoshi-ri-08",
+    "topic_id": "jodoshi-ri",
+    "kind": "shikibetsu",
+    "prompt": "「立てる木」（立っている木）の「る」の正体は？",
+    "context": null,
+    "choices": [
+      "完了・存続「り」の連体形",
+      "受身「る」",
+      "可能「る」",
+      "ラ変動詞の一部"
+    ],
+    "answer": "完了・存続「り」の連体形",
+    "explanation": "「立て」＝四段已然形（e段）＋る＋体言→「り」の連体形。受身なら未然形（a段）「立たる」のはず。",
+    "ref_heading": "「たり」との違い",
+    "sort": 7
+  }
 ]

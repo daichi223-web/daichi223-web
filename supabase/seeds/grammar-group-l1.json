@@ -1,37 +1,546 @@
 [
-  {"id":"jodoshi-suiryo-01","topic_id":"jodoshi-suiryo","kind":"setsuzoku","prompt":"「らむ」は何形に接続する？（ラ変型は連体形）","context":null,"choices":["終止形","未然形","連用形","已然形"],"answer":"終止形","explanation":"らむ＝終止形接続（ラ変型には連体形）。もとは「あり＋む」で「む」の現在版。","ref_heading":"一覧","sort":1},
-  {"id":"jodoshi-suiryo-02","topic_id":"jodoshi-suiryo","kind":"imi","prompt":"「らむ」の意味は？","context":"今ごろ都では花咲くらむ","choices":["現在推量","過去推量","視覚の推定","意志"],"answer":"現在推量","explanation":"今見えていない場所のことを「今ごろ〜ているだろう」と推測→現在推量。","ref_heading":"一覧","sort":2},
-  {"id":"jodoshi-suiryo-03","topic_id":"jodoshi-suiryo","kind":"imi","prompt":"目の前の様子について言う「など泣くらむ」の「らむ」は？","context":null,"choices":["現在の原因推量","現在推量","過去推量","婉曲"],"answer":"現在の原因推量","explanation":"今見えていることの原因を「どうして〜のだろう」と推測→原因推量。見えない事柄なら現在推量。","ref_heading":"一覧","sort":3},
-  {"id":"jodoshi-suiryo-04","topic_id":"jodoshi-suiryo","kind":"imi","prompt":"「けむ」の意味は？","context":"いにしへの人は何思ひけむ","choices":["過去推量","現在推量","過去の事実","意志"],"answer":"過去推量","explanation":"けむ＝「む」の過去版。「昔の人は何を思っていたのだろう」。接続は連用形。","ref_heading":"一覧","sort":4},
-  {"id":"jodoshi-suiryo-05","topic_id":"jodoshi-suiryo","kind":"shikibetsu","prompt":"推定「めり」が根拠とするものは？","context":null,"choices":["視覚（見たところ）","聴覚（聞こえる音）","人づての話","確かな証拠"],"answer":"視覚（見たところ）","explanation":"めり＝「見＋あり」。視界内の出来事に基づく推定。聴覚に基づくのは伝聞推定「なり」。","ref_heading":"一覧","sort":5},
-  {"id":"jodoshi-suiryo-06","topic_id":"jodoshi-suiryo","kind":"shikibetsu","prompt":"「らし」が他の推量と違う点は？","context":"夏来にけらし白妙の衣干すてふ天の香具山","choices":["確かな根拠に基づく推定である","根拠なく想像する","過去のことにしか使えない","会話文専用である"],"answer":"確かな根拠に基づく推定である","explanation":"らし＝根拠のある推定「〜らしい」。この歌では「衣を干している」という事実が根拠。","ref_heading":"一覧","sort":6},
-  {"id":"jodoshi-suiryo-07","topic_id":"jodoshi-suiryo","kind":"setsuzoku","prompt":"ラ変動詞「あり」に「べし」を付けると？","context":null,"choices":["あるべし","ありべし","あらべし","あれべし"],"answer":"あるべし","explanation":"「べし」は終止形接続だが、ラ変型には連体形「ある」に付く。らむ・まじ・なり（伝聞）・めり・らしも同じルール。","ref_heading":"べし（推量・当然・可能）","sort":7},
-  {"id":"jodoshi-suiryo-08","topic_id":"jodoshi-suiryo","kind":"imi","prompt":"主語が一人称の「われ行くまじ」の「まじ」は？","context":null,"choices":["打消意志（行くまい）","打消推量（行かないだろう）","不可能","禁止"],"answer":"打消意志（行くまい）","explanation":"まじ＝べしの打消。主語が一人称→打消意志。「む／じ」「べし／まじ」は肯定否定のペアで整理する。","ref_heading":"一覧","sort":8},
-
-  {"id":"jodoshi-ganbou-01","topic_id":"jodoshi-ganbou","kind":"setsuzoku","prompt":"「まし」は何形に接続する？","context":null,"choices":["未然形","連用形","終止形","連体形"],"answer":"未然形","explanation":"まし＝未然形接続。活用は特殊型（ましか・○・まし・まし・ましか・○）。","ref_heading":"まし — 反実仮想（最重要）","sort":1},
-  {"id":"jodoshi-ganbou-02","topic_id":"jodoshi-ganbou","kind":"imi","prompt":"「まし」の意味は？","context":"世の中にたえて桜のなかりせば春の心はのどけからまし","choices":["反実仮想","希望","推量","意志"],"answer":"反実仮想","explanation":"「せば…まし」の呼応＝反実仮想。「もし桜がなかったら、のどかだっただろうに」（実際は桜があるので心は落ち着かない）。","ref_heading":"まし — 反実仮想（最重要）","sort":2},
-  {"id":"jodoshi-ganbou-03","topic_id":"jodoshi-ganbou","kind":"katsuyo-fill","prompt":"反実仮想の呼応「〜せば、〜＿＿」。空欄は？","context":null,"choices":["まし","べし","らむ","なむ"],"answer":"まし","explanation":"ましかば…まし／ませば…まし／せば…まし／未然形＋ば…まし。このセットを見たら即、反実仮想。","ref_heading":"まし — 反実仮想（最重要）","sort":3},
-  {"id":"jodoshi-ganbou-04","topic_id":"jodoshi-ganbou","kind":"setsuzoku","prompt":"「あり」に「まほし」を付けて「ありたい」と言うと？","context":null,"choices":["あらまほし","ありまほし","あるまほし","あれまほし"],"answer":"あらまほし","explanation":"まほし＝未然形接続→「あら」＋まほし。「あらまほし」は「理想的だ」の意の重要語でもある。","ref_heading":"まほし / たし — 願望","sort":4},
-  {"id":"jodoshi-ganbou-05","topic_id":"jodoshi-ganbou","kind":"imi","prompt":"「たき」の意味は？","context":"家にありたき木は、松・桜","choices":["希望（〜たい）","当然","可能","推量"],"answer":"希望（〜たい）","explanation":"たし＝希望「〜たい」。連用形「あり」に接続。「家にあってほしい木は松と桜」（徒然草）。","ref_heading":"まほし / たし — 願望","sort":5},
-  {"id":"jodoshi-ganbou-06","topic_id":"jodoshi-ganbou","kind":"setsuzoku","prompt":"「光陰矢のごとし」の構造として正しいのは？","context":null,"choices":["体言＋の＋ごとし","連体形＋の＋ごとし","体言＋が＋ごとし","終止形＋ごとし"],"answer":"体言＋の＋ごとし","explanation":"ごとしは、体言＋の／連体形＋が、をはさんで接続する。「扇の広げたるがごとし」が連体形＋が の例。","ref_heading":"ごとし — 比況・例示","sort":6},
-  {"id":"jodoshi-ganbou-07","topic_id":"jodoshi-ganbou","kind":"imi","prompt":"「ごとく」の意味は？","context":"雪のごとく散る","choices":["比況（〜のように）","例示（〜など）","断定","推定"],"answer":"比況（〜のように）","explanation":"ごとし＝比況「〜のようだ」が基本。例示「〜など」は「Ａ・Ｂのごとき」と体言を並べる形で多い。","ref_heading":"ごとし — 比況・例示","sort":7},
-  {"id":"jodoshi-ganbou-08","topic_id":"jodoshi-ganbou","kind":"shikibetsu","prompt":"「行かなむ」と「行かまほし」。「（自分が）行きたい」はどちら？","context":null,"choices":["行かまほし","行かなむ","両方","どちらも違う"],"answer":"行かまほし","explanation":"まほし・たし＝自分の願望「〜たい」。なむ（終助詞）＝他者への願望「〜してほしい」。願望の向きで使い分ける。","ref_heading":"願望表現の体系","sort":8},
-
-  {"id":"jodoshi-dantei-01","topic_id":"jodoshi-dantei","kind":"setsuzoku","prompt":"断定「なり」は何に接続する？","context":null,"choices":["体言・連体形","終止形","連用形","未然形"],"answer":"体言・連体形","explanation":"断定なり＝体言・連体形接続。終止形接続なら伝聞推定の「なり」。","ref_heading":"なり（断定・所在）","sort":1},
-  {"id":"jodoshi-dantei-02","topic_id":"jodoshi-dantei","kind":"katsuyo-fill","prompt":"断定「たり」の連用形は「たり」ともう一つは？","context":null,"choices":["と","に","て","つ"],"answer":"と","explanation":"たり＝と＋あり。連用形に「たり」「と」の2形。なりの連用形「に」と対で覚える。","ref_heading":"たり（断定）","sort":2},
-  {"id":"jodoshi-dantei-03","topic_id":"jodoshi-dantei","kind":"imi","prompt":"「なり」の意味は？","context":"これは竹取の翁と申す者なり","choices":["断定（〜である）","伝聞推定","存在","推量"],"answer":"断定（〜である）","explanation":"体言「者」＋なり＝断定。「竹取の翁と申す者である」。","ref_heading":"なり（断定・所在）","sort":3},
-  {"id":"jodoshi-dantei-04","topic_id":"jodoshi-dantei","kind":"shikibetsu","prompt":"「学者たりとも」の「たり」の正体は？","context":null,"choices":["断定「たり」（体言接続）","完了「たり」","存続「たり」","形容動詞の語尾"],"answer":"断定「たり」（体言接続）","explanation":"体言「学者」＋たり＝断定「学者であるとしても」。連用形接続なら完了・存続。","ref_heading":"たり（断定）","sort":4},
-  {"id":"jodoshi-dantei-05","topic_id":"jodoshi-dantei","kind":"shikibetsu","prompt":"断定の「なり」と「たり」、漢文訓読体で使われるのは？","context":null,"choices":["たり","なり","両方同じ","どちらも使わない"],"answer":"たり","explanation":"なり＝和文体（頻度高）、たり＝漢文訓読体。「将軍たり」「学者たり」のような文体で出る。","ref_heading":"なり vs たり — 文体差","sort":5},
-  {"id":"jodoshi-dantei-06","topic_id":"jodoshi-dantei","kind":"shikibetsu","prompt":"3つの「なり」のうち、終止形に接続するのは？","context":null,"choices":["伝聞推定「なり」","断定「なり」","形容動詞ナリ活用","どれでもない"],"answer":"伝聞推定「なり」","explanation":"断定＝体言・連体形、伝聞推定＝終止形、ナリ活用＝語幹につく。接続が判別の第一手。","ref_heading":"なりの識別（最重要）","sort":6},
-  {"id":"jodoshi-dantei-07","topic_id":"jodoshi-dantei","kind":"shikibetsu","prompt":"「にて」「にあり」と続く「に」の正体は？","context":null,"choices":["断定「なり」の連用形","格助詞","完了「ぬ」の連用形","接続助詞"],"answer":"断定「なり」の連用形","explanation":"「であって」と訳せる「に」＝断定の連用形。「にて」「にあり」「にや」「にこそ」の形が目印。","ref_heading":"連用形「に」の識別","sort":7},
-  {"id":"jodoshi-dantei-08","topic_id":"jodoshi-dantei","kind":"imi","prompt":"「なる」の意味は？","context":"駿河なる宇津の山辺","choices":["所在（〜にある）","断定（〜である）","伝聞推定","比況"],"answer":"所在（〜にある）","explanation":"場所＋なる＋場所→所在「駿河の国にある宇津の山」。断定「なり」の所在用法。","ref_heading":"なり（断定・所在）","sort":8},
-
-  {"id":"jodoshi-jisei-01","topic_id":"jodoshi-jisei","kind":"setsuzoku","prompt":"過去の「き」は何形に接続する？","context":null,"choices":["連用形","未然形","終止形","連体形"],"answer":"連用形","explanation":"き＝連用形接続。き・けり・つ・ぬ・たり、時制系はみな連用形接続（「り」だけ特殊）。","ref_heading":"き（過去・直接体験）","sort":1},
-  {"id":"jodoshi-jisei-02","topic_id":"jodoshi-jisei","kind":"katsuyo-fill","prompt":"「き」の活用（せ・○・き・し・しか・○）。連体形はどれ？","context":null,"choices":["し","き","しか","せ"],"answer":"し","explanation":"きの連体形は「し」（見し人）、已然形は「しか」。丸暗記の特殊型。","ref_heading":"き（過去・直接体験）","sort":2},
-  {"id":"jodoshi-jisei-03","topic_id":"jodoshi-jisei","kind":"shikibetsu","prompt":"「き」と「けり」、自分が直接体験した過去に使うのは？","context":null,"choices":["き","けり","両方","どちらも違う"],"answer":"き","explanation":"き＝体験過去（その場にいた）、けり＝伝聞過去（人づて・物語）＋詠嘆。","ref_heading":"一覧","sort":3},
-  {"id":"jodoshi-jisei-04","topic_id":"jodoshi-jisei","kind":"shikibetsu","prompt":"「来し方（こしかた）」の「こ・し」の説明として正しいのは？","context":null,"choices":["カ変未然形「こ」＋過去「き」連体形「し」","カ変連用形「き」＋副助詞「し」","カ変終止形＋サ変","上一段＋過去"],"answer":"カ変未然形「こ」＋過去「き」連体形「し」","explanation":"きはカ変・サ変に特殊接続する。カ変→こし・こしか、サ変→せし・せしか。","ref_heading":"き（過去・直接体験）","sort":4},
-  {"id":"jodoshi-jisei-05","topic_id":"jodoshi-jisei","kind":"imi","prompt":"「き」が使われている理由として正しいのは？","context":"京より下りし時に、みな人、子どもなかりき","choices":["筆者自身が体験した過去だから","人から聞いた話だから","和歌だから","強調したいから"],"answer":"筆者自身が体験した過去だから","explanation":"自分が「京から下った」体験→体験過去の「き」。土佐日記は紀貫之自身の旅の記録。","ref_heading":"き（過去・直接体験）","sort":5},
-  {"id":"jodoshi-jisei-06","topic_id":"jodoshi-jisei","kind":"katsuyo-fill","prompt":"係助詞「こそ」を受けるとき、文末の「き」はどの形になる？","context":null,"choices":["しか","し","き","せ"],"answer":"しか","explanation":"こその結びは已然形。きの已然形は「しか」。「ぞ・なむ・や・か」なら連体形「し」。","ref_heading":"き（過去・直接体験）","sort":6},
-  {"id":"jodoshi-jisei-07","topic_id":"jodoshi-jisei","kind":"shikibetsu","prompt":"「せば…まし」の「せ」の正体は？","context":null,"choices":["過去「き」の未然形","サ変動詞","使役「す」","尊敬「す」"],"answer":"過去「き」の未然形","explanation":"きの未然形「せ」は「せば…まし」の反実仮想構文専用。それ以外の「せ」は使役・尊敬かサ変。","ref_heading":"き（過去・直接体験）","sort":7},
-  {"id":"jodoshi-jisei-08","topic_id":"jodoshi-jisei","kind":"shikibetsu","prompt":"時制系6つの整理。「たり」「り」に共通する2つの意味は？","context":null,"choices":["完了・存続","過去・詠嘆","完了・強意","推量・意志"],"answer":"完了・存続","explanation":"き・けり＝過去、つ・ぬ＝完了・強意、たり・り＝完了・存続。3ペアで整理する。","ref_heading":"一覧","sort":8}
+  {
+    "id": "jodoshi-suiryo-01",
+    "topic_id": "jodoshi-suiryo",
+    "kind": "setsuzoku",
+    "prompt": "「らむ」は何形に接続する？（ラ変型は連体形）",
+    "context": null,
+    "choices": [
+      "終止形",
+      "未然形",
+      "連用形",
+      "已然形"
+    ],
+    "answer": "終止形",
+    "explanation": "らむ＝終止形接続（ラ変型には連体形）。もとは「あり＋む」で「む」の現在版。",
+    "ref_heading": "一覧",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-suiryo-02",
+    "topic_id": "jodoshi-suiryo",
+    "kind": "imi",
+    "prompt": "「らむ」の意味は？",
+    "context": "今ごろ都では花咲くらむ",
+    "choices": [
+      "現在推量",
+      "過去推量",
+      "視覚の推定",
+      "意志"
+    ],
+    "answer": "現在推量",
+    "explanation": "今見えていない場所のことを「今ごろ〜ているだろう」と推測→現在推量。",
+    "ref_heading": "一覧",
+    "sort": 101
+  },
+  {
+    "id": "jodoshi-suiryo-03",
+    "topic_id": "jodoshi-suiryo",
+    "kind": "imi",
+    "prompt": "目の前の様子について言う「など泣くらむ」の「らむ」は？",
+    "context": null,
+    "choices": [
+      "現在の原因推量",
+      "現在推量",
+      "過去推量",
+      "婉曲"
+    ],
+    "answer": "現在の原因推量",
+    "explanation": "今見えていることの原因を「どうして〜のだろう」と推測→原因推量。見えない事柄なら現在推量。",
+    "ref_heading": "一覧",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-suiryo-04",
+    "topic_id": "jodoshi-suiryo",
+    "kind": "imi",
+    "prompt": "「けむ」の意味は？",
+    "context": "いにしへの人は何思ひけむ",
+    "choices": [
+      "過去推量",
+      "現在推量",
+      "過去の事実",
+      "意志"
+    ],
+    "answer": "過去推量",
+    "explanation": "けむ＝「む」の過去版。「昔の人は何を思っていたのだろう」。接続は連用形。",
+    "ref_heading": "一覧",
+    "sort": 102
+  },
+  {
+    "id": "jodoshi-suiryo-05",
+    "topic_id": "jodoshi-suiryo",
+    "kind": "shikibetsu",
+    "prompt": "推定「めり」が根拠とするものは？",
+    "context": null,
+    "choices": [
+      "視覚（見たところ）",
+      "聴覚（聞こえる音）",
+      "人づての話",
+      "確かな証拠"
+    ],
+    "answer": "視覚（見たところ）",
+    "explanation": "めり＝「見＋あり」。視界内の出来事に基づく推定。聴覚に基づくのは伝聞推定「なり」。",
+    "ref_heading": "一覧",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-suiryo-06",
+    "topic_id": "jodoshi-suiryo",
+    "kind": "shikibetsu",
+    "prompt": "「らし」が他の推量と違う点は？",
+    "context": "夏来にけらし白妙の衣干すてふ天の香具山",
+    "choices": [
+      "確かな根拠に基づく推定である",
+      "根拠なく想像する",
+      "過去のことにしか使えない",
+      "会話文専用である"
+    ],
+    "answer": "確かな根拠に基づく推定である",
+    "explanation": "らし＝根拠のある推定「〜らしい」。この歌では「衣を干している」という事実が根拠。",
+    "ref_heading": "一覧",
+    "sort": 103
+  },
+  {
+    "id": "jodoshi-suiryo-07",
+    "topic_id": "jodoshi-suiryo",
+    "kind": "setsuzoku",
+    "prompt": "ラ変動詞「あり」に「べし」を付けると？",
+    "context": null,
+    "choices": [
+      "あるべし",
+      "ありべし",
+      "あらべし",
+      "あれべし"
+    ],
+    "answer": "あるべし",
+    "explanation": "「べし」は終止形接続だが、ラ変型には連体形「ある」に付く。らむ・まじ・なり（伝聞）・めり・らしも同じルール。",
+    "ref_heading": "べし（推量・当然・可能）",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-suiryo-08",
+    "topic_id": "jodoshi-suiryo",
+    "kind": "imi",
+    "prompt": "主語が一人称の「われ行くまじ」の「まじ」は？",
+    "context": null,
+    "choices": [
+      "打消意志（行くまい）",
+      "打消推量（行かないだろう）",
+      "不可能",
+      "禁止"
+    ],
+    "answer": "打消意志（行くまい）",
+    "explanation": "まじ＝べしの打消。主語が一人称→打消意志。「む／じ」「べし／まじ」は肯定否定のペアで整理する。",
+    "ref_heading": "一覧",
+    "sort": 5
+  },
+  {
+    "id": "jodoshi-ganbou-01",
+    "topic_id": "jodoshi-ganbou",
+    "kind": "setsuzoku",
+    "prompt": "「まし」は何形に接続する？",
+    "context": null,
+    "choices": [
+      "未然形",
+      "連用形",
+      "終止形",
+      "連体形"
+    ],
+    "answer": "未然形",
+    "explanation": "まし＝未然形接続。活用は特殊型（ましか・○・まし・まし・ましか・○）。",
+    "ref_heading": "まし — 反実仮想（最重要）",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-ganbou-02",
+    "topic_id": "jodoshi-ganbou",
+    "kind": "imi",
+    "prompt": "「まし」の意味は？",
+    "context": "世の中にたえて桜のなかりせば春の心はのどけからまし",
+    "choices": [
+      "反実仮想",
+      "希望",
+      "推量",
+      "意志"
+    ],
+    "answer": "反実仮想",
+    "explanation": "「せば…まし」の呼応＝反実仮想。「もし桜がなかったら、のどかだっただろうに」（実際は桜があるので心は落ち着かない）。",
+    "ref_heading": "まし — 反実仮想（最重要）",
+    "sort": 101
+  },
+  {
+    "id": "jodoshi-ganbou-03",
+    "topic_id": "jodoshi-ganbou",
+    "kind": "katsuyo-fill",
+    "prompt": "反実仮想の呼応「〜せば、〜＿＿」。空欄は？",
+    "context": null,
+    "choices": [
+      "まし",
+      "べし",
+      "らむ",
+      "なむ"
+    ],
+    "answer": "まし",
+    "explanation": "ましかば…まし／ませば…まし／せば…まし／未然形＋ば…まし。このセットを見たら即、反実仮想。",
+    "ref_heading": "まし — 反実仮想（最重要）",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-ganbou-04",
+    "topic_id": "jodoshi-ganbou",
+    "kind": "setsuzoku",
+    "prompt": "「あり」に「まほし」を付けて「ありたい」と言うと？",
+    "context": null,
+    "choices": [
+      "あらまほし",
+      "ありまほし",
+      "あるまほし",
+      "あれまほし"
+    ],
+    "answer": "あらまほし",
+    "explanation": "まほし＝未然形接続→「あら」＋まほし。「あらまほし」は「理想的だ」の意の重要語でもある。",
+    "ref_heading": "まほし / たし — 願望",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-ganbou-05",
+    "topic_id": "jodoshi-ganbou",
+    "kind": "imi",
+    "prompt": "「たき」の意味は？",
+    "context": "家にありたき木は、松・桜",
+    "choices": [
+      "希望（〜たい）",
+      "当然",
+      "可能",
+      "推量"
+    ],
+    "answer": "希望（〜たい）",
+    "explanation": "たし＝希望「〜たい」。連用形「あり」に接続。「家にあってほしい木は松と桜」（徒然草）。",
+    "ref_heading": "まほし / たし — 願望",
+    "sort": 102
+  },
+  {
+    "id": "jodoshi-ganbou-06",
+    "topic_id": "jodoshi-ganbou",
+    "kind": "setsuzoku",
+    "prompt": "「光陰矢のごとし」の構造として正しいのは？",
+    "context": null,
+    "choices": [
+      "体言＋の＋ごとし",
+      "連体形＋の＋ごとし",
+      "体言＋が＋ごとし",
+      "終止形＋ごとし"
+    ],
+    "answer": "体言＋の＋ごとし",
+    "explanation": "ごとしは、体言＋の／連体形＋が、をはさんで接続する。「扇の広げたるがごとし」が連体形＋が の例。",
+    "ref_heading": "ごとし — 比況・例示",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-ganbou-07",
+    "topic_id": "jodoshi-ganbou",
+    "kind": "imi",
+    "prompt": "「ごとく」の意味は？",
+    "context": "雪のごとく散る",
+    "choices": [
+      "比況（〜のように）",
+      "例示（〜など）",
+      "断定",
+      "推定"
+    ],
+    "answer": "比況（〜のように）",
+    "explanation": "ごとし＝比況「〜のようだ」が基本。例示「〜など」は「Ａ・Ｂのごとき」と体言を並べる形で多い。",
+    "ref_heading": "ごとし — 比況・例示",
+    "sort": 103
+  },
+  {
+    "id": "jodoshi-ganbou-08",
+    "topic_id": "jodoshi-ganbou",
+    "kind": "shikibetsu",
+    "prompt": "「行かなむ」と「行かまほし」。「（自分が）行きたい」はどちら？",
+    "context": null,
+    "choices": [
+      "行かまほし",
+      "行かなむ",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "行かまほし",
+    "explanation": "まほし・たし＝自分の願望「〜たい」。なむ（終助詞）＝他者への願望「〜してほしい」。願望の向きで使い分ける。",
+    "ref_heading": "願望表現の体系",
+    "sort": 5
+  },
+  {
+    "id": "jodoshi-dantei-01",
+    "topic_id": "jodoshi-dantei",
+    "kind": "setsuzoku",
+    "prompt": "断定「なり」は何に接続する？",
+    "context": null,
+    "choices": [
+      "体言・連体形",
+      "終止形",
+      "連用形",
+      "未然形"
+    ],
+    "answer": "体言・連体形",
+    "explanation": "断定なり＝体言・連体形接続。終止形接続なら伝聞推定の「なり」。",
+    "ref_heading": "なり（断定・所在）",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-dantei-02",
+    "topic_id": "jodoshi-dantei",
+    "kind": "katsuyo-fill",
+    "prompt": "断定「たり」の連用形は「たり」ともう一つは？",
+    "context": null,
+    "choices": [
+      "と",
+      "に",
+      "て",
+      "つ"
+    ],
+    "answer": "と",
+    "explanation": "たり＝と＋あり。連用形に「たり」「と」の2形。なりの連用形「に」と対で覚える。",
+    "ref_heading": "たり（断定）",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-dantei-03",
+    "topic_id": "jodoshi-dantei",
+    "kind": "imi",
+    "prompt": "「なり」の意味は？",
+    "context": "これは竹取の翁と申す者なり",
+    "choices": [
+      "断定（〜である）",
+      "伝聞推定",
+      "存在",
+      "推量"
+    ],
+    "answer": "断定（〜である）",
+    "explanation": "体言「者」＋なり＝断定。「竹取の翁と申す者である」。",
+    "ref_heading": "なり（断定・所在）",
+    "sort": 301
+  },
+  {
+    "id": "jodoshi-dantei-04",
+    "topic_id": "jodoshi-dantei",
+    "kind": "shikibetsu",
+    "prompt": "「学者たりとも」の「たり」の正体は？",
+    "context": null,
+    "choices": [
+      "断定「たり」（体言接続）",
+      "完了「たり」",
+      "存続「たり」",
+      "形容動詞の語尾"
+    ],
+    "answer": "断定「たり」（体言接続）",
+    "explanation": "体言「学者」＋たり＝断定「学者であるとしても」。連用形接続なら完了・存続。",
+    "ref_heading": "たり（断定）",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-dantei-05",
+    "topic_id": "jodoshi-dantei",
+    "kind": "shikibetsu",
+    "prompt": "断定の「なり」と「たり」、漢文訓読体で使われるのは？",
+    "context": null,
+    "choices": [
+      "たり",
+      "なり",
+      "両方同じ",
+      "どちらも使わない"
+    ],
+    "answer": "たり",
+    "explanation": "なり＝和文体（頻度高）、たり＝漢文訓読体。「将軍たり」「学者たり」のような文体で出る。",
+    "ref_heading": "なり vs たり — 文体差",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-dantei-06",
+    "topic_id": "jodoshi-dantei",
+    "kind": "shikibetsu",
+    "prompt": "3つの「なり」のうち、終止形に接続するのは？",
+    "context": null,
+    "choices": [
+      "伝聞推定「なり」",
+      "断定「なり」",
+      "形容動詞ナリ活用",
+      "どれでもない"
+    ],
+    "answer": "伝聞推定「なり」",
+    "explanation": "断定＝体言・連体形、伝聞推定＝終止形、ナリ活用＝語幹につく。接続が判別の第一手。",
+    "ref_heading": "なりの識別（最重要）",
+    "sort": 5
+  },
+  {
+    "id": "jodoshi-dantei-07",
+    "topic_id": "jodoshi-dantei",
+    "kind": "shikibetsu",
+    "prompt": "「にて」「にあり」と続く「に」の正体は？",
+    "context": null,
+    "choices": [
+      "断定「なり」の連用形",
+      "格助詞",
+      "完了「ぬ」の連用形",
+      "接続助詞"
+    ],
+    "answer": "断定「なり」の連用形",
+    "explanation": "「であって」と訳せる「に」＝断定の連用形。「にて」「にあり」「にや」「にこそ」の形が目印。",
+    "ref_heading": "連用形「に」の識別",
+    "sort": 6
+  },
+  {
+    "id": "jodoshi-dantei-08",
+    "topic_id": "jodoshi-dantei",
+    "kind": "imi",
+    "prompt": "「なる」の意味は？",
+    "context": "駿河なる宇津の山辺",
+    "choices": [
+      "所在（〜にある）",
+      "断定（〜である）",
+      "伝聞推定",
+      "比況"
+    ],
+    "answer": "所在（〜にある）",
+    "explanation": "場所＋なる＋場所→所在「駿河の国にある宇津の山」。断定「なり」の所在用法。",
+    "ref_heading": "なり（断定・所在）",
+    "sort": 302
+  },
+  {
+    "id": "jodoshi-jisei-01",
+    "topic_id": "jodoshi-jisei",
+    "kind": "setsuzoku",
+    "prompt": "過去の「き」は何形に接続する？",
+    "context": null,
+    "choices": [
+      "連用形",
+      "未然形",
+      "終止形",
+      "連体形"
+    ],
+    "answer": "連用形",
+    "explanation": "き＝連用形接続。き・けり・つ・ぬ・たり、時制系はみな連用形接続（「り」だけ特殊）。",
+    "ref_heading": "き（過去・直接体験）",
+    "sort": 1
+  },
+  {
+    "id": "jodoshi-jisei-02",
+    "topic_id": "jodoshi-jisei",
+    "kind": "katsuyo-fill",
+    "prompt": "「き」の活用（せ・○・き・し・しか・○）。連体形はどれ？",
+    "context": null,
+    "choices": [
+      "し",
+      "き",
+      "しか",
+      "せ"
+    ],
+    "answer": "し",
+    "explanation": "きの連体形は「し」（見し人）、已然形は「しか」。丸暗記の特殊型。",
+    "ref_heading": "き（過去・直接体験）",
+    "sort": 2
+  },
+  {
+    "id": "jodoshi-jisei-03",
+    "topic_id": "jodoshi-jisei",
+    "kind": "shikibetsu",
+    "prompt": "「き」と「けり」、自分が直接体験した過去に使うのは？",
+    "context": null,
+    "choices": [
+      "き",
+      "けり",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "き",
+    "explanation": "き＝体験過去（その場にいた）、けり＝伝聞過去（人づて・物語）＋詠嘆。",
+    "ref_heading": "一覧",
+    "sort": 3
+  },
+  {
+    "id": "jodoshi-jisei-04",
+    "topic_id": "jodoshi-jisei",
+    "kind": "shikibetsu",
+    "prompt": "「来し方（こしかた）」の「こ・し」の説明として正しいのは？",
+    "context": null,
+    "choices": [
+      "カ変未然形「こ」＋過去「き」連体形「し」",
+      "カ変連用形「き」＋副助詞「し」",
+      "カ変終止形＋サ変",
+      "上一段＋過去"
+    ],
+    "answer": "カ変未然形「こ」＋過去「き」連体形「し」",
+    "explanation": "きはカ変・サ変に特殊接続する。カ変→こし・こしか、サ変→せし・せしか。",
+    "ref_heading": "き（過去・直接体験）",
+    "sort": 4
+  },
+  {
+    "id": "jodoshi-jisei-05",
+    "topic_id": "jodoshi-jisei",
+    "kind": "imi",
+    "prompt": "「き」が使われている理由として正しいのは？",
+    "context": "京より下りし時に、みな人、子どもなかりき",
+    "choices": [
+      "筆者自身が体験した過去だから",
+      "人から聞いた話だから",
+      "和歌だから",
+      "強調したいから"
+    ],
+    "answer": "筆者自身が体験した過去だから",
+    "explanation": "自分が「京から下った」体験→体験過去の「き」。土佐日記は紀貫之自身の旅の記録。",
+    "ref_heading": "き（過去・直接体験）",
+    "sort": 101
+  },
+  {
+    "id": "jodoshi-jisei-06",
+    "topic_id": "jodoshi-jisei",
+    "kind": "katsuyo-fill",
+    "prompt": "係助詞「こそ」を受けるとき、文末の「き」はどの形になる？",
+    "context": null,
+    "choices": [
+      "しか",
+      "し",
+      "き",
+      "せ"
+    ],
+    "answer": "しか",
+    "explanation": "こその結びは已然形。きの已然形は「しか」。「ぞ・なむ・や・か」なら連体形「し」。",
+    "ref_heading": "き（過去・直接体験）",
+    "sort": 5
+  },
+  {
+    "id": "jodoshi-jisei-07",
+    "topic_id": "jodoshi-jisei",
+    "kind": "shikibetsu",
+    "prompt": "「せば…まし」の「せ」の正体は？",
+    "context": null,
+    "choices": [
+      "過去「き」の未然形",
+      "サ変動詞",
+      "使役「す」",
+      "尊敬「す」"
+    ],
+    "answer": "過去「き」の未然形",
+    "explanation": "きの未然形「せ」は「せば…まし」の反実仮想構文専用。それ以外の「せ」は使役・尊敬かサ変。",
+    "ref_heading": "き（過去・直接体験）",
+    "sort": 6
+  },
+  {
+    "id": "jodoshi-jisei-08",
+    "topic_id": "jodoshi-jisei",
+    "kind": "shikibetsu",
+    "prompt": "時制系6つの整理。「たり」「り」に共通する2つの意味は？",
+    "context": null,
+    "choices": [
+      "完了・存続",
+      "過去・詠嘆",
+      "完了・強意",
+      "推量・意志"
+    ],
+    "answer": "完了・存続",
+    "explanation": "き・けり＝過去、つ・ぬ＝完了・強意、たり・り＝完了・存続。3ペアで整理する。",
+    "ref_heading": "一覧",
+    "sort": 7
+  }
 ]

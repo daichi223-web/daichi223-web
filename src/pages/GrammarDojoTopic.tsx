@@ -16,19 +16,26 @@ const LEVEL_LABEL: Record<number, string> = {
 /** レベル別到達度の保存キー（Lv1 は従来どおり topicId、Lv2以降はサフィックス付き） */
 const levelKey = (topicId: string, level: number) => (level === 1 ? topicId : `${topicId}@${level}`);
 
-/** 前のレベルを85%以上で定着させると次が解放される（存在するレベルの並び順で判定） */
+/**
+ * 解放済み最高レベル。
+ * ※ 助動詞テストを継続編集中のため、当面は全レベルを解放する（存在する最高レベルを返す）。
+ *   段階解放に戻すときは下のループ版（前レベル85%定着で次を解放）に差し替える。
+ */
 function maxUnlockedLevel(
   lvls: number[],
-  progress: Record<string, TopicProgress>,
-  topicId: string
+  _progress: Record<string, TopicProgress>,
+  _topicId: string
 ): number {
-  let max = lvls[0] ?? 1;
-  for (let i = 1; i < lvls.length; i++) {
-    const prevKey = levelKey(topicId, lvls[i - 1]);
-    if ((progress[prevKey]?.masteryPct ?? 0) >= 85) max = lvls[i];
-    else break;
-  }
-  return max;
+  // 全解放（一時）
+  return lvls[lvls.length - 1] ?? 1;
+  // --- 段階解放（元の挙動）に戻す場合 ---
+  // let max = lvls[0] ?? 1;
+  // for (let i = 1; i < lvls.length; i++) {
+  //   const prevKey = levelKey(_topicId, lvls[i - 1]);
+  //   if ((_progress[prevKey]?.masteryPct ?? 0) >= 85) max = lvls[i];
+  //   else break;
+  // }
+  // return max;
 }
 
 /** 1セッションで出題する問題数（各レベル約20問のバンクからシャッフルして抽出） */
@@ -94,9 +101,9 @@ export default function GrammarDojoTopic() {
       setMedia(m);
       setDrills(d);
       setProgress(p);
-      // 解放済みの最高レベルを初期選択にする
+      // 全レベル解放中。初期選択は最易レベル（L1）にする。
       const lvls = [1, 2, 3, 4, 5].filter((L) => d.some((x) => drillLevel(x) === L));
-      setSelLevel(maxUnlockedLevel(lvls, p as Record<string, TopicProgress>, topicId!));
+      setSelLevel(lvls[0] ?? 1);
       setLoading(false);
     });
     return () => {

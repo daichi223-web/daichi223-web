@@ -1,148 +1,410 @@
 [
- {
-  "id": "doushi-kahen-t01", "topic_id": "doushi-kahen", "kind": "katsuyo-fill",
-  "prompt": "この「来（き）」（カ変）の活用形は？", "context": "秋【き】《て》、木の葉散りはじむ",
-  "choices": ["連用形", "未然形", "終止形", "連体形"], "answer": "連用形",
-  "explanation": "下の「て」は連用形接続。カ変「来」の連用形は「き」。", "ref_heading": "活用表", "sort": 101
- },
- {
-  "id": "doushi-kahen-t02", "topic_id": "doushi-kahen", "kind": "katsuyo-fill",
-  "prompt": "この「来（く）」（カ変）の活用形は？", "context": "ほどなく人【く】《。》",
-  "choices": ["終止形", "連用形", "連体形", "已然形"], "answer": "終止形",
-  "explanation": "言い切り（。）で終わるので終止形。カ変「来」の終止形は「く」。", "ref_heading": "活用表", "sort": 102
- },
- {
-  "id": "doushi-kahen-t03", "topic_id": "doushi-kahen", "kind": "katsuyo-fill",
-  "prompt": "この「来（くる）」（カ変）の活用形は？", "context": "こなたへ【くる】《人》を待つ",
-  "choices": ["連体形", "終止形", "已然形", "命令形"], "answer": "連体形",
-  "explanation": "下の体言「人」に連なるので連体形。カ変「来」の連体形は「くる」。", "ref_heading": "活用表", "sort": 103
- },
- {
-  "id": "doushi-kahen-t04", "topic_id": "doushi-kahen", "kind": "katsuyo-fill",
-  "prompt": "「来（こ）ず」の「来」の活用形と読みは？", "context": "今日は人も【こ】《ず》",
-  "choices": ["未然形・こ", "連用形・き", "終止形・く", "命令形・こ（よ）"], "answer": "未然形・こ",
-  "explanation": "打消「ず」は未然形接続。カ変「来」の未然形は「こ」。読みが形で変わるのがカ変の急所。", "ref_heading": "活用表", "sort": 201
- },
- {
-  "id": "doushi-kahen-t05", "topic_id": "doushi-kahen", "kind": "katsuyo-type",
-  "prompt": "「来」の活用の種類は？", "context": null,
-  "choices": ["カ行変格活用", "カ行四段活用", "カ行上一段活用", "サ行変格活用"], "answer": "カ行変格活用",
-  "explanation": "「来」一語だけのカ変。こ・き・く・くる・くれ・こ（よ）と変則に活用する。", "ref_heading": "カ行変格活用とは", "sort": 202
- },
- {
-  "id": "doushi-kahen-t06", "topic_id": "doushi-kahen", "kind": "shikibetsu",
-  "prompt": "「出で来（く）」のように「来」を含む複合動詞も活用は？", "context": null,
-  "choices": ["カ変（後半の来に従う）", "ダ行下二段", "四段", "サ変"], "answer": "カ変（後半の来に従う）",
-  "explanation": "複合動詞は後ろの動詞の活用に従う。「出で来」「持て来」も来の部分がカ変。", "ref_heading": "複合動詞", "sort": 203
- },
- {
-  "id": "doushi-kahen-t07", "topic_id": "doushi-kahen", "kind": "katsuyo-fill",
-  "prompt": "下の文の「来（くれ）」の活用形は？", "context": "春【くれ】《ば》、花おのづから咲きにけり",
-  "choices": ["已然形", "連体形", "未然形", "命令形"], "answer": "已然形",
-  "explanation": "「已然形＋ば」は確定条件（〜すると）。カ変「来」の已然形は「くれ」。", "ref_heading": "活用表", "sort": 301
- },
- {
-  "id": "doushi-kahen-t08", "topic_id": "doushi-kahen", "kind": "katsuyo-fill",
-  "prompt": "命令「（早く）来い」を古語で言うと、カ変「来」の命令形は？", "context": null,
-  "choices": ["こ（よ）", "き", "く", "くれ"], "answer": "こ（よ）",
-  "explanation": "カ変の命令形は「こ」または「こよ」。未然形と同じ「こ」だが、命令の文脈で判別する。", "ref_heading": "活用表", "sort": 302
- },
-
- {
-  "id": "doushi-kami-ichidan-t01", "topic_id": "doushi-kami-ichidan", "kind": "katsuyo-fill",
-  "prompt": "この「見（み）」（上一段）の活用形は？", "context": "月を【み】《て》、もの思ふ",
-  "choices": ["連用形", "未然形", "終止形", "連体形"], "answer": "連用形",
-  "explanation": "下の「て」は連用形接続。上一段「見る」の連用形は「み」。", "ref_heading": "活用表", "sort": 101
- },
- {
-  "id": "doushi-kami-ichidan-t02", "topic_id": "doushi-kami-ichidan", "kind": "katsuyo-fill",
-  "prompt": "この「見る（みる）」の活用形は？", "context": "花を【みる】《人》ぞ多かりける",
-  "choices": ["連体形", "終止形", "已然形", "命令形"], "answer": "連体形",
-  "explanation": "体言「人」に連なるので連体形。上一段は終止形も連体形も「みる」で同形。", "ref_heading": "活用表", "sort": 102
- },
- {
-  "id": "doushi-kami-ichidan-t03", "topic_id": "doushi-kami-ichidan", "kind": "katsuyo-fill",
-  "prompt": "この「着（き）」（上一段）の活用形は？", "context": "唐衣【き】《つつ》なれにし妻しあれば",
-  "choices": ["連用形", "未然形", "終止形", "已然形"], "answer": "連用形",
-  "explanation": "「つつ」は連用形接続。上一段「着る」の連用形は「き」。", "ref_heading": "活用表", "sort": 103
- },
- {
-  "id": "doushi-kami-ichidan-t04", "topic_id": "doushi-kami-ichidan", "kind": "katsuyo-type",
-  "prompt": "「見る」の活用の種類は？", "context": null,
-  "choices": ["マ行上一段活用", "マ行四段活用", "マ行上二段活用", "マ行下二段活用"], "answer": "マ行上一段活用",
-  "explanation": "上一段はイ段一段で活用。「ず」を付けると『見ず』とイ段になる（四段ならア段、上二段でも『起きず』とイ段だが語数が違う）。", "ref_heading": "見分け方", "sort": 201
- },
- {
-  "id": "doushi-kami-ichidan-t05", "topic_id": "doushi-kami-ichidan", "kind": "shikibetsu",
-  "prompt": "次のうち上一段活用の動詞はどれ？（暗記「ひいきにみゐる」）", "context": null,
-  "choices": ["着る", "受く", "起く", "落つ"], "answer": "着る",
-  "explanation": "上一段は「干る・射る・鋳る・着る・似る・煮る・見る・居る・率る」＝『ひいきにみゐる』。受く・起く・落つは二段。", "ref_heading": "暗記すべき上一段動詞", "sort": 202
- },
- {
-  "id": "doushi-kami-ichidan-t06", "topic_id": "doushi-kami-ichidan", "kind": "katsuyo-fill",
-  "prompt": "この「居（ゐ）」（上一段）の活用形は？", "context": "縁に【ゐ】《て》、月を眺む",
-  "choices": ["連用形", "未然形", "連体形", "命令形"], "answer": "連用形",
-  "explanation": "「て」は連用形接続。上一段「居る（ゐる）」の連用形は「ゐ」。座る・とどまるの意。", "ref_heading": "活用表", "sort": 203
- },
- {
-  "id": "doushi-kami-ichidan-t07", "topic_id": "doushi-kami-ichidan", "kind": "katsuyo-fill",
-  "prompt": "この「見れ（みれ）」の活用形は？", "context": "天の原ふりさけ【みれ】《ば》春日なる",
-  "choices": ["已然形", "連用形", "連体形", "未然形"], "answer": "已然形",
-  "explanation": "「已然形＋ば」で確定条件。上一段「見る」の已然形は「みれ」。", "ref_heading": "活用表", "sort": 301
- },
- {
-  "id": "doushi-kami-ichidan-t08", "topic_id": "doushi-kami-ichidan", "kind": "katsuyo-fill",
-  "prompt": "命令「（よく）見よ」の上一段「見る」の命令形は？", "context": null,
-  "choices": ["みよ", "み", "みる", "みれ"], "answer": "みよ",
-  "explanation": "上一段の命令形は「〜よ」。見る→みよ、着る→きよ、居る→ゐよ。", "ref_heading": "活用表", "sort": 302
- },
-
- {
-  "id": "doushi-shimo-nidan-t01", "topic_id": "doushi-shimo-nidan", "kind": "katsuyo-fill",
-  "prompt": "この「受け（うけ）」（下二段）の活用形は？", "context": "仰せを【うけ】《て》、まかり出づ",
-  "choices": ["連用形", "未然形", "終止形", "連体形"], "answer": "連用形",
-  "explanation": "「て」は連用形接続。下二段「受く」の連用形は「うけ」（エ段）。", "ref_heading": "活用表", "sort": 101
- },
- {
-  "id": "doushi-shimo-nidan-t02", "topic_id": "doushi-shimo-nidan", "kind": "katsuyo-fill",
-  "prompt": "この「受く（うく）」の活用形は？", "context": "情けを人に【うく】《。》",
-  "choices": ["終止形", "連用形", "連体形", "已然形"], "answer": "終止形",
-  "explanation": "言い切り（。）で終止形。下二段「受く」の終止形は「うく」（ウ段）。", "ref_heading": "活用表", "sort": 102
- },
- {
-  "id": "doushi-shimo-nidan-t03", "topic_id": "doushi-shimo-nidan", "kind": "katsuyo-fill",
-  "prompt": "この「出づる（いづる）」（下二段）の活用形は？", "context": "山の端に【いづる】《月》を待つ",
-  "choices": ["連体形", "終止形", "已然形", "命令形"], "answer": "連体形",
-  "explanation": "体言「月」に連なるので連体形。下二段「出づ」の連体形は「いづる」（〜うる）。", "ref_heading": "活用表", "sort": 103
- },
- {
-  "id": "doushi-shimo-nidan-t04", "topic_id": "doushi-shimo-nidan", "kind": "shikibetsu",
-  "prompt": "「受く」が下二段だと見分ける方法は？", "context": null,
-  "choices": ["「ず」を付けると『受けず』とエ段になる", "「ず」を付けると『受かず』とア段になる", "「ず」を付けると『受きず』とイ段になる", "命令形が『受け』だから"], "answer": "「ず」を付けると『受けず』とエ段になる",
-  "explanation": "「ず」を付けて直前がエ段なら下二段。ア段なら四段、イ段なら上二段。", "ref_heading": "見分け方", "sort": 201
- },
- {
-  "id": "doushi-shimo-nidan-t05", "topic_id": "doushi-shimo-nidan", "kind": "shikibetsu",
-  "prompt": "次のうち下二段活用の動詞はどれ？", "context": null,
-  "choices": ["捨つ", "立つ", "待つ", "勝つ"], "answer": "捨つ",
-  "explanation": "「捨つ」は『捨てず』とエ段→下二段。立つ・待つ・勝つは『立たず』とア段→四段。", "ref_heading": "代表的な下二段動詞", "sort": 202
- },
- {
-  "id": "doushi-shimo-nidan-t06", "topic_id": "doushi-shimo-nidan", "kind": "katsuyo-fill",
-  "prompt": "この「植う（うう）」（下二段）の活用形は？", "context": "庭に松を【うう】《。》",
-  "choices": ["終止形", "連用形", "連体形", "未然形"], "answer": "終止形",
-  "explanation": "言い切りで終止形。ワ行下二段「植う」は うゑ・うゑ・うう・ううる・ううれ・うゑよ。", "ref_heading": "活用表", "sort": 203
- },
- {
-  "id": "doushi-shimo-nidan-t07", "topic_id": "doushi-shimo-nidan", "kind": "katsuyo-fill",
-  "prompt": "この「捨つれ（すつれ）」の活用形は？", "context": "世を【すつれ】《ど》、なほ憂し",
-  "choices": ["已然形", "連体形", "連用形", "命令形"], "answer": "已然形",
-  "explanation": "逆接「ども（ど）」は已然形接続。下二段「捨つ」の已然形は「すつれ」。", "ref_heading": "活用表", "sort": 301
- },
- {
-  "id": "doushi-shimo-nidan-t08", "topic_id": "doushi-shimo-nidan", "kind": "katsuyo-fill",
-  "prompt": "命令「（早く）出でよ」の下二段「出づ」の命令形は？", "context": null,
-  "choices": ["いでよ", "いで", "いづ", "いづれ"], "answer": "いでよ",
-  "explanation": "下二段の命令形は「〜えよ」。出づ→いでよ、受く→うけよ、捨つ→すてよ。", "ref_heading": "活用表", "sort": 302
- }
+  {
+    "id": "doushi-kahen-t01",
+    "topic_id": "doushi-kahen",
+    "kind": "katsuyo-fill",
+    "prompt": "この「来（き）」（カ変）の活用形は？",
+    "context": "秋【き】《て》、木の葉散りはじむ",
+    "choices": [
+      "連用形",
+      "未然形",
+      "終止形",
+      "連体形"
+    ],
+    "answer": "連用形",
+    "explanation": "下の「て」は連用形接続。カ変「来」の連用形は「き」。",
+    "ref_heading": "活用表",
+    "sort": 102
+  },
+  {
+    "id": "doushi-kahen-t02",
+    "topic_id": "doushi-kahen",
+    "kind": "katsuyo-fill",
+    "prompt": "この「来（く）」（カ変）の活用形は？",
+    "context": "ほどなく人【く】《。》",
+    "choices": [
+      "終止形",
+      "連用形",
+      "連体形",
+      "已然形"
+    ],
+    "answer": "終止形",
+    "explanation": "言い切り（。）で終わるので終止形。カ変「来」の終止形は「く」。",
+    "ref_heading": "活用表",
+    "sort": 201
+  },
+  {
+    "id": "doushi-kahen-t03",
+    "topic_id": "doushi-kahen",
+    "kind": "katsuyo-fill",
+    "prompt": "この「来（くる）」（カ変）の活用形は？",
+    "context": "こなたへ【くる】《人》を待つ",
+    "choices": [
+      "連体形",
+      "終止形",
+      "已然形",
+      "命令形"
+    ],
+    "answer": "連体形",
+    "explanation": "下の体言「人」に連なるので連体形。カ変「来」の連体形は「くる」。",
+    "ref_heading": "活用表",
+    "sort": 202
+  },
+  {
+    "id": "doushi-kahen-t04",
+    "topic_id": "doushi-kahen",
+    "kind": "katsuyo-fill",
+    "prompt": "「来（こ）ず」の「来」の活用形と読みは？",
+    "context": "今日は人も【こ】《ず》",
+    "choices": [
+      "未然形・こ",
+      "連用形・き",
+      "終止形・く",
+      "命令形・こ（よ）"
+    ],
+    "answer": "未然形・こ",
+    "explanation": "打消「ず」は未然形接続。カ変「来」の未然形は「こ」。読みが形で変わるのがカ変の急所。",
+    "ref_heading": "活用表",
+    "sort": 203
+  },
+  {
+    "id": "doushi-kahen-t05",
+    "topic_id": "doushi-kahen",
+    "kind": "katsuyo-type",
+    "prompt": "「来」の活用の種類は？",
+    "context": null,
+    "choices": [
+      "カ行変格活用",
+      "カ行四段活用",
+      "カ行上一段活用",
+      "サ行変格活用"
+    ],
+    "answer": "カ行変格活用",
+    "explanation": "「来」一語だけのカ変。こ・き・く・くる・くれ・こ（よ）と変則に活用する。",
+    "ref_heading": "カ行変格活用とは",
+    "sort": 5
+  },
+  {
+    "id": "doushi-kahen-t06",
+    "topic_id": "doushi-kahen",
+    "kind": "shikibetsu",
+    "prompt": "「出で来（く）」のように「来」を含む複合動詞も活用は？",
+    "context": null,
+    "choices": [
+      "カ変（後半の来に従う）",
+      "ダ行下二段",
+      "四段",
+      "サ変"
+    ],
+    "answer": "カ変（後半の来に従う）",
+    "explanation": "複合動詞は後ろの動詞の活用に従う。「出で来」「持て来」も来の部分がカ変。",
+    "ref_heading": "複合動詞",
+    "sort": 6
+  },
+  {
+    "id": "doushi-kahen-t07",
+    "topic_id": "doushi-kahen",
+    "kind": "katsuyo-fill",
+    "prompt": "下の文の「来（くれ）」の活用形は？",
+    "context": "春【くれ】《ば》、花おのづから咲きにけり",
+    "choices": [
+      "已然形",
+      "連体形",
+      "未然形",
+      "命令形"
+    ],
+    "answer": "已然形",
+    "explanation": "「已然形＋ば」は確定条件（〜すると）。カ変「来」の已然形は「くれ」。",
+    "ref_heading": "活用表",
+    "sort": 204
+  },
+  {
+    "id": "doushi-kahen-t08",
+    "topic_id": "doushi-kahen",
+    "kind": "katsuyo-fill",
+    "prompt": "命令「（早く）来い」を古語で言うと、カ変「来」の命令形は？",
+    "context": null,
+    "choices": [
+      "こ（よ）",
+      "き",
+      "く",
+      "くれ"
+    ],
+    "answer": "こ（よ）",
+    "explanation": "カ変の命令形は「こ」または「こよ」。未然形と同じ「こ」だが、命令の文脈で判別する。",
+    "ref_heading": "活用表",
+    "sort": 7
+  },
+  {
+    "id": "doushi-kami-ichidan-t01",
+    "topic_id": "doushi-kami-ichidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「見（み）」（上一段）の活用形は？",
+    "context": "月を【み】《て》、もの思ふ",
+    "choices": [
+      "連用形",
+      "未然形",
+      "終止形",
+      "連体形"
+    ],
+    "answer": "連用形",
+    "explanation": "下の「て」は連用形接続。上一段「見る」の連用形は「み」。",
+    "ref_heading": "活用表",
+    "sort": 102
+  },
+  {
+    "id": "doushi-kami-ichidan-t02",
+    "topic_id": "doushi-kami-ichidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「見る（みる）」の活用形は？",
+    "context": "花を【みる】《人》ぞ多かりける",
+    "choices": [
+      "連体形",
+      "終止形",
+      "已然形",
+      "命令形"
+    ],
+    "answer": "連体形",
+    "explanation": "体言「人」に連なるので連体形。上一段は終止形も連体形も「みる」で同形。",
+    "ref_heading": "活用表",
+    "sort": 201
+  },
+  {
+    "id": "doushi-kami-ichidan-t03",
+    "topic_id": "doushi-kami-ichidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「着（き）」（上一段）の活用形は？",
+    "context": "唐衣【き】《つつ》なれにし妻しあれば",
+    "choices": [
+      "連用形",
+      "未然形",
+      "終止形",
+      "已然形"
+    ],
+    "answer": "連用形",
+    "explanation": "「つつ」は連用形接続。上一段「着る」の連用形は「き」。",
+    "ref_heading": "活用表",
+    "sort": 202
+  },
+  {
+    "id": "doushi-kami-ichidan-t04",
+    "topic_id": "doushi-kami-ichidan",
+    "kind": "katsuyo-type",
+    "prompt": "「見る」の活用の種類は？",
+    "context": null,
+    "choices": [
+      "マ行上一段活用",
+      "マ行四段活用",
+      "マ行上二段活用",
+      "マ行下二段活用"
+    ],
+    "answer": "マ行上一段活用",
+    "explanation": "上一段はイ段一段で活用。「ず」を付けると『見ず』とイ段になる（四段ならア段、上二段でも『起きず』とイ段だが語数が違う）。",
+    "ref_heading": "見分け方",
+    "sort": 6
+  },
+  {
+    "id": "doushi-kami-ichidan-t05",
+    "topic_id": "doushi-kami-ichidan",
+    "kind": "shikibetsu",
+    "prompt": "次のうち上一段活用の動詞はどれ？（暗記「ひいきにみゐる」）",
+    "context": null,
+    "choices": [
+      "着る",
+      "受く",
+      "起く",
+      "落つ"
+    ],
+    "answer": "着る",
+    "explanation": "上一段は「干る・射る・鋳る・着る・似る・煮る・見る・居る・率る」＝『ひいきにみゐる』。受く・起く・落つは二段。",
+    "ref_heading": "暗記すべき上一段動詞",
+    "sort": 7
+  },
+  {
+    "id": "doushi-kami-ichidan-t06",
+    "topic_id": "doushi-kami-ichidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「居（ゐ）」（上一段）の活用形は？",
+    "context": "縁に【ゐ】《て》、月を眺む",
+    "choices": [
+      "連用形",
+      "未然形",
+      "連体形",
+      "命令形"
+    ],
+    "answer": "連用形",
+    "explanation": "「て」は連用形接続。上一段「居る（ゐる）」の連用形は「ゐ」。座る・とどまるの意。",
+    "ref_heading": "活用表",
+    "sort": 203
+  },
+  {
+    "id": "doushi-kami-ichidan-t07",
+    "topic_id": "doushi-kami-ichidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「見れ（みれ）」の活用形は？",
+    "context": "天の原ふりさけ【みれ】《ば》春日なる",
+    "choices": [
+      "已然形",
+      "連用形",
+      "連体形",
+      "未然形"
+    ],
+    "answer": "已然形",
+    "explanation": "「已然形＋ば」で確定条件。上一段「見る」の已然形は「みれ」。",
+    "ref_heading": "活用表",
+    "sort": 204
+  },
+  {
+    "id": "doushi-kami-ichidan-t08",
+    "topic_id": "doushi-kami-ichidan",
+    "kind": "katsuyo-fill",
+    "prompt": "命令「（よく）見よ」の上一段「見る」の命令形は？",
+    "context": null,
+    "choices": [
+      "みよ",
+      "み",
+      "みる",
+      "みれ"
+    ],
+    "answer": "みよ",
+    "explanation": "上一段の命令形は「〜よ」。見る→みよ、着る→きよ、居る→ゐよ。",
+    "ref_heading": "活用表",
+    "sort": 8
+  },
+  {
+    "id": "doushi-shimo-nidan-t01",
+    "topic_id": "doushi-shimo-nidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「受け（うけ）」（下二段）の活用形は？",
+    "context": "仰せを【うけ】《て》、まかり出づ",
+    "choices": [
+      "連用形",
+      "未然形",
+      "終止形",
+      "連体形"
+    ],
+    "answer": "連用形",
+    "explanation": "「て」は連用形接続。下二段「受く」の連用形は「うけ」（エ段）。",
+    "ref_heading": "活用表",
+    "sort": 102
+  },
+  {
+    "id": "doushi-shimo-nidan-t02",
+    "topic_id": "doushi-shimo-nidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「受く（うく）」の活用形は？",
+    "context": "情けを人に【うく】《。》",
+    "choices": [
+      "終止形",
+      "連用形",
+      "連体形",
+      "已然形"
+    ],
+    "answer": "終止形",
+    "explanation": "言い切り（。）で終止形。下二段「受く」の終止形は「うく」（ウ段）。",
+    "ref_heading": "活用表",
+    "sort": 104
+  },
+  {
+    "id": "doushi-shimo-nidan-t03",
+    "topic_id": "doushi-shimo-nidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「出づる（いづる）」（下二段）の活用形は？",
+    "context": "山の端に【いづる】《月》を待つ",
+    "choices": [
+      "連体形",
+      "終止形",
+      "已然形",
+      "命令形"
+    ],
+    "answer": "連体形",
+    "explanation": "体言「月」に連なるので連体形。下二段「出づ」の連体形は「いづる」（〜うる）。",
+    "ref_heading": "活用表",
+    "sort": 202
+  },
+  {
+    "id": "doushi-shimo-nidan-t04",
+    "topic_id": "doushi-shimo-nidan",
+    "kind": "shikibetsu",
+    "prompt": "「受く」が下二段だと見分ける方法は？",
+    "context": null,
+    "choices": [
+      "「ず」を付けると『受けず』とエ段になる",
+      "「ず」を付けると『受かず』とア段になる",
+      "「ず」を付けると『受きず』とイ段になる",
+      "命令形が『受け』だから"
+    ],
+    "answer": "「ず」を付けると『受けず』とエ段になる",
+    "explanation": "「ず」を付けて直前がエ段なら下二段。ア段なら四段、イ段なら上二段。",
+    "ref_heading": "見分け方",
+    "sort": 6
+  },
+  {
+    "id": "doushi-shimo-nidan-t05",
+    "topic_id": "doushi-shimo-nidan",
+    "kind": "shikibetsu",
+    "prompt": "次のうち下二段活用の動詞はどれ？",
+    "context": null,
+    "choices": [
+      "捨つ",
+      "立つ",
+      "待つ",
+      "勝つ"
+    ],
+    "answer": "捨つ",
+    "explanation": "「捨つ」は『捨てず』とエ段→下二段。立つ・待つ・勝つは『立たず』とア段→四段。",
+    "ref_heading": "代表的な下二段動詞",
+    "sort": 7
+  },
+  {
+    "id": "doushi-shimo-nidan-t06",
+    "topic_id": "doushi-shimo-nidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「植う（うう）」（下二段）の活用形は？",
+    "context": "庭に松を【うう】《。》",
+    "choices": [
+      "終止形",
+      "連用形",
+      "連体形",
+      "未然形"
+    ],
+    "answer": "終止形",
+    "explanation": "言い切りで終止形。ワ行下二段「植う」は うゑ・うゑ・うう・ううる・ううれ・うゑよ。",
+    "ref_heading": "活用表",
+    "sort": 205
+  },
+  {
+    "id": "doushi-shimo-nidan-t07",
+    "topic_id": "doushi-shimo-nidan",
+    "kind": "katsuyo-fill",
+    "prompt": "この「捨つれ（すつれ）」の活用形は？",
+    "context": "世を【すつれ】《ど》、なほ憂し",
+    "choices": [
+      "已然形",
+      "連体形",
+      "連用形",
+      "命令形"
+    ],
+    "answer": "已然形",
+    "explanation": "逆接「ども（ど）」は已然形接続。下二段「捨つ」の已然形は「すつれ」。",
+    "ref_heading": "活用表",
+    "sort": 206
+  },
+  {
+    "id": "doushi-shimo-nidan-t08",
+    "topic_id": "doushi-shimo-nidan",
+    "kind": "katsuyo-fill",
+    "prompt": "命令「（早く）出でよ」の下二段「出づ」の命令形は？",
+    "context": null,
+    "choices": [
+      "いでよ",
+      "いで",
+      "いづ",
+      "いづれ"
+    ],
+    "answer": "いでよ",
+    "explanation": "下二段の命令形は「〜えよ」。出づ→いでよ、受く→うけよ、捨つ→すてよ。",
+    "ref_heading": "活用表",
+    "sort": 8
+  }
 ]

@@ -1,37 +1,546 @@
 [
-  {"id":"keigo-01","topic_id":"keigo","kind":"shikibetsu","prompt":"「のたまふ」（おっしゃる）が高めているのは誰？","context":null,"choices":["動作の主体（言う人）","動作の受け手（言われる人）","聞き手","筆者自身"],"answer":"動作の主体（言う人）","explanation":"尊敬語＝する人を高める。「のたまふ」の主語は身分の高い人。","ref_heading":"敬語の 3 種","sort":1},
-  {"id":"keigo-02","topic_id":"keigo","kind":"shikibetsu","prompt":"「申す」（申し上げる）が高めているのは誰？","context":null,"choices":["動作の受け手（言われる相手）","動作の主体（言う人）","聞き手","筆者自身"],"answer":"動作の受け手（言われる相手）","explanation":"謙譲語＝する人を低めて、される側を高める。尊敬語と方向が逆。","ref_heading":"敬語の 3 種","sort":2},
-  {"id":"keigo-03","topic_id":"keigo","kind":"shikibetsu","prompt":"「侍り」（〜です・ます）が高めているのは誰？","context":null,"choices":["聞き手・読み手","動作の主体","動作の受け手","誰も高めない"],"answer":"聞き手・読み手","explanation":"丁寧語＝動作と無関係に「今この話を聞いているあなた」への敬意。","ref_heading":"丁寧語 — 聞き手を高める","sort":3},
-  {"id":"keigo-04","topic_id":"keigo","kind":"imi","prompt":"主語が省略されている。誰がふさわしい？","context":"___、笛を吹き給ふ","choices":["殿（身分の高い人）","召使","通りすがりの童","誰でもよい"],"answer":"殿（身分の高い人）","explanation":"尊敬語「給ふ」がある→主語は身分の高い人物。敬語は省略された主語を復元する最大の手がかり。","ref_heading":"敬語の 3 種","sort":4},
-  {"id":"keigo-05","topic_id":"keigo","kind":"imi","prompt":"「〜せ給ふ」の主語として最もふさわしいのは？","context":null,"choices":["帝","従者","子ども","作者"],"answer":"帝","explanation":"「せ給ふ・させ給ふ」＝二重敬語（最高敬意）。主語はほぼ天皇・皇族級と判断できる。","ref_heading":"二重敬語と敬意の方向","sort":5},
-  {"id":"keigo-06","topic_id":"keigo","kind":"shikibetsu","prompt":"「奏す」（申し上げる）の相手は誰と確定できる？","context":null,"choices":["天皇・上皇","中宮・東宮","一般の貴族","僧"],"answer":"天皇・上皇","explanation":"「奏す」は相手が天皇・上皇に決まっている絶対敬語。登場人物の特定に直結する。","ref_heading":"謙譲語 — 客体を高める","sort":6},
-  {"id":"keigo-07","topic_id":"keigo","kind":"shikibetsu","prompt":"「啓す」（申し上げる）の相手は誰と確定できる？","context":null,"choices":["中宮・東宮","天皇・上皇","一般の貴族","神仏"],"answer":"中宮・東宮","explanation":"「啓す」は相手が中宮・東宮に決まっている絶対敬語。「奏す＝天皇」とセットで覚える。","ref_heading":"謙譲語 — 客体を高める","sort":7},
-  {"id":"keigo-08","topic_id":"keigo","kind":"shikibetsu","prompt":"地の文の「給ふ」は、誰から誰への敬意？","context":null,"choices":["筆者から動作の主体へ","話者から聞き手へ","主体から客体へ","読者から筆者へ"],"answer":"筆者から動作の主体へ","explanation":"地の文の敬語の出発点は筆者。会話文なら話者が出発点になる。","ref_heading":"二重敬語と敬意の方向","sort":8},
-
-  {"id":"keigo-sonkei-01","topic_id":"keigo-sonkei","kind":"shikibetsu","prompt":"「のたまふ」に対応する一般語は？","context":null,"choices":["言ふ","聞く","見る","思ふ"],"answer":"言ふ","explanation":"のたまふ＝「言ふ」の尊敬語「おっしゃる」。仰す（おほす）も同じ。","ref_heading":"主な尊敬語動詞一覧","sort":1},
-  {"id":"keigo-sonkei-02","topic_id":"keigo-sonkei","kind":"imi","prompt":"「大殿籠る（おほとのごもる）」の意味は？","context":null,"choices":["おやすみになる","お出かけになる","召し上がる","お建てになる"],"answer":"おやすみになる","explanation":"「寝」の尊敬語。本動詞の尊敬語は一般語とセットで暗記する。","ref_heading":"主な尊敬語動詞一覧","sort":2},
-  {"id":"keigo-sonkei-03","topic_id":"keigo-sonkei","kind":"imi","prompt":"「聞こし召す」の意味として正しいのは？","context":null,"choices":["お聞きになる・召し上がる（両方）","お聞きになるのみ","召し上がるのみ","ご覧になる"],"answer":"お聞きになる・召し上がる（両方）","explanation":"聞こし召す＝「聞く」と「食ふ」両方の尊敬語。「召す」も呼ぶ・食ふ・着るの多義。","ref_heading":"主な尊敬語動詞一覧","sort":3},
-  {"id":"keigo-sonkei-04","topic_id":"keigo-sonkei","kind":"shikibetsu","prompt":"「見給ふ」（四段活用）の意味は？","context":null,"choices":["ご覧になる（尊敬）","拝見する（謙譲）","見ます（丁寧）","見られる（受身）"],"answer":"ご覧になる（尊敬）","explanation":"四段の「給ふ」＝尊敬「〜なさる」。下二段の「給ふ」だけが謙譲「〜いたす」。活用で見分ける。","ref_heading":"「給ふ」の尊敬と謙譲の見分け方","sort":4},
-  {"id":"keigo-sonkei-05","topic_id":"keigo-sonkei","kind":"shikibetsu","prompt":"文中に敬語が一つもないとき、主語として可能性が高いのは？","context":null,"choices":["身分の低い人・一般の人物","天皇","中宮","神仏"],"answer":"身分の低い人・一般の人物","explanation":"敬語の有無自体が主語のヒント。尊敬語があれば貴人、なければ一般人物の動作と推定できる。","ref_heading":"尊敬語で主語を判定する方法","sort":5},
-  {"id":"keigo-sonkei-06","topic_id":"keigo-sonkei","kind":"shikibetsu","prompt":"尊敬の表し方3つ（本動詞／給ふ／る・らる）で、敬意が最も高いのは？","context":null,"choices":["本動詞（のたまふ等）","補助動詞「給ふ」","助動詞「る・らる」","すべて同じ"],"answer":"本動詞（のたまふ等）","explanation":"敬意の度合いは 本動詞＞給ふ＞る・らる。どの作り方かで人物の格も推定できる。","ref_heading":"尊敬語の3つの作り方","sort":6},
-  {"id":"keigo-sonkei-07","topic_id":"keigo-sonkei","kind":"shikibetsu","prompt":"「おはす」と「おはします」。より高い敬意はどちら？","context":null,"choices":["おはします","おはす","同じ","文脈次第"],"answer":"おはします","explanation":"おはします＝おはす＋ます の二重敬語化。天皇・中宮など最高位に使う。","ref_heading":"「おはす」と「おはします」の違い","sort":7},
-  {"id":"keigo-sonkei-08","topic_id":"keigo-sonkei","kind":"imi","prompt":"地の文「（良秀は絵が）上手におはしけり」の「おはし」は、誰から誰への敬意？","context":"上手におはしけり","choices":["筆者から良秀（主体）へ","良秀から筆者へ","筆者から読者へ","僧から良秀へ"],"answer":"筆者から良秀（主体）へ","explanation":"地の文の尊敬語＝筆者→動作の主体。「でいらっしゃった」と主人公を高めている。","ref_heading":"尊敬語とは","sort":8},
-
-  {"id":"keigo-kenjou-01","topic_id":"keigo-kenjou","kind":"imi","prompt":"「参る」の意味は？","context":null,"choices":["参上する（「行く」の謙譲）","退出する","いらっしゃる","〜です・ます"],"answer":"参上する（「行く」の謙譲）","explanation":"貴人のもとへ「向かう」のが参る。尊敬語ではない点に注意。","ref_heading":"主な謙譲語動詞一覧","sort":1},
-  {"id":"keigo-kenjou-02","topic_id":"keigo-kenjou","kind":"shikibetsu","prompt":"「参る」と「まかる」。貴人のもとから去るのはどちら？","context":null,"choices":["まかる","参る","両方","どちらも違う"],"answer":"まかる","explanation":"参る＝向かう（参上）、まかる・まかづ＝離れる（退出）。方向が逆。","ref_heading":"「参る」「まかる」の使い分け","sort":2},
-  {"id":"keigo-kenjou-03","topic_id":"keigo-kenjou","kind":"imi","prompt":"単独で使われた「奉る」（本動詞）の意味は？","context":null,"choices":["さしあげる","いただく","お与えになる","〜です・ます"],"answer":"さしあげる","explanation":"本動詞の奉る＝「与ふ」の謙譲語。ほかに着る・食ふ・乗るの尊敬語の用法もあるが、まず「さしあげる」。","ref_heading":"主な謙譲語動詞一覧","sort":3},
-  {"id":"keigo-kenjou-04","topic_id":"keigo-kenjou","kind":"shikibetsu","prompt":"「見奉る」の「奉る」の働きは？","context":null,"choices":["補助動詞（〜申し上げる）","本動詞（さしあげる）","助動詞","接続助詞"],"answer":"補助動詞（〜申し上げる）","explanation":"動詞の連用形の後に来る奉るは補助動詞。「見奉る」＝拝見する。単独なら本動詞。","ref_heading":"補助動詞の謙譲語","sort":4},
-  {"id":"keigo-kenjou-05","topic_id":"keigo-kenjou","kind":"imi","prompt":"「女房、帝に奏しける」。主語はどちら？","context":null,"choices":["女房","帝","作者","読者"],"answer":"女房","explanation":"謙譲語の主語は低められる側（身分の低い方）。高められるのは対象の帝。尊敬語と逆なので混同注意。","ref_heading":"謙譲語で主語を判定する方法","sort":5},
-  {"id":"keigo-kenjou-06","topic_id":"keigo-kenjou","kind":"imi","prompt":"児が僧に言う場面。「申しさぶらはば」の「申し」は誰への敬意？","context":"申しさぶらはば","choices":["僧（動作の対象）","児（動作の主体）","読者","筆者"],"answer":"僧（動作の対象）","explanation":"謙譲語「申す」は申し上げる相手＝僧への敬意。敬意の方向は児→僧。","ref_heading":"謙譲語とは","sort":6},
-  {"id":"keigo-kenjou-07","topic_id":"keigo-kenjou","kind":"imi","prompt":"「つかまつる」の意味は？","context":null,"choices":["お仕えする・いたす","おっしゃる","お聞きになる","退出する"],"answer":"お仕えする・いたす","explanation":"「す・仕ふ」の謙譲語。「歌つかまつれ」＝歌をお詠みいたせ、のようにも使う。","ref_heading":"主な謙譲語動詞一覧","sort":7},
-  {"id":"keigo-kenjou-08","topic_id":"keigo-kenjou","kind":"shikibetsu","prompt":"どちらも「言ふ」の敬語。「のたまふ」が高めるのは言う人。では「申す」が高めるのは？","context":null,"choices":["言われる相手","言う人","聞き手","誰も高めない"],"answer":"言われる相手","explanation":"同じ「言ふ」でも、尊敬（のたまふ）は主体を、謙譲（申す）は客体を高める。敬語の種類＝敬意の方向。","ref_heading":"謙譲語とは","sort":8},
-
-  {"id":"keigo-teinei-01","topic_id":"keigo-teinei","kind":"imi","prompt":"補助動詞「はべり」の現代語訳は？","context":null,"choices":["〜です・〜ます","〜なさる","〜申し上げる","〜られる"],"answer":"〜です・〜ます","explanation":"丁寧語の補助動詞。「美しくはべり」＝美しゅうございます。","ref_heading":"丁寧語とは","sort":1},
-  {"id":"keigo-teinei-02","topic_id":"keigo-teinei","kind":"shikibetsu","prompt":"丁寧語が高めているのは誰？","context":null,"choices":["聞き手・読み手","動作の主体","動作の受け手","神仏"],"answer":"聞き手・読み手","explanation":"丁寧語は動作の主体にも対象にも関係しない。「今この話を聞いているあなた」への敬意。","ref_heading":"丁寧語とは","sort":2},
-  {"id":"keigo-teinei-03","topic_id":"keigo-teinei","kind":"shikibetsu","prompt":"「内裏にはべりし時」の「はべり」の働きは？","context":null,"choices":["本動詞（お仕えする・謙譲）","補助動詞（〜です・丁寧）","尊敬の本動詞","助動詞"],"answer":"本動詞（お仕えする・謙譲）","explanation":"単独で「いる・仕える」の意味→本動詞（謙譲）。「宮中にお仕えしていた時」。","ref_heading":"「はべり」の詳細","sort":3},
-  {"id":"keigo-teinei-04","topic_id":"keigo-teinei","kind":"shikibetsu","prompt":"「美しくはべり」の「はべり」の働きは？","context":null,"choices":["補助動詞（〜です・丁寧）","本動詞（お仕えする・謙譲）","尊敬の本動詞","助動詞"],"answer":"補助動詞（〜です・丁寧）","explanation":"他の語の後に付いている→補助動詞（丁寧）。単独（本動詞）か後置（補助動詞）かが判別の第一歩。","ref_heading":"「はべり」の詳細","sort":4},
-  {"id":"keigo-teinei-05","topic_id":"keigo-teinei","kind":"imi","prompt":"児が僧に話す場面。「申しさぶらはば」の「さぶらは」は誰への敬意？","context":"申しさぶらはば","choices":["聞き手の僧","児自身","読者","誰でもない"],"answer":"聞き手の僧","explanation":"会話文の丁寧語＝話し相手への敬意。ここでは聞き手も動作の対象も僧なので、二つの敬語が同じ人に向かう。","ref_heading":"敬語の組み合わせ","sort":5},
-  {"id":"keigo-teinei-06","topic_id":"keigo-teinei","kind":"shikibetsu","prompt":"「申しさぶらふ」に含まれる敬語の組み合わせは？","context":null,"choices":["謙譲（申す）＋丁寧（さぶらふ）","尊敬＋丁寧","尊敬＋謙譲","丁寧のみ"],"answer":"謙譲（申す）＋丁寧（さぶらふ）","explanation":"一つの表現に敬意の方向が2つ。「申す」→動作の対象へ、「さぶらふ」→聞き手へ。出題頻出。","ref_heading":"敬語の組み合わせ","sort":6},
-  {"id":"keigo-teinei-07","topic_id":"keigo-teinei","kind":"shikibetsu","prompt":"地の文に丁寧語があるとき、敬意は誰に向かう？","context":null,"choices":["読者","登場人物","筆者自身","神仏"],"answer":"読者","explanation":"地の文の丁寧語＝筆者が読者に丁寧に語っている。日記・随筆に多い。","ref_heading":"丁寧語はどこに出現するか","sort":7},
-  {"id":"keigo-teinei-08","topic_id":"keigo-teinei","kind":"shikibetsu","prompt":"「はべり」「さぶらふ」を見たら、まず確認することは？","context":null,"choices":["単独か、他の動詞の後か","活用の行","書かれた時代","作者の性別"],"answer":"単独か、他の動詞の後か","explanation":"単独＝本動詞（謙譲「お側にいる」）、動詞の後＝補助動詞（丁寧「〜です」）。判別手順の第一歩。","ref_heading":"丁寧語の判別法","sort":8}
+  {
+    "id": "keigo-01",
+    "topic_id": "keigo",
+    "kind": "shikibetsu",
+    "prompt": "「のたまふ」（おっしゃる）が高めているのは誰？",
+    "context": null,
+    "choices": [
+      "動作の主体（言う人）",
+      "動作の受け手（言われる人）",
+      "聞き手",
+      "筆者自身"
+    ],
+    "answer": "動作の主体（言う人）",
+    "explanation": "尊敬語＝する人を高める。「のたまふ」の主語は身分の高い人。",
+    "ref_heading": "敬語の 3 種",
+    "sort": 1
+  },
+  {
+    "id": "keigo-02",
+    "topic_id": "keigo",
+    "kind": "shikibetsu",
+    "prompt": "「申す」（申し上げる）が高めているのは誰？",
+    "context": null,
+    "choices": [
+      "動作の受け手（言われる相手）",
+      "動作の主体（言う人）",
+      "聞き手",
+      "筆者自身"
+    ],
+    "answer": "動作の受け手（言われる相手）",
+    "explanation": "謙譲語＝する人を低めて、される側を高める。尊敬語と方向が逆。",
+    "ref_heading": "敬語の 3 種",
+    "sort": 2
+  },
+  {
+    "id": "keigo-03",
+    "topic_id": "keigo",
+    "kind": "shikibetsu",
+    "prompt": "「侍り」（〜です・ます）が高めているのは誰？",
+    "context": null,
+    "choices": [
+      "聞き手・読み手",
+      "動作の主体",
+      "動作の受け手",
+      "誰も高めない"
+    ],
+    "answer": "聞き手・読み手",
+    "explanation": "丁寧語＝動作と無関係に「今この話を聞いているあなた」への敬意。",
+    "ref_heading": "丁寧語 — 聞き手を高める",
+    "sort": 3
+  },
+  {
+    "id": "keigo-04",
+    "topic_id": "keigo",
+    "kind": "imi",
+    "prompt": "主語が省略されている。誰がふさわしい？",
+    "context": "___、笛を吹き給ふ",
+    "choices": [
+      "殿（身分の高い人）",
+      "召使",
+      "通りすがりの童",
+      "誰でもよい"
+    ],
+    "answer": "殿（身分の高い人）",
+    "explanation": "尊敬語「給ふ」がある→主語は身分の高い人物。敬語は省略された主語を復元する最大の手がかり。",
+    "ref_heading": "敬語の 3 種",
+    "sort": 101
+  },
+  {
+    "id": "keigo-05",
+    "topic_id": "keigo",
+    "kind": "imi",
+    "prompt": "「〜せ給ふ」の主語として最もふさわしいのは？",
+    "context": null,
+    "choices": [
+      "帝",
+      "従者",
+      "子ども",
+      "作者"
+    ],
+    "answer": "帝",
+    "explanation": "「せ給ふ・させ給ふ」＝二重敬語（最高敬意）。主語はほぼ天皇・皇族級と判断できる。",
+    "ref_heading": "二重敬語と敬意の方向",
+    "sort": 4
+  },
+  {
+    "id": "keigo-06",
+    "topic_id": "keigo",
+    "kind": "shikibetsu",
+    "prompt": "「奏す」（申し上げる）の相手は誰と確定できる？",
+    "context": null,
+    "choices": [
+      "天皇・上皇",
+      "中宮・東宮",
+      "一般の貴族",
+      "僧"
+    ],
+    "answer": "天皇・上皇",
+    "explanation": "「奏す」は相手が天皇・上皇に決まっている絶対敬語。登場人物の特定に直結する。",
+    "ref_heading": "謙譲語 — 客体を高める",
+    "sort": 5
+  },
+  {
+    "id": "keigo-07",
+    "topic_id": "keigo",
+    "kind": "shikibetsu",
+    "prompt": "「啓す」（申し上げる）の相手は誰と確定できる？",
+    "context": null,
+    "choices": [
+      "中宮・東宮",
+      "天皇・上皇",
+      "一般の貴族",
+      "神仏"
+    ],
+    "answer": "中宮・東宮",
+    "explanation": "「啓す」は相手が中宮・東宮に決まっている絶対敬語。「奏す＝天皇」とセットで覚える。",
+    "ref_heading": "謙譲語 — 客体を高める",
+    "sort": 6
+  },
+  {
+    "id": "keigo-08",
+    "topic_id": "keigo",
+    "kind": "shikibetsu",
+    "prompt": "地の文の「給ふ」は、誰から誰への敬意？",
+    "context": null,
+    "choices": [
+      "筆者から動作の主体へ",
+      "話者から聞き手へ",
+      "主体から客体へ",
+      "読者から筆者へ"
+    ],
+    "answer": "筆者から動作の主体へ",
+    "explanation": "地の文の敬語の出発点は筆者。会話文なら話者が出発点になる。",
+    "ref_heading": "二重敬語と敬意の方向",
+    "sort": 7
+  },
+  {
+    "id": "keigo-sonkei-01",
+    "topic_id": "keigo-sonkei",
+    "kind": "shikibetsu",
+    "prompt": "「のたまふ」に対応する一般語は？",
+    "context": null,
+    "choices": [
+      "言ふ",
+      "聞く",
+      "見る",
+      "思ふ"
+    ],
+    "answer": "言ふ",
+    "explanation": "のたまふ＝「言ふ」の尊敬語「おっしゃる」。仰す（おほす）も同じ。",
+    "ref_heading": "主な尊敬語動詞一覧",
+    "sort": 1
+  },
+  {
+    "id": "keigo-sonkei-02",
+    "topic_id": "keigo-sonkei",
+    "kind": "imi",
+    "prompt": "「大殿籠る（おほとのごもる）」の意味は？",
+    "context": null,
+    "choices": [
+      "おやすみになる",
+      "お出かけになる",
+      "召し上がる",
+      "お建てになる"
+    ],
+    "answer": "おやすみになる",
+    "explanation": "「寝」の尊敬語。本動詞の尊敬語は一般語とセットで暗記する。",
+    "ref_heading": "主な尊敬語動詞一覧",
+    "sort": 2
+  },
+  {
+    "id": "keigo-sonkei-03",
+    "topic_id": "keigo-sonkei",
+    "kind": "imi",
+    "prompt": "「聞こし召す」の意味として正しいのは？",
+    "context": null,
+    "choices": [
+      "お聞きになる・召し上がる（両方）",
+      "お聞きになるのみ",
+      "召し上がるのみ",
+      "ご覧になる"
+    ],
+    "answer": "お聞きになる・召し上がる（両方）",
+    "explanation": "聞こし召す＝「聞く」と「食ふ」両方の尊敬語。「召す」も呼ぶ・食ふ・着るの多義。",
+    "ref_heading": "主な尊敬語動詞一覧",
+    "sort": 3
+  },
+  {
+    "id": "keigo-sonkei-04",
+    "topic_id": "keigo-sonkei",
+    "kind": "shikibetsu",
+    "prompt": "「見給ふ」（四段活用）の意味は？",
+    "context": null,
+    "choices": [
+      "ご覧になる（尊敬）",
+      "拝見する（謙譲）",
+      "見ます（丁寧）",
+      "見られる（受身）"
+    ],
+    "answer": "ご覧になる（尊敬）",
+    "explanation": "四段の「給ふ」＝尊敬「〜なさる」。下二段の「給ふ」だけが謙譲「〜いたす」。活用で見分ける。",
+    "ref_heading": "「給ふ」の尊敬と謙譲の見分け方",
+    "sort": 4
+  },
+  {
+    "id": "keigo-sonkei-05",
+    "topic_id": "keigo-sonkei",
+    "kind": "shikibetsu",
+    "prompt": "文中に敬語が一つもないとき、主語として可能性が高いのは？",
+    "context": null,
+    "choices": [
+      "身分の低い人・一般の人物",
+      "天皇",
+      "中宮",
+      "神仏"
+    ],
+    "answer": "身分の低い人・一般の人物",
+    "explanation": "敬語の有無自体が主語のヒント。尊敬語があれば貴人、なければ一般人物の動作と推定できる。",
+    "ref_heading": "尊敬語で主語を判定する方法",
+    "sort": 5
+  },
+  {
+    "id": "keigo-sonkei-06",
+    "topic_id": "keigo-sonkei",
+    "kind": "shikibetsu",
+    "prompt": "尊敬の表し方3つ（本動詞／給ふ／る・らる）で、敬意が最も高いのは？",
+    "context": null,
+    "choices": [
+      "本動詞（のたまふ等）",
+      "補助動詞「給ふ」",
+      "助動詞「る・らる」",
+      "すべて同じ"
+    ],
+    "answer": "本動詞（のたまふ等）",
+    "explanation": "敬意の度合いは 本動詞＞給ふ＞る・らる。どの作り方かで人物の格も推定できる。",
+    "ref_heading": "尊敬語の3つの作り方",
+    "sort": 6
+  },
+  {
+    "id": "keigo-sonkei-07",
+    "topic_id": "keigo-sonkei",
+    "kind": "shikibetsu",
+    "prompt": "「おはす」と「おはします」。より高い敬意はどちら？",
+    "context": null,
+    "choices": [
+      "おはします",
+      "おはす",
+      "同じ",
+      "文脈次第"
+    ],
+    "answer": "おはします",
+    "explanation": "おはします＝おはす＋ます の二重敬語化。天皇・中宮など最高位に使う。",
+    "ref_heading": "「おはす」と「おはします」の違い",
+    "sort": 7
+  },
+  {
+    "id": "keigo-sonkei-08",
+    "topic_id": "keigo-sonkei",
+    "kind": "imi",
+    "prompt": "地の文「（良秀は絵が）上手におはしけり」の「おはし」は、誰から誰への敬意？",
+    "context": "上手におはしけり",
+    "choices": [
+      "筆者から良秀（主体）へ",
+      "良秀から筆者へ",
+      "筆者から読者へ",
+      "僧から良秀へ"
+    ],
+    "answer": "筆者から良秀（主体）へ",
+    "explanation": "地の文の尊敬語＝筆者→動作の主体。「でいらっしゃった」と主人公を高めている。",
+    "ref_heading": "尊敬語とは",
+    "sort": 301
+  },
+  {
+    "id": "keigo-kenjou-01",
+    "topic_id": "keigo-kenjou",
+    "kind": "imi",
+    "prompt": "「参る」の意味は？",
+    "context": null,
+    "choices": [
+      "参上する（「行く」の謙譲）",
+      "退出する",
+      "いらっしゃる",
+      "〜です・ます"
+    ],
+    "answer": "参上する（「行く」の謙譲）",
+    "explanation": "貴人のもとへ「向かう」のが参る。尊敬語ではない点に注意。",
+    "ref_heading": "主な謙譲語動詞一覧",
+    "sort": 1
+  },
+  {
+    "id": "keigo-kenjou-02",
+    "topic_id": "keigo-kenjou",
+    "kind": "shikibetsu",
+    "prompt": "「参る」と「まかる」。貴人のもとから去るのはどちら？",
+    "context": null,
+    "choices": [
+      "まかる",
+      "参る",
+      "両方",
+      "どちらも違う"
+    ],
+    "answer": "まかる",
+    "explanation": "参る＝向かう（参上）、まかる・まかづ＝離れる（退出）。方向が逆。",
+    "ref_heading": "「参る」「まかる」の使い分け",
+    "sort": 2
+  },
+  {
+    "id": "keigo-kenjou-03",
+    "topic_id": "keigo-kenjou",
+    "kind": "imi",
+    "prompt": "単独で使われた「奉る」（本動詞）の意味は？",
+    "context": null,
+    "choices": [
+      "さしあげる",
+      "いただく",
+      "お与えになる",
+      "〜です・ます"
+    ],
+    "answer": "さしあげる",
+    "explanation": "本動詞の奉る＝「与ふ」の謙譲語。ほかに着る・食ふ・乗るの尊敬語の用法もあるが、まず「さしあげる」。",
+    "ref_heading": "主な謙譲語動詞一覧",
+    "sort": 3
+  },
+  {
+    "id": "keigo-kenjou-04",
+    "topic_id": "keigo-kenjou",
+    "kind": "shikibetsu",
+    "prompt": "「見奉る」の「奉る」の働きは？",
+    "context": null,
+    "choices": [
+      "補助動詞（〜申し上げる）",
+      "本動詞（さしあげる）",
+      "助動詞",
+      "接続助詞"
+    ],
+    "answer": "補助動詞（〜申し上げる）",
+    "explanation": "動詞の連用形の後に来る奉るは補助動詞。「見奉る」＝拝見する。単独なら本動詞。",
+    "ref_heading": "補助動詞の謙譲語",
+    "sort": 4
+  },
+  {
+    "id": "keigo-kenjou-05",
+    "topic_id": "keigo-kenjou",
+    "kind": "imi",
+    "prompt": "「女房、帝に奏しける」。主語はどちら？",
+    "context": null,
+    "choices": [
+      "女房",
+      "帝",
+      "作者",
+      "読者"
+    ],
+    "answer": "女房",
+    "explanation": "謙譲語の主語は低められる側（身分の低い方）。高められるのは対象の帝。尊敬語と逆なので混同注意。",
+    "ref_heading": "謙譲語で主語を判定する方法",
+    "sort": 5
+  },
+  {
+    "id": "keigo-kenjou-06",
+    "topic_id": "keigo-kenjou",
+    "kind": "imi",
+    "prompt": "児が僧に言う場面。「申しさぶらはば」の「申し」は誰への敬意？",
+    "context": "申しさぶらはば",
+    "choices": [
+      "僧（動作の対象）",
+      "児（動作の主体）",
+      "読者",
+      "筆者"
+    ],
+    "answer": "僧（動作の対象）",
+    "explanation": "謙譲語「申す」は申し上げる相手＝僧への敬意。敬意の方向は児→僧。",
+    "ref_heading": "謙譲語とは",
+    "sort": 201
+  },
+  {
+    "id": "keigo-kenjou-07",
+    "topic_id": "keigo-kenjou",
+    "kind": "imi",
+    "prompt": "「つかまつる」の意味は？",
+    "context": null,
+    "choices": [
+      "お仕えする・いたす",
+      "おっしゃる",
+      "お聞きになる",
+      "退出する"
+    ],
+    "answer": "お仕えする・いたす",
+    "explanation": "「す・仕ふ」の謙譲語。「歌つかまつれ」＝歌をお詠みいたせ、のようにも使う。",
+    "ref_heading": "主な謙譲語動詞一覧",
+    "sort": 6
+  },
+  {
+    "id": "keigo-kenjou-08",
+    "topic_id": "keigo-kenjou",
+    "kind": "shikibetsu",
+    "prompt": "どちらも「言ふ」の敬語。「のたまふ」が高めるのは言う人。では「申す」が高めるのは？",
+    "context": null,
+    "choices": [
+      "言われる相手",
+      "言う人",
+      "聞き手",
+      "誰も高めない"
+    ],
+    "answer": "言われる相手",
+    "explanation": "同じ「言ふ」でも、尊敬（のたまふ）は主体を、謙譲（申す）は客体を高める。敬語の種類＝敬意の方向。",
+    "ref_heading": "謙譲語とは",
+    "sort": 7
+  },
+  {
+    "id": "keigo-teinei-01",
+    "topic_id": "keigo-teinei",
+    "kind": "imi",
+    "prompt": "補助動詞「はべり」の現代語訳は？",
+    "context": null,
+    "choices": [
+      "〜です・〜ます",
+      "〜なさる",
+      "〜申し上げる",
+      "〜られる"
+    ],
+    "answer": "〜です・〜ます",
+    "explanation": "丁寧語の補助動詞。「美しくはべり」＝美しゅうございます。",
+    "ref_heading": "丁寧語とは",
+    "sort": 1
+  },
+  {
+    "id": "keigo-teinei-02",
+    "topic_id": "keigo-teinei",
+    "kind": "shikibetsu",
+    "prompt": "丁寧語が高めているのは誰？",
+    "context": null,
+    "choices": [
+      "聞き手・読み手",
+      "動作の主体",
+      "動作の受け手",
+      "神仏"
+    ],
+    "answer": "聞き手・読み手",
+    "explanation": "丁寧語は動作の主体にも対象にも関係しない。「今この話を聞いているあなた」への敬意。",
+    "ref_heading": "丁寧語とは",
+    "sort": 2
+  },
+  {
+    "id": "keigo-teinei-03",
+    "topic_id": "keigo-teinei",
+    "kind": "shikibetsu",
+    "prompt": "「内裏にはべりし時」の「はべり」の働きは？",
+    "context": null,
+    "choices": [
+      "本動詞（お仕えする・謙譲）",
+      "補助動詞（〜です・丁寧）",
+      "尊敬の本動詞",
+      "助動詞"
+    ],
+    "answer": "本動詞（お仕えする・謙譲）",
+    "explanation": "単独で「いる・仕える」の意味→本動詞（謙譲）。「宮中にお仕えしていた時」。",
+    "ref_heading": "「はべり」の詳細",
+    "sort": 3
+  },
+  {
+    "id": "keigo-teinei-04",
+    "topic_id": "keigo-teinei",
+    "kind": "shikibetsu",
+    "prompt": "「美しくはべり」の「はべり」の働きは？",
+    "context": null,
+    "choices": [
+      "補助動詞（〜です・丁寧）",
+      "本動詞（お仕えする・謙譲）",
+      "尊敬の本動詞",
+      "助動詞"
+    ],
+    "answer": "補助動詞（〜です・丁寧）",
+    "explanation": "他の語の後に付いている→補助動詞（丁寧）。単独（本動詞）か後置（補助動詞）かが判別の第一歩。",
+    "ref_heading": "「はべり」の詳細",
+    "sort": 4
+  },
+  {
+    "id": "keigo-teinei-05",
+    "topic_id": "keigo-teinei",
+    "kind": "imi",
+    "prompt": "児が僧に話す場面。「申しさぶらはば」の「さぶらは」は誰への敬意？",
+    "context": "申しさぶらはば",
+    "choices": [
+      "聞き手の僧",
+      "児自身",
+      "読者",
+      "誰でもない"
+    ],
+    "answer": "聞き手の僧",
+    "explanation": "会話文の丁寧語＝話し相手への敬意。ここでは聞き手も動作の対象も僧なので、二つの敬語が同じ人に向かう。",
+    "ref_heading": "敬語の組み合わせ",
+    "sort": 201
+  },
+  {
+    "id": "keigo-teinei-06",
+    "topic_id": "keigo-teinei",
+    "kind": "shikibetsu",
+    "prompt": "「申しさぶらふ」に含まれる敬語の組み合わせは？",
+    "context": null,
+    "choices": [
+      "謙譲（申す）＋丁寧（さぶらふ）",
+      "尊敬＋丁寧",
+      "尊敬＋謙譲",
+      "丁寧のみ"
+    ],
+    "answer": "謙譲（申す）＋丁寧（さぶらふ）",
+    "explanation": "一つの表現に敬意の方向が2つ。「申す」→動作の対象へ、「さぶらふ」→聞き手へ。出題頻出。",
+    "ref_heading": "敬語の組み合わせ",
+    "sort": 5
+  },
+  {
+    "id": "keigo-teinei-07",
+    "topic_id": "keigo-teinei",
+    "kind": "shikibetsu",
+    "prompt": "地の文に丁寧語があるとき、敬意は誰に向かう？",
+    "context": null,
+    "choices": [
+      "読者",
+      "登場人物",
+      "筆者自身",
+      "神仏"
+    ],
+    "answer": "読者",
+    "explanation": "地の文の丁寧語＝筆者が読者に丁寧に語っている。日記・随筆に多い。",
+    "ref_heading": "丁寧語はどこに出現するか",
+    "sort": 6
+  },
+  {
+    "id": "keigo-teinei-08",
+    "topic_id": "keigo-teinei",
+    "kind": "shikibetsu",
+    "prompt": "「はべり」「さぶらふ」を見たら、まず確認することは？",
+    "context": null,
+    "choices": [
+      "単独か、他の動詞の後か",
+      "活用の行",
+      "書かれた時代",
+      "作者の性別"
+    ],
+    "answer": "単独か、他の動詞の後か",
+    "explanation": "単独＝本動詞（謙譲「お側にいる」）、動詞の後＝補助動詞（丁寧「〜です」）。判別手順の第一歩。",
+    "ref_heading": "丁寧語の判別法",
+    "sort": 7
+  }
 ]
