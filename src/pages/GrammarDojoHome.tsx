@@ -30,6 +30,7 @@ const CURRICULUM = [
   "doushi-katsuyo", "doushi-yodan", "doushi-kami-ichidan", "doushi-shimo-nidan",
   "doushi-kahen", "doushi-sahen", "doushi-rahen",
   "keiyoshi-katsuyo", "keiyoshi-ku", "keiyoshi-shiku", "keiyoshi-gokan", "onbin",
+  "jodoshi-toha",
   "jodoshi-jisei", "jodoshi-keri", "jodoshi-tsu", "jodoshi-nu", "jodoshi-tari", "jodoshi-ri",
   "jodoshi-mu", "jodoshi-suiryo", "jodoshi-beshi", "jodoshi-zu",
   "jodoshi-ru", "jodoshi-su", "jodoshi-ganbou", "jodoshi-dantei", "jodoshi-nari",

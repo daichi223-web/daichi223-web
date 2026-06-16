@@ -27,6 +27,13 @@ export const grammarTopics: GrammarTopicSummary[] = [
   },
   // Layer 2: 助動詞
   {
+    id: "jodoshi-toha",
+    title: "助動詞とは",
+    category: "助動詞",
+    layer: 2,
+    summary: "助動詞は付属語で活用する。「接続・活用・意味」の3点で攻略する",
+  },
+  {
     id: "jodoshi-jisei",
     title: "助動詞 時制系",
     category: "助動詞",
