@@ -39,7 +39,7 @@ function maxUnlockedLevel(
 }
 
 /** 1セッションで出題する問題数（各レベル約20問のバンクからシャッフルして抽出） */
-const SESSION_SIZE = 6;
+const SESSION_SIZE = 8;
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -69,6 +69,7 @@ export default function GrammarDojoTopic() {
 
   // この単元に存在する難度レベルと、解放済み最大レベル（前レベル定着85%で解放）
   const levels = [1, 2, 3, 4, 5].filter((L) => drills.some((d) => drillLevel(d) === L));
+  // 定着＝85%以上。8問抽出なので7〜8問は1ミスまでOK、6問以下の級は実質全問正解。
   const isMastered = (key: string) => (progress[key]?.masteryPct ?? 0) >= 85;
   const unlockedMax = !topicId ? 1 : maxUnlockedLevel(levels, progress, topicId);
   const levelDrills = drills.filter((d) => drillLevel(d) === selLevel);
