@@ -51,7 +51,8 @@ function inferDeciderType(jodoshi, meaning) {
   if (/意志|勧誘|適当|命令/.test(m)) return "主語";
   if (/打消推量|打消意志|推量/.test(m)) return "主語";
   // 下接語で決まる（尊敬＝給ふ等／使役＝対象）
-  if (/尊敬/.test(m)) return "後接";
+  // 尊敬: る・らるは主語(貴人)が決め手。す・さす・しむは下接「給ふ」(二重敬語)＝後接。
+  if (/尊敬/.test(m)) return jodoshi === "る・らる" ? "主語" : "後接";
   if (/使役/.test(m)) return "文脈";
   return "文脈";
 }
