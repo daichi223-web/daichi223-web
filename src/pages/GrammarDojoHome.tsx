@@ -172,6 +172,23 @@ export default function GrammarDojoHome() {
           </Link>
         )}
 
+        {/* 例文事典への導線 */}
+        {!loading && (
+          <Link
+            to="/read/grammar/reibun"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3.5 mb-4 border-2 bg-rw-paper border-rw-rule text-rw-ink-soft hover:border-rw-ink-soft transition-colors"
+          >
+            <span className="text-2xl flex-shrink-0">📖</span>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-black leading-snug text-rw-ink">助動詞 例文事典</h3>
+              <p className="text-[11px] mt-0.5 leading-relaxed text-rw-ink-soft">
+                意味ごとの「決め手」と出典つき本文用例（けり・つ・ぬ・たり・り・まじ・けむ・らむ・ごとし）
+              </p>
+            </div>
+            <span className="text-sm text-rw-ink-soft flex-shrink-0">→</span>
+          </Link>
+        )}
+
         {loading ? (
           <p className="text-rw-ink-soft">読み込み中...</p>
         ) : units.length === 0 ? (

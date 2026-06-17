@@ -184,6 +184,33 @@ export interface GrammarDrill {
   sort?: number; // 出題順。100の位で難度レベルを表す（<100=Lv1, 100台=Lv2, 200台=Lv3）
 }
 
+/** 助動詞例文集の1例（grammar_reibun） */
+export interface GrammarReibun {
+  id: string;
+  jodoshi: string;
+  meaningKey: string;
+  meaning: string;
+  sentence: string; // 本文（判定対象=【】, 決め手=《》）
+  translation: string;
+  source: string;
+  workKey?: string;
+  context?: string; // 場面解説
+  decider?: string; // 決め手
+  period?: string;
+  confidence: "high" | "medium" | "low";
+  verified: boolean;
+  isQuiz: boolean;
+  layer?: "kata" | "mazeru" | "jissen";
+}
+
+/** 助動詞×意味マスタ（選択肢セット＋決め手の総則, grammar_jodoshi_meanings） */
+export interface GrammarJodoshiMeaning {
+  meaningKey: string;
+  jodoshi: string;
+  meaning: string;
+  deciderRule: string;
+}
+
 /** 単元到達度（per-user, grammar_topic_progress） */
 export interface TopicProgress {
   topicId: string;
