@@ -125,23 +125,17 @@ export default function ReibunDict() {
                 {/* 例カード */}
                 <div className="flex flex-col gap-2.5">
                   {examples.map((e) => {
-                    const needsCheck = !e.verified || e.confidence === "low";
                     return (
                       <div key={e.id} className="bg-rw-paper border-2 border-rw-ink rounded-2xl px-3.5 py-3">
                         <div className="flex items-start justify-between gap-2">
                           <p className="text-[15px] text-rw-ink leading-relaxed flex-1">
                             <ReibunSentence text={e.sentence} cues={e.cues} />
                           </p>
-                          <span className="flex items-center gap-1 flex-shrink-0">
-                            {needsCheck && (
-                              <span className="text-[10px] text-rw-ink-soft" title="要確認">⚠</span>
-                            )}
-                            <span
-                              className="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-rw-ink text-rw-paper"
-                              title={e.meaning}
-                            >
-                              {meaningBadge(e.meaning)}
-                            </span>
+                          <span
+                            className="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-rw-ink text-rw-paper flex-shrink-0"
+                            title={e.meaning}
+                          >
+                            {meaningBadge(e.meaning)}
                           </span>
                         </div>
                         <p className="text-[12px] text-rw-ink-soft mt-1.5 leading-relaxed">{e.translation}</p>
