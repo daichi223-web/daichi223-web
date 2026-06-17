@@ -5,10 +5,12 @@
 //   node scripts/build-reibun-seed.mjs  [path/to/_all_sets.json]
 // 既定入力: F:/A2A/_all_sets.json
 // 出力:     supabase/seeds/grammar-reibun.sql
+//
+// 行データは buildRows(src) で組み立て、SQL 生成と REST 投入(apply-reibun.mjs)で共用する。
 import fs from "node:fs";
 import path from "node:path";
 
-const SRC = process.argv[2] || "F:/A2A/_all_sets.json";
+export const DEFAULT_SRC = "F:/A2A/_all_sets.json";
 const OUT = path.join(process.cwd(), "supabase/seeds/grammar-reibun.sql");
 
 const ROMAJI = {
@@ -54,63 +56,98 @@ function inferDeciderType(jodoshi, meaning) {
   return "文脈";
 }
 
-// 手がかり注釈（任意）: F:/A2A/_cues.json = { "meaning_key#idx": [{text,type,note}] }
-let CUES = {};
-try {
-  CUES = JSON.parse(fs.readFileSync("F:/A2A/_cues.json", "utf8"));
-} catch {
-  /* 注釈未生成でも seed は作れる */
+// 行データを組み立てる（SQL生成・REST投入で共用）。副作用なし。
+export function buildRows(src = DEFAULT_SRC) {
+  // 手がかり注釈（任意）: F:/A2A/_cues.json = { "meaning_key#idx": [{text,type,note}] }
+  let CUES = {};
+  try {
+    CUES = JSON.parse(fs.readFileSync("F:/A2A/_cues.json", "utf8"));
+  } catch {
+    /* 注釈未生成でも seed は作れる */
+  }
+
+  const sets = JSON.parse(fs.readFileSync(src, "utf8"));
+  const reibun = [];
+  const meanings = [];
+  const perJodoshi = {};
+
+  for (const s of sets) {
+    const romaji = ROMAJI[s.jodoshi];
+    if (!romaji) throw new Error(`未知の助動詞: ${s.jodoshi}`);
+    perJodoshi[romaji] = (perJodoshi[romaji] || 0) + 1;
+    const mIdx = perJodoshi[romaji];
+    const meaningKey = `${romaji}-${mIdx}`;
+
+    const isNew = !ORIG.has(romaji);
+    const dtype = TYPE_MAP[meaningKey] || (isNew ? inferDeciderType(s.jodoshi, s.meaning) : null);
+    meanings.push({
+      meaning_key: meaningKey,
+      jodoshi: s.jodoshi,
+      meaning: s.meaning,
+      decider_rule: s.decider_rule,
+      decider_type: dtype,
+      sort: mIdx,
+    });
+
+    s.examples.forEach((e, i) => {
+      const id = `reibun-${meaningKey}-${String(i + 1).padStart(2, "0")}`;
+      const conf = e.confidence || "medium";
+      // 両論ある例(noQuiz)は出題から除外（正解衝突を防ぐ）。事典には残す
+      const isQuiz = conf === "high" && e.verified === true && e.noQuiz !== true;
+      // 手がかり：注釈があれば取り込み、text は本文の部分文字列のみ採用（幻覚排除）
+      const ref = `${meaningKey}#${i + 1}`;
+      let rawCues = Array.isArray(CUES[ref]) ? CUES[ref] : [];
+      // 新助動詞で注釈未生成なら、本文の《…》から手がかりを自動生成（型は意味から推定）
+      if (isNew && rawCues.length === 0) {
+        const spans = [...e.sentence.matchAll(/《([^》]*)》/g)].map((m) => m[1]).filter(Boolean);
+        rawCues = spans.map((t) => ({ text: t, type: dtype, note: e.decider || "" }));
+      }
+      const cues = rawCues.filter(
+        (c) => c && c.type && (c.text === "" || (c.text && e.sentence.includes(c.text)))
+      );
+      reibun.push({
+        id,
+        jodoshi: s.jodoshi,
+        meaning_key: meaningKey,
+        meaning: s.meaning,
+        sentence: e.sentence,
+        translation: e.translation,
+        source: e.source,
+        work_key: null,
+        context: e.context,
+        decider: e.decider,
+        period: e.period,
+        confidence: conf,
+        verified: e.verified === true,
+        is_quiz: isQuiz,
+        layer: null,
+        decider_type: dtype,
+        cues: cues.length ? cues : null,
+        sort: i + 1,
+      });
+    });
+  }
+  return { meanings, reibun, setCount: sets.length };
 }
 
+// ---- SQL シリアライズ（従来出力をバイト単位で維持）----
 const q = (s) => (s == null ? "null" : `'${String(s).replace(/'/g, "''")}'`);
 const b = (v) => (v ? "true" : "false");
 
-const sets = JSON.parse(fs.readFileSync(SRC, "utf8"));
-
-const reibunRows = [];
-const meaningRows = [];
-const perJodoshi = {};
-
-for (const s of sets) {
-  const romaji = ROMAJI[s.jodoshi];
-  if (!romaji) throw new Error(`未知の助動詞: ${s.jodoshi}`);
-  perJodoshi[romaji] = (perJodoshi[romaji] || 0) + 1;
-  const mIdx = perJodoshi[romaji];
-  const meaningKey = `${romaji}-${mIdx}`;
-
-  const isNew = !ORIG.has(romaji);
-  const dtype = TYPE_MAP[meaningKey] || (isNew ? inferDeciderType(s.jodoshi, s.meaning) : null);
-  meaningRows.push(
-    `('${meaningKey}', ${q(s.jodoshi)}, ${q(s.meaning)}, ${q(s.decider_rule)}, ${q(dtype)}, ${mIdx})`
+function toSql({ meanings, reibun, setCount }) {
+  const meaningRows = meanings.map(
+    (m) => `('${m.meaning_key}', ${q(m.jodoshi)}, ${q(m.meaning)}, ${q(m.decider_rule)}, ${q(m.decider_type)}, ${m.sort})`
   );
-
-  s.examples.forEach((e, i) => {
-    const id = `reibun-${meaningKey}-${String(i + 1).padStart(2, "0")}`;
-    const conf = e.confidence || "medium";
-    // 両論ある例(noQuiz)は出題から除外（正解衝突を防ぐ）。事典には残す
-    const isQuiz = conf === "high" && e.verified === true && e.noQuiz !== true;
-    // 手がかり：注釈があれば取り込み、text は本文の部分文字列のみ採用（幻覚排除）
-    const ref = `${meaningKey}#${i + 1}`;
-    let rawCues = Array.isArray(CUES[ref]) ? CUES[ref] : [];
-    // 新助動詞で注釈未生成なら、本文の《…》から手がかりを自動生成（型は意味から推定）
-    if (isNew && rawCues.length === 0) {
-      const spans = [...e.sentence.matchAll(/《([^》]*)》/g)].map((m) => m[1]).filter(Boolean);
-      rawCues = spans.map((t) => ({ text: t, type: dtype, note: e.decider || "" }));
-    }
-    const cues = rawCues.filter(
-      (c) => c && c.type && (c.text === "" || (c.text && e.sentence.includes(c.text)))
-    );
-    const cuesJson = cues.length ? `'${JSON.stringify(cues).replace(/'/g, "''")}'::jsonb` : "null";
-    reibunRows.push(
-      `(${q(id)}, ${q(s.jodoshi)}, '${meaningKey}', ${q(s.meaning)}, ${q(e.sentence)}, ` +
-        `${q(e.translation)}, ${q(e.source)}, null, ${q(e.context)}, ${q(e.decider)}, ` +
-        `${q(e.period)}, ${q(conf)}, ${b(e.verified === true)}, ${b(isQuiz)}, null, ${q(dtype)}, ${cuesJson}, ${i + 1})`
+  const reibunRows = reibun.map((r) => {
+    const cuesJson = r.cues ? `'${JSON.stringify(r.cues).replace(/'/g, "''")}'::jsonb` : "null";
+    return (
+      `(${q(r.id)}, ${q(r.jodoshi)}, '${r.meaning_key}', ${q(r.meaning)}, ${q(r.sentence)}, ` +
+      `${q(r.translation)}, ${q(r.source)}, null, ${q(r.context)}, ${q(r.decider)}, ` +
+      `${q(r.period)}, ${q(r.confidence)}, ${b(r.verified)}, ${b(r.is_quiz)}, null, ${q(r.decider_type)}, ${cuesJson}, ${r.sort})`
     );
   });
-}
-
-const sql = `-- AUTO-GENERATED by scripts/build-reibun-seed.mjs — do not edit by hand.
--- 助動詞例文集（拡充版）seed。${sets.length}意味セット / ${reibunRows.length}例。
+  return `-- AUTO-GENERATED by scripts/build-reibun-seed.mjs — do not edit by hand.
+-- 助動詞例文集（拡充版）seed。${setCount}意味セット / ${reibunRows.length}例。
 begin;
 delete from grammar_reibun;
 delete from grammar_jodoshi_meanings;
@@ -123,11 +160,16 @@ insert into grammar_reibun
 ${reibunRows.join(",\n")};
 commit;
 `;
+}
 
-fs.mkdirSync(path.dirname(OUT), { recursive: true });
-fs.writeFileSync(OUT, sql);
-const quizN = reibunRows.length; // recompute below for log
-let q2 = 0;
-for (const s of sets) for (const e of s.examples) if ((e.confidence === "high") && e.verified === true) q2++;
-console.log(`✅ ${OUT}`);
-console.log(`   意味セット ${meaningRows.length} / 例文 ${reibunRows.length}（出題対象 is_quiz=${q2}）`);
+// ---- CLI 実行（直接起動時のみ）----
+const isMain = import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("build-reibun-seed.mjs");
+if (isMain) {
+  const src = process.argv[2] || DEFAULT_SRC;
+  const data = buildRows(src);
+  fs.mkdirSync(path.dirname(OUT), { recursive: true });
+  fs.writeFileSync(OUT, toSql(data));
+  const quizN = data.reibun.filter((r) => r.confidence === "high" && r.verified).length;
+  console.log(`✅ ${OUT}`);
+  console.log(`   意味セット ${data.meanings.length} / 例文 ${data.reibun.length}（出題対象 is_quiz=${quizN}）`);
+}
