@@ -9,7 +9,13 @@ import type { GrammarReibun, GrammarJodoshiMeaning } from "@/lib/kobun/types";
 
 // 助動詞の表示順（例文集に合わせる）
 export const JODOSHI_ORDER = [
-  "けり", "つ", "ぬ", "たり", "り", "まじ", "けむ", "らむ", "ごとし",
+  "けり", "つ", "ぬ", "たり", "り",
+  "む", "べし",
+  "まじ", "けむ", "らむ",
+  "まし", "じ", "めり",
+  "なり",
+  "ごとし",
+  "る・らる", "す・さす・しむ",
 ];
 
 /**

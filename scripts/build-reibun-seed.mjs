@@ -14,7 +14,13 @@ const OUT = path.join(process.cwd(), "supabase/seeds/grammar-reibun.sql");
 const ROMAJI = {
   "けり": "keri", "つ": "tsu", "ぬ": "nu", "たり": "tari", "り": "ri",
   "まじ": "maji", "けむ": "kemu", "らむ": "ramu", "ごとし": "gotoshi",
+  // 多義助動詞 第2弾（2026-06-17）
+  "む": "mu", "べし": "beshi", "す・さす・しむ": "su", "る・らる": "ru",
+  "なり": "nari", "まし": "mashi", "じ": "ji", "めり": "meri",
 };
+
+// 初代9助動詞（出力を不変に保つため、新ロジックは新助動詞だけに適用）
+const ORIG = new Set(["keri", "tsu", "nu", "tari", "ri", "maji", "kemu", "ramu", "gotoshi"]);
 
 // 決め手の型（後接/呼応/形/主語/文脈）。meaning_key ごとに確定（手作業・捏造なし）
 const TYPE_MAP = {
@@ -28,6 +34,25 @@ const TYPE_MAP = {
   "ramu-1": "文脈", "ramu-2": "呼応", "ramu-3": "形",
   "gotoshi-1": "形", "gotoshi-2": "形",
 };
+
+// 新助動詞の決め手型（意味→型）。初代は上の TYPE_MAP を使う。
+function inferDeciderType(jodoshi, meaning) {
+  const m = meaning;
+  // 形・接続・語形で決まる
+  if (/婉曲|仮定|比況|例示/.test(m)) return "形";
+  if (/断定|存在/.test(m)) return "形"; // 体言・連体形接続で決まる
+  if (/伝聞|推定/.test(m)) return jodoshi.includes("めり") ? "文脈" : "形"; // なり=終止接続/めり=視覚文脈
+  // 呼応（係助詞・打消・呼応副詞・反実の「ましかば〜まし」）
+  if (/反実仮想|ためらい/.test(m)) return "呼応";
+  if (/可能/.test(m)) return "呼応"; // 下に打消を伴う
+  // 主語の人称で決まる
+  if (/意志|勧誘|適当|命令/.test(m)) return "主語";
+  if (/打消推量|打消意志|推量/.test(m)) return "主語";
+  // 下接語で決まる（尊敬＝給ふ等／使役＝対象）
+  if (/尊敬/.test(m)) return "後接";
+  if (/使役/.test(m)) return "文脈";
+  return "文脈";
+}
 
 // 手がかり注釈（任意）: F:/A2A/_cues.json = { "meaning_key#idx": [{text,type,note}] }
 let CUES = {};
@@ -53,7 +78,8 @@ for (const s of sets) {
   const mIdx = perJodoshi[romaji];
   const meaningKey = `${romaji}-${mIdx}`;
 
-  const dtype = TYPE_MAP[meaningKey] || null;
+  const isNew = !ORIG.has(romaji);
+  const dtype = TYPE_MAP[meaningKey] || (isNew ? inferDeciderType(s.jodoshi, s.meaning) : null);
   meaningRows.push(
     `('${meaningKey}', ${q(s.jodoshi)}, ${q(s.meaning)}, ${q(s.decider_rule)}, ${q(dtype)}, ${mIdx})`
   );
@@ -61,10 +87,16 @@ for (const s of sets) {
   s.examples.forEach((e, i) => {
     const id = `reibun-${meaningKey}-${String(i + 1).padStart(2, "0")}`;
     const conf = e.confidence || "medium";
-    const isQuiz = conf === "high" && e.verified === true;
+    // 両論ある例(noQuiz)は出題から除外（正解衝突を防ぐ）。事典には残す
+    const isQuiz = conf === "high" && e.verified === true && e.noQuiz !== true;
     // 手がかり：注釈があれば取り込み、text は本文の部分文字列のみ採用（幻覚排除）
     const ref = `${meaningKey}#${i + 1}`;
-    const rawCues = Array.isArray(CUES[ref]) ? CUES[ref] : [];
+    let rawCues = Array.isArray(CUES[ref]) ? CUES[ref] : [];
+    // 新助動詞で注釈未生成なら、本文の《…》から手がかりを自動生成（型は意味から推定）
+    if (isNew && rawCues.length === 0) {
+      const spans = [...e.sentence.matchAll(/《([^》]*)》/g)].map((m) => m[1]).filter(Boolean);
+      rawCues = spans.map((t) => ({ text: t, type: dtype, note: e.decider || "" }));
+    }
     const cues = rawCues.filter(
       (c) => c && c.type && (c.text === "" || (c.text && e.sentence.includes(c.text)))
     );
