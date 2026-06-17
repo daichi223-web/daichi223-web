@@ -75,7 +75,8 @@ function isAuxRentaiRaHen(text) {
 
 function isYodanType(type) {
   if (!type) return false;
-  return /四段/.test(type);
+  // データは「ラ四」「ハ四」「カ四」等の略記 (=ラ行四段 等) と「四段」表記が混在
+  return /四/.test(type);
 }
 
 function isSaHenType(type) {
@@ -131,6 +132,9 @@ function inferAuxBaseForm(text, meaning) {
   if (/(願望|希望)/.test(m) && /^(たし|たき|たく|たう|たかり|たから|たかる|たけれ)$/.test(t)) return 'たし';
   // 受身/自発/可能/尊敬「る」「らる」
   if (/(受身|自発|可能|尊敬)/.test(m) && /^(る|れ|るる|るれ|られ)$/.test(t)) return /^ら/.test(t) ? 'らる' : 'る';
+  // 完了・存続「り」: ら/り/り/る/れ/れ (サ変未然・四段已然接続)。連体形「る」・已然形「れ」が
+  // 受身/尊敬の「る・らる」と同形のため、meaning が 完了/存続 のときのみ「り」と確定する。
+  if (/(完了|存続)/.test(m) && /^(ら|り|る|れ)$/.test(t)) return 'り';
   // 使役/尊敬「す」「さす」「しむ」
   if (/(使役|尊敬)/.test(m)) {
     if (/^(す|せ|する|すれ|せよ)$/.test(t)) return 'す';
