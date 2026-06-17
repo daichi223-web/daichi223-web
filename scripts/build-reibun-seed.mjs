@@ -16,6 +16,27 @@ const ROMAJI = {
   "まじ": "maji", "けむ": "kemu", "らむ": "ramu", "ごとし": "gotoshi",
 };
 
+// 決め手の型（後接/呼応/形/主語/文脈）。meaning_key ごとに確定（手作業・捏造なし）
+const TYPE_MAP = {
+  "keri-1": "文脈", "keri-2": "文脈",
+  "tsu-1": "後接", "tsu-2": "後接",
+  "nu-1": "後接", "nu-2": "後接",
+  "tari-1": "文脈", "tari-2": "文脈",
+  "ri-1": "文脈", "ri-2": "文脈",
+  "maji-1": "主語", "maji-2": "主語", "maji-3": "主語", "maji-4": "文脈", "maji-5": "呼応",
+  "kemu-1": "形", "kemu-2": "呼応", "kemu-3": "形",
+  "ramu-1": "文脈", "ramu-2": "呼応", "ramu-3": "形",
+  "gotoshi-1": "形", "gotoshi-2": "形",
+};
+
+// 手がかり注釈（任意）: F:/A2A/_cues.json = { "meaning_key#idx": [{text,type,note}] }
+let CUES = {};
+try {
+  CUES = JSON.parse(fs.readFileSync("F:/A2A/_cues.json", "utf8"));
+} catch {
+  /* 注釈未生成でも seed は作れる */
+}
+
 const q = (s) => (s == null ? "null" : `'${String(s).replace(/'/g, "''")}'`);
 const b = (v) => (v ? "true" : "false");
 
@@ -32,18 +53,26 @@ for (const s of sets) {
   const mIdx = perJodoshi[romaji];
   const meaningKey = `${romaji}-${mIdx}`;
 
+  const dtype = TYPE_MAP[meaningKey] || null;
   meaningRows.push(
-    `('${meaningKey}', ${q(s.jodoshi)}, ${q(s.meaning)}, ${q(s.decider_rule)}, ${mIdx})`
+    `('${meaningKey}', ${q(s.jodoshi)}, ${q(s.meaning)}, ${q(s.decider_rule)}, ${q(dtype)}, ${mIdx})`
   );
 
   s.examples.forEach((e, i) => {
     const id = `reibun-${meaningKey}-${String(i + 1).padStart(2, "0")}`;
     const conf = e.confidence || "medium";
     const isQuiz = conf === "high" && e.verified === true;
+    // 手がかり：注釈があれば取り込み、text は本文の部分文字列のみ採用（幻覚排除）
+    const ref = `${meaningKey}#${i + 1}`;
+    const rawCues = Array.isArray(CUES[ref]) ? CUES[ref] : [];
+    const cues = rawCues.filter(
+      (c) => c && c.type && (c.text === "" || (c.text && e.sentence.includes(c.text)))
+    );
+    const cuesJson = cues.length ? `'${JSON.stringify(cues).replace(/'/g, "''")}'::jsonb` : "null";
     reibunRows.push(
       `(${q(id)}, ${q(s.jodoshi)}, '${meaningKey}', ${q(s.meaning)}, ${q(e.sentence)}, ` +
         `${q(e.translation)}, ${q(e.source)}, null, ${q(e.context)}, ${q(e.decider)}, ` +
-        `${q(e.period)}, ${q(conf)}, ${b(e.verified === true)}, ${b(isQuiz)}, null, ${i + 1})`
+        `${q(e.period)}, ${q(conf)}, ${b(e.verified === true)}, ${b(isQuiz)}, null, ${q(dtype)}, ${cuesJson}, ${i + 1})`
     );
   });
 }
@@ -54,11 +83,11 @@ begin;
 delete from grammar_reibun;
 delete from grammar_jodoshi_meanings;
 
-insert into grammar_jodoshi_meanings (meaning_key, jodoshi, meaning, decider_rule, sort) values
+insert into grammar_jodoshi_meanings (meaning_key, jodoshi, meaning, decider_rule, decider_type, sort) values
 ${meaningRows.join(",\n")};
 
 insert into grammar_reibun
-  (id, jodoshi, meaning_key, meaning, sentence, translation, source, work_key, context, decider, period, confidence, verified, is_quiz, layer, sort) values
+  (id, jodoshi, meaning_key, meaning, sentence, translation, source, work_key, context, decider, period, confidence, verified, is_quiz, layer, decider_type, cues, sort) values
 ${reibunRows.join(",\n")};
 commit;
 `;

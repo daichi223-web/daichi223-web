@@ -3,42 +3,11 @@ import { Link } from "react-router-dom";
 import {
   fetchAllReibun,
   fetchMeanings,
+  meaningBadge,
   JODOSHI_ORDER,
 } from "@/lib/kobun/reibunData";
 import type { GrammarReibun, GrammarJodoshiMeaning } from "@/lib/kobun/types";
-
-/** 本文の 【判定対象】 と 《決め手》 を色付きで描画する */
-function HighlightedSentence({ text }: { text: string }) {
-  // 【...】＝判定対象（太字・プライマリ下線）, 《...》＝決め手（下線）
-  const parts = text.split(/(【[^】]*】|《[^》]*》)/g);
-  return (
-    <>
-      {parts.map((p, i) => {
-        if (p.startsWith("【") && p.endsWith("】")) {
-          return (
-            <span key={i} className="font-black text-rw-ink underline decoration-2 decoration-[var(--rw-primary)]">
-              {p.slice(1, -1)}
-            </span>
-          );
-        }
-        if (p.startsWith("《") && p.endsWith("》")) {
-          return (
-            <span key={i} className="font-bold text-rw-ink-soft underline decoration-dotted">
-              {p.slice(1, -1)}
-            </span>
-          );
-        }
-        return <span key={i}>{p}</span>;
-      })}
-    </>
-  );
-}
-
-const confBadge: Record<string, { label: string; cls: string }> = {
-  high: { label: "確", cls: "bg-rw-ink text-rw-paper" },
-  medium: { label: "△", cls: "bg-rw-paper text-rw-ink-soft border border-rw-rule" },
-  low: { label: "⚠", cls: "bg-rw-paper text-rw-ink-soft border border-dashed border-rw-rule" },
-};
+import { ReibunSentence, ReibunLegend } from "@/components/grammar/ReibunSentence";
 
 export default function ReibunDict() {
   const [reibun, setReibun] = useState<GrammarReibun[]>([]);
@@ -90,10 +59,10 @@ export default function ReibunDict() {
           </Link>
           <h1 className="text-[22px] sm:text-2xl font-black text-rw-ink tracking-tight">助動詞 例文事典</h1>
         </div>
-        <p className="text-[12px] text-rw-ink-soft mb-5 leading-relaxed">
-          意味ごとの「決め手」と、出典つきの本文用例。<span className="font-bold">【太字】</span>＝判定対象／
-          <span className="underline decoration-dotted">点線</span>＝意味の決め手。
-        </p>
+        <div className="mb-5">
+          <p className="text-[12px] text-rw-ink-soft mb-1.5 leading-relaxed">意味ごとの「決め手」と、出典つきの本文用例。</p>
+          <ReibunLegend />
+        </div>
 
         {/* 助動詞タブ */}
         <div className="flex gap-1.5 mb-3 flex-wrap">
@@ -156,15 +125,23 @@ export default function ReibunDict() {
                 {/* 例カード */}
                 <div className="flex flex-col gap-2.5">
                   {examples.map((e) => {
-                    const badge = confBadge[e.confidence] ?? confBadge.medium;
+                    const needsCheck = !e.verified || e.confidence === "low";
                     return (
                       <div key={e.id} className="bg-rw-paper border-2 border-rw-ink rounded-2xl px-3.5 py-3">
                         <div className="flex items-start justify-between gap-2">
                           <p className="text-[15px] text-rw-ink leading-relaxed flex-1">
-                            <HighlightedSentence text={e.sentence} />
+                            <ReibunSentence text={e.sentence} cues={e.cues} />
                           </p>
-                          <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0 ${badge.cls}`} title={`確信度: ${e.confidence}`}>
-                            {badge.label}
+                          <span className="flex items-center gap-1 flex-shrink-0">
+                            {needsCheck && (
+                              <span className="text-[10px] text-rw-ink-soft" title="要確認">⚠</span>
+                            )}
+                            <span
+                              className="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-rw-ink text-rw-paper"
+                              title={e.meaning}
+                            >
+                              {meaningBadge(e.meaning)}
+                            </span>
                           </span>
                         </div>
                         <p className="text-[12px] text-rw-ink-soft mt-1.5 leading-relaxed">{e.translation}</p>

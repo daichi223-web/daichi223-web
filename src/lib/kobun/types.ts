@@ -201,6 +201,18 @@ export interface GrammarReibun {
   verified: boolean;
   isQuiz: boolean;
   layer?: "kata" | "mazeru" | "jissen";
+  deciderType?: DeciderType; // 決め手の型（意味から継承）
+  cues?: DeciderCue[]; // 本文中の手がかり（型・理由つき・複数可）
+}
+
+/** 意味を確定させる決め手の型 */
+export type DeciderType = "後接" | "呼応" | "形" | "主語" | "文脈";
+
+/** 本文中の手がかり1つ。text は本文の部分文字列（構造・文脈で語が無い場合は空） */
+export interface DeciderCue {
+  text: string;
+  type: DeciderType;
+  note: string;
 }
 
 /** 助動詞×意味マスタ（選択肢セット＋決め手の総則, grammar_jodoshi_meanings） */
@@ -209,6 +221,7 @@ export interface GrammarJodoshiMeaning {
   jodoshi: string;
   meaning: string;
   deciderRule: string;
+  deciderType?: DeciderType;
 }
 
 /** 単元到達度（per-user, grammar_topic_progress） */

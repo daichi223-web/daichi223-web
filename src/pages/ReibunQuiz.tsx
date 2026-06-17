@@ -3,32 +3,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import { fetchAllReibun, fetchMeanings, JODOSHI_ORDER } from "@/lib/kobun/reibunData";
 import { recordDrillAnswer } from "@/lib/kobun/dojoData";
 import type { GrammarReibun, GrammarJodoshiMeaning } from "@/lib/kobun/types";
+import { ReibunSentence, ReibunLegend } from "@/components/grammar/ReibunSentence";
 
 const MAX_Q = 10;
-
-/** 本文の 【判定対象】 と 《決め手》 を色付きで描画 */
-function Highlighted({ text }: { text: string }) {
-  const parts = text.split(/(【[^】]*】|《[^》]*》)/g);
-  return (
-    <>
-      {parts.map((p, i) => {
-        if (p.startsWith("【") && p.endsWith("】"))
-          return (
-            <span key={i} className="font-black text-rw-ink underline decoration-2 decoration-[var(--rw-primary)]">
-              {p.slice(1, -1)}
-            </span>
-          );
-        if (p.startsWith("《") && p.endsWith("》"))
-          return (
-            <span key={i} className="font-bold text-rw-ink-soft underline decoration-dotted">
-              {p.slice(1, -1)}
-            </span>
-          );
-        return <span key={i}>{p}</span>;
-      })}
-    </>
-  );
-}
 
 function shuffle<T>(a: T[]): T[] {
   const r = [...a];
@@ -179,7 +156,8 @@ export default function ReibunQuiz() {
             【　】の「{current.jodoshi}」の意味は？
           </p>
           <p className="text-[17px] text-rw-ink leading-relaxed">
-            <Highlighted text={current.sentence} />
+            {/* 出題中は手がかりを伏せる（ハイライトすると答えがバレるため） */}
+            <ReibunSentence text={current.sentence} reveal={false} />
           </p>
         </div>
 
@@ -210,6 +188,13 @@ export default function ReibunQuiz() {
         {/* 解説（解答後） */}
         {answered && (
           <div className="bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 mb-4">
+            {/* 解答後：本文を再掲し、意味を決めた手がかりを型つきでハイライト */}
+            <p className="text-[15px] text-rw-ink leading-relaxed mb-1.5">
+              <ReibunSentence text={current.sentence} cues={current.cues} reveal />
+            </p>
+            <div className="mb-2">
+              <ReibunLegend />
+            </div>
             <p className="text-[12px] text-rw-ink-soft mb-1.5">{current.translation}</p>
             {current.decider && (
               <p className="text-[12px] text-rw-ink leading-relaxed">

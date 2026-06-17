@@ -12,6 +12,36 @@ export const JODOSHI_ORDER = [
   "けり", "つ", "ぬ", "たり", "り", "まじ", "けむ", "らむ", "ごとし",
 ];
 
+/**
+ * 意味ラベル → 短い意味バッジ（過去推量と過去の取り違えを防ぐため語で判定）。
+ * 順序が重要（過去推量を過去より先に判定）。
+ */
+export function meaningBadge(meaning: string): string {
+  const rules: [RegExp, string][] = [
+    [/詠嘆/, "詠"],
+    [/過去の伝聞|過去.*婉曲/, "婉"],
+    [/現在の伝聞|現在.*婉曲/, "婉"],
+    [/過去の原因|過去.*原因/, "過因"],
+    [/現在の原因|現在.*原因/, "現因"],
+    [/過去推量/, "過推"],
+    [/現在推量/, "現推"],
+    [/過去/, "過"],
+    [/強意|確述/, "強"],
+    [/完了/, "完"],
+    [/存続/, "存"],
+    [/不適当/, "不適"],
+    [/打消推量/, "打推"],
+    [/打消意志/, "打意"],
+    [/打消当然/, "打当"],
+    [/不可能/, "不可"],
+    [/禁止/, "禁"],
+    [/比況/, "比"],
+    [/例示/, "例"],
+  ];
+  for (const [re, label] of rules) if (re.test(meaning)) return label;
+  return meaning.slice(0, 2);
+}
+
 function toReibun(r: Record<string, unknown>): GrammarReibun {
   return {
     id: r.id as string,
@@ -29,6 +59,8 @@ function toReibun(r: Record<string, unknown>): GrammarReibun {
     verified: r.verified as boolean,
     isQuiz: r.is_quiz as boolean,
     layer: (r.layer as GrammarReibun["layer"]) ?? undefined,
+    deciderType: (r.decider_type as GrammarReibun["deciderType"]) ?? undefined,
+    cues: (r.cues as GrammarReibun["cues"]) ?? undefined,
   };
 }
 
@@ -46,7 +78,7 @@ export async function fetchAllReibun(): Promise<GrammarReibun[]> {
   const { data, error } = await supabase
     .from("grammar_reibun")
     .select(
-      "id, jodoshi, meaning_key, meaning, sentence, translation, source, work_key, context, decider, period, confidence, verified, is_quiz, layer"
+      "id, jodoshi, meaning_key, meaning, sentence, translation, source, work_key, context, decider, period, confidence, verified, is_quiz, layer, decider_type, cues"
     )
     .order("meaning_key", { ascending: true })
     .order("sort", { ascending: true });
