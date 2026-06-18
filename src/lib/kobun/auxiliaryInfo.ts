@@ -110,6 +110,37 @@ export function normalizeConjugationForm(form: string): string {
 }
 
 /**
+ * 助動詞の見出し語(baseForm)を解決する。baseForm が無いとき、表面形が
+ * 同形で衝突する語 (例: 「る」=存続「り」連体形 と る・らる、「れ」=「り」已然 と る・らる、
+ * 「ぬ」=完了「ぬ」 と 打消「ず」連体形) を **meaning で曖昧解消**する。
+ * これがないと「道知れる」の「る」(存続「り」) が る・らる の接続「四段・ナ変・ラ変の未然形」
+ * で表示されてしまう。
+ */
+function resolveAuxKey(
+  baseForm: string | undefined,
+  text: string,
+  meaning: string | undefined,
+): string {
+  if (baseForm && AUXILIARY_INFO[baseForm]) return baseForm;
+  const m = meaning ?? '';
+  // 完了・存続「り」: ら/り/る/れ (サ変未然・四段已然接続)
+  if (/(完了|存続)/.test(m) && /^(ら|り|る|れ)$/.test(text)) return 'り';
+  // 受身・尊敬・自発・可能「る・らる」
+  if (/(受身|尊敬|自発|可能)/.test(m) && /^(る|れ|るる|るれ|らる|られ|らるる|らるれ)$/.test(text))
+    return /^ら/.test(text) ? 'らる' : 'る';
+  // 使役・尊敬「す・さす・しむ」
+  if (/(使役|尊敬)/.test(m)) {
+    if (/^(さす|させ|さする|さすれ|させよ)$/.test(text)) return 'さす';
+    if (/^(しむ|しめ|しむる|しむれ|しめよ)$/.test(text)) return 'しむ';
+    if (/^(す|せ|する|すれ|せよ)$/.test(text)) return 'す';
+  }
+  // 完了「ぬ」 と 打消「ず」連体形「ぬ」
+  if (/完了/.test(m) && /^(な|に|ぬ|ぬる|ぬれ|ね)$/.test(text)) return 'ぬ';
+  if (/打消/.test(m) && /^(ず|ぬ|ね|ざら|ざり|ざる|ざれ)$/.test(text)) return 'ず';
+  return AUXILIARY_INFO[text] ? text : (baseForm ?? text);
+}
+
+/**
  * grammarTag が空・不完全なフィールドを補完して返す。
  */
 export function enrichGrammarInfo(
@@ -118,6 +149,7 @@ export function enrichGrammarInfo(
   baseForm: string | undefined,
   conjugationType: string | undefined,
   conjugationForm: string | undefined,
+  meaning?: string,
 ): {
   conjugationType: string | null;
   conjugationForm: string | null;
@@ -128,8 +160,8 @@ export function enrichGrammarInfo(
   let connection = '';
 
   if (pos === '助動詞') {
-    // baseForm 優先、なければ text で逆引き
-    const aux = AUXILIARY_INFO[baseForm ?? ''] ?? AUXILIARY_INFO[text];
+    // baseForm → meaning で曖昧解消した見出し語で逆引き
+    const aux = AUXILIARY_INFO[resolveAuxKey(baseForm, text, meaning)];
     if (aux) {
       if (!type && aux.conjugationType) type = aux.conjugationType;
       if (aux.connection) connection = aux.connection;

@@ -192,6 +192,7 @@ function PopoverContent({
           tag.baseForm,
           tag.conjugationType,
           tag.conjugationForm,
+          tag.meaning,
         );
         const isInflectingPos = tag.pos === '動詞' || tag.pos === '形容詞' || tag.pos === '形容動詞' || tag.pos === '助動詞';
         return (
