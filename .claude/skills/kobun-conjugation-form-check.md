@@ -228,6 +228,9 @@ cp public/texts-v3/{id}.json dist/texts-v3/{id}.json
 ### 運用
 新規教材を追加したら `node scripts/check-conjugation-forms.cjs` → り上接の 命 が出たら `node scripts/fix-ri-izenkei.cjs` で是正。hint も書くなら「已然形『X』＋り（サ未四已）」で統一する。
 
+### 表示層の「り↔る・らる」衝突（2026-06-18・別レイヤー）
+データタグとは別に、`src/lib/kobun/auxiliaryInfo.ts` の接続逆引きでも同型衝突があった。存続・完了「り」連体形「る」/已然形「れ」は **baseForm 欠落時に text「る」で `AUXILIARY_INFO['る']`（る・らる）にヒットし、GrammarPopover の接続欄が「四段・ナ変・ラ変の未然形」と誤表示**（例: 東下り「道知れる」）。`resolveAuxKey` を追加し baseForm 欠落時は **meaning で曖昧解消**（完了/存続→り、受身/尊敬/自発/可能→る・らる、ぬ/ず・す系も）。fix commit 46dae72。教材監査では**タグ（conjugationForm）と表示（接続欄）の両方**を確認する。
+
 ## 近世前期 (元禄頃) のテキストでの注意
 
 西鶴 (1685『西鶴諸国ばなし』)、近松、芭蕉らの 元禄期 テキストでは古典文法と口語の過渡的な形が混在する:
