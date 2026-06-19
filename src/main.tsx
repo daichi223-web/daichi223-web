@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 
 // 単語クイズ本体（初回ロードでほぼ確実に必要なので eager）
 import App from './App.tsx'
@@ -81,6 +82,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/vocab" element={<VocabPage />} />
         </Routes>
       </Suspense>
+      <Analytics />
       </ReiwaThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
