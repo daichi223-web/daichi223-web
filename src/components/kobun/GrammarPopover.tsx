@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Token, LayerId, TokenAnalysis } from "@/lib/kobun/types";
+import type { Token, LayerId, TokenAnalysis, TokenDecider } from "@/lib/kobun/types";
+import { ReibunSentence, DECIDER_STYLE } from "@/components/grammar/ReibunSentence";
 import { buildGemUrl, buildNotebookLmUrl } from "@/lib/kobun/gem";
 import { addVocabEntry, recordHintOpen } from "@/lib/kobun/progress";
 import VocabModal from "@/components/VocabModal";
@@ -246,8 +247,13 @@ function PopoverContent({
         </div>
       )}
 
+      {/* 意味の決め手（例文集と同じモデル：型＋手がかり＋理由） */}
+      {!isScaffold && analysis?.decider && (
+        <DeciderPanel decider={analysis.decider} token={token} sentenceText={sentenceText} />
+      )}
+
       {/* 判別の筋道（分析対象のみ） */}
-      {!isScaffold && analysis && analysis.reasoning.length > 0 && (
+      {!isScaffold && analysis && analysis.reasoning && analysis.reasoning.length > 0 && (
         <div className="border-t border-rw-rule pt-3 space-y-2">
           <p className="text-xs font-black text-rw-ink-soft tracking-wider">判別の筋道</p>
           {analysis.reasoning.map((step, i) => (
@@ -361,6 +367,65 @@ function PopoverContent({
       {vocabLemma && (
         <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} textId={textId} />
       )}
+    </div>
+  );
+}
+
+/**
+ * 意味の決め手パネル。例文集（ReibunSentence）と同じ視覚言語で、
+ * 「この語がなぜその意味になるか」を 型(色) ＋ 本文中の手がかり(色つき下線) ＋ 理由文 で示す。
+ */
+function DeciderPanel({
+  decider,
+  token,
+  sentenceText,
+}: {
+  decider: TokenDecider;
+  token: Token;
+  sentenceText: string;
+}) {
+  const style = DECIDER_STYLE[decider.type] ?? DECIDER_STYLE["文脈"];
+
+  // 判定対象（この語）を 【】 で囲み、例文集と同じ描画に渡す（太字＋下線）。
+  const s = sentenceText;
+  const inRange =
+    token.start >= 0 &&
+    token.end <= s.length &&
+    token.end > token.start &&
+    s.slice(token.start, token.end) === token.text;
+  const marked = inRange
+    ? `${s.slice(0, token.start)}【${s.slice(token.start, token.end)}】${s.slice(token.end)}`
+    : s.includes(token.text)
+    ? s.replace(token.text, `【${token.text}】`)
+    : s;
+
+  return (
+    <div
+      className="rounded-xl px-3 py-2.5"
+      style={{ background: style.color + "14", borderLeft: `4px solid ${style.color}` }}
+    >
+      <div className="flex items-center gap-2 flex-wrap mb-1.5">
+        <span className="text-xs font-black tracking-wider" style={{ color: style.color }}>
+          🔑 意味の決め手
+        </span>
+        <span
+          className="text-[10px] font-black px-1.5 py-0.5 rounded-full"
+          style={{ background: style.color + "26", color: style.color }}
+        >
+          {decider.type}で決まる
+        </span>
+        <span className="text-[11px] font-black text-rw-ink">→「{decider.meaning}」</span>
+      </div>
+
+      {/* 例文集と同じ：本文中の手がかりを色つき下線で（タップで理由） */}
+      <p className="text-[15px] text-rw-ink leading-relaxed mb-1.5 font-serif">
+        <ReibunSentence text={marked} cues={decider.cues} />
+      </p>
+
+      <p className="text-[12.5px] text-rw-ink leading-relaxed">{decider.summary}</p>
+      <p className="text-[10.5px] text-rw-ink-soft mt-1.5">
+        ［{decider.type}］{style.desc}
+      </p>
     </div>
   );
 }

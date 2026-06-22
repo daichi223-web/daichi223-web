@@ -79,13 +79,29 @@ export interface TextAnalysis {
 
 export interface TokenAnalysis {
   tokenId: string;
-  reasoning: ReasoningStep[];
+  reasoning?: ReasoningStep[];
+  /** 意味確定の決め手（例文集 GrammarReibun と同じモデル）。助動詞などに付与 */
+  decider?: TokenDecider;
 }
 
 export interface ReasoningStep {
   question: string;
   answer: string;
   explanation: string;
+}
+
+/**
+ * トークンの意味がどう決まるかを、例文集と同じ「決め手」モデルで説明する。
+ * - meaning: 確定した意味（教材 grammarTag.meaning と一致）。
+ * - type:    決め手の型（後接/呼応/形/主語/文脈）。色・下線パターンを共有。
+ * - summary: なぜその意味になるかの説明文（例文集 reibun.decider 相当）。
+ * - cues:    本文中の手がかり（型・理由つき・複数可。text は本文の部分文字列）。
+ */
+export interface TokenDecider {
+  meaning: string;
+  type: DeciderType;
+  summary: string;
+  cues?: DeciderCue[];
 }
 
 /** 文法リファレンス */
