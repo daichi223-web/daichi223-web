@@ -393,9 +393,13 @@ function DeciderPanel({
     token.end <= s.length &&
     token.end > token.start &&
     s.slice(token.start, token.end) === token.text;
+  // オフセットが本文と一致しない教材では、表層が文中に1回だけ出るときのみ置換でハイライト
+  // （複数出現する1字助動詞「き」「し」等を誤って太字化しないため）。それ以外は太字なしで表示。
+  const onlyOnce =
+    !!token.text && s.indexOf(token.text) !== -1 && s.indexOf(token.text) === s.lastIndexOf(token.text);
   const marked = inRange
     ? `${s.slice(0, token.start)}【${s.slice(token.start, token.end)}】${s.slice(token.end)}`
-    : s.includes(token.text)
+    : onlyOnce
     ? s.replace(token.text, `【${token.text}】`)
     : s;
 

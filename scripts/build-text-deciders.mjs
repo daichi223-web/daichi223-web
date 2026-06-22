@@ -264,7 +264,7 @@ function spanOf(text, tokenId) {
 }
 
 // 手書き gold（東下り3本）。--force でも決して再生成しない。
-const GOLD = new Set(["e245dd3617", "bfa5b23cf2", "1af601c3ea"]);
+const GOLD = new Set(["e245dd3617", "bfa5b23cf2", "1af601c3ea", "3d0d7bf6ee", "31d11bf2f8", "chigo-no-sorane"]);
 
 function buildForText(id, root = ".", force = false) {
   const text = loadText(id, root);
