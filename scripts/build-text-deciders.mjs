@@ -264,7 +264,7 @@ function spanOf(text, tokenId) {
 }
 
 // 手書き gold（東下り3本）。--force でも決して再生成しない。
-const GOLD = new Set(["e245dd3617", "bfa5b23cf2", "1af601c3ea", "3d0d7bf6ee", "31d11bf2f8", "chigo-no-sorane", "e9d989b44a", "567eed13fe", "515679c1ce", "b621d6ca53", "6f8c66024b", "84bdc39850", "d1e41d3f09", "f9c215dd74", "f84b5ac5c5", "18019954e6", "03a2e8e8af", "76758ae087", "5ce9ba8c46", "b0c46b4d93", "3cd78122cb", "f1c4b82dd3", "9662ce1347", "622041c1e6", "dd1c1e0d14", "0213bea23e", "b6f9644033", "1811f6888e", "1689245ecd", "7b959c5be1", "ab2e5ff73a", "815a43f9e7", "068cd465f4", "08ac4e0173", "a2bfd6cb02", "524e7d139e"]);
+const GOLD = new Set(["e245dd3617", "bfa5b23cf2", "1af601c3ea", "3d0d7bf6ee", "31d11bf2f8", "chigo-no-sorane", "e9d989b44a", "567eed13fe", "515679c1ce", "b621d6ca53", "6f8c66024b", "84bdc39850", "d1e41d3f09", "f9c215dd74", "f84b5ac5c5", "18019954e6", "03a2e8e8af", "76758ae087", "5ce9ba8c46", "b0c46b4d93", "3cd78122cb", "f1c4b82dd3", "9662ce1347", "622041c1e6", "dd1c1e0d14", "0213bea23e", "b6f9644033", "1811f6888e", "1689245ecd", "7b959c5be1", "ab2e5ff73a", "815a43f9e7", "068cd465f4", "08ac4e0173", "a2bfd6cb02", "524e7d139e", "f7aee682ff", "4c8f90856b", "cbf3db0edb"]);
 
 function buildForText(id, root = ".", force = false) {
   const text = loadText(id, root);
