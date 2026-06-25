@@ -15,6 +15,16 @@ import type { GrammarDrill, GrammarDrillKind, GrammarMedia, TopicProgress } from
 
 const VIDEO_BUCKET = "grammar-videos";
 
+/**
+ * 動画配信のベースURL。既定で Cloudflare R2（egress 無料）の公開URLから配信する。
+ * VITE_VIDEO_BASE_URL を設定すれば上書き可能（例: 学校フィルタ対策のカスタムドメイン）。
+ * 明示的に空文字を渡したときのみ Supabase Storage にフォールバックする。
+ * R2例: https://<bucket>.<account>.r2.dev ／ カスタム例: https://video.example.com
+ */
+const VIDEO_BASE = (
+  import.meta.env.VITE_VIDEO_BASE_URL ?? "https://pub-03c03199b45c473baa4b74b29d521416.r2.dev"
+).replace(/\/+$/, "");
+
 /** grammar_drills の行 → GrammarDrill へ正規化 */
 function toDrill(r: {
   id: string;
@@ -48,8 +58,9 @@ export function drillLevel(d: GrammarDrill): number {
   return Math.min(5, Math.floor(s / 100) + 1);
 }
 
-/** バケット内パス → 公開 URL */
+/** バケット内パス → 公開 URL（R2 設定時は R2、未設定なら Supabase Storage） */
 export function videoUrl(storagePath: string): string {
+  if (VIDEO_BASE) return `${VIDEO_BASE}/${storagePath}`;
   return supabase.storage.from(VIDEO_BUCKET).getPublicUrl(storagePath).data.publicUrl;
 }
 

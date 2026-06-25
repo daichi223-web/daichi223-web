@@ -28,7 +28,7 @@ export function VideoEmbed({ media, onPlay }: { media: GrammarMedia; onPlay?: ()
         src={src}
         poster={poster}
         controls
-        preload="metadata"
+        preload="none"
         playsInline
         onPlay={onPlay}
         onError={() => setFailed(true)}
