@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>助動詞ドロップクイズ</title>
+<style>
+  :root{
+    --bg:#0f1226; --panel:#1a1f3d; --ink:#eef1ff; --sub:#9aa3d4;
+    --tgt:#ffd34d; --key:#5ff2c4; --ok:#3ddc84; --ng:#ff5d73; --lane:#262c52;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;overscroll-behavior:none}
+  #app{max-width:680px;margin:0 auto;height:100%;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;gap:12px;padding:10px 14px;font-size:13px;color:var(--sub)}
+  header b{color:var(--ink);font-size:15px}
+  header .sp{flex:1}
+  .hud{font-variant-numeric:tabular-nums}
+  .hud .v{color:var(--tgt);font-weight:700}
+  #field{position:relative;flex:1;margin:0 10px;border-radius:14px;overflow:hidden;
+    background:linear-gradient(180deg,#141831,#0c0f22);border:1px solid #2a3158}
+  .card{position:absolute;left:0;top:0;width:46%;padding:12px 14px;border-radius:12px;
+    background:var(--panel);border:1px solid #3a4membership;box-shadow:0 6px 18px rgba(0,0,0,.4);
+    border:1px solid #3a437a;line-height:1.7;font-size:clamp(14px,3.6vw,18px);
+    transition:box-shadow .1s;will-change:transform}
+  .card .jo{font-size:11px;color:var(--sub);letter-spacing:.1em;margin-bottom:4px}
+  .tgt{color:#1a1330;background:var(--tgt);padding:1px 6px;border-radius:6px;font-weight:700}
+  .key{color:#06291f;background:var(--key);padding:1px 6px;border-radius:6px;font-weight:700}
+  .key.hide{color:transparent;background:#3a437a;border-radius:6px}
+  #lanes{display:flex;gap:6px;margin:8px 10px 6px;height:64px}
+  .lane{flex:1;border-radius:12px;background:var(--lane);border:1px solid #333a66;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    font-size:clamp(13px,3.4vw,16px);padding:4px;color:var(--ink);user-select:none;cursor:pointer;
+    transition:transform .08s,background .08s}
+  .lane.active{background:#34407e;border-color:var(--tgt);transform:translateY(-3px)}
+  .lane:active{transform:translateY(-1px) scale(.98)}
+  #ctrls{display:flex;gap:8px;padding:8px 10px 14px}
+  #ctrls button{flex:1;padding:14px;border-radius:12px;border:1px solid #3a437a;background:#222a52;
+    color:var(--ink);font-size:18px;font-family:inherit}
+  #ctrls button:active{background:#2e3768}
+  .flash{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .15s}
+  .flash.ok{background:radial-gradient(circle,rgba(61,220,132,.35),transparent 70%)}
+  .flash.ng{background:radial-gradient(circle,rgba(255,93,115,.4),transparent 70%)}
+  .flash.on{opacity:1}
+  .overlay{position:absolute;inset:0;background:rgba(8,10,24,.92);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;z-index:5}
+  .overlay h1{margin:0;font-size:26px}
+  .overlay p{margin:0;color:var(--sub);font-size:14px;line-height:1.7}
+  .pick{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:420px}
+  .pick button{padding:16px;border-radius:12px;border:1px solid #3a437a;background:#222a52;color:var(--ink);
+    font-family:inherit;font-size:16px}
+  .pick button.full{grid-column:1/-1;background:#2c356b}
+  .pick button b{display:block;font-size:12px;color:var(--sub);font-weight:400;margin-top:3px}
+  .toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sub)}
+  .feedback{max-width:460px}
+  .feedback .verdict{font-size:22px;font-weight:700;margin-bottom:6px}
+  .feedback .sent{background:#161a33;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.8;font-size:16px}
+  .feedback .exp{font-size:14px;color:#cdd3ff}
+  .feedback .src{font-size:12px;color:var(--sub);margin-top:4px}
+  .small{font-size:12px;color:var(--sub)}
+  button.go{padding:14px 28px;border-radius:12px;border:none;background:var(--tgt);color:#1a1330;
+    font-family:inherit;font-size:17px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <b>助動詞ドロップ</b>
+    <span id="mode" class="small"></span>
+    <span class="sp"></span>
+    <span class="hud">得点 <span class="v" id="score">0</span></span>
+    <span class="hud">連続 <span class="v" id="streak">0</span></span>
+    <span class="hud" id="lives">♥♥♥</span>
+  </header>
+
+  <div id="lanes"></div>
+
+  <div id="field">
+    <div class="flash ok" id="flashOk"></div>
+    <div class="flash ng" id="flashNg"></div>
+    <!-- card injected here -->
+    <div class="overlay" id="overlay"></div>
+  </div>
+
+  <div id="ctrls">
+    <button id="bLeft">◀</button>
+    <button id="bDrop">▼ 落とす</button>
+    <button id="bRight">▶</button>
+  </div>
+</div>
+
+<script>
+// ===== データ（例文集より）=====
+// j:助動詞 / s:本文(【対象】《決め手》) / a:意味 / exp:解説 / src:出典
+const DATA = [
+  {j:"けり", s:"これも今は昔、比叡の山に児あり【けり】。", a:"過去", exp:"地の文の叙述＝過去。「児がいた」。", src:"宇治拾遺・児のそら寝"},
+  {j:"けり", s:"家の焼くるを見て、うちうなづきて、ときどき笑ひ【けり】。", a:"過去", exp:"地の文の動作描写＝過去。", src:"宇治拾遺・絵仏師良秀"},
+  {j:"けり", s:"限りなく遠くも来に【ける】《かな》、とわびあへるに、", a:"詠嘆", exp:"「けるかな」＝詠嘆。", src:"伊勢物語・東下り"},
+  {j:"けり", s:"かなはぬものは憂き身なり【けり】", a:"詠嘆", exp:"和歌の「なりけり」＝詠嘆。", src:"落窪物語"},
+
+  {j:"たり", s:"《すでに》し出だし【たる】さまにて、ひしめき合ひたり。", a:"完了", exp:"「すでに」＋たる＝完了。", src:"宇治拾遺・児のそら寝"},
+  {j:"たり", s:"片方に寄りて、寝【たる】よしにて、出で来るを待ちけるに、", a:"存続", exp:"「寝たるよし」＝存続（寝ているふり）。", src:"宇治拾遺・児のそら寝"},
+
+  {j:"まじ", s:"女を《え》得【まじ】かりけるを、年を経てよばひわたりけるを、", a:"不可能", exp:"え＋まじ＝不可能。", src:"伊勢物語・芥川"},
+  {j:"まじ", s:"おぼろけの紙は《え》張る【まじ】ければ、求めはべるなり。", a:"不可能", exp:"え＋まじ＝不可能。", src:"枕草子・中納言参りたまひて"},
+  {j:"まじ", s:"証さぶらふ【まじき】により、高御座の柱のもとを削りてさぶらふなり。", a:"打消推量", exp:"第三者の事態の見込み＝打消推量。", src:"大鏡・肝試し"},
+  {j:"まじ", s:"その人ならば苦しかる【まじ】。入れまうせ。", a:"打消推量", exp:"「さしつかえあるまい」＝打消推量。", src:"平家物語・忠度の都落ち"},
+  {j:"まじ", s:"男なき女の一生に一人の男を不義とは申され【まじ】。", a:"打消推量", exp:"第三者評価の見込み＝打消推量。", src:"井原西鶴・忍び扇の長歌"},
+  {j:"まじ", s:"かかる忘れ形見を…《ゆめゆめ》疎略を存ず【まじ】う候ふ。", a:"打消意志", exp:"一人称＋「ゆめゆめ」＝打消意志。", src:"平家物語・忠度の都落ち"},
+
+  {j:"けむ", s:"かく仰せられ議するほどに、丑にもなりに【けむ】。", a:"過去推量", exp:"連用形＋けむ＝過去推量。", src:"大鏡・肝試し"},
+  {j:"けむ", s:"なべて世のはかなきことを…かかる夢見ぬ人《や》言ひ【けむ】", a:"過去推量", exp:"や…けむ＝疑問＋過去推量。", src:"和泉式部日記"},
+  {j:"けむ", s:"君や来しわれ《や》行き【けむ】思ほえず夢かうつつか", a:"過去推量", exp:"や…けむ＝過去推量。", src:"伊勢物語・狩りの使ひ"},
+  {j:"けむ", s:"昔の人は…穴を掘りては言ひ入れはべり【けめ】、とおぼえはべり。", a:"過去推量", exp:"已然形「けめ」＝こその結び（係り結び）。", src:"大鏡・雲林院にて"},
+  {j:"けむ", s:"いかなる叡慮にあづかりて《か》、この地の名産とはなれり【けむ】。", a:"過去の原因推量", exp:"いかなる…か…けむ＝原因の過去推量。", src:"奈良団扇"},
+
+  {j:"らむ", s:"わななくわななく書きて取らせて、いかに思ふ【らむ】と、わびし。", a:"現在推量", exp:"終止形＋らむ＝現在推量。", src:"枕草子・二月つごもりごろに"},
+  {j:"らむ", s:"大将殿をぞ豪家には思ひきこゆ【らむ】。", a:"現在推量", exp:"終止形＋らむ＝現在推量。", src:"源氏物語・車争ひ"},
+  {j:"らむ", s:"名対面は過ぎぬ【らむ】、滝口の宿直奏し今こそ、と推し量りたまふ。", a:"現在推量", exp:"ぬ＋らむ＝現在推量。", src:"源氏物語・廃院の怪"},
+  {j:"らむ", s:"御前に《こそ》わりなく思さる【らめ】。", a:"現在推量", exp:"こそ…らめ＝係り結びの現在推量。", src:"源氏物語・廃院の怪"},
+  {j:"らむ", s:"またなう人わろく、悔しう《何に》来つ【らむ】と思ふにかひなし。", a:"現在の原因推量", exp:"何に…らむ＝原因推量。", src:"源氏物語・車争ひ"},
+];
+
+// 助動詞ごとの意味レーン（出現順を保つ）
+const MEANINGS = {};
+for(const d of DATA){ (MEANINGS[d.j] ||= []); if(!MEANINGS[d.j].includes(d.a)) MEANINGS[d.j].push(d.a); }
+const PLAYABLE = Object.keys(MEANINGS).filter(j=>MEANINGS[j].length>=2); // 2意味以上
+
+// ===== 状態 =====
+let mode="けり", hint=true, deck=[], card=null, lane=0, lanes=[];
+let y=0, speed=0, score=0, streak=0, lives=3, running=false, raf=0, busy=false;
+const $=id=>document.getElementById(id);
+const field=$("field");
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=(i*9301+score*49297+13)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+// 決定的擬似シャッフル（Math.random不使用：得点で攪拌）
+
+function buildDeck(){
+  const pool = mode==="総合" ? DATA.slice() : DATA.filter(d=>d.j===mode);
+  deck = shuffle(pool); if(deck.length<6) deck=deck.concat(shuffle(pool));
+}
+
+function renderSentence(s){
+  let h=s.replace(/【(.+?)】/g,'<span class="tgt">$1</span>');
+  h=h.replace(/《(.+?)》/g, hint?'<span class="key">$1</span>':'<span class="key hide">$1</span>');
+  return h;
+}
+
+function setLanes(j){
+  lanes = MEANINGS[j];
+  const el=$("lanes"); el.innerHTML="";
+  lanes.forEach((m,i)=>{
+    const d=document.createElement("div");
+    d.className="lane"; d.textContent=m; d.dataset.i=i;
+    d.onclick=()=>{ lane=i; updateLanes(); commit(); };
+    el.appendChild(d);
+  });
+  lane=Math.min(lane,lanes.length-1);
+  updateLanes();
+}
+function updateLanes(){ [...$("lanes").children].forEach((c,i)=>c.classList.toggle("active",i===lane)); }
+
+function spawn(){
+  if(busy) return;
+  if(deck.length===0) buildDeck();
+  card = deck.pop();
+  setLanes(card.j);
+  lane = Math.floor(lanes.length/2);
+  updateLanes();
+  // カード要素
+  let c=$("card"); if(!c){ c=document.createElement("div"); c.id="card"; c.className="card"; field.appendChild(c);}
+  c.style.display="block";
+  c.innerHTML = `<div class="jo">助動詞「${card.j}」　─　どの意味？</div>${renderSentence(card.s)}`;
+  y=0; speed = 0.18 + Math.min(score,400)/1000;  // 得点で加速
+  placeCard();
+}
+
+function placeCard(){
+  const c=$("card"); if(!c) return;
+  const n=lanes.length, w=field.clientWidth;
+  const laneW = w/n;
+  const cw = Math.min(laneW*0.92, c.clientWidth||w*0.46);
+  c.style.width = Math.max(140, laneW-12)+"px";
+  const cx = laneW*lane + laneW/2 - (c.clientWidth/2);
+  const maxY = field.clientHeight - c.clientHeight - 70; // レーン手前
+  const py = Math.min(y, maxY);
+  c.style.transform = `translate(${Math.max(4,Math.min(cx,w-c.clientWidth-4))}px, ${py}px)`;
+  return py>=maxY;
+}
+
+function loop(){
+  if(!running||busy){ return; }
+  y += field.clientHeight * speed/60;
+  const landed = placeCard();
+  if(landed){ commit(); return; }
+  raf=requestAnimationFrame(loop);
+}
+
+function commit(){
+  if(busy||!card) return;
+  busy=true; cancelAnimationFrame(raf);
+  const chosen = lanes[lane];
+  const ok = chosen===card.a;
+  const f = ok?$("flashOk"):$("flashNg");
+  f.classList.add("on"); setTimeout(()=>f.classList.remove("on"),200);
+  if(ok){ score+=Math.round(10+speed*30); streak++; if(streak%5===0) score+=20; }
+  else { lives--; streak=0; }
+  draw();
+  showFeedback(ok, chosen);
+}
+
+function showFeedback(ok, chosen){
+  const ov=$("overlay");
+  const lost = lives<=0;
+  const keyShown = card.s.includes("《") ? "" : `<div class="small">※この文は呼応語ではなく〈接続・活用形・文脈〉が決め手。</div>`;
+  ov.style.display="flex";
+  ov.innerHTML = `
+    <div class="feedback">
+      <div class="verdict" style="color:${ok?'var(--ok)':'var(--ng)'}">${ok?'正解！':'残念…'}</div>
+      <div class="small">あなたの選択：${chosen}　／　正解：<b style="color:var(--tgt)">${card.a}</b></div>
+      <div class="sent">${renderSentence(card.s.replace(/《(.+?)》/g,'《$1》'))}</div>
+      <div class="exp">${card.exp}</div>
+      <div class="src">─ ${card.src}</div>
+      ${keyShown}
+    </div>
+    ${ lost
+      ? `<h1>ゲームオーバー</h1><p>得点 <b style="color:var(--tgt)">${score}</b></p><button class="go" id="again">もう一度</button>`
+      : `<button class="go" id="next">つづける ▶</button><div class="small">スペース / タップでも進む</div>` }
+  `;
+  if(lost){ running=false; $("again").onclick=toMenu; }
+  else { $("next").onclick=next; }
+}
+
+function next(){
+  $("overlay").style.display="none";
+  busy=false; spawn(); running=true; raf=requestAnimationFrame(loop);
+}
+
+function draw(){
+  $("score").textContent=score;
+  $("streak").textContent=streak;
+  $("lives").textContent="♥".repeat(Math.max(0,lives))+"·".repeat(3-Math.max(0,lives));
+  $("mode").textContent="［"+mode+"］"+(hint?" ヒント有":" ヒント無");
+}
+
+function startGame(m){
+  mode=m; score=0; streak=0; lives=3; busy=false;
+  $("overlay").style.display="none";
+  buildDeck(); draw(); spawn(); running=true; raf=requestAnimationFrame(loop);
+}
+
+function toMenu(){
+  running=false; busy=false; cancelAnimationFrame(raf);
+  const c=$("card"); if(c) c.style.display="none";
+  const ov=$("overlay"); ov.style.display="flex";
+  const btns = PLAYABLE.map(j=>`<button data-m="${j}">${j}<b>${MEANINGS[j].join(" / ")}</b></button>`).join("");
+  ov.innerHTML = `
+    <h1>助動詞ドロップ</h1>
+    <p>落ちてくる本文を、正しい<b>意味のレーン</b>へ。<br>
+    <span class="tgt">黄＝対象の助動詞</span>　<span class="key">緑＝意味の決め手</span></p>
+    <label class="toggle"><input type="checkbox" id="hint" ${hint?'checked':''}> 決め手（緑）を表示する</label>
+    <div class="pick">
+      ${btns}
+      <button class="full" data-m="総合">総合（全助動詞ミックス）<b>レーンは出題ごとに変化</b></button>
+    </div>
+    <p class="small">◀▶＝レーン移動 ／ ▼・スペース＝落とす ／ レーンを直接タップでもOK</p>`;
+  ov.querySelector("#hint").onchange=e=>{hint=e.target.checked; draw();};
+  ov.querySelectorAll(".pick button").forEach(b=>b.onclick=()=>startGame(b.dataset.m));
+}
+
+// ===== 入力 =====
+function moveLane(d){ if(busy||!running) return; lane=Math.max(0,Math.min(lanes.length-1,lane+d)); updateLanes(); placeCard(); }
+$("bLeft").onclick=()=>moveLane(-1);
+$("bRight").onclick=()=>moveLane(1);
+$("bDrop").onclick=()=>{ if(running&&!busy){ y=field.clientHeight; placeCard(); commit(); } };
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowLeft"){moveLane(-1);e.preventDefault();}
+  else if(e.key==="ArrowRight"){moveLane(1);e.preventDefault();}
+  else if(e.key==="ArrowDown"){ if(running&&!busy){y=field.clientHeight;placeCard();commit();} e.preventDefault();}
+  else if(e.key===" "||e.key==="Enter"){
+    if(busy && $("overlay").style.display!=="none"){ const n=$("next"); if(n) n.click(); }
+    else if(running&&!busy){y=field.clientHeight;placeCard();commit();}
+    e.preventDefault();
+  }
+});
+window.addEventListener("resize",()=>{ if(running) placeCard(); });
+
+toMenu();
+</script>
+</body>
+</html>

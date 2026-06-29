@@ -23,7 +23,8 @@ KAKARI_IZEN   = ["こそ"]                            # → 已然形
 DEFAULT_FILES = [
     "supabase/seeds/grammar-corpus-lv23.json",
     "supabase/seeds/grammar-authored.json",
-    "supabase/seeds/grammar-jodoshi-lv5.json",
+    "supabase/seeds/grammar-jodoshi-advanced.json",
+    "supabase/seeds/grammar-jodoshi-yaku-lv5.json",
     "supabase/seeds/grammar-meaning-lv3.json",
     "supabase/seeds/grammar-doushi-types.json",
     "supabase/seeds/grammar-verb-lv4.json",
