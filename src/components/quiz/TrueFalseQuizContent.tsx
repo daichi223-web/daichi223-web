@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Word } from '../../types';
 import ExampleDisplay from '../ExampleDisplay';
+import { WordInsightPanel, WordInsightStrip } from './WordInsightPanel';
 
 interface TrueFalseQuestion {
   example: string;
@@ -32,15 +33,16 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
     setSelectedAnswer(null);
   }, [question.example, question.meaning]);
 
-  // 正解時に自動遷移
+  // 正解時に自動遷移。核イメージがある語は1行だけ「学びの瞬間」を見せてから進む。
   React.useEffect(() => {
     if (answeredCorrectly === true && onNext) {
+      const hasInsight = !!(question.correctAnswer?.senseCore || question.correctAnswer?.trap);
       const timer = setTimeout(() => {
         onNext();
-      }, 500);
+      }, hasInsight ? 1600 : 500);
       return () => clearTimeout(timer);
     }
-  }, [answeredCorrectly, onNext]);
+  }, [answeredCorrectly, onNext, question.correctAnswer]);
 
   const handleAnswer = (answer: boolean) => {
     if (answered) return;
@@ -116,6 +118,22 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
             × 正しくない
           </button>
         </div>
+
+        {/* 正解時: 核イメージを1行だけ (テンポは崩さない) */}
+        {answeredCorrectly === true && <WordInsightStrip word={question.correctAnswer} />}
+
+        {/* 不正解時: この例文の正しい意味と「なぜその意味か」 */}
+        {answeredCorrectly === false && (
+          <div className="mt-3 text-left">
+            <div className="p-3 bg-rw-paper border-2 border-rw-accent rounded-xl mb-3">
+              <p className="text-xs font-black text-rw-accent tracking-wider mb-1">この例文での正しい意味</p>
+              <p className="text-rw-ink font-black text-base">
+                {question.correctAnswer?.senseNorm || question.correctAnswer?.sense}
+              </p>
+            </div>
+            <WordInsightPanel word={question.correctAnswer} />
+          </div>
+        )}
 
         {/* 不正解の場合のみ次へボタン表示 */}
         {answeredCorrectly === false && (

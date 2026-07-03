@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 const SEARCH_SCROLL_KEY = 'kobun-search-scroll-v1';
 import { chapterFor, chapterColor } from '../utils/chapters';
 import VocabModal from '../components/VocabModal';
-import bundledKobunQ from '../data/kobunQ.json';
+import bundledKobunQ from '../data/kobunQ.v2.slim.json';
 import bundledVocabIndex from '../data/vocabIndex.json';
 import { getQuizQidsForLemma } from '@/lib/vocabLookup';
 import bundledTextsIndex from '../data/textsIndex.json';

@@ -3,7 +3,7 @@
  * 複数画面 (TextReader / GrammarPopover / Result / VocabPage / Stats / Search)
  * で再利用するため、ここに集約。
  */
-import bundledKobunQ from '@/data/kobunQ.json';
+import bundledKobunQ from '@/data/kobunQ.v2.slim.json';
 import bundledVocabIndex from '@/data/vocabIndex.json';
 
 type KobunQEntry = { qid: string; lemma: string; pos?: string; sense?: string };

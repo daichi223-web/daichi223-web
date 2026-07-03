@@ -268,6 +268,14 @@ export default function HomeReiwa({
           iconBg="var(--rw-primary)"
           fgColor="var(--rw-paper)"
         />
+        <TileLink
+          href="/tango-dojo"
+          emoji="🎯"
+          label="単語道場"
+          stat="決め手で撃ち分け"
+          iconBg="var(--rw-accent)"
+          fgColor="var(--rw-paper)"
+        />
         <Tile
           emoji="🔁"
           label="苦手復習"
@@ -277,18 +285,15 @@ export default function HomeReiwa({
           fgColor="var(--rw-paper)"
           disabled={weakWordsCount === 0}
         />
-        <TileLink
-          href="/read/vocab"
-          emoji="📒"
-          label="単語帳"
-          stat={vocab.length > 0 ? `${vocab.length}語` : 'ことばの記録'}
-          iconBg="var(--rw-accent-soft)"
-          fgColor="var(--rw-accent)"
-        />
       </div>
 
-      {/* 学習履歴ショートカット */}
-      <div className="grid grid-cols-2 gap-2.5 mb-3">
+      {/* 単語帳・学習履歴ショートカット */}
+      <div className="grid grid-cols-3 gap-2.5 mb-3">
+        <TileLinkInline
+          href="/read/vocab"
+          label={vocab.length > 0 ? `単語帳 ${vocab.length}` : '単語帳'}
+          emoji="📒"
+        />
         <TileLinkInline href="/stats" label="学習履歴" emoji="📊" />
         <button
           onClick={onOpenThemePicker}

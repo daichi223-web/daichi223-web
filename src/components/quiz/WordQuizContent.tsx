@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Word } from '../../types';
 import ExampleDisplay from '../ExampleDisplay';
+import { WordInsightPanel, WordInsightStrip } from './WordInsightPanel';
 
 interface QuizQuestion {
   correct: Word;
@@ -11,9 +12,11 @@ interface QuizQuestion {
   senseCount?: number; // 同一 lemma の意味数（多義語判定用）
   srsBox?: number; // 単語レベル（SRS箱 1-5）
   corpusExample?: boolean; // 例文が教材実文
+  resolvedType?: WordQuizType; // おまかせ時の実出題形式
+  jpBlank?: string; // blank-fill: 〔　　　〕入りの例文
 }
 
-type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
+type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'blank-fill' | 'meaning-writing';
 
 export interface WordQuizContentProps {
   question: QuizQuestion;
@@ -58,15 +61,16 @@ export function WordQuizContent({
     setShowModernTranslation(false);
   }, [question.correct.qid, contextRequired]);
 
-  // 正解時に自動遷移
+  // 正解時に自動遷移。核イメージがある語は1行だけ「学びの瞬間」を見せてから進む。
   React.useEffect(() => {
     if (answeredCorrectly === true && onNext) {
+      const hasInsight = !!(question.correct?.senseCore || question.correct?.trap);
       const timer = setTimeout(() => {
         onNext();
-      }, 500);
+      }, hasInsight ? 1600 : 500);
       return () => clearTimeout(timer);
     }
-  }, [answeredCorrectly, onNext]);
+  }, [answeredCorrectly, onNext, question.correct]);
 
   // Defensive check: ensure question and question.correct exist
   if (!question || !question.correct || !question.correct.lemma) {
@@ -168,6 +172,9 @@ export function WordQuizContent({
                 <p className="text-rw-ink leading-relaxed">{writingResult.feedback}</p>
               </div>
 
+              {/* なぜこの意味か（核イメージ・決め手・罠・意味マップ） */}
+              <WordInsightPanel word={question.correct} />
+
               {/* 採点結果訂正UI */}
               {writingUserJudgment === undefined && (
                 <div className="mt-4 p-4 rounded-xl bg-rw-primary-soft border-2 border-rw-primary">
@@ -248,6 +255,24 @@ export function WordQuizContent({
     );
   }
 
+  // 空欄 〔　　　〕 を目立たせてレンダリング (blank-fill)
+  const renderBlankSentence = (text: string) => {
+    const parts = text.split(/(〔[\s　]*〕|〔[\s　]*])/);
+    return parts.map((p, i) =>
+      /^〔[\s　]*[〕\]]$/.test(p) ? (
+        <span
+          key={i}
+          className="inline-block font-black px-3 mx-0.5 rounded border-b-4"
+          style={{ background: 'var(--rw-pop)', opacity: 0.85, borderColor: 'var(--rw-ink)' }}
+        >
+          ？
+        </span>
+      ) : (
+        <React.Fragment key={i}>{p}</React.Fragment>
+      )
+    );
+  };
+
   // ターゲット語をハイライトしてレンダリング (sentence-meaning / meaning-writing 系の文表示)
   const renderHighlightedSentence = (text: string, lemma: string) => {
     if (!lemma || !text) return text;
@@ -318,6 +343,21 @@ export function WordQuizContent({
               <div className="font-serif text-base text-rw-ink leading-relaxed">
                 {question.exampleModern || 'データなし'}
               </div>
+            </div>
+          </div>
+        ) : quizType === 'blank-fill' ? (
+          // 空欄補充 (学校テスト形式): Excel 原本の手作業空欄 + 訳がヒント
+          <div>
+            <div className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-5 mb-3">
+              <div className="font-serif text-lg text-rw-ink leading-loose font-medium">
+                {renderBlankSentence(question.jpBlank || '')}
+              </div>
+            </div>
+            <div className="bg-rw-bg border border-rw-rule rounded-xl px-4 py-3">
+              <p className="text-[10px] font-black text-rw-ink-soft tracking-wider mb-1">現代語訳（ヒント）</p>
+              <p className="font-serif text-sm text-rw-ink leading-relaxed">
+                {question.exampleModern || ''}
+              </p>
             </div>
           </div>
         ) : (
@@ -432,15 +472,20 @@ export function WordQuizContent({
                 {optionLabels[index]}
               </span>
               <span className="flex-1">
-                {quizType === 'word-reverse' ? (option.lemma || 'データなし') : (option.sense || 'データなし')}
+                {quizType === 'word-reverse' || quizType === 'blank-fill'
+                  ? (option.lemma || 'データなし')
+                  : (option.sense || 'データなし')}
               </span>
             </button>
           );
         })}
       </div>
 
-      {/* 不正解時：例文で文脈記憶を補強 */}
-      {answeredCorrectly === false && (quizType === 'word-meaning' || quizType === 'word-reverse') && (
+      {/* 正解時：核イメージを1行だけ見せる（テンポは崩さない） */}
+      {answeredCorrectly === true && <WordInsightStrip word={question.correct} />}
+
+      {/* 不正解時：例文で文脈記憶を補強 (blank-fill は空欄が埋まった全文を見せる) */}
+      {answeredCorrectly === false && (quizType === 'word-meaning' || quizType === 'word-reverse' || quizType === 'blank-fill') && (
         <ExampleDisplay
           exampleKobun={question.exampleKobun}
           exampleModern={question.exampleModern}
@@ -449,6 +494,9 @@ export function WordQuizContent({
           className="mt-3 bg-rw-primary-soft rounded-xl border-2 border-rw-primary"
         />
       )}
+
+      {/* 不正解時：なぜこの意味か（核イメージ・決め手・罠・意味マップ） */}
+      {answeredCorrectly === false && <WordInsightPanel word={question.correct} className="mt-3" />}
 
       {/* 不正解の場合のみ次へボタン表示 */}
       {answeredCorrectly === false && (

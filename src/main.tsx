@@ -26,6 +26,7 @@ const TextGuide = lazy(() => import('./pages/TextGuide.tsx'))
 const ReferenceHome = lazy(() => import('./pages/ReferenceHome.tsx'))
 const ReferenceTopic = lazy(() => import('./pages/ReferenceTopic.tsx'))
 const GrammarDojoHome = lazy(() => import('./pages/GrammarDojoHome.tsx'))
+const VocabDojoHome = lazy(() => import('./pages/VocabDojoHome.tsx'))
 const GrammarDojoReview = lazy(() => import('./pages/GrammarDojoReview.tsx'))
 const GrammarDojoTopic = lazy(() => import('./pages/GrammarDojoTopic.tsx'))
 const ReibunDict = lazy(() => import('./pages/ReibunDict.tsx'))
@@ -74,6 +75,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/reference" element={<ReferenceHome />} />
           <Route path="/read/reference/:topicId" element={<ReferenceTopic />} />
           <Route path="/read/grammar" element={<GrammarDojoHome />} />
+          <Route path="/tango-dojo" element={<VocabDojoHome />} />
           <Route path="/read/grammar/reibun" element={<ReibunDict />} />
           <Route path="/read/grammar/reibun/quiz" element={<ReibunQuiz />} />
           <Route path="/read/grammar/review" element={<GrammarDojoReview />} />

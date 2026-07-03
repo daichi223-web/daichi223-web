@@ -4,6 +4,7 @@ import { dataParser } from '../../utils/dataParser';
 import { matchSense } from '../../utils/matchSense';
 import { validateConnections } from '../../lib/validateConnectionsFromFile';
 import { coachWriting, isCoachOptedIn } from '../../lib/nanoCoach';
+import { PolysemyInsight } from './WordInsightPanel';
 
 export interface ContextWritingContentProps {
   word: MultiMeaningWord;
@@ -410,6 +411,9 @@ export function ContextWritingContent({
           </button>
         </div>
       )}
+
+      {/* 採点後: 核イメージ＋意味ごとの決め手で1つの絵にまとめる */}
+      {checked && <PolysemyInsight meanings={word.meanings} className="mb-4" />}
 
       {/* 1つでも不正解があれば次へボタン表示 */}
       {hasIncorrect && (

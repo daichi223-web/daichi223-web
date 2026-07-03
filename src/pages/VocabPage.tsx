@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { getVocabEntries, removeVocabEntry, type VocabEntry } from "@/lib/kobun/progress";
 import { getWordStats } from "@/lib/wordStats";
-import bundledKobunQ from "@/data/kobunQ.json";
+import bundledKobunQ from "@/data/kobunQ.v2.slim.json";
 import bundledVocabIndex from "@/data/vocabIndex.json";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
 import VocabModal from "@/components/VocabModal";

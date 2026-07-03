@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Word, MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
+import { PolysemyInsight } from './WordInsightPanel';
 
 export interface ExampleComprehensionContentProps {
   word: MultiMeaningWord;
@@ -80,6 +81,11 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
                 <div className="mb-3 p-3 bg-rw-paper border-2 border-rw-accent rounded-xl">
                   <p className="text-xs font-black text-rw-accent tracking-wider mb-1">正解</p>
                   <p className="text-rw-ink font-black text-base mb-2">{meaning.sense}</p>
+                  {meaning.decider && (
+                    <p className="text-xs font-bold text-rw-ink mb-2 leading-relaxed">
+                      🔑 決め手　{meaning.decider.clue}
+                    </p>
+                  )}
                   <p className="text-sm text-rw-ink-soft font-serif">{exampleModern}</p>
                 </div>
               )}
@@ -135,6 +141,9 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
           </button>
         </div>
       )}
+
+      {/* 答え合わせ後: 核イメージ＋意味ごとの決め手で1つの絵にまとめる */}
+      {checked && <PolysemyInsight meanings={word.meanings} className="mb-4" />}
 
       {/* 不正解がある場合のみ「次へ」ボタンを表示 */}
       {checked && !isAllCorrect && onNext && (

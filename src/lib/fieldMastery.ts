@@ -6,7 +6,7 @@
 //   公卿:  ★9 参議 / ★10 大将 / ★11 大納言 / ★12 大臣 (= 真のマスター)
 
 import { useEffect, useMemo, useState } from 'react';
-import bundledKobunQ from '@/data/kobunQ.json';
+import bundledKobunQ from '@/data/kobunQ.v2.slim.json';
 import vocabIndex from '@/data/vocabIndex.json';
 import { getWordStats } from '@/lib/wordStats';
 import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';

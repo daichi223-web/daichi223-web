@@ -21,6 +21,7 @@ const QUIZ_TOPICS = new Set<string>([
   "keigo", "keigo-sonkei", "keigo-kenjou", "keigo-teinei",
   "shikibetsu-ni", "shikibetsu-nu-ne", "shikibetsu-namu", "shikibetsu-ru-re",
   "shikibetsu-nari", "shikibetsu-shi", "vocab-kokon",
+  "vocab-kokon-2", "vocab-shiten", "vocab-dan", "vocab-kinsetsu", "vocab-koou", "vocab-tagi",
 ]);
 
 /** 教材タグの参照単元(grammarRefId)を、ドリルがあるクイズ単元へ解決する */

@@ -1,5 +1,9 @@
 import { WordData, Word, MultiMeaningWord, ExamplesBySense } from '../types';
-import bundledKobunQ from '../data/kobunQ.json';
+// kobunQ v2 (slim): 語・qid・順番は v1 と完全互換 (単語帳の掲載順は不変)。
+// 追加されたのは 核イメージ/決め手/trap/品詞/第2例文。空欄テキスト等の
+// クイズ未使用フィールドはバンドル軽量化のため slim 生成時に除外
+// (再生成: python scripts/build-kobunq-slim.py。正本は kobunQ.v2.json)。
+import bundledKobunQ from '../data/kobunQ.v2.slim.json';
 
 // 例文が意図的に空のエントリ (副 sense で出典確定の例文が無いもの)。
 // これらは validateExamples の警告対象から除外する。

@@ -5,7 +5,7 @@ import { fetchJsonAsset } from "@/lib/fetchJson";
 import { fetchDojoTopicIds, getAllTopicProgress, fetchDueDrillCount } from "@/lib/kobun/dojoData";
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 
-type Category = "用言" | "助動詞" | "助詞" | "敬語" | "識別";
+type Category = "用言" | "助動詞" | "助詞" | "敬語" | "識別" | "単語";
 
 interface Unit {
   id: string;
@@ -16,13 +16,14 @@ interface Unit {
 }
 
 /** カテゴリの表示順・見出し */
-const CATEGORY_ORDER: Category[] = ["用言", "助動詞", "助詞", "敬語", "識別"];
+const CATEGORY_ORDER: Category[] = ["用言", "助動詞", "助詞", "敬語", "識別", "単語"];
 const CATEGORY_META: Record<Category, { emoji: string; desc: string }> = {
   用言: { emoji: "✍️", desc: "動詞・形容詞・形容動詞の活用と音便" },
   助動詞: { emoji: "⚙️", desc: "意味・接続・活用、紛らわしい語の識別" },
   助詞: { emoji: "🔗", desc: "格助詞・接続助詞・係り結び" },
   敬語: { emoji: "👑", desc: "尊敬・謙譲・丁寧と敬意の方向" },
   識別: { emoji: "🔍", desc: "紛らわしい語を文脈で判別" },
+  単語: { emoji: "🎯", desc: "紛らわしい単語を「決め手」で撃ち分ける" },
 };
 
 /** カテゴリ内の教育的な並び順。未掲載の id は末尾へ（layer→id） */
@@ -37,7 +38,8 @@ const CURRICULUM = [
   "joshi-kaku", "joshi-setsuzoku", "joshi-fuku-kakari", "joshi-shujoshi", "kakari-musubi",
   "keigo", "keigo-sonkei", "keigo-kenjou", "keigo-teinei",
   "shikibetsu", "shikibetsu-ni", "shikibetsu-nu-ne", "shikibetsu-namu",
-  "shikibetsu-ru-re", "shikibetsu-nari", "shikibetsu-shi", "vocab-kokon",
+  "shikibetsu-ru-re", "shikibetsu-nari", "shikibetsu-shi",
+  "vocab-kokon", "vocab-kokon-2", "vocab-shiten", "vocab-dan", "vocab-kinsetsu", "vocab-koou", "vocab-tagi",
 ];
 const orderIndex = (id: string) => {
   const i = CURRICULUM.indexOf(id);

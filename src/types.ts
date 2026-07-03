@@ -1,5 +1,11 @@
 // kobun-app.htmlの仕様に基づく型定義
 
+// 単語の「意味の決め手」(kobunQ v2 で付与。B1 増補)
+export interface SenseDecider {
+  clue: string; // 共起語・場面の手がかり
+  rule: string; // 判別1行
+}
+
 // 基本的な単語データ
 export interface WordData {
   qid: string;
@@ -10,10 +16,22 @@ export interface WordData {
   examples: Array<{
     jp: string;
     translation: string;
+    jpBlank?: string;          // Excel 原本の空欄化済みテキスト
+    translationBlank?: string;
+    source?: string;           // 出典 (jp 末尾の括弧から抽出済み)
+    senseLabel?: string;       // 第2例文セットの意味ラベル (表記が違う場合のみ)
+    origin?: string;           // kobunq | excel2
   }>;
   // 例文機能追加
   examples_kobun?: string[];
   examples_modern?: string[];
+  // ---- kobunQ v2 増補フィールド (B1) ----
+  pos?: string;          // 品詞 (Excel 原本由来)
+  keigo?: boolean;       // 敬語フラグ
+  senseNorm?: string;    // 意味の正規化 (終止形)
+  senseCore?: string;    // lemma 単位の核イメージ
+  decider?: SenseDecider;
+  trap?: { modern: string; note: string }; // 古今異義語の現代語の罠
 }
 
 // 多義語データ（例文機能強化版）
@@ -28,7 +46,9 @@ export interface MultiMeaningWord {
 export type AppMode = 'word' | 'polysemy';
 
 // 単語モードのクイズタイプ
-export type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
+// auto       = おまかせ (SRS箱に応じて問い方が昇格する)
+// blank-fill = 空欄補充 (Excel原本の手作業空欄。学校テスト形式) — word-reverse の後継
+export type WordQuizType = 'auto' | 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'blank-fill' | 'meaning-writing';
 
 // 多義語モードのクイズタイプ
 export type PolysemyQuizType = 'example-comprehension' | 'true-false' | 'context-writing';
@@ -259,8 +279,20 @@ export interface Word {
   examples: Array<{
     jp: string;
     translation: string;
+    jpBlank?: string;
+    translationBlank?: string;
+    source?: string;
+    senseLabel?: string;
+    origin?: string;
   }>;
   // 例文機能追加
   examples_kobun?: string[];
   examples_modern?: string[];
+  // ---- kobunQ v2 増補フィールド (B1) ----
+  pos?: string;
+  keigo?: boolean;
+  senseNorm?: string;
+  senseCore?: string;
+  decider?: SenseDecider;
+  trap?: { modern: string; note: string };
 }

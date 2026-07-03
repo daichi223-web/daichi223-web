@@ -5,7 +5,7 @@ import { getDueWords } from '@/lib/srsEngine';
 import { readStreak, type StreakSnapshot } from '@/lib/streak';
 import { supabase } from '@/lib/supabase';
 import { currentAuthUid } from '@/lib/anonAuth';
-import bundledKobunQ from '@/data/kobunQ.json';
+import bundledKobunQ from '@/data/kobunQ.v2.slim.json';
 import vocabIndex from '@/data/vocabIndex.json';
 import bundledTextsV3 from '@/data/textsV3Index.json';
 import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';

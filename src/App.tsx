@@ -12,6 +12,7 @@ import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
+import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import { updateSrsState, getDueWords, getSrsBoxes } from './lib/srsEngine';
 
@@ -37,9 +38,11 @@ import ReiwaThemePicker from './theme/ReiwaThemePicker';
 import HomeReiwa from './components/HomeReiwa';
 
 const WORD_QUIZ_LABELS: Record<WordQuizType, string> = {
+  'auto': 'おまかせ（覚えるほど問いが難しくなる）',
   'word-meaning': '単語の意味を選ぶ',
-  'word-reverse': '意味から単語を選ぶ',
+  'word-reverse': '意味から単語を選ぶ', // 旧形式 (選択UIからは引退。保存値の互換用)
   'sentence-meaning': '例文から意味を選ぶ',
+  'blank-fill': '空欄に入る語を選ぶ（テスト形式）',
   'meaning-writing': '意味を書いて答える',
 };
 const POLYSEMY_QUIZ_LABELS: Record<PolysemyQuizType, string> = {
@@ -49,7 +52,9 @@ const POLYSEMY_QUIZ_LABELS: Record<PolysemyQuizType, string> = {
 };
 
 type AppMode = 'word' | 'polysemy';
-type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'meaning-writing';
+type WordQuizType = 'auto' | 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'blank-fill' | 'meaning-writing';
+// おまかせ以外の「実際に出題される形式」
+type ResolvedWordQuizType = Exclude<WordQuizType, 'auto'>;
 type PolysemyQuizType = 'example-comprehension' | 'true-false' | 'context-writing';
 
 interface QuizQuestion {
@@ -61,6 +66,8 @@ interface QuizQuestion {
   senseCount?: number; // 同一 lemma の意味数（多義語は例文を最初から表示）
   srsBox?: number; // 単語レベル（SRS箱 1-5）
   corpusExample?: boolean; // 例文が教材実文（箱3以上で切替）
+  resolvedType?: ResolvedWordQuizType; // おまかせ時: この問題の実出題形式
+  jpBlank?: string; // blank-fill: 〔　　　〕入りの例文 (Excel原本の手作業空欄)
 }
 
 interface TrueFalseQuestion {
@@ -122,7 +129,13 @@ function App() {
   const fullSelectB = useFullSelectInput(); // polysemyNumQuestions 用
 
   // Word mode settings with localStorage persistence
-  const [wordQuizType, setWordQuizType] = useLocalStorageState<WordQuizType>('kobun-wordQuizType', 'word-meaning');
+  const [wordQuizType, setWordQuizType] = useLocalStorageState<WordQuizType>('kobun-wordQuizType', 'auto');
+
+  // 旧形式「意味から単語を選ぶ」は空欄補充へ移行 (保存値のマイグレーション)
+  useEffect(() => {
+    if (wordQuizType === 'word-reverse') setWordQuizType('blank-fill');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [wordNumQuestions, setWordNumQuestions] = useLocalStorageState<number>('kobun-wordNumQuestions', 10);
   const [wordRange, setWordRange] = useLocalStorageState<{from?: number; to?: number}>('kobun-wordRange', { from: 1, to: 50 });
   // 単語帳カテゴリ絞り込み (重要動詞/敬語動詞/...) — 空配列は「全て」
@@ -530,11 +543,22 @@ function App() {
       }
     }
 
+    // 空欄補充・おまかせは Excel 原本の手作業空欄 (jpBlank) を遅延ロード
+    let blanks: Record<string, BlankEntry[]> = {};
+    if (wordQuizType === 'blank-fill' || wordQuizType === 'auto') {
+      blanks = await loadBlanks();
+      if (wordQuizType === 'blank-fill') {
+        targetWords = targetWords.filter((w) => (blanks[w.qid]?.length ?? 0) > 0);
+      }
+    }
+
     // 記述式は1単語以上でOK、選択式も1単語以上（前後5単語から選択肢を選ぶ）
     if (targetWords.length < 1) {
       if (allWords.length > 0) {
         const msg = quizQidFilter
           ? '対象となる単語が見つかりません。'
+          : wordQuizType === 'blank-fill'
+          ? 'この範囲には空欄テキストのある単語がありません（範囲331以降は非対応）。'
           : '出題範囲に単語が見つかりません。';
         showErrorMessage(msg);
       }
@@ -583,7 +607,9 @@ function App() {
         exampleKobun,
         exampleModern,
         srsBox: 1,
-        corpusExample: false
+        corpusExample: false,
+        resolvedType: undefined as ResolvedWordQuizType | undefined,
+        jpBlank: undefined as string | undefined
       });
     }
 
@@ -606,14 +632,47 @@ function App() {
       /* 取得失敗時は基本例文のまま出題 */
     }
 
+    // 出題形式の解決:
+    //   おまかせ = SRS箱に応じて問い方を昇格 (箱1 再認 → 箱2-3 例文 → 箱4 空欄 → 箱5 記述)。
+    //   blank-fill / おまかせの箱4 は Excel 原本の空欄テキストに差し替える。
+    for (const prep of questionPrepData) {
+      let qType: ResolvedWordQuizType;
+      if (wordQuizType === 'auto') {
+        const box = prep.srsBox ?? 1;
+        const hasBlank = (blanks[prep.correctWord.qid]?.length ?? 0) > 0;
+        if (box <= 1) qType = 'word-meaning';
+        else if (box <= 3) qType = 'sentence-meaning';
+        else if (box === 4) qType = hasBlank ? 'blank-fill' : 'sentence-meaning';
+        else qType = 'meaning-writing';
+      } else {
+        qType = wordQuizType as ResolvedWordQuizType;
+      }
+      prep.resolvedType = qType;
+
+      if (qType === 'blank-fill') {
+        const pool = blanks[prep.correctWord.qid] ?? [];
+        if (pool.length > 0) {
+          const b = pool[Math.floor(Math.random() * pool.length)];
+          prep.jpBlank = b.jpBlank;
+          prep.exampleKobun = b.jp;
+          prep.exampleModern = b.translation;
+          prep.corpusExample = false;
+        } else {
+          prep.resolvedType = 'sentence-meaning'; // 空欄なし語のフォールバック
+        }
+      }
+    }
+
     // 記述モード以外では選択肢をAPIから並列取得
     let apiChoices: (Word[] | null)[] = [];
     if (wordQuizType !== 'meaning-writing') {
       const apiPromises = questionPrepData.map(async (prep, idx) => {
+        if (prep.resolvedType === 'meaning-writing') return null;
+        const apiMode = prep.resolvedType === 'blank-fill' ? 'word-reverse' : prep.resolvedType;
         try {
           const excludeQids = [...Array.from(usedIndexes), ...recentChoices].join(',');
           const response = await fetch(
-            `/api/getChoices?qid=${encodeURIComponent(prep.correctWord.qid)}&correctQid=${encodeURIComponent(prep.correctWord.qid)}&excludeQids=${excludeQids}&mode=${wordQuizType}`
+            `/api/getChoices?qid=${encodeURIComponent(prep.correctWord.qid)}&correctQid=${encodeURIComponent(prep.correctWord.qid)}&excludeQids=${excludeQids}&mode=${apiMode}`
           );
 
           if (response.ok) {
@@ -637,9 +696,13 @@ function App() {
     for (let i = 0; i < questionPrepData.length; i++) {
       const prep = questionPrepData[i];
       let options: Word[] = apiChoices[i] || [];
+      // この問題の実出題形式 (おまかせは prep で解決済み)
+      const qType: ResolvedWordQuizType = prep.resolvedType ?? (wordQuizType as ResolvedWordQuizType);
+      // 選択肢が「語」になる形式 (blank-fill は word-reverse と同じ語彙誤答)
+      const lemmaMode = qType === 'word-reverse' || qType === 'blank-fill';
 
       // フォールバック：API が使えない場合は前後10単語から選択肢を生成（記述モード以外）
-      if (wordQuizType !== 'meaning-writing' && options.length < 4) {
+      if (qType !== 'meaning-writing' && options.length < 4) {
         const incorrectOptions: Word[] = [];
         const correctWord = prep.correctWord;
 
@@ -648,7 +711,7 @@ function App() {
           Math.abs(w.group - correctWord.group) <= 10 && w.qid !== correctWord.qid
         );
 
-        if (wordQuizType === 'sentence-meaning') {
+        if (qType === 'sentence-meaning') {
           // Same word different meanings first (from nearby range)
           const sameWordMeanings = nearbyWords.filter(w =>
             w.lemma === correctWord.lemma
@@ -691,14 +754,14 @@ function App() {
             }
           }
         } else {
-          // word-meaning or word-reverse: use nearby words
+          // word-meaning / 語彙モード (word-reverse, blank-fill): use nearby words
           const shuffledNearby = [...nearbyWords].sort(() => Math.random() - 0.5);
 
           for (const word of shuffledNearby) {
             if (incorrectOptions.length >= 3) break;
             if (!word || !word.lemma || !word.sense) continue;
 
-            if (wordQuizType === 'word-reverse') {
+            if (lemmaMode) {
               if (word.lemma !== correctWord.lemma &&
                   !incorrectOptions.some(opt => opt && opt.lemma === word.lemma)) {
                 incorrectOptions.push(word);
@@ -720,7 +783,7 @@ function App() {
               const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
               if (!randomWord || !randomWord.lemma || !randomWord.sense) continue;
 
-              if (wordQuizType === 'word-reverse') {
+              if (lemmaMode) {
                 if (randomWord.lemma !== correctWord.lemma &&
                     !incorrectOptions.some(opt => opt && opt.lemma === randomWord.lemma)) {
                   incorrectOptions.push(randomWord);
@@ -746,7 +809,9 @@ function App() {
         exampleModern: prep.exampleModern,
         senseCount: allWords.reduce((n, w) => n + (w.lemma === prep.correctWord.lemma ? 1 : 0), 0),
         srsBox: prep.srsBox,
-        corpusExample: prep.corpusExample
+        corpusExample: prep.corpusExample,
+        resolvedType: qType,
+        jpBlank: prep.jpBlank
       });
     }
 
@@ -1890,9 +1955,10 @@ function App() {
                     onChange={(e) => setWordQuizType(e.target.value as WordQuizType)}
                     className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
                   >
+                    <option value="auto">おまかせ（覚えるほど問いが難しくなる）</option>
                     <option value="word-meaning">単語の意味を選ぶ</option>
-                    <option value="word-reverse">意味から単語を選ぶ</option>
                     <option value="sentence-meaning">例文から意味を選ぶ</option>
+                    <option value="blank-fill">空欄に入る語を選ぶ（テスト形式）</option>
                     <option value="meaning-writing">意味を書いて答える</option>
                   </select>
                 </div>
@@ -2026,7 +2092,7 @@ function App() {
             {currentMode === 'word' && getCurrentQuestion() && (
               <WordQuizContent
                 question={getCurrentQuestion()!}
-                quizType={wordQuizType}
+                quizType={getCurrentQuestion()!.resolvedType ?? (wordQuizType === 'auto' ? 'word-meaning' : wordQuizType)}
                 onAnswer={handleAnswer}
                 onWritingSubmit={handleWritingSubmit}
                 nextButtonVisible={nextButtonVisible}
