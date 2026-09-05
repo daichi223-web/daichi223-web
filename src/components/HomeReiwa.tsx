@@ -29,6 +29,8 @@ type Props = {
   polysemyQuizTypeLabel: string;
   weakWordsCount: number;
   dueWordsCount: number;
+  // 長い空白のあと: 空白日数と、先頭に置く「覚えていた語」の数（null なら通常）
+  welcomeBack?: { gapDays: number; warmupCount: number } | null;
   onStartQuiz: () => void;
   onStartReview: () => void;
   onStartSrsReview: () => void;
@@ -50,6 +52,7 @@ export default function HomeReiwa({
   polysemyQuizTypeLabel,
   weakWordsCount,
   dueWordsCount,
+  welcomeBack = null,
   onStartQuiz,
   onStartReview,
   onStartSrsReview,
@@ -206,13 +209,26 @@ export default function HomeReiwa({
                 <div className="text-[10px] opacity-90 font-bold tracking-wider uppercase">
                   Today's Quest
                 </div>
-                {dueWordsCount > 0 ? (
+                {welcomeBack && dueWordsCount > 0 ? (
+                  <>
+                    <div className="text-base md:text-lg font-black mt-1 leading-tight">
+                      おかえり
+                    </div>
+                    <div className="text-[11px] opacity-90 font-bold leading-tight">
+                      {welcomeBack.gapDays}日ぶり。まず覚えていた{welcomeBack.warmupCount}語から
+                    </div>
+                    <div className="flex items-baseline gap-1 mt-1.5">
+                      <span className="text-3xl font-black">{welcomeBack.warmupCount + dueWordsCount}</span>
+                      <span className="text-xs opacity-90">語・2〜3分</span>
+                    </div>
+                  </>
+                ) : dueWordsCount > 0 ? (
                   <>
                     <div className="text-base md:text-lg font-black mt-1 leading-tight">
                       今日の復習
                     </div>
                     <div className="text-[11px] opacity-90 font-bold leading-tight">
-                      SRS が選んだ単語
+                      期限の古い順に、今日はここまで
                     </div>
                     <div className="flex items-baseline gap-1 mt-1.5">
                       <span className="text-3xl font-black">{dueWordsCount}</span>
@@ -232,7 +248,7 @@ export default function HomeReiwa({
                 )}
               </div>
               <div className="mt-2 inline-block self-start bg-rw-paper text-rw-primary text-xs font-black px-3.5 py-1.5 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
-                {dueWordsCount > 0 ? '復習スタート ▶' : 'つづきから ▶'}
+                {welcomeBack && dueWordsCount > 0 ? 'おかえり復習 ▶' : dueWordsCount > 0 ? '復習スタート ▶' : 'つづきから ▶'}
               </div>
             </div>
           </div>

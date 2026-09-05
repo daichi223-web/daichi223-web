@@ -179,3 +179,81 @@ export async function initSrsWord(qid: string): Promise<void> {
       next_review: new Date().toISOString(),
     });
 }
+
+// ---------------------------------------------------------------------------
+// 「戻ってきやすい」復習
+//   - 期限到来の語が何千あっても、今日出すのは上限まで（溜まりは消さず・見せない）
+//   - 長い空白のあとは、箱4〜5（覚えていた語）から数語のウォームアップを先頭に置く
+// ---------------------------------------------------------------------------
+
+/** 1日に出す復習語の上限 */
+export const DAILY_REVIEW_CAP = 10;
+/** これ以上空くと「おかえり」扱い（休み明け想定） */
+export const WELCOME_BACK_GAP_DAYS = 14;
+/** おかえり時に先頭へ置く、覚えていた語の数 */
+export const WELCOME_WARMUP_COUNT = 5;
+
+/**
+ * 今日の復習セット。期限が古い順に DAILY_REVIEW_CAP 語まで。
+ * totalDue は残りの把握用で、UI には出さない前提。
+ */
+export async function getTodayReviewSet(cap = DAILY_REVIEW_CAP): Promise<{ qids: string[]; totalDue: number }> {
+  const userId = await getUserId();
+  const now = new Date().toISOString();
+  const [{ data, error }, totalDue] = await Promise.all([
+    supabase
+      .from('srs_state')
+      .select('qid')
+      .eq('user_id', userId)
+      .lte('next_review', now)
+      .order('next_review', { ascending: true })
+      .limit(cap),
+    getDueCount(),
+  ]);
+  if (error || !data) {
+    console.warn('Failed to fetch today review set:', error);
+    return { qids: [], totalDue: 0 };
+  }
+  return { qids: data.map((r) => r.qid as string), totalDue };
+}
+
+/** 最後に復習した日時（srs_state.last_review の最大）。未学習なら null。 */
+export async function getLastActivity(): Promise<Date | null> {
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from('srs_state')
+    .select('last_review')
+    .eq('user_id', userId)
+    .not('last_review', 'is', null)
+    .order('last_review', { ascending: false })
+    .limit(1);
+  if (error || !data || data.length === 0 || !data[0].last_review) return null;
+  return new Date(data[0].last_review as string);
+}
+
+/** 空白日数。last が null（初回）なら null。 */
+export function gapDays(last: Date | null, now: Date = new Date()): number | null {
+  if (!last) return null;
+  return Math.floor((now.getTime() - last.getTime()) / 86400000);
+}
+
+/**
+ * おかえりウォームアップ用: 箱4〜5の語からランダムに n 語。
+ * 「まだ覚えている」を先に体験させるためのもので、正誤は通常どおり SRS に反映する。
+ */
+export async function getWarmupWords(n = WELCOME_WARMUP_COUNT): Promise<string[]> {
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from('srs_state')
+    .select('qid')
+    .eq('user_id', userId)
+    .gte('box', 4)
+    .limit(200);
+  if (error || !data || data.length === 0) return [];
+  const pool = data.map((r) => r.qid as string);
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, n);
+}

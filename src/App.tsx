@@ -14,7 +14,15 @@ import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
-import { updateSrsState, getDueWords, getSrsBoxes } from './lib/srsEngine';
+import {
+  updateSrsState,
+  getSrsBoxes,
+  getTodayReviewSet,
+  getLastActivity,
+  gapDays,
+  getWarmupWords,
+  WELCOME_BACK_GAP_DAYS,
+} from './lib/srsEngine';
 
 // 教材実例文（qid → 例文[]）。箱(単語レベル)が上がった語の出題に使う
 type CorpusExample = { jp: string; translation: string };
@@ -203,6 +211,10 @@ function App() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [weakWordsCount, setWeakWordsCount] = useState(0);
   const [dueWordsCount, setDueWordsCount] = useState(0);
+  // 今日の復習セット（期限が古い順・上限つき）。溜まった残りは表示しない
+  const [todayReview, setTodayReview] = useState<string[]>([]);
+  // 長い空白のあとの「おかえり」: 空白日数と、箱4〜5からのウォームアップ語
+  const [welcomeBack, setWelcomeBack] = useState<{ gapDays: number; warmup: string[] } | null>(null);
   // 累計学習統計 (Result 画面で表示)
   const [cumulativeStats, setCumulativeStats] = useState<{
     totalAnswered: number;
@@ -275,15 +287,21 @@ function App() {
     let cancelled = false;
     (async () => {
       try {
-        const [weak, due] = await Promise.all([getWeakWords(), getDueWords()]);
+        const [weak, today, last] = await Promise.all([getWeakWords(), getTodayReviewSet(), getLastActivity()]);
+        const gap = gapDays(last);
+        const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? await getWarmupWords() : [];
         if (!cancelled) {
           setWeakWordsCount(weak.length);
-          setDueWordsCount(due.length);
+          setTodayReview(today.qids);
+          setDueWordsCount(today.qids.length);
+          setWelcomeBack(gap != null && gap >= WELCOME_BACK_GAP_DAYS && warmup.length > 0 ? { gapDays: gap, warmup } : null);
         }
       } catch {
         if (!cancelled) {
           setWeakWordsCount(0);
+          setTodayReview([]);
           setDueWordsCount(0);
+          setWelcomeBack(null);
         }
       }
     })();
@@ -484,7 +502,10 @@ function App() {
       .map(([lemma, meanings]) => ({ lemma, meanings }));
   };
 
-  const setupQuiz = async (qidFilterOverride?: string[], seedLemma?: string | null) => {
+  // opts.sequential: フィルタの並び順どおりに出題（復習＝期限の古い順、おかえり＝ウォームアップを先頭）
+  // opts.numQuestions: このセッションだけ出題数を上書き
+  type QuizOpts = { sequential?: boolean; numQuestions?: number };
+  const setupQuiz = async (qidFilterOverride?: string[], seedLemma?: string | null, opts?: QuizOpts) => {
     // Reset all quiz states when switching modes
     setShowResults(false);
     setIsQuizActive(false);
@@ -497,7 +518,7 @@ function App() {
     setWrongAnswers([]);
 
     if (currentMode === 'word') {
-      await setupWordQuiz(qidFilterOverride, seedLemma ?? undefined);
+      await setupWordQuiz(qidFilterOverride, seedLemma ?? undefined, opts);
     } else {
       setupPolysemyQuiz(seedLemma ?? undefined);
     }
@@ -518,7 +539,7 @@ function App() {
     return null;
   };
 
-  const setupWordQuiz = async (qidFilterOverride?: string[], seedLemma?: string) => {
+  const setupWordQuiz = async (qidFilterOverride?: string[], seedLemma?: string, opts?: QuizOpts) => {
     // qid フィルタ (引数優先、次に state)。指定があれば苦手単語 / SRS 復習として
     // その qid のみ出題、なければ範囲で絞り込む
     const filter = qidFilterOverride ?? quizQidFilter;
@@ -526,6 +547,11 @@ function App() {
     if (filter && filter.length > 0) {
       const qidSet = new Set(filter);
       targetWords = allWords.filter((w) => qidSet.has(w.qid));
+      if (opts?.sequential) {
+        // フィルタの順序を保つ（allWords.filter は allWords 順になるため並べ直す）
+        const order = new Map(filter.map((q, i) => [q, i]));
+        targetWords.sort((a, b) => (order.get(a.qid) ?? 0) - (order.get(b.qid) ?? 0));
+      }
     } else {
       const start = wordRange.from ?? 1;
       const end = wordRange.to ?? 330;
@@ -568,7 +594,7 @@ function App() {
     const quizData: QuizQuestion[] = [];
     const usedIndexes = new Set();
     const maxQuestions = new Set(targetWords.map(w => w.qid)).size;
-    const actualNumQuestions = Math.min(wordNumQuestions, maxQuestions);
+    const actualNumQuestions = Math.min(opts?.numQuestions ?? wordNumQuestions, maxQuestions);
 
     // 重複回避用に最近使った選択肢を追跡
     const recentChoices = getRecentChoices();
@@ -582,6 +608,10 @@ function App() {
         correctWordIndex = targetWords.findIndex(
           (w) => w.lemma === seedLemma && !usedIndexes.has(w.qid)
         );
+      }
+      if (correctWordIndex < 0 && opts?.sequential) {
+        // 順序固定: 未使用の先頭を取る
+        correctWordIndex = targetWords.findIndex((w) => !usedIndexes.has(w.qid));
       }
       if (correctWordIndex < 0) {
         do {
@@ -1520,6 +1550,7 @@ function App() {
             polysemyQuizTypeLabel={POLYSEMY_QUIZ_LABELS[polysemyQuizType]}
             weakWordsCount={weakWordsCount}
             dueWordsCount={dueWordsCount}
+            welcomeBack={welcomeBack ? { gapDays: welcomeBack.gapDays, warmupCount: welcomeBack.warmup.length } : null}
             onStartQuiz={() => {
               setQuizQidFilter(null);
               setQuizMode('normal');
@@ -1536,8 +1567,12 @@ function App() {
               void setupQuiz(weak);
             }}
             onStartSrsReview={async () => {
-              const due = await getDueWords();
-              if (due.length === 0) {
+              // 今日の復習（上限つき）。おかえり時は「覚えていた語」のウォームアップを先頭に置き、
+              // その後に今日の分を続ける。出題は並び順どおり（期限の古い順）
+              const warmup = welcomeBack?.warmup ?? [];
+              const todaySet = todayReview.filter((q) => !warmup.includes(q));
+              const session = [...warmup, ...todaySet];
+              if (session.length === 0) {
                 // フォールバック: 通常クイズ
                 setQuizQidFilter(null);
                 setQuizMode('normal');
@@ -1545,11 +1580,11 @@ function App() {
                 void setupQuiz();
                 return;
               }
-              setQuizQidFilter(due);
+              setQuizQidFilter(session);
               setQuizMode('srs');
               setCurrentMode('word');
               setShowHome(false);
-              void setupQuiz(due);
+              void setupQuiz(session, null, { sequential: true, numQuestions: session.length });
             }}
             onSwitchMode={(mode) => {
               setQuizQidFilter(null);
