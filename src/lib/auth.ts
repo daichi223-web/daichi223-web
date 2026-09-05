@@ -2,14 +2,14 @@ import { supabase } from './supabase';
 import { ensureAnonSession, resetAnonSessionCache } from './anonAuth';
 
 /**
- * 匿名アカウント → メール（マジックリンク）への紐づけ。
+ * 匿名アカウント → 学校メール＋パスワード への紐づけ（health-check と同じ方式）。
  *
- * - linkEmail:        今の匿名アカウントにメールを付ける。確認リンクを踏むと
- *                     同じ user_id のまま永続アカウントになる（記録は1行も動かない）
- * - signInWithEmail:  別の端末から、登録済みのメールでログインする
+ * - linkEmailPassword:  今の匿名アカウントにメールとパスワードを付ける。Dashboard で「Confirm email」が
+ *                       OFF なら即時に永続化（メール送信なし）。同じ user_id のまま＝記録は1行も動かない
+ * - signInWithPassword: 別の端末から、登録済みのメール＋パスワードでログイン（送信なし）
+ * - sendResetLink:      パスワードを忘れた時だけマジックリンク（/auth/callback → /account でパスワード変更）
+ * - changePassword:     ログイン中のパスワード変更
  * - signOutToAnonymous: 共用PC向け。ログアウトして新しい匿名セッションに戻す
- *
- * リンクの着地は /auth/callback（supabase-js が URL からセッションを復元する）。
  */
 
 export type AccountStatus = {
@@ -17,14 +17,20 @@ export type AccountStatus = {
   /** メール未登録（匿名のまま） */
   isAnonymous: boolean;
   email: string | null;
-  /** 確認待ちのメール（リンク未クリック） */
+  /** 確認待ちのメール（Confirm email が ON の場合のみ発生） */
   pendingEmail: string | null;
 };
 
 export type AuthResult = { ok: true } | { ok: false; message: string };
 
+const MIN_PASSWORD = 6;
+
 function callbackUrl(): string {
   return `${window.location.origin}/auth/callback`;
+}
+
+function validEmail(e: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
 
 export async function getAccountStatus(): Promise<AccountStatus> {
@@ -42,33 +48,55 @@ export async function getAccountStatus(): Promise<AccountStatus> {
 /** Supabase の英語エラーを生徒向けの短い日本語に */
 function humanize(message: string): string {
   const m = message.toLowerCase();
-  if (m.includes('rate limit') || m.includes('too many')) return '送信回数の上限に達しました。しばらく待ってからもう一度お試しください。';
-  if (m.includes('signups not allowed')) return 'このメールはまだ登録されていません。最初に使った端末で「メール登録」をしてください。';
+  if (m.includes('invalid login credentials')) return 'メールアドレスかパスワードが違います。';
+  if (m.includes('rate limit') || m.includes('too many')) return '回数の上限に達しました。しばらく待ってからもう一度お試しください。';
+  if (m.includes('password should be') || m.includes('password is too short') || m.includes('weak password'))
+    return `パスワードは${MIN_PASSWORD}文字以上にしてください。`;
   if (m.includes('already registered') || m.includes('already been registered') || m.includes('already exists'))
-    return 'このメールは別のアカウントで登録済みです。「登録済みのメールでログイン」から入ってください。';
+    return 'このメールは登録済みです。「登録済みのメールでログイン」から入ってください。';
+  if (m.includes('signups not allowed')) return 'このメールはまだ登録されていません。最初に使った端末で登録してください。';
+  if (m.includes('email not confirmed')) return 'メールの確認が終わっていません。届いたメールのリンクを開いてください。';
   if (m.includes('invalid') && m.includes('email')) return 'メールアドレスの形式が正しくありません。';
-  return `送信できませんでした（${message}）`;
+  return `できませんでした（${message}）`;
 }
 
-export async function linkEmail(email: string): Promise<AuthResult> {
+export async function linkEmailPassword(email: string, password: string): Promise<AuthResult> {
   const trimmed = email.trim();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
+  if (!validEmail(trimmed)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
+  if (password.length < MIN_PASSWORD) return { ok: false, message: `パスワードは${MIN_PASSWORD}文字以上にしてください。` };
   await ensureAnonSession();
-  const { error } = await supabase.auth.updateUser({ email: trimmed }, { emailRedirectTo: callbackUrl() });
+  const { error } = await supabase.auth.updateUser({ email: trimmed, password }, { emailRedirectTo: callbackUrl() });
   if (error) return { ok: false, message: humanize(error.message) };
   return { ok: true };
 }
 
-export async function signInWithEmail(email: string): Promise<AuthResult> {
+export async function signInWithPassword(email: string, password: string): Promise<AuthResult> {
   const trimmed = email.trim();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
+  if (!validEmail(trimmed)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
+  if (!password) return { ok: false, message: 'パスワードを入力してください。' };
   // 端末統合の準備: この端末が匿名で記録を持っていれば、ログイン後に統合できるようチケットを取っておく
+  await requestMergeTicket();
+  const { error } = await supabase.auth.signInWithPassword({ email: trimmed, password });
+  if (error) return { ok: false, message: humanize(error.message) };
+  return { ok: true };
+}
+
+/** パスワードを忘れた時: マジックリンク（登録済みメールのみ）。着地後 /account でパスワードを変える */
+export async function sendResetLink(email: string): Promise<AuthResult> {
+  const trimmed = email.trim();
+  if (!validEmail(trimmed)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
   await requestMergeTicket();
   const { error } = await supabase.auth.signInWithOtp({
     email: trimmed,
-    // 登録済みのメールだけ受け付ける（打ち間違いで空アカウントを作らない）
     options: { emailRedirectTo: callbackUrl(), shouldCreateUser: false },
   });
+  if (error) return { ok: false, message: humanize(error.message) };
+  return { ok: true };
+}
+
+export async function changePassword(password: string): Promise<AuthResult> {
+  if (password.length < MIN_PASSWORD) return { ok: false, message: `パスワードは${MIN_PASSWORD}文字以上にしてください。` };
+  const { error } = await supabase.auth.updateUser({ password });
   if (error) return { ok: false, message: humanize(error.message) };
   return { ok: true };
 }
