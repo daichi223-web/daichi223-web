@@ -54,7 +54,8 @@ export default function NobleStatusBar({
         }}
       >
         <img
-          src={portrait.src}
+          src={portrait.thumb}
+          decoding="async"
           alt={portrait.label}
           draggable={false}
           style={{

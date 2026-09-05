@@ -124,7 +124,10 @@ export const GENRES: Genre[] = [
 // 8 枚の水彩ポートレート。fromN..toN のステージ範囲を 1 枚で代表させる。
 // focusX/focusY は object-position (%) — 人物が中心になるトリミング基準。
 export type PortraitBand = {
+  /** 主表示用 (幅1200px)。原画は約2800pxでスマホが落ちるため直接参照しない */
   src: string;
+  /** 一覧・小枠用 (幅480px) */
+  thumb: string;
   fromN: number;
   toN: number;
   label: string;
@@ -135,52 +138,52 @@ export type PortraitBand = {
 };
 
 export const PORTRAITS: PortraitBand[] = [
-  { src: '/portraits/01-mui-bench.webp',    fromN: 1,  toN: 1,
+  { src: '/portraits/01-mui-bench-w1200.webp', thumb: '/portraits/01-mui-bench-w480.webp',    fromN: 1,  toN: 1,
     label: '童 ・ 入門',
     note: '無位の若者 ・ 書を抱きて 御所の縁に座す',
     focusX: 52, focusY: 50,
     palette: ['#e9e0cc', '#a89677', '#6b5a3e'] },
-  { src: '/portraits/02-mui-study.webp',    fromN: 2,  toN: 2,
+  { src: '/portraits/02-mui-study-w1200.webp', thumb: '/portraits/02-mui-study-w480.webp',    fromN: 2,  toN: 2,
     label: '八 位 ・ 少 録',
     note: '燈下に巻物を解く ・ 八位の見習い ・ 浅縹の袍',
     focusX: 48, focusY: 50,
     palette: ['#e6dbc2', '#7e6a4d', '#3c2f1e'] },
-  { src: '/portraits/02-mui-study.webp',    fromN: 3,  toN: 3,
+  { src: '/portraits/02-mui-study-w1200.webp', thumb: '/portraits/02-mui-study-w480.webp',    fromN: 3,  toN: 3,
     label: '七 位 ・ 大 允',
     note: '深縹に進み木笏を執る ・ 七位の官人',
     focusX: 48, focusY: 50,
     palette: ['#e6dbc2', '#7e6a4d', '#3c2f1e'] },
-  { src: '/portraits/04-jige-coral.webp',   fromN: 4,  toN: 7,
+  { src: '/portraits/04-jige-coral-w1200.webp', thumb: '/portraits/04-jige-coral-w480.webp',   fromN: 4,  toN: 7,
     label: '地 下 官 人',
     note: '紅梅の袍を賜り、笏を取る ・ 六位の地下',
     focusX: 52, focusY: 55,
     palette: ['#e98c78', '#c45441', '#7b2e22'] },
-  { src: '/portraits/08-tenjo-red.webp',    fromN: 8,  toN: 11,
+  { src: '/portraits/08-tenjo-red-w1200.webp', thumb: '/portraits/08-tenjo-red-w480.webp',    fromN: 8,  toN: 11,
     label: '殿 上 人 入',
     note: '初めて殿上を許される ・ 五位 ・ 細太刀を佩く',
     focusX: 50, focusY: 55,
     palette: ['#e87060', '#b8423a', '#5e1c19'] },
-  { src: '/portraits/12-tenjo-purple.webp', fromN: 12, toN: 15,
+  { src: '/portraits/12-tenjo-purple-w1200.webp', thumb: '/portraits/12-tenjo-purple-w480.webp', fromN: 12, toN: 15,
     label: '近 衛 中 将',
     note: '浅紫の袍 ・ 四位 ・ 飾太刀を許される',
     focusX: 50, focusY: 55,
     palette: ['#b89bc4', '#8a6aa6', '#4a2a5c'] },
-  { src: '/portraits/16-kugyo-fan.webp',    fromN: 16, toN: 17,
+  { src: '/portraits/16-kugyo-fan-w1200.webp', thumb: '/portraits/16-kugyo-fan-w480.webp',    fromN: 16, toN: 17,
     label: '公 卿 ・ 参 議',
     note: '雲鶴の地紋 ・ 牛車を許される ・ 三位',
     focusX: 48, focusY: 55,
     palette: ['#c9b0d4', '#8a6aa6', '#3d2050'] },
-  { src: '/portraits/18-kugyo-scroll.webp', fromN: 18, toN: 19,
+  { src: '/portraits/18-kugyo-scroll-w1200.webp', thumb: '/portraits/18-kugyo-scroll-w480.webp', fromN: 18, toN: 19,
     label: '大 納 言',
     note: '雲鶴鳳凰の最高級地紋 ・ 二位 ・ 蒔絵牛車',
     focusX: 65, focusY: 55,
     palette: ['#d0b8d8', '#8c6cb0', '#3a1a4a'] },
-  { src: '/portraits/20-kyokui-seal.webp',  fromN: 20, toN: 20,
+  { src: '/portraits/20-kyokui-seal-w1200.webp', thumb: '/portraits/20-kyokui-seal-w480.webp',  fromN: 20, toN: 20,
     label: '従 一 位 ・ 摂 関',
     note: '深紫の袍 ・ 摂政関白 ・ 一の人',
     focusX: 60, focusY: 55,
     palette: ['#a78bbf', '#6a4889', '#2c1640'] },
-  { src: '/portraits/21-shoichi.webp',     fromN: 21, toN: 21,
+  { src: '/portraits/21-shoichi-w1200.webp', thumb: '/portraits/21-shoichi-w480.webp',     fromN: 21, toN: 21,
     label: '正 一 位 ・ 太 政 大 臣',
     note: '深紫鳳凰の極位 ・ 七尺の長き裾 ・ 太政大臣の威容',
     focusX: 60, focusY: 55,
@@ -188,12 +191,12 @@ export const PORTRAITS: PortraitBand[] = [
 ];
 
 // 部位ごとの解説図 (StatsPage の図解で使う)
-export const PART_CHARTS: Array<{ key: PartKey; label: string; src: string; cap: number }> = [
-  { key: 'head',  label: '頭 ・ 烏帽子の七段',   src: '/portraits/chart-head.webp',  cap: 7 },
-  { key: 'robe',  label: '袍 ・ 色目の九段',     src: '/portraits/chart-robe.webp',  cap: 9 },
-  { key: 'train', label: '裾 ・ 下襲の五段',     src: '/portraits/chart-train.webp', cap: 5 },
-  { key: 'item',  label: '持物 ・ 笏と扇の五段', src: '/portraits/chart-item.webp',  cap: 5 },
-  { key: 'belt',  label: '帯 ・ 太刀の五段',     src: '/portraits/chart-belt.webp',  cap: 5 },
+export const PART_CHARTS: Array<{ key: PartKey; label: string; src: string; thumb: string; cap: number }> = [
+  { key: 'head',  label: '頭 ・ 烏帽子の七段',   src: '/portraits/chart-head-w1200.webp', thumb: '/portraits/chart-head-w480.webp',  cap: 7 },
+  { key: 'robe',  label: '袍 ・ 色目の九段',     src: '/portraits/chart-robe-w1200.webp', thumb: '/portraits/chart-robe-w480.webp',  cap: 9 },
+  { key: 'train', label: '裾 ・ 下襲の五段',     src: '/portraits/chart-train-w1200.webp', thumb: '/portraits/chart-train-w480.webp', cap: 5 },
+  { key: 'item',  label: '持物 ・ 笏と扇の五段', src: '/portraits/chart-item-w1200.webp', thumb: '/portraits/chart-item-w480.webp',  cap: 5 },
+  { key: 'belt',  label: '帯 ・ 太刀の五段',     src: '/portraits/chart-belt-w1200.webp', thumb: '/portraits/chart-belt-w480.webp',  cap: 5 },
 ];
 
 // 現在のパーツ Lv が全て満たす最高ステージ。

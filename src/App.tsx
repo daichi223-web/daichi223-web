@@ -12,6 +12,7 @@ import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
+import { pickQuestions, type Bucket } from './lib/quizSelector';
 import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import {
@@ -145,6 +146,9 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [wordNumQuestions, setWordNumQuestions] = useLocalStorageState<number>('kobun-wordNumQuestions', 10);
+  // 出題の選び方: auto = 学習記録から「苦手→未着手（番号順）→途中」を配分、得意は頻度を下げる。random = 従来
+  const [pickMode, setPickMode] = useLocalStorageState<'auto' | 'random'>('kobun-pickMode', 'auto');
+  const [lastPick, setLastPick] = useState<Record<Bucket, number> | null>(null);
   const [wordRange, setWordRange] = useLocalStorageState<{from?: number; to?: number}>('kobun-wordRange', { from: 1, to: 50 });
   // 単語帳カテゴリ絞り込み (重要動詞/敬語動詞/...) — 空配列は「全て」
   const [categoryFilter, setCategoryFilter] = useLocalStorageState<string[]>('kobun-categoryFilter', []);
@@ -520,7 +524,7 @@ function App() {
     if (currentMode === 'word') {
       await setupWordQuiz(qidFilterOverride, seedLemma ?? undefined, opts);
     } else {
-      setupPolysemyQuiz(seedLemma ?? undefined);
+      await setupPolysemyQuiz(seedLemma ?? undefined);
     }
   };
 
@@ -591,6 +595,21 @@ function App() {
       return;
     }
 
+    // おまかせ選択: 明示フィルタ（復習・苦手）が無い通常出題だけ対象。取得失敗時は従来のランダム
+    let autoPicked = false;
+    if (!filter && pickMode === 'auto') {
+      try {
+        const [stats, boxes] = await Promise.all([getWordStats(), getSrsBoxes(targetWords.map((w) => w.qid))]);
+        const r = pickQuestions({
+          items: targetWords,
+          key: (w) => w.qid,
+          order: (w) => w.group * 100 + (w.meaning_idx ?? 0),
+          stats, boxes, n: opts?.numQuestions ?? wordNumQuestions,
+        });
+        if (r.picked.length > 0) { targetWords = r.picked; autoPicked = true; setLastPick(r.composition); }
+      } catch { /* ランダムにフォールバック */ }
+    }
+
     const quizData: QuizQuestion[] = [];
     const usedIndexes = new Set();
     const maxQuestions = new Set(targetWords.map(w => w.qid)).size;
@@ -609,7 +628,7 @@ function App() {
           (w) => w.lemma === seedLemma && !usedIndexes.has(w.qid)
         );
       }
-      if (correctWordIndex < 0 && opts?.sequential) {
+      if (correctWordIndex < 0 && (opts?.sequential || autoPicked)) {
         // 順序固定: 未使用の先頭を取る
         correctWordIndex = targetWords.findIndex((w) => !usedIndexes.has(w.qid));
       }
@@ -854,7 +873,7 @@ function App() {
     setShowWritingResult(false);
   };
 
-  const setupPolysemyQuiz = (seedLemma?: string) => {
+  const setupPolysemyQuiz = async (seedLemma?: string) => {
     const start = polysemyRange.from ?? 1;
     const end = polysemyRange.to ?? 330;
     const polysemyWords = getPolysemyWords(allWords, start, end);
@@ -866,13 +885,42 @@ function App() {
       return;
     }
 
-    // シャッフルしてから選択。seedLemma があれば先頭に固定 (モード切替時の語引継ぎ)。
-    const shuffled = [...polysemyWords].sort(() => Math.random() - 0.5);
-    let ordered = shuffled;
+    // 出題する語を決める。
+    //   おまかせ: 語（lemma）ごとに各意味の正誤を合算し、苦手→未着手（番号順）→途中 の配分で選ぶ
+    //   ランダム: シャッフルして先頭から
+    // seedLemma があれば先頭に固定 (モード切替時の語引継ぎ)。
+    let ordered: MultiMeaningWord[] | null = null;
+    if (pickMode === 'auto') {
+      try {
+        const stats = await getWordStats();
+        const byLemma: Record<string, { correct: number; incorrect: number; lastSeen?: string | null }> = {};
+        for (const w of polysemyWords) {
+          let c = 0, i = 0, last: string | null = null;
+          for (const m of w.meanings) {
+            const st = stats[m.qid];
+            if (!st) continue;
+            c += st.correct; i += st.incorrect;
+            if (st.lastSeen && (!last || st.lastSeen > last)) last = st.lastSeen;
+          }
+          if (c + i > 0) byLemma[w.lemma] = { correct: c, incorrect: i, lastSeen: last };
+        }
+        const r = pickQuestions({
+          items: polysemyWords,
+          key: (w) => w.lemma,
+          order: (w) => Math.min(...w.meanings.map((m) => m.group)),
+          stats: byLemma, n: polysemyNumQuestions,
+        });
+        if (r.picked.length > 0) { ordered = r.picked; setLastPick(r.composition); }
+      } catch { /* ランダムにフォールバック */ }
+    }
+    if (!ordered) ordered = [...polysemyWords].sort(() => Math.random() - 0.5);
     if (seedLemma) {
-      const seedIdx = shuffled.findIndex((w) => w.lemma === seedLemma);
+      const seedIdx = ordered.findIndex((w) => w.lemma === seedLemma);
       if (seedIdx > 0) {
-        ordered = [shuffled[seedIdx], ...shuffled.filter((_, i) => i !== seedIdx)];
+        ordered = [ordered[seedIdx], ...ordered.filter((_, i) => i !== seedIdx)];
+      } else if (seedIdx < 0) {
+        const seed = polysemyWords.find((w) => w.lemma === seedLemma);
+        if (seed) ordered = [seed, ...ordered];
       }
     }
     const selectedWords = ordered.slice(0, Math.min(polysemyNumQuestions, ordered.length));
@@ -1997,6 +2045,22 @@ function App() {
                     <option value="meaning-writing">意味を書いて答える</option>
                   </select>
                 </div>
+                <div>
+                  <select
+                    value={pickMode}
+                    onChange={(e) => setPickMode(e.target.value as 'auto' | 'random')}
+                    className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
+                    title="どの語を出すか。おまかせは学習記録から、苦手→まだ解いていない語（番号順）→途中の語 の順に配分し、正答率の高い語は頻度を下げる"
+                  >
+                    <option value="auto">出す語はおまかせ（苦手・未着手を優先）</option>
+                    <option value="random">出す語はランダム</option>
+                  </select>
+                  {pickMode === 'auto' && lastPick && (
+                    <div className="text-[10px] text-slate-500 mt-0.5">
+                      前回の内訳: 苦手 {lastPick.weak}・未着手 {lastPick.new}・途中 {lastPick.mid}{lastPick.strong > 0 ? `・得意 ${lastPick.strong}` : ''}
+                    </div>
+                  )}
+                </div>
                 <div className="flex items-center space-x-1">
                   <label className="text-xs text-slate-600 whitespace-nowrap">問題数</label>
                   <input
@@ -2062,6 +2126,22 @@ function App() {
                     <option value="true-false">例文の訳の正誤を判断</option>
                     <option value="context-writing">文脈から意味を書く</option>
                   </select>
+                </div>
+                <div>
+                  <select
+                    value={pickMode}
+                    onChange={(e) => setPickMode(e.target.value as 'auto' | 'random')}
+                    className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
+                    title="どの語を出すか。おまかせは学習記録から、苦手→まだ解いていない語（番号順）→途中の語 の順に配分し、正答率の高い語は頻度を下げる"
+                  >
+                    <option value="auto">出す語はおまかせ（苦手・未着手を優先）</option>
+                    <option value="random">出す語はランダム</option>
+                  </select>
+                  {pickMode === 'auto' && lastPick && (
+                    <div className="text-[10px] text-slate-500 mt-0.5">
+                      前回の内訳: 苦手 {lastPick.weak}・未着手 {lastPick.new}・途中 {lastPick.mid}{lastPick.strong > 0 ? `・得意 ${lastPick.strong}` : ''}
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center space-x-1">
                   <label className="text-xs text-slate-600 whitespace-nowrap">問題数</label>

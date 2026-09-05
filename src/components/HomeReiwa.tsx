@@ -126,7 +126,8 @@ export default function HomeReiwa({
                   }}
                 >
                   <img
-                    src={noblePortrait.src}
+                    src={noblePortrait.thumb}
+                    decoding="async"
                     alt={noblePortrait.label}
                     draggable={false}
                     style={{

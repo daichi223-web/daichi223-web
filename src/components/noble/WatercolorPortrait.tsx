@@ -36,8 +36,9 @@ export default function WatercolorPortrait({
       }}
     >
       <img
-        src={p.src}
+        src={p.thumb}
         alt={p.label}
+        decoding="async"
         draggable={false}
         style={{
           position: 'absolute',

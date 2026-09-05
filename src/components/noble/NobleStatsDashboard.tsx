@@ -127,6 +127,7 @@ export default function NobleStatsDashboard({ parts }: Props) {
             <img
               src={portrait.src}
               alt={portrait.label}
+              decoding="async"
               style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'cover' }}
             />
 
@@ -468,7 +469,7 @@ function ZukanModal({ currentStageN, onClose }: { currentStageN: number; onClose
                     filter: unlocked ? 'none' : 'grayscale(1) blur(2px)',
                   }}
                 >
-                  <img src={p.src} alt={p.label} style={{ display: 'block', width: '100%', height: 'auto' }} />
+                  <img src={p.thumb} alt={p.label} loading="lazy" decoding="async" style={{ display: 'block', width: '100%', height: 'auto' }} />
                   {!unlocked && (
                     <div
                       className="absolute inset-0 flex items-center justify-center text-white text-2xl font-black"
@@ -579,7 +580,7 @@ function RefsDrawer({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="p-1.5 mb-2" style={{ background: '#f5ecd6', border: '1px solid rgba(60,40,20,0.3)' }}>
-          <img src={chart.src} alt={chart.label} style={{ display: 'block', width: '100%', height: 'auto' }} />
+          <img src={chart.src} alt={chart.label} loading="lazy" decoding="async" style={{ display: 'block', width: '100%', height: 'auto' }} />
         </div>
         <div className="text-center text-xs text-rw-ink-soft tracking-wider">
           {chart.label}

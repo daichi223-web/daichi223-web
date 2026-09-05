@@ -1507,7 +1507,7 @@ function NoblePreviewView() {
         <div className="mb-5 grid grid-cols-2 md:grid-cols-5 gap-3 p-3 bg-slate-50 rounded">
           {PART_CHARTS.map((c) => (
             <div key={c.key} className="bg-white border border-slate-200 rounded overflow-hidden">
-              <img src={c.src} alt={c.label} style={{ display: 'block', width: '100%', height: 'auto' }} />
+              <img src={c.thumb} alt={c.label} loading="lazy" decoding="async" style={{ display: 'block', width: '100%', height: 'auto' }} />
               <div className="px-2 py-1.5 text-[10px] text-slate-600 text-center">
                 {c.label} <span className="text-slate-400 ml-1">全 {c.cap} 段</span>
               </div>
@@ -1612,7 +1612,9 @@ function NoblePreviewView() {
           {PORTRAITS.map((p, i) => (
             <div key={i} className="border border-slate-200 rounded overflow-hidden bg-white">
               <img
-                src={p.src}
+                src={p.thumb}
+                loading="lazy"
+                decoding="async"
                 alt={p.label}
                 draggable={false}
                 style={{
