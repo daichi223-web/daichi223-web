@@ -98,7 +98,7 @@
   ],
   "crons": [
     {
-      "path": "/api/aggregateCandidates?minFreq=3&lookbackDays=7",
+      "path": "/api/teacher?action=aggregateCandidates&minFreq=3&lookbackDays=7",
       "schedule": "0 18 * * *"
     }
   ]

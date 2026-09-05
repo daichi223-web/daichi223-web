@@ -93,11 +93,11 @@ export default function Teacher() {
         const words = dataParser.getAllWords();
         setAllWordsData(words);
 
-        const data = await callAPI("/api/listRecentAnswers?limit=50");
+        const data = await callAPI("/api/teacher?action=listRecentAnswers&limit=50");
         setRows(data);
 
         // 候補データも取得
-        const candidatesData = await callAPI("/api/listCandidates?limit=100");
+        const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=100");
         setCandidates(candidatesData.candidates || []);
       } catch (e: any) {
         const msg = String(e?.message || e);
@@ -117,7 +117,7 @@ export default function Teacher() {
 
   const doOverride = async (id: string, label: "OK" | "NG" | null) => {
     try {
-      await callAPI("/api/overrideAnswer", { answerId: id, result: label });
+      await callAPI("/api/teacher?action=overrideAnswer", { answerId: id, result: label });
       setRows(rs => rs.map(r => r.id === id ? {
         ...r,
         final: label === null
@@ -131,10 +131,10 @@ export default function Teacher() {
 
   const addOverrideRule = async (qid: string, answerRaw: string) => {
     try {
-      await callAPI("/api/upsertOverride", { qid, answerRaw, label: "OK", active: true });
+      await callAPI("/api/teacher?action=upsertOverride", { qid, answerRaw, label: "OK", active: true });
       alert("辞書に登録しました（同型を一括置換）");
       // Refresh data
-      const data = await callAPI("/api/listRecentAnswers?limit=50");
+      const data = await callAPI("/api/teacher?action=listRecentAnswers&limit=50");
       setRows(data);
     } catch (e: any) {
       alert(`エラー: ${e.message}`);
@@ -221,11 +221,11 @@ export default function Teacher() {
 
     try {
       setLoading(true);
-      const result = await callAPI("/api/aggregateCandidates", {});
+      const result = await callAPI("/api/teacher?action=aggregateCandidates", {});
       alert(`集計完了:\n処理数: ${result.processed}\n集計数: ${result.aggregated}\n保存数: ${result.saved}`);
 
       // 候補データを再取得
-      const candidatesData = await callAPI("/api/listCandidates?limit=100");
+      const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=100");
       setCandidates(candidatesData.candidates || []);
     } catch (e: any) {
       alert(`エラー: ${e.message}`);
@@ -247,13 +247,13 @@ export default function Teacher() {
 
     try {
       setLoading(true);
-      const result = await callAPI("/api/deleteAllData", { confirm: "DELETE_ALL_DATA" });
+      const result = await callAPI("/api/teacher?action=deleteAllData", { confirm: "DELETE_ALL_DATA" });
       alert(`削除完了:\n${JSON.stringify(result.deleted, null, 2)}`);
 
       // データを再取得
-      const data = await callAPI("/api/listRecentAnswers?limit=50");
+      const data = await callAPI("/api/teacher?action=listRecentAnswers&limit=50");
       setRows(data);
-      const candidatesData = await callAPI("/api/listCandidates?limit=100");
+      const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=100");
       setCandidates(candidatesData.candidates || []);
     } catch (e: any) {
       alert(`エラー: ${e.message}`);
@@ -307,7 +307,7 @@ export default function Teacher() {
               onClick={async () => {
                 try {
                   setLoading(true);
-                  const result = await callAPI("/api/exportCandidatesJSON");
+                  const result = await callAPI("/api/teacher?action=exportCandidatesJSON");
                   alert(`エクスポート完了:\n候補数: ${result.candidatesCount}\nQID数: ${result.qidsCount}\n${result.message}`);
                 } catch (e: any) {
                   alert(`エラー: ${e.message}`);
@@ -620,7 +620,7 @@ export default function Teacher() {
 
           {candidates.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              候補データがありません。まず /api/aggregateCandidates を実行してください。
+              候補データがありません。まず「候補を集計」を実行してください。
             </div>
           )}
         </div>
@@ -1378,7 +1378,7 @@ function AnalyticsView({
         </h3>
         {topWrongs.length === 0 ? (
           <div className="text-slate-500 text-sm py-4">
-            まだデータがありません。生徒の記述解答が累積されたら /api/aggregateCandidates を実行してください。
+            まだデータがありません。生徒の記述解答が累積されたら「候補を集計」を実行してください。
           </div>
         ) : (
           <table className="w-full text-sm">
