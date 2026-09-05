@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { supabaseAdmin } from "./_supabaseAdmin.js";
 import { normalize } from "./_normalize.js";
+import { handleMergeAccount, handleMergeTicket } from "./_merge.js";
 import crypto from "crypto";
 
 type ResultLabel = "OK" | "NG" | "ABSTAIN";
@@ -13,6 +14,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const action = (req.body as { action?: string })?.action;
     if (action === "migrate") {
       return await handleMigrate(req, res);
+    }
+    // 端末統合（Hobby の関数数上限のため同居。中身は api/_merge.ts）
+    if (action === "mergeTicket") {
+      return await handleMergeTicket(req, res);
+    }
+    if (action === "mergeAccount") {
+      return await handleMergeAccount(req, res);
     }
 
     const { qid, answerRaw, uid, anonId, autoScore, autoResult, autoReason, questionType } = req.body as {

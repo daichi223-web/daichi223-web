@@ -127,7 +127,12 @@ async function requestMergeTicket(): Promise<void> {
     const { data } = await supabase.auth.getSession();
     const s = data.session;
     if (!s?.user || !(s.user.is_anonymous ?? !s.user.email)) return;
-    const resp = await fetch('/api/mergeTicket', { method: 'POST', headers: { Authorization: `Bearer ${s.access_token}` } });
+    // Hobby の関数数上限のため /api/submitAnswer に同居（action で分岐）
+    const resp = await fetch('/api/submitAnswer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${s.access_token}` },
+      body: JSON.stringify({ action: 'mergeTicket' }),
+    });
     if (!resp.ok) return;
     const j = (await resp.json()) as { ticket?: string; counts?: PendingMerge['counts'] };
     if (!j.ticket) return;
@@ -156,10 +161,10 @@ export async function confirmPendingMerge(): Promise<{ ok: true; merged: MergeRe
   const { data } = await supabase.auth.getSession();
   const s = data.session;
   if (!s?.user || (s.user.is_anonymous ?? !s.user.email)) return { ok: false, message: '先にメールでログインしてください。' };
-  const resp = await fetch('/api/mergeAccount', {
+  const resp = await fetch('/api/submitAnswer', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${s.access_token}` },
-    body: JSON.stringify({ ticket: pending.ticket }),
+    body: JSON.stringify({ action: 'mergeAccount', ticket: pending.ticket }),
   });
   const j = (await resp.json().catch(() => ({}))) as { ok?: boolean; merged?: MergeResult; error?: string };
   if (resp.ok && j.ok && j.merged) {
