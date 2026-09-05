@@ -9,6 +9,11 @@ import { supabase } from './supabase';
  */
 let ensurePromise: Promise<string | null> | null = null;
 
+/** signOut 後など、次回 ensureAnonSession() で改めてセッションを確認させたい時に呼ぶ */
+export function resetAnonSessionCache(): void {
+  ensurePromise = null;
+}
+
 export function ensureAnonSession(): Promise<string | null> {
   if (ensurePromise) return ensurePromise;
   ensurePromise = (async () => {

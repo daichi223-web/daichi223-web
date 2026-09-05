@@ -34,6 +34,8 @@ const ReibunQuiz = lazy(() => import('./pages/ReibunQuiz.tsx'))
 const VocabPage = lazy(() => import('./pages/VocabPage.tsx'))
 const VocabCard = lazy(() => import('./pages/VocabCard.tsx'))
 const VocabHome = lazy(() => import('./pages/VocabHome.tsx'))
+const AccountPage = lazy(() => import('./pages/AccountPage.tsx'))
+const AuthCallback = lazy(() => import('./pages/AuthCallback.tsx'))
 const Teacher = lazy(() => import('./pages/Teacher.tsx'))
 const TextDetail = lazy(() => import('./pages/TextDetail.tsx'))
 const TextsIndex = lazy(() => import('./pages/TextsIndex.tsx'))
@@ -80,6 +82,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/tango-dojo" element={<VocabDojoHome />} />
           <Route path="/vocab" element={<VocabHome />} />
           <Route path="/word/:lemma" element={<VocabCard />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/read/grammar/reibun" element={<ReibunDict />} />
           <Route path="/read/grammar/reibun/quiz" element={<ReibunQuiz />} />
           <Route path="/read/grammar/review" element={<GrammarDojoReview />} />

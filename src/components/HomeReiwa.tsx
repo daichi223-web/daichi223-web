@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getAccountStatus, type AccountStatus } from '@/lib/auth';
 import { Link } from 'react-router-dom';
 import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
 import { readStreak } from '@/lib/streak';
@@ -61,11 +62,13 @@ export default function HomeReiwa({
 }: Props) {
   const [vocab, setVocab] = useState<VocabEntry[]>([]);
   const [streak, setStreak] = useState(0);
+  const [account, setAccount] = useState<AccountStatus | null>(null);
   const { fieldMastery, totalAnswered, totalMastered, loading: masteryLoading } = useFieldMastery();
 
   useEffect(() => {
     setVocab(getVocabEntries());
     setStreak(readStreak().current);
+    getAccountStatus().then(setAccount).catch(() => setAccount(null));
   }, []);
 
   // 装束ステータス (Today's Quest 内で表示する位階情報) を導出。
@@ -322,6 +325,28 @@ export default function HomeReiwa({
           </div>
         </button>
       </div>
+
+      {/* 記録の引き継ぎ（匿名なら登録を促し、登録済みなら状態だけ） */}
+      {account && (
+        <Link
+          to="/account"
+          className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-2.5 mb-4 hover:border-rw-ink-soft transition no-underline text-rw-ink"
+          style={{ textDecoration: 'none' }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-lg">📮</span>
+            <span className="flex-1 min-w-0">
+              <span className="block text-[13px] font-black tracking-tight">
+                {account.isAnonymous ? '記録を引き継ぐ' : 'メール登録済み'}
+              </span>
+              <span className="block text-[10.5px] text-rw-ink-soft font-semibold truncate">
+                {account.isAnonymous ? 'この端末だけの記録です。メールを付けると別の端末でも続きから' : account.email}
+              </span>
+            </span>
+            <span className="text-rw-ink-soft text-sm">→</span>
+          </div>
+        </Link>
+      )}
 
       {/* 気になってる単語 */}
       {vocab.length > 0 && (
