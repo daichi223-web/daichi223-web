@@ -11,7 +11,7 @@ interface Course {
   id: string;
   no: number;
   title: string;
-  hook: string;   // 1行の売り文句（何と何を撃ち分けるか）
+  hook: string;   // 1行の売り文句（何と何を見分けるか）
   kimete: string; // この講の「意味の決まり方」
   emoji: string;
 }
@@ -21,7 +21,7 @@ const COURSES: Course[] = [
   { id: "vocab-kokon-2",  no: 2, title: "古今異義語②", hook: "おどろく・あく・ながむ・ときめく——罠の第2波", kimete: "共起語（風の音・寝たるに…）が決める", emoji: "🪤" },
   { id: "vocab-shiten",   no: 3, title: "視点で反転する語", hook: "かたはらいたし・まばゆし——見る側か、見られる側か", kimete: "誰の視点の痛みかが決める", emoji: "👀" },
   { id: "vocab-dan",      no: 4, title: "段で意味が変わる語", hook: "たまふ・かづく・たのむ——四段か下二段か", kimete: "活用の形（たまふる＝下二段）が決める", emoji: "⚖️" },
-  { id: "vocab-kinsetsu", no: 5, title: "似た者どうしの撃ち分け", hook: "をかし/あはれ、やすらふ/ためらふ、美の三段", kimete: "ペアの「違いの軸」が決める", emoji: "🎭" },
+  { id: "vocab-kinsetsu", no: 5, title: "似た者どうしの見分け", hook: "をかし/あはれ、やすらふ/ためらふ、美の三段", kimete: "ペアの「違いの軸」が決める", emoji: "🎭" },
   { id: "vocab-koou",     no: 6, title: "呼応で決まる語", hook: "え・よも・ゆめ・いかで——文末を見てから訳す", kimete: "文末（打消・禁止・願望）が決める", emoji: "🔗" },
   { id: "vocab-tagi",     no: 7, title: "多義語の文脈判別", hook: "よし・けしき・ほど・かぎり——決め手で意味を選ぶ", kimete: "文脈の決め手（型＋手がかり）が決める", emoji: "🧭" },
 ];
@@ -74,9 +74,21 @@ export default function VocabDojoHome() {
             <span className="text-xs font-black text-rw-ink-soft">定着 {doneCount} / {COURSES.length}</span>
           </div>
           <p className="text-xs font-semibold text-rw-ink-soft mt-2 leading-relaxed">
-            訳語の丸暗記から、文脈で撃ち分ける力へ。紛らわしい単語を「紛らわしさごと」に対決させる。
+            訳語の丸暗記から、文脈で見分ける力へ。紛らわしい単語を「紛らわしさごと」に対決させる。
           </p>
         </header>
+
+        {/* 見分ける前に理解する — 単語ホームへ（語の一覧はそちらが正） */}
+        <Link
+          to="/vocab"
+          className="block bg-rw-paper border-2 border-rw-ink rounded-2xl p-4 mb-5 no-underline"
+          style={{ textDecoration: "none" }}
+        >
+          <h2 className="text-sm font-black text-rw-ink mb-1">🧭 その前に、単語を理解する ▶</h2>
+          <p className="text-[11px] text-rw-ink-soft font-semibold leading-snug">
+            核イメージから意味がどう分かれるか、<span className="font-black">なぜその意味になるか</span>を、問う前に読む。
+          </p>
+        </Link>
 
         {/* 意味はどこで決まる？ — 5つの型 */}
         <section className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-4 mb-5">

@@ -269,10 +269,10 @@ export default function HomeReiwa({
           fgColor="var(--rw-paper)"
         />
         <TileLink
-          href="/tango-dojo"
-          emoji="🎯"
-          label="単語道場"
-          stat="決め手で撃ち分け"
+          href="/vocab"
+          emoji="🗂️"
+          label="単語ホーム"
+          stat="理解・練習・見分け"
           iconBg="var(--rw-accent)"
           fgColor="var(--rw-paper)"
         />

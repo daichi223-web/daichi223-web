@@ -23,7 +23,7 @@ const CATEGORY_META: Record<Category, { emoji: string; desc: string }> = {
   助詞: { emoji: "🔗", desc: "格助詞・接続助詞・係り結び" },
   敬語: { emoji: "👑", desc: "尊敬・謙譲・丁寧と敬意の方向" },
   識別: { emoji: "🔍", desc: "紛らわしい語を文脈で判別" },
-  単語: { emoji: "🎯", desc: "紛らわしい単語を「決め手」で撃ち分ける" },
+  単語: { emoji: "🎯", desc: "紛らわしい単語を「決め手」で見分ける" },
 };
 
 /** カテゴリ内の教育的な並び順。未掲載の id は末尾へ（layer→id） */
