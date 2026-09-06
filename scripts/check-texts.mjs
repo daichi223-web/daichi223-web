@@ -1,0 +1,203 @@
+#!/usr/bin/env node
+/**
+ * 教材データの機械検査（read-only）。
+ *
+ *   node scripts/check-texts.mjs           … 全件を検査してサマリを出す
+ *   node scripts/check-texts.mjs <id>      … 1本だけ
+ *   node scripts/check-texts.mjs --json    … 機械可読で出す
+ *
+ * 人が目で見るのは、この検査を通った後だけにするための道具。
+ * 直せるものは直さない（検出だけ）。何も書き換えない。
+ *
+ * 検査項目
+ *   T1 索引の実在      索引の id にファイルが存在するか（texts-v3 / texts）
+ *   T1b 索引のズレ     アプリが読む索引（src/data）と public の索引が食い違っていないか
+ *   T2 トークン連結    tokens の text を連ねたものが originalText と一致するか
+ *   T3 オフセット      token.start/end が originalText の実位置と合っているか
+ *   T4 訳の有無        文ごとに modernTranslation があるか
+ *   T5 訳の長さ        訳が本文の 3 倍を超えていないか（短文は除外。訳の膨張＝別文の混入を疑う）
+ *   T9 訳の使い回し    同じ訳が複数の文に付いていないか（訳の取り違えを疑う）
+ *   T6 文 id の重複    sentence.id / token.id が重複していないか
+ *   T7 文法参照        grammarRefId が public/grammar に実在するか
+ *   T8 決め手          analysis/<id>.json があるとき、その参照 token が実在するか
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+const ROOT = process.cwd();
+const V3 = path.join(ROOT, 'public/texts-v3');
+const TEXTS = path.join(ROOT, 'public/texts');
+// アプリが実際に読むのはバンドルされた索引（src/data）。public 側の index.json は
+// ビルド成果物で、ズレていても画面には出ないが、生成漏れの目印になる。
+const BUNDLED_V3_INDEX = path.join(ROOT, 'src/data/textsV3Index.json');
+const PUBLIC_V3_INDEX = path.join(V3, 'index.json');
+const GRAMMAR = path.join(ROOT, 'public/grammar');
+const ANALYSIS = path.join(ROOT, 'public/analysis');
+
+const args = process.argv.slice(2);
+const asJson = args.includes('--json');
+const only = args.find((a) => !a.startsWith('-')) || null;
+
+const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+const exists = (p) => fs.existsSync(p);
+const norm = (s) => (s || '').replace(/\s+/g, '');
+
+const grammarIds = new Set(
+  exists(GRAMMAR)
+    ? fs.readdirSync(GRAMMAR).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5))
+    : [],
+);
+
+const findings = [];
+const add = (id, code, detail) => findings.push({ id, code, detail });
+
+// ---- T1: 索引の実在 / T1b: 索引のズレ --------------------------------------
+const index = exists(BUNDLED_V3_INDEX) ? read(BUNDLED_V3_INDEX) : [];
+const ids = index.map((t) => t.id).filter(Boolean);
+for (const t of index) {
+  if (!exists(path.join(V3, `${t.id}.json`))) add(t.id, 'T1-v3欠', `texts-v3/${t.id}.json がない`);
+  // /texts/<slug>.json は検索と教材詳細ページが実行時に取りにいく
+  if (exists(TEXTS) && !exists(path.join(TEXTS, `${t.id}.json`))) {
+    add(t.id, 'T1-texts欠', `texts/${t.id}.json がない（全文検索と /texts/${t.id} が動かない）`);
+  }
+}
+if (exists(PUBLIC_V3_INDEX)) {
+  const pub = new Set(read(PUBLIC_V3_INDEX).map((t) => t.id));
+  for (const t of index) {
+    if (!pub.has(t.id)) add(t.id, 'T1b-索引ズレ', 'public/texts-v3/index.json に無い（生成漏れ）');
+  }
+  for (const id of pub) {
+    if (!ids.includes(id)) add(id, 'T1b-索引ズレ', 'src/data/textsV3Index.json に無い');
+  }
+}
+
+// ---- 本体 -----------------------------------------------------------------
+const targets = only ? ids.filter((i) => i === only) : ids;
+if (only && targets.length === 0) {
+  console.error(`id "${only}" は index.json にない`);
+  process.exit(1);
+}
+
+let checked = 0;
+for (const id of targets) {
+  const p = path.join(V3, `${id}.json`);
+  if (!exists(p)) continue;
+  let doc;
+  try {
+    doc = read(p);
+  } catch (e) {
+    add(id, 'T0-壊れJSON', String(e.message).slice(0, 120));
+    continue;
+  }
+  checked++;
+  const sentences = Array.isArray(doc.sentences) ? doc.sentences : [];
+  const seenSentence = new Set();
+  const seenToken = new Set();
+
+  for (const s of sentences) {
+    if (seenSentence.has(s.id)) add(id, 'T6-文id重複', s.id);
+    seenSentence.add(s.id);
+
+    const original = s.originalText || '';
+    const tokens = Array.isArray(s.tokens) ? s.tokens : [];
+
+    // T2 連結一致
+    const joined = tokens.map((t) => t.text || '').join('');
+    if (tokens.length > 0 && norm(joined) !== norm(original)) {
+      add(id, 'T2-連結不一致', `${s.id}: tokens=${joined.length}字 / 本文=${original.length}字`);
+    }
+
+    // T3 オフセット
+    for (const t of tokens) {
+      if (seenToken.has(t.id)) add(id, 'T6-token id重複', t.id);
+      seenToken.add(t.id);
+      if (typeof t.start === 'number' && typeof t.end === 'number') {
+        const slice = original.slice(t.start, t.end);
+        if (slice !== (t.text || '')) {
+          add(id, 'T3-オフセットずれ', `${t.id}: 本文[${t.start},${t.end}]="${slice}" ≠ "${t.text}"`);
+        }
+      }
+      // T7 文法参照
+      if (t.grammarRefId && !grammarIds.has(t.grammarRefId)) {
+        add(id, 'T7-文法参照切れ', `${t.id}: ${t.grammarRefId}`);
+      }
+    }
+
+    // T4/T5 訳
+    const tr = s.modernTranslation || '';
+    if (!tr) {
+      add(id, 'T4-訳なし', s.id);
+    } else if (original.length >= 15 && tr.length > original.length * 3) {
+      // 短い文（「」だけ等）は訳が長くなって当然なので見ない
+      add(id, 'T5-訳が長すぎ', `${s.id}: 本文${original.length}字 → 訳${tr.length}字`);
+    }
+  }
+
+  // T9 訳の使い回し（同じ訳が複数の文に付いている＝取り違えを疑う）
+  const trMap = new Map();
+  for (const s of sentences) {
+    const tr = (s.modernTranslation || '').trim();
+    if (tr.length < 10) continue; // 「」など短い訳は一致して当然
+    if (!trMap.has(tr)) trMap.set(tr, []);
+    trMap.get(tr).push(s.id);
+  }
+  for (const [tr, sids] of trMap) {
+    if (sids.length >= 2) {
+      add(id, 'T9-訳の使い回し', `${sids.join(',')} が同じ訳「${tr.slice(0, 24)}…」`);
+    }
+  }
+
+  // T8 決め手
+  const ap = path.join(ANALYSIS, `${id}.json`);
+  if (exists(ap)) {
+    let an;
+    try {
+      an = read(ap);
+    } catch (e) {
+      add(id, 'T0-壊れJSON(analysis)', String(e.message).slice(0, 120));
+      an = null;
+    }
+    const deciders = an && (an.deciders || an.tokens || []);
+    if (Array.isArray(deciders)) {
+      for (const d of deciders) {
+        const tid = d.tokenId || d.id;
+        if (tid && !seenToken.has(tid)) add(id, 'T8-決め手の参照切れ', tid);
+      }
+    }
+  }
+}
+
+// ---- 出力 -----------------------------------------------------------------
+if (asJson) {
+  console.log(JSON.stringify({ checked, findings }, null, 2));
+  process.exit(findings.length > 0 ? 1 : 0);
+}
+
+const byCode = new Map();
+for (const f of findings) byCode.set(f.code, (byCode.get(f.code) || 0) + 1);
+const byText = new Map();
+for (const f of findings) byText.set(f.id, (byText.get(f.id) || 0) + 1);
+
+console.log(`検査: ${checked} 本 / 指摘 ${findings.length} 件`);
+if (findings.length === 0) {
+  console.log('問題なし。');
+  process.exit(0);
+}
+console.log('\n種類別:');
+for (const [code, n] of [...byCode].sort((a, b) => b[1] - a[1])) {
+  console.log(`  ${String(n).padStart(5)}  ${code}`);
+}
+console.log('\n指摘の多い教材 上位10本:');
+const titleOf = Object.fromEntries(index.map((t) => [t.id, t.title]));
+for (const [id, n] of [...byText].sort((a, b) => b[1] - a[1]).slice(0, 10)) {
+  console.log(`  ${String(n).padStart(5)}  ${id}  ${titleOf[id] || ''}`);
+}
+console.log('\n例（各種類の先頭3件）:');
+const shown = new Map();
+for (const f of findings) {
+  const n = shown.get(f.code) || 0;
+  if (n >= 3) continue;
+  shown.set(f.code, n + 1);
+  console.log(`  [${f.code}] ${f.id}: ${f.detail}`);
+}
+process.exit(1);
