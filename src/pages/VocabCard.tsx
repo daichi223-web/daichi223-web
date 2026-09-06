@@ -2,6 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import bundledKobunQ from '@/data/kobunQ.v2.slim.json';
 import whyJson from '@/data/vocab-why.json';
+import { loadExampleBank, groupBySense, dedupeExamples, type BankExample } from '@/lib/exampleBank';
+import { getPublishedSlugs } from '@/lib/textPublications';
+import { hasFullAccess } from '@/lib/fullAccess';
+import textsIndex from '@/data/textsIndex.json';
 
 // 単語理解カード（B型：核から意味を見ていく／案1「なぜ」ラベル帯）。
 // 「問う前に読んで理解する場所」。答え合わせ後のパネル(WordInsightPanel)とは別に、
@@ -10,6 +14,7 @@ import whyJson from '@/data/vocab-why.json';
 // データ源：
 //   kobunQ v2 (slim) … lemma/sense/senseCore/decider/trap/examples（語・qid 不変）
 //   vocab-why.json    … 核→各意味の「なぜ」（手検証・照合済みの語のみ。捏造禁止）
+//   example-bank      … 意味ごとの用例（教材本文由来はその本文へ飛べる）
 
 interface Example { jp: string; translation: string; source?: string }
 interface Sense {
@@ -32,6 +37,14 @@ interface WhyWord {
   trapWhy?: string;
 }
 const WHY = (whyJson as { words: Record<string, WhyWord> }).words;
+
+// 本文へのリンク用（id → タイトル）。公開されている教材だけリンクする。
+const TEXT_TITLES: Record<string, string> = (
+  textsIndex as Array<{ id: string; title: string }>
+).reduce((acc, t) => {
+  acc[t.id] = t.title;
+  return acc;
+}, {} as Record<string, string>);
 
 function stripBrackets(s: string): string {
   const m = (s || '').match(/〔\s*(.+?)\s*〕/);
@@ -64,6 +77,39 @@ export default function VocabCard() {
       try { localStorage.setItem('kobun-vocab-last-lemma', lemma); } catch { /* noop */ }
     }
   }, [lemma, senses.length]);
+
+  // 用例バンク（意味ごと）。語を開いたときに1ファイルだけ読む
+  const [bank, setBank] = useState<Record<string, BankExample[]>>({});
+  const [publishedSet, setPublishedSet] = useState<Set<string> | null>(null);
+  const [openExamples, setOpenExamples] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    let cancelled = false;
+    setOpenExamples(new Set());
+    loadExampleBank(lemma).then((b) => {
+      if (!cancelled) setBank(groupBySense(b));
+    });
+    getPublishedSlugs().then((s) => {
+      if (!cancelled) setPublishedSet(s);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [lemma]);
+
+  const fullAccess = hasFullAccess();
+  const canOpenText = (textId?: string) => {
+    if (!textId || !TEXT_TITLES[textId]) return false;
+    if (fullAccess) return true;
+    // 表が無い（null）ときは制限なし扱い。textPublications と同じ方針
+    return publishedSet == null || publishedSet.has(textId);
+  };
+  const toggleExamples = (qid: string) =>
+    setOpenExamples((prev) => {
+      const next = new Set(prev);
+      if (next.has(qid)) next.delete(qid);
+      else next.add(qid);
+      return next;
+    });
 
   const why = WHY[lemma];
   const core = senses.find((s) => s.senseCore)?.senseCore;
@@ -148,6 +194,13 @@ export default function VocabCard() {
               const label = s.senseNorm || stripBrackets(s.sense);
               const ex = s.examples?.[0];
               const whyText = w?.why || s.decider?.rule;
+              // この意味の用例（kobunQ の1例と重複するものは落とす）
+              const bankAll = dedupeExamples(bank[s.qid] ?? []);
+              const shownJp = (ex?.jp || '').replace(/\s+/g, '').replace(/[【】〔〕]/g, '');
+              const more = bankAll.filter(
+                (b) => (b.jp || '').replace(/\s+/g, '').replace(/[【】〔〕]/g, '') !== shownJp,
+              );
+              const isOpen = openExamples.has(s.qid);
               return (
                 <div
                   key={s.qid}
@@ -169,6 +222,59 @@ export default function VocabCard() {
                       <span className="block text-[13px] text-rw-ink-soft mt-1">
                         {cleanTr(ex.translation)}
                       </span>
+                    </div>
+                  )}
+                  {more.length > 0 && (
+                    <div className="mt-2">
+                      <button
+                        onClick={() => toggleExamples(s.qid)}
+                        className="text-[13px] font-black text-rw-ink-soft"
+                      >
+                        {isOpen ? `この意味の用例 ▾` : `この意味の用例をもっと見る（${more.length}）▸`}
+                      </button>
+                      {isOpen && (
+                        <div className="mt-1.5 space-y-2">
+                          {more.slice(0, 8).map((b, i) => {
+                            const linkable = b.origin === 'text' && canOpenText(b.textId);
+                            const body = (
+                              <>
+                                <span className="text-[13.5px] leading-relaxed text-rw-ink">
+                                  {cleanJp(b.jp, b.source)}
+                                </span>
+                                {b.source && (
+                                  <span className="ml-1 text-[11.5px] text-rw-ink-soft">／{b.source}</span>
+                                )}
+                                {b.translation && (
+                                  <span className="block text-[12.5px] text-rw-ink-soft mt-0.5">
+                                    {cleanTr(b.translation)}
+                                  </span>
+                                )}
+                              </>
+                            );
+                            return (
+                              <div
+                                key={`${s.qid}-ex-${i}`}
+                                className="rounded-lg px-3 py-2"
+                                style={{ background: 'color-mix(in srgb, var(--rw-ink) 5%, transparent)' }}
+                              >
+                                {body}
+                                {linkable && (
+                                  <Link
+                                    to={`/read/texts/${b.textId}`}
+                                    className="inline-block mt-1 text-[12px] font-black text-rw-accent no-underline"
+                                    style={{ textDecoration: 'none' }}
+                                  >
+                                    本文で読む →
+                                  </Link>
+                                )}
+                              </div>
+                            );
+                          })}
+                          {more.length > 8 && (
+                            <div className="text-[12px] text-rw-ink-soft">ほか {more.length - 8} 例</div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
                   {whyText && (

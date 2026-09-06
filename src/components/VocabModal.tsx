@@ -67,6 +67,10 @@ type Props = {
 
 type Tab = 'overview' | 'examples';
 
+// 単語理解カード（/word/:lemma）を持たない語。vocabIndex 366 と kobunQ 365 の差分。
+// カードは kobunQ を見るので、この語だけリンクを出さない（行き止まりにしない）。
+const NO_CARD_LEMMAS = new Set(['かたみ']);
+
 export default function VocabModal({ lemma, onClose, textId }: Props) {
   // この作品由来でこの語の解説を開いた回数をカウント (シークレット指標)
   useEffect(() => {
@@ -228,6 +232,15 @@ export default function VocabModal({ lemma, onClose, textId }: Props) {
         </button>
         <div className="vocab-modal-header">
           <h2>{entry?.title || lemma}</h2>
+          {entry && !NO_CARD_LEMMAS.has(lemma) && (
+            <Link
+              to={`/word/${encodeURIComponent(lemma)}`}
+              onClick={onClose}
+              className="vocab-modal-card-link"
+            >
+              🧭 核から理解する（単語カード）→
+            </Link>
+          )}
           {entry && (
             <div className="vocab-modal-badges">
               {entry.pos && <span className="badge">{entry.pos}</span>}
