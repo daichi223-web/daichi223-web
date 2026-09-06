@@ -193,19 +193,30 @@ export const WELCOME_BACK_GAP_DAYS = 14;
 /** おかえり時に先頭へ置く、覚えていた語の数 */
 export const WELCOME_WARMUP_COUNT = 5;
 
+/** ローカル時間の今日0時（ISO）。「今日すでに解いた語」の判定に使う */
+export function startOfToday(now: Date = new Date()): string {
+  const d = new Date(now);
+  d.setHours(0, 0, 0, 0);
+  return d.toISOString();
+}
+
 /**
  * 今日の復習セット。期限が古い順に DAILY_REVIEW_CAP 語まで。
+ * 今日すでに解いた語は除く（箱1は「常に期限到来」なので、誤答した語が
+ * その場でまた「今日の復習」に戻り、「今日はここまで」が終わらなくなるため）。
  * totalDue は残りの把握用で、UI には出さない前提。
  */
 export async function getTodayReviewSet(cap = DAILY_REVIEW_CAP): Promise<{ qids: string[]; totalDue: number }> {
   const userId = await getUserId();
   const now = new Date().toISOString();
+  const today0 = startOfToday();
   const [{ data, error }, totalDue] = await Promise.all([
     supabase
       .from('srs_state')
       .select('qid')
       .eq('user_id', userId)
       .lte('next_review', now)
+      .or(`last_review.is.null,last_review.lt.${today0}`)
       .order('next_review', { ascending: true })
       .limit(cap),
     getDueCount(),

@@ -17,7 +17,7 @@ import { recordPromotion } from '@/lib/promotionHistory';
 //
 // 構成 (上から):
 //  1. ヘッダ: kobun. + 日付 + 単語帳件数 (🔥)
-//  2. Today's Quest カード: 現在の mode + range を表示し「つづきから」でクイズへ
+//  2. Today's Quest カード: 「今日の分」1ボタン（おかえり語→今日の復習→範囲から補充、で約10問）
 //  3. 4 タイル: 単語クイズ / 多義語クイズ / 読解 / 単語帳
 //  4. 気になってる単語: localStorage の単語帳から最新 5 件
 //  5. テーマピッカーへの誘導 (詳細設定は別途、クイズ画面でアクセス可能)
@@ -26,15 +26,14 @@ type Props = {
   currentMode: 'word' | 'polysemy';
   wordRange: { from: number | null; to: number | null };
   polysemyRange: { from: number | null; to: number | null };
-  wordQuizTypeLabel: string;
-  polysemyQuizTypeLabel: string;
   weakWordsCount: number;
   dueWordsCount: number;
   // 長い空白のあと: 空白日数と、先頭に置く「覚えていた語」の数（null なら通常）
   welcomeBack?: { gapDays: number; warmupCount: number } | null;
-  onStartQuiz: () => void;
+  // 今日の分の見込み: 復習（期限到来・上限つき）と補充（範囲からおまかせ）の語数
+  todayPreview: { review: number; fresh: number };
+  onStartToday: () => void;
   onStartReview: () => void;
-  onStartSrsReview: () => void;
   onSwitchMode: (mode: 'word' | 'polysemy') => void;
   onOpenThemePicker: () => void;
 };
@@ -49,14 +48,12 @@ export default function HomeReiwa({
   currentMode,
   wordRange,
   polysemyRange,
-  wordQuizTypeLabel,
-  polysemyQuizTypeLabel,
   weakWordsCount,
   dueWordsCount,
   welcomeBack = null,
-  onStartQuiz,
+  todayPreview,
+  onStartToday,
   onStartReview,
-  onStartSrsReview,
   onSwitchMode,
   onOpenThemePicker,
 }: Props) {
@@ -86,7 +83,6 @@ export default function HomeReiwa({
   }, [nobleStage?.n]);
 
   const range = currentMode === 'word' ? wordRange : polysemyRange;
-  const quizTypeLabel = currentMode === 'word' ? wordQuizTypeLabel : polysemyQuizTypeLabel;
   const rangeLabel =
     range.from && range.to
       ? `${range.from}〜${range.to}`
@@ -95,6 +91,8 @@ export default function HomeReiwa({
       : range.to
       ? `〜${range.to}`
       : '範囲未指定';
+  // 今日の分の語数（おかえり語は別に足す）
+  const todayTotal = todayPreview.review + todayPreview.fresh;
 
   return (
     <div className="bg-rw-bg min-h-dvh -mx-3 md:-mx-6 -mt-16 md:mt-0 px-4 md:px-6 pt-4 md:pt-6 pb-8 text-rw-ink">
@@ -106,7 +104,7 @@ export default function HomeReiwa({
 
       {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}
       <button
-        onClick={dueWordsCount > 0 ? onStartSrsReview : onStartQuiz}
+        onClick={onStartToday}
         className="w-full text-left mb-4 p-4 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
       >
         <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-rw-pop opacity-30 pointer-events-none" />
@@ -213,7 +211,7 @@ export default function HomeReiwa({
                 <div className="text-[10px] opacity-90 font-bold tracking-wider uppercase">
                   Today's Quest
                 </div>
-                {welcomeBack && dueWordsCount > 0 ? (
+                {welcomeBack ? (
                   <>
                     <div className="text-base md:text-lg font-black mt-1 leading-tight">
                       おかえり
@@ -222,37 +220,29 @@ export default function HomeReiwa({
                       {welcomeBack.gapDays}日ぶり。まず覚えていた{welcomeBack.warmupCount}語から
                     </div>
                     <div className="flex items-baseline gap-1 mt-1.5">
-                      <span className="text-3xl font-black">{welcomeBack.warmupCount + dueWordsCount}</span>
+                      <span className="text-3xl font-black">{welcomeBack.warmupCount + todayTotal}</span>
                       <span className="text-xs opacity-90">語・2〜3分</span>
-                    </div>
-                  </>
-                ) : dueWordsCount > 0 ? (
-                  <>
-                    <div className="text-base md:text-lg font-black mt-1 leading-tight">
-                      今日の復習
-                    </div>
-                    <div className="text-[11px] opacity-90 font-bold leading-tight">
-                      期限の古い順に、今日はここまで
-                    </div>
-                    <div className="flex items-baseline gap-1 mt-1.5">
-                      <span className="text-3xl font-black">{dueWordsCount}</span>
-                      <span className="text-xs opacity-90">語</span>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="text-base md:text-lg font-black mt-1 leading-tight truncate">
-                      {currentMode === 'word' ? '単語クイズ' : '多義語クイズ'}
+                    <div className="text-base md:text-lg font-black mt-1 leading-tight">
+                      今日の分
                     </div>
                     <div className="text-[11px] opacity-90 font-bold leading-tight truncate">
-                      {quizTypeLabel}
+                      {todayPreview.review > 0
+                        ? `復習 ${todayPreview.review}語 ＋ 新しく ${todayPreview.fresh}語`
+                        : `${rangeLabel} から、苦手・未着手を優先`}
                     </div>
-                    <div className="text-xl font-black mt-1.5 truncate">{rangeLabel}</div>
+                    <div className="flex items-baseline gap-1 mt-1.5">
+                      <span className="text-3xl font-black">{todayTotal}</span>
+                      <span className="text-xs opacity-90">語・2〜3分</span>
+                    </div>
                   </>
                 )}
               </div>
               <div className="mt-2 inline-block self-start bg-rw-paper text-rw-primary text-xs font-black px-3.5 py-1.5 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
-                {welcomeBack && dueWordsCount > 0 ? 'おかえり復習 ▶' : dueWordsCount > 0 ? '復習スタート ▶' : 'つづきから ▶'}
+                {welcomeBack ? 'おかえり ▶' : '今日の分 ▶'}
               </div>
             </div>
           </div>

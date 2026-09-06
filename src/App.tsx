@@ -15,6 +15,8 @@ import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { pickQuestions, type Bucket } from './lib/quizSelector';
 import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
+import { composeTodaySet, estimateFresh, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
+import { readStreak } from './lib/streak';
 import {
   updateSrsState,
   getSrsBoxes,
@@ -211,14 +213,19 @@ function App() {
   const [showHome, setShowHome] = useState(true);
   // 苦手単語 / SRS 復習用に、特定の qid セットだけで出題する場合に使う
   const [quizQidFilter, setQuizQidFilter] = useState<string[] | null>(null);
-  const [quizMode, setQuizMode] = useState<'normal' | 'weak' | 'srs' | 'focus'>('normal');
+  const [quizMode, setQuizMode] = useState<'normal' | 'weak' | 'srs' | 'focus' | 'today'>('normal');
   const [searchParams, setSearchParams] = useSearchParams();
   const [weakWordsCount, setWeakWordsCount] = useState(0);
   const [dueWordsCount, setDueWordsCount] = useState(0);
-  // 今日の復習セット（期限が古い順・上限つき）。溜まった残りは表示しない
-  const [todayReview, setTodayReview] = useState<string[]>([]);
   // 長い空白のあとの「おかえり」: 空白日数と、箱4〜5からのウォームアップ語
   const [welcomeBack, setWelcomeBack] = useState<{ gapDays: number; warmup: string[] } | null>(null);
+  // 「今日の分」: 出題した qid・開始時の箱（終了画面の成長1行用）・内訳
+  const [todaySession, setTodaySession] = useState<{
+    qids: string[];
+    boxesBefore: Record<string, number>;
+    parts: TodayParts;
+  } | null>(null);
+  const [todayGrowth, setTodayGrowth] = useState<string | null>(null);
   // 累計学習統計 (Result 画面で表示)
   const [cumulativeStats, setCumulativeStats] = useState<{
     totalAnswered: number;
@@ -296,14 +303,12 @@ function App() {
         const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? await getWarmupWords() : [];
         if (!cancelled) {
           setWeakWordsCount(weak.length);
-          setTodayReview(today.qids);
           setDueWordsCount(today.qids.length);
           setWelcomeBack(gap != null && gap >= WELCOME_BACK_GAP_DAYS && warmup.length > 0 ? { gapDays: gap, warmup } : null);
         }
       } catch {
         if (!cancelled) {
           setWeakWordsCount(0);
-          setTodayReview([]);
           setDueWordsCount(0);
           setWelcomeBack(null);
         }
@@ -340,6 +345,26 @@ function App() {
       cancelled = true;
     };
   }, [showResults]);
+  // 「今日の分」終了時: 開始時の箱と比べて成長1行を作る（最後の回答の反映を少し待つ）
+  useEffect(() => {
+    if (!showResults || quizMode !== 'today' || !todaySession) return;
+    let cancelled = false;
+    const t = setTimeout(async () => {
+      try {
+        const after = await getSrsBoxes(todaySession.qids);
+        if (cancelled) return;
+        const g = countGrowth(todaySession.qids, todaySession.boxesBefore, after);
+        setTodayGrowth(growthLine(g, readStreak().current));
+      } catch {
+        // 出さないだけ
+      }
+    }, 700);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, [showResults, quizMode, todaySession]);
+
   // モード切替時に「同じ語」を新モードの第一問に引き継ぐための seed lemma。
   // currentMode 変更を契機に useEffect が setupQuiz(undefined, seed) を呼ぶ。
   const [pendingSeedLemma, setPendingSeedLemma] = useState<string | null>(null);
@@ -509,7 +534,13 @@ function App() {
   // opts.sequential: フィルタの並び順どおりに出題（復習＝期限の古い順、おかえり＝ウォームアップを先頭）
   // opts.numQuestions: このセッションだけ出題数を上書き
   type QuizOpts = { sequential?: boolean; numQuestions?: number };
-  const setupQuiz = async (qidFilterOverride?: string[], seedLemma?: string | null, opts?: QuizOpts) => {
+  // modeOverride: setCurrentMode 直後は closure の currentMode が古いので、呼び出し側でモードを明示できる
+  const setupQuiz = async (
+    qidFilterOverride?: string[],
+    seedLemma?: string | null,
+    opts?: QuizOpts,
+    modeOverride?: 'word' | 'polysemy',
+  ) => {
     // Reset all quiz states when switching modes
     setShowResults(false);
     setIsQuizActive(false);
@@ -521,11 +552,76 @@ function App() {
     setShowCorrectCircle(false);
     setWrongAnswers([]);
 
-    if (currentMode === 'word') {
+    if ((modeOverride ?? currentMode) === 'word') {
       await setupWordQuiz(qidFilterOverride, seedLemma ?? undefined, opts);
     } else {
       await setupPolysemyQuiz(seedLemma ?? undefined);
     }
+  };
+
+  // 「今日の分」: おかえり語 → 今日の復習 → 範囲内からおまかせ補充、で基本10問。
+  // 中身はアプリが決め、生徒はボタン1つで始める。again=true は「もう1セット」（おかえり語は付けない）。
+  const startTodaySession = async (again = false) => {
+    const warmup = again ? [] : (welcomeBack?.warmup ?? []);
+    let due: string[] = [];
+    try {
+      due = (await getTodayReviewSet()).qids;
+    } catch {
+      due = [];
+    }
+    const start = wordRange.from ?? 1;
+    const end = wordRange.to ?? 330;
+    let pool = allWords.filter((w) => w.group >= start && w.group <= end);
+    if (categoryFilter.length > 0) {
+      const catSet = new Set(categoryFilter);
+      const vidx = bundledVocabIndex as Record<string, { category?: string }>;
+      pool = pool.filter((w) => {
+        const c = vidx[w.lemma]?.category;
+        return c ? catSet.has(c) : false;
+      });
+    }
+    let stats: Record<string, { correct: number; incorrect: number; lastSeen?: string | null }> = {};
+    let boxes: Record<string, number> = {};
+    try {
+      [stats, boxes] = await Promise.all([getWordStats(), getSrsBoxes(pool.map((w) => w.qid))]);
+    } catch {
+      // 記録が取れなければ全部「未着手」として補充する
+    }
+    const set = composeTodaySet({
+      warmup,
+      due,
+      pool,
+      key: (w) => w.qid,
+      order: (w) => w.group * 100 + (w.meaning_idx ?? 0),
+      stats,
+      boxes,
+    });
+    if (set.qids.length === 0) {
+      // 範囲に語が無い等。通常クイズにフォールバック
+      setQuizQidFilter(null);
+      setQuizMode('normal');
+      setShowHome(false);
+      void setupQuiz();
+      return;
+    }
+    let boxesBefore: Record<string, number> = {};
+    for (const q of set.qids) if (boxes[q] != null) boxesBefore[q] = boxes[q];
+    const missing = set.qids.filter((q) => boxesBefore[q] == null);
+    if (missing.length > 0) {
+      try {
+        boxesBefore = { ...boxesBefore, ...(await getSrsBoxes(missing)) };
+      } catch {
+        // 成長1行が出ないだけ
+      }
+    }
+    setTodaySession({ qids: set.qids, boxesBefore, parts: set.parts });
+    setTodayGrowth(null);
+    setLastPick(set.parts.freshComposition);
+    setQuizQidFilter(set.qids);
+    setQuizMode('today');
+    setCurrentMode('word');
+    setShowHome(false);
+    void setupQuiz(set.qids, null, { sequential: true, numQuestions: set.qids.length }, 'word');
   };
 
   // 現在のクイズで出題中の lemma を返す (モード切替の seed 用)。
@@ -1594,17 +1690,14 @@ function App() {
             currentMode={currentMode}
             wordRange={wordRange}
             polysemyRange={polysemyRange}
-            wordQuizTypeLabel={WORD_QUIZ_LABELS[wordQuizType]}
-            polysemyQuizTypeLabel={POLYSEMY_QUIZ_LABELS[polysemyQuizType]}
             weakWordsCount={weakWordsCount}
             dueWordsCount={dueWordsCount}
             welcomeBack={welcomeBack ? { gapDays: welcomeBack.gapDays, warmupCount: welcomeBack.warmup.length } : null}
-            onStartQuiz={() => {
-              setQuizQidFilter(null);
-              setQuizMode('normal');
-              setShowHome(false);
-              void setupQuiz();
+            todayPreview={{
+              review: dueWordsCount,
+              fresh: estimateFresh(welcomeBack?.warmup.length ?? 0, dueWordsCount),
             }}
+            onStartToday={() => void startTodaySession()}
             onStartReview={async () => {
               const weak = await getWeakWords();
               if (weak.length === 0) return;
@@ -1613,26 +1706,6 @@ function App() {
               setCurrentMode('word');
               setShowHome(false);
               void setupQuiz(weak);
-            }}
-            onStartSrsReview={async () => {
-              // 今日の復習（上限つき）。おかえり時は「覚えていた語」のウォームアップを先頭に置き、
-              // その後に今日の分を続ける。出題は並び順どおり（期限の古い順）
-              const warmup = welcomeBack?.warmup ?? [];
-              const todaySet = todayReview.filter((q) => !warmup.includes(q));
-              const session = [...warmup, ...todaySet];
-              if (session.length === 0) {
-                // フォールバック: 通常クイズ
-                setQuizQidFilter(null);
-                setQuizMode('normal');
-                setShowHome(false);
-                void setupQuiz();
-                return;
-              }
-              setQuizQidFilter(session);
-              setQuizMode('srs');
-              setCurrentMode('word');
-              setShowHome(false);
-              void setupQuiz(session, null, { sequential: true, numQuestions: session.length });
             }}
             onSwitchMode={(mode) => {
               setQuizQidFilter(null);
@@ -1717,9 +1790,24 @@ function App() {
             <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-rw-accent opacity-30" />
 
             <div className="relative">
-              <div className="text-[10px] tracking-[0.2em] font-black text-rw-ink-soft uppercase mb-1">Quest Cleared</div>
-              <h1 className="text-2xl font-black text-rw-ink mb-2">クイズ終了！</h1>
-              <p className="text-rw-ink-soft text-sm mb-5">お疲れ様でした。</p>
+              {quizMode === 'today' ? (
+                <>
+                  <div className="text-[10px] tracking-[0.2em] font-black text-rw-ink-soft uppercase mb-1">Today's Quest</div>
+                  <h1 className="text-2xl font-black text-rw-ink mb-2">今日はここまで</h1>
+                  <p className="text-rw-ink-soft text-sm mb-2">今日の分は終わり。お疲れさま。</p>
+                  {todayGrowth ? (
+                    <p className="text-sm font-black text-rw-accent mb-5">{todayGrowth}</p>
+                  ) : (
+                    <div className="mb-3" />
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="text-[10px] tracking-[0.2em] font-black text-rw-ink-soft uppercase mb-1">Quest Cleared</div>
+                  <h1 className="text-2xl font-black text-rw-ink mb-2">クイズ終了！</h1>
+                  <p className="text-rw-ink-soft text-sm mb-5">お疲れ様でした。</p>
+                </>
+              )}
 
               {/* Perfect Score Celebration */}
               {isPerfectScore && (
@@ -1915,27 +2003,54 @@ function App() {
                 </div>
               )}
 
-              {/* アクションボタン */}
+              {/* アクションボタン（今日の分は「終わる」が既定、もう1セットは任意） */}
               <div className="space-y-2.5">
-                <button
-                  onClick={restartQuiz}
-                  className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
-                  style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
-                >
-                  同じ範囲を繰り返す ▶
-                </button>
-                <button
-                  onClick={() => {
-                    setShowHome(true);
-                    setShowResults(false);
-                    setIsQuizActive(false);
-                    setQuizQidFilter(null);
-                    setQuizMode('normal');
-                  }}
-                  className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
-                >
-                  ホームに戻る
-                </button>
+                {quizMode === 'today' ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        setShowHome(true);
+                        setShowResults(false);
+                        setIsQuizActive(false);
+                        setQuizQidFilter(null);
+                        setQuizMode('normal');
+                        setTodaySession(null);
+                      }}
+                      className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
+                      style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
+                    >
+                      今日はここまで（ホームへ）
+                    </button>
+                    <button
+                      onClick={() => void startTodaySession(true)}
+                      className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
+                    >
+                      もう1セット ▶
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={restartQuiz}
+                      className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
+                      style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
+                    >
+                      同じ範囲を繰り返す ▶
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowHome(true);
+                        setShowResults(false);
+                        setIsQuizActive(false);
+                        setQuizQidFilter(null);
+                        setQuizMode('normal');
+                      }}
+                      className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
+                    >
+                      ホームに戻る
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
