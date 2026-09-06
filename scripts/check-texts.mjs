@@ -18,6 +18,7 @@
  *   T5 訳の長さ        訳が本文の 3 倍を超えていないか（短文は除外。訳の膨張＝別文の混入を疑う）
  *   T9 訳の使い回し    同じ訳が複数の文に付いていないか（訳の取り違えを疑う）
  *   T10 訳のズレ       隣の文の訳のほうが原文に合っていないか（1文ずれの検出）
+ *   T11 歌頭のズレ     「〜……」で始まる和歌の訳が、和歌でない文に付いていないか
  *   T6 文 id の重複    sentence.id / token.id が重複していないか
  *   T7 文法参照        grammarRefId が public/grammar に実在するか
  *   T8 決め手          analysis/<id>.json があるとき、その参照 token が実在するか
@@ -54,6 +55,19 @@ const kanjiWords = (t) => {
 const overlap = (words, tr) => {
   if (words.length === 0 || !tr) return 0;
   return words.filter((w) => tr.includes(w)).length / words.length;
+};
+
+// 和歌・漢詩の訳は「初句……（訳）」の書式で書かれている。
+// 頭の「初句」がその文の原文の冒頭と一致していれば正しい訳、しなければ
+// 別の文（多くは次の和歌）の訳がここに入っている。
+const GLOSS = /^[\s　「]*(.{2,12}?)……/;
+const glossHead = (tr) => {
+  const m = GLOSS.exec(tr || '');
+  return m ? m[1].replace(/[\s　「]/g, '') : null;
+};
+const headMatchesOriginal = (head, original) => {
+  const o = (original || '').replace(/[\s　「」『』]/g, '');
+  return o.startsWith(head);
 };
 
 const grammarIds = new Set(
@@ -142,8 +156,20 @@ for (const id of targets) {
     if (!tr) {
       if (!isCitationOnly(original)) add(id, 'T4-訳なし', s.id);
     } else if (original.length >= 15 && tr.length > original.length * 3) {
-      // 短い文（「」だけ等）は訳が長くなって当然なので見ない
-      add(id, 'T5-訳が長すぎ', `${s.id}: 本文${original.length}字 → 訳${tr.length}字`);
+      // 短い文（「」だけ等）は訳が長くなって当然なので見ない。
+      // 和歌の訳（「初句……」書式）は原文より長くなるのが normal なので、
+      // 頭がこの文の原文と一致していれば数えない。
+      const head = glossHead(tr);
+      if (!(head && headMatchesOriginal(head, original))) {
+        add(id, 'T5-訳が長すぎ', `${s.id}: 本文${original.length}字 → 訳${tr.length}字`);
+      }
+    }
+    // T11 歌頭のズレ: 「初句……」の初句がこの文の原文と合わない
+    {
+      const head = glossHead(tr);
+      if (head && !headMatchesOriginal(head, original)) {
+        add(id, 'T11-歌頭のズレ', `${s.id}: 訳が「${head}……」で始まるが、この文の原文は「${original.slice(0, 14)}」`);
+      }
     }
   }
 
