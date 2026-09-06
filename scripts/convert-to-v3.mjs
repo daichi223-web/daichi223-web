@@ -211,6 +211,9 @@ function parseBunkai(md) {
     // ヘッダ行 "| 語 | 品詞・活用 |" とセパレータ "|:--|:--|" をスキップ
     if (line.includes("品詞") && line.includes("活用")) continue;
     if (/^\|\s*:?-+:?\s*\|/.test(line)) continue;
+    // 和歌・句の教材は表の末尾に「| 【歌意】 |  |」以降、訳が1行1文で並ぶ。
+    // ここから先はトークンではないので打ち切る。
+    if (/^\|\s*【(歌意|句意)】\s*\|/.test(line)) break;
     // wikilink 内の `\|` を一時退避 → 列 `|` で分割 → 復元
     const safe = line.replace(/\\\|/g, " ");
     const parts = safe.split("|");
@@ -245,6 +248,121 @@ function parseBunkai(md) {
     cursor += tokenText.length;
   }
   return tokens;
+}
+
+/**
+ * 品詞分解の並びが本文と食い違う場合に、余分なトークンを落とす。
+ *
+ * 和歌・句の教材では、表に本文には無いものが混ざる:
+ *   - 作者名（表では歌の前、本文では行末に付く＝順序が逆）
+ *   - 「反歌」のような構成ラベル
+ * 逆に本文にだけあるもの（歌集名、行末の作者名）は、トークンを作らず
+ * 後段の埋めトークンに任せる。
+ *
+ * やり方: 本文を先頭から見て、トークンが今の位置に無ければ少し先まで探す。
+ * 見つかればそこまで本文を進める（本文だけにある部分）。見つからなければ
+ * そのトークンを落とす（トークンだけにあるもの）。
+ */
+function dropUnmatchedTokens(tokens, bodyText) {
+  // 本文（空白を保ったまま）と、突き合わせ用の空白除去版
+  const bodyRaw = bodyText ?? "";
+  const strip = (x) => (x ?? "").replace(/[\s\u3000]/g, "");
+  const body = strip(bodyRaw);
+  if (!body || tokens.length === 0) return { tokens, dropped: 0, filled: 0 };
+
+  // body（空白除去）の位置 → bodyRaw の位置
+  const mapToRaw = [];
+  for (let i = 0; i < bodyRaw.length; i++) {
+    if (!/[\s\u3000]/.test(bodyRaw[i])) mapToRaw.push(i);
+  }
+  // 空白除去版の位置 to の直前までを、生の本文から切り出す。
+  // rawFrom は「前のトークンの生の終わり位置」で、空白ごと拾うために使う。
+  const rawSliceTo = (rawFrom, to) => {
+    const b = to < mapToRaw.length ? mapToRaw[to] : bodyRaw.length;
+    return b > rawFrom ? bodyRaw.slice(rawFrom, b) : "";
+  };
+
+  const texts = tokens.map((tk) => strip(tk._rawText));
+  const LOOKAHEAD = 80;   // 本文だけにある部分（歌集名・行末の作者名）を飛ぶ幅
+  const CONFIRM = 3;      // 飛んだ先で続けて一致することを確かめるトークン数
+
+  const runLength = (i, pos) => {
+    let n = 0;
+    let p = pos;
+    for (let k = i; k < tokens.length && n < CONFIRM; k++) {
+      const t = texts[k];
+      if (!t) continue;
+      if (!body.startsWith(t, p)) break;
+      p += t.length;
+      n++;
+    }
+    return n;
+  };
+
+  // 本文にだけある部分は、文法タグの無い埋めトークンにする（連結＝本文を保つため）
+  // 段落の改行は文の originalText には入らないので、埋めトークンからは外す
+  const filler = (raw) => {
+    const text = (raw ?? "").replace(/[\r\n]+/g, "");
+    return {
+      _rawText: text,
+      start: 0,
+      end: text.length,
+      layer: 0,
+      grammarTag: { pos: "" },
+    };
+  };
+
+  const out = [];
+  let cursor = 0;      // 空白除去版の位置
+  let rawCursor = 0;   // 生の本文の位置
+  let dropped = 0;
+  let filled = 0;
+  const advanceRaw = (toStripped) => {
+    // 空白除去版で toStripped まで進んだときの、生の本文の位置
+    rawCursor = toStripped > 0 ? mapToRaw[toStripped - 1] + 1 : 0;
+  };
+  for (let i = 0; i < tokens.length; i++) {
+    const t = texts[i];
+    if (!t) {
+      out.push(tokens[i]);
+      continue;
+    }
+    if (body.startsWith(t, cursor)) {
+      out.push(tokens[i]);
+      cursor += t.length;
+      advanceRaw(cursor);
+      continue;
+    }
+    const at = body.indexOf(t, cursor);
+    if (at >= 0 && at - cursor <= LOOKAHEAD && runLength(i, at) >= Math.min(CONFIRM, tokens.length - i)) {
+      const gap = (rawSliceTo(rawCursor, at) || "").replace(/[\r\n]+/g, "");
+      if (gap) {
+        out.push(filler(gap));
+        filled++;
+      }
+      out.push(tokens[i]);
+      cursor = at + t.length;
+      advanceRaw(cursor);
+      continue;
+    }
+    dropped++;   // 本文に無い／順序が違うトークン → 落とす
+  }
+  // 末尾に本文だけが残っていれば埋める
+  if (rawCursor < bodyRaw.length) {
+    const tail = bodyRaw.slice(rawCursor).replace(/[\r\n]+/g, "");
+    if (tail) {
+      out.push(filler(tail));
+      filled++;
+    }
+  }
+  // start/end を振り直す
+  let c = 0;
+  for (const tk of out) {
+    tk.start = c;
+    tk.end = c + (tk._rawText ?? "").length;
+    c = tk.end;
+  }
+  return { tokens: out, dropped, filled };
 }
 
 // ------------------------- sentences 分割 -------------------------
@@ -512,7 +630,13 @@ function convertOne(src) {
   const difficulty = inferDifficulty(src.metadata);
 
   // tokens
-  const allTokens = parseBunkai(s["品詞分解"]);
+  const rawTokens = parseBunkai(s["品詞分解"]);
+  // 品詞分解の並びが本文と食い違うぶんを落とす（和歌教材の作者名・構成ラベル等）
+  const { tokens: allTokens, dropped: droppedTokens, filled: filledTokens } =
+    dropUnmatchedTokens(rawTokens, s["本文"] ?? "");
+  if (droppedTokens > 0 || filledTokens > 0) {
+    console.log(`  ${src.id}: 本文に無いトークンを ${droppedTokens} 件落とし、本文だけの部分に ${filledTokens} 件の埋めトークンを作った`);
+  }
   const { sentences, prologue } = splitSentences(s["本文"], allTokens, s["現代語訳"]);
   const learningPoints = parseLearningPoints(s["学習ポイント"]);
 
@@ -652,4 +776,13 @@ function main() {
   console.log(`合計 sentences: ${totalSentences}, tokens: ${totalTokens}`);
 }
 
-main();
+// 直接実行されたときだけ走らせる。
+// import しただけで全107本を上書きしてしまう事故を防ぐ（実際に一度やった）。
+import { pathToFileURL } from "node:url";
+const invokedDirectly =
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (invokedDirectly) {
+  main();
+} else {
+  console.error("convert-to-v3.mjs: import されただけなので何もしません（実行は node scripts/convert-to-v3.mjs）");
+}
