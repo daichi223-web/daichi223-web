@@ -25,8 +25,9 @@ import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
 
 type Props = {
   currentMode: 'word' | 'polysemy';
-  wordRange: { from: number | null; to: number | null };
-  polysemyRange: { from: number | null; to: number | null };
+  // 範囲は localStorage 由来なので未設定は undefined（null ではない）
+  wordRange: { from?: number | null; to?: number | null };
+  polysemyRange: { from?: number | null; to?: number | null };
   weakWordsCount: number;
   dueWordsCount: number;
   // 長い空白のあと: 空白日数と、先頭に置く「覚えていた語」の数（null なら通常）

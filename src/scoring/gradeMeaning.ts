@@ -51,12 +51,16 @@ const DEFAULT_CONFIG: GradeConfig = {
 };
 
 // ---- tokenizer (singleton) ----
-let _tokenizerPromise: Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> | null = null;
+// kuromoji.js の Tokenizer は型引数を取らないので、こちらの型に寄せてから保持する
+type KuromojiTokenizer = kuromoji.Tokenizer<kuromoji.IpadicFeatures>;
+let _tokenizerPromise: Promise<KuromojiTokenizer> | null = null;
 export function getTokenizer() {
   if (!_tokenizerPromise) {
     const builder = kuromoji.builder({ dicPath: "/kuromoji/dict" });
-    _tokenizerPromise = new Promise((resolve, reject) => {
-      builder.build((err, tk) => (err ? reject(err) : resolve(tk)));
+    _tokenizerPromise = new Promise<KuromojiTokenizer>((resolve, reject) => {
+      builder.build((err, tk) =>
+        err ? reject(err) : resolve(tk as unknown as KuromojiTokenizer),
+      );
     });
   }
   return _tokenizerPromise!;

@@ -6,8 +6,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { fetchJsonAsset } from "../lib/fetchJson";
 
 function mockFetch(impl: (input: RequestInfo | URL) => Promise<Response>) {
-  // @ts-expect-error — テスト用の簡易置換
-  global.fetch = vi.fn(impl);
+  // テスト用の簡易置換
+  global.fetch = vi.fn(impl) as unknown as typeof fetch;
 }
 
 describe("fetchJsonAsset", () => {

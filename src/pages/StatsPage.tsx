@@ -415,8 +415,10 @@ export default function StatsPage() {
     // 初期ロード中 (publishedSet === undefined) は何も表示しない。
     // null (テーブル未作成 fallback) なら全表示、Set なら該当のみ表示。
     if (!fullAccess && publishedSet === undefined) return [];
+    // ここに来た時点で publishedSet は undefined ではない（上で return 済み）
+    const pub = publishedSet ?? null;
     const allTexts = (bundledTextsV3 as TextV3Entry[]).filter(
-      (t) => fullAccess || publishedSet === null || publishedSet.has(t.id)
+      (t) => fullAccess || pub === null || pub.has(t.id)
     );
     const allProgress = loadAllProgress();
     const counters = getOpenCounters();

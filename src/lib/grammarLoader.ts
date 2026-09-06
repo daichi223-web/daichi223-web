@@ -102,10 +102,14 @@ export function loadGrammar(): GrammarIndex {
     }
 
     // 係助詞→呼応の形
+    // JSON からは string で入ってくるので、実データにある2値だけを通す
+    const isMusubi = (v: unknown): v is "連体形" | "已然形" =>
+      v === "連体形" || v === "已然形";
     if (grammarData.particles && Array.isArray(grammarData.particles)) {
       for (const prt of grammarData.particles) {
-        if (prt.呼応) {
-          kakari.set(prt.語, prt.呼応);
+        const yobi = (prt as { 呼応?: unknown }).呼応;
+        if (isMusubi(yobi)) {
+          kakari.set(prt.語, yobi);
         }
       }
     }
@@ -132,10 +136,10 @@ export function loadGrammar(): GrammarIndex {
       verbs: grammarData.verbs || [],
       adjectives: grammarData.adjectives || [],
       auxiliaries: grammarData.auxiliaries || [],
-      particles: grammarData.particles || [],
+      particles: (grammarData.particles || []) as ParticleRule[],
     };
 
-    return cachedGrammar;
+    return cachedGrammar as GrammarIndex;
   } catch (e) {
     console.warn("Failed to load grammar data:", e);
     // Fallback to empty grammar

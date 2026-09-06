@@ -188,7 +188,7 @@ export function WordQuizContent({
                   </p>
                   <div className="flex gap-2 justify-center flex-wrap">
                     <button
-                      onClick={() => handleWritingUserJudgment(true)}
+                      onClick={() => handleWritingUserJudgment?.(true)}
                       className={`px-5 py-2 font-black rounded-full transition ${
                         writingResult.score >= 60
                           ? 'bg-rw-accent-soft text-rw-accent border-2 border-rw-accent'
@@ -198,13 +198,13 @@ export function WordQuizContent({
                       {writingResult.score >= 60 ? '○ 正解のまま' : '○ 正解に変更'}
                     </button>
                     <button
-                      onClick={() => handleWritingUserJudgment('partial')}
+                      onClick={() => handleWritingUserJudgment?.('partial')}
                       className="px-5 py-2 bg-rw-paper text-rw-ink-soft border-2 border-rw-rule font-black rounded-full transition hover:border-rw-ink-soft"
                     >
                       そのまま進む
                     </button>
                     <button
-                      onClick={() => handleWritingUserJudgment(false)}
+                      onClick={() => handleWritingUserJudgment?.(false)}
                       className={`px-5 py-2 font-black rounded-full transition ${
                         writingResult.score < 60
                           ? 'bg-rw-primary-soft text-rw-primary border-2 border-rw-primary'
