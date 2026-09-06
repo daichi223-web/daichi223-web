@@ -324,12 +324,20 @@ function splitSentences(bodyText, allTokens, translation) {
         tokenCursor++;
       }
     }
-    // 翻訳: 同段落の対応 sentence 位置（同段落内のインデックス）から取得
+    // 翻訳: 同段落の対応 sentence 位置（同段落内のインデックス）から取得。
+    // 訳のほうが細かく切れている場合（本文1文＝和歌に対し訳が2文、など）、
+    // 余った訳を最後の文にまとめて付ける。そうしないと訳が丸ごと落ちる。
     const paraTrans = transByPara[sr.paragraphIndex] ?? [];
+    const paraSentenceCount = sentenceRanges.filter(
+      (x) => x.paragraphIndex === sr.paragraphIndex,
+    ).length;
     const inParaIdx = sentenceRanges
       .slice(0, sIdx + 1)
       .filter((x) => x.paragraphIndex === sr.paragraphIndex).length - 1;
-    const modernTrans = paraTrans[inParaIdx] ?? paraTrans.join("") ?? "";
+    const isLastInPara = inParaIdx === paraSentenceCount - 1;
+    const modernTrans = isLastInPara
+      ? paraTrans.slice(inParaIdx).join("")
+      : (paraTrans[inParaIdx] ?? "");
 
     // token id / start / end を sentence 基準で振り直し
     let localCursor = 0;
@@ -578,8 +586,23 @@ function convertOne(src) {
 // ------------------------- 実行 -------------------------
 
 function main() {
-  const files = readdirSync(IN_DIR).filter((f) => f.endsWith(".json") && f !== "index.json");
-  console.log(`入力 JSON: ${files.length} 件`);
+  // 引数に id を渡すと、その教材だけを変換する（index.json は既存を読んで
+  // 該当行だけ差し替える）。全件上書きは手で直したトークン整合・hint・決め手を
+  // 壊すので、部分的な作り直しにはこちらを使う。
+  //   node scripts/convert-to-v3.mjs b1d89ce45e 2e45c61a81
+  const only = process.argv.slice(2).filter((a) => !a.startsWith("-"));
+  const all = readdirSync(IN_DIR).filter((f) => f.endsWith(".json") && f !== "index.json");
+  const files = only.length > 0 ? all.filter((f) => only.includes(f.slice(0, -5))) : all;
+  if (only.length > 0) {
+    const missing = only.filter((id) => !files.includes(`${id}.json`));
+    if (missing.length > 0) {
+      console.error(`入力が見つからない id: ${missing.join(", ")}`);
+      process.exit(1);
+    }
+    console.log(`指定された ${files.length} 件だけ変換します: ${only.join(", ")}`);
+  } else {
+    console.log(`入力 JSON: ${files.length} 件`);
+  }
 
   const index = [];
   const failures = [];
@@ -602,9 +625,22 @@ function main() {
     }
   }
 
-  // 一覧
-  index.sort((a, b) => (a.metadata?.chapter ?? 0) - (b.metadata?.chapter ?? 0));
-  writeFileSync(join(OUT_TEXTS, "index.json"), JSON.stringify(index, null, 2), "utf8");
+  // 一覧（部分変換のときは既存の index を読んで該当行だけ差し替える）
+  let finalIndex = index;
+  if (only.length > 0) {
+    const indexPath = join(OUT_TEXTS, "index.json");
+    let existing = [];
+    try {
+      existing = JSON.parse(readFileSync(indexPath, "utf8"));
+    } catch {
+      existing = [];
+    }
+    const byId = new Map(existing.map((e) => [e.id, e]));
+    for (const e of index) byId.set(e.id, e);
+    finalIndex = [...byId.values()];
+  }
+  finalIndex.sort((a, b) => (a.metadata?.chapter ?? 0) - (b.metadata?.chapter ?? 0));
+  writeFileSync(join(OUT_TEXTS, "index.json"), JSON.stringify(finalIndex, null, 2), "utf8");
 
   console.log(`\n✅ 成功: ${index.length} / ${files.length}`);
   if (failures.length > 0) {

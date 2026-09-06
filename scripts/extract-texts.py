@@ -122,7 +122,8 @@ def kaii_from_table(body: str) -> str:
         if not left or left.startswith('---') or left.startswith(':--'):
             continue
         out.append(left)
-    return '\n'.join(out).strip()
+    # 1行1文＝1まとまり。変換側は空行で段落を数えるので空行区切りで返す
+    return '\n\n'.join(out).strip()
 
 
 def slugify(title: str) -> str:
