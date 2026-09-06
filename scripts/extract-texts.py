@@ -98,6 +98,33 @@ def parse_sections(body: str) -> dict[str, str]:
     return result
 
 
+KAII_MARK = re.compile(r'^\|\s*【(?:歌意|句意)】\s*\|')
+TABLE_ROW = re.compile(r'^\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*$')
+
+
+def kaii_from_table(body: str) -> str:
+    """和歌・句の教材は現代語訳の見出しが空で、訳が品詞分解テーブルの
+    「| 【歌意】 |  |」以降に1行1文で入っている。そこから取り出す。"""
+    lines = body.split('\n')
+    start = None
+    for i, l in enumerate(lines):
+        if KAII_MARK.match(l):
+            start = i
+            break
+    if start is None:
+        return ''
+    out = []
+    for l in lines[start + 1:]:
+        m = TABLE_ROW.match(l)
+        if not m:
+            break
+        left = m.group(1)
+        if not left or left.startswith('---') or left.startswith(':--'):
+            continue
+        out.append(left)
+    return '\n'.join(out).strip()
+
+
 def slugify(title: str) -> str:
     return hashlib.sha1(title.encode('utf-8')).hexdigest()[:10]
 
@@ -111,6 +138,12 @@ def process_file(md_path: Path) -> dict | None:
 
     sections = parse_sections(body)
     all_titles = sections.pop('_all_sections_meta', [])
+
+    # 現代語訳の見出しが空なら、品詞分解テーブル内の【歌意】【句意】を拾う
+    if not (sections.get('現代語訳') or '').strip():
+        kaii = kaii_from_table(body)
+        if kaii:
+            sections['現代語訳'] = kaii
 
     # Quality flags
     has_text = '本文' in sections and sections['本文'].strip()
