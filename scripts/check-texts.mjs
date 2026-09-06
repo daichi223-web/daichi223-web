@@ -14,7 +14,7 @@
  *   T1b 索引のズレ     アプリが読む索引（src/data）と public の索引が食い違っていないか
  *   T2 トークン連結    tokens の text を連ねたものが originalText と一致するか
  *   T3 オフセット      token.start/end が originalText の実位置と合っているか
- *   T4 訳の有無        文ごとに modernTranslation があるか
+ *   T4 訳の有無        文ごとに訳があるか（出典表記だけの行は除く）
  *   T5 訳の長さ        訳が本文の 3 倍を超えていないか（短文は除外。訳の膨張＝別文の混入を疑う）
  *   T9 訳の使い回し    同じ訳が複数の文に付いていないか（訳の取り違えを疑う）
  *   T6 文 id の重複    sentence.id / token.id が重複していないか
@@ -41,6 +41,8 @@ const only = args.find((a) => !a.startsWith('-')) || null;
 const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const exists = (p) => fs.existsSync(p);
 const norm = (s) => (s || '').replace(/\s+/g, '');
+// 「（巻第三）」「（第九段・前半）」のような出典表記だけの行は訳す対象ではない
+const isCitationOnly = (t) => /^[（(][^（）()]{1,20}[）)]$/.test((t || '').trim());
 
 const grammarIds = new Set(
   exists(GRAMMAR)
@@ -126,7 +128,7 @@ for (const id of targets) {
     // T4/T5 訳
     const tr = s.modernTranslation || '';
     if (!tr) {
-      add(id, 'T4-訳なし', s.id);
+      if (!isCitationOnly(original)) add(id, 'T4-訳なし', s.id);
     } else if (original.length >= 15 && tr.length > original.length * 3) {
       // 短い文（「」だけ等）は訳が長くなって当然なので見ない
       add(id, 'T5-訳が長すぎ', `${s.id}: 本文${original.length}字 → 訳${tr.length}字`);
