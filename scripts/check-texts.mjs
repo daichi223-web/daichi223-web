@@ -17,6 +17,7 @@
  *   T4 訳の有無        文ごとに訳があるか（出典表記だけの行は除く）
  *   T5 訳の長さ        訳が本文の 3 倍を超えていないか（短文は除外。訳の膨張＝別文の混入を疑う）
  *   T9 訳の使い回し    同じ訳が複数の文に付いていないか（訳の取り違えを疑う）
+ *   T10 訳のズレ       隣の文の訳のほうが原文に合っていないか（1文ずれの検出）
  *   T6 文 id の重複    sentence.id / token.id が重複していないか
  *   T7 文法参照        grammarRefId が public/grammar に実在するか
  *   T8 決め手          analysis/<id>.json があるとき、その参照 token が実在するか
@@ -43,6 +44,17 @@ const exists = (p) => fs.existsSync(p);
 const norm = (s) => (s || '').replace(/\s+/g, '');
 // 「（巻第三）」「（第九段・前半）」のような出典表記だけの行は訳す対象ではない
 const isCitationOnly = (t) => /^[（(][^（）()]{1,20}[）)]$/.test((t || '').trim());
+
+// T10 用: 古文→現代語訳では漢字の語（比叡・富士・雀…）がそのまま訳に残ることが多い。
+// 原文の漢字2字以上の語が、自分の訳より隣の訳に多く出るなら1文ずれを疑う。
+const kanjiWords = (t) => {
+  const m = (t || '').match(/[一-鿿]{2,}/g);
+  return m ? [...new Set(m)] : [];
+};
+const overlap = (words, tr) => {
+  if (words.length === 0 || !tr) return 0;
+  return words.filter((w) => tr.includes(w)).length / words.length;
+};
 
 const grammarIds = new Set(
   exists(GRAMMAR)
@@ -146,6 +158,19 @@ for (const id of targets) {
   for (const [tr, sids] of trMap) {
     if (sids.length >= 2) {
       add(id, 'T9-訳の使い回し', `${sids.join(',')} が同じ訳「${tr.slice(0, 24)}…」`);
+    }
+  }
+
+  // T10 訳のズレ（隣の訳のほうが原文に合う）
+  for (let i = 0; i < sentences.length; i++) {
+    const words = kanjiWords(sentences[i].originalText || '');
+    if (words.length < 2) continue; // 手がかりが少ない文は判定しない
+    const own = overlap(words, sentences[i].modernTranslation || '');
+    const next = i + 1 < sentences.length ? overlap(words, sentences[i + 1].modernTranslation || '') : 0;
+    const prev = i > 0 ? overlap(words, sentences[i - 1].modernTranslation || '') : 0;
+    const best = Math.max(own, next, prev);
+    if (best > 0 && best - own > 0.34) {
+      add(id, 'T10-訳のズレ', `${sentences[i].id}: 自分の訳との一致 ${own.toFixed(2)} < ${next >= prev ? '次' : '前'}の訳 ${best.toFixed(2)}`);
     }
   }
 
