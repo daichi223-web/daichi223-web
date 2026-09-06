@@ -16,6 +16,7 @@ import { pickQuestions, type Bucket } from './lib/quizSelector';
 import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import { composeTodaySet, estimateFresh, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
+import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
 import { readStreak } from './lib/streak';
 import {
   updateSrsState,
@@ -226,6 +227,8 @@ function App() {
     parts: TodayParts;
   } | null>(null);
   const [todayGrowth, setTodayGrowth] = useState<string | null>(null);
+  // 教員が設定した小テスト範囲（ホーム最上段）
+  const [quizRange, setQuizRange] = useState<QuizRange | null>(null);
   // 累計学習統計 (Result 画面で表示)
   const [cumulativeStats, setCumulativeStats] = useState<{
     totalAnswered: number;
@@ -298,12 +301,18 @@ function App() {
     let cancelled = false;
     (async () => {
       try {
-        const [weak, today, last] = await Promise.all([getWeakWords(), getTodayReviewSet(), getLastActivity()]);
+        const [weak, today, last, range] = await Promise.all([
+          getWeakWords(),
+          getTodayReviewSet(),
+          getLastActivity(),
+          getActiveQuizRange(),
+        ]);
         const gap = gapDays(last);
         const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? await getWarmupWords() : [];
         if (!cancelled) {
           setWeakWordsCount(weak.length);
           setDueWordsCount(today.qids.length);
+          setQuizRange(range);
           setWelcomeBack(gap != null && gap >= WELCOME_BACK_GAP_DAYS && warmup.length > 0 ? { gapDays: gap, warmup } : null);
         }
       } catch {
@@ -561,7 +570,7 @@ function App() {
 
   // 「今日の分」: おかえり語 → 今日の復習 → 範囲内からおまかせ補充、で基本10問。
   // 中身はアプリが決め、生徒はボタン1つで始める。again=true は「もう1セット」（おかえり語は付けない）。
-  const startTodaySession = async (again = false) => {
+  const startTodaySession = async (again = false, rangeOverride?: { from: number; to: number }) => {
     const warmup = again ? [] : (welcomeBack?.warmup ?? []);
     let due: string[] = [];
     try {
@@ -569,10 +578,15 @@ function App() {
     } catch {
       due = [];
     }
-    const start = wordRange.from ?? 1;
-    const end = wordRange.to ?? 330;
+    const start = rangeOverride?.from ?? wordRange.from ?? 1;
+    const end = rangeOverride?.to ?? wordRange.to ?? 330;
     let pool = allWords.filter((w) => w.group >= start && w.group <= end);
-    if (categoryFilter.length > 0) {
+    if (rangeOverride) {
+      // 小テスト範囲から始めたときは、範囲外の復習語を混ぜない
+      const inRange = new Set(pool.map((w) => w.qid));
+      due = due.filter((q) => inRange.has(q));
+    }
+    if (categoryFilter.length > 0 && !rangeOverride) {
       const catSet = new Set(categoryFilter);
       const vidx = bundledVocabIndex as Record<string, { category?: string }>;
       pool = pool.filter((w) => {
@@ -1697,7 +1711,13 @@ function App() {
               review: dueWordsCount,
               fresh: estimateFresh(welcomeBack?.warmup.length ?? 0, dueWordsCount),
             }}
+            quizRange={quizRange}
             onStartToday={() => void startTodaySession()}
+            onStartQuizRange={(r) => {
+              // 小テスト範囲を生徒の出題範囲にも反映（次からは指定不要）
+              setWordRange({ from: r.from, to: r.to });
+              void startTodaySession(false, { from: r.from, to: r.to });
+            }}
             onStartReview={async () => {
               const weak = await getWeakWords();
               if (weak.length === 0) return;

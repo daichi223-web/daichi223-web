@@ -11,6 +11,7 @@ import {
   portraitForStage,
 } from '@/lib/nobleData';
 import { recordPromotion } from '@/lib/promotionHistory';
+import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
 
 // Reiwa デザイン版ホーム画面。
 // handoff/dir-reiwa.jsx の RwHome を本番ロジックと結線したもの。
@@ -32,7 +33,10 @@ type Props = {
   welcomeBack?: { gapDays: number; warmupCount: number } | null;
   // 今日の分の見込み: 復習（期限到来・上限つき）と補充（範囲からおまかせ）の語数
   todayPreview: { review: number; fresh: number };
+  // 教員が設定した小テスト範囲（無ければ null）
+  quizRange?: QuizRange | null;
   onStartToday: () => void;
+  onStartQuizRange?: (r: QuizRange) => void;
   onStartReview: () => void;
   onSwitchMode: (mode: 'word' | 'polysemy') => void;
   onOpenThemePicker: () => void;
@@ -52,7 +56,9 @@ export default function HomeReiwa({
   dueWordsCount,
   welcomeBack = null,
   todayPreview,
+  quizRange = null,
   onStartToday,
+  onStartQuizRange,
   onStartReview,
   onSwitchMode,
   onOpenThemePicker,
@@ -93,6 +99,8 @@ export default function HomeReiwa({
       : '範囲未指定';
   // 今日の分の語数（おかえり語は別に足す）
   const todayTotal = todayPreview.review + todayPreview.fresh;
+  // 小テスト範囲（期日を過ぎたものは出さない）
+  const quizRangeLine = quizRange ? quizRangeHeadline(quizRange) : null;
 
   return (
     <div className="bg-rw-bg min-h-dvh -mx-3 md:-mx-6 -mt-16 md:mt-0 px-4 md:px-6 pt-4 md:pt-6 pb-8 text-rw-ink">
@@ -101,6 +109,26 @@ export default function HomeReiwa({
         <div className="text-2xl md:text-3xl font-black tracking-tight leading-none">kobun.</div>
         <div className="text-[10px] text-rw-ink-soft font-mono">{todayLabel()}</div>
       </div>
+
+      {/* 小テスト範囲（教員が設定したときだけ最上段に出す） */}
+      {quizRange && quizRangeLine && onStartQuizRange && (
+        <button
+          onClick={() => onStartQuizRange(quizRange)}
+          className="w-full text-left mb-2.5 px-4 py-3 rounded-2xl border-2 border-rw-ink bg-rw-pop text-rw-ink hover:-translate-y-0.5 transition-transform"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-xl">📌</span>
+            <span className="flex-1 min-w-0">
+              <span className="block text-[13px] font-black tracking-tight truncate">{quizRangeLine}</span>
+              <span className="block text-[11px] font-bold opacity-80">
+                {quizRange.from}〜{quizRange.to}
+                {quizRange.note ? `・${quizRange.note}` : ''}
+              </span>
+            </span>
+            <span className="text-xs font-black shrink-0">この範囲で ▶</span>
+          </div>
+        </button>
+      )}
 
       {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}
       <button

@@ -16,6 +16,7 @@ import listCandidates from "./_teacher_listCandidates.js";
 import listRecentAnswers from "./_teacher_listRecentAnswers.js";
 import overrideAnswer from "./_teacher_overrideAnswer.js";
 import upsertOverride from "./_teacher_upsertOverride.js";
+import { getQuizRange, setQuizRange } from "./_teacher_quizRange.js";
 
 type Handler = (req: VercelRequest, res: VercelResponse) => Promise<unknown> | unknown;
 
@@ -27,6 +28,8 @@ const ROUTES: Record<string, Handler> = {
   listRecentAnswers,
   overrideAnswer,
   upsertOverride,
+  getQuizRange,
+  setQuizRange,
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

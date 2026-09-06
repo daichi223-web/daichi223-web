@@ -72,7 +72,7 @@ async function callAPI(path: string, body?: any) {
 
 export default function Teacher() {
   const [token, setToken] = useState<string | null>(() => getToken());
-  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble">("answers");
+  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble" | "quizrange">("answers");
   const [rows, setRows] = useState<any[]>([]);
   const [candidates, setCandidates] = useState<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
@@ -384,6 +384,16 @@ export default function Teacher() {
           📚 教材公開管理
         </button>
         <button
+          onClick={() => setActiveTab("quizrange")}
+          className={`px-4 py-2 font-medium transition ${
+            activeTab === "quizrange"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-slate-600 hover:text-slate-800"
+          }`}
+        >
+          📌 小テスト範囲
+        </button>
+        <button
           onClick={() => setActiveTab("noble")}
           className={`px-4 py-2 font-medium transition ${
             activeTab === "noble"
@@ -632,6 +642,8 @@ export default function Teacher() {
 
       {activeTab === "texts" && <TextsManageView />}
 
+      {activeTab === "quizrange" && <QuizRangeView />}
+
       {activeTab === "noble" && <NoblePreviewView />}
     </div>
   );
@@ -770,6 +782,189 @@ type TextEntry = {
   era?: string;
   author?: string;
 };
+
+// 小テスト範囲: 教員が1回設定すると、その cohort の生徒ホーム最上段に出る。
+// 生徒側の「範囲を自分で指定」はそのまま残る（指定の手間を消すだけ）。
+function QuizRangeView() {
+  const [cohort, setCohort] = useState("default");
+  const [label, setLabel] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [note, setNote] = useState("");
+  const [active, setActive] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
+
+  const load = async (c: string) => {
+    setLoading(true);
+    setErr(null);
+    setMsg(null);
+    try {
+      const data = await callAPI(`/api/teacher?action=getQuizRange&cohort=${encodeURIComponent(c)}`);
+      const row = data?.row ?? null;
+      if (row) {
+        setLabel(row.label ?? "");
+        setFrom(String(row.range_from ?? ""));
+        setTo(String(row.range_to ?? ""));
+        setDueDate(row.due_date ?? "");
+        setNote(row.note ?? "");
+        setActive(row.active !== false);
+        setUpdatedAt(row.updated_at ?? null);
+      } else {
+        setLabel("");
+        setFrom("");
+        setTo("");
+        setDueDate("");
+        setNote("");
+        setActive(true);
+        setUpdatedAt(null);
+      }
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void load(cohort);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cohort]);
+
+  const save = async (nextActive: boolean) => {
+    setLoading(true);
+    setErr(null);
+    setMsg(null);
+    try {
+      const body: Record<string, unknown> = { action: "setQuizRange", cohort, active: nextActive };
+      if (nextActive) {
+        body.from = Number(from);
+        body.to = Number(to);
+        body.label = label;
+        body.dueDate = dueDate;
+        body.note = note;
+      }
+      const data = await callAPI("/api/teacher", body);
+      setActive(nextActive);
+      setUpdatedAt(data?.row?.updated_at ?? null);
+      setMsg(nextActive ? "保存しました。生徒のホームに出ます。" : "取り下げました。生徒のホームから消えます。");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const valid = Number.isInteger(Number(from)) && Number.isInteger(Number(to)) && Number(from) >= 1 && Number(to) >= Number(from);
+
+  return (
+    <div className="bg-white rounded-lg shadow p-6 max-w-2xl">
+      <h2 className="text-lg font-bold text-slate-800 mb-1">📌 小テスト範囲</h2>
+      <p className="text-sm text-slate-600 mb-5">
+        ここで1回設定すると、その生徒のホーム最上段に「小テスト・あと3日／101〜150」が出ます。
+        押すとその範囲で今日の分が始まります。生徒が自分で範囲を指定することもできます（今までどおり）。
+      </p>
+
+      <div className="grid grid-cols-2 gap-4">
+        <label className="block col-span-2">
+          <span className="text-sm font-bold text-slate-700">コホート</span>
+          <input
+            value={cohort}
+            onChange={(e) => setCohort(e.target.value)}
+            placeholder="default"
+            className="mt-1 w-full border border-slate-300 rounded px-3 py-2"
+          />
+          <span className="text-xs text-slate-500">default = 全員。クラス別に配るなら 2A-2026 など</span>
+        </label>
+
+        <label className="block col-span-2">
+          <span className="text-sm font-bold text-slate-700">名前</span>
+          <input
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            placeholder="金曜の小テスト"
+            className="mt-1 w-full border border-slate-300 rounded px-3 py-2"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-sm font-bold text-slate-700">範囲（から）</span>
+          <input
+            type="number"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            placeholder="101"
+            className="mt-1 w-full border border-slate-300 rounded px-3 py-2"
+          />
+        </label>
+        <label className="block">
+          <span className="text-sm font-bold text-slate-700">範囲（まで）</span>
+          <input
+            type="number"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            placeholder="150"
+            className="mt-1 w-full border border-slate-300 rounded px-3 py-2"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-sm font-bold text-slate-700">実施日（任意）</span>
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            className="mt-1 w-full border border-slate-300 rounded px-3 py-2"
+          />
+          <span className="text-xs text-slate-500">入れると「あと3日」が出ます</span>
+        </label>
+        <label className="block">
+          <span className="text-sm font-bold text-slate-700">ひとこと（任意）</span>
+          <input
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="敬語を中心に"
+            className="mt-1 w-full border border-slate-300 rounded px-3 py-2"
+          />
+        </label>
+      </div>
+
+      <div className="flex items-center gap-3 mt-5">
+        <button
+          onClick={() => void save(true)}
+          disabled={loading || !valid}
+          className="px-4 py-2 rounded bg-blue-600 text-white font-bold disabled:opacity-50"
+        >
+          保存して生徒に出す
+        </button>
+        {active && updatedAt && (
+          <button
+            onClick={() => void save(false)}
+            disabled={loading}
+            className="px-4 py-2 rounded border border-slate-300 text-slate-700 disabled:opacity-50"
+          >
+            取り下げる
+          </button>
+        )}
+        {loading && <span className="text-sm text-slate-500">通信中…</span>}
+      </div>
+
+      {!valid && (from !== "" || to !== "") && (
+        <p className="text-sm text-amber-700 mt-3">範囲は「から ≦ まで」の整数で入れてください。</p>
+      )}
+      {msg && <p className="text-sm text-green-700 mt-3">{msg}</p>}
+      {err && <p className="text-sm text-red-700 mt-3">エラー: {err}</p>}
+      {updatedAt && (
+        <p className="text-xs text-slate-500 mt-4">
+          最終更新: {new Date(updatedAt).toLocaleString("ja-JP")}／状態: {active ? "生徒に出ている" : "取り下げ済み"}
+        </p>
+      )}
+    </div>
+  );
+}
 
 function DiagnosticPanel({ cohort }: { cohort: string }) {
   const [rows, setRows] = useState<Array<{ slug: string; published: boolean; cohort?: string }>>([]);
