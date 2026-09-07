@@ -92,13 +92,28 @@ const kanjiWords = (t) => {
 // T12 用: 隣の文と本文が重なっているか。
 // 「s1 に本文＋次の和歌、s2 にその和歌」のように、分割で内容が二重になることがある。
 const bodyKey = (t) => (t || '').replace(/[\s\u3000「」﹁﹂『』（）()]+/g, '');
+// 厄介なのは複製側が脱字した劣化コピーになっている場合で（能登殿「鞘をはづし」→「鞘を」）、
+// 完全一致では取り逃す。最長共通部分列で「短いほうがどれだけ長いほうに入っているか」を見る。
+const lcsLen = (a, b) => {
+  let prev = new Uint32Array(b.length + 1);
+  let cur = new Uint32Array(b.length + 1);
+  for (let i = 0; i < a.length; i++) {
+    for (let j = 0; j < b.length; j++) {
+      cur[j + 1] = a[i] === b[j] ? prev[j] + 1 : Math.max(cur[j], prev[j + 1]);
+    }
+    [prev, cur] = [cur, prev];
+    cur.fill(0);
+  }
+  return prev[b.length];
+};
 const overlapsNeighbour = (a, b) => {
   const x = bodyKey(a);
   const y = bodyKey(b);
   if (x.length < 12 || y.length < 12) return false;
   const [short, long] = x.length <= y.length ? [x, y] : [y, x];
-  const head = short.slice(0, Math.floor(short.length * 0.8));
-  return head.length > 0 && long.includes(head);
+  if (long.includes(short.slice(0, Math.floor(short.length * 0.8)))) return true;
+  if (short.length > 600 || long.length > 600) return false; // 総当たりが重くなるものは見送る
+  return lcsLen(short, long) / short.length >= 0.85;
 };
 
 const overlap = (words, tr) => {

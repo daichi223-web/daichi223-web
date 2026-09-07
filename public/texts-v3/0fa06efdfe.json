@@ -2043,7 +2043,7 @@
     },
     {
       "id": "s7",
-      "originalText": "」と語る。「いとよきことにこそあなれ。",
+      "originalText": "」と語る。「",
       "modernTranslation": "」と語る。",
       "tokens": [
         {
@@ -2100,103 +2100,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s7-t6",
-          "text": "いと",
-          "start": 6,
-          "end": 8,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞",
-            "baseForm": "いと"
-          }
-        },
-        {
-          "id": "s7-t7",
-          "text": "よき",
-          "start": 8,
-          "end": 10,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "ク",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "keiyoshi-katsuyo"
-        },
-        {
-          "id": "s7-t8",
-          "text": "こと",
-          "start": 10,
-          "end": 12,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "",
-            "baseForm": "こと"
-          }
-        },
-        {
-          "id": "s7-t9",
-          "text": "に",
-          "start": 12,
-          "end": 13,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "断定"
-          },
-          "grammarRefId": "jodoshi-dantei"
-        },
-        {
-          "id": "s7-t10",
-          "text": "こそ",
-          "start": 13,
-          "end": 15,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "強意"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s7-t11",
-          "text": "あ",
-          "start": 15,
-          "end": 16,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s7-t12",
-          "text": "なれ",
-          "start": 16,
-          "end": 18,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "已",
-            "meaning": "推定",
-            "baseForm": "なる"
-          },
-          "grammarRefId": "jodoshi-suiryo"
-        },
-        {
-          "id": "s7-t13",
-          "text": "。",
-          "start": 18,
-          "end": 19,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
         }
       ]
     },
@@ -2206,14 +2109,108 @@
       "modernTranslation": "「とてもよいことのようね。",
       "tokens": [
         {
+          "text": "｢",
+          "layer": 0,
           "id": "s8-t1",
-          "text": "｢いとよきことにこそあなれ。",
           "start": 0,
-          "end": 14,
+          "end": 1
+        },
+        {
+          "text": "いと",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞",
+            "baseForm": "いと"
+          },
+          "id": "s8-t2",
+          "start": 1,
+          "end": 3
+        },
+        {
+          "text": "よき",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "id": "s8-t3",
+          "start": 3,
+          "end": 5
+        },
+        {
+          "text": "こと",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "",
+            "baseForm": "こと"
+          },
+          "id": "s8-t4",
+          "start": 5,
+          "end": 7
+        },
+        {
+          "text": "に",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "断定"
+          },
+          "grammarRefId": "jodoshi-dantei",
+          "id": "s8-t5",
+          "start": 7,
+          "end": 8
+        },
+        {
+          "text": "こそ",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "強意"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "id": "s8-t6",
+          "start": 8,
+          "end": 10
+        },
+        {
+          "text": "あ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s8-t7",
+          "start": 10,
+          "end": 11
+        },
+        {
+          "text": "なれ",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "已",
+            "meaning": "推定",
+            "baseForm": "なる"
+          },
+          "grammarRefId": "jodoshi-suiryo",
+          "id": "s8-t8",
+          "start": 11,
+          "end": 13
+        },
+        {
+          "text": "。",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s8-t9",
+          "start": 13,
+          "end": 14
         }
       ]
     },

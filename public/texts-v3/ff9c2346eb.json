@@ -2390,7 +2390,7 @@
     },
     {
       "id": "s13",
-      "originalText": "犬は狩り出でて、滝口などして追ひつかはしつ。「あはれ、いみじうゆるぎありきつるものを。",
+      "originalText": "犬は狩り出でて、滝口などして追ひつかはしつ。「",
       "modernTranslation": "犬はつかまえて、滝口の武士などの手で追放してしまった。",
       "tokens": [
         {
@@ -2525,87 +2525,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s13-t13",
-          "text": "あはれ",
-          "start": 23,
-          "end": 26,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "感動詞",
-            "baseForm": "あはれ"
-          },
-          "hint": "重要語「あはれ」: 感動詞「ああ」、形容動詞「しみじみと心打たれる」。枕草子の「をかし」と並ぶ重要美意識"
-        },
-        {
-          "id": "s13-t14",
-          "text": "、",
-          "start": 26,
-          "end": 27,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s13-t15",
-          "text": "いみじう",
-          "start": 27,
-          "end": 31,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "シク",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "重要語「いみじ」: 程度が甚だしい。文脈で「すばらしい/ひどい」と訳し分ける。連用形「いみじく」のウ音便"
-        },
-        {
-          "id": "s13-t16",
-          "text": "ゆるぎありき",
-          "start": 31,
-          "end": 37,
-          "layer": 1,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s13-t17",
-          "text": "つる",
-          "start": 37,
-          "end": 39,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "完了"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「つ」連体形「つる」: 完了・強意。連体形で名詞修飾や結びになる"
-        },
-        {
-          "id": "s13-t18",
-          "text": "ものを",
-          "start": 39,
-          "end": 42,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「ものを」: 逆接確定「〜のに」。詠嘆的な含みを伴うことが多い"
-        },
-        {
-          "id": "s13-t19",
-          "text": "。",
-          "start": 42,
-          "end": 43,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
         }
       ]
     },
@@ -2615,14 +2534,92 @@
       "modernTranslation": "「ああかわいそうに、偉そうに体を揺すって歩き回っていたのに。",
       "tokens": [
         {
+          "text": "｢",
+          "layer": 0,
           "id": "s14-t1",
-          "text": "｢あはれ、いみじうゆるぎありきつるものを。",
           "start": 0,
-          "end": 21,
+          "end": 1
+        },
+        {
+          "text": "あはれ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "感動詞",
+            "baseForm": "あはれ"
+          },
+          "hint": "重要語「あはれ」: 感動詞「ああ」、形容動詞「しみじみと心打たれる」。枕草子の「をかし」と並ぶ重要美意識",
+          "id": "s14-t2",
+          "start": 1,
+          "end": 4
+        },
+        {
+          "text": "、",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s14-t3",
+          "start": 4,
+          "end": 5
+        },
+        {
+          "text": "いみじう",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "シク",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要語「いみじ」: 程度が甚だしい。文脈で「すばらしい/ひどい」と訳し分ける。連用形「いみじく」のウ音便",
+          "id": "s14-t4",
+          "start": 5,
+          "end": 9
+        },
+        {
+          "text": "ゆるぎありき",
+          "layer": 1,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s14-t5",
+          "start": 9,
+          "end": 15
+        },
+        {
+          "text": "つる",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「つ」連体形「つる」: 完了・強意。連体形で名詞修飾や結びになる",
+          "id": "s14-t6",
+          "start": 15,
+          "end": 17
+        },
+        {
+          "text": "ものを",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「ものを」: 逆接確定「〜のに」。詠嘆的な含みを伴うことが多い",
+          "id": "s14-t7",
+          "start": 17,
+          "end": 20
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s14-t8",
+          "start": 20,
+          "end": 21
         }
       ]
     },

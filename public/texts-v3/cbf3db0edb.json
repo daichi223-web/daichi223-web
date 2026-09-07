@@ -114,7 +114,7 @@
   "sentences": [
     {
       "id": "s1",
-      "originalText": "およそ能登守教経の矢先にまはる者こそなかりけれ。矢だねのあるほど射尽くして、今日を最後とや思はれけん、赤地の錦の直垂に、唐綾威の鎧着て、厳物づくりの大太刀抜き、白柄の大長刀の鞘を、左右に持つてなぎまはりたまふに、面を合はする者ぞなき。",
+      "originalText": "およそ能登守教経の矢先にまはる者こそなかりけれ。",
       "modernTranslation": "そもそも能登守教経の矢先に立ち向かう者はいなかった。",
       "tokens": [
         {
@@ -249,664 +249,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s1-t12",
-          "text": "矢だね",
-          "start": 24,
-          "end": 27,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "矢だね (やだね): 「矢の種・蓄え」。「矢だねのある (＝矢が残っている) ほど」と読む。"
-        },
-        {
-          "id": "s1-t13",
-          "text": "の",
-          "start": 27,
-          "end": 28,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "主格"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」: 主格 (が)。「矢だねの (＝矢が) ある」と読み解く。連体修飾の「の」と並ぶ最頻出用法。"
-        },
-        {
-          "id": "s1-t14",
-          "text": "ある",
-          "start": 28,
-          "end": 30,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "体",
-            "baseForm": "ある"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「ある」: ラ変。「ある (体)」+「ほど」で「〜限り・尽きるまで」を表す慣用。"
-        },
-        {
-          "id": "s1-t15",
-          "text": "ほど",
-          "start": 30,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "",
-            "baseForm": "ほど"
-          },
-          "hint": "名詞「ほど」: 「程度・あいだ」。「あるほど」＝「ある限り・尽きるまで」と慣用化。"
-        },
-        {
-          "id": "s1-t16",
-          "text": "射尽くし",
-          "start": 32,
-          "end": 36,
-          "layer": 1,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "動詞「射尽くし」: 「射尽くす」(複合動詞、サ行四段) の連用形。「射尽くして」＝矢を全部射てしまって。"
-        },
-        {
-          "id": "s1-t17",
-          "text": "て",
-          "start": 36,
-          "end": 37,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続「〜て」。"
-        },
-        {
-          "id": "s1-t18",
-          "text": "、",
-          "start": 37,
-          "end": 38,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s1-t19",
-          "text": "今日",
-          "start": 38,
-          "end": 40,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "今日 (けふ): 「きょう」。"
-        },
-        {
-          "id": "s1-t20",
-          "text": "を",
-          "start": 40,
-          "end": 41,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象「〜を」。"
-        },
-        {
-          "id": "s1-t21",
-          "text": "最後",
-          "start": 41,
-          "end": 43,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "最後 (さいご): 「最期 (死期)・終わり」。「今日を最後とや思はれけん」＝「今日を最期とお思いになったのだろうか」。"
-        },
-        {
-          "id": "s1-t22",
-          "text": "と",
-          "start": 43,
-          "end": 44,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「と」: 引用「〜と」。「最後と思ふ」。"
-        },
-        {
-          "id": "s1-t23",
-          "text": "や",
-          "start": 44,
-          "end": 45,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "疑問"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「や」: 疑問・推量を導く。結びは連体形「けん」。「思はれけん」までかかり「〜とお思いになったのだろうか」。"
-        },
-        {
-          "id": "s1-t24",
-          "text": "思は",
-          "start": 45,
-          "end": 47,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「思は」: ハ行四段「思ふ」未然形。直後の「れ」は尊敬の助動詞で、教経への敬意。"
-        },
-        {
-          "id": "s1-t25",
-          "text": "れ",
-          "start": 47,
-          "end": 48,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "尊敬"
-          },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
-          "hint": "助動詞「る」: 受身・尊敬・自発・可能の四義。ここは尊敬「お〜になる」(教経への敬意)。連用形「れ」。"
-        },
-        {
-          "id": "s1-t26",
-          "text": "けん",
-          "start": 48,
-          "end": 50,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "過去推量"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「けん (けむ)」: 過去推量「〜たであろう・〜たのだろうか」。連用形接続。語り手が過去の心情を推測する標識。「や〜けん」で結びの連体形。"
-        },
-        {
-          "id": "s1-t27",
-          "text": "、",
-          "start": 50,
-          "end": 51,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s1-t28",
-          "text": "赤地",
-          "start": 51,
-          "end": 53,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "赤地 (あかぢ): 赤色の地 (生地)。"
-        },
-        {
-          "id": "s1-t29",
-          "text": "の",
-          "start": 53,
-          "end": 54,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s1-t30",
-          "text": "錦",
-          "start": 54,
-          "end": 55,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "錦 (にしき): 金糸・色糸を使った最高級の絹織物。武家・公家の儀礼装。"
-        },
-        {
-          "id": "s1-t31",
-          "text": "の",
-          "start": 55,
-          "end": 56,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s1-t32",
-          "text": "直垂",
-          "start": 56,
-          "end": 58,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "直垂 (ひたたれ): 武士の日常着・戦装束。鎧の下に着る。「赤地の錦」は最高級の絹織物で、平家の貴族的武将の派手な装い。"
-        },
-        {
-          "id": "s1-t33",
-          "text": "に",
-          "start": 58,
-          "end": 59,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "添加"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」: 添加「〜に加えて」。直垂の上に鎧を重ね着している様子。"
-        },
-        {
-          "id": "s1-t34",
-          "text": "、",
-          "start": 59,
-          "end": 60,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s1-t35",
-          "text": "唐綾威",
-          "start": 60,
-          "end": 63,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "唐綾威 (からあやおどし): 唐綾 (高級織物) の組紐で小札を綴じた鎧の仕立て。豪華な戦装束。"
-        },
-        {
-          "id": "s1-t36",
-          "text": "の",
-          "start": 63,
-          "end": 64,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s1-t37",
-          "text": "鎧",
-          "start": 64,
-          "end": 65,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "鎧: 「唐綾威」は唐綾 (高級織物) の紐で小札を綴じた豪華な仕立て。武者の地位と財力を示す。"
-        },
-        {
-          "id": "s1-t38",
-          "text": "着",
-          "start": 65,
-          "end": 66,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ上一",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「着」: カ行上一段「着る」連用形。上一段は「着・煮・似・干・見・射・鋳・率」など限定数。"
-        },
-        {
-          "id": "s1-t39",
-          "text": "て",
-          "start": 66,
-          "end": 67,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続「〜て」。"
-        },
-        {
-          "id": "s1-t40",
-          "text": "、",
-          "start": 67,
-          "end": 68,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s1-t41",
-          "text": "厳物づくり",
-          "start": 68,
-          "end": 73,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "厳物づくり (いかものづくり): 飾りの厳めしい仕立て。武器の装飾を誇張した造り。"
-        },
-        {
-          "id": "s1-t42",
-          "text": "の",
-          "start": 73,
-          "end": 74,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s1-t43",
-          "text": "大太刀",
-          "start": 74,
-          "end": 77,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "大太刀 (おほだち): 通常より長大な太刀。武者の威容を示す。"
-        },
-        {
-          "id": "s1-t44",
-          "text": "抜き",
-          "start": 77,
-          "end": 79,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「抜き」: カ行四段「抜く」連用形。"
-        },
-        {
-          "id": "s1-t45",
-          "text": "、白柄",
-          "start": 79,
-          "end": 82,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s1-t46",
-          "text": "の",
-          "start": 82,
-          "end": 83,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s1-t47",
-          "text": "大長刀",
-          "start": 83,
-          "end": 86,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "大長刀 (おほなぎなた): 大型の薙刀。長柄武器の代表で、馬上・徒歩戦で薙ぎ払うのに用いる。"
-        },
-        {
-          "id": "s1-t48",
-          "text": "の",
-          "start": 86,
-          "end": 87,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s1-t49",
-          "text": "鞘",
-          "start": 87,
-          "end": 88,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "鞘 (さや): 刀身を納める筒。「鞘をはづし」＝鞘を払って抜刀する直前。"
-        },
-        {
-          "id": "s1-t50",
-          "text": "を",
-          "start": 88,
-          "end": 89,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象。"
-        },
-        {
-          "id": "s1-t51",
-          "text": "、",
-          "start": 89,
-          "end": 90,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s1-t52",
-          "text": "左右",
-          "start": 90,
-          "end": 92,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "左右 (さう): 「ひだりみぎ」。「左右に持つて」＝両手にそれぞれ太刀と長刀を持って。"
-        },
-        {
-          "id": "s1-t53",
-          "text": "に",
-          "start": 92,
-          "end": 93,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "場所"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s1-t54",
-          "text": "持つ",
-          "start": 93,
-          "end": 95,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "タ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「持つ」: タ行四段。ここは「持つて」で促音便 (持ちて → 持つて)。軍記物の口語的活気を示す。"
-        },
-        {
-          "id": "s1-t55",
-          "text": "て",
-          "start": 95,
-          "end": 96,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続「〜て」。"
-        },
-        {
-          "id": "s1-t56",
-          "text": "なぎまはり",
-          "start": 96,
-          "end": 101,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「なぎまはり」: ラ行四段。「なぎまはる」＝刀を振り回して薙ぎ払うこと。"
-        },
-        {
-          "id": "s1-t57",
-          "text": "たまふ",
-          "start": 101,
-          "end": 104,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "体",
-            "baseForm": "たまふ",
-            "honorific": "尊敬"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たまふ」: ハ行四段、尊敬「お〜になる」。教経への敬意。本作で「たまふ」は教経・義経・知盛など主要武将の動作に頻出。"
-        },
-        {
-          "id": "s1-t58",
-          "text": "に",
-          "start": 104,
-          "end": 105,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「に」: 単純接続「〜と・〜のだが」。連体形 + に は順接または逆接どちらにもなる。"
-        },
-        {
-          "id": "s1-t59",
-          "text": "、",
-          "start": 105,
-          "end": 106,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s1-t60",
-          "text": "面",
-          "start": 106,
-          "end": 107,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「面」: 「おもて」。「面を合はする」＝顔を向き合わせる、つまり立ち向かう。"
-        },
-        {
-          "id": "s1-t61",
-          "text": "を",
-          "start": 107,
-          "end": 108,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象。"
-        },
-        {
-          "id": "s1-t62",
-          "text": "合はする",
-          "start": 108,
-          "end": 112,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ下二",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「合はする」: サ行下二段「合はす」連体形。「面を合はする」＝顔を向き合わせる、つまり立ち向かう。"
-        },
-        {
-          "id": "s1-t63",
-          "text": "者",
-          "start": 112,
-          "end": 113,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「者」: 「もの」、人物。"
-        },
-        {
-          "id": "s1-t64",
-          "text": "ぞ",
-          "start": 113,
-          "end": 114,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "強意"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「ぞ」: 強意。結びは連体形「なき」。「面を合はする者ぞなき」。"
-        },
-        {
-          "id": "s1-t65",
-          "text": "なき",
-          "start": 114,
-          "end": 116,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "ク",
-            "conjugationForm": "体",
-            "baseForm": "なく"
-          },
-          "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "形容詞「なき」: ク活用「なし」連体形。「ぞ」の結び。"
-        },
-        {
-          "id": "s1-t66",
-          "text": "。",
-          "start": 116,
-          "end": 117,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
         }
       ]
     },
@@ -916,20 +258,675 @@
       "modernTranslation": "手持ちの矢があるだけ射尽くして、今日を最後とお思いになったのであろうか、赤地に錦を織り出した鎧直垂に、唐綾威しの鎧を着て、厳めしい作りの大太刀を抜き、白木の柄の大長刀の鞘をはずし、左右の手に持って横ざまに切って回りなさると、面と向かって相手になる者はいない。",
       "tokens": [
         {
-          "id": "s2-t1",
-          "text": "矢だねのあるほど射尽くして、今日を最後とや思はれけん、赤地の錦の直垂に、唐綾威の鎧着て、厳物づくりの大太刀抜き、白柄の大長刀の鞘をはづし、左右に持つてなぎまはりたまふに、面を合はする者ぞなき。",
-          "start": 0,
-          "end": 96,
+          "text": "矢だね",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "矢だね (やだね): 「矢の種・蓄え」。「矢だねのある (＝矢が残っている) ほど」と読む。",
+          "id": "s2-t1",
+          "start": 0,
+          "end": 3
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 主格 (が)。「矢だねの (＝矢が) ある」と読み解く。連体修飾の「の」と並ぶ最頻出用法。",
+          "id": "s2-t2",
+          "start": 3,
+          "end": 4
+        },
+        {
+          "text": "ある",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "体",
+            "baseForm": "ある"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「ある」: ラ変。「ある (体)」+「ほど」で「〜限り・尽きるまで」を表す慣用。",
+          "id": "s2-t3",
+          "start": 4,
+          "end": 6
+        },
+        {
+          "text": "ほど",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "",
+            "baseForm": "ほど"
+          },
+          "hint": "名詞「ほど」: 「程度・あいだ」。「あるほど」＝「ある限り・尽きるまで」と慣用化。",
+          "id": "s2-t4",
+          "start": 6,
+          "end": 8
+        },
+        {
+          "text": "射尽くし",
+          "layer": 1,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "動詞「射尽くし」: 「射尽くす」(複合動詞、サ行四段) の連用形。「射尽くして」＝矢を全部射てしまって。",
+          "id": "s2-t5",
+          "start": 8,
+          "end": 12
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続「〜て」。",
+          "id": "s2-t6",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s2-t7",
+          "start": 13,
+          "end": 14
+        },
+        {
+          "text": "今日",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "今日 (けふ): 「きょう」。",
+          "id": "s2-t8",
+          "start": 14,
+          "end": 16
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。",
+          "id": "s2-t9",
+          "start": 16,
+          "end": 17
+        },
+        {
+          "text": "最後",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "最後 (さいご): 「最期 (死期)・終わり」。「今日を最後とや思はれけん」＝「今日を最期とお思いになったのだろうか」。",
+          "id": "s2-t10",
+          "start": 17,
+          "end": 19
+        },
+        {
+          "text": "と",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「と」: 引用「〜と」。「最後と思ふ」。",
+          "id": "s2-t11",
+          "start": 19,
+          "end": 20
+        },
+        {
+          "text": "や",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "疑問"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「や」: 疑問・推量を導く。結びは連体形「けん」。「思はれけん」までかかり「〜とお思いになったのだろうか」。",
+          "id": "s2-t12",
+          "start": 20,
+          "end": 21
+        },
+        {
+          "text": "思は",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「思は」: ハ行四段「思ふ」未然形。直後の「れ」は尊敬の助動詞で、教経への敬意。",
+          "id": "s2-t13",
+          "start": 21,
+          "end": 23
+        },
+        {
+          "text": "れ",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "尊敬"
+          },
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「る」: 受身・尊敬・自発・可能の四義。ここは尊敬「お〜になる」(教経への敬意)。連用形「れ」。",
+          "id": "s2-t14",
+          "start": 23,
+          "end": 24
+        },
+        {
+          "text": "けん",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去推量"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「けん (けむ)」: 過去推量「〜たであろう・〜たのだろうか」。連用形接続。語り手が過去の心情を推測する標識。「や〜けん」で結びの連体形。",
+          "id": "s2-t15",
+          "start": 24,
+          "end": 26
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s2-t16",
+          "start": 26,
+          "end": 27
+        },
+        {
+          "text": "赤地",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "赤地 (あかぢ): 赤色の地 (生地)。",
+          "id": "s2-t17",
+          "start": 27,
+          "end": 29
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s2-t18",
+          "start": 29,
+          "end": 30
+        },
+        {
+          "text": "錦",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "錦 (にしき): 金糸・色糸を使った最高級の絹織物。武家・公家の儀礼装。",
+          "id": "s2-t19",
+          "start": 30,
+          "end": 31
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s2-t20",
+          "start": 31,
+          "end": 32
+        },
+        {
+          "text": "直垂",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "直垂 (ひたたれ): 武士の日常着・戦装束。鎧の下に着る。「赤地の錦」は最高級の絹織物で、平家の貴族的武将の派手な装い。",
+          "id": "s2-t21",
+          "start": 32,
+          "end": 34
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "添加"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 添加「〜に加えて」。直垂の上に鎧を重ね着している様子。",
+          "id": "s2-t22",
+          "start": 34,
+          "end": 35
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s2-t23",
+          "start": 35,
+          "end": 36
+        },
+        {
+          "text": "唐綾威",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "唐綾威 (からあやおどし): 唐綾 (高級織物) の組紐で小札を綴じた鎧の仕立て。豪華な戦装束。",
+          "id": "s2-t24",
+          "start": 36,
+          "end": 39
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s2-t25",
+          "start": 39,
+          "end": 40
+        },
+        {
+          "text": "鎧",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "鎧: 「唐綾威」は唐綾 (高級織物) の紐で小札を綴じた豪華な仕立て。武者の地位と財力を示す。",
+          "id": "s2-t26",
+          "start": 40,
+          "end": 41
+        },
+        {
+          "text": "着",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ上一",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「着」: カ行上一段「着る」連用形。上一段は「着・煮・似・干・見・射・鋳・率」など限定数。",
+          "id": "s2-t27",
+          "start": 41,
+          "end": 42
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続「〜て」。",
+          "id": "s2-t28",
+          "start": 42,
+          "end": 43
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s2-t29",
+          "start": 43,
+          "end": 44
+        },
+        {
+          "text": "厳物づくり",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "厳物づくり (いかものづくり): 飾りの厳めしい仕立て。武器の装飾を誇張した造り。",
+          "id": "s2-t30",
+          "start": 44,
+          "end": 49
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s2-t31",
+          "start": 49,
+          "end": 50
+        },
+        {
+          "text": "大太刀",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "大太刀 (おほだち): 通常より長大な太刀。武者の威容を示す。",
+          "id": "s2-t32",
+          "start": 50,
+          "end": 53
+        },
+        {
+          "text": "抜き",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「抜き」: カ行四段「抜く」連用形。",
+          "id": "s2-t33",
+          "start": 53,
+          "end": 55
+        },
+        {
+          "text": "、白柄",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s2-t34",
+          "start": 55,
+          "end": 58
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s2-t35",
+          "start": 58,
+          "end": 59
+        },
+        {
+          "text": "大長刀",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "大長刀 (おほなぎなた): 大型の薙刀。長柄武器の代表で、馬上・徒歩戦で薙ぎ払うのに用いる。",
+          "id": "s2-t36",
+          "start": 59,
+          "end": 62
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s2-t37",
+          "start": 62,
+          "end": 63
+        },
+        {
+          "text": "鞘",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "鞘 (さや): 刀身を納める筒。「鞘をはづし」＝鞘を払って抜刀する直前。",
+          "id": "s2-t38",
+          "start": 63,
+          "end": 64
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象。",
+          "id": "s2-t39",
+          "start": 64,
+          "end": 65
+        },
+        {
+          "text": "はづし",
+          "layer": 0,
+          "id": "s2-t40",
+          "start": 65,
+          "end": 68
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s2-t41",
+          "start": 68,
+          "end": 69
+        },
+        {
+          "text": "左右",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "左右 (さう): 「ひだりみぎ」。「左右に持つて」＝両手にそれぞれ太刀と長刀を持って。",
+          "id": "s2-t42",
+          "start": 69,
+          "end": 71
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s2-t43",
+          "start": 71,
+          "end": 72
+        },
+        {
+          "text": "持つ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "タ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「持つ」: タ行四段。ここは「持つて」で促音便 (持ちて → 持つて)。軍記物の口語的活気を示す。",
+          "id": "s2-t44",
+          "start": 72,
+          "end": 74
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続「〜て」。",
+          "id": "s2-t45",
+          "start": 74,
+          "end": 75
+        },
+        {
+          "text": "なぎまはり",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「なぎまはり」: ラ行四段。「なぎまはる」＝刀を振り回して薙ぎ払うこと。",
+          "id": "s2-t46",
+          "start": 75,
+          "end": 80
+        },
+        {
+          "text": "たまふ",
+          "layer": 4,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "体",
+            "baseForm": "たまふ",
+            "honorific": "尊敬"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」: ハ行四段、尊敬「お〜になる」。教経への敬意。本作で「たまふ」は教経・義経・知盛など主要武将の動作に頻出。",
+          "id": "s2-t47",
+          "start": 80,
+          "end": 83
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「に」: 単純接続「〜と・〜のだが」。連体形 + に は順接または逆接どちらにもなる。",
+          "id": "s2-t48",
+          "start": 83,
+          "end": 84
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s2-t49",
+          "start": 84,
+          "end": 85
+        },
+        {
+          "text": "面",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「面」: 「おもて」。「面を合はする」＝顔を向き合わせる、つまり立ち向かう。",
+          "id": "s2-t50",
+          "start": 85,
+          "end": 86
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象。",
+          "id": "s2-t51",
+          "start": 86,
+          "end": 87
+        },
+        {
+          "text": "合はする",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ下二",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「合はする」: サ行下二段「合はす」連体形。「面を合はする」＝顔を向き合わせる、つまり立ち向かう。",
+          "id": "s2-t52",
+          "start": 87,
+          "end": 91
+        },
+        {
+          "text": "者",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「者」: 「もの」、人物。",
+          "id": "s2-t53",
+          "start": 91,
+          "end": 92
+        },
+        {
+          "text": "ぞ",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "強意"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「ぞ」: 強意。結びは連体形「なき」。「面を合はする者ぞなき」。",
+          "id": "s2-t54",
+          "start": 92,
+          "end": 93
+        },
+        {
+          "text": "なき",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "体",
+            "baseForm": "なく"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「なき」: ク活用「なし」連体形。「ぞ」の結び。",
+          "id": "s2-t55",
+          "start": 93,
+          "end": 95
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s2-t56",
+          "start": 95,
+          "end": 96
         }
       ]
     },
     {
       "id": "s3",
-      "originalText": "多くの者ども討たれにけり。新中納言、使者をたてて、「能登殿、罪な作りたまひそ。",
+      "originalText": "多くの者ども討たれにけり。",
       "modernTranslation": "多くの者たちが討たれてしまった。",
       "tokens": [
         {
@@ -1044,204 +1041,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s3-t10",
-          "text": "新中納言",
-          "start": 13,
-          "end": 17,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "新中納言: 平知盛 (清盛の四男、権中納言)。教経の従兄弟で平家の総大将格。「見るべき程の事は見つ」の名句で知られる。"
-        },
-        {
-          "id": "s3-t11",
-          "text": "、",
-          "start": 17,
-          "end": 18,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t12",
-          "text": "使者",
-          "start": 18,
-          "end": 20,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "使者 (ししや): 主人の意を伝える伝令役。新中納言が教経のもとへ派遣した。"
-        },
-        {
-          "id": "s3-t13",
-          "text": "を",
-          "start": 20,
-          "end": 21,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象。"
-        },
-        {
-          "id": "s3-t14",
-          "text": "たて",
-          "start": 21,
-          "end": 23,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "タ下二",
-            "conjugationForm": "用",
-            "baseForm": "たつ"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「たて」: タ行下二段「たつ (立つ)」連用形。「使者をたつ」＝使者を派遣する。下二段は「たてる」となるが古文は「たて」。"
-        },
-        {
-          "id": "s3-t15",
-          "text": "て",
-          "start": 23,
-          "end": 24,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続。"
-        },
-        {
-          "id": "s3-t16",
-          "text": "、",
-          "start": 24,
-          "end": 25,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t17",
-          "text": "「",
-          "start": 25,
-          "end": 26,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t18",
-          "text": "能登",
-          "start": 26,
-          "end": 28,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "能登 (のと): 能登国。「能登殿」で平教経の通称。"
-        },
-        {
-          "id": "s3-t19",
-          "text": "殿",
-          "start": 28,
-          "end": 29,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "接尾「殿」: 「どの・との」、敬称。「能登殿」＝能登守の方。"
-        },
-        {
-          "id": "s3-t20",
-          "text": "、",
-          "start": 29,
-          "end": 30,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s3-t21",
-          "text": "罪",
-          "start": 30,
-          "end": 31,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「罪」: 仏教語。殺生など悪業を意味する。「罪を作る」は古典的慣用。"
-        },
-        {
-          "id": "s3-t22",
-          "text": "な",
-          "start": 31,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「な」: 禁止「な〜そ」の前部。終助詞「そ」と呼応し動詞を挟む。「いたう罪な作りたまひそ」＝「ひどく罪をお作りになるな」。"
-        },
-        {
-          "id": "s3-t23",
-          "text": "作り",
-          "start": 32,
-          "end": 34,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「作り」: ラ行四段「作る」連用形。「罪を作る」は仏教語で殺生など悪業を積むこと。"
-        },
-        {
-          "id": "s3-t24",
-          "text": "たまひ",
-          "start": 34,
-          "end": 37,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "用",
-            "baseForm": "たまふ",
-            "honorific": "尊敬"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たまひ」: ハ四・連用、尊敬。語り手→知盛→教経への命令だが、教経への敬意を込めた表現。"
-        },
-        {
-          "id": "s3-t25",
-          "text": "そ",
-          "start": 37,
-          "end": 38,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "終助詞",
-            "meaning": "禁止"
-          },
-          "grammarRefId": "joshi-shujoshi",
-          "hint": "終助詞「そ」: 禁止。「な〜そ」の形で柔らかい禁止「〜してくれるな」。「な作りたまひそ」で完成。"
-        },
-        {
-          "id": "s3-t26",
-          "text": "。",
-          "start": 38,
-          "end": 39,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
         }
       ]
     },
@@ -1251,14 +1050,209 @@
       "modernTranslation": "新中納言知盛は使者を立てて、「能登殿よ、あまり罪作りなことをなさいますな。",
       "tokens": [
         {
-          "id": "s4-t1",
-          "text": "新中納言、使者をたてて、「能登殿、いたう罪な作りたまひそ。",
-          "start": 0,
-          "end": 29,
+          "text": "新中納言",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "hint": "新中納言: 平知盛 (清盛の四男、権中納言)。教経の従兄弟で平家の総大将格。「見るべき程の事は見つ」の名句で知られる。",
+          "id": "s4-t1",
+          "start": 0,
+          "end": 4
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s4-t2",
+          "start": 4,
+          "end": 5
+        },
+        {
+          "text": "使者",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "使者 (ししや): 主人の意を伝える伝令役。新中納言が教経のもとへ派遣した。",
+          "id": "s4-t3",
+          "start": 5,
+          "end": 7
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象。",
+          "id": "s4-t4",
+          "start": 7,
+          "end": 8
+        },
+        {
+          "text": "たて",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "タ下二",
+            "conjugationForm": "用",
+            "baseForm": "たつ"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「たて」: タ行下二段「たつ (立つ)」連用形。「使者をたつ」＝使者を派遣する。下二段は「たてる」となるが古文は「たて」。",
+          "id": "s4-t5",
+          "start": 8,
+          "end": 10
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続。",
+          "id": "s4-t6",
+          "start": 10,
+          "end": 11
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s4-t7",
+          "start": 11,
+          "end": 12
+        },
+        {
+          "text": "「",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s4-t8",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "能登",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "能登 (のと): 能登国。「能登殿」で平教経の通称。",
+          "id": "s4-t9",
+          "start": 13,
+          "end": 15
+        },
+        {
+          "text": "殿",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "接尾「殿」: 「どの・との」、敬称。「能登殿」＝能登守の方。",
+          "id": "s4-t10",
+          "start": 15,
+          "end": 16
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s4-t11",
+          "start": 16,
+          "end": 17
+        },
+        {
+          "text": "いたう",
+          "layer": 0,
+          "id": "s4-t12",
+          "start": 17,
+          "end": 20
+        },
+        {
+          "text": "罪",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「罪」: 仏教語。殺生など悪業を意味する。「罪を作る」は古典的慣用。",
+          "id": "s4-t13",
+          "start": 20,
+          "end": 21
+        },
+        {
+          "text": "な",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「な」: 禁止「な〜そ」の前部。終助詞「そ」と呼応し動詞を挟む。「いたう罪な作りたまひそ」＝「ひどく罪をお作りになるな」。",
+          "id": "s4-t14",
+          "start": 21,
+          "end": 22
+        },
+        {
+          "text": "作り",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「作り」: ラ行四段「作る」連用形。「罪を作る」は仏教語で殺生など悪業を積むこと。",
+          "id": "s4-t15",
+          "start": 22,
+          "end": 24
+        },
+        {
+          "text": "たまひ",
+          "layer": 4,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "用",
+            "baseForm": "たまふ",
+            "honorific": "尊敬"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまひ」: ハ四・連用、尊敬。語り手→知盛→教経への命令だが、教経への敬意を込めた表現。",
+          "id": "s4-t16",
+          "start": 24,
+          "end": 27
+        },
+        {
+          "text": "そ",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "終助詞",
+            "meaning": "禁止"
+          },
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "終助詞「そ」: 禁止。「な〜そ」の形で柔らかい禁止「〜してくれるな」。「な作りたまひそ」で完成。",
+          "id": "s4-t17",
+          "start": 27,
+          "end": 28
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s4-t18",
+          "start": 28,
+          "end": 29
         }
       ]
     },
@@ -5092,7 +5086,7 @@
     },
     {
       "id": "s21",
-      "originalText": "われにちつとも劣らぬ郎等一人、弟の次郎も普通にはすぐれたるしたたか者なり。安芸太郎、能登殿を見たてまつて申しけるは、「いかにましますとも、われら三人とりついたらんに、たとひ丈十丈の鬼なりとも、などか従へざるべき。",
+      "originalText": "われにちつとも劣らぬ郎等一人、弟の次郎も普通にはすぐれたるしたたか者なり。",
       "modernTranslation": "その実光に少しも劣らない家来が一人、実光の弟の次郎も普通の者よりはすぐれた気丈な者である。",
       "tokens": [
         {
@@ -5315,428 +5309,9 @@
         },
         {
           "id": "s21-t19",
-          "text": "。安芸太郎、能登",
-          "start": 36,
-          "end": 44,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s21-t20",
-          "text": "殿",
-          "start": 44,
-          "end": 45,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s21-t21",
-          "text": "を",
-          "start": 45,
-          "end": 46,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s21-t22",
-          "text": "見",
-          "start": 46,
-          "end": 47,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ上一",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「見」: マ上一「見る」連用形。"
-        },
-        {
-          "id": "s21-t23",
-          "text": "たてまつ",
-          "start": 47,
-          "end": 51,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "用",
-            "honorific": "謙譲"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たてまつ」: ラ四「たてまつる」連用形、謙譲。「見たてまつる」＝「お見申し上げる」。安芸太郎→教経への敬意 (高貴な相手への謙譲)。"
-        },
-        {
-          "id": "s21-t24",
-          "text": "て",
-          "start": 51,
-          "end": 52,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続。"
-        },
-        {
-          "id": "s21-t25",
-          "text": "申し",
-          "start": 52,
-          "end": 54,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ四",
-            "conjugationForm": "用",
-            "honorific": "謙譲"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「申し」: サ四「申す」連用形、謙譲。「言ふ」の謙譲語。"
-        },
-        {
-          "id": "s21-t26",
-          "text": "ける",
-          "start": 54,
-          "end": 56,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei"
-        },
-        {
-          "id": "s21-t27",
-          "text": "は",
-          "start": 56,
-          "end": 57,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s21-t28",
-          "text": "、",
-          "start": 57,
-          "end": 58,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s21-t29",
-          "text": "「",
-          "start": 58,
-          "end": 59,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s21-t30",
-          "text": "いかに",
-          "start": 59,
-          "end": 62,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「いかに」: 「どんなに・いくら〜とも」。下の「とも」と呼応して譲歩を表す。"
-        },
-        {
-          "id": "s21-t31",
-          "text": "まします",
-          "start": 62,
-          "end": 66,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "サ四",
-            "conjugationForm": "終",
-            "honorific": "尊敬"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「まします」: サ四・終止、尊敬。「あり・をり」の尊敬語で最高級の敬意。安芸太郎→教経。"
-        },
-        {
-          "id": "s21-t32",
-          "text": "とも",
-          "start": 66,
-          "end": 68,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「とも」: 逆接仮定「〜としても」。終止形 (形容詞は連用) 接続。"
-        },
-        {
-          "id": "s21-t33",
-          "text": "、",
-          "start": 68,
-          "end": 69,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s21-t34",
-          "text": "われ",
-          "start": 69,
-          "end": 71,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          }
-        },
-        {
-          "id": "s21-t35",
-          "text": "ら",
-          "start": 71,
-          "end": 72,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "接尾「ら」: 複数「〜たち」。「われら三人」。"
-        },
-        {
-          "id": "s21-t36",
-          "text": "三人",
-          "start": 72,
-          "end": 74,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "三人 (さんにん): 安芸太郎・次郎・郎等の三人組。"
-        },
-        {
-          "id": "s21-t37",
-          "text": "とりつい",
-          "start": 74,
-          "end": 78,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s21-t38",
-          "text": "たら",
-          "start": 78,
-          "end": 80,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "未",
-            "meaning": "完了"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「たら」: 完了「たり」未然形。"
-        },
-        {
-          "id": "s21-t39",
-          "text": "ん",
-          "start": 80,
-          "end": 81,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "仮定"
-          },
-          "grammarRefId": "jodoshi-ganbou",
-          "hint": "助動詞「ん (む)」: 仮定・婉曲「〜ような」連体形。「とりついたらんに」＝「取り付いたとしたら」。"
-        },
-        {
-          "id": "s21-t40",
-          "text": "に",
-          "start": 81,
-          "end": 82,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "時間"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s21-t41",
-          "text": "、",
-          "start": 82,
-          "end": 83,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s21-t42",
-          "text": "たとひ",
-          "start": 83,
-          "end": 86,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「たとひ」: 「たとえ〜だとしても」。下の「とも」と呼応する譲歩構文。"
-        },
-        {
-          "id": "s21-t43",
-          "text": "丈",
-          "start": 86,
-          "end": 87,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「丈」: 長さの単位、約 3 メートル。「丈十丈」＝約 30 メートル、超人的な巨大さの誇張。"
-        },
-        {
-          "id": "s21-t44",
-          "text": "十丈",
-          "start": 87,
-          "end": 89,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "十丈: 約 30 メートル。鬼の身長として非現実的な誇張。"
-        },
-        {
-          "id": "s21-t45",
-          "text": "の",
-          "start": 89,
-          "end": 90,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s21-t46",
-          "text": "鬼",
-          "start": 90,
-          "end": 91,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "鬼: 古文では「隠 (おん)」、人を超える異界の力をもつ存在の象徴。「丈十丈の鬼」は超人的な脅威の最大値。"
-        },
-        {
-          "id": "s21-t47",
-          "text": "なり",
-          "start": 91,
-          "end": 93,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "断定",
-            "baseForm": "なる"
-          },
-          "grammarRefId": "jodoshi-dantei",
-          "hint": "助動詞「なり」: 断定、終止形。「鬼なりとも」＝「鬼であるとしても」。"
-        },
-        {
-          "id": "s21-t48",
-          "text": "とも",
-          "start": 93,
-          "end": 95,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「とも」: 逆接仮定。"
-        },
-        {
-          "id": "s21-t49",
-          "text": "、",
-          "start": 95,
-          "end": 96,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s21-t50",
-          "text": "などか",
-          "start": 96,
-          "end": 99,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「などか」: 反語「どうして〜か、いや〜ない」。「などか従へざるべき」＝「どうして従わせられないことがあろうか、いや従わせられる」。"
-        },
-        {
-          "id": "s21-t51",
-          "text": "従へ",
-          "start": 99,
-          "end": 101,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ下二",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「従へ」: ハ下二「従ふ」未然形、他動詞「服従させる」。"
-        },
-        {
-          "id": "s21-t52",
-          "text": "ざる",
-          "start": 101,
-          "end": 103,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei",
-          "hint": "助動詞「ざる」: 打消「ず」連体形 (補助活用「ざり」系)。"
-        },
-        {
-          "id": "s21-t53",
-          "text": "べき",
-          "start": 103,
-          "end": 105,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "可能"
-          },
-          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
-          "hint": "助動詞「べき」: 可能「〜できる」連体形。「などか〜ざるべき」と反語構文を完成。"
-        },
-        {
-          "id": "s21-t54",
           "text": "。",
-          "start": 105,
-          "end": 106,
+          "start": 36,
+          "end": 37,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -5750,20 +5325,443 @@
       "modernTranslation": "安芸太郎が、能登殿を拝見して申したことには、「どんなに勇猛でいらっしゃっても、われら三人が取りついたら、たとえ身の丈十丈（三〇メートル）の鬼であっても、どうして従えられないことがあろうか。",
       "tokens": [
         {
+          "text": "安芸太郎、能登",
+          "layer": 0,
           "id": "s22-t1",
-          "text": "安芸太郎、能登殿を見たてまつて申しけるは、「いかに猛うましますとも、われら三人とりついたらんに、たとひ丈十丈の鬼なりとも、などか従へざるべき。",
           "start": 0,
-          "end": 71,
+          "end": 7
+        },
+        {
+          "text": "殿",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s22-t2",
+          "start": 7,
+          "end": 8
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s22-t3",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "見",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ上一",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「見」: マ上一「見る」連用形。",
+          "id": "s22-t4",
+          "start": 9,
+          "end": 10
+        },
+        {
+          "text": "たてまつ",
+          "layer": 4,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用",
+            "honorific": "謙譲"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たてまつ」: ラ四「たてまつる」連用形、謙譲。「見たてまつる」＝「お見申し上げる」。安芸太郎→教経への敬意 (高貴な相手への謙譲)。",
+          "id": "s22-t5",
+          "start": 10,
+          "end": 14
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続。",
+          "id": "s22-t6",
+          "start": 14,
+          "end": 15
+        },
+        {
+          "text": "申し",
+          "layer": 4,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ四",
+            "conjugationForm": "用",
+            "honorific": "謙譲"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「申し」: サ四「申す」連用形、謙譲。「言ふ」の謙譲語。",
+          "id": "s22-t7",
+          "start": 15,
+          "end": 17
+        },
+        {
+          "text": "ける",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "id": "s22-t8",
+          "start": 17,
+          "end": 19
+        },
+        {
+          "text": "は",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "id": "s22-t9",
+          "start": 19,
+          "end": 20
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s22-t10",
+          "start": 20,
+          "end": 21
+        },
+        {
+          "text": "「",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s22-t11",
+          "start": 21,
+          "end": 22
+        },
+        {
+          "text": "いかに",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「いかに」: 「どんなに・いくら〜とも」。下の「とも」と呼応して譲歩を表す。",
+          "id": "s22-t12",
+          "start": 22,
+          "end": 25
+        },
+        {
+          "text": "猛う",
+          "layer": 0,
+          "id": "s22-t13",
+          "start": 25,
+          "end": 27
+        },
+        {
+          "text": "まします",
+          "layer": 4,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "サ四",
+            "conjugationForm": "終",
+            "honorific": "尊敬"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「まします」: サ四・終止、尊敬。「あり・をり」の尊敬語で最高級の敬意。安芸太郎→教経。",
+          "id": "s22-t14",
+          "start": 27,
+          "end": 31
+        },
+        {
+          "text": "とも",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「とも」: 逆接仮定「〜としても」。終止形 (形容詞は連用) 接続。",
+          "id": "s22-t15",
+          "start": 31,
+          "end": 33
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s22-t16",
+          "start": 33,
+          "end": 34
+        },
+        {
+          "text": "われ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          },
+          "id": "s22-t17",
+          "start": 34,
+          "end": 36
+        },
+        {
+          "text": "ら",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "接尾「ら」: 複数「〜たち」。「われら三人」。",
+          "id": "s22-t18",
+          "start": 36,
+          "end": 37
+        },
+        {
+          "text": "三人",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "三人 (さんにん): 安芸太郎・次郎・郎等の三人組。",
+          "id": "s22-t19",
+          "start": 37,
+          "end": 39
+        },
+        {
+          "text": "とりつい",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s22-t20",
+          "start": 39,
+          "end": 43
+        },
+        {
+          "text": "たら",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "未",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「たら」: 完了「たり」未然形。",
+          "id": "s22-t21",
+          "start": 43,
+          "end": 45
+        },
+        {
+          "text": "ん",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "仮定"
+          },
+          "grammarRefId": "jodoshi-ganbou",
+          "hint": "助動詞「ん (む)」: 仮定・婉曲「〜ような」連体形。「とりついたらんに」＝「取り付いたとしたら」。",
+          "id": "s22-t22",
+          "start": 45,
+          "end": 46
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "時間"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s22-t23",
+          "start": 46,
+          "end": 47
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s22-t24",
+          "start": 47,
+          "end": 48
+        },
+        {
+          "text": "たとひ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「たとひ」: 「たとえ〜だとしても」。下の「とも」と呼応する譲歩構文。",
+          "id": "s22-t25",
+          "start": 48,
+          "end": 51
+        },
+        {
+          "text": "丈",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「丈」: 長さの単位、約 3 メートル。「丈十丈」＝約 30 メートル、超人的な巨大さの誇張。",
+          "id": "s22-t26",
+          "start": 51,
+          "end": 52
+        },
+        {
+          "text": "十丈",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "十丈: 約 30 メートル。鬼の身長として非現実的な誇張。",
+          "id": "s22-t27",
+          "start": 52,
+          "end": 54
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s22-t28",
+          "start": 54,
+          "end": 55
+        },
+        {
+          "text": "鬼",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "鬼: 古文では「隠 (おん)」、人を超える異界の力をもつ存在の象徴。「丈十丈の鬼」は超人的な脅威の最大値。",
+          "id": "s22-t29",
+          "start": 55,
+          "end": 56
+        },
+        {
+          "text": "なり",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "断定",
+            "baseForm": "なる"
+          },
+          "grammarRefId": "jodoshi-dantei",
+          "hint": "助動詞「なり」: 断定、終止形。「鬼なりとも」＝「鬼であるとしても」。",
+          "id": "s22-t30",
+          "start": 56,
+          "end": 58
+        },
+        {
+          "text": "とも",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「とも」: 逆接仮定。",
+          "id": "s22-t31",
+          "start": 58,
+          "end": 60
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s22-t32",
+          "start": 60,
+          "end": 61
+        },
+        {
+          "text": "などか",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「などか」: 反語「どうして〜か、いや〜ない」。「などか従へざるべき」＝「どうして従わせられないことがあろうか、いや従わせられる」。",
+          "id": "s22-t33",
+          "start": 61,
+          "end": 64
+        },
+        {
+          "text": "従へ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ下二",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「従へ」: ハ下二「従ふ」未然形、他動詞「服従させる」。",
+          "id": "s22-t34",
+          "start": 64,
+          "end": 66
+        },
+        {
+          "text": "ざる",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ざる」: 打消「ず」連体形 (補助活用「ざり」系)。",
+          "id": "s22-t35",
+          "start": 66,
+          "end": 68
+        },
+        {
+          "text": "べき",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "可能"
+          },
+          "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
+          "hint": "助動詞「べき」: 可能「〜できる」連体形。「などか〜ざるべき」と反語構文を完成。",
+          "id": "s22-t36",
+          "start": 68,
+          "end": 70
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s22-t37",
+          "start": 70,
+          "end": 71
         }
       ]
     },
     {
       "id": "s23",
-      "originalText": "」とて、主従三人小船に乗つて、能登殿の舟に押し並べ、「えい。」とて乗り移り、甲の錣をかたぶけ、太刀をて一面に討つてかかる。能登殿ちつとも騒ぎたまはず、まつ先にだる安芸太郎が郎等を裾を合はせて、海へどうど蹴入れたまふ。て寄る安芸太郎を弓手のわきにてはさみ、弟の次郎をば馬手のわきにかいはさみ、ひと締め締めて、「いざ、うれ、さらばおのれら、死途の山の供せよ。",
+      "originalText": "」とて、主従三人小船に乗つて、能登殿の舟に押し並べ、「えい。」と",
       "modernTranslation": "」と言って、主従三人小船に乗って能登殿の船に押し並べて、「えい。",
       "tokens": [
         {
@@ -6001,977 +5999,6 @@
           },
           "grammarRefId": "joshi-kaku",
           "hint": "格助詞「と」: 引用。"
-        },
-        {
-          "id": "s23-t22",
-          "text": "て",
-          "start": 32,
-          "end": 33,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続。"
-        },
-        {
-          "id": "s23-t23",
-          "text": "乗り移り",
-          "start": 33,
-          "end": 37,
-          "layer": 1,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t24",
-          "text": "、",
-          "start": 37,
-          "end": 38,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t25",
-          "text": "甲",
-          "start": 38,
-          "end": 39,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「甲」: 兜。"
-        },
-        {
-          "id": "s23-t26",
-          "text": "の",
-          "start": 39,
-          "end": 40,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」: 体修。"
-        },
-        {
-          "id": "s23-t27",
-          "text": "錣",
-          "start": 40,
-          "end": 41,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "錣 (しころ): 兜の後頭部・首筋を守る垂れ部分。「錣をかたぶく」＝錣を傾けて顔を守る突撃姿勢。"
-        },
-        {
-          "id": "s23-t28",
-          "text": "を",
-          "start": 41,
-          "end": 42,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象。"
-        },
-        {
-          "id": "s23-t29",
-          "text": "かたぶけ",
-          "start": 42,
-          "end": 46,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「かたぶけ」: カ下二「傾く (かたぶく)」連用形 (他動詞)。「錣をかたぶく」＝兜の錣 (しころ・後頭部の防護板) を斜めに傾ける戦闘姿勢。"
-        },
-        {
-          "id": "s23-t30",
-          "text": "、",
-          "start": 46,
-          "end": 47,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t31",
-          "text": "太刀",
-          "start": 47,
-          "end": 49,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「太刀」: 「たち」、刀。"
-        },
-        {
-          "id": "s23-t32",
-          "text": "を",
-          "start": 49,
-          "end": 50,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象。"
-        },
-        {
-          "id": "s23-t33",
-          "text": "て",
-          "start": 50,
-          "end": 51,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s23-t34",
-          "text": "一面に",
-          "start": 51,
-          "end": 54,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          }
-        },
-        {
-          "id": "s23-t35",
-          "text": "討つ",
-          "start": 54,
-          "end": 56,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "タ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「討つ」: タ四「討つ」連用形、促音便。"
-        },
-        {
-          "id": "s23-t36",
-          "text": "て",
-          "start": 56,
-          "end": 57,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続。"
-        },
-        {
-          "id": "s23-t37",
-          "text": "かかる",
-          "start": 57,
-          "end": 60,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "終"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「かかる」: ラ四「かかる」終止形。「討つてかかる」＝攻めかかる。"
-        },
-        {
-          "id": "s23-t38",
-          "text": "。",
-          "start": 60,
-          "end": 61,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t39",
-          "text": "能登",
-          "start": 61,
-          "end": 63,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t40",
-          "text": "殿",
-          "start": 63,
-          "end": 64,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t41",
-          "text": "ちつとも",
-          "start": 64,
-          "end": 68,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          },
-          "hint": "副詞「ちつとも」: 「すこしも」。下に打消「ず」を伴う。"
-        },
-        {
-          "id": "s23-t42",
-          "text": "騒ぎ",
-          "start": 68,
-          "end": 70,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ガ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「騒ぎ」: ガ四「騒ぐ」連用形。"
-        },
-        {
-          "id": "s23-t43",
-          "text": "たまは",
-          "start": 70,
-          "end": 73,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "未",
-            "baseForm": "たまふ",
-            "honorific": "尊敬"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たまは」: ハ四・未然、尊敬。教経への敬意。"
-        },
-        {
-          "id": "s23-t44",
-          "text": "ず",
-          "start": 73,
-          "end": 74,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei",
-          "hint": "助動詞「ず」: 打消、連用形。"
-        },
-        {
-          "id": "s23-t45",
-          "text": "、まつ先",
-          "start": 74,
-          "end": 78,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "まつ先 (まつさき): 「真っ先」、先頭。「まつ先に進んだる」＝先頭に立って進んでいる。"
-        },
-        {
-          "id": "s23-t46",
-          "text": "に",
-          "start": 78,
-          "end": 79,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "時間"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」: 時間「〜に」。「まつ先に」＝真っ先に。"
-        },
-        {
-          "id": "s23-t47",
-          "text": "だる",
-          "start": 79,
-          "end": 81,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "完了"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「だる」: 完了「たり」連体形 (撥音便由来)。「進んだる」＝進んでいる。"
-        },
-        {
-          "id": "s23-t48",
-          "text": "安芸太郎",
-          "start": 81,
-          "end": 85,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "安芸太郎: 安芸太郎実光。"
-        },
-        {
-          "id": "s23-t49",
-          "text": "が",
-          "start": 85,
-          "end": 86,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「が」: 体修「〜の」。"
-        },
-        {
-          "id": "s23-t50",
-          "text": "郎等",
-          "start": 86,
-          "end": 88,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "郎等 (らうどう): 安芸太郎の家来。"
-        },
-        {
-          "id": "s23-t51",
-          "text": "を",
-          "start": 88,
-          "end": 89,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象。"
-        },
-        {
-          "id": "s23-t52",
-          "text": "裾",
-          "start": 89,
-          "end": 90,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「裾」: ここは鎧の裾、つまり下端部分。"
-        },
-        {
-          "id": "s23-t53",
-          "text": "を",
-          "start": 90,
-          "end": 91,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象。"
-        },
-        {
-          "id": "s23-t54",
-          "text": "合はせ",
-          "start": 91,
-          "end": 94,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「合はせ」: サ下二「合はす」連用形。「裾を合はせて」＝裾を合わせて (蹴り出す動作)。"
-        },
-        {
-          "id": "s23-t55",
-          "text": "て",
-          "start": 94,
-          "end": 95,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続。"
-        },
-        {
-          "id": "s23-t56",
-          "text": "、",
-          "start": 95,
-          "end": 96,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t57",
-          "text": "海",
-          "start": 96,
-          "end": 97,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「海」: 壇ノ浦の海。"
-        },
-        {
-          "id": "s23-t58",
-          "text": "へ",
-          "start": 97,
-          "end": 98,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "方向"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s23-t59",
-          "text": "どうど",
-          "start": 98,
-          "end": 101,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          }
-        },
-        {
-          "id": "s23-t60",
-          "text": "蹴入れ",
-          "start": 101,
-          "end": 104,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「蹴入れ」: ラ下二「蹴入る」連用形。「海へ蹴入る」。"
-        },
-        {
-          "id": "s23-t61",
-          "text": "たまふ",
-          "start": 104,
-          "end": 107,
-          "layer": 4,
-          "grammarTag": {
-            "pos": "補助動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "終",
-            "baseForm": "たまふ",
-            "honorific": "尊敬"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たまふ」: ハ四・終止、尊敬。教経への敬意。"
-        },
-        {
-          "id": "s23-t62",
-          "text": "。",
-          "start": 107,
-          "end": 108,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t63",
-          "text": "て",
-          "start": 108,
-          "end": 109,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続。"
-        },
-        {
-          "id": "s23-t64",
-          "text": "寄る",
-          "start": 109,
-          "end": 111,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「寄る」: ラ四・連体形。"
-        },
-        {
-          "id": "s23-t65",
-          "text": "安芸太郎",
-          "start": 111,
-          "end": 115,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t66",
-          "text": "を",
-          "start": 115,
-          "end": 116,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象。"
-        },
-        {
-          "id": "s23-t67",
-          "text": "弓手",
-          "start": 116,
-          "end": 118,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "弓手 (ゆんで): 弓を持つ手、すなわち左手。武士の身体感覚に根差す方位語。"
-        },
-        {
-          "id": "s23-t68",
-          "text": "の",
-          "start": 118,
-          "end": 119,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」: 体修。"
-        },
-        {
-          "id": "s23-t69",
-          "text": "わき",
-          "start": 119,
-          "end": 121,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「わき」: 「脇」、脇腹側。"
-        },
-        {
-          "id": "s23-t70",
-          "text": "に",
-          "start": 121,
-          "end": 122,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "場所"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」: 場所「〜に」。"
-        },
-        {
-          "id": "s23-t71",
-          "text": "て",
-          "start": 122,
-          "end": 123,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s23-t72",
-          "text": "はさみ",
-          "start": 123,
-          "end": 126,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「はさみ」: マ四「挟む」連用形。"
-        },
-        {
-          "id": "s23-t73",
-          "text": "、",
-          "start": 126,
-          "end": 127,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t74",
-          "text": "弟",
-          "start": 127,
-          "end": 128,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「弟」: 安芸次郎。"
-        },
-        {
-          "id": "s23-t75",
-          "text": "の",
-          "start": 128,
-          "end": 129,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」: 体修。"
-        },
-        {
-          "id": "s23-t76",
-          "text": "次郎",
-          "start": 129,
-          "end": 131,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "次郎: 安芸次郎。"
-        },
-        {
-          "id": "s23-t77",
-          "text": "をば",
-          "start": 131,
-          "end": 133,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "連語「をば」: 格助詞「を」+ 係助詞「は」。対象を取り立てて強調「〜は」。"
-        },
-        {
-          "id": "s23-t78",
-          "text": "馬手",
-          "start": 133,
-          "end": 135,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "馬手 (めて): 馬の手綱を取る手、すなわち右手。「弓手」と対をなす慣用語。"
-        },
-        {
-          "id": "s23-t79",
-          "text": "の",
-          "start": 135,
-          "end": 136,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」: 体修。"
-        },
-        {
-          "id": "s23-t80",
-          "text": "わき",
-          "start": 136,
-          "end": 138,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「わき」: 「脇」。"
-        },
-        {
-          "id": "s23-t81",
-          "text": "に",
-          "start": 138,
-          "end": 139,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "場所"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」: 場所。"
-        },
-        {
-          "id": "s23-t82",
-          "text": "かい",
-          "start": 139,
-          "end": 141,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "接頭「かい」: 動作を強める接頭語「掻き〜」。「かいはさむ」＝しっかり挟む。"
-        },
-        {
-          "id": "s23-t83",
-          "text": "はさみ",
-          "start": 141,
-          "end": 144,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「はさみ」: マ四「挟む」連用形。"
-        },
-        {
-          "id": "s23-t84",
-          "text": "、",
-          "start": 144,
-          "end": 145,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t85",
-          "text": "ひと締め",
-          "start": 145,
-          "end": 149,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "ひと締め (ひとしめ): 「一締め」、ぐっと一回締める動作。"
-        },
-        {
-          "id": "s23-t86",
-          "text": "締め",
-          "start": 149,
-          "end": 151,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「締め」: マ下二「締む」連用形。"
-        },
-        {
-          "id": "s23-t87",
-          "text": "て",
-          "start": 151,
-          "end": 152,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続。"
-        },
-        {
-          "id": "s23-t88",
-          "text": "、",
-          "start": 152,
-          "end": 153,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t89",
-          "text": "「",
-          "start": 153,
-          "end": 154,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t90",
-          "text": "いざ",
-          "start": 154,
-          "end": 156,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "感動詞"
-          },
-          "hint": "感動詞「いざ」: 「さあ・それ」と相手を促す呼びかけ。"
-        },
-        {
-          "id": "s23-t91",
-          "text": "、",
-          "start": 156,
-          "end": 157,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t92",
-          "text": "うれ",
-          "start": 157,
-          "end": 159,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          },
-          "hint": "代名詞「うれ」: 軽蔑・親愛を含む二人称「おまえ・こいつ」。「いざ、うれ」＝「さあ、おまえら」。"
-        },
-        {
-          "id": "s23-t93",
-          "text": "、",
-          "start": 159,
-          "end": 160,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t94",
-          "text": "さらば",
-          "start": 160,
-          "end": 163,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "接続詞"
-          },
-          "hint": "接続詞「さらば」: 「それでは・ならば」。決意や別れの場面で頻出。"
-        },
-        {
-          "id": "s23-t95",
-          "text": "おの",
-          "start": 163,
-          "end": 165,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          },
-          "hint": "代名詞「おの」: 「己 (おのれ)」の語幹。下の「れら」と合わせ「おのれら」＝「おまえら」と相手を貶めて呼ぶ。"
-        },
-        {
-          "id": "s23-t96",
-          "text": "れら",
-          "start": 165,
-          "end": 167,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t97",
-          "text": "、",
-          "start": 167,
-          "end": 168,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t98",
-          "text": "死途",
-          "start": 168,
-          "end": 170,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "死途の山 (しでのやま): 死出の山。冥途への途上にあるとされる山。「死途の山の供せよ」＝「冥途への道連れになれ」と入水を宣言。"
-        },
-        {
-          "id": "s23-t99",
-          "text": "の",
-          "start": 170,
-          "end": 171,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」: 体修。"
-        },
-        {
-          "id": "s23-t100",
-          "text": "山",
-          "start": 171,
-          "end": 172,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「山」: 「死途の山」。"
-        },
-        {
-          "id": "s23-t101",
-          "text": "の",
-          "start": 172,
-          "end": 173,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」: 体修。"
-        },
-        {
-          "id": "s23-t102",
-          "text": "供",
-          "start": 173,
-          "end": 174,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "名詞「供」: 「とも」、「死途の山の供」＝冥途への道連れ。"
-        },
-        {
-          "id": "s23-t103",
-          "text": "せよ",
-          "start": 174,
-          "end": 176,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ変",
-            "conjugationForm": "命"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「せよ」: サ変「す」命令形。"
-        },
-        {
-          "id": "s23-t104",
-          "text": "。",
-          "start": 176,
-          "end": 177,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
         }
       ]
     },
@@ -6981,14 +6008,214 @@
       "modernTranslation": "」と言って乗り移り、甲の錣を傾けて、太刀を抜いていっせいに討ってかかる。",
       "tokens": [
         {
+          "text": "」と言ひ",
+          "layer": 0,
           "id": "s24-t1",
-          "text": "」と言ひて乗り移り、甲の錣をかたぶけ、太刀を抜いて一面に討つてかかる。",
           "start": 0,
-          "end": 35,
+          "end": 4
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続。",
+          "id": "s24-t2",
+          "start": 4,
+          "end": 5
+        },
+        {
+          "text": "乗り移り",
+          "layer": 1,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s24-t3",
+          "start": 5,
+          "end": 9
+        },
+        {
+          "text": "、",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s24-t4",
+          "start": 9,
+          "end": 10
+        },
+        {
+          "text": "甲",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「甲」: 兜。",
+          "id": "s24-t5",
+          "start": 10,
+          "end": 11
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 体修。",
+          "id": "s24-t6",
+          "start": 11,
+          "end": 12
+        },
+        {
+          "text": "錣",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "錣 (しころ): 兜の後頭部・首筋を守る垂れ部分。「錣をかたぶく」＝錣を傾けて顔を守る突撃姿勢。",
+          "id": "s24-t7",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象。",
+          "id": "s24-t8",
+          "start": 13,
+          "end": 14
+        },
+        {
+          "text": "かたぶけ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「かたぶけ」: カ下二「傾く (かたぶく)」連用形 (他動詞)。「錣をかたぶく」＝兜の錣 (しころ・後頭部の防護板) を斜めに傾ける戦闘姿勢。",
+          "id": "s24-t9",
+          "start": 14,
+          "end": 18
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s24-t10",
+          "start": 18,
+          "end": 19
+        },
+        {
+          "text": "太刀",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「太刀」: 「たち」、刀。",
+          "id": "s24-t11",
+          "start": 19,
+          "end": 21
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象。",
+          "id": "s24-t12",
+          "start": 21,
+          "end": 22
+        },
+        {
+          "text": "抜い",
+          "layer": 0,
+          "id": "s24-t13",
+          "start": 22,
+          "end": 24
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "id": "s24-t14",
+          "start": 24,
+          "end": 25
+        },
+        {
+          "text": "一面に",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "id": "s24-t15",
+          "start": 25,
+          "end": 28
+        },
+        {
+          "text": "討つ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "タ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「討つ」: タ四「討つ」連用形、促音便。",
+          "id": "s24-t16",
+          "start": 28,
+          "end": 30
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続。",
+          "id": "s24-t17",
+          "start": 30,
+          "end": 31
+        },
+        {
+          "text": "かかる",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "終"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「かかる」: ラ四「かかる」終止形。「討つてかかる」＝攻めかかる。",
+          "id": "s24-t18",
+          "start": 31,
+          "end": 34
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s24-t19",
+          "start": 34,
+          "end": 35
         }
       ]
     },
@@ -6998,14 +6225,304 @@
       "modernTranslation": "能登殿は少しもお騒ぎにならず、真っ先に進んだ安芸太郎の家来を裾と裾が合うほど引きつけて、海へどうと蹴り入れなさる。",
       "tokens": [
         {
-          "id": "s25-t1",
-          "text": "能登殿ちつとも騒ぎたまはず、まつ先に進んだる安芸太郎が郎等を裾を合はせて、海へどうど蹴入れたまふ。",
-          "start": 0,
-          "end": 49,
+          "text": "能登",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s25-t1",
+          "start": 0,
+          "end": 2
+        },
+        {
+          "text": "殿",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s25-t2",
+          "start": 2,
+          "end": 3
+        },
+        {
+          "text": "ちつとも",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "hint": "副詞「ちつとも」: 「すこしも」。下に打消「ず」を伴う。",
+          "id": "s25-t3",
+          "start": 3,
+          "end": 7
+        },
+        {
+          "text": "騒ぎ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ガ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「騒ぎ」: ガ四「騒ぐ」連用形。",
+          "id": "s25-t4",
+          "start": 7,
+          "end": 9
+        },
+        {
+          "text": "たまは",
+          "layer": 4,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "未",
+            "baseForm": "たまふ",
+            "honorific": "尊敬"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまは」: ハ四・未然、尊敬。教経への敬意。",
+          "id": "s25-t5",
+          "start": 9,
+          "end": 12
+        },
+        {
+          "text": "ず",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei",
+          "hint": "助動詞「ず」: 打消、連用形。",
+          "id": "s25-t6",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "、まつ先",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "まつ先 (まつさき): 「真っ先」、先頭。「まつ先に進んだる」＝先頭に立って進んでいる。",
+          "id": "s25-t7",
+          "start": 13,
+          "end": 17
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "時間"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 時間「〜に」。「まつ先に」＝真っ先に。",
+          "id": "s25-t8",
+          "start": 17,
+          "end": 18
+        },
+        {
+          "text": "進ん",
+          "layer": 0,
+          "id": "s25-t9",
+          "start": 18,
+          "end": 20
+        },
+        {
+          "text": "だる",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「だる」: 完了「たり」連体形 (撥音便由来)。「進んだる」＝進んでいる。",
+          "id": "s25-t10",
+          "start": 20,
+          "end": 22
+        },
+        {
+          "text": "安芸太郎",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "安芸太郎: 安芸太郎実光。",
+          "id": "s25-t11",
+          "start": 22,
+          "end": 26
+        },
+        {
+          "text": "が",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」: 体修「〜の」。",
+          "id": "s25-t12",
+          "start": 26,
+          "end": 27
+        },
+        {
+          "text": "郎等",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "郎等 (らうどう): 安芸太郎の家来。",
+          "id": "s25-t13",
+          "start": 27,
+          "end": 29
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象。",
+          "id": "s25-t14",
+          "start": 29,
+          "end": 30
+        },
+        {
+          "text": "裾",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「裾」: ここは鎧の裾、つまり下端部分。",
+          "id": "s25-t15",
+          "start": 30,
+          "end": 31
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象。",
+          "id": "s25-t16",
+          "start": 31,
+          "end": 32
+        },
+        {
+          "text": "合はせ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「合はせ」: サ下二「合はす」連用形。「裾を合はせて」＝裾を合わせて (蹴り出す動作)。",
+          "id": "s25-t17",
+          "start": 32,
+          "end": 35
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続。",
+          "id": "s25-t18",
+          "start": 35,
+          "end": 36
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s25-t19",
+          "start": 36,
+          "end": 37
+        },
+        {
+          "text": "海",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「海」: 壇ノ浦の海。",
+          "id": "s25-t20",
+          "start": 37,
+          "end": 38
+        },
+        {
+          "text": "へ",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "方向"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s25-t21",
+          "start": 38,
+          "end": 39
+        },
+        {
+          "text": "どうど",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          },
+          "id": "s25-t22",
+          "start": 39,
+          "end": 42
+        },
+        {
+          "text": "蹴入れ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「蹴入れ」: ラ下二「蹴入る」連用形。「海へ蹴入る」。",
+          "id": "s25-t23",
+          "start": 42,
+          "end": 45
+        },
+        {
+          "text": "たまふ",
+          "layer": 4,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "終",
+            "baseForm": "たまふ",
+            "honorific": "尊敬"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "補助動詞「たまふ」: ハ四・終止、尊敬。教経への敬意。",
+          "id": "s25-t24",
+          "start": 45,
+          "end": 48
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s25-t25",
+          "start": 48,
+          "end": 49
         }
       ]
     },
@@ -7015,14 +6532,500 @@
       "modernTranslation": "続いて寄る安芸太郎を左手の脇に取ってはさみ、弟の次郎を右手の脇にさしはさんで、ひと締めぐっと締めて、「さあ、おまえたち、それでは、おまえたちが死出の旅の供をせよ。",
       "tokens": [
         {
+          "text": "続い",
+          "layer": 0,
           "id": "s26-t1",
-          "text": "続いて寄る安芸太郎を弓手のわきに取つてはさみ、弟の次郎をば馬手のわきにかいはさみ、ひと締め締めて、「いざ、うれ、さらばおのれら、死途の山の供せよ。",
           "start": 0,
-          "end": 73,
+          "end": 2
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続。",
+          "id": "s26-t2",
+          "start": 2,
+          "end": 3
+        },
+        {
+          "text": "寄る",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「寄る」: ラ四・連体形。",
+          "id": "s26-t3",
+          "start": 3,
+          "end": 5
+        },
+        {
+          "text": "安芸太郎",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s26-t4",
+          "start": 5,
+          "end": 9
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象。",
+          "id": "s26-t5",
+          "start": 9,
+          "end": 10
+        },
+        {
+          "text": "弓手",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "弓手 (ゆんで): 弓を持つ手、すなわち左手。武士の身体感覚に根差す方位語。",
+          "id": "s26-t6",
+          "start": 10,
+          "end": 12
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 体修。",
+          "id": "s26-t7",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "わき",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「わき」: 「脇」、脇腹側。",
+          "id": "s26-t8",
+          "start": 13,
+          "end": 15
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 場所「〜に」。",
+          "id": "s26-t9",
+          "start": 15,
+          "end": 16
+        },
+        {
+          "text": "取つ",
+          "layer": 0,
+          "id": "s26-t10",
+          "start": 16,
+          "end": 18
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "id": "s26-t11",
+          "start": 18,
+          "end": 19
+        },
+        {
+          "text": "はさみ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「はさみ」: マ四「挟む」連用形。",
+          "id": "s26-t12",
+          "start": 19,
+          "end": 22
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t13",
+          "start": 22,
+          "end": 23
+        },
+        {
+          "text": "弟",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「弟」: 安芸次郎。",
+          "id": "s26-t14",
+          "start": 23,
+          "end": 24
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 体修。",
+          "id": "s26-t15",
+          "start": 24,
+          "end": 25
+        },
+        {
+          "text": "次郎",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "次郎: 安芸次郎。",
+          "id": "s26-t16",
+          "start": 25,
+          "end": 27
+        },
+        {
+          "text": "をば",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "連語「をば」: 格助詞「を」+ 係助詞「は」。対象を取り立てて強調「〜は」。",
+          "id": "s26-t17",
+          "start": 27,
+          "end": 29
+        },
+        {
+          "text": "馬手",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "馬手 (めて): 馬の手綱を取る手、すなわち右手。「弓手」と対をなす慣用語。",
+          "id": "s26-t18",
+          "start": 29,
+          "end": 31
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 体修。",
+          "id": "s26-t19",
+          "start": 31,
+          "end": 32
+        },
+        {
+          "text": "わき",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「わき」: 「脇」。",
+          "id": "s26-t20",
+          "start": 32,
+          "end": 34
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「に」: 場所。",
+          "id": "s26-t21",
+          "start": 34,
+          "end": 35
+        },
+        {
+          "text": "かい",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "接頭「かい」: 動作を強める接頭語「掻き〜」。「かいはさむ」＝しっかり挟む。",
+          "id": "s26-t22",
+          "start": 35,
+          "end": 37
+        },
+        {
+          "text": "はさみ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「はさみ」: マ四「挟む」連用形。",
+          "id": "s26-t23",
+          "start": 37,
+          "end": 40
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t24",
+          "start": 40,
+          "end": 41
+        },
+        {
+          "text": "ひと締め",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "ひと締め (ひとしめ): 「一締め」、ぐっと一回締める動作。",
+          "id": "s26-t25",
+          "start": 41,
+          "end": 45
+        },
+        {
+          "text": "締め",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「締め」: マ下二「締む」連用形。",
+          "id": "s26-t26",
+          "start": 45,
+          "end": 47
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続。",
+          "id": "s26-t27",
+          "start": 47,
+          "end": 48
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t28",
+          "start": 48,
+          "end": 49
+        },
+        {
+          "text": "「",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t29",
+          "start": 49,
+          "end": 50
+        },
+        {
+          "text": "いざ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "感動詞"
+          },
+          "hint": "感動詞「いざ」: 「さあ・それ」と相手を促す呼びかけ。",
+          "id": "s26-t30",
+          "start": 50,
+          "end": 52
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t31",
+          "start": 52,
+          "end": 53
+        },
+        {
+          "text": "うれ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          },
+          "hint": "代名詞「うれ」: 軽蔑・親愛を含む二人称「おまえ・こいつ」。「いざ、うれ」＝「さあ、おまえら」。",
+          "id": "s26-t32",
+          "start": 53,
+          "end": 55
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t33",
+          "start": 55,
+          "end": 56
+        },
+        {
+          "text": "さらば",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "接続詞"
+          },
+          "hint": "接続詞「さらば」: 「それでは・ならば」。決意や別れの場面で頻出。",
+          "id": "s26-t34",
+          "start": 56,
+          "end": 59
+        },
+        {
+          "text": "おの",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          },
+          "hint": "代名詞「おの」: 「己 (おのれ)」の語幹。下の「れら」と合わせ「おのれら」＝「おまえら」と相手を貶めて呼ぶ。",
+          "id": "s26-t35",
+          "start": 59,
+          "end": 61
+        },
+        {
+          "text": "れら",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t36",
+          "start": 61,
+          "end": 63
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t37",
+          "start": 63,
+          "end": 64
+        },
+        {
+          "text": "死途",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "死途の山 (しでのやま): 死出の山。冥途への途上にあるとされる山。「死途の山の供せよ」＝「冥途への道連れになれ」と入水を宣言。",
+          "id": "s26-t38",
+          "start": 64,
+          "end": 66
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 体修。",
+          "id": "s26-t39",
+          "start": 66,
+          "end": 67
+        },
+        {
+          "text": "山",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「山」: 「死途の山」。",
+          "id": "s26-t40",
+          "start": 67,
+          "end": 68
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 体修。",
+          "id": "s26-t41",
+          "start": 68,
+          "end": 69
+        },
+        {
+          "text": "供",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "名詞「供」: 「とも」、「死途の山の供」＝冥途への道連れ。",
+          "id": "s26-t42",
+          "start": 69,
+          "end": 70
+        },
+        {
+          "text": "せよ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ変",
+            "conjugationForm": "命"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「せよ」: サ変「す」命令形。",
+          "id": "s26-t43",
+          "start": 70,
+          "end": 72
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s26-t44",
+          "start": 72,
+          "end": 73
         }
       ]
     },

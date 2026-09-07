@@ -24,43 +24,95 @@ const args = process.argv.slice(2);
 const APPLY = args.includes('--apply');
 const only = args.filter((a) => !a.startsWith('-'));
 
-const bodyKey = (t) => (t || '').replace(/[\s　「」﹁﹂『』（）()]+/g, '');
+const isSpace = (ch) => /[\s\u3000]/.test(ch);
 
-/** 実テキスト上で、正規化後の位置に対応する切り出しを探す */
-function findSuffixCut(a, b) {
-  // a の末尾が b と同じか（正規化して比較）。返り値は a を切るべき実位置。
-  const ka = bodyKey(a);
-  const kb = bodyKey(b);
-  if (kb.length < 12 || ka.length <= kb.length) return -1;
-  const head = kb.slice(0, Math.floor(kb.length * 0.8));
-  if (!head || !ka.includes(head)) return -1;
-  const at = ka.lastIndexOf(head);
-  if (at <= 0) return -1;
-  // 正規化位置 at → 実位置
-  let seen = 0;
+/** b の各字が a のどこに対応するかを最長共通部分列で求める（無ければ -1） */
+function alignChars(a, b) {
+  const rows = [new Uint32Array(b.length + 1)];
   for (let i = 0; i < a.length; i++) {
-    if (!/[\s　「」﹁﹂『』（）()]/.test(a[i])) {
-      if (seen === at) return i;
-      seen++;
+    const prev = rows[i];
+    const cur = new Uint32Array(b.length + 1);
+    for (let j = 0; j < b.length; j++) {
+      cur[j + 1] = a[i] === b[j] ? prev[j] + 1 : Math.max(cur[j], prev[j + 1]);
     }
+    rows.push(cur);
+  }
+  const map = new Int32Array(b.length).fill(-1);
+  let i = a.length, j = b.length;
+  while (i > 0 && j > 0) {
+    if (a[i - 1] === b[j - 1] && rows[i][j] === rows[i - 1][j - 1] + 1) { map[j - 1] = i - 1; i--; j--; }
+    else if (rows[i - 1][j] >= rows[i][j - 1]) i--;
+    else j--;
+  }
+  return map;
+}
+
+/** b が a のどれだけ入っているか（空白は数えない） */
+function coverage(map, b) {
+  let seen = 0, hit = 0;
+  for (let j = 0; j < b.length; j++) {
+    if (isSpace(b[j])) continue;
+    seen++;
+    if (map[j] >= 0) hit++;
+  }
+  return seen === 0 ? 0 : hit / seen;
+}
+
+/** 一致位置を「間が空いたら別の塊」として分け、いちばん大きい塊を返す */
+function densestBlock(hits) {
+  const blocks = [];
+  let cur = [];
+  for (const h of hits) {
+    if (cur.length && h - cur[cur.length - 1] > 8) { blocks.push(cur); cur = []; }
+    cur.push(h);
+  }
+  if (cur.length) blocks.push(cur);
+  return blocks.sort((x, y) => y.length - x.length)[0] || [];
+}
+
+/**
+ * a の末尾が、続く文々の複製か。返り値は a を切るべき位置。
+ * 複製側は脱字していることがある（能登殿「鞘をはづし」→「鞘を」）ので完全一致では見ない。
+ * 1文とは限らず、続く3文ぶんをまとめて抱えていることもある（能登殿 s23）。
+ * 「消す部分が、続く文々に本当にある」ことを確かめてから切る。
+ */
+function findSuffixCut(a, nexts) {
+  const b = nexts[0];
+  if (!a || !b || b.length < 12 || a.length <= b.length) return -1;
+  const map = alignChars(a, b);
+  if (coverage(map, b) < 0.85) return -1;
+  // b の頭の「」や句読点が a の別の場所と偶然合うことがあるので、いちばん大きい塊の先頭を起点にする
+  const block = densestBlock([...map].filter((x) => x >= 0));
+  const first = block[0];
+  if (first === undefined || first <= 0) return -1;
+
+  const tail = a.slice(first);
+  // 続く文を必要なだけ足して、消す部分がそこに収まるか見る
+  let acc = '';
+  for (const t of nexts) {
+    acc += t;
+    if (coverage(alignChars(acc, tail), tail) >= 0.85) return first;
+    if (acc.length > tail.length * 1.5) break;
   }
   return -1;
 }
 
-function findPrefixCut(a, b) {
-  // b の先頭が a と同じか。返り値は b を切るべき実位置。
-  const ka = bodyKey(a);
-  const kb = bodyKey(b);
-  if (ka.length < 12 || kb.length <= ka.length) return -1;
-  const head = ka.slice(0, Math.floor(ka.length * 0.8));
-  if (!head || !kb.startsWith(head)) return -1;
-  // a 全体が b の先頭にあるとみなし、a の長さぶん進める
-  let seen = 0;
-  for (let i = 0; i < b.length; i++) {
-    if (!/[\s　「」﹁﹂『』（）()]/.test(b[i])) {
-      seen++;
-      if (seen === ka.length) return i + 1;
-    }
+/** b の先頭が、前の文々の複製か。返り値は b を切るべき位置。 */
+function findPrefixCut(prevs, b) {
+  const a = prevs[prevs.length - 1];
+  if (!a || !b || a.length < 12 || b.length <= a.length) return -1;
+  const map = alignChars(b, a);
+  if (coverage(map, a) < 0.85) return -1;
+  const block = densestBlock([...map].filter((x) => x >= 0));
+  if (block[0] > 2) return -1;
+  const cut = block[block.length - 1] + 1;
+  if (cut >= b.length) return -1;
+  const head = b.slice(0, cut);
+  let acc = '';
+  for (let k = prevs.length - 1; k >= 0; k--) {
+    acc = prevs[k] + acc;
+    if (coverage(alignChars(acc, head), head) >= 0.85) return cut;
+    if (acc.length > head.length * 1.5) break;
   }
   return -1;
 }
@@ -108,8 +160,10 @@ for (const f of files) {
   for (let i = 0; i + 1 < ss.length; i++) {
     const a = ss[i];
     const b = ss[i + 1];
-    const suffixCut = findSuffixCut(a.originalText, b.originalText);
-    const prefixCut = suffixCut >= 0 ? -1 : findPrefixCut(a.originalText, b.originalText);
+    const nexts = ss.slice(i + 1, i + 6).map((x) => x.originalText);
+    const prevs = ss.slice(Math.max(0, i - 4), i + 1).map((x) => x.originalText);
+    const suffixCut = findSuffixCut(a.originalText, nexts);
+    const prefixCut = suffixCut >= 0 ? -1 : findPrefixCut(prevs, b.originalText);
     if (suffixCut < 0 && prefixCut < 0) continue;
     totalFound++;
     if (suffixCut >= 0) {
