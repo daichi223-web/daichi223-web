@@ -82,9 +82,24 @@ const glossHead = (tr) => {
   const m = GLOSS.exec(tr || '');
   return m ? m[1].replace(/[\s　「]/g, '') : null;
 };
+// 訳の「初句」は本文と表記が揺れる（すこし／少し、ゐ／い など）。
+// 前方一致だけだと取りこぼすので、共通部分の長さでも判定する。
+const longestCommon = (a, b) => {
+  let best = 0;
+  for (let x = 0; x < a.length; x++) {
+    for (let y = 0; y < b.length; y++) {
+      let k = 0;
+      while (x + k < a.length && y + k < b.length && a[x + k] === b[y + k]) k++;
+      if (k > best) best = k;
+    }
+  }
+  return best;
+};
 const headMatchesOriginal = (head, original) => {
-  const o = (original || '').replace(/[\s　「」『』]/g, '');
-  return o.startsWith(head);
+  const o = (original || '').replace(/[\s\u3000「」『』]/g, '');
+  if (o.startsWith(head)) return true;
+  const window = o.slice(0, head.length + 6);
+  return longestCommon(head, window) >= Math.ceil(head.length * 0.6);
 };
 
 const grammarIds = new Set(
@@ -172,7 +187,12 @@ for (const id of targets) {
     const tr = s.modernTranslation || '';
     if (!tr) {
       if (!isCitationOnly(original) && !isEditorSummary(s)) add(id, 'T4-訳なし', s.id);
-    } else if (original.length >= 15 && tr.length > original.length * 3) {
+    } else if (
+      original.length >= 15 &&
+      tr.length > original.length * 3 &&
+      // 和歌・俳句の行（句点が無く短い）は、訳が原文より長くなって当然
+      !(original.length <= 45 && !original.includes('。'))
+    ) {
       // 短い文（「」だけ等）は訳が長くなって当然なので見ない。
       // 和歌の訳（「初句……」書式）は原文より長くなるのが normal なので、
       // 頭がこの文の原文と一致していれば数えない。
