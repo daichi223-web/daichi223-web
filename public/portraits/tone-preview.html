@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>古文タン 肖像トーン比較</title>
+  <style>
+    :root { --ink:#302b26; --paper:#f5efe4; --line:#d8cdbb; --accent:#8b3f32; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:Georgia,"Yu Mincho","Hiragino Mincho ProN",serif; }
+    header { padding:42px 20px 28px; text-align:center; border-bottom:1px solid var(--line); }
+    h1 { margin:0 0 10px; letter-spacing:.12em; }
+    header p { margin:0; color:#74685b; line-height:1.8; }
+    main { width:min(1280px,calc(100% - 28px)); margin:26px auto 50px; }
+    .axes { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:22px; padding:14px 18px; border:1px solid var(--line); background:#fffaf2; line-height:1.7; }
+    .axes b { color:var(--accent); }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    figure { margin:0; background:#fffaf2; border:1px solid var(--line); box-shadow:0 5px 16px #65482a18; }
+    figure img { display:block; width:100%; aspect-ratio:4/3; object-fit:cover; }
+    figcaption { padding:14px 16px 16px; }
+    .tone { margin:0 0 6px; font-size:19px; font-weight:bold; }
+    .pos { color:var(--accent); font-size:13px; }
+    .desc { margin:8px 0 0; color:#74685b; font-size:14px; line-height:1.65; }
+    footer { text-align:center; padding:0 20px 28px; color:#887b6d; font-size:13px; }
+    @media(max-width:850px){ .grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:560px){ .grid{grid-template-columns:1fr;} .axes{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+  <header><h1>古文タン 肖像トーン比較</h1><p>同じ「五位・殿上人初位」を6つの方向で比較</p></header>
+  <main>
+    <div class="axes">
+      <div><b>横軸：</b>ゆるい・親しみやすい　← →　キリッと端正</div>
+      <div><b>縦軸：</b>キャラクター性・ポップ　← →　史実・装束重視</div>
+    </div>
+    <section class="grid" aria-label="6つのトーン">
+      <figure><img src="tone-01-yuruchara-w1200.webp" alt="ゆるキャラ・最強に親しみやすい"><figcaption><p class="tone">1. ゆるキャラ</p><div class="pos">左下：親しみやすさ最大</div><p class="desc">ちいかわ系に近い、丸くてやさしい学習キャラ。低学年にも強い。</p></figcaption></figure>
+      <figure><img src="tone-02-yuru-history-w1200.webp" alt="ゆるキャラと史実の中間"><figcaption><p class="tone">2. ゆるキャラ×史実</p><div class="pos">左寄り・史実寄り</div><p class="desc">ゆるさを残しつつ、冠・袍・太刀などの識別性を保つ。</p></figcaption></figure>
+      <figure><img src="tone-03-pop-anime-w1200.webp" alt="ポップな学習アプリキャラ"><figcaption><p class="tone">3. ポップ学習キャラ</p><div class="pos">中央下：キャラ性強め</div><p class="desc">高校生向けアプリらしい、明るく動きのあるキャラクター表現。</p></figcaption></figure>
+      <figure><img src="tone-04-current-w1200.webp" alt="現在寄りの端正な水彩キャラ"><figcaption><p class="tone">4. 現在寄り水彩</p><div class="pos">中央：現在版に近い</div><p class="desc">若さとキリッと感を両立した、今回の21段階版に近い方向。</p></figcaption></figure>
+      <figure><img src="tone-05-ikemen-w1200.webp" alt="キリッとした青年キャラ"><figcaption><p class="tone">5. キリッと青年</p><div class="pos">右下：キャラ性×端正</div><p class="desc">主人公感・成長感を強く出す。昇進の達成感が伝わりやすい。</p></figcaption></figure>
+      <figure><img src="tone-06-emaki-w1200.webp" alt="絵巻と史実重視"><figcaption><p class="tone">6. 絵巻・史実重視</p><div class="pos">右上：史実性最大</div><p class="desc">装束・調度品・建築を主役にした、教科書・資料集寄りの方向。</p></figcaption></figure>
+    </section>
+  </main>
+  <footer>この6案から1つの基調を選び、21段階すべてへ展開できます。</footer>
+</body>
+</html>

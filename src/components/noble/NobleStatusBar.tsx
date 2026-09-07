@@ -8,6 +8,7 @@ import {
   TIER_TONE,
 } from '@/lib/nobleData';
 import { recordPromotion } from '@/lib/promotionHistory';
+import { usePortraitTone } from '@/lib/portraitTone';
 
 // ホーム/学習履歴の最上部に置く統合ステータスバー。
 // 1段 ~90px で 「肖像サムネ + 位階 + 次の昇進バー + 3 KPI」を集約。
@@ -30,8 +31,9 @@ export default function NobleStatusBar({
   linkToStats = true,
 }: Props) {
   const stage = effectiveStage(parts);
+  const [portraitTone] = usePortraitTone();
   const next = nextStage(parts, stage.n);
-  const portrait = portraitForStage(stage.n);
+  const portrait = portraitForStage(stage.n, portraitTone);
   const tone = TIER_TONE[stage.era];
   const progress = next ? Math.round(((5 - next.blocking.length) / 5) * 100) : 100;
 

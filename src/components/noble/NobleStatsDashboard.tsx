@@ -18,6 +18,7 @@ import {
 import { recordPromotion } from '@/lib/promotionHistory';
 import RoadmapModal from './RoadmapModal';
 import HistoryDrawer from './HistoryDrawer';
+import { usePortraitTone, type PortraitTone } from '@/lib/portraitTone';
 
 // StatsPage の theme='noble' 区画。掛軸スタイルで水彩肖像をヒーローに、
 // 5 部位の装い詳細 + 5 ジャンル動線 + 出世絵巻/装束図鑑/履歴の3導線。
@@ -31,6 +32,7 @@ export default function NobleStatsDashboard({ parts }: Props) {
   const [showRefs, setShowRefs] = useState(false);
   const [showRoadmap, setShowRoadmap] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [portraitTone, setPortraitTone] = usePortraitTone();
   // 掛軸ヒーローの開閉。デフォルト畳む (大きいため)。状態は localStorage に永続化。
   const [showKakejiku, setShowKakejiku] = useState<boolean>(() => {
     try {
@@ -52,7 +54,7 @@ export default function NobleStatsDashboard({ parts }: Props) {
 
   const stage = effectiveStage(parts);
   const next = nextStage(parts, stage.n);
-  const portrait = portraitForStage(stage.n);
+  const portrait = portraitForStage(stage.n, portraitTone);
   const tone = TIER_TONE[stage.era];
   const progress = next ? Math.round(((5 - next.blocking.length) / 5) * 100) : 100;
   const bandSize = portrait.toN - portrait.fromN + 1;
@@ -75,6 +77,32 @@ export default function NobleStatsDashboard({ parts }: Props) {
         </span>
         <span className="text-rw-ink-soft">{showKakejiku ? '▴' : '▾'}</span>
       </button>
+
+      <div className="px-4 pb-3 pt-1 border-b border-rw-rule">
+        <div className="text-[10px] font-bold text-rw-ink-soft mb-1.5">肖像の雰囲気</div>
+        <div className="flex gap-2" role="group" aria-label="肖像の雰囲気">
+          {([
+            ['yuru', 'ゆるキャラ×史実'],
+            ['pop', 'ポップ学習キャラ'],
+            ['sharp', 'キリッと青年'],
+          ] as Array<[PortraitTone, string]>).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setPortraitTone(value)}
+              aria-pressed={portraitTone === value}
+              className="px-2.5 py-1 rounded-full text-[10px] font-bold border transition"
+              style={{
+                borderColor: portraitTone === value ? 'var(--rw-primary)' : 'var(--rw-rule)',
+                background: portraitTone === value ? 'var(--rw-primary-soft)' : 'transparent',
+                color: portraitTone === value ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {showKakejiku && (
       <>

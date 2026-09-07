@@ -11,6 +11,7 @@ import {
   portraitForStage,
 } from '@/lib/nobleData';
 import { recordPromotion } from '@/lib/promotionHistory';
+import { usePortraitTone } from '@/lib/portraitTone';
 import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
 
 // Reiwa デザイン版ホーム画面。
@@ -67,6 +68,7 @@ export default function HomeReiwa({
   const [vocab, setVocab] = useState<VocabEntry[]>([]);
   const [streak, setStreak] = useState(0);
   const [account, setAccount] = useState<AccountStatus | null>(null);
+  const [portraitTone] = usePortraitTone();
   const { fieldMastery, totalAnswered, totalMastered, loading: masteryLoading } = useFieldMastery();
 
   useEffect(() => {
@@ -79,7 +81,7 @@ export default function HomeReiwa({
   const parts = !masteryLoading ? partsFromFieldMastery(fieldMastery) : null;
   const nobleStage = parts ? effectiveStage(parts) : null;
   const nobleNext = parts && nobleStage ? nextStage(parts, nobleStage.n) : null;
-  const noblePortrait = nobleStage ? portraitForStage(nobleStage.n) : null;
+  const noblePortrait = nobleStage ? portraitForStage(nobleStage.n, portraitTone) : null;
   const nobleProgress = nobleNext
     ? Math.round(((5 - nobleNext.blocking.length) / 5) * 100)
     : 100;

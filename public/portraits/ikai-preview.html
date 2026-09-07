@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>古文タン 位階肖像プレビュー</title>
+  <style>
+    :root { color-scheme: light; --ink:#302b26; --paper:#f5efe4; --line:#d8cdbb; --accent:#8b3f32; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family: Georgia, "Yu Mincho", "Hiragino Mincho ProN", serif; }
+    header { padding:48px 24px 32px; text-align:center; border-bottom:1px solid var(--line); background:rgba(255,255,255,.38); }
+    h1 { margin:0 0 12px; font-size:clamp(24px,4vw,42px); letter-spacing:.12em; }
+    header p { margin:0; color:#74685b; line-height:1.8; }
+    main { width:min(1400px, calc(100% - 32px)); margin:32px auto 56px; }
+    .notice { padding:16px 20px; margin-bottom:28px; border:1px solid var(--line); border-left:4px solid var(--accent); background:#fffaf2; line-height:1.8; }
+    .tone-switch { display:flex; gap:8px; margin-top:14px; }
+    .tone-switch button { padding:7px 12px; border:1px solid var(--line); border-radius:999px; background:transparent; color:var(--ink); cursor:pointer; font:inherit; font-size:13px; }
+    .tone-switch button.active { border-color:var(--accent); background:#f0ddd1; color:var(--accent); font-weight:bold; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px; }
+    figure { margin:0; overflow:hidden; border:1px solid var(--line); background:#fffaf2; box-shadow:0 6px 18px rgba(66,45,25,.08); }
+    figure img { display:block; width:100%; aspect-ratio:4/3; object-fit:cover; cursor:zoom-in; }
+    figcaption { padding:18px 18px 20px; }
+    .stage { margin:0 0 8px; font-size:21px; font-weight:bold; }
+    .rank { color:var(--accent); font-size:14px; letter-spacing:.08em; }
+    .note { margin:10px 0 0; color:#74685b; line-height:1.7; font-size:14px; }
+    footer { text-align:center; color:#887b6d; font-size:13px; padding:0 20px 32px; }
+    dialog { width:min(1100px, 95vw); padding:0; border:0; background:transparent; }
+    dialog::backdrop { background:rgba(20,15,10,.8); }
+    dialog img { display:block; width:100%; max-height:90vh; object-fit:contain; }
+    @media (max-width:640px) { header { padding-top:32px; } main { width:min(100% - 20px, 1400px); margin-top:20px; } .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>古文タン 位階肖像</h1>
+    <p>平安後期の臣下装束を基準にした、位階表現の改訂版</p>
+  </header>
+  <main>
+    <div class="notice">
+      位袍の基本色は、六位以下＝縹、五位＝緋、四位以上＝黒。<br>
+      高位ほど紫になる単純な表現ではなく、冠・纓・文様・持物・儀礼によって差を表しています。画像をクリックすると拡大できます。
+      <div class="tone-switch" role="group" aria-label="肖像トーン">
+        <button type="button" data-tone="yuru">ゆるキャラ×史実</button>
+        <button type="button" data-tone="pop">ポップ学習キャラ</button>
+        <button type="button" data-tone="sharp" class="active">キリッと青年</button>
+      </div>
+    </div>
+    <section class="grid" aria-label="位階肖像一覧">
+      <figure><img src="stage-01-w1200.webp" alt="無位・雑任" loading="lazy"><figcaption><p class="stage">無位・雑任</p><div class="rank">第1階</div><p class="note">白水干・巻物・文机</p></figcaption></figure>
+      <figure><img src="stage-02-w1200.webp" alt="八位・少録" loading="lazy"><figcaption><p class="stage">八位・少録</p><div class="rank">第2階</div><p class="note">濃い縹の袍・折烏帽子・木笏</p></figcaption></figure>
+      <figure><img src="stage-03-w1200.webp" alt="七位・大允" loading="lazy"><figcaption><p class="stage">七位・大允</p><div class="rank">第3階</div><p class="note">縹の袍・木笏・紙を置いた文机</p></figcaption></figure>
+      <figure><img src="stage-04-w1200.webp" alt="従六下・下国守" loading="lazy"><figcaption><p class="stage">従六下・下国守</p><div class="rank">第4階</div><p class="note">縹の袍・立烏帽子・短い平緒</p></figcaption></figure>
+      <figure><img src="stage-05-w1200.webp" alt="従六上・上国介" loading="lazy"><figcaption><p class="stage">従六上・上国介</p><div class="rank">第5階</div><p class="note">濃い縹の袍・硯箱・平緒</p></figcaption></figure>
+      <figure><img src="stage-06-w1200.webp" alt="正六下・中国守" loading="lazy"><figcaption><p class="stage">正六下・中国守</p><div class="rank">第6階</div><p class="note">縹の綾袍・紙扇・文箱</p></figcaption></figure>
+      <figure><img src="stage-07-w1200.webp" alt="正六上・大国介" loading="lazy"><figcaption><p class="stage">正六上・大国介</p><div class="rank">第7階</div><p class="note">縹の地紋袍・紋付き立烏帽子</p></figcaption></figure>
+      <figure><img src="stage-08-w1200.webp" alt="従五下・殿上人初位" loading="lazy"><figcaption><p class="stage">従五下・殿上人初位</p><div class="rank">第8階</div><p class="note">緋袍・短纓冠・檜扇・細太刀</p></figcaption></figure>
+      <figure><img src="stage-09-w1200.webp" alt="従五上・侍従" loading="lazy"><figcaption><p class="stage">従五上・侍従</p><div class="rank">第9階</div><p class="note">緋の綾袍・纓・銀の硯箱</p></figcaption></figure>
+      <figure><img src="stage-10-w1200.webp" alt="正五下・少弁" loading="lazy"><figcaption><p class="stage">正五下・少弁</p><div class="rank">第10階</div><p class="note">緋の上質袍・垂纓冠・文書台</p></figcaption></figure>
+      <figure><img src="stage-11-w1200.webp" alt="正五上・中弁" loading="lazy"><figcaption><p class="stage">正五上・中弁</p><div class="rank">第11階</div><p class="note">緋の地紋袍・垂纓冠・飾り御簾</p></figcaption></figure>
+      <figure><img src="stage-12-w1200.webp" alt="従四下・八省輔" loading="lazy"><figcaption><p class="stage">従四下・八省輔</p><div class="rank">第12階</div><p class="note">黒袍・垂纓冠・長い下襲・飾太刀</p></figcaption></figure>
+      <figure><img src="stage-13-w1200.webp" alt="従四上・京大夫" loading="lazy"><figcaption><p class="stage">従四上・京大夫</p><div class="rank">第13階</div><p class="note">黒の綾袍・垂纓冠・金具の硯箱</p></figcaption></figure>
+      <figure><img src="stage-14-w1200.webp" alt="正四下・七省卿" loading="lazy"><figcaption><p class="stage">正四下・七省卿</p><div class="rank">第14階</div><p class="note">黒の地紋袍・蒔絵檜扇・屏風</p></figcaption></figure>
+      <figure><img src="stage-15-w1200.webp" alt="正四上・中務卿" loading="lazy"><figcaption><p class="stage">正四上・中務卿</p><div class="rank">第15階</div><p class="note">黒の上質地紋袍・几帳・文箱</p></figcaption></figure>
+      <figure><img src="stage-16-w1200.webp" alt="従三・中納言" loading="lazy"><figcaption><p class="stage">従三・中納言</p><div class="rank">第16階</div><p class="note">公卿の黒袍有文・高位垂纓冠</p></figcaption></figure>
+      <figure><img src="stage-17-w1200.webp" alt="正三・大納言" loading="lazy"><figcaption><p class="stage">正三・大納言</p><div class="rank">第17階</div><p class="note">精緻な有文袍・香炉・上質檜扇</p></figcaption></figure>
+      <figure><img src="stage-18-w1200.webp" alt="従二・内大臣" loading="lazy"><figcaption><p class="stage">従二・内大臣</p><div class="rank">第18階</div><p class="note">高級有文袍・蒔絵文箱・香炉</p></figcaption></figure>
+      <figure><img src="stage-19-w1200.webp" alt="正二・左右大臣" loading="lazy"><figcaption><p class="stage">正二・左右大臣</p><div class="rank">第19階</div><p class="note">極上有文袍・格式ある廂・調度品</p></figcaption></figure>
+      <figure><img src="stage-20-w1200.webp" alt="従一・摂政関白" loading="lazy"><figcaption><p class="stage">従一・摂政関白</p><div class="rank">第20階</div><p class="note">最高級黒袍・極位冠・重厚な屏風</p></figcaption></figure>
+      <figure><img src="stage-21-w1200.webp" alt="正一位・太政大臣" loading="lazy"><figcaption><p class="stage">正一位・太政大臣</p><div class="rank">第21階</div><p class="note">最高位の黒い有文束帯・最高級の御簾</p></figcaption></figure>
+    </section>
+  </main>
+  <footer>古文タン 位階肖像プレビュー</footer>
+  <dialog id="viewer"><img alt="拡大表示"><button type="button" aria-label="閉じる" style="position:fixed;top:16px;right:20px;font-size:28px;border:0;border-radius:50%;width:44px;height:44px;cursor:pointer;opacity:.85">×</button></dialog>
+  <script>
+    const viewer = document.querySelector('#viewer');
+    const large = viewer.querySelector('img');
+    const toneButtons = document.querySelectorAll('[data-tone]');
+    const portraitImages = document.querySelectorAll('section.grid img');
+    toneButtons.forEach(button => button.addEventListener('click', () => {
+      const tone = button.dataset.tone;
+      portraitImages.forEach(img => {
+        img.src = img.src.replace(/(?:yuru-|pop-)?stage-/, tone === 'yuru' ? 'yuru-stage-' : tone === 'pop' ? 'pop-stage-' : 'stage-');
+      });
+      toneButtons.forEach(item => item.classList.toggle('active', item === button));
+    }));
+    document.querySelectorAll('figure img').forEach(img => img.addEventListener('click', () => { large.src = img.src; large.alt = img.alt; viewer.showModal(); }));
+    viewer.addEventListener('click', e => { if (e.target === viewer || e.target.tagName === 'BUTTON') viewer.close(); });
+  </script>
+</body>
+</html>
