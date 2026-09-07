@@ -180,7 +180,6 @@ export default function SearchPage() {
   useEffect(() => {
     // Restore "bodies" param from URL on mount
     if (searchParams.get('bodies') === '1') setIncludeBodies(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 検索結果から個別単語/教材へ飛んだあとブラウザ戻るで復帰した際に

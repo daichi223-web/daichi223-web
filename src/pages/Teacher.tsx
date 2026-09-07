@@ -831,7 +831,6 @@ function QuizRangeView() {
 
   useEffect(() => {
     void load(cohort);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cohort]);
 
   const save = async (nextActive: boolean) => {
@@ -991,7 +990,6 @@ function DiagnosticPanel({ cohort }: { cohort: string }) {
 
   useEffect(() => {
     refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cohort]);
 
   const clearFullAccess = () => {

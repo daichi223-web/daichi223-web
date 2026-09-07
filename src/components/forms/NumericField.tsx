@@ -53,7 +53,6 @@ export const NumericField: React.FC<NumericFieldProps> = ({
     if (currentNum !== value) {
       setRaw(value === "" ? "" : String(value));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   // IME開始

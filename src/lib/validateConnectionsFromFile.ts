@@ -6,6 +6,7 @@ import { loadGrammar } from "./grammarLoader";
 import { tokenizeSense, Morpheme } from "../utils/morphTokenizer";
 import {
   guessLeftForm,
+  guessVerbForm,
   isNounLike,
   guessResultingForm,
   Form,
@@ -225,6 +226,14 @@ function resolveAmbiguous(
   if (leftSurface.endsWith("し")) {
     const patterns = grammar.disamb.get("し");
     if (patterns) {
+      // 「行きしこと」の「し」は過去「き」の連体形だが、
+      // 助動詞に接続する左語は「行き」（連用形）として判定する。
+      if (leftSurface.endsWith("きし")) {
+        return {
+          form: guessVerbForm(leftSurface.slice(0, -1)),
+          note: "過去『き』連体形（左語は連用形）",
+        };
+      }
       // 右文脈が名詞 → 過去『き』連体形
       if (isNounLike(rightSurface)) {
         return {

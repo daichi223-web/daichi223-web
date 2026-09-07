@@ -17,18 +17,16 @@ export type Form =
  * 形容詞の活用形を推定（ク/シク活用）
  */
 export function guessAdjectiveForm(surface: string): Form {
+  // シク活用を先に判定する。「悲しく」は未然形の「く」ではなく連用形。
+  if (/しく$|しかり$/.test(surface)) return "連用形";
+  if (/しから$/.test(surface)) return "未然形";
   // ク活用
   if (/く$|から$/.test(surface)) return "未然形";
-  if (/く$|かり$/.test(surface)) return "連用形";
+  if (/かり$/.test(surface)) return "連用形";
   if (/し$/.test(surface)) return "終止形";
   if (/き$|かる$/.test(surface)) return "連体形";
   if (/けれ$/.test(surface)) return "已然形";
   if (/かれ$/.test(surface)) return "命令形";
-
-  // シク活用
-  if (/しく$|しから$/.test(surface)) return "未然形";
-  if (/しく$|しかり$/.test(surface)) return "連用形";
-  if (/し$/.test(surface)) return "終止形";
   if (/しき$|しかる$/.test(surface)) return "連体形";
   if (/しけれ$/.test(surface)) return "已然形";
   if (/しかれ$/.test(surface)) return "命令形";
@@ -127,6 +125,9 @@ export function isNounLike(right: string): boolean {
  * 文末の述語から結びの形を推定
  */
 export function guessResultingForm(endingSurface: string): Form {
+  if (/(かる|しかる)$/.test(endingSurface)) return "連体形";
+  if (/けれ$/.test(endingSurface)) return "已然形";
+  if (/き$/.test(endingSurface)) return "連体形";
   // 連体形パターン（「〜る」「〜くる」「〜する」など）
   if (/[るくすぬ]る$/.test(endingSurface)) return "連体形";
 

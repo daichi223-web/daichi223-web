@@ -31,6 +31,7 @@ type Props = {
   polysemyRange: { from?: number | null; to?: number | null };
   weakWordsCount: number;
   dueWordsCount: number;
+  dataError?: boolean;
   // 長い空白のあと: 空白日数と、先頭に置く「覚えていた語」の数（null なら通常）
   welcomeBack?: { gapDays: number; warmupCount: number } | null;
   // 今日の分の見込み: 復習（期限到来・上限つき）と補充（範囲からおまかせ）の語数
@@ -56,6 +57,7 @@ export default function HomeReiwa({
   polysemyRange,
   weakWordsCount,
   dueWordsCount,
+  dataError = false,
   welcomeBack = null,
   todayPreview,
   quizRange = null,
@@ -131,6 +133,11 @@ export default function HomeReiwa({
             <span className="text-xs font-black shrink-0">この範囲で ▶</span>
           </div>
         </button>
+      )}
+      {dataError && (
+        <div className="mb-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-900" role="alert">
+          学習記録を取得できませんでした。通信状態を確認してから再読み込みしてください。
+        </div>
       )}
 
       {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}

@@ -55,7 +55,7 @@ function getParticleRules(): Array<{ re: RegExp; tag: string }> {
   particleRulesCache = [
     { re: /(は|わ)$/u, tag: "係助:は" },
     { re: /(も)$/u, tag: "係助:も" },
-    { re: /(ぞ|なむ|や|か)$/u, tag: "係助:係り結び" },
+    { re: /(ぞ|なむ|や)$/u, tag: "係助:係り結び" },
     { re: /(を)$/u, tag: "格助:を" },
     { re: /(に)$/u, tag: "格助:に" },
     { re: /(へ)$/u, tag: "格助:へ" },
@@ -142,6 +142,9 @@ function peelAuxiliaries(x: string) {
     for (const rule of AUX_RULES) {
       const m = x.match(rule.re);
       if (m) {
+        // 形容詞の連体形「悲しき」「美しかる」は助動詞ではない。
+        if (rule.tag === "過去" && m[0] === "き" && /しき$/u.test(x)) continue;
+        if (rule.tag === "る・らる" && /(かる|しかる)$/u.test(x)) continue;
         // まだ自立語が残っている場合は助動詞として抽出
         // 自立語がなく助動詞のみの場合は、それは動詞の一部
         const remaining = x.slice(0, x.length - m[0].length);
@@ -171,15 +174,28 @@ function toContentMorpheme(stem0: string): Morpheme {
   const ADJ_REVERSE = getAdjReverse();
   const ADJ_NARI_REVERSE = getAdjNariReverse();
 
-  for (const r of VERB_REVERSE) {
-    if (r.re.test(stem)) {
-      stem = stem.replace(r.re, r.to);
-      changed = true;
-      break;
+  if (/きし$/u.test(stem)) {
+    stem = stem.replace(/きし$/u, "く");
+    changed = true;
+  }
+
+  // シク活用の語尾は動詞「する」の「し」と衝突するため先に扱う。
+  if (/し(?:き|く|けれ|から|かり|かる)?$/u.test(stem)) {
+    stem = stem.replace(/し(?:き|く|けれ|から|かり|かる)?$/u, "しい");
+    changed = true;
+  }
+
+  if (!changed) {
+    for (const r of ADJ_REVERSE) {
+      if (r.re.test(stem)) {
+        stem = stem.replace(r.re, r.to);
+        changed = true;
+        break;
+      }
     }
   }
   if (!changed) {
-    for (const r of ADJ_REVERSE) {
+    for (const r of VERB_REVERSE) {
       if (r.re.test(stem)) {
         stem = stem.replace(r.re, r.to);
         changed = true;
@@ -222,6 +238,26 @@ export function tokenizeSense(
     return [{ pos: "content", surface: "", lemma: "" }];
   }
 
+  // 単独の現代語「ない」も、古文の助動詞「ず」と同じ打消タグにする。
+  if (x === "ない") {
+    return [
+      { pos: "content", surface: "ない", lemma: "ない" },
+      { pos: "aux", tag: "打消", surface: "ない" },
+    ];
+  }
+
+  // 係助詞は文頭に現れるため、末尾からの通常の分解だけでは拾えない。
+  const leadingParticle = x.match(/^(こそ|ぞ|なむ|や|か)(?=.)/u);
+  const leadingPrt: Morpheme[] = leadingParticle
+    ? [{ pos: "prt", tag: leadingParticle[1] === "こそ" ? "係助:こそ" : "係助:係り結び", surface: leadingParticle[1] }]
+    : [];
+  if (leadingParticle) x = x.slice(leadingParticle[0].length);
+
+  // 形式名詞を切り離し、直前の活用語の形判定に渡す。
+  const nounTail = x.match(/^(.+?)(こと|もの|人|所|者|時|方|由)$/u);
+  const trailingNoun = nounTail?.[2] ?? "";
+  if (nounTail) x = nounTail[1];
+
   // 敬語プレフィクス（お/ご）を評価対象にする：削除しない、タグ化する
   const honorific = /^(お|ご)(?=[ぁ-ゖ一-龯])/u.test(x);
 
@@ -235,6 +271,14 @@ export function tokenizeSense(
 
   const content = toContentMorpheme(afterPrt);
   const seq: Morpheme[] = [content, ...aux];
+
+  // 「行きしこと」のような、過去「き」の連体形「し」を文中で拾う。
+  if (trailingNoun && /し$/u.test(x)) {
+    seq.push({ pos: "aux", tag: "過去", surface: "し" });
+  }
+  if (trailingNoun) {
+    seq.push({ pos: "content", surface: trailingNoun, lemma: trailingNoun });
+  }
 
   // 連用形音便があり、かつまだ接続タグがない場合のみ追加（「座っ」=「座って」）
   const hasConnectionTag = aux.some(a => {
@@ -250,7 +294,7 @@ export function tokenizeSense(
   if (honorific) {
     seq.push({ pos: "aux", tag: "尊敬", surface: "お/ご(敬語)" });
   }
-  if (!opts.ignoreParticles) seq.push(...prts);
+  if (!opts.ignoreParticles) return [...leadingPrt, ...seq, ...prts];
   return seq;
 }
 

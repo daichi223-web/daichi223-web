@@ -131,6 +131,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [homeDataError, setHomeDataError] = useState(false);
 
   // UI refs for focus management
   const wordQuizTypeRef = useRef<HTMLSelectElement>(null);
@@ -146,7 +147,6 @@ function App() {
   // 旧形式「意味から単語を選ぶ」は空欄補充へ移行 (保存値のマイグレーション)
   useEffect(() => {
     if (wordQuizType === 'word-reverse') setWordQuizType('blank-fill');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [wordNumQuestions, setWordNumQuestions] = useLocalStorageState<number>('kobun-wordNumQuestions', 10);
   // 出題の選び方: auto = 学習記録から「苦手→未着手（番号順）→途中」を配分、得意は頻度を下げる。random = 従来
@@ -253,7 +253,6 @@ function App() {
     setCurrentMode('word');
     setShowHome(false);
     void setupQuiz(qids);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allWords.length]);
 
   // URL クエリ ?category=重要動詞,敬語動詞 でカテゴリ絞り込みクイズを起動
@@ -272,7 +271,6 @@ function App() {
     setCurrentMode('word');
     setShowHome(false);
     void setupQuiz();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allWords.length]);
 
   // URL クエリ ?chapter=ch1 で章範囲のクイズを起動。
@@ -292,13 +290,13 @@ function App() {
     setCurrentMode('word');
     setShowHome(false);
     void setupQuiz();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allWords.length]);
 
   // ホーム表示時に学習履歴ベースの集計を取得
   useEffect(() => {
     if (!showHome) return;
     let cancelled = false;
+    setHomeDataError(false);
     (async () => {
       try {
         const [weak, today, last, range] = await Promise.all([
@@ -317,6 +315,7 @@ function App() {
         }
       } catch {
         if (!cancelled) {
+          setHomeDataError(true);
           setWeakWordsCount(0);
           setDueWordsCount(0);
           setWelcomeBack(null);
@@ -464,7 +463,6 @@ function App() {
       };
     }
     // pendingSeedLemma は意図的に依存に入れない (mode/range 変更時に最新値を closure で拾う)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     currentMode,
     wordQuizType, wordNumQuestions, wordRange.from, wordRange.to,
@@ -1706,6 +1704,7 @@ function App() {
             polysemyRange={polysemyRange}
             weakWordsCount={weakWordsCount}
             dueWordsCount={dueWordsCount}
+            dataError={homeDataError}
             welcomeBack={welcomeBack ? { gapDays: welcomeBack.gapDays, warmupCount: welcomeBack.warmup.length } : null}
             todayPreview={{
               review: dueWordsCount,

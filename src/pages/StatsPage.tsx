@@ -308,7 +308,6 @@ export default function StatsPage() {
     }
     if (updates.length > 0) updatePeakTiers(updates);
     return out;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupAgg, allGroups, quizTypeStats, srsBoxByQid]);
 
   const blueprintMetrics = useMemo(() => {

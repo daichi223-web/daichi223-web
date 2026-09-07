@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Word, MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
 import { PolysemyInsight } from './WordInsightPanel';
@@ -10,6 +10,17 @@ export interface ExampleComprehensionContentProps {
 }
 
 export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleComprehensionContentProps) {
+  const [answers, setAnswers] = useState<{[key: string]: string}>({});
+  const [shuffledMeanings, setShuffledMeanings] = useState<Word[]>([]);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (!word || !word.lemma || !word.meanings || !Array.isArray(word.meanings)) return;
+    setAnswers({});
+    setChecked(false);
+    setShuffledMeanings([...word.meanings].sort(() => Math.random() - 0.5));
+  }, [word?.lemma, word?.meanings]);
+
   // Defensive check: ensure word exists and has required properties
   if (!word || !word.lemma || !word.meanings || !Array.isArray(word.meanings)) {
     return (
@@ -18,17 +29,6 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
       </div>
     );
   }
-
-  const [answers, setAnswers] = useState<{[key: string]: string}>({});
-  const [shuffledMeanings, setShuffledMeanings] = useState<Word[]>([]);
-  const [checked, setChecked] = useState(false);
-
-  // Reset state and reshuffle meanings when word changes
-  React.useEffect(() => {
-    setAnswers({});
-    setChecked(false);
-    setShuffledMeanings([...word.meanings].sort(() => Math.random() - 0.5));
-  }, [word.lemma, word.meanings]);
 
   const handleAnswerSelect = (exampleQid: string, selectedQid: string) => {
     if (checked) return;
