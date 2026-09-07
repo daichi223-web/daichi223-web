@@ -10,6 +10,7 @@
  *   M1 表記ゆれ      同じラベルの少数派の書き方（係助・強調 → 係助・強意 など）
  *   M2 他と食い違う  他の教材では必ず同じセルになる語なのに、ここだけ違う
  *   M3 孤立ラベル    どの教材にも1回しか出ないラベル（誤記の疑い）
+ *   M4 接続の矛盾    次の語から決まる活用形と、書かれている活用形が合わない
  *
  * 機械の推定と食い違うだけの行は出さない（推定はまだ8割程度なので、
  * それを出すと本当の誤りが埋もれる）。「他の教材が揃って別の答えを出す」
@@ -19,6 +20,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { allowedForms, formOf } = require(path.join(__dirname, 'morph-rules.cjs'));
 
 const IN = path.join(process.cwd(), 'public', 'texts');
 const args = process.argv.slice(2);
@@ -128,6 +130,23 @@ function nearestCommon(label) {
   return best;
 }
 
+// M4 用: 「次の語 × 実際の活用形」の違反が全体で何回起きているかを先に数える。
+// 何度も起きるものは規則の取りこぼし（例: 形容動詞連用形＋サ変「せ」）なので出さない。
+const violation = new Map();
+for (const d of docs) {
+  for (let i = 0; i < d.rows.length; i++) {
+    const form = formOf(d.rows[i].label);
+    if (!form) continue;
+    const next = i + 1 < d.rows.length ? d.rows[i + 1].word : null;
+    const allowed = allowedForms(next);
+    if (allowed && !allowed.has(form)) {
+      const k = next + '	' + form;
+      violation.set(k, (violation.get(k) || 0) + 1);
+    }
+  }
+}
+const VIOLATION_MAX = 2; // これを超えて出る違反は規則の側の問題とみなす
+
 const findings = [];
 const add = (d, code, r, detail) => findings.push({ id: d.id, title: d.title, code, line: r.line, word: r.word, detail });
 
@@ -136,7 +155,18 @@ commonLabels.sort((a, b) => b[1] - a[1]);
 
 const targets = only.length ? docs.filter((d) => only.includes(d.id)) : docs;
 for (const d of targets) {
-  for (const r of d.rows) {
+  for (let i = 0; i < d.rows.length; i++) {
+    const r = d.rows[i];
+    // M4 接続の矛盾（活用形を持つ行だけ。規則は「絞り込み」用に広めなので、
+    // それでも外れるものは書き間違いか、次の語が別語の可能性が高い）
+    const form = formOf(r.label);
+    if (form) {
+      const next = i + 1 < d.rows.length ? d.rows[i + 1].word : null;
+      const allowed = allowedForms(next);
+      if (allowed && !allowed.has(form) && (violation.get(next + '	' + form) || 0) <= VIOLATION_MAX) {
+        add(d, 'M4-接続の矛盾', r, `次が「${next}」なら活用形は ${[...allowed].join('/')} のはずだが「${r.label}」`);
+      }
+    }
     if (!r.label) continue;
     if (canonical.has(r.label)) {
       add(d, 'M1-表記ゆれ', r, `「${r.label}」→「${canonical.get(r.label)}」が多数派`);
