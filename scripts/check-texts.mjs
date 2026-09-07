@@ -14,7 +14,9 @@
  *   T1b 索引のズレ     アプリが読む索引（src/data）と public の索引が食い違っていないか
  *   T2 トークン連結    tokens の text を連ねたものが originalText と一致するか
  *   T3 オフセット      token.start/end が originalText の実位置と合っているか
- *   T4 訳の有無        文ごとに訳があるか（出典表記の行と、編者のあらすじ文は除く）
+ *   T4 訳の有無        文ごとに訳があるか
+ *                     除く: 出典表記の行／編者のあらすじ文／前の行から続いている行
+ *                     （和歌集の詞書は2〜3行に割れ、訳は先頭行にまとまっている）
  *   T5 訳の長さ        訳が本文の 3 倍を超えていないか（短文は除外。訳の膨張＝別文の混入を疑う）
  *   T9 訳の使い回し    同じ訳が複数の文に付いていないか（訳の取り違えを疑う）
  *   T10 訳のズレ       隣の文の訳のほうが原文に合っていないか（1文ずれの検出）
@@ -49,7 +51,23 @@ const isCitationOnly = (t) => /^[（(][^（）()]{1,20}[）)]$/.test((t || '').t
 // 教材には編者による現代語の「あらすじ」文が混ざる（古文本文ではない）。
 // これらは品詞分解の対象外なので、文法タグの付いたトークンが1つも無い。
 // 訳す対象ではないので「訳なし」に数えない。
-const CLASSICAL = /(けり|けれ|ける|たまふ|給ふ|侍り|はべり|べし|べき|なむ|こそ|ぬれ|たれ|らむ|けむ|まじ|ごとし|いはく|とて|なりけ|ざり|しか)/;
+// 古文の目印。現代語にも現れる短い形（たれ・しか など）は入れない
+// （「討たれた時の」を古文と誤判定していた）
+const CLASSICAL = /(けり|けれ|ける|たまふ|給ふ|侍り|はべり|べし|べき|なむ|こそ|ぬれ|らむ|けむ|まじ|ごとし|いはく|なりけ|ざりけ|めり|かな。|にけり)/;
+// 歌集名だけの行（古今和歌集・金槐和歌集…）。訳す対象ではない。
+const isCollectionName = (t) => /^[^\s\u3000。、]{2,12}(集|抄)$/.test((t || '').trim());
+
+// 前の行から続いている行かどうか。
+// 和歌集の教材では詞書が2〜3行に割れ、長歌や今様も複数行に分かれる。
+// 正本の訳はその先頭行にまとまっているので、続きの行に訳が無いのは正しい。
+const isContinuation = (sentences, i) => {
+  if (i === 0) return false;
+  const prev = (sentences[i - 1].originalText || '').trim();
+  const cur = (sentences[i].originalText || '').trim();
+  if (/^[」』）)]/.test(cur)) return true;          // 閉じ括弧で始まる＝前の文の続き
+  return prev !== '' && !/[。！？」』）)]$/.test(prev); // 前の行が文末で終わっていない
+};
+
 const isEditorSummary = (sentence) => {
   const tokens = Array.isArray(sentence.tokens) ? sentence.tokens : [];
   if (tokens.length === 0) return false;
@@ -186,7 +204,15 @@ for (const id of targets) {
     // T4/T5 訳
     const tr = s.modernTranslation || '';
     if (!tr) {
-      if (!isCitationOnly(original) && !isEditorSummary(s)) add(id, 'T4-訳なし', s.id);
+      const idx = sentences.indexOf(s);
+      if (
+        !isCitationOnly(original) &&
+        !isEditorSummary(s) &&
+        !isCollectionName(original) &&
+        !isContinuation(sentences, idx)
+      ) {
+        add(id, 'T4-訳なし', s.id);
+      }
     } else if (
       original.length >= 15 &&
       tr.length > original.length * 3 &&
@@ -228,6 +254,9 @@ for (const id of targets) {
   for (let i = 0; i < sentences.length; i++) {
     const words = kanjiWords(sentences[i].originalText || '');
     if (words.length < 2) continue; // 手がかりが少ない文は判定しない
+    // 訳が無い文のズレは判定しない（訳が無いこと自体は T4 の担当。
+    // 詞書の続き行のように訳が先頭行にまとまっているケースを二重に数えない）
+    if (!(sentences[i].modernTranslation || '').trim()) continue;
     const own = overlap(words, sentences[i].modernTranslation || '');
     const next = i + 1 < sentences.length ? overlap(words, sentences[i + 1].modernTranslation || '') : 0;
     const prev = i > 0 ? overlap(words, sentences[i - 1].modernTranslation || '') : 0;
