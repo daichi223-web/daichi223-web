@@ -17,6 +17,19 @@
 調整系（grammar-level-calibration）。
 ユーザーレベルにも /kobun-text-clean・/kobun-vocab-alias・/kobun-reibun-corpus・/kobun-tsu-nu-kakujutsu がある。
 
+## いま並行で動いている作業（2026-09-07）
+
+このリポジトリは Claude Code と CODEX が同じ作業ツリーを共有している。
+
+| 担当 | 触っている範囲 |
+|---|---|
+| CODEX | 位階システム = `src/lib/nobleData.ts` / `src/lib/portraitTone.ts` / `src/components/noble/` / `public/portraits/` / `assets-src/portraits/` / `docs/noble-rank-system.md` |
+| Claude Code | 読解教材データ = `public/texts-v3/` / `public/analysis/` / `public/reading/` / `scripts/check-texts.mjs` ほか検査・修正スクリプト |
+
+- **担当外のファイルは add もコミットもしない**。`git add -A` / `git add .` は使わず名指しで add する
+  （`assets-src/portraits/` は `.gitignore` に無く、肖像の原本が 250MB ある）
+- 作業が終わったらこの表と `AGENTS.md` の同じ表を更新する
+
 ## 注意
 
 - ルート直下の `test-*.html`・`kobun-app-*.html`・`範囲選択*.txt` は過去の試行の残骸。参照も編集もしない
