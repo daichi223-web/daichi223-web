@@ -14,7 +14,7 @@
  *   T1b 索引のズレ     アプリが読む索引（src/data）と public の索引が食い違っていないか
  *   T2 トークン連結    tokens の text を連ねたものが originalText と一致するか
  *   T3 オフセット      token.start/end が originalText の実位置と合っているか
- *   T4 訳の有無        文ごとに訳があるか（出典表記だけの行は除く）
+ *   T4 訳の有無        文ごとに訳があるか（出典表記の行と、編者のあらすじ文は除く）
  *   T5 訳の長さ        訳が本文の 3 倍を超えていないか（短文は除外。訳の膨張＝別文の混入を疑う）
  *   T9 訳の使い回し    同じ訳が複数の文に付いていないか（訳の取り違えを疑う）
  *   T10 訳のズレ       隣の文の訳のほうが原文に合っていないか（1文ずれの検出）
@@ -45,6 +45,23 @@ const exists = (p) => fs.existsSync(p);
 const norm = (s) => (s || '').replace(/\s+/g, '');
 // 「（巻第三）」「（第九段・前半）」のような出典表記だけの行は訳す対象ではない
 const isCitationOnly = (t) => /^[（(][^（）()]{1,20}[）)]$/.test((t || '').trim());
+
+// 教材には編者による現代語の「あらすじ」文が混ざる（古文本文ではない）。
+// これらは品詞分解の対象外なので、文法タグの付いたトークンが1つも無い。
+// 訳す対象ではないので「訳なし」に数えない。
+const CLASSICAL = /(けり|けれ|ける|たまふ|給ふ|侍り|はべり|べし|べき|なむ|こそ|ぬれ|たれ|らむ|けむ|まじ|ごとし|いはく|とて|なりけ|ざり|しか)/;
+const isEditorSummary = (sentence) => {
+  const tokens = Array.isArray(sentence.tokens) ? sentence.tokens : [];
+  if (tokens.length === 0) return false;
+  // 品詞分解の対象になっていない＝古文本文として扱われていない
+  const tagged = tokens.filter((t) => (t.grammarTag && t.grammarTag.pos) || t.grammarRefId);
+  if (tagged.length > 0) return false;
+  const o = (sentence.originalText || '').trim();
+  if (o.length < 8 || !o.includes('。')) return false;
+  // 古文の目印があれば本文。あらすじ文ではない
+  if (CLASSICAL.test(o)) return false;
+  return true;
+};
 
 // T10 用: 古文→現代語訳では漢字の語（比叡・富士・雀…）がそのまま訳に残ることが多い。
 // 原文の漢字2字以上の語が、自分の訳より隣の訳に多く出るなら1文ずれを疑う。
@@ -154,7 +171,7 @@ for (const id of targets) {
     // T4/T5 訳
     const tr = s.modernTranslation || '';
     if (!tr) {
-      if (!isCitationOnly(original)) add(id, 'T4-訳なし', s.id);
+      if (!isCitationOnly(original) && !isEditorSummary(s)) add(id, 'T4-訳なし', s.id);
     } else if (original.length >= 15 && tr.length > original.length * 3) {
       // 短い文（「」だけ等）は訳が長くなって当然なので見ない。
       // 和歌の訳（「初句……」書式）は原文より長くなるのが normal なので、
