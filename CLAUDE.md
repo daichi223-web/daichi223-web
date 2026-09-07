@@ -27,7 +27,8 @@
 | Claude Code | 読解教材データ = `public/texts-v3/` / `public/analysis/` / `public/reading/` / `scripts/check-texts.mjs` ほか検査・修正スクリプト |
 
 - **担当外のファイルは add もコミットもしない**。`git add -A` / `git add .` は使わず名指しで add する
-  （`assets-src/portraits/` は `.gitignore` に無く、肖像の原本が 250MB ある）
+- 肖像の原本（`assets-src/portraits/`）は **git で持つ**（`.gitignore` に入れない）。
+  PNG は1世代 約139MB で履歴は縮まないので、試作は入れず採用版だけ commit する
 - 作業が終わったらこの表と `AGENTS.md` の同じ表を更新する
 
 ## 注意

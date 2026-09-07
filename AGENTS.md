@@ -20,9 +20,10 @@
 ## git
 
 - **`git add -A` / `git add .` を使わない。** 自分が触ったファイルだけを名指しで `add` する
-  - `assets-src/portraits/` は `.gitignore` に無く、肖像の原本が 250MB ある。
-    一括 add すると履歴に入って戻せない
   - 同じ作業ツリーを別のエージェントと共有している（下記）。担当外の変更を巻き込まない
+- **肖像の原本（`assets-src/portraits/`）は git で持つ方針**（`.gitignore` に入れない）。
+  ただし PNG は1枚 2〜3MB で、1世代ぶんで約 139MB。git の履歴は縮まないので、
+  **試作は commit せず、採用が決まった版だけ** commit する
 - push は人の承認を得てから。Vercel Hobby は commit の author email が verified と
   一致しないと deploy が ERROR になるので、push 前に `git config user.email` を確かめる
 - コミット前に `git status` を見て、意図しないファイルが混ざっていないか確かめる
