@@ -1555,7 +1555,7 @@
     },
     {
       "id": "s10",
-      "originalText": "その沢にかきつばた、いとおもしろく咲きたり。それを見て、ある人のいはく、「かきつばた、」といふ五文字を句の上に据ゑて、旅の心を詠め。",
+      "originalText": "その沢にかきつばた、いとおもしろく咲きたり。",
       "modernTranslation": "その沢にかきつばたがたいそう美しく咲いていた。",
       "tokens": [
         {
@@ -1681,317 +1681,14 @@
         },
         {
           "id": "s10-t11",
-          "text": "。それ",
+          "text": "。",
           "start": 21,
-          "end": 24,
+          "end": 22,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
           },
           "hint": "代名詞「それ」: 中称の指示代名詞「それ」。古文の指示代名詞は「こ・そ・か (あ)」系で、近称「これ」/中称「それ」/遠称「かれ・あれ」と体系をなす。"
-        },
-        {
-          "id": "s10-t12",
-          "text": "を",
-          "start": 24,
-          "end": 25,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s10-t13",
-          "text": "見",
-          "start": 25,
-          "end": 26,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ上一",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "マ上一「見る」:「み・み・みる・みる・みれ・みよ」と活用。上一段は語幹+「i」音で固定、活用語尾は「i・i・iる・iる・iれ・iよ」。「見る・着る・煮る・干る・嚏(ひ)る」など暗記必須。"
-        },
-        {
-          "id": "s10-t14",
-          "text": "て",
-          "start": 26,
-          "end": 27,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 連用形接続。単純接続「〜て・〜で」。動作の継起を示す。"
-        },
-        {
-          "id": "s10-t15",
-          "text": "、",
-          "start": 27,
-          "end": 28,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t16",
-          "text": "ある",
-          "start": 28,
-          "end": 30,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ変",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。連体形「ある」+体言で「(とある)〜」。「ある人」=「(同行の) ある人」と人物の特定を避ける表現。"
-        },
-        {
-          "id": "s10-t17",
-          "text": "人",
-          "start": 30,
-          "end": 31,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t18",
-          "text": "の",
-          "start": 31,
-          "end": 32,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "主格"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(主格): 連体修飾節内で主語を示す「〜が」。「ある人のいはく」=「ある人が言うことには」。連体修飾の「〜の」と区別する重要識別ポイント。"
-        },
-        {
-          "id": "s10-t19",
-          "text": "いはく",
-          "start": 32,
-          "end": 35,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "連語",
-            "baseForm": "いふ"
-          },
-          "hint": "連語「いはく」: ハ四「言ふ」未然形+ク語法 (上代の名詞化形式)。「言うことには」の意で、後に発言内容を引用する定型句。「のたまはく」「思はく」も同じク語法。"
-        },
-        {
-          "id": "s10-t20",
-          "text": "、「かきつばた",
-          "start": 35,
-          "end": 42,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t21",
-          "text": "、」",
-          "start": 42,
-          "end": 44,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t22",
-          "text": "と",
-          "start": 44,
-          "end": 45,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "引用の格助詞「と」: 直前の語句を引用「〜という・〜と」。「Aといふ」「Aと思ふ」の形で頻出。"
-        },
-        {
-          "id": "s10-t23",
-          "text": "いふ",
-          "start": 45,
-          "end": 47,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ハ四",
-            "conjugationForm": "体",
-            "baseForm": "いふ"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ハ四「言ふ」:「は・ひ・ふ・ふ・へ・へ」と活用。「言う・呼ぶ」の意。「Aといふ」=「Aという」の引用句で頻出。"
-        },
-        {
-          "id": "s10-t24",
-          "text": "五文字",
-          "start": 47,
-          "end": 50,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t25",
-          "text": "を",
-          "start": 50,
-          "end": 51,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s10-t26",
-          "text": "句",
-          "start": 51,
-          "end": 52,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t27",
-          "text": "の",
-          "start": 52,
-          "end": 53,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s10-t28",
-          "text": "上",
-          "start": 53,
-          "end": 54,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t29",
-          "text": "に",
-          "start": 54,
-          "end": 55,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "場所"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s10-t30",
-          "text": "据ゑ",
-          "start": 55,
-          "end": 57,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ワ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "ワ下二「据う」:「ゑ・ゑ・う・うる・うれ・ゑよ」と活用。「(物を) 据える・置く」の意。ワ行下二段は「植う・据う・飢う」の三語のみ、暗記必須。"
-        },
-        {
-          "id": "s10-t31",
-          "text": "て",
-          "start": 57,
-          "end": 58,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 連用形接続。単純接続「〜て・〜で」。動作の継起を示す。"
-        },
-        {
-          "id": "s10-t32",
-          "text": "、旅",
-          "start": 58,
-          "end": 60,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t33",
-          "text": "の",
-          "start": 60,
-          "end": 61,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s10-t34",
-          "text": "心",
-          "start": 61,
-          "end": 62,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s10-t35",
-          "text": "を",
-          "start": 62,
-          "end": 63,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s10-t36",
-          "text": "詠め",
-          "start": 63,
-          "end": 65,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "マ四",
-            "conjugationForm": "命"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "マ四「詠む」:「ま・み・む・む・め・め」と活用。「(歌を) 詠む」の意。命令形「詠め」=「詠め」、已然形「詠め」+ば=「詠んだので」と同形なので接続で識別。"
-        },
-        {
-          "id": "s10-t37",
-          "text": "。",
-          "start": 65,
-          "end": 66,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
         }
       ]
     },
@@ -2001,14 +1698,314 @@
       "modernTranslation": "それを見て、同行の者が、「『かきつばた』という五文字を各句の頭に置いて、旅の心を詠め。",
       "tokens": [
         {
+          "text": "それ",
+          "layer": 0,
           "id": "s11-t1",
-          "text": "それを見て、ある人のいはく、「かきつばた、といふ五文字を句の上に据ゑて、旅の心を詠め。",
           "start": 0,
-          "end": 43,
+          "end": 2
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s11-t2",
+          "start": 2,
+          "end": 3
+        },
+        {
+          "text": "見",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ上一",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ上一「見る」:「み・み・みる・みる・みれ・みよ」と活用。上一段は語幹+「i」音で固定、活用語尾は「i・i・iる・iる・iれ・iよ」。「見る・着る・煮る・干る・嚏(ひ)る」など暗記必須。",
+          "id": "s11-t3",
+          "start": 3,
+          "end": 4
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 連用形接続。単純接続「〜て・〜で」。動作の継起を示す。",
+          "id": "s11-t4",
+          "start": 4,
+          "end": 5
+        },
+        {
+          "text": "、",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s11-t5",
+          "start": 5,
+          "end": 6
+        },
+        {
+          "text": "ある",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ラ変動詞「あり」: 「ら・り・り・る・れ・れ」と活用。連体形「ある」+体言で「(とある)〜」。「ある人」=「(同行の) ある人」と人物の特定を避ける表現。",
+          "id": "s11-t6",
+          "start": 6,
+          "end": 8
+        },
+        {
+          "text": "人",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t7",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(主格): 連体修飾節内で主語を示す「〜が」。「ある人のいはく」=「ある人が言うことには」。連体修飾の「〜の」と区別する重要識別ポイント。",
+          "id": "s11-t8",
+          "start": 9,
+          "end": 10
+        },
+        {
+          "text": "いはく",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "連語",
+            "baseForm": "いふ"
+          },
+          "hint": "連語「いはく」: ハ四「言ふ」未然形+ク語法 (上代の名詞化形式)。「言うことには」の意で、後に発言内容を引用する定型句。「のたまはく」「思はく」も同じク語法。",
+          "id": "s11-t9",
+          "start": 10,
+          "end": 13
+        },
+        {
+          "text": "、「かきつばた",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t10",
+          "start": 13,
+          "end": 20
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t11",
+          "start": 20,
+          "end": 21
+        },
+        {
+          "text": "と",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "引用の格助詞「と」: 直前の語句を引用「〜という・〜と」。「Aといふ」「Aと思ふ」の形で頻出。",
+          "id": "s11-t12",
+          "start": 21,
+          "end": 22
+        },
+        {
+          "text": "いふ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ハ四",
+            "conjugationForm": "体",
+            "baseForm": "いふ"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ハ四「言ふ」:「は・ひ・ふ・ふ・へ・へ」と活用。「言う・呼ぶ」の意。「Aといふ」=「Aという」の引用句で頻出。",
+          "id": "s11-t13",
+          "start": 22,
+          "end": 24
+        },
+        {
+          "text": "五文字",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t14",
+          "start": 24,
+          "end": 27
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s11-t15",
+          "start": 27,
+          "end": 28
+        },
+        {
+          "text": "句",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t16",
+          "start": 28,
+          "end": 29
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s11-t17",
+          "start": 29,
+          "end": 30
+        },
+        {
+          "text": "上",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t18",
+          "start": 30,
+          "end": 31
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s11-t19",
+          "start": 31,
+          "end": 32
+        },
+        {
+          "text": "据ゑ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ワ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "ワ下二「据う」:「ゑ・ゑ・う・うる・うれ・ゑよ」と活用。「(物を) 据える・置く」の意。ワ行下二段は「植う・据う・飢う」の三語のみ、暗記必須。",
+          "id": "s11-t20",
+          "start": 32,
+          "end": 34
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 連用形接続。単純接続「〜て・〜で」。動作の継起を示す。",
+          "id": "s11-t21",
+          "start": 34,
+          "end": 35
+        },
+        {
+          "text": "、旅",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t22",
+          "start": 35,
+          "end": 37
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s11-t23",
+          "start": 37,
+          "end": 38
+        },
+        {
+          "text": "心",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t24",
+          "start": 38,
+          "end": 39
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s11-t25",
+          "start": 39,
+          "end": 40
+        },
+        {
+          "text": "詠め",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ四",
+            "conjugationForm": "命"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "マ四「詠む」:「ま・み・む・む・め・め」と活用。「(歌を) 詠む」の意。命令形「詠め」=「詠め」、已然形「詠め」+ば=「詠んだので」と同形なので接続で識別。",
+          "id": "s11-t26",
+          "start": 40,
+          "end": 42
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s11-t27",
+          "start": 42,
+          "end": 43
         }
       ]
     },

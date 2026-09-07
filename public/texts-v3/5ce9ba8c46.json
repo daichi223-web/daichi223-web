@@ -118,27 +118,7 @@
       "modernTranslation": "興ざめなもの　昼吠える犬、春の網代。",
       "tokens": [
         {
-          "id": "s1-t1",
-          "text": "すさまじきもの　昼ほゆる犬、春の網代。",
-          "start": 0,
-          "end": 19,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        }
-      ]
-    },
-    {
-      "id": "s2",
-      "originalText": "すさまじきもの昼ほゆる犬、春の網代。三、四月の紅梅の衣。",
-      "modernTranslation": "三、四月の紅梅襲の着物。",
-      "tokens": [
-        {
-          "id": "s2-t1",
           "text": "すさまじき",
-          "start": 0,
-          "end": 5,
           "layer": 1,
           "grammarTag": {
             "pos": "形容詞",
@@ -147,25 +127,146 @@
             "baseForm": "すさまじ"
           },
           "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "重要語「すさまじ」: 現代語「すさまじい(強烈だ)」と全く違い、古語では「興ざめだ・場違いだ・不調和だ」が基本義。本段の主題語で、清少納言は時季外れ・期待外れの事物に向けて使う。シク活用形容詞、ここは連体形で「もの」を修飾"
+          "hint": "重要語「すさまじ」: 現代語「すさまじい(強烈だ)」と全く違い、古語では「興ざめだ・場違いだ・不調和だ」が基本義。本段の主題語で、清少納言は時季外れ・期待外れの事物に向けて使う。シク活用形容詞、ここは連体形で「もの」を修飾",
+          "id": "s1-t1",
+          "start": 0,
+          "end": 5
         },
         {
-          "id": "s2-t2",
           "text": "もの",
-          "start": 5,
-          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": "",
             "baseForm": "もの"
           },
-          "hint": "名詞「もの」: 類聚的章段の標識。「〜もの」は同類事物を列挙する形式で、「すさまじきもの」「うつくしきもの」「にくきもの」など枕草子の代表的章段名"
+          "hint": "名詞「もの」: 類聚的章段の標識。「〜もの」は同類事物を列挙する形式で、「すさまじきもの」「うつくしきもの」「にくきもの」など枕草子の代表的章段名",
+          "id": "s1-t2",
+          "start": 5,
+          "end": 7
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s1-t3",
+          "start": 7,
+          "end": 8
+        },
+        {
+          "text": "昼",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s1-t4",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "ほゆる",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "ヤ下二"
+          },
+          "hint": "ヤ行下二段「ほゆ」: 「吠える」。動物の鳴き声に用いる古語動詞。連体形「ほゆる」で「犬」を修飾",
+          "id": "s1-t5",
+          "start": 9,
+          "end": 12
+        },
+        {
+          "text": "犬",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s1-t6",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "、",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s1-t7",
+          "start": 13,
+          "end": 14
+        },
+        {
+          "text": "春",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s1-t8",
+          "start": 14,
+          "end": 15
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」: 連体修飾(体修)「〜の」。主格「〜が」、同格「〜で」、準体格「〜のもの」など多義。本作冒頭で頻出",
+          "id": "s1-t9",
+          "start": 15,
+          "end": 16
+        },
+        {
+          "text": "網代",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s1-t10",
+          "start": 16,
+          "end": 18
+        },
+        {
+          "text": "。",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s1-t11",
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "originalText": "三、四月の紅梅の衣。",
+      "modernTranslation": "三、四月の紅梅襲の着物。",
+      "tokens": [
+        {
+          "id": "s2-t1",
+          "text": "三",
+          "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s2-t2",
+          "text": "、",
+          "start": 1,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
         },
         {
           "id": "s2-t3",
-          "text": "昼",
-          "start": 7,
-          "end": 8,
+          "text": "四月",
+          "start": 2,
+          "end": 4,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -173,113 +274,9 @@
         },
         {
           "id": "s2-t4",
-          "text": "ほゆる",
-          "start": 8,
-          "end": 11,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "ヤ下二"
-          },
-          "hint": "ヤ行下二段「ほゆ」: 「吠える」。動物の鳴き声に用いる古語動詞。連体形「ほゆる」で「犬」を修飾"
-        },
-        {
-          "id": "s2-t5",
-          "text": "犬",
-          "start": 11,
-          "end": 12,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t6",
-          "text": "、",
-          "start": 12,
-          "end": 13,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t7",
-          "text": "春",
-          "start": 13,
-          "end": 14,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t8",
           "text": "の",
-          "start": 14,
-          "end": 15,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」: 連体修飾(体修)「〜の」。主格「〜が」、同格「〜で」、準体格「〜のもの」など多義。本作冒頭で頻出"
-        },
-        {
-          "id": "s2-t9",
-          "text": "網代",
-          "start": 15,
-          "end": 17,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t10",
-          "text": "。",
-          "start": 17,
-          "end": 18,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t11",
-          "text": "三",
-          "start": 18,
-          "end": 19,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t12",
-          "text": "、",
-          "start": 19,
-          "end": 20,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t13",
-          "text": "四月",
-          "start": 20,
-          "end": 22,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s2-t14",
-          "text": "の",
-          "start": 22,
-          "end": 23,
+          "start": 4,
+          "end": 5,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -289,10 +286,10 @@
           "hint": "格助詞「の」: 連体修飾(体修)。「三、四月の紅梅の衣」=「三、四月に着る紅梅襲の着物」"
         },
         {
-          "id": "s2-t15",
+          "id": "s2-t5",
           "text": "紅梅",
-          "start": 23,
-          "end": 25,
+          "start": 5,
+          "end": 7,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -300,10 +297,10 @@
           "hint": "名詞「紅梅」: 紅梅襲(かさね)の色目。十一月から二月頃までの冬の襲で、晩春の三、四月に着るのは時季外れ"
         },
         {
-          "id": "s2-t16",
+          "id": "s2-t6",
           "text": "の",
-          "start": 25,
-          "end": 26,
+          "start": 7,
+          "end": 8,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -313,20 +310,20 @@
           "hint": "格助詞「の」: 連体修飾(体修)"
         },
         {
-          "id": "s2-t17",
+          "id": "s2-t7",
           "text": "衣",
-          "start": 26,
-          "end": 27,
+          "start": 8,
+          "end": 9,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t18",
+          "id": "s2-t8",
           "text": "。",
-          "start": 27,
-          "end": 28,
+          "start": 9,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""

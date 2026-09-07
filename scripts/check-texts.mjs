@@ -21,9 +21,11 @@
  *   T9 訳の使い回し    同じ訳が複数の文に付いていないか（訳の取り違えを疑う）
  *   T10 訳のズレ       隣の文の訳のほうが原文に合っていないか（1文ずれの検出）
  *   T11 歌頭のズレ     「〜……」で始まる和歌の訳が、和歌でない文に付いていないか
+ *   T12 原文の重複     隣の文と本文が重なっていないか（分割の失敗）
  *   T6 文 id の重複    sentence.id / token.id が重複していないか
  *   T7 文法参照        grammarRefId が public/grammar に実在するか
  *   T8 決め手          analysis/<id>.json があるとき、その参照 token が実在するか
+ *   T13 決め手の食い違い  決め手の意味が、その token の品詞分解の意味と食い違わないか
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -87,6 +89,18 @@ const kanjiWords = (t) => {
   const m = (t || '').match(/[一-鿿]{2,}/g);
   return m ? [...new Set(m)] : [];
 };
+// T12 用: 隣の文と本文が重なっているか。
+// 「s1 に本文＋次の和歌、s2 にその和歌」のように、分割で内容が二重になることがある。
+const bodyKey = (t) => (t || '').replace(/[\s\u3000「」﹁﹂『』（）()]+/g, '');
+const overlapsNeighbour = (a, b) => {
+  const x = bodyKey(a);
+  const y = bodyKey(b);
+  if (x.length < 12 || y.length < 12) return false;
+  const [short, long] = x.length <= y.length ? [x, y] : [y, x];
+  const head = short.slice(0, Math.floor(short.length * 0.8));
+  return head.length > 0 && long.includes(head);
+};
+
 const overlap = (words, tr) => {
   if (words.length === 0 || !tr) return 0;
   return words.filter((w) => tr.includes(w)).length / words.length;
@@ -250,6 +264,13 @@ for (const id of targets) {
     }
   }
 
+  // T12 原文の重複（隣の文と本文が重なっている＝分割の失敗）
+  for (let i = 0; i + 1 < sentences.length; i++) {
+    if (overlapsNeighbour(sentences[i].originalText, sentences[i + 1].originalText)) {
+      add(id, 'T12-原文の重複', `${sentences[i].id} と ${sentences[i + 1].id} の本文が重なっている`);
+    }
+  }
+
   // T10 訳のズレ（隣の訳のほうが原文に合う）
   for (let i = 0; i < sentences.length; i++) {
     const words = kanjiWords(sentences[i].originalText || '');
@@ -257,6 +278,10 @@ for (const id of targets) {
     // 訳が無い文のズレは判定しない（訳が無いこと自体は T4 の担当。
     // 詞書の続き行のように訳が先頭行にまとまっているケースを二重に数えない）
     if (!(sentences[i].modernTranslation || '').trim()) continue;
+    // 隣と本文が重なっている場合、訳が隣に合うのは当然なので T12 の担当にする
+    const dupPrev = i > 0 && overlapsNeighbour(sentences[i - 1].originalText, sentences[i].originalText);
+    const dupNext = i + 1 < sentences.length && overlapsNeighbour(sentences[i].originalText, sentences[i + 1].originalText);
+    if (dupPrev || dupNext) continue;
     const own = overlap(words, sentences[i].modernTranslation || '');
     const next = i + 1 < sentences.length ? overlap(words, sentences[i + 1].modernTranslation || '') : 0;
     const prev = i > 0 ? overlap(words, sentences[i - 1].modernTranslation || '') : 0;
@@ -276,11 +301,30 @@ for (const id of targets) {
       add(id, 'T0-壊れJSON(analysis)', String(e.message).slice(0, 120));
       an = null;
     }
-    const deciders = an && (an.deciders || an.tokens || []);
+    // 実データのキーは tokenAnalyses（旧名の deciders / tokens も一応見る）
+    const deciders = an && (an.tokenAnalyses || an.deciders || an.tokens || []);
     if (Array.isArray(deciders)) {
+      // token id → 品詞分解の意味
+      const meaningOf = new Map();
+      for (const st of sentences)
+        for (const tk of st.tokens || []) meaningOf.set(tk.id, tk.grammarTag?.meaning || '');
       for (const d of deciders) {
         const tid = d.tokenId || d.id;
-        if (tid && !seenToken.has(tid)) add(id, 'T8-決め手の参照切れ', tid);
+        if (tid && !seenToken.has(tid)) {
+          add(id, 'T8-決め手の参照切れ', `${tid}（決め手「${d.decider?.meaning ?? '?'}」）`);
+          continue;
+        }
+        // T13 意味の食い違い。「完了体/完了」「比況（幹）/比況」のような
+        // 細かさの違いは同じものとみなす（片方がもう片方で始まれば一致）。
+        const want = d.decider?.meaning;
+        if (!tid || !want) continue;
+        const got = meaningOf.get(tid);
+        if (got === undefined) continue;
+        if (got === '') {
+          add(id, 'T13-決め手の食い違い', `${tid}: 決め手「${want}」だが品詞分解に意味が無い`);
+        } else if (!got.startsWith(want) && !want.startsWith(got)) {
+          add(id, 'T13-決め手の食い違い', `${tid}: 品詞分解「${got}」/ 決め手「${want}」`);
+        }
       }
     }
   }

@@ -6109,7 +6109,7 @@
     },
     {
       "id": "s13",
-      "originalText": "すなはち、その国より越えて甲斐にいでまして、酒折の宮にいましし時に、歌ひたまひしく、新治筑波を過ぎて幾夜か寝つる",
+      "originalText": "すなはち、その国より越えて甲斐にいでまして、酒折の宮にいましし時に、歌ひたまひしく、",
       "modernTranslation": "そして、その国から越えて甲斐においでになって、酒折の宮に滞在された時に、歌いなさったことには、",
       "tokens": [
         {
@@ -6418,112 +6418,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s13-t28",
-          "text": "新治",
-          "start": 42,
-          "end": 44,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s13-t29",
-          "text": "筑波",
-          "start": 44,
-          "end": 46,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s13-t30",
-          "text": "を",
-          "start": 46,
-          "end": 47,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "経由点"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s13-t31",
-          "text": "過ぎ",
-          "start": 47,
-          "end": 49,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ上二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s13-t32",
-          "text": "て",
-          "start": 49,
-          "end": 50,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続「〜て」。連用形接続。動作の連続・継起・原因を緩やかに繋ぐ。古事記では一文を長く繋ぐ役割"
-        },
-        {
-          "id": "s13-t33",
-          "text": "幾夜",
-          "start": 50,
-          "end": 52,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s13-t34",
-          "text": "か",
-          "start": 52,
-          "end": 53,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "疑問"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「か」: 疑問・反語「〜か」。係り結びの結びは連体形。「幾夜か寝つる」の連体形「つる」が結び"
-        },
-        {
-          "id": "s13-t35",
-          "text": "寝",
-          "start": 53,
-          "end": 54,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ナ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s13-t36",
-          "text": "つる",
-          "start": 54,
-          "end": 56,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "完了"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「つ」連体形「つる」: 完了「〜た・〜てしまった」。連用形接続。和歌の「幾夜か寝つる」は係助詞「か」の結びで連体形"
         }
       ]
     },
@@ -6533,20 +6427,130 @@
       "modernTranslation": "新治……常陸の新治や筑波の地を過ぎてから、幾夜寝たか。",
       "tokens": [
         {
-          "id": "s14-t1",
-          "text": "新治　筑波を過ぎて　幾夜か寝つる",
-          "start": 0,
-          "end": 16,
+          "text": "新治",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s14-t1",
+          "start": 0,
+          "end": 2
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s14-t2",
+          "start": 2,
+          "end": 3
+        },
+        {
+          "text": "筑波",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s14-t3",
+          "start": 3,
+          "end": 5
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "経由点"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s14-t4",
+          "start": 5,
+          "end": 6
+        },
+        {
+          "text": "過ぎ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ上二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s14-t5",
+          "start": 6,
+          "end": 8
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続「〜て」。連用形接続。動作の連続・継起・原因を緩やかに繋ぐ。古事記では一文を長く繋ぐ役割",
+          "id": "s14-t6",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s14-t7",
+          "start": 9,
+          "end": 10
+        },
+        {
+          "text": "幾夜",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s14-t8",
+          "start": 10,
+          "end": 12
+        },
+        {
+          "text": "か",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "疑問"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「か」: 疑問・反語「〜か」。係り結びの結びは連体形。「幾夜か寝つる」の連体形「つる」が結び",
+          "id": "s14-t9",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "寝",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ナ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s14-t10",
+          "start": 13,
+          "end": 14
+        },
+        {
+          "text": "つる",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「つ」連体形「つる」: 完了「〜た・〜てしまった」。連用形接続。和歌の「幾夜か寝つる」は係助詞「か」の結びで連体形",
+          "id": "s14-t11",
+          "start": 14,
+          "end": 16
         }
       ]
     },
     {
       "id": "s15",
-      "originalText": "しかして、その御火焼きの翁、御歌につぎて、歌ひしく、かがなべて夜には九夜日には十日を",
+      "originalText": "しかして、その御火焼きの翁、御歌につぎて、歌ひしく、",
       "modernTranslation": "それから、警備のかがり火をたく役の老人が、（ヤマトタケルの）御歌に続けて、歌ったことには、",
       "tokens": [
         {
@@ -6736,144 +6740,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s15-t18",
-          "text": "かが",
-          "start": 26,
-          "end": 28,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s15-t19",
-          "text": "なべ",
-          "start": 28,
-          "end": 30,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "バ下二",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「並ぶ」バ下二・連用: 「重ねる・並べる」。「かがなべて」=「日(か)を並べて」=日数を重ねて。翁の歌の冒頭、歌枕的な言い回し"
-        },
-        {
-          "id": "s15-t20",
-          "text": "て",
-          "start": 30,
-          "end": 31,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          },
-          "hint": "接続助詞「て」: 単純接続「〜て」。連用形接続。動作の連続・継起・原因を緩やかに繋ぐ。古事記では一文を長く繋ぐ役割"
-        },
-        {
-          "id": "s15-t21",
-          "text": "夜",
-          "start": 31,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s15-t22",
-          "text": "に",
-          "start": 32,
-          "end": 33,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "時間"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s15-t23",
-          "text": "は",
-          "start": 33,
-          "end": 34,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "単純"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「は」: 提示・主題化。和歌中で「倭は国のまほろば」=「大和は国の中で最も美しい場所」と讃美の主題を提示"
-        },
-        {
-          "id": "s15-t24",
-          "text": "九夜",
-          "start": 34,
-          "end": 36,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s15-t25",
-          "text": "日",
-          "start": 36,
-          "end": 37,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s15-t26",
-          "text": "に",
-          "start": 37,
-          "end": 38,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "時間"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s15-t27",
-          "text": "は",
-          "start": 38,
-          "end": 39,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「は」: 提示・主題提示「〜は」。話題を限定し直後の述語と呼応する。本章では場面ごとの主題転換の合図"
-        },
-        {
-          "id": "s15-t28",
-          "text": "十日",
-          "start": 39,
-          "end": 41,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s15-t29",
-          "text": "を",
-          "start": 41,
-          "end": 42,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "間投助詞",
-            "meaning": "詠嘆"
-          },
-          "grammarRefId": "joshi-shujoshi",
-          "hint": "間投助詞「を」: 詠嘆「〜よ」。和歌の句末で詠嘆の余情を作る。「日には十日を」「葉を髻華に挿せ」などの末尾"
         }
       ]
     },
@@ -6883,14 +6749,156 @@
       "modernTranslation": "かがなべて……日数を重ねて、夜は九夜、日では十日になります。",
       "tokens": [
         {
-          "id": "s16-t1",
-          "text": "かがなべて　夜には九夜　日には十日を",
-          "start": 0,
-          "end": 18,
+          "text": "かが",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s16-t1",
+          "start": 0,
+          "end": 2
+        },
+        {
+          "text": "なべ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "バ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "hint": "動詞「並ぶ」バ下二・連用: 「重ねる・並べる」。「かがなべて」=「日(か)を並べて」=日数を重ねて。翁の歌の冒頭、歌枕的な言い回し",
+          "id": "s16-t2",
+          "start": 2,
+          "end": 4
+        },
+        {
+          "text": "て",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          },
+          "hint": "接続助詞「て」: 単純接続「〜て」。連用形接続。動作の連続・継起・原因を緩やかに繋ぐ。古事記では一文を長く繋ぐ役割",
+          "id": "s16-t3",
+          "start": 4,
+          "end": 5
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s16-t4",
+          "start": 5,
+          "end": 6
+        },
+        {
+          "text": "夜",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s16-t5",
+          "start": 6,
+          "end": 7
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "時間"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s16-t6",
+          "start": 7,
+          "end": 8
+        },
+        {
+          "text": "は",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "単純"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題化。和歌中で「倭は国のまほろば」=「大和は国の中で最も美しい場所」と讃美の主題を提示",
+          "id": "s16-t7",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "九夜",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s16-t8",
+          "start": 9,
+          "end": 11
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s16-t9",
+          "start": 11,
+          "end": 12
+        },
+        {
+          "text": "日",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s16-t10",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "時間"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s16-t11",
+          "start": 13,
+          "end": 14
+        },
+        {
+          "text": "は",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題提示「〜は」。話題を限定し直後の述語と呼応する。本章では場面ごとの主題転換の合図",
+          "id": "s16-t12",
+          "start": 14,
+          "end": 15
+        },
+        {
+          "text": "十日",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s16-t13",
+          "start": 15,
+          "end": 17
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「を」: 詠嘆「〜よ」。和歌の句末で詠嘆の余情を作る。「日には十日を」「葉を髻華に挿せ」などの末尾",
+          "id": "s16-t14",
+          "start": 17,
+          "end": 18
         }
       ]
     },
@@ -7160,7 +7168,7 @@
     },
     {
       "id": "s18",
-      "originalText": "そこよりいでまして、能煩野に至りましし時に、国を思ひて、歌ひたまひしく、倭は国のまほろばたたなづく青垣山隠れる倭しうるはし",
+      "originalText": "そこよりいでまして、能煩野に至りましし時に、国を思ひて、歌ひたまひしく、",
       "modernTranslation": "そこから出発なさって、能煩野にお着きになられた時に、（大和の）国を思いやって、歌いなさったことには、",
       "tokens": [
         {
@@ -7436,154 +7444,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s18-t24",
-          "text": "倭",
-          "start": 36,
-          "end": 37,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s18-t25",
-          "text": "は",
-          "start": 37,
-          "end": 38,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「は」: 提示・主題提示「〜は」。話題を限定し直後の述語と呼応する。本章では場面ごとの主題転換の合図"
-        },
-        {
-          "id": "s18-t26",
-          "text": "国",
-          "start": 38,
-          "end": 39,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s18-t27",
-          "text": "の",
-          "start": 39,
-          "end": 40,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s18-t28",
-          "text": "まほろば",
-          "start": 40,
-          "end": 44,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s18-t29",
-          "text": "たたなづく",
-          "start": 44,
-          "end": 49,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s18-t30",
-          "text": "青垣",
-          "start": 49,
-          "end": 51,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s18-t31",
-          "text": "山",
-          "start": 51,
-          "end": 52,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s18-t32",
-          "text": "隠れ",
-          "start": 52,
-          "end": 54,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "已"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s18-t33",
-          "text": "る",
-          "start": 54,
-          "end": 55,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "存続"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「り」連体形「る」: 完了・存続「〜た・〜ている」。サ変未然形・四段已然形接続(サミ四已と暗記)。「住め＋る」=四段已然＋り"
-        },
-        {
-          "id": "s18-t34",
-          "text": "倭",
-          "start": 55,
-          "end": 56,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s18-t35",
-          "text": "し",
-          "start": 56,
-          "end": 57,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "副助詞"
-          },
-          "hint": "副助詞「し」: 強意「まさに〜こそ」。「倭しうるはし」=「大和こそ美しい」、上代歌謡の主題語を強める用法"
-        },
-        {
-          "id": "s18-t36",
-          "text": "うるはし",
-          "start": 57,
-          "end": 61,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "シク",
-            "conjugationForm": "終"
-          },
-          "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "重要古語「うるはし」シク・終止: 「整って美しい・端正だ・立派だ」。「倭しうるはし」=「大和は美しい」、思国歌の核心語。現代語「美しい」より格式高い"
         }
       ]
     },
@@ -7593,20 +7453,179 @@
       "modernTranslation": "倭は……大和は国の中心の立派な土地だ。たたみ重なっている、青々とした垣根のように大和の周りをめぐっている山々。その山々の中に囲まれている、大和は美しい。",
       "tokens": [
         {
-          "id": "s19-t1",
-          "text": "倭は　国のまほろばたたなづく　青垣　山隠れる倭しうるはし",
-          "start": 0,
-          "end": 28,
+          "text": "倭",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s19-t1",
+          "start": 0,
+          "end": 1
+        },
+        {
+          "text": "は",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題提示「〜は」。話題を限定し直後の述語と呼応する。本章では場面ごとの主題転換の合図",
+          "id": "s19-t2",
+          "start": 1,
+          "end": 2
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s19-t3",
+          "start": 2,
+          "end": 3
+        },
+        {
+          "text": "国",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s19-t4",
+          "start": 3,
+          "end": 4
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s19-t5",
+          "start": 4,
+          "end": 5
+        },
+        {
+          "text": "まほろば",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s19-t6",
+          "start": 5,
+          "end": 9
+        },
+        {
+          "text": "たたなづく",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s19-t7",
+          "start": 9,
+          "end": 14
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s19-t8",
+          "start": 14,
+          "end": 15
+        },
+        {
+          "text": "青垣",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s19-t9",
+          "start": 15,
+          "end": 17
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s19-t10",
+          "start": 17,
+          "end": 18
+        },
+        {
+          "text": "山",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s19-t11",
+          "start": 18,
+          "end": 19
+        },
+        {
+          "text": "隠れ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "已"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s19-t12",
+          "start": 19,
+          "end": 21
+        },
+        {
+          "text": "る",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "存続"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「り」連体形「る」: 完了・存続「〜た・〜ている」。サ変未然形・四段已然形接続(サミ四已と暗記)。「住め＋る」=四段已然＋り",
+          "id": "s19-t13",
+          "start": 21,
+          "end": 22
+        },
+        {
+          "text": "倭",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s19-t14",
+          "start": 22,
+          "end": 23
+        },
+        {
+          "text": "し",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "副助詞"
+          },
+          "hint": "副助詞「し」: 強意「まさに〜こそ」。「倭しうるはし」=「大和こそ美しい」、上代歌謡の主題語を強める用法",
+          "id": "s19-t15",
+          "start": 23,
+          "end": 24
+        },
+        {
+          "text": "うるはし",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "シク",
+            "conjugationForm": "終"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "重要古語「うるはし」シク・終止: 「整って美しい・端正だ・立派だ」。「倭しうるはし」=「大和は美しい」、思国歌の核心語。現代語「美しい」より格式高い",
+          "id": "s19-t16",
+          "start": 24,
+          "end": 28
         }
       ]
     },
     {
       "id": "s20",
-      "originalText": "また、歌ひたまひしく、命のまたけむ人はたたみこも平群の山の熊白檮が葉を髻華に挿せその子",
+      "originalText": "また、歌ひたまひしく、",
       "modernTranslation": "また、歌いなさったことには、",
       "tokens": [
         {
@@ -7678,249 +7697,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s20-t7",
-          "text": "命",
-          "start": 11,
-          "end": 12,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s20-t8",
-          "text": "の",
-          "start": 12,
-          "end": 13,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "主格"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s20-t9",
-          "text": "またけ",
-          "start": 13,
-          "end": 16,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "ク",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "keiyoshi-katsuyo",
-          "hint": "形容詞「全(また)し」ク・未然: 「(命を)全うする・損なわない」。「またけむ人」=「(命を)全うするであろう人」、生命賛美歌の主題語"
-        },
-        {
-          "id": "s20-t10",
-          "text": "む",
-          "start": 16,
-          "end": 17,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "婉曲"
-          },
-          "grammarRefId": "jodoshi-suiryo",
-          "hint": "助動詞「む」連体形(婉曲): 「〜のような・〜であろう」。「またけむ人」=長らえるであろう人、現実の事象を婉曲化する用法"
-        },
-        {
-          "id": "s20-t11",
-          "text": "人",
-          "start": 17,
-          "end": 18,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s20-t12",
-          "text": "は",
-          "start": 18,
-          "end": 19,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「は」: 提示・主題提示「〜は」。話題を限定し直後の述語と呼応する。本章では場面ごとの主題転換の合図"
-        },
-        {
-          "id": "s20-t13",
-          "text": "たたみこも",
-          "start": 19,
-          "end": 24,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s20-t14",
-          "text": "平群",
-          "start": 24,
-          "end": 26,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s20-t15",
-          "text": "の",
-          "start": 26,
-          "end": 27,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s20-t16",
-          "text": "山",
-          "start": 27,
-          "end": 28,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s20-t17",
-          "text": "の",
-          "start": 28,
-          "end": 29,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s20-t18",
-          "text": "熊白檮",
-          "start": 29,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s20-t19",
-          "text": "が",
-          "start": 32,
-          "end": 33,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s20-t20",
-          "text": "葉",
-          "start": 33,
-          "end": 34,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s20-t21",
-          "text": "を",
-          "start": 34,
-          "end": 35,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」: 対象「〜を」。動作の対象を示す。和歌中で詠嘆の間投助詞「を」と紛らわしいので識別注意"
-        },
-        {
-          "id": "s20-t22",
-          "text": "髻華",
-          "start": 35,
-          "end": 37,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s20-t23",
-          "text": "に",
-          "start": 37,
-          "end": 38,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "資格"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s20-t24",
-          "text": "挿せ",
-          "start": 38,
-          "end": 40,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ四",
-            "conjugationForm": "命"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s20-t25",
-          "text": "そ",
-          "start": 40,
-          "end": 41,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          },
-          "hint": "指示代名詞「そ」: 「その」。「その国の造」「その神」など、上代では連体詞「その」の語幹「そ」が独立しやすい"
-        },
-        {
-          "id": "s20-t26",
-          "text": "の",
-          "start": 41,
-          "end": 42,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s20-t27",
-          "text": "子",
-          "start": 42,
-          "end": 43,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
         }
       ]
     },
@@ -7930,14 +7706,275 @@
       "modernTranslation": "命のまたけむ人は……命の先がある者は（ふるさとの大和に帰って）平群の山の大きく立派な樫の木の葉を、髪飾りにして髪に挿し（ますます長く生きながらえるようにし）なさい、お前たちよ。",
       "tokens": [
         {
-          "id": "s21-t1",
-          "text": "命の　またけむ人はたたみこも　平群の山の熊白檮が葉を　髻華に挿せ　その子",
-          "start": 0,
-          "end": 36,
+          "text": "命",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s21-t1",
+          "start": 0,
+          "end": 1
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s21-t2",
+          "start": 1,
+          "end": 2
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s21-t3",
+          "start": 2,
+          "end": 3
+        },
+        {
+          "text": "またけ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "ク",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "keiyoshi-katsuyo",
+          "hint": "形容詞「全(また)し」ク・未然: 「(命を)全うする・損なわない」。「またけむ人」=「(命を)全うするであろう人」、生命賛美歌の主題語",
+          "id": "s21-t4",
+          "start": 3,
+          "end": 6
+        },
+        {
+          "text": "む",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "婉曲"
+          },
+          "grammarRefId": "jodoshi-suiryo",
+          "hint": "助動詞「む」連体形(婉曲): 「〜のような・〜であろう」。「またけむ人」=長らえるであろう人、現実の事象を婉曲化する用法",
+          "id": "s21-t5",
+          "start": 6,
+          "end": 7
+        },
+        {
+          "text": "人",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s21-t6",
+          "start": 7,
+          "end": 8
+        },
+        {
+          "text": "は",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題提示「〜は」。話題を限定し直後の述語と呼応する。本章では場面ごとの主題転換の合図",
+          "id": "s21-t7",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "たたみこも",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s21-t8",
+          "start": 9,
+          "end": 14
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s21-t9",
+          "start": 14,
+          "end": 15
+        },
+        {
+          "text": "平群",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s21-t10",
+          "start": 15,
+          "end": 17
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s21-t11",
+          "start": 17,
+          "end": 18
+        },
+        {
+          "text": "山",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s21-t12",
+          "start": 18,
+          "end": 19
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s21-t13",
+          "start": 19,
+          "end": 20
+        },
+        {
+          "text": "熊白檮",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s21-t14",
+          "start": 20,
+          "end": 23
+        },
+        {
+          "text": "が",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s21-t15",
+          "start": 23,
+          "end": 24
+        },
+        {
+          "text": "葉",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s21-t16",
+          "start": 24,
+          "end": 25
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「を」: 対象「〜を」。動作の対象を示す。和歌中で詠嘆の間投助詞「を」と紛らわしいので識別注意",
+          "id": "s21-t17",
+          "start": 25,
+          "end": 26
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s21-t18",
+          "start": 26,
+          "end": 27
+        },
+        {
+          "text": "髻華",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s21-t19",
+          "start": 27,
+          "end": 29
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "資格"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s21-t20",
+          "start": 29,
+          "end": 30
+        },
+        {
+          "text": "挿せ",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ四",
+            "conjugationForm": "命"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s21-t21",
+          "start": 30,
+          "end": 32
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s21-t22",
+          "start": 32,
+          "end": 33
+        },
+        {
+          "text": "そ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          },
+          "hint": "指示代名詞「そ」: 「その」。「その国の造」「その神」など、上代では連体詞「その」の語幹「そ」が独立しやすい",
+          "id": "s21-t23",
+          "start": 33,
+          "end": 34
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s21-t24",
+          "start": 34,
+          "end": 35
+        },
+        {
+          "text": "子",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s21-t25",
+          "start": 35,
+          "end": 36
         }
       ]
     },
@@ -8040,7 +8077,7 @@
     },
     {
       "id": "s23",
-      "originalText": "また、歌ひたまひしく、はしけやし我家の方よ雲居立ちくも",
+      "originalText": "また、歌ひたまひしく、",
       "modernTranslation": "次にまた、お歌いになったのは、",
       "tokens": [
         {
@@ -8112,96 +8149,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s23-t7",
-          "text": "はしけやし",
-          "start": 11,
-          "end": 16,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t8",
-          "text": "我家",
-          "start": 16,
-          "end": 18,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t9",
-          "text": "の",
-          "start": 18,
-          "end": 19,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s23-t10",
-          "text": "方",
-          "start": 19,
-          "end": 20,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t11",
-          "text": "よ",
-          "start": 20,
-          "end": 21,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "起点",
-            "baseForm": "よ"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「よ」(上代): 起点「〜より・〜から」。「我家の方よ」=我が家の方から、上代特有の「より」と同義の格助詞"
-        },
-        {
-          "id": "s23-t12",
-          "text": "雲居",
-          "start": 21,
-          "end": 23,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t13",
-          "text": "立ちく",
-          "start": 23,
-          "end": 26,
-          "layer": 1,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s23-t14",
-          "text": "も",
-          "start": 26,
-          "end": 27,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "間投助詞",
-            "meaning": "詠嘆"
-          },
-          "grammarRefId": "joshi-shujoshi",
-          "hint": "間投助詞「も」: 詠嘆「〜よ・〜ことよ」。和歌の句中で語勢を整える上代特有の用法"
         }
       ]
     },
@@ -8211,14 +8158,108 @@
       "modernTranslation": "はしけやし……ああ、なつかしい、わが家の方から、雲が湧きのぼってくるよ。",
       "tokens": [
         {
-          "id": "s24-t1",
-          "text": "はしけやし　我家の方よ　雲居立ちくも",
-          "start": 0,
-          "end": 18,
+          "text": "はしけやし",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s24-t1",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s24-t2",
+          "start": 5,
+          "end": 6
+        },
+        {
+          "text": "我家",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s24-t3",
+          "start": 6,
+          "end": 8
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s24-t4",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "方",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s24-t5",
+          "start": 9,
+          "end": 10
+        },
+        {
+          "text": "よ",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "起点",
+            "baseForm": "よ"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「よ」(上代): 起点「〜より・〜から」。「我家の方よ」=我が家の方から、上代特有の「より」と同義の格助詞",
+          "id": "s24-t6",
+          "start": 10,
+          "end": 11
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s24-t7",
+          "start": 11,
+          "end": 12
+        },
+        {
+          "text": "雲居",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s24-t8",
+          "start": 12,
+          "end": 14
+        },
+        {
+          "text": "立ちく",
+          "layer": 1,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s24-t9",
+          "start": 14,
+          "end": 17
+        },
+        {
+          "text": "も",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「も」: 詠嘆「〜よ・〜ことよ」。和歌の句中で語勢を整える上代特有の用法",
+          "id": "s24-t10",
+          "start": 17,
+          "end": 18
         }
       ]
     },
@@ -8436,7 +8477,7 @@
     },
     {
       "id": "s27",
-      "originalText": "しかして、御歌よみしたまひしく、嬢子の床のべにわが置きし剣の太刀その太刀はや",
+      "originalText": "しかして、御歌よみしたまひしく、",
       "modernTranslation": "そこでその時お歌いになったのは、",
       "tokens": [
         {
@@ -8528,218 +8569,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s27-t9",
-          "text": "嬢子",
-          "start": 16,
-          "end": 18,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s27-t10",
-          "text": "の",
-          "start": 18,
-          "end": 19,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s27-t11",
-          "text": "床",
-          "start": 19,
-          "end": 20,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s27-t12",
-          "text": "の",
-          "start": 20,
-          "end": 21,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s27-t13",
-          "text": "べ",
-          "start": 21,
-          "end": 22,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s27-t14",
-          "text": "に",
-          "start": 22,
-          "end": 23,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "場所"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s27-t15",
-          "text": "わ",
-          "start": 23,
-          "end": 24,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          },
-          "hint": "一人称代名詞「わ」: 「我」の上代縮約形。「わが置きし剣の太刀」=「私が置いてきた大刀」、倭建命の絶命歌の主語"
-        },
-        {
-          "id": "s27-t16",
-          "text": "が",
-          "start": 24,
-          "end": 25,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "主格"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「が」(主格・連体修飾): 上代では「〜の・〜が」。「吉備の臣らが祖」=吉備臣たちの祖先、連体修飾で多用"
-        },
-        {
-          "id": "s27-t17",
-          "text": "置き",
-          "start": 25,
-          "end": 27,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "カ四",
-            "conjugationForm": "用"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s27-t18",
-          "text": "し",
-          "start": 27,
-          "end": 28,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「き」連体形「し」: 直接体験の過去「〜た」。連用形接続。下に体言が来ると連体形「し」で結ぶ。古事記では「けり」より「き」が多用される"
-        },
-        {
-          "id": "s27-t19",
-          "text": "剣",
-          "start": 28,
-          "end": 29,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s27-t20",
-          "text": "の",
-          "start": 29,
-          "end": 30,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s27-t21",
-          "text": "太刀",
-          "start": 30,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s27-t22",
-          "text": "そ",
-          "start": 32,
-          "end": 33,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "代名詞"
-          },
-          "hint": "指示代名詞「そ」: 「その」。「その国の造」「その神」など、上代では連体詞「その」の語幹「そ」が独立しやすい"
-        },
-        {
-          "id": "s27-t23",
-          "text": "の",
-          "start": 33,
-          "end": 34,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用"
-        },
-        {
-          "id": "s27-t24",
-          "text": "太刀",
-          "start": 34,
-          "end": 36,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s27-t25",
-          "text": "は",
-          "start": 36,
-          "end": 37,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "提示"
-          },
-          "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「は」: 提示・主題提示「〜は」。話題を限定し直後の述語と呼応する。本章では場面ごとの主題転換の合図"
-        },
-        {
-          "id": "s27-t26",
-          "text": "や",
-          "start": 37,
-          "end": 38,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "間投助詞",
-            "meaning": "詠嘆"
-          },
-          "grammarRefId": "joshi-shujoshi",
-          "hint": "間投助詞「や」: 詠嘆「〜よ」。「太刀はや」「はしけやし」など、上代歌謡で頻出する感嘆表現"
         }
       ]
     },
@@ -8749,14 +8578,237 @@
       "modernTranslation": "嬢子の……おとめの床のあたりに、私が置いてきた大刀。ああ、その大刀よ。",
       "tokens": [
         {
-          "id": "s28-t1",
-          "text": "嬢子の　床のべにわが置きし　剣の太刀　その太刀はや",
-          "start": 0,
-          "end": 25,
+          "text": "嬢子",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s28-t1",
+          "start": 0,
+          "end": 2
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s28-t2",
+          "start": 2,
+          "end": 3
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s28-t3",
+          "start": 3,
+          "end": 4
+        },
+        {
+          "text": "床",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s28-t4",
+          "start": 4,
+          "end": 5
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s28-t5",
+          "start": 5,
+          "end": 6
+        },
+        {
+          "text": "べ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s28-t6",
+          "start": 6,
+          "end": 7
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "場所"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s28-t7",
+          "start": 7,
+          "end": 8
+        },
+        {
+          "text": "わ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          },
+          "hint": "一人称代名詞「わ」: 「我」の上代縮約形。「わが置きし剣の太刀」=「私が置いてきた大刀」、倭建命の絶命歌の主語",
+          "id": "s28-t8",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "が",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「が」(主格・連体修飾): 上代では「〜の・〜が」。「吉備の臣らが祖」=吉備臣たちの祖先、連体修飾で多用",
+          "id": "s28-t9",
+          "start": 9,
+          "end": 10
+        },
+        {
+          "text": "置き",
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo",
+          "id": "s28-t10",
+          "start": 10,
+          "end": 12
+        },
+        {
+          "text": "し",
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei",
+          "hint": "助動詞「き」連体形「し」: 直接体験の過去「〜た」。連用形接続。下に体言が来ると連体形「し」で結ぶ。古事記では「けり」より「き」が多用される",
+          "id": "s28-t11",
+          "start": 12,
+          "end": 13
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s28-t12",
+          "start": 13,
+          "end": 14
+        },
+        {
+          "text": "剣",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s28-t13",
+          "start": 14,
+          "end": 15
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s28-t14",
+          "start": 15,
+          "end": 16
+        },
+        {
+          "text": "太刀",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s28-t15",
+          "start": 16,
+          "end": 18
+        },
+        {
+          "text": "　",
+          "layer": 0,
+          "id": "s28-t16",
+          "start": 18,
+          "end": 19
+        },
+        {
+          "text": "そ",
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          },
+          "hint": "指示代名詞「そ」: 「その」。「その国の造」「その神」など、上代では連体詞「その」の語幹「そ」が独立しやすい",
+          "id": "s28-t17",
+          "start": 19,
+          "end": 20
+        },
+        {
+          "text": "の",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku",
+          "hint": "格助詞「の」(連体修飾): 「〜の」。体言と体言を結ぶ。古事記では「東の方」「伊勢の大御神」など多用",
+          "id": "s28-t18",
+          "start": 20,
+          "end": 21
+        },
+        {
+          "text": "太刀",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s28-t19",
+          "start": 21,
+          "end": 23
+        },
+        {
+          "text": "は",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari",
+          "hint": "係助詞「は」: 提示・主題提示「〜は」。話題を限定し直後の述語と呼応する。本章では場面ごとの主題転換の合図",
+          "id": "s28-t20",
+          "start": 23,
+          "end": 24
+        },
+        {
+          "text": "や",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「や」: 詠嘆「〜よ」。「太刀はや」「はしけやし」など、上代歌謡で頻出する感嘆表現",
+          "id": "s28-t21",
+          "start": 24,
+          "end": 25
         }
       ]
     },

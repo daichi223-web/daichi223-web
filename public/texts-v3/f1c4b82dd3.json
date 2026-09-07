@@ -102,103 +102,83 @@
       "modernTranslation": "ある年、入道殿（＝道長）が大井川で船遊びをなさった折に、漢詩の船、音楽の船、和歌の船とお分けになって、それぞれの芸道に優れている人々をお乗せになったが、この大納言殿（＝公任）が参上なさったので、入道殿は、「かの大納言は、どの船にお乗りになるつもりか。",
       "tokens": [
         {
+          "text": "世継",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
           "id": "s1-t1",
-          "text": "世継「一年、入道殿の大井川に逍遥せさせたまひしに、作文の船・管絃の船・和歌の船と分かたせたまひて、その道にたへたる人々を乗せさせたまひしに、この大納言殿の参りたまへるを、入道殿、「かの大納言、いづれの船にか乗らるべき。",
           "start": 0,
-          "end": 109,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        }
-      ]
-    },
-    {
-      "id": "s2",
-      "originalText": "（世継）「一年、入道殿の大井川に逍遥せさせたまひしに、作文の船・管絃の船・和歌の船と分かたせたまひて、その道にたへたる人々を乗せさせたまひしに、この大納言殿の参りたまへるを、入道殿、「かの大納言、いづれの船にか乗らるべき。」とのたまはすれば、「和歌の船に乗りはべらむ。",
-      "modernTranslation": "」とおっしゃるので、（公任卿は）「和歌の船に乗りましょう。",
-      "tokens": [
-        {
-          "id": "s2-t1",
-          "text": "（世継）",
-          "start": 0,
-          "end": 4,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
+          "end": 2
         },
         {
-          "id": "s2-t2",
           "text": "「",
-          "start": 4,
-          "end": 5,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t2",
+          "start": 2,
+          "end": 3
         },
         {
-          "id": "s2-t3",
           "text": "一年、入道",
-          "start": 5,
-          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t3",
+          "start": 3,
+          "end": 8
         },
         {
-          "id": "s2-t4",
           "text": "殿",
-          "start": 10,
-          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t4",
+          "start": 8,
+          "end": 9
         },
         {
-          "id": "s2-t5",
           "text": "の",
-          "start": 11,
-          "end": 12,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "主格"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(主格): 「〜が」と訳す。連体修飾節の中で主語を示す用法。「入道殿の…せたまひし」=「入道殿が…なさった」"
+          "hint": "格助詞「の」(主格): 「〜が」と訳す。連体修飾節の中で主語を示す用法。「入道殿の…せたまひし」=「入道殿が…なさった」",
+          "id": "s1-t5",
+          "start": 9,
+          "end": 10
         },
         {
-          "id": "s2-t6",
           "text": "大井川",
-          "start": 12,
-          "end": 15,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t6",
+          "start": 10,
+          "end": 13
         },
         {
-          "id": "s2-t7",
           "text": "に",
-          "start": 15,
-          "end": 16,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "場所"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」(場所): 「〜で・〜に」。動作の場所・時・対象・原因・結果など多義。文脈で判別"
+          "hint": "格助詞「に」(場所): 「〜で・〜に」。動作の場所・時・対象・原因・結果など多義。文脈で判別",
+          "id": "s1-t7",
+          "start": 13,
+          "end": 14
         },
         {
-          "id": "s2-t8",
           "text": "逍遥せ",
-          "start": 16,
-          "end": 19,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -206,13 +186,13 @@
             "conjugationForm": "未"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "サ変動詞「逍遥す」: 名詞+「す」型のサ変。「あちこち遊び歩く・船遊びする」。サ変は未然「せ」連用「し」終止「す」連体「する」已然「すれ」命令「せよ」"
+          "hint": "サ変動詞「逍遥す」: 名詞+「す」型のサ変。「あちこち遊び歩く・船遊びする」。サ変は未然「せ」連用「し」終止「す」連体「する」已然「すれ」命令「せよ」",
+          "id": "s1-t8",
+          "start": 14,
+          "end": 17
         },
         {
-          "id": "s2-t9",
           "text": "させ",
-          "start": 19,
-          "end": 21,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -220,13 +200,13 @@
             "meaning": "尊敬"
           },
           "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
-          "hint": "助動詞「さす」: 使役・尊敬。下二段型。下に「たまふ」が続くと二重敬語(最高敬語)で「尊敬」と判別。ここは道長への最高敬語"
+          "hint": "助動詞「さす」: 使役・尊敬。下二段型。下に「たまふ」が続くと二重敬語(最高敬語)で「尊敬」と判別。ここは道長への最高敬語",
+          "id": "s1-t9",
+          "start": 17,
+          "end": 19
         },
         {
-          "id": "s2-t10",
           "text": "たまひ",
-          "start": 21,
-          "end": 24,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -236,13 +216,13 @@
             "honorific": "尊敬"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たまふ」(尊敬): ハ行四段。動作主への尊敬「〜なさる・お〜になる」。作者→道長への敬意。「させたまふ」で二重敬語"
+          "hint": "補助動詞「たまふ」(尊敬): ハ行四段。動作主への尊敬「〜なさる・お〜になる」。作者→道長への敬意。「させたまふ」で二重敬語",
+          "id": "s1-t10",
+          "start": 19,
+          "end": 22
         },
         {
-          "id": "s2-t11",
           "text": "し",
-          "start": 24,
-          "end": 25,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -250,126 +230,126 @@
             "meaning": "過去"
           },
           "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「き」(過去): 直接体験した過去「〜た」。連用形接続。活用は(せ)・○・き・し・しか・○。連体形「し」"
+          "hint": "助動詞「き」(過去): 直接体験した過去「〜た」。連用形接続。活用は(せ)・○・き・し・しか・○。連体形「し」",
+          "id": "s1-t11",
+          "start": 22,
+          "end": 23
         },
         {
-          "id": "s2-t12",
           "text": "に",
-          "start": 25,
-          "end": 26,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "時間"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」(時間): 「〜時に・〜の折に」。「逍遥せさせたまひしに」=「船遊びをなさった折に」"
+          "hint": "格助詞「に」(時間): 「〜時に・〜の折に」。「逍遥せさせたまひしに」=「船遊びをなさった折に」",
+          "id": "s1-t12",
+          "start": 23,
+          "end": 24
         },
         {
-          "id": "s2-t13",
           "text": "、",
-          "start": 26,
-          "end": 27,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t13",
+          "start": 24,
+          "end": 25
         },
         {
-          "id": "s2-t14",
           "text": "作文",
-          "start": 27,
-          "end": 29,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t14",
+          "start": 25,
+          "end": 27
         },
         {
-          "id": "s2-t15",
           "text": "の",
-          "start": 29,
-          "end": 30,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(連体修飾): 「〜の」。「作文の船」=「漢詩の船」。主格・連体修飾・準体・同格・連用修飾の5用法を識別"
+          "hint": "格助詞「の」(連体修飾): 「〜の」。「作文の船」=「漢詩の船」。主格・連体修飾・準体・同格・連用修飾の5用法を識別",
+          "id": "s1-t15",
+          "start": 27,
+          "end": 28
         },
         {
-          "id": "s2-t16",
           "text": "船・管絃",
-          "start": 30,
-          "end": 34,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t16",
+          "start": 28,
+          "end": 32
         },
         {
-          "id": "s2-t17",
           "text": "の",
-          "start": 34,
-          "end": 35,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "id": "s1-t17",
+          "start": 32,
+          "end": 33
         },
         {
-          "id": "s2-t18",
           "text": "船・和歌",
-          "start": 35,
-          "end": 39,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t18",
+          "start": 33,
+          "end": 37
         },
         {
-          "id": "s2-t19",
           "text": "の",
-          "start": 39,
-          "end": 40,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "id": "s1-t19",
+          "start": 37,
+          "end": 38
         },
         {
-          "id": "s2-t20",
           "text": "船",
-          "start": 40,
-          "end": 41,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t20",
+          "start": 38,
+          "end": 39
         },
         {
-          "id": "s2-t21",
           "text": "と",
-          "start": 41,
-          "end": 42,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "結果"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「と」: 引用「〜と」・並列「〜と〜」・結果「〜として」・比較「〜と」など。ここは結果用法「〜と(分けて)」"
+          "hint": "格助詞「と」: 引用「〜と」・並列「〜と〜」・結果「〜として」・比較「〜と」など。ここは結果用法「〜と(分けて)」",
+          "id": "s1-t21",
+          "start": 39,
+          "end": 40
         },
         {
-          "id": "s2-t22",
           "text": "分かた",
-          "start": 42,
-          "end": 45,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -377,13 +357,13 @@
             "conjugationForm": "未"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「分かつ」: タ行四段「区別する・分ける」。未然形「分かた」+助動詞「す」(尊敬)+「たまふ」で二重敬語"
+          "hint": "動詞「分かつ」: タ行四段「区別する・分ける」。未然形「分かた」+助動詞「す」(尊敬)+「たまふ」で二重敬語",
+          "id": "s1-t22",
+          "start": 40,
+          "end": 43
         },
         {
-          "id": "s2-t23",
           "text": "せ",
-          "start": 45,
-          "end": 46,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -391,13 +371,13 @@
             "meaning": "尊敬"
           },
           "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
-          "hint": "助動詞「す」: 使役・尊敬。四段/ナ変/ラ変の未然形に接続。「せたまふ」で二重敬語(最高敬語)。動作主への高い敬意を示す"
+          "hint": "助動詞「す」: 使役・尊敬。四段/ナ変/ラ変の未然形に接続。「せたまふ」で二重敬語(最高敬語)。動作主への高い敬意を示す",
+          "id": "s1-t23",
+          "start": 43,
+          "end": 44
         },
         {
-          "id": "s2-t24",
           "text": "たまひ",
-          "start": 46,
-          "end": 49,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -407,79 +387,79 @@
             "honorific": "尊敬"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たまふ」(尊敬): ハ行四段。「お〜になる・〜なさる」。作者→道長への敬意。「せたまふ」で二重敬語"
+          "hint": "補助動詞「たまふ」(尊敬): ハ行四段。「お〜になる・〜なさる」。作者→道長への敬意。「せたまふ」で二重敬語",
+          "id": "s1-t24",
+          "start": 44,
+          "end": 47
         },
         {
-          "id": "s2-t25",
           "text": "て",
-          "start": 49,
-          "end": 50,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           },
-          "hint": "接続助詞「て」: 連用形接続。単純接続「〜て」。前の動作と後の動作をつなぐ"
+          "hint": "接続助詞「て」: 連用形接続。単純接続「〜て」。前の動作と後の動作をつなぐ",
+          "id": "s1-t25",
+          "start": 47,
+          "end": 48
         },
         {
-          "id": "s2-t26",
           "text": "、",
-          "start": 50,
-          "end": 51,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t26",
+          "start": 48,
+          "end": 49
         },
         {
-          "id": "s2-t27",
           "text": "そ",
-          "start": 51,
-          "end": 52,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "id": "s1-t27",
+          "start": 49,
+          "end": 50
         },
         {
-          "id": "s2-t28",
           "text": "の",
-          "start": 52,
-          "end": 53,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "id": "s1-t28",
+          "start": 50,
+          "end": 51
         },
         {
-          "id": "s2-t29",
           "text": "道",
-          "start": 53,
-          "end": 54,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t29",
+          "start": 51,
+          "end": 52
         },
         {
-          "id": "s2-t30",
           "text": "に",
-          "start": 54,
-          "end": 55,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "対象"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」(対象): 「その道にたへたる」=「その道に堪能な」。能力の対象を示す"
+          "hint": "格助詞「に」(対象): 「その道にたへたる」=「その道に堪能な」。能力の対象を示す",
+          "id": "s1-t30",
+          "start": 52,
+          "end": 53
         },
         {
-          "id": "s2-t31",
           "text": "たへ",
-          "start": 55,
-          "end": 57,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -487,13 +467,13 @@
             "conjugationForm": "用"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "重要語「たふ(堪ふ)」: ハ行下二段。「堪能である・十分な力量がある・耐える」。「その道にたへたる人々」=芸道に優れた人々"
+          "hint": "重要語「たふ(堪ふ)」: ハ行下二段。「堪能である・十分な力量がある・耐える」。「その道にたへたる人々」=芸道に優れた人々",
+          "id": "s1-t31",
+          "start": 53,
+          "end": 55
         },
         {
-          "id": "s2-t32",
           "text": "たる",
-          "start": 57,
-          "end": 59,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -501,36 +481,36 @@
             "meaning": "存続"
           },
           "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「たり」(存続/完了): 連用形接続。「〜ている・〜た」。ここは存続「優れている」。活用はラ変型(たら/たり/たり/たる/たれ/たれ)"
+          "hint": "助動詞「たり」(存続/完了): 連用形接続。「〜ている・〜た」。ここは存続「優れている」。活用はラ変型(たら/たり/たり/たる/たれ/たれ)",
+          "id": "s1-t32",
+          "start": 55,
+          "end": 57
         },
         {
-          "id": "s2-t33",
           "text": "人々",
-          "start": 59,
-          "end": 61,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t33",
+          "start": 57,
+          "end": 59
         },
         {
-          "id": "s2-t34",
           "text": "を",
-          "start": 61,
-          "end": 62,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "対象"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「を」(対象): 動作の対象「〜を」。「人々を乗せ」=「人々を乗せる」"
+          "hint": "格助詞「を」(対象): 動作の対象「〜を」。「人々を乗せ」=「人々を乗せる」",
+          "id": "s1-t34",
+          "start": 59,
+          "end": 60
         },
         {
-          "id": "s2-t35",
           "text": "乗せ",
-          "start": 62,
-          "end": 64,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -538,13 +518,13 @@
             "conjugationForm": "未"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「乗す」: サ行下二段の他動詞「(人を)乗せる」。下二段は未然「せ」連用「せ」終止「す」連体「する」已然「すれ」命令「せよ」"
+          "hint": "動詞「乗す」: サ行下二段の他動詞「(人を)乗せる」。下二段は未然「せ」連用「せ」終止「す」連体「する」已然「すれ」命令「せよ」",
+          "id": "s1-t35",
+          "start": 60,
+          "end": 62
         },
         {
-          "id": "s2-t36",
           "text": "させ",
-          "start": 64,
-          "end": 66,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -552,13 +532,13 @@
             "meaning": "尊敬"
           },
           "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
-          "hint": "助動詞「さす」: 「さすたまふ」で二重敬語。本文では「乗せさせたまふ」=お乗せになる。道長への最高敬意"
+          "hint": "助動詞「さす」: 「さすたまふ」で二重敬語。本文では「乗せさせたまふ」=お乗せになる。道長への最高敬意",
+          "id": "s1-t36",
+          "start": 62,
+          "end": 64
         },
         {
-          "id": "s2-t37",
           "text": "たまひ",
-          "start": 66,
-          "end": 69,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -568,13 +548,13 @@
             "honorific": "尊敬"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たまふ」(尊敬): 作者→道長への敬意。「させたまふ」で二重敬語(最高敬語)"
+          "hint": "補助動詞「たまふ」(尊敬): 作者→道長への敬意。「させたまふ」で二重敬語(最高敬語)",
+          "id": "s1-t37",
+          "start": 64,
+          "end": 67
         },
         {
-          "id": "s2-t38",
           "text": "し",
-          "start": 69,
-          "end": 70,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -582,89 +562,89 @@
             "meaning": "過去"
           },
           "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「き」(過去): 連体形「し」。直接過去「〜た」。連用形接続"
+          "hint": "助動詞「き」(過去): 連体形「し」。直接過去「〜た」。連用形接続",
+          "id": "s1-t38",
+          "start": 67,
+          "end": 68
         },
         {
-          "id": "s2-t39",
           "text": "に",
-          "start": 70,
-          "end": 71,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           },
-          "hint": "接続助詞「に」: 連体形に接続し、順接(〜ので)・逆接(〜のに)・単純接続(〜と)を表す。文脈で判断"
+          "hint": "接続助詞「に」: 連体形に接続し、順接(〜ので)・逆接(〜のに)・単純接続(〜と)を表す。文脈で判断",
+          "id": "s1-t39",
+          "start": 68,
+          "end": 69
         },
         {
-          "id": "s2-t40",
           "text": "、",
-          "start": 71,
-          "end": 72,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t40",
+          "start": 69,
+          "end": 70
         },
         {
-          "id": "s2-t41",
           "text": "こ",
-          "start": 72,
-          "end": 73,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "id": "s1-t41",
+          "start": 70,
+          "end": 71
         },
         {
-          "id": "s2-t42",
           "text": "の",
-          "start": 73,
-          "end": 74,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "id": "s1-t42",
+          "start": 71,
+          "end": 72
         },
         {
-          "id": "s2-t43",
           "text": "大納言",
-          "start": 74,
-          "end": 77,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t43",
+          "start": 72,
+          "end": 75
         },
         {
-          "id": "s2-t44",
           "text": "殿",
-          "start": 77,
-          "end": 78,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t44",
+          "start": 75,
+          "end": 76
         },
         {
-          "id": "s2-t45",
           "text": "の",
-          "start": 78,
-          "end": 79,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "主格"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「の」(主格): 「〜が」。連体修飾節中の主語。「大納言殿の参りたまへる」=「大納言殿が参上なさった」"
+          "hint": "格助詞「の」(主格): 「〜が」。連体修飾節中の主語。「大納言殿の参りたまへる」=「大納言殿が参上なさった」",
+          "id": "s1-t45",
+          "start": 76,
+          "end": 77
         },
         {
-          "id": "s2-t46",
           "text": "参り",
-          "start": 79,
-          "end": 81,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -673,13 +653,13 @@
             "honorific": "謙譲"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "謙譲動詞「参る」: 「行く・来」の謙譲語「参上する」。作者→入道殿(道長)への敬意。動作主は公任、敬意の向きは到達点の道長"
+          "hint": "謙譲動詞「参る」: 「行く・来」の謙譲語「参上する」。作者→入道殿(道長)への敬意。動作主は公任、敬意の向きは到達点の道長",
+          "id": "s1-t46",
+          "start": 77,
+          "end": 79
         },
         {
-          "id": "s2-t47",
           "text": "たまへ",
-          "start": 81,
-          "end": 84,
           "layer": 4,
           "grammarTag": {
             "pos": "補助動詞",
@@ -689,13 +669,13 @@
             "honorific": "尊敬"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "補助動詞「たまふ」(尊敬): 命令形ではなく已然形「たまへ」+完了「り」。動作主の公任への作者からの敬意"
+          "hint": "補助動詞「たまふ」(尊敬): 命令形ではなく已然形「たまへ」+完了「り」。動作主の公任への作者からの敬意",
+          "id": "s1-t47",
+          "start": 79,
+          "end": 82
         },
         {
-          "id": "s2-t48",
           "text": "る",
-          "start": 84,
-          "end": 85,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -703,164 +683,164 @@
             "meaning": "完了"
           },
           "grammarRefId": "jodoshi-jisei",
-          "hint": "助動詞「り」(完了/存続): サ変未然形・四段已然形に接続(サミシイ・リカチャン)。連体形「る」。「〜た・〜ている」"
+          "hint": "助動詞「り」(完了/存続): サ変未然形・四段已然形に接続(サミシイ・リカチャン)。連体形「る」。「〜た・〜ている」",
+          "id": "s1-t48",
+          "start": 82,
+          "end": 83
         },
         {
-          "id": "s2-t49",
           "text": "を",
-          "start": 85,
-          "end": 86,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           },
-          "hint": "接続助詞「を」: 連体形に接続。順接「〜ので」・逆接「〜のに」・単純接続「〜と」。文脈判断。ここは単純接続"
+          "hint": "接続助詞「を」: 連体形に接続。順接「〜ので」・逆接「〜のに」・単純接続「〜と」。文脈判断。ここは単純接続",
+          "id": "s1-t49",
+          "start": 83,
+          "end": 84
         },
         {
-          "id": "s2-t50",
           "text": "、",
-          "start": 86,
-          "end": 87,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t50",
+          "start": 84,
+          "end": 85
         },
         {
-          "id": "s2-t51",
           "text": "入道",
-          "start": 87,
-          "end": 89,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t51",
+          "start": 85,
+          "end": 87
         },
         {
-          "id": "s2-t52",
           "text": "殿",
-          "start": 89,
-          "end": 90,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t52",
+          "start": 87,
+          "end": 88
         },
         {
-          "id": "s2-t53",
           "text": "、「",
-          "start": 90,
-          "end": 92,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t53",
+          "start": 88,
+          "end": 90
         },
         {
-          "id": "s2-t54",
           "text": "か",
-          "start": 92,
-          "end": 93,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "id": "s1-t54",
+          "start": 90,
+          "end": 91
         },
         {
-          "id": "s2-t55",
           "text": "の",
-          "start": 93,
-          "end": 94,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "id": "s1-t55",
+          "start": 91,
+          "end": 92
         },
         {
-          "id": "s2-t56",
           "text": "大納言",
-          "start": 94,
-          "end": 97,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t56",
+          "start": 92,
+          "end": 95
         },
         {
-          "id": "s2-t57",
           "text": "、",
-          "start": 97,
-          "end": 98,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t57",
+          "start": 95,
+          "end": 96
         },
         {
-          "id": "s2-t58",
           "text": "いづれ",
-          "start": 98,
-          "end": 101,
           "layer": 0,
           "grammarTag": {
             "pos": "代名詞"
-          }
+          },
+          "id": "s1-t58",
+          "start": 96,
+          "end": 99
         },
         {
-          "id": "s2-t59",
           "text": "の",
-          "start": 101,
-          "end": 102,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "体修"
           },
-          "grammarRefId": "joshi-kaku"
+          "grammarRefId": "joshi-kaku",
+          "id": "s1-t59",
+          "start": 99,
+          "end": 100
         },
         {
-          "id": "s2-t60",
           "text": "船",
-          "start": 102,
-          "end": 103,
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s1-t60",
+          "start": 100,
+          "end": 101
         },
         {
-          "id": "s2-t61",
           "text": "に",
-          "start": 103,
-          "end": 104,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
             "meaning": "対象"
           },
           "grammarRefId": "joshi-kaku",
-          "hint": "格助詞「に」(対象): 「〜に」。動作の到達点・対象。「船に乗る」"
+          "hint": "格助詞「に」(対象): 「〜に」。動作の到達点・対象。「船に乗る」",
+          "id": "s1-t61",
+          "start": 101,
+          "end": 102
         },
         {
-          "id": "s2-t62",
           "text": "か",
-          "start": 104,
-          "end": 105,
           "layer": 3,
           "grammarTag": {
             "pos": "係助詞",
             "meaning": "疑問"
           },
           "grammarRefId": "joshi-fuku-kakari",
-          "hint": "係助詞「か」(疑問/反語): 結びは連体形。「いづれの船にか乗らるべき」で疑問「どの船にお乗りになるか」。係り結びの法則"
+          "hint": "係助詞「か」(疑問/反語): 結びは連体形。「いづれの船にか乗らるべき」で疑問「どの船にお乗りになるか」。係り結びの法則",
+          "id": "s1-t62",
+          "start": 102,
+          "end": 103
         },
         {
-          "id": "s2-t63",
           "text": "乗ら",
-          "start": 105,
-          "end": 107,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -868,13 +848,13 @@
             "conjugationForm": "未"
           },
           "grammarRefId": "doushi-katsuyo",
-          "hint": "動詞「乗る」: ラ行四段。未然形「乗ら」+尊敬の助動詞「る」=「お乗りになる」"
+          "hint": "動詞「乗る」: ラ行四段。未然形「乗ら」+尊敬の助動詞「る」=「お乗りになる」",
+          "id": "s1-t63",
+          "start": 103,
+          "end": 105
         },
         {
-          "id": "s2-t64",
           "text": "る",
-          "start": 107,
-          "end": 108,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -882,13 +862,13 @@
             "meaning": "尊敬"
           },
           "grammarRefId": "jodoshi-ukemi-shieki-sonkei",
-          "hint": "助動詞「る」: 受身・尊敬・自発・可能。四段/ナ変/ラ変の未然形接続。下に「べし」など推量があると尊敬の意となりやすい。ここは公任への尊敬"
+          "hint": "助動詞「る」: 受身・尊敬・自発・可能。四段/ナ変/ラ変の未然形接続。下に「べし」など推量があると尊敬の意となりやすい。ここは公任への尊敬",
+          "id": "s1-t64",
+          "start": 105,
+          "end": 106
         },
         {
-          "id": "s2-t65",
           "text": "べき",
-          "start": 108,
-          "end": 110,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -896,23 +876,40 @@
             "meaning": "意志"
           },
           "grammarRefId": "jodoshi-suiryo",
-          "hint": "助動詞「べし」: 推量・意志・当然・命令・適当・可能(スイカトメテ)。終止形(ラ変連体形)接続。「か」の係り結びで連体形「べき」。意味判別は文脈"
+          "hint": "助動詞「べし」: 推量・意志・当然・命令・適当・可能(スイカトメテ)。終止形(ラ変連体形)接続。「か」の係り結びで連体形「べき」。意味判別は文脈",
+          "id": "s1-t65",
+          "start": 106,
+          "end": 108
         },
         {
-          "id": "s2-t66",
-          "text": "。」",
-          "start": 110,
-          "end": 112,
+          "text": "。",
+          "layer": 0,
+          "id": "s1-t66",
+          "start": 108,
+          "end": 109
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "originalText": "」とのたまはすれば、「和歌の船に乗りはべらむ。",
+      "modernTranslation": "」とおっしゃるので、（公任卿は）「和歌の船に乗りましょう。",
+      "tokens": [
+        {
+          "id": "s2-t1",
+          "text": "」",
+          "start": 0,
+          "end": 1,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t67",
+          "id": "s2-t2",
           "text": "と",
-          "start": 112,
-          "end": 113,
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -922,10 +919,10 @@
           "hint": "格助詞「と」(引用): 発言・思考の内容を受ける。直前は「いづれの船にか乗らるべき」を引用"
         },
         {
-          "id": "s2-t68",
+          "id": "s2-t3",
           "text": "のたまはすれ",
-          "start": 113,
-          "end": 119,
+          "start": 2,
+          "end": 8,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -937,10 +934,10 @@
           "hint": "尊敬動詞「のたまはす」: 「言ふ」の尊敬語「のたまふ」より高い最高敬語「おっしゃる」。サ行下二段。作者→道長への最高敬意"
         },
         {
-          "id": "s2-t69",
+          "id": "s2-t4",
           "text": "ば",
-          "start": 119,
-          "end": 120,
+          "start": 8,
+          "end": 9,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
@@ -948,40 +945,40 @@
           "hint": "接続助詞「ば」: 已然形+ば=確定条件(〜ので・〜と・〜したところ)。未然形+ば=仮定条件(もし〜ならば)。ここは已然+ば=順接確定"
         },
         {
-          "id": "s2-t70",
+          "id": "s2-t5",
           "text": "、",
-          "start": 120,
-          "end": 121,
+          "start": 9,
+          "end": 10,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t71",
+          "id": "s2-t6",
           "text": "「",
-          "start": 121,
-          "end": 122,
+          "start": 10,
+          "end": 11,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t72",
+          "id": "s2-t7",
           "text": "和歌",
-          "start": 122,
-          "end": 124,
+          "start": 11,
+          "end": 13,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t73",
+          "id": "s2-t8",
           "text": "の",
-          "start": 124,
-          "end": 125,
+          "start": 13,
+          "end": 14,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -990,20 +987,20 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s2-t74",
+          "id": "s2-t9",
           "text": "船",
-          "start": 125,
-          "end": 126,
+          "start": 14,
+          "end": 15,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s2-t75",
+          "id": "s2-t10",
           "text": "に",
-          "start": 126,
-          "end": 127,
+          "start": 15,
+          "end": 16,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -1013,10 +1010,10 @@
           "hint": "格助詞「に」(対象): 動作の対象・到達点を示す"
         },
         {
-          "id": "s2-t76",
+          "id": "s2-t11",
           "text": "乗り",
-          "start": 127,
-          "end": 129,
+          "start": 16,
+          "end": 18,
           "layer": 1,
           "grammarTag": {
             "pos": "動詞",
@@ -1027,10 +1024,10 @@
           "hint": "動詞「乗る」: ラ行四段「のる」。連用形「乗り」+丁寧「はべら」+意志「む」=「お乗りいたしましょう」"
         },
         {
-          "id": "s2-t77",
+          "id": "s2-t12",
           "text": "はべら",
-          "start": 129,
-          "end": 132,
+          "start": 18,
+          "end": 21,
           "layer": 1,
           "grammarTag": {
             "pos": "補助動詞",
@@ -1042,10 +1039,10 @@
           "hint": "丁寧の補助動詞「はべり」: ラ変。本動詞「あり・をり」の丁寧語「ございます」。補助動詞では「〜です・〜ます」。公任→道長への丁寧表現"
         },
         {
-          "id": "s2-t78",
+          "id": "s2-t13",
           "text": "む",
-          "start": 132,
-          "end": 133,
+          "start": 21,
+          "end": 22,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -1056,10 +1053,10 @@
           "hint": "助動詞「む」: 推量・意志・勧誘・婉曲・仮定(スイカカエテ)。未然形接続。一人称主語+終止形なら意志「〜よう」。ここは公任の意志"
         },
         {
-          "id": "s2-t79",
+          "id": "s2-t14",
           "text": "。",
-          "start": 133,
-          "end": 134,
+          "start": 22,
+          "end": 23,
           "layer": 0,
           "grammarTag": {
             "pos": ""

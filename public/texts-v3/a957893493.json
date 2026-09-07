@@ -1370,7 +1370,7 @@
     },
     {
       "id": "s8",
-      "originalText": "常に莫逆の交はり深く、朋友に信あるかな、この人。深川や芭蕉を富士にあづけ行く千里",
+      "originalText": "常に莫逆の交はり深く、朋友に信あるかな、この人。",
       "modernTranslation": "常日ごろから意気投合して互いに逆らうことのない親密な交わりが深く、友人に対してまことのある人よ、この人は。",
       "tokens": [
         {
@@ -1535,94 +1535,6 @@
           "grammarTag": {
             "pos": ""
           }
-        },
-        {
-          "id": "s8-t15",
-          "text": "深川",
-          "start": 24,
-          "end": 26,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t16",
-          "text": "や",
-          "start": 26,
-          "end": 27,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "間投助詞",
-            "meaning": "詠嘆"
-          },
-          "grammarRefId": "joshi-shujoshi",
-          "hint": "間投助詞「や」: 詠嘆「〜よ・〜だなあ」。文中・文末で感動を表す。「深川や」=深川よ。和歌・俳句の切れ字として頻用。"
-        },
-        {
-          "id": "s8-t17",
-          "text": "芭蕉",
-          "start": 27,
-          "end": 29,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          },
-          "hint": "重要語「芭蕉」: ここでは深川の庵に植えられたバショウ(芭蕉)の樹。庵号「芭蕉庵」「俳号「芭蕉」の由来となった象徴的植物。"
-        },
-        {
-          "id": "s8-t18",
-          "text": "を",
-          "start": 29,
-          "end": 30,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s8-t19",
-          "text": "富士",
-          "start": 30,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t20",
-          "text": "に",
-          "start": 32,
-          "end": 33,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s8-t21",
-          "text": "あづけ行く",
-          "start": 33,
-          "end": 38,
-          "layer": 1,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s8-t22",
-          "text": "千里",
-          "start": 38,
-          "end": 40,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
         }
       ]
     },
@@ -1632,14 +1544,99 @@
       "modernTranslation": "深川や……深川の芭蕉庵よ。",
       "tokens": [
         {
-          "id": "s9-t1",
-          "text": "深川や芭蕉を富士にあづけ行く　　　　　　　　　　　　　　　　　　　　千里",
-          "start": 0,
-          "end": 36,
+          "text": "深川",
           "layer": 0,
           "grammarTag": {
             "pos": ""
-          }
+          },
+          "id": "s9-t1",
+          "start": 0,
+          "end": 2
+        },
+        {
+          "text": "や",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "間投助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi",
+          "hint": "間投助詞「や」: 詠嘆「〜よ・〜だなあ」。文中・文末で感動を表す。「深川や」=深川よ。和歌・俳句の切れ字として頻用。",
+          "id": "s9-t2",
+          "start": 2,
+          "end": 3
+        },
+        {
+          "text": "芭蕉",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "hint": "重要語「芭蕉」: ここでは深川の庵に植えられたバショウ(芭蕉)の樹。庵号「芭蕉庵」「俳号「芭蕉」の由来となった象徴的植物。",
+          "id": "s9-t3",
+          "start": 3,
+          "end": 5
+        },
+        {
+          "text": "を",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s9-t4",
+          "start": 5,
+          "end": 6
+        },
+        {
+          "text": "富士",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s9-t5",
+          "start": 6,
+          "end": 8
+        },
+        {
+          "text": "に",
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku",
+          "id": "s9-t6",
+          "start": 8,
+          "end": 9
+        },
+        {
+          "text": "あづけ行く",
+          "layer": 1,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s9-t7",
+          "start": 9,
+          "end": 14
+        },
+        {
+          "text": "　　　　　　　　　　　　　　　　　　　　",
+          "layer": 0,
+          "id": "s9-t8",
+          "start": 14,
+          "end": 34
+        },
+        {
+          "text": "千里",
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          },
+          "id": "s9-t9",
+          "start": 34,
+          "end": 36
         }
       ]
     },
