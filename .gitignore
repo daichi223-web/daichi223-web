@@ -28,3 +28,6 @@ handoff/
 
 # supabase CLI のローカル状態（プロジェクト参照やバージョン情報。共有しない）
 supabase/.temp/
+
+# 品詞分解の辞書は build-morph-lexicon.cjs で2秒で作り直せる派生物（3.4MB）
+data/morph-lexicon.json

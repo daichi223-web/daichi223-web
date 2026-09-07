@@ -80,8 +80,10 @@ const LAYER_DEFS = [
  */
 function parseObsidianLink(cell) {
   const s = cell.trim();
-  const m = s.match(/^\[\[([^\]|]+)\|([^\]]+)\]\]$/);
-  if (m) return { linked: true, target: m[1], display: m[2] };
+  // 「[[link\|サ四・未]]（尊敬）」のように ]] の後ろへ注記を続ける書き方がある。
+  // 閉じ括弧で打ち切ると pos に「[[…|サ四」が残るので、後ろも表示名に足す。
+  const m = s.match(/^\[\[([^\]|]+)\|([^\]]+)\]\](.*)$/);
+  if (m) return { linked: true, target: m[1], display: (m[2] + m[3]).trim() };
   // リンクなし
   return { linked: false, text: s };
 }
@@ -112,7 +114,9 @@ function parsePosAndConjugation(tagText, linkCategory) {
   if (!tagText) return { pos: "" };
   const t = tagText.trim();
   // 尊敬・謙譲マーカー
-  const honorific = /[（(]尊[）)]/.test(t) ? "尊敬" : /[（(]謙[）)]/.test(t) ? "謙譲" : undefined;
+  // 「（尊）」だけでなく「（尊敬）」「（尊敬補助）」のような書き方も拾う
+  const honorific = /[（(][^）)]*尊[^）)]*[）)]/.test(t) ? "尊敬"
+    : /[（(][^）)]*謙[^）)]*[）)]/.test(t) ? "謙譲" : undefined;
   const parts = t.split("・");
   // 動詞・形容詞・助動詞・助詞の分類
   if (linkCategory === "用言") {

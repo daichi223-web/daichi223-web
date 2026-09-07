@@ -26,6 +26,7 @@
  *   T7 文法参照        grammarRefId が public/grammar に実在するか
  *   T8 決め手          analysis/<id>.json があるとき、その参照 token が実在するか
  *   T13 決め手の食い違い  決め手の意味が、その token の品詞分解の意味と食い違わないか
+ *   T14 壊れた品詞タグ    pos/意味/活用形に wikilink の断片が残っていないか
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -303,6 +304,18 @@ for (const id of targets) {
     const best = Math.max(own, next, prev);
     if (best > 0 && best - own > 0.34) {
       add(id, 'T10-訳のズレ', `${sentences[i].id}: 自分の訳との一致 ${own.toFixed(2)} < ${next >= prev ? '次' : '前'}の訳 ${best.toFixed(2)}`);
+    }
+  }
+
+  // T14 壊れた品詞タグ（正本のセルを読み損ねた残骸が入っていないか）
+  for (const st of sentences) {
+    for (const tk of st.tokens || []) {
+      const g = tk.grammarTag || {};
+      const bad = [g.pos, g.meaning, g.conjugationForm, g.conjugationType]
+        .filter((x) => x && (x.includes('[[') || x.includes(']]')));
+      if (bad.length > 0) {
+        add(id, 'T14-壊れた品詞タグ', `${tk.id}「${tk.text}」: ${bad[0].slice(0, 40)}`);
+      }
     }
   }
 
