@@ -366,11 +366,11 @@ function splitSentences(bodyText, allTokens, translation) {
   // 途中のものは残す（前後の空だけ落とす）。全部落とすと本文との段落数が
   // 合わなくなり、和歌教材で本文の冒頭が丸ごと捨てられていた。
   const transParasRaw = (translation ?? "").replace(/\r\n/g, "\n").split(/\n{2,}/).map((p) => p.trim());
-  let tFrom = 0;
+  // 空の段落は「その本文段落に訳が無い」ことを表すので落とさない。
+  // ただし MD の末尾改行で本文の段落数を超えて増えたぶんだけは落とす。
   let tTo = transParasRaw.length;
-  while (tFrom < tTo && !transParasRaw[tFrom]) tFrom++;
-  while (tTo > tFrom && !transParasRaw[tTo - 1]) tTo--;
-  const transParas = transParasRaw.slice(tFrom, tTo);
+  while (tTo > paragraphs.length && !transParasRaw[tTo - 1]) tTo--;
+  const transParas = transParasRaw.slice(0, tTo);
 
   // 本文冒頭の導入段落（近代日本語）を検出: 古文マーカー（けり/たり/なり/係り結び/ぞ・なむ...）を含まない最初の段落群
   // 乱暴だが、現代語訳の段落数と一致する本文側の末尾 N 段落を本文として使う。
