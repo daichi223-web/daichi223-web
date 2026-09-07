@@ -264,27 +264,20 @@ function parseBunkai(md) {
  * そのトークンを落とす（トークンだけにあるもの）。
  */
 function dropUnmatchedTokens(tokens, bodyText) {
-  // 本文（空白を保ったまま）と、突き合わせ用の空白除去版
   const bodyRaw = bodyText ?? "";
   const strip = (x) => (x ?? "").replace(/[\s\u3000]/g, "");
   const body = strip(bodyRaw);
   if (!body || tokens.length === 0) return { tokens, dropped: 0, filled: 0 };
 
-  // body（空白除去）の位置 → bodyRaw の位置
+  // 空白除去版の位置 → 生の本文の位置
   const mapToRaw = [];
   for (let i = 0; i < bodyRaw.length; i++) {
     if (!/[\s\u3000]/.test(bodyRaw[i])) mapToRaw.push(i);
   }
-  // 空白除去版の位置 to の直前までを、生の本文から切り出す。
-  // rawFrom は「前のトークンの生の終わり位置」で、空白ごと拾うために使う。
-  const rawSliceTo = (rawFrom, to) => {
-    const b = to < mapToRaw.length ? mapToRaw[to] : bodyRaw.length;
-    return b > rawFrom ? bodyRaw.slice(rawFrom, b) : "";
-  };
 
   const texts = tokens.map((tk) => strip(tk._rawText));
-  const LOOKAHEAD = 80;   // 本文だけにある部分（歌集名・行末の作者名）を飛ぶ幅
-  const CONFIRM = 3;      // 飛んだ先で続けて一致することを確かめるトークン数
+  const LOOKAHEAD = 80;
+  const CONFIRM = 3;
 
   const runLength = (i, pos) => {
     let n = 0;
@@ -299,17 +292,10 @@ function dropUnmatchedTokens(tokens, bodyText) {
     return n;
   };
 
-  // 本文にだけある部分は、文法タグの無い埋めトークンにする（連結＝本文を保つため）
-  // 段落の改行は文の originalText には入らないので、埋めトークンからは外す
+  // 本文にだけある部分（空白・歌集名・行末の作者名）は文法タグの無い埋めトークンにする
   const filler = (raw) => {
     const text = (raw ?? "").replace(/[\r\n]+/g, "");
-    return {
-      _rawText: text,
-      start: 0,
-      end: text.length,
-      layer: 0,
-      grammarTag: { pos: "" },
-    };
+    return { _rawText: text, start: 0, end: text.length, layer: 0, grammarTag: { pos: "" } };
   };
 
   const out = [];
@@ -317,35 +303,34 @@ function dropUnmatchedTokens(tokens, bodyText) {
   let rawCursor = 0;   // 生の本文の位置
   let dropped = 0;
   let filled = 0;
-  const advanceRaw = (toStripped) => {
-    // 空白除去版で toStripped まで進んだときの、生の本文の位置
-    rawCursor = toStripped > 0 ? mapToRaw[toStripped - 1] + 1 : 0;
+
+  // 空白除去版の位置 pos にあるトークンを受け入れる。
+  // 直前からの生の本文（空白を含む）を埋めトークンにしてから push する。
+  const accept = (tk, pos, len) => {
+    const rawStart = mapToRaw[pos];
+    const gap = bodyRaw.slice(rawCursor, rawStart).replace(/[\r\n]+/g, "");
+    if (gap) {
+      out.push(filler(gap));
+      filled++;
+    }
+    out.push(tk);
+    rawCursor = mapToRaw[pos + len - 1] + 1;
+    cursor = pos + len;
   };
+
   for (let i = 0; i < tokens.length; i++) {
     const t = texts[i];
-    if (!t) {
-      out.push(tokens[i]);
-      continue;
-    }
+    if (!t) continue;                       // 空トークンは捨てる
     if (body.startsWith(t, cursor)) {
-      out.push(tokens[i]);
-      cursor += t.length;
-      advanceRaw(cursor);
+      accept(tokens[i], cursor, t.length);
       continue;
     }
     const at = body.indexOf(t, cursor);
     if (at >= 0 && at - cursor <= LOOKAHEAD && runLength(i, at) >= Math.min(CONFIRM, tokens.length - i)) {
-      const gap = (rawSliceTo(rawCursor, at) || "").replace(/[\r\n]+/g, "");
-      if (gap) {
-        out.push(filler(gap));
-        filled++;
-      }
-      out.push(tokens[i]);
-      cursor = at + t.length;
-      advanceRaw(cursor);
+      accept(tokens[i], at, t.length);
       continue;
     }
-    dropped++;   // 本文に無い／順序が違うトークン → 落とす
+    dropped++;
   }
   // 末尾に本文だけが残っていれば埋める
   if (rawCursor < bodyRaw.length) {
@@ -377,7 +362,15 @@ function splitSentences(bodyText, allTokens, translation) {
   const body = (bodyText ?? "").replace(/\r\n/g, "\n");
   // 段落 (\n\n) → 文 (。) の2段分割。和歌・引用は 。なしで独立段落。
   const paragraphs = body.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
-  const transParas = (translation ?? "").replace(/\r\n/g, "\n").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  // 訳の段落。空の段落は「その本文段落に訳が無い」ことを表すので、
+  // 途中のものは残す（前後の空だけ落とす）。全部落とすと本文との段落数が
+  // 合わなくなり、和歌教材で本文の冒頭が丸ごと捨てられていた。
+  const transParasRaw = (translation ?? "").replace(/\r\n/g, "\n").split(/\n{2,}/).map((p) => p.trim());
+  let tFrom = 0;
+  let tTo = transParasRaw.length;
+  while (tFrom < tTo && !transParasRaw[tFrom]) tFrom++;
+  while (tTo > tFrom && !transParasRaw[tTo - 1]) tTo--;
+  const transParas = transParasRaw.slice(tFrom, tTo);
 
   // 本文冒頭の導入段落（近代日本語）を検出: 古文マーカー（けり/たり/なり/係り結び/ぞ・なむ...）を含まない最初の段落群
   // 乱暴だが、現代語訳の段落数と一致する本文側の末尾 N 段落を本文として使う。
