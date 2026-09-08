@@ -83,21 +83,33 @@ for (const d of docs) {
 const norm = (s) => s.replace(/[\s\u3000]/g, '').replace(/補助/g, '補動')
   .replace(/命令/g, '命').replace(/強調/g, '強意').replace(/連用/g, '用')
   .replace(/[（(]/g, '(').replace(/[）)]/g, ')');
-const canonical = new Map(); // ラベル → 多数派のラベル
+const canonical = new Map(); // ラベル → 正しい書き方
 {
-  const groups = new Map();
-  for (const [L, n] of labelCount) {
-    const k = norm(L);
-    if (!groups.has(k)) groups.set(k, []);
-    groups.get(k).push([L, n]);
-  }
-  // 正しい形の選び方: 語中に全角空白が入っていないものを優先し、その中で多いもの。
-  // （空白入りのほうが多い組があるが、それは揃って混入しているだけで正しくない）
-  const dirty = (L) => /[\u3000]/.test(L);
-  for (const g of groups.values()) {
-    if (g.length < 2) continue;
-    g.sort((a, b) => (dirty(a[0]) - dirty(b[0])) || (b[1] - a[1]));
-    for (const [L] of g.slice(1)) canonical.set(L, g[0][0]);
+  // 正しい書き方は多数決ではなく規則で決める。
+  //   ・語中の全角空白は入れない
+  //   ・補助→補動 ／ 命令→命 ／ 強調→強意 ／ 連用→用（いずれも区切りごとに見る）
+  // 「ラ四・用（連用形名詞化）」の「連用形」まで変えないよう、区切り単位で判定する。
+  // 区切りの位置で意味が違うので分けて扱う。
+  //   1番目 … 品詞や助動詞の意味（「命令・終」の命令は〈命令〉の意味。活用形ではない）
+  //   2番目以降 … 活用形や細かい意味
+  const fixSeg = (seg, isFirst) => {
+    const m = seg.match(/^([^（(]*)([（(].*)?$/);
+    const head = (m[1] || '').replace(/[\u3000]/g, '');
+    const tail = m[2] || '';
+    let fixed = head;
+    if (isFirst) {
+      if (head === '補助') fixed = '補動';
+    } else {
+      if (head === '命令') fixed = '命';
+      else if (head === '連用') fixed = '用';
+      else if (head.endsWith('強調')) fixed = head.slice(0, -2) + '強意';
+    }
+    return fixed + tail;
+  };
+  const fixLabel = (L) => L.split('・').map((seg, i) => fixSeg(seg, i === 0)).join('・');
+  for (const L of labelCount.keys()) {
+    const f = fixLabel(L);
+    if (f !== L) canonical.set(L, f);
   }
 }
 
