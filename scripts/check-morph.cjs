@@ -21,6 +21,8 @@
 const fs = require('fs');
 const path = require('path');
 const { allowedForms, formOf } = require(path.join(__dirname, 'morph-rules.cjs'));
+// 助動詞の意味の一覧（次の語が助動詞かどうかの判定に使う）
+const JODOSHI_MEANINGS = new Set(['過去','完了','打消','断定','存続','尊敬','推量','意志','婉曲','受身','使役','当然','強意','詠嘆','可能','過去推量','自発','打消推量','推定','比況','適当','反実仮想','打消意志','仮定','存在','伝聞','過去伝聞','打消当然','希望','願望','現在推量','不可能','命令','禁止','例示','原因推量']);
 
 const IN = path.join(process.cwd(), 'public', 'texts');
 const args = process.argv.slice(2);
@@ -174,7 +176,14 @@ for (const d of targets) {
     const form = formOf(r.label);
     if (form) {
       const next = i + 1 < d.rows.length ? d.rows[i + 1].word : null;
-      const allowed = allowedForms(next);
+      // 接続の規則が効くのは、次の語が助動詞か、接続をもつ助詞のときだけ。
+      // 同じ仮名でも格助詞なら関係ない（「かうぶらう+ど」の「ど」は
+      // 格助詞「と」の濁音で、接続助詞「ど」ではない）。
+      const nextLabel = i + 1 < d.rows.length ? (d.rows[i + 1].label || '') : '';
+      const nextHead = nextLabel.split('・')[0].replace(/[（(].*$/, '');
+      const governs = nextLabel === '' || /^(接助|係助|副助|終助|間助)$/.test(nextHead)
+        || JODOSHI_MEANINGS.has(nextHead);
+      const allowed = governs ? allowedForms(next) : null;
       if (allowed && !allowed.has(form) && (violation.get(next + '	' + form) || 0) <= VIOLATION_MAX) {
         add(d, 'M4-接続の矛盾', r, `次が「${next}」なら活用形は ${[...allowed].join('/')} のはずだが「${r.label}」`);
       }
