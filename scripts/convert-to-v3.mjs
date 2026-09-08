@@ -16,6 +16,7 @@
 
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
+import { parseLabel } from "./morph-label.mjs";
 
 const ROOT = resolve(process.cwd());
 const IN_DIR = join(ROOT, "public", "texts");
@@ -148,14 +149,11 @@ function parsePosAndConjugation(tagText, linkCategory) {
       meaning: parts.slice(1).join("・").replace(/[（(].*$/, ""),
     };
   }
-  // リンクなしのプレーンテキスト（副・代・接助・副助 などが多い）
-  const plainPos = t.replace(/[（(].*$/, "").split("・")[0];
-  const posMap = {
-    "副": "副詞", "代": "代名詞", "感": "感動詞", "接": "接続詞",
-    "接助": "接続助詞", "副助": "副助詞", "係助": "係助詞", "終助": "終助詞",
-    "間助": "間投助詞", "格助": "格助詞",
-  };
-  return { pos: posMap[plainPos] || plainPos || "" };
+  // リンクなしのプレーンテキスト（副・代・接助・副助 のほか、
+  // 「ヤ下二・用」「命令・終」のように活用の種類や助動詞の意味も書かれる）。
+  // 最初の区切りをそのまま品詞名にすると pos="ヤ下二" のようになるので、
+  // ラベルの形から読み解く（scripts/morph-label.mjs）。
+  return parseLabel(t);
 }
 
 function inferPosFromConjType(ct) {
