@@ -102,6 +102,13 @@ for (const f of readdirSync(V3).filter((x) => x.endsWith('.json') && x !== 'inde
     }
     const row = rows.find((r) => r.word === t.text && !r.used);
     // 正本に当たる行が無いときは、いま入っている壊れた値をラベルとして読み直す
+    // 正本のラベルが空なら、品詞は付けないのが正しい
+    if (row && row.label === '') {
+      notes.push(`   → ${t.id}「${t.text}」 ${JSON.stringify(t.grammarTag)} → 正本のラベルが空なので品詞を外す`);
+      if (APPLY) t.grammarTag = { ...t.grammarTag, pos: '' };
+      n++; fixed++;
+      continue;
+    }
     const parsed = row ? parseLabel(row.label) : parseLabel(t.grammarTag.pos);
     if (!parsed.pos) {
       notes.push(`   ✗ 「${t.text}」の${row ? `ラベル「${row.label}」` : `品詞「${t.grammarTag.pos}」`}を読み解けない`);
