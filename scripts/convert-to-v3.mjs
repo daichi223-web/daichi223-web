@@ -16,7 +16,7 @@
 
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
-import { parseLabel } from "./morph-label.mjs";
+import { parseLabel, posFromConjType } from "./morph-label.mjs";
 
 const ROOT = resolve(process.cwd());
 const IN_DIR = join(ROOT, "public", "texts");
@@ -157,12 +157,9 @@ function parsePosAndConjugation(tagText, linkCategory) {
 }
 
 function inferPosFromConjType(ct) {
-  if (!ct) return "";
-  if (/^(ラ|カ|サ|タ|ナ|ハ|バ|マ|ヤ|ワ|ア|ガ|ダ)/.test(ct)) return "動詞";
-  if (/^(ク|シク)/.test(ct)) return "形容詞";
-  if (/^(ナリ|タリ)/.test(ct)) return "形容動詞";
-  if (/^(カ変|サ変|ナ変|ラ変)/.test(ct)) return "動詞";
-  return "動詞";
+  // 「ナリ」「タリ」「カリ」を先に見る。行の仮名（ナ・タ・カ）で先に判定すると
+  // 形容動詞・形容詞が動詞になってしまう（376件がそうなっていた）。
+  return posFromConjType(ct);
 }
 
 /** プレーンテキストの品詞タグから推定レイヤーを返す。0=判定不能 */

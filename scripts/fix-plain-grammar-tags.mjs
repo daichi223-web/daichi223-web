@@ -14,7 +14,7 @@
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { parseLabel } from './morph-label.mjs';
+import { parseLabel, posFromConjType } from './morph-label.mjs';
 
 const APPLY = process.argv.includes('--apply');
 const V3 = join(process.cwd(), 'public', 'texts-v3');
@@ -64,8 +64,17 @@ for (const f of readdirSync(V3).filter((x) => x.endsWith('.json') && x !== 'inde
   const doc = JSON.parse(readFileSync(fp, 'utf8'));
   const bad = [];
   for (const s of doc.sentences || []) for (const t of s.tokens || []) {
-    const pos = t.grammarTag?.pos;
-    if (pos !== undefined && !REAL_POS.has(pos)) bad.push(t);
+    const g = t.grammarTag;
+    if (!g) continue;
+    // 品詞名でないものが入っている
+    if (g.pos !== undefined && !REAL_POS.has(g.pos)) { bad.push(t); continue; }
+    // 活用の種類と品詞が食い違う（ナリ活用なのに動詞、など）。
+    // 助動詞・補助動詞は活用の「型」を持つので対象外。
+    if (g.conjugationType && g.pos !== '助動詞' && g.pos !== '補助動詞'
+        && g.pos !== posFromConjType(g.conjugationType)) {
+      t._posOnly = posFromConjType(g.conjugationType);
+      bad.push(t);
+    }
   }
   if (bad.length === 0) continue;
   const v2 = join(V2, f);
@@ -75,6 +84,14 @@ for (const f of readdirSync(V3).filter((x) => x.endsWith('.json') && x !== 'inde
   const notes = [];
   let n = 0;
   for (const t of bad) {
+    // 活用の種類と品詞の食い違いは、品詞だけ差し替える
+    if (t._posOnly) {
+      notes.push(`   → ${t.id}「${t.text}」 品詞 ${t.grammarTag.pos} → ${t._posOnly}（${t.grammarTag.conjugationType}活用）`);
+      if (APPLY) t.grammarTag.pos = t._posOnly;
+      delete t._posOnly;
+      n++; fixed++;
+      continue;
+    }
     // 句読点や括弧だけのトークンは、分割のときに次の語のタグを引き継いでいる
     // （「。」が 連体 を持つ等）。品詞は付けない。
     if (/^[\s　。、，．・「」﹁﹂『』（）()\[\]]+$/.test(t.text)) {
