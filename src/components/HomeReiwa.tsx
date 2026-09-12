@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAccountStatus, type AccountStatus } from '@/lib/auth';
+import { getCohort } from '@/lib/cohort';
+import { schoolLabel } from '@/lib/schools';
 import { Link } from 'react-router-dom';
 import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
 import { readStreak } from '@/lib/streak';
@@ -366,10 +368,10 @@ export default function HomeReiwa({
             <span className="text-lg">📮</span>
             <span className="flex-1 min-w-0">
               <span className="block text-[13px] font-black tracking-tight">
-                {account.isAnonymous ? '記録を引き継ぐ' : 'メール登録済み'}
+                {account.isAnonymous ? 'はじめに登録' : `登録済み（${schoolLabel(getCohort())}）`}
               </span>
               <span className="block text-[10.5px] text-rw-ink-soft font-semibold truncate">
-                {account.isAnonymous ? 'この端末だけの記録です。メールを付けると別の端末でも続きから' : account.email}
+                {account.isAnonymous ? '学校のメールで登録すると、別の端末でも続きから' : account.email}
               </span>
             </span>
             <span className="text-rw-ink-soft text-sm">→</span>

@@ -25,6 +25,7 @@
 |---|---|
 | CODEX | 位階システム = `src/lib/nobleData.ts` / `src/lib/portraitTone.ts` / `src/components/noble/` / `public/portraits/` / `assets-src/portraits/` / `docs/noble-rank-system.md` |
 | Claude Code | 読解教材データ = `public/texts-v3/` / `public/analysis/` / `public/reading/` / `scripts/check-texts.mjs` ほか検査・修正スクリプト |
+| Claude Code | 登録必須化＋暗号化プロフィール（2026-09-12〜）= `api/profile.ts` / `api/_pii.ts` / `src/lib/{profile,schools,auth}.ts` / `src/components/RequireAccount.tsx` / `src/pages/AccountPage.tsx` / `src/main.tsx` / `supabase/migrations/013_profiles.sql` / 利用状況 `scripts/usage-*` |
 
 - **担当外のファイルは add もコミットもしない**。`git add -A` / `git add .` は使わず名指しで add する
 - 肖像の原本（`assets-src/portraits/`）は **git で持つ**（`.gitignore` に入れない）。

@@ -31,3 +31,9 @@ supabase/.temp/
 
 # 品詞分解の辞書は build-morph-lexicon.cjs で2秒で作り直せる派生物（3.4MB）
 data/morph-lexicon.json
+
+# 利用状況レポートの出力（学習ログの集計。共有しない）
+reports/
+
+# 暗号化キーの控え（絶対にコミットしない）
+PII_KEY_控え.txt

@@ -1,5 +1,7 @@
 import { supabase } from './supabase';
 import { ensureAnonSession, resetAnonSessionCache } from './anonAuth';
+import { clearProfileCache } from './profile';
+import { DOMAIN_HINT, emailDomainOk } from './schools';
 
 /**
  * 匿名アカウント → 学校メール＋パスワード への紐づけ（health-check と同じ方式）。
@@ -33,6 +35,13 @@ function validEmail(e: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
 
+/** 形式＋学校ドメインの確認。最終判定はサーバ（/api/profile）でも行う */
+function checkEmail(e: string): AuthResult {
+  if (!validEmail(e)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
+  if (!emailDomainOk(e)) return { ok: false, message: `${DOMAIN_HINT}を使ってください。` };
+  return { ok: true };
+}
+
 export async function getAccountStatus(): Promise<AccountStatus> {
   const { data } = await supabase.auth.getSession();
   const u = data.session?.user;
@@ -62,29 +71,36 @@ function humanize(message: string): string {
 
 export async function linkEmailPassword(email: string, password: string): Promise<AuthResult> {
   const trimmed = email.trim();
-  if (!validEmail(trimmed)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
+  const chk = checkEmail(trimmed);
+  if (!chk.ok) return chk;
   if (password.length < MIN_PASSWORD) return { ok: false, message: `パスワードは${MIN_PASSWORD}文字以上にしてください。` };
   await ensureAnonSession();
   const { error } = await supabase.auth.updateUser({ email: trimmed, password }, { emailRedirectTo: callbackUrl() });
   if (error) return { ok: false, message: humanize(error.message) };
+  // 新しい claims（email・is_anonymous=false）を持つトークンに更新してから /api/profile を呼べるように
+  await supabase.auth.refreshSession().catch(() => {});
+  clearProfileCache();
   return { ok: true };
 }
 
 export async function signInWithPassword(email: string, password: string): Promise<AuthResult> {
   const trimmed = email.trim();
-  if (!validEmail(trimmed)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
+  const chk = checkEmail(trimmed);
+  if (!chk.ok) return chk;
   if (!password) return { ok: false, message: 'パスワードを入力してください。' };
   // 端末統合の準備: この端末が匿名で記録を持っていれば、ログイン後に統合できるようチケットを取っておく
   await requestMergeTicket();
   const { error } = await supabase.auth.signInWithPassword({ email: trimmed, password });
   if (error) return { ok: false, message: humanize(error.message) };
+  clearProfileCache(); // 別人のプロフィールを引きずらない
   return { ok: true };
 }
 
 /** パスワードを忘れた時: マジックリンク（登録済みメールのみ）。着地後 /account でパスワードを変える */
 export async function sendResetLink(email: string): Promise<AuthResult> {
   const trimmed = email.trim();
-  if (!validEmail(trimmed)) return { ok: false, message: 'メールアドレスの形式が正しくありません。' };
+  const chk = checkEmail(trimmed);
+  if (!chk.ok) return chk;
   await requestMergeTicket();
   const { error } = await supabase.auth.signInWithOtp({
     email: trimmed,
@@ -103,6 +119,7 @@ export async function changePassword(password: string): Promise<AuthResult> {
 
 export async function signOutToAnonymous(): Promise<void> {
   await supabase.auth.signOut();
+  clearProfileCache();
   resetAnonSessionCache();
   await ensureAnonSession();
 }

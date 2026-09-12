@@ -5,18 +5,33 @@ import {
   getPendingMerge, confirmPendingMerge, discardPendingMerge,
   type AccountStatus, type AuthResult, type PendingMerge,
 } from '@/lib/auth';
+import { fetchProfile, registerProfile, type Profile } from '@/lib/profile';
+import { getCohort } from '@/lib/cohort';
+import { DOMAIN_HINT, SCHOOLS, schoolLabel } from '@/lib/schools';
 
-// 記録の引き継ぎ（学校メール＋パスワード／別端末ログイン）。health-check と同じ方式。
-// 匿名のままだと記録は「このブラウザだけ」に紐づく。メールを付けると同じ記録のまま
-// 別の端末からも続けられる。メール送信はパスワードを忘れた時だけ。
+// 登録（学校メール＋パスワード＋学年・組・番号）。health-check と同じ方式。
+//   * 初回起動時は必須（RequireAccount が ?required=1&next=<戻り先> 付きでここへ送る）
+//   * 匿名セッションに updateUser でメールを付けるので uid は変わらず、この端末の記録はそのまま引き継がれる
+//   * 学年・組・番号はサーバ（/api/profile）で暗号化して保存。学校は ?cohort= で配った値を固定
+//   * メール送信はパスワードを忘れた時だけ
 
 export default function AccountPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
+  const required = params.get('required') === '1';
+  const next = params.get('next') || '/';
+  const justLinked = params.get('linked') === '1';
+  const callbackError = params.get('error');
+
   const [status, setStatus] = useState<AccountStatus | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [grade, setGrade] = useState('');
+  const [cls, setCls] = useState('');
+  const [number, setNumber] = useState('');
+  const [cohort, setCohortChoice] = useState(getCohort());
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -28,11 +43,17 @@ export default function AccountPage() {
     const st = await getAccountStatus();
     setStatus(st);
     setPending(!st.isAnonymous ? getPendingMerge() : null);
+    if (!st.isAnonymous) {
+      try { setProfile(await fetchProfile()); } catch { setProfile(null); }
+    } else {
+      setProfile(null);
+    }
   };
   useEffect(() => { void refresh(); }, []);
 
-  const justLinked = params.get('linked') === '1';
-  const callbackError = params.get('error');
+  const registered = !!status && !status.isAnonymous && !!profile?.registered;
+  const needsProfile = !!status && !status.isAnonymous && !!profile && !profile.registered;
+  const knownCohort = cohort in SCHOOLS;
 
   const run = async (fn: () => Promise<AuthResult>, okText: string, after?: () => void) => {
     setBusy(true); setError(null); setMessage(null);
@@ -42,10 +63,53 @@ export default function AccountPage() {
     else setError(r.message);
   };
 
-  const onLink = () => run(
-    () => linkEmailPassword(email, password),
-    '登録しました。この端末の記録がアカウントに紐づき、別の端末からも同じメールとパスワードで続けられます。',
-  );
+  const profileInput = (): { grade: number | null; class: number; number: number; cohort: string } | string => {
+    const g = grade ? parseInt(grade, 10) : null;
+    const c = parseInt(cls, 10);
+    const n = parseInt(number, 10);
+    if (g !== null && (!Number.isInteger(g) || g < 1 || g > 3)) return '学年は 1〜3 で入力してください。';
+    if (!Number.isInteger(c) || c < 1 || c > 20) return '組を数字で入力してください。';
+    if (!Number.isInteger(n) || n < 1 || n > 60) return '出席番号を数字で入力してください。';
+    return { grade: g, class: c, number: n, cohort };
+  };
+
+  /** 匿名 → メール＋パスワードを付け、続けて学年・組・番号を暗号化保存 */
+  const onRegister = async () => {
+    const input = profileInput();
+    if (typeof input === 'string') { setError(input); return; }
+    setBusy(true); setError(null); setMessage(null);
+    const r = await linkEmailPassword(email, password);
+    if (!r.ok) { setBusy(false); setError(r.message); return; }
+    try {
+      await registerProfile(input);
+    } catch (e) {
+      setBusy(false);
+      setError(`メールは登録できましたが、組・番号の保存に失敗しました（${e instanceof Error ? e.message : String(e)}）。下の欄からもう一度保存してください。`);
+      await refresh();
+      return;
+    }
+    setBusy(false); setPassword('');
+    setMessage('登録しました。この端末の記録はそのまま引き継がれ、別の端末からも同じメールとパスワードで続けられます。');
+    await refresh();
+    if (required) navigate(next, { replace: true });
+  };
+
+  /** メールは付いているが組・番号が未登録（別端末でログインした直後など） */
+  const onSaveProfile = async () => {
+    const input = profileInput();
+    if (typeof input === 'string') { setError(input); return; }
+    setBusy(true); setError(null); setMessage(null);
+    try {
+      await registerProfile(input);
+      setMessage('組・番号を保存しました。');
+      await refresh();
+      if (required) navigate(next, { replace: true });
+    } catch (e) {
+      setError(`保存できませんでした（${e instanceof Error ? e.message : String(e)}）。`);
+    }
+    setBusy(false);
+  };
+
   const onSignIn = () => run(
     () => signInWithPassword(email, password),
     'ログインしました。',
@@ -72,14 +136,24 @@ export default function AccountPage() {
   };
   const onDiscard = () => { discardPendingMerge(); setPending(null); };
 
+  // 登録が済んでいて required で来た場合は、統合待ちが無ければそのまま戻す
+  useEffect(() => {
+    if (required && registered && !pending) navigate(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [required, registered, pending]);
+
   return (
     <div className="min-h-dvh bg-rw-bg">
       <div className="max-w-2xl mx-auto px-5 py-6">
         <header className="mb-4">
-          <Link to="/" className="text-sm font-semibold text-rw-ink-soft hover:text-rw-ink transition-colors">← ホーム</Link>
-          <h1 className="mt-3 text-[28px] font-black tracking-tight text-rw-ink leading-none">📮 記録の引き継ぎ</h1>
+          {!required && <Link to="/" className="text-sm font-semibold text-rw-ink-soft hover:text-rw-ink transition-colors">← ホーム</Link>}
+          <h1 className="mt-3 text-[28px] font-black tracking-tight text-rw-ink leading-none">
+            {required ? '📮 はじめに登録' : '📮 アカウント'}
+          </h1>
           <p className="text-xs font-semibold text-rw-ink-soft mt-2 leading-relaxed">
-            今の記録は「このブラウザだけ」に紐づいています。学校のメールとパスワードを登録すると、同じ記録のままスマホやPCから続けられます。
+            {required
+              ? `古文単を使うには、${DOMAIN_HINT}とパスワード、学年・組・番号の登録が必要です。登録すると、スマホやPCなど別の端末からも同じ記録で続けられます。`
+              : '学校のメールとパスワードで、別の端末からも同じ記録で続けられます。'}
           </p>
         </header>
 
@@ -96,10 +170,19 @@ export default function AccountPage() {
               <span className="font-black">{status.pendingEmail}</span> に確認メールを送ってあります。届いたリンクを開くと登録が完了します。
             </p>
           ) : status.isAnonymous ? (
-            <p className="text-sm text-rw-ink leading-relaxed">メール未登録。<span className="font-black">この端末だけ</span>の記録です。</p>
+            <p className="text-sm text-rw-ink leading-relaxed">未登録。<span className="font-black">この端末だけ</span>の記録です。</p>
+          ) : registered ? (
+            <p className="text-sm text-rw-ink leading-relaxed">
+              ✓ <span className="font-black">{status.email}</span>{' '}
+              <span className="text-rw-ink-soft">
+                （{schoolLabel(profile?.cohort ?? cohort)}
+                {profile?.grade ? ` ${profile.grade}年` : ''}{profile?.class ? ` ${profile.class}組` : ''}{profile?.number ? ` ${profile.number}番` : ''}）
+              </span>
+              。別の端末でも、このメールとパスワードでログインすれば続きからできます。
+            </p>
           ) : (
             <p className="text-sm text-rw-ink leading-relaxed">
-              ✓ <span className="font-black">{status.email}</span> で登録済み。別の端末でも、このメールとパスワードでログインすれば続きからできます。
+              <span className="font-black">{status.email}</span> でログイン中。学年・組・番号が未登録です。
             </p>
           )}
         </section>
@@ -126,46 +209,80 @@ export default function AccountPage() {
           </section>
         )}
 
-        {/* 匿名なら: メール＋パスワード登録 */}
+        {/* 匿名なら: 新規登録（メール＋パスワード＋学年・組・番号） */}
         {status?.isAnonymous && (
           <section className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-4">
-            <h2 className="text-sm font-black text-rw-ink mb-1">この端末の記録に、メールとパスワードを付ける</h2>
+            <h2 className="text-sm font-black text-rw-ink mb-1">はじめて使う人：登録する</h2>
             <p className="text-[11px] text-rw-ink-soft font-semibold mb-2.5 leading-snug">
-              学校のメール（st.spec.ed.jp）とパスワード（6文字以上）。メールは送られません。
+              {DOMAIN_HINT}とパスワード（6文字以上）。確認メールは送られません。この端末で進めた記録はそのまま引き継がれます。
             </p>
-            <AuthForm
-              email={email} setEmail={setEmail}
-              password={password} setPassword={setPassword} passwordPlaceholder="新しいパスワード（6文字以上）" passwordAutoComplete="new-password"
-              disabled={busy} onSubmit={onLink} label="登録する"
-            />
+            <form onSubmit={(e) => { e.preventDefault(); if (!busy) void onRegister(); }} className="flex flex-col gap-2">
+              <SchoolField cohort={cohort} known={knownCohort} onChange={setCohortChoice} />
+              <input
+                type="email" inputMode="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                placeholder="example@st.spec.ed.jp" required className={inputCls}
+              />
+              <input
+                type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
+                placeholder="新しいパスワード（6文字以上）" minLength={6} required className={inputCls}
+              />
+              <ClassFields grade={grade} cls={cls} number={number} setGrade={setGrade} setCls={setCls} setNumber={setNumber} />
+              <button type="submit" disabled={busy} className="w-full rounded-xl py-3 text-[15px] font-black text-rw-paper disabled:opacity-60" style={{ background: 'var(--rw-accent)' }}>
+                {busy ? '処理中…' : '登録する'}
+              </button>
+            </form>
+          </section>
+        )}
+
+        {/* メールは付いているが組・番号が未登録 */}
+        {needsProfile && (
+          <section className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-4">
+            <h2 className="text-sm font-black text-rw-ink mb-1">学年・組・番号を登録する</h2>
+            <form onSubmit={(e) => { e.preventDefault(); if (!busy) void onSaveProfile(); }} className="flex flex-col gap-2">
+              <SchoolField cohort={cohort} known={knownCohort} onChange={setCohortChoice} />
+              <ClassFields grade={grade} cls={cls} number={number} setGrade={setGrade} setCls={setCls} setNumber={setNumber} />
+              <button type="submit" disabled={busy} className="w-full rounded-xl py-3 text-[15px] font-black text-rw-paper disabled:opacity-60" style={{ background: 'var(--rw-accent)' }}>
+                {busy ? '処理中…' : '保存する'}
+              </button>
+            </form>
           </section>
         )}
 
         {/* 別端末ログイン */}
-        <section className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-4">
-          <h2 className="text-sm font-black text-rw-ink mb-1">登録済みのメールでログイン</h2>
-          <p className="text-[11px] text-rw-ink-soft font-semibold mb-2.5 leading-snug">
-            別の端末で先に登録した人はこちら。この端末で登録前に進めた記録があれば、ログイン後に統合するか選べます。
-          </p>
-          <AuthForm
-            email={email} setEmail={setEmail}
-            password={password} setPassword={setPassword} passwordPlaceholder="パスワード" passwordAutoComplete="current-password"
-            disabled={busy} onSubmit={onSignIn} label="ログイン"
-          />
-          <button type="button" onClick={() => setShowReset((v) => !v)} className="mt-2.5 text-[12px] font-bold text-rw-ink-soft underline">
-            パスワードを忘れた
-          </button>
-          {showReset && (
-            <div className="mt-2 rounded-xl border border-rw-rule p-3">
-              <p className="text-[11px] text-rw-ink-soft font-semibold mb-2 leading-snug">
-                上のメールアドレス宛にログイン用のリンクを送ります。開いたあと、この画面でパスワードを設定し直せます。届かない時は先生に伝えてください。
-              </p>
-              <button type="button" onClick={onReset} disabled={busy} className="w-full rounded-xl py-2.5 text-[13px] font-black border border-rw-ink text-rw-ink disabled:opacity-60">
-                リンクを送る
+        {!registered && (
+          <section className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-4">
+            <h2 className="text-sm font-black text-rw-ink mb-1">登録済みのメールでログイン</h2>
+            <p className="text-[11px] text-rw-ink-soft font-semibold mb-2.5 leading-snug">
+              別の端末で先に登録した人はこちら。この端末で登録前に進めた記録があれば、ログイン後に統合するか選べます。
+            </p>
+            <form onSubmit={(e) => { e.preventDefault(); if (!busy) onSignIn(); }} className="flex flex-col gap-2">
+              <input
+                type="email" inputMode="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                placeholder="example@st.spec.ed.jp" required className={inputCls}
+              />
+              <input
+                type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
+                placeholder="パスワード" required className={inputCls}
+              />
+              <button type="submit" disabled={busy} className="w-full rounded-xl py-3 text-[15px] font-black text-rw-paper disabled:opacity-60" style={{ background: 'var(--rw-accent)' }}>
+                {busy ? '処理中…' : 'ログイン'}
               </button>
-            </div>
-          )}
-        </section>
+            </form>
+            <button type="button" onClick={() => setShowReset((v) => !v)} className="mt-2.5 text-[12px] font-bold text-rw-ink-soft underline">
+              パスワードを忘れた
+            </button>
+            {showReset && (
+              <div className="mt-2 rounded-xl border border-rw-rule p-3">
+                <p className="text-[11px] text-rw-ink-soft font-semibold mb-2 leading-snug">
+                  上のメールアドレス宛にログイン用のリンクを送ります。開いたあと、この画面でパスワードを設定し直せます。届かない時は先生に伝えてください。
+                </p>
+                <button type="button" onClick={onReset} disabled={busy} className="w-full rounded-xl py-2.5 text-[13px] font-black border border-rw-ink text-rw-ink disabled:opacity-60">
+                  リンクを送る
+                </button>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* 登録済みなら: パスワード変更・ログアウト */}
         {status && !status.isAnonymous && (
@@ -175,8 +292,7 @@ export default function AccountPage() {
               <form onSubmit={(e) => { e.preventDefault(); if (!busy) onChangePassword(); }} className="flex flex-col gap-2">
                 <input
                   type="password" autoComplete="new-password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="新しいパスワード（6文字以上）" minLength={6} required
-                  className="w-full rounded-xl border border-rw-rule bg-rw-bg px-3.5 py-2.5 text-sm text-rw-ink outline-none focus:border-rw-ink"
+                  placeholder="新しいパスワード（6文字以上）" minLength={6} required className={inputCls}
                 />
                 <button type="submit" disabled={busy} className="w-full rounded-xl py-2.5 text-[14px] font-black border border-rw-ink text-rw-ink disabled:opacity-60">
                   変更する
@@ -195,27 +311,39 @@ export default function AccountPage() {
   );
 }
 
-function AuthForm({ email, setEmail, password, setPassword, passwordPlaceholder, passwordAutoComplete, disabled, onSubmit, label }: {
-  email: string; setEmail: (v: string) => void;
-  password: string; setPassword: (v: string) => void; passwordPlaceholder: string; passwordAutoComplete: string;
-  disabled: boolean; onSubmit: () => void; label: string;
+const inputCls = 'w-full rounded-xl border border-rw-rule bg-rw-bg px-3.5 py-2.5 text-sm text-rw-ink outline-none focus:border-rw-ink';
+
+/** 学校：?cohort= で配った値が既知ならその名前を表示、未知なら選ばせる */
+function SchoolField({ cohort, known, onChange }: { cohort: string; known: boolean; onChange: (v: string) => void }) {
+  if (known) {
+    return (
+      <div className="flex items-center justify-between rounded-xl border border-rw-rule bg-rw-bg px-3.5 py-2.5 text-sm">
+        <span className="text-rw-ink-soft font-semibold">学校</span>
+        <span className="font-black text-rw-ink">{schoolLabel(cohort)}</span>
+      </div>
+    );
+  }
+  return (
+    <label className="flex items-center justify-between gap-3 rounded-xl border border-rw-rule bg-rw-bg px-3.5 py-2 text-sm">
+      <span className="text-rw-ink-soft font-semibold">学校</span>
+      <select value={cohort} onChange={(e) => onChange(e.target.value)} className="bg-transparent font-black text-rw-ink outline-none">
+        {!(cohort in SCHOOLS) && <option value={cohort}>{cohort}</option>}
+        {Object.entries(SCHOOLS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+      </select>
+    </label>
+  );
+}
+
+function ClassFields({ grade, cls, number, setGrade, setCls, setNumber }: {
+  grade: string; cls: string; number: string;
+  setGrade: (v: string) => void; setCls: (v: string) => void; setNumber: (v: string) => void;
 }) {
   return (
-    <form onSubmit={(e) => { e.preventDefault(); if (!disabled) onSubmit(); }} className="flex flex-col gap-2">
-      <input
-        type="email" inputMode="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
-        placeholder="example@st.spec.ed.jp" required
-        className="w-full rounded-xl border border-rw-rule bg-rw-bg px-3.5 py-2.5 text-sm text-rw-ink outline-none focus:border-rw-ink"
-      />
-      <input
-        type="password" autoComplete={passwordAutoComplete} value={password} onChange={(e) => setPassword(e.target.value)}
-        placeholder={passwordPlaceholder} required
-        className="w-full rounded-xl border border-rw-rule bg-rw-bg px-3.5 py-2.5 text-sm text-rw-ink outline-none focus:border-rw-ink"
-      />
-      <button type="submit" disabled={disabled} className="w-full rounded-xl py-3 text-[15px] font-black text-rw-paper disabled:opacity-60" style={{ background: 'var(--rw-accent)' }}>
-        {disabled ? '処理中…' : label}
-      </button>
-    </form>
+    <div className="grid grid-cols-3 gap-2">
+      <input type="number" inputMode="numeric" min={1} max={3} value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="学年" className={inputCls} />
+      <input type="number" inputMode="numeric" min={1} max={20} value={cls} onChange={(e) => setCls(e.target.value)} placeholder="組" required className={inputCls} />
+      <input type="number" inputMode="numeric" min={1} max={60} value={number} onChange={(e) => setNumber(e.target.value)} placeholder="出席番号" required className={inputCls} />
+    </div>
   );
 }
 

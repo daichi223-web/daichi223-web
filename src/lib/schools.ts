@@ -1,0 +1,23 @@
+// 学校（cohort）と、登録に使えるメールのドメイン。
+//
+// 学校の判別は「学校ごとに ?cohort=<名前> 付きの URL/QR を配る」方式（src/lib/cohort.ts）。
+// 登録時にその cohort をプロフィールへ固定し、別端末でログインした時も同じ学校の教材が出る。
+// 表示名が未設定の cohort はコード名をそのまま表示する。
+
+export const ALLOWED_DOMAINS = ['st.spec.ed.jp', 'spec.ed.jp'];
+
+/** cohort → 学校の表示名。新しい学校を足すときはここに1行追加 */
+export const SCHOOLS: Record<string, string> = {
+  default: '浦和高校',
+};
+
+export function schoolLabel(cohort: string): string {
+  return SCHOOLS[cohort] ?? cohort;
+}
+
+export function emailDomainOk(email: string): boolean {
+  const d = email.trim().split('@')[1]?.toLowerCase();
+  return !!d && ALLOWED_DOMAINS.includes(d);
+}
+
+export const DOMAIN_HINT = '学校のメール（@st.spec.ed.jp）';

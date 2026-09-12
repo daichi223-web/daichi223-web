@@ -1,0 +1,668 @@
+<meta charset="utf-8">
+<title>古文単 利用状況</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --ground: #f2f4f7;
+    --surface: #ffffff;
+    --surface-2: #f8f9fb;
+    --ink: #151a21;
+    --ink-2: #4f5865;
+    --muted: #838b98;
+    --line: #e2e6ec;
+    --line-strong: #ccd2dc;
+    --series-1: #2a78d6;
+    --series-1-soft: #cde2fb;
+    --ord-1: #86b6ef;
+    --ord-2: #5598e7;
+    --ord-3: #2a78d6;
+    --ord-4: #1c5cab;
+    --ord-5: #104281;
+    --link: #1c5cab;
+    --shadow: 0 1px 2px rgba(21, 26, 33, .06), 0 8px 24px rgba(21, 26, 33, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --ground: #14171b;
+      --surface: #1c2026;
+      --surface-2: #23272e;
+      --ink: #eff2f6;
+      --ink-2: #b6becb;
+      --muted: #8b95a3;
+      --line: #2b3039;
+      --line-strong: #3a414d;
+      --series-1: #3987e5;
+      --series-1-soft: #1c5cab;
+      --ord-1: #9ec5f4;
+      --ord-2: #6da7ec;
+      --ord-3: #3987e5;
+      --ord-4: #256abf;
+      --ord-5: #184f95;
+      --link: #86b6ef;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #14171b;
+    --surface: #1c2026;
+    --surface-2: #23272e;
+    --ink: #eff2f6;
+    --ink-2: #b6becb;
+    --muted: #8b95a3;
+    --line: #2b3039;
+    --line-strong: #3a414d;
+    --series-1: #3987e5;
+    --series-1-soft: #1c5cab;
+    --ord-1: #9ec5f4;
+    --ord-2: #6da7ec;
+    --ord-3: #3987e5;
+    --ord-4: #256abf;
+    --ord-5: #184f95;
+    --link: #86b6ef;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  }
+  /* 状態色は固定（テーマで変えない） */
+  :root, :root[data-theme="dark"] {
+    --good: #0ca30c;
+    --warning: #fab219;
+    --serious: #ec835a;
+    --critical: #d03b3b;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mincho { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 72px; }
+
+  header.page {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px;
+    padding-bottom: 18px; margin-bottom: 20px;
+    border-bottom: 2px solid var(--line-strong);
+  }
+  header.page h1 {
+    font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    font-size: 30px; font-weight: 700; letter-spacing: .04em; margin: 0; text-wrap: balance;
+  }
+  header.page .meta { color: var(--muted); font-size: 13px; margin-left: auto; text-align: right; }
+
+  /* 期間コントロール */
+  .ctl {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 14px; margin-bottom: 28px; box-shadow: var(--shadow);
+  }
+  .ctl .k { font-size: 12px; color: var(--muted); letter-spacing: .08em; margin-right: 2px; }
+  .ctl button {
+    font: inherit; font-size: 12.5px; padding: 4px 11px; border-radius: 999px;
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-2); cursor: pointer;
+  }
+  .ctl button:hover { border-color: var(--series-1); color: var(--ink); }
+  .ctl button[aria-pressed="true"] { background: var(--series-1); border-color: var(--series-1); color: #fff; }
+  .ctl input[type="date"] {
+    font: inherit; font-size: 12.5px; padding: 3px 6px; border: 1px solid var(--line-strong); border-radius: 6px;
+    background: var(--surface); color: var(--ink);
+  }
+  .ctl .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+  .ctl .sum { margin-left: auto; font-size: 12.5px; color: var(--ink-2); }
+  .ctl .sum b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  section { margin-top: 44px; }
+  section > h2 {
+    font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    font-size: 19px; font-weight: 700; letter-spacing: .05em; margin: 0 0 4px;
+  }
+  section > .lede { color: var(--ink-2); font-size: 13.5px; margin: 0 0 18px; max-width: 62ch; }
+  .note { color: var(--muted); font-size: 12px; margin: 10px 2px 0; }
+  .empty { color: var(--muted); font-size: 13px; padding: 24px 0; text-align: center; }
+
+  /* 数値タイル */
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px 14px; box-shadow: var(--shadow); }
+  .tile .k { font-size: 11.5px; letter-spacing: .12em; color: var(--muted); text-transform: none; }
+  .tile .v {
+    font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    font-size: 34px; font-weight: 700; line-height: 1.15; margin-top: 2px;
+  }
+  .tile .v small { font-size: 15px; font-weight: 500; color: var(--ink-2); margin-left: 3px; }
+  .tile .s { font-size: 12.5px; color: var(--ink-2); margin-top: 4px; }
+  .tiles.small .tile { padding: 12px 14px 10px; }
+  .tiles.small .tile .v { font-size: 24px; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px 20px; }
+  .panel h3 { font-size: 14px; margin: 0 0 2px; letter-spacing: .02em; }
+  .panel .sub { font-size: 12px; color: var(--muted); margin: 0 0 16px; }
+
+  /* 縦バー */
+  .vbars { display: flex; align-items: flex-end; gap: 6px; height: 168px; }
+  .vbars .col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 5px; }
+  .vbars .num { font-size: 11.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .vbars .bar { width: 100%; background: var(--series-1); border-radius: 4px 4px 0 0; min-height: 2px; }
+  .vlabels { display: flex; gap: 6px; margin-top: 8px; border-top: 1px solid var(--line); padding-top: 6px; }
+  .vlabels div { flex: 1; text-align: center; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* 横バー */
+  .hbars { display: flex; flex-direction: column; gap: 8px; }
+  .hrow { display: grid; grid-template-columns: minmax(84px, auto) 1fr minmax(52px, auto); align-items: center; gap: 12px; }
+  .hrow .lab { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hrow .track { background: var(--surface-2); border-radius: 4px; height: 14px; overflow: hidden; }
+  .hrow .fill { height: 100%; background: var(--series-1); border-radius: 4px; min-width: 2px; }
+  .hrow .val { font-size: 12.5px; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+  /* 警告帯 */
+  .flag { display: flex; gap: 12px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--warning); border-radius: 8px; padding: 14px 18px; margin-top: 16px; }
+  .flag .icon { font-size: 16px; line-height: 1.4; }
+  .flag b { font-size: 14px; }
+  .flag p { margin: 2px 0 0; font-size: 13px; color: var(--ink-2); }
+
+  /* 表 */
+  .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 13px; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { font-size: 11.5px; letter-spacing: .08em; color: var(--muted); font-weight: 600; background: var(--surface-2); position: sticky; top: 0; }
+  th.num, td.num { text-align: right; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; }
+  td.q { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--ink-2); white-space: nowrap; }
+  .errcell { display: flex; align-items: center; gap: 9px; min-width: 128px; }
+  .errcell .track { flex: 1; height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+  .errcell .fill { height: 100%; border-radius: 4px; }
+  .errcell .pctv { font-variant-numeric: tabular-nums; width: 40px; text-align: right; }
+
+  /* 個別の生徒 */
+  .people-ctl { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 12px; font-size: 13px; }
+  .people-ctl input[type="search"] {
+    font: inherit; font-size: 13px; padding: 5px 10px; border: 1px solid var(--line-strong); border-radius: 8px;
+    background: var(--surface); color: var(--ink); width: 200px; font-family: ui-monospace, Consolas, monospace;
+  }
+  .people-ctl label { color: var(--ink-2); display: inline-flex; gap: 6px; align-items: center; }
+  .people-ctl select {
+    font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid var(--line-strong); border-radius: 8px;
+    background: var(--surface); color: var(--ink);
+  }
+  .people-ctl .cnt { color: var(--muted); font-size: 12.5px; margin-left: auto; }
+  table.people th[data-sort] { cursor: pointer; user-select: none; white-space: nowrap; }
+  table.people th[data-sort]:hover { color: var(--ink); }
+  table.people th[data-sort].on::after { content: " ▼"; font-size: 9px; }
+  table.people th[data-sort].on.asc::after { content: " ▲"; }
+  table.people tbody tr { cursor: pointer; }
+  table.people tbody tr:hover td { background: var(--surface-2); }
+  table.people tbody tr.sel td { background: var(--series-1-soft); }
+  td.id { font-family: ui-monospace, Consolas, monospace; font-size: 12px; letter-spacing: .04em; }
+  .more { display: block; width: 100%; margin-top: 10px; font: inherit; font-size: 13px; padding: 8px; border: 1px dashed var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--ink-2); cursor: pointer; }
+
+  .person { margin-top: 22px; background: var(--surface); border: 1px solid var(--series-1); border-radius: 12px; padding: 20px 22px 22px; box-shadow: var(--shadow); }
+  .person .head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 14px; }
+  .person .head h3 { font-family: ui-monospace, Consolas, monospace; font-size: 18px; margin: 0; letter-spacing: .06em; }
+  .person .head .range { color: var(--muted); font-size: 12.5px; }
+  .person .head .close { margin-left: auto; font: inherit; font-size: 12.5px; background: none; border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px 10px; color: var(--ink-2); cursor: pointer; }
+  .person .cols { margin-top: 18px; }
+  .person h4 { font-size: 13.5px; margin: 0 0 2px; }
+  .person .sub { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+  .person table { min-width: 0; font-size: 12.5px; }
+  .person th, .person td { padding: 6px 10px; }
+  .boxdot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 4px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .chip { font-size: 12.5px; padding: 4px 11px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); color: var(--ink-2); }
+
+  footer.page { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  code { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 12px; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+
+  #tip {
+    position: fixed; z-index: 9; pointer-events: none; opacity: 0;
+    background: var(--ink); color: var(--surface); font-size: 12px; line-height: 1.5;
+    padding: 6px 10px; border-radius: 6px; max-width: 260px; transition: opacity .1s;
+  }
+  @media (prefers-reduced-motion: reduce) { #tip { transition: none; } }
+  @media (max-width: 780px) {
+    .tiles { grid-template-columns: repeat(2, 1fr); }
+    .cols { grid-template-columns: 1fr; }
+    header.page .meta { margin-left: 0; text-align: left; }
+    .ctl { position: static; }
+    .ctl .sum { margin-left: 0; width: 100%; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="page">
+    <h1>古文単 利用状況</h1>
+    <div class="meta" id="meta"></div>
+  </header>
+  <div class="ctl" id="ctl">
+    <span class="k">期間</span>
+    <span id="presets"></span>
+    <span class="sep"></span>
+    <input type="date" id="from" aria-label="開始日"> <span style="color:var(--muted)">〜</span> <input type="date" id="to" aria-label="終了日">
+    <span class="sum" id="ctlsum"></span>
+  </div>
+  <main id="app"></main>
+  <section id="people-sec">
+    <h2>個別の生徒</h2>
+    <p class="lede" id="plede"></p>
+    <div class="people-ctl">
+      <input type="search" id="psearch" placeholder="組-番号・メール・ID で絞り込み" autocomplete="off" spellcheck="false">
+      <select id="pschool" aria-label="学校"></select>
+      <label><input type="checkbox" id="pactive" checked> 期間内に学習した人だけ</label>
+      <span class="cnt" id="pcnt"></span>
+    </div>
+    <div class="tablewrap">
+      <table class="people">
+        <thead><tr>
+          <th data-sort="school">学校</th>
+          <th data-sort="klass">組-番号</th>
+          <th data-sort="mail">メール</th>
+          <th data-sort="id">ID</th>
+          <th class="num" data-sort="ans">回答</th>
+          <th class="num" data-sort="correctPct">正答率</th>
+          <th class="num" data-sort="words">触れた語</th>
+          <th class="num" data-sort="box5">定着(箱5)</th>
+          <th class="num" data-sort="due">期限切れ</th>
+          <th class="num" data-sort="topics">文法T</th>
+          <th class="num" data-sort="mastery">習得度</th>
+          <th data-sort="first">初回</th>
+          <th data-sort="last">最終</th>
+        </tr></thead>
+        <tbody id="pbody"></tbody>
+      </table>
+    </div>
+    <button class="more" id="pmore" hidden></button>
+    <div id="person"></div>
+    <p class="note">「回答」「触れた語」は word_stats の累計行を最終学習日で期間に割り付けた概算。期間内に触れて、その後また触れた語は後の期間に計上されます。</p>
+  </section>
+  <footer class="page">
+    生成 = <code>node --env-file=.env.local scripts/usage-report.mjs</code>（Supabase への SELECT のみ／user_id は先頭 8 桁だけ埋め込み、reports/ は gitignore）。
+    再実行すればこのページが上書きされます。日付は日本時間。<br>
+    <b>このファイルは登録済み生徒の個人情報（学校・組・番号・メールのローカル部）を復号して含みます。</b>共有・配布しないでください。
+  </footer>
+</div>
+<div id="tip"></div>
+
+<script>
+const D = /*__DATA__*/null;
+/*__AGG__*/
+
+const fmt = (n) => Number(n ?? 0).toLocaleString("ja-JP");
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const md = (d) => (d ? d.slice(5).replace("-", "/") : "—");
+const TODAY = D.today;
+const ORD = ["--ord-1", "--ord-2", "--ord-3", "--ord-4", "--ord-5"];
+
+/* 縦バー：値ラベルは全数直付け（6〜24本まで） */
+function vbars(items, { label, tip, showEvery = 1 }) {
+  if (!items.length) return `<div class="empty">この期間の記録はありません</div>`;
+  const max = Math.max(...items.map((i) => i.n), 1);
+  const cols = items.map((i, k) => {
+    const h = Math.max(2, Math.round((i.n / max) * 132));
+    const num = showEvery === 1 || k === items.length - 1 ? fmt(i.n) : "";
+    return `<div class="col" data-tip="${esc(tip(i))}">
+      <div class="num">${num}</div>
+      <div class="bar" style="height:${h}px"></div>
+    </div>`;
+  }).join("");
+  const labs = items.map((i, k) => `<div>${showEvery === 1 || k % showEvery === 0 || k === items.length - 1 ? esc(label(i)) : ""}</div>`).join("");
+  return `<div class="vbars">${cols}</div><div class="vlabels">${labs}</div>`;
+}
+
+/* 横バー */
+function hbars(items, { colors = null, suffix = "" } = {}) {
+  if (!items.length) return `<div class="empty">この期間の記録はありません</div>`;
+  const max = Math.max(...items.map((i) => i.n), 1);
+  return `<div class="hbars">${items.map((i, k) => `
+    <div class="hrow" data-tip="${esc(i.tip ?? "")}">
+      <div class="lab" title="${esc(i.label)}">${esc(i.label)}</div>
+      <div class="track"><div class="fill" style="width:${Math.max(0.6, (i.n / max) * 100)}%${colors ? `;background:var(${colors[k % colors.length]})` : ""}"></div></div>
+      <div class="val">${fmt(i.n)}${suffix}</div>
+    </div>`).join("")}</div>`;
+}
+const errColor = (e) => (e >= 60 ? "var(--critical)" : e >= 50 ? "var(--serious)" : "var(--warning)");
+const boxItems = (boxes) => boxes.map((n, k) => ({ label: `箱 ${k + 1}${k === 0 ? "（新出）" : k === 4 ? "（定着）" : ""}`, n, tip: `箱${k + 1}: ${fmt(n)} 語` }));
+
+/* ---- 期間 ------------------------------------------------------------------ */
+const monthStart = (d) => d.slice(0, 7) + "-01";
+const prevMonth = (d) => { const t = new Date(d.slice(0, 7) + "-01T00:00:00Z"); t.setUTCMonth(t.getUTCMonth() - 1); return t.toISOString().slice(0, 7); };
+const year = TODAY.slice(0, 4);
+const PRESETS = [
+  { key: "all", label: "全期間", from: null, to: null },
+  { key: "7d", label: "直近7日", from: shiftDay(TODAY, -6), to: TODAY },
+  { key: "30d", label: "直近30日", from: shiftDay(TODAY, -29), to: TODAY },
+  { key: "month", label: "今月", from: monthStart(TODAY), to: TODAY },
+  { key: "pmonth", label: "先月", from: prevMonth(TODAY) + "-01", to: shiftDay(monthStart(TODAY), -1) },
+  { key: "t1", label: "1学期（4〜7月）", from: `${year}-04-01`, to: `${year}-07-31` },
+  { key: "t2", label: "2学期（9月〜）", from: `${year}-09-01`, to: TODAY },
+];
+let range = { from: null, to: null };
+try { const s = JSON.parse(localStorage.getItem("usage.range") || "null"); if (s && typeof s === "object") range = { from: s.from ?? null, to: s.to ?? null }; } catch { /* noop */ }
+
+const $ = (id) => document.getElementById(id);
+$("presets").innerHTML = PRESETS.map((p) => `<button type="button" data-key="${p.key}">${p.label}</button>`).join(" ");
+$("presets").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-key]"); if (!b) return;
+  const p = PRESETS.find((x) => x.key === b.dataset.key);
+  setRange(p.from, p.to);
+});
+$("from").addEventListener("change", () => setRange($("from").value || null, $("to").value || null));
+$("to").addEventListener("change", () => setRange($("from").value || null, $("to").value || null));
+
+function setRange(from, to) {
+  if (from && to && from > to) [from, to] = [to, from];
+  range = { from, to };
+  try { localStorage.setItem("usage.range", JSON.stringify(range)); } catch { /* noop */ }
+  render();
+}
+const rangeLabel = () => (!range.from && !range.to) ? "全期間" : `${range.from ?? "…"} 〜 ${range.to ?? "…"}`;
+
+/* ---- 全体 ------------------------------------------------------------------ */
+let A = null;         // 現在の期間の集計
+let selected = null;  // 選択中の uIdx
+let pageSize = 60;
+let sortKey = "last", sortAsc = false;
+
+function render() {
+  A = aggregate(D, range.from, range.to, TODAY);
+  const t = A.totals;
+  const filtered = !!(range.from || range.to);
+
+  $("from").value = range.from ?? "";
+  $("to").value = range.to ?? "";
+  for (const b of $("presets").querySelectorAll("button")) {
+    const p = PRESETS.find((x) => x.key === b.dataset.key);
+    b.setAttribute("aria-pressed", String(p.from === range.from && p.to === range.to));
+  }
+  $("ctlsum").innerHTML = `${esc(rangeLabel())}：<b>${fmt(t.users)}</b> 人・<b>${fmt(t.answers)}</b> 回`;
+
+  const parts = [];
+  parts.push(`
+<section style="margin-top:0">
+  <div class="tiles">
+    <div class="tile"><div class="k">${filtered ? "期間内に学習した人" : "のべ利用者"}</div><div class="v">${fmt(t.users)}<small>人</small></div>
+      <div class="s">${t.firstDay ? `${t.firstDay} 〜 ${t.lastDay}` : "記録なし"}<br>登録済み ${fmt(D.registered ?? 0)} 人${D.schools?.length ? `（${D.schools.map(esc).join("・")}）` : ""}</div></div>
+    <div class="tile"><div class="k">クイズ回答</div><div class="v">${fmt(t.answers)}<small>回</small></div>
+      <div class="s">うち文法ドリル ${fmt(t.grammarAns)} 回</div></div>
+    <div class="tile"><div class="k">正答率</div><div class="v">${t.correctPct}<small>%</small></div>
+      <div class="s">1人あたり中央値 ${t.median} 回</div></div>
+    <div class="tile"><div class="k">直近30日に学習</div><div class="v">${fmt(t.active30)}<small>人</small></div>
+      <div class="s">7日以内は ${fmt(t.active7)} 人</div></div>
+  </div>
+  ${filtered ? `<p class="note">期間集計は「その期間に最後に触れた語」の累計で近似しています（実際より少なめに出ます）。</p>` : ""}
+</section>`);
+
+  const wk = A.weeks.slice(-20);
+  parts.push(`
+<section>
+  <h2>いつ使われたか</h2>
+  <p class="lede">${filtered ? `${esc(rangeLabel())} の内訳。` : "山は5〜6月。夏休みで底を打ち、9月に戻り始めています。"}</p>
+  <div class="cols">
+    <div class="panel">
+      <h3>月別の回答数</h3>
+      <p class="sub">最終学習月に、その人のその語の回答をまとめて計上（概算）</p>
+      ${vbars(A.months, { label: (i) => i.m.slice(5) + "月", tip: (i) => `${i.m}　${fmt(i.n)} 回` })}
+      <p class="note">word_stats は語ごとの累計行のため、日単位の推移は取れません。</p>
+    </div>
+    <div class="panel">
+      <h3>最後に学習した週（人数）</h3>
+      <p class="sub">直近20週。右端に近いほど「まだ使っている人」</p>
+      ${vbars(wk, { label: (i) => md(i.w), tip: (i) => `${i.w} の週　${fmt(i.n)} 人が最終学習`, showEvery: wk.length > 8 ? 4 : 1 })}
+      <p class="note">左側の山＝その週を最後に離れた人。手前の谷は離脱、右端の伸びは現役。</p>
+    </div>
+  </div>
+</section>`);
+
+  parts.push(`
+<section>
+  <h2>どこで止まったか</h2>
+  <p class="lede">${fmt(t.low10)} 人（${t.users ? Math.round((t.low10 / t.users) * 100) : 0}%）が10回以下${filtered ? "の回答" : "で離れています。続いた人は桁違いに続く"}。</p>
+  <div class="cols">
+    <div class="panel">
+      <h3>1人あたりの回答数</h3>
+      <p class="sub">上位5人は ${t.top5.map(fmt).join("・") || "—"} 回</p>
+      ${hbars(A.buckets.map((b) => ({ label: b.label, n: b.n, tip: `${b.label}: ${fmt(b.n)} 人` })), { suffix: " 人" })}
+    </div>
+    <div class="panel">
+      <h3>SRS（Leitner 箱）の分布</h3>
+      <p class="sub">${fmt(A.srs.rows)} 語ぶんの記録／${fmt(A.srs.users)} 人${filtered ? "（期間内に復習した語）" : ""}</p>
+      ${hbars(boxItems(A.srs.boxes), { colors: ORD, suffix: " 語" })}
+    </div>
+  </div>
+  ${A.srs.duePct >= 50 ? `<div class="flag">
+    <div class="icon">⚠</div>
+    <div>
+      <b>要対応 — 復習キューが実質破綻：期限到来 ${fmt(A.srs.due)} 語（${A.srs.duePct}%）</b>
+      <p>ほぼ全ての語が「復習期限切れ」の状態。今日の分を開いても山が崩れないため、戻ってきた人ほど心が折れます。</p>
+    </div>
+  </div>` : ""}
+</section>`);
+
+  parts.push(`
+<section>
+  <h2>何が難しいか</h2>
+  <p class="lede">回答${A.minN}件以上のうち誤答率の高い順に25問。${filtered ? "" : "単語より先に、助動詞の意味判別が並びます。"}</p>
+  ${A.hard.length ? `<div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th>種別</th><th>設問</th><th style="width:170px">誤答率</th><th class="num">回答</th><th class="num">人数</th><th>qid</th>
+      </tr></thead>
+      <tbody>
+        ${A.hard.map((h) => `<tr>
+          <td><span class="badge">${esc(h.kind)}</span></td>
+          <td>${esc(h.label || h.topic || "—")}</td>
+          <td><div class="errcell">
+            <div class="track"><div class="fill" style="width:${h.err}%;background:${errColor(h.err)}"></div></div>
+            <span class="pctv">${h.err}%</span>
+          </div></td>
+          <td class="num">${fmt(h.n)}</td>
+          <td class="num">${fmt(h.users)}</td>
+          <td class="q">${esc(h.qid)}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+  </div>` : `<div class="empty">この期間の記録はありません</div>`}
+  <p class="note">誤答率 60%以上を赤、50%以上を橙で表示。</p>
+</section>`);
+
+  parts.push(`
+<section>
+  <h2>何が使われていないか</h2>
+  <p class="lede">出題された語は ${fmt(t.wordQidsSeen)} / ${fmt(t.wordQidTotal)}。${filtered ? "" : "学習は単語帳の前半に張りついています。"}</p>
+  <div class="cols">
+    <div class="panel">
+      <h3>単語番号帯ごとの回答数</h3>
+      <p class="sub">正本 Excel の番号順。後半ほど手つかず</p>
+      ${hbars(A.bands.map((b) => ({ label: b.band, n: b.n, tip: `${b.band}番: ${fmt(b.n)} 回` })), { suffix: " 回" })}
+    </div>
+    <div class="panel">
+      <h3>文法道場のトピック（着手人数）</h3>
+      <p class="sub">${fmt(A.grammar.users)} 人が着手／全 ${A.grammar.topics} トピック・${fmt(A.grammar.drills)} 問${filtered ? "（期間内に更新のあった分）" : ""}</p>
+      ${hbars(A.grammar.topTopics.slice(0, 10).map((x) => ({ label: x.id, n: x.n, tip: `${x.id}: ${fmt(x.n)} 人／平均習得度 ${x.mastery}%` })), { suffix: " 人" })}
+      <p class="note">ラベルにマウスを置くと平均習得度が出ます。@2・@3 はレベル2・3。</p>
+    </div>
+  </div>
+</section>`);
+
+  parts.push(`
+<section>
+  <h2>読解教材の公開</h2>
+  <p class="lede">${D.publications.cohorts.map((c) => `${esc(c.cohort)} = 公開 ${c.pub} / 非公開 ${c.unpub}`).join("　｜　")}</p>
+  <div class="chips">${D.publications.titles.map((x) => `<span class="chip">${esc(x.title)}<span style="color:var(--muted)">　${esc(x.source)}</span></span>`).join("")}</div>
+</section>`);
+
+  $("app").innerHTML = parts.join("");
+  pageSize = 60;
+  renderPeople();
+  if (selected !== null) renderPerson();
+}
+
+/* ---- 個別の生徒 ------------------------------------------------------------ */
+const allPeople = () => aggregate(D, null, null, TODAY).people;
+let peopleAll = null;
+
+function peopleList() {
+  const active = $("pactive").checked;
+  let list = active ? A.people : (peopleAll ??= allPeople());
+  const school = $("pschool").value;
+  if (school === "__none") list = list.filter((p) => !p.registered);
+  else if (school) list = list.filter((p) => p.school === school);
+  const q = $("psearch").value.trim().toLowerCase();
+  if (q) list = list.filter((p) => p.id.startsWith(q) || (p.mail ?? "").toLowerCase().includes(q) || p.klass === q || p.klass.endsWith("-" + q) || p.klass.startsWith(q));
+  const dir = sortAsc ? 1 : -1;
+  const textKey = ["id", "first", "last", "school", "klass", "mail"].includes(sortKey);
+  const pad = (n) => String(n ?? 0).padStart(2, "0");
+  const v = (p) => {
+    if (sortKey === "klass") return p.klass ? `${pad(p.grade)}-${pad(p.cls)}-${pad(p.num)}` : "";
+    return p[sortKey] === null || p[sortKey] === undefined ? (textKey ? "" : -1) : p[sortKey];
+  };
+  list = [...list].sort((a, b) => {
+    const x = v(a), y = v(b);
+    if (textKey && (x === "") !== (y === "")) return x === "" ? 1 : -1; // 空欄（未登録など）は昇降どちらでも末尾
+    if (x === y) return b.ans - a.ans;
+    return (x > y ? 1 : -1) * dir;
+  });
+  return list;
+}
+
+function renderPeople() {
+  const list = peopleList();
+  const shown = list.slice(0, pageSize);
+  $("pcnt").textContent = `${fmt(list.length)} 人${list.length > shown.length ? `（先頭 ${fmt(shown.length)} 人を表示）` : ""}`;
+  for (const th of document.querySelectorAll("table.people th[data-sort]")) {
+    th.classList.toggle("on", th.dataset.sort === sortKey);
+    th.classList.toggle("asc", th.dataset.sort === sortKey && sortAsc);
+  }
+  $("pbody").innerHTML = shown.length ? shown.map((p) => `<tr data-u="${p.u}" class="${p.u === selected ? "sel" : ""}">
+    <td>${p.registered ? esc(p.school) : `<span class="badge">未登録</span>`}</td>
+    <td class="num" style="text-align:left">${esc(p.klass || "—")}</td>
+    <td class="id">${esc(p.mail || "—")}</td>
+    <td class="id">${esc(p.id)}</td>
+    <td class="num">${fmt(p.ans)}</td>
+    <td class="num">${p.correctPct}%</td>
+    <td class="num">${fmt(p.words)}</td>
+    <td class="num">${fmt(p.box5)}</td>
+    <td class="num">${fmt(p.due)}</td>
+    <td class="num">${fmt(p.topics)}</td>
+    <td class="num">${p.mastery === null ? "—" : p.mastery + "%"}</td>
+    <td class="q">${esc(p.first || "—")}</td>
+    <td class="q">${esc(p.last || "—")}</td>
+  </tr>`).join("") : `<tr><td colspan="13" class="empty">該当する人はいません</td></tr>`;
+  const rest = list.length - shown.length;
+  $("pmore").hidden = rest <= 0;
+  $("pmore").textContent = `さらに ${fmt(Math.min(rest, 200))} 人を表示（残り ${fmt(rest)} 人）`;
+}
+$("pbody").addEventListener("click", (e) => {
+  const tr = e.target.closest("tr[data-u]"); if (!tr) return;
+  selected = Number(tr.dataset.u);
+  renderPeople(); renderPerson();
+  $("person").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("pmore").addEventListener("click", () => { pageSize += 200; renderPeople(); });
+$("psearch").addEventListener("input", () => { pageSize = 60; renderPeople(); });
+$("pschool").innerHTML = [`<option value="">すべての学校</option>`, ...(D.schools ?? []).map((s) => `<option value="${esc(s)}">${esc(s)}</option>`), `<option value="__none">未登録だけ</option>`].join("");
+$("pschool").addEventListener("change", () => { pageSize = 60; renderPeople(); });
+$("plede").textContent = (D.registered ?? 0)
+  ? `登録済みは学校・組-番号・メール（@の前）で表示${D.piiDecrypted ? "" : "（この生成では暗号化キーが無く、学校以外は伏せています）"}。未登録は匿名 ID の先頭 8 桁だけです。`
+  : "まだ登録者がいないため、全員が匿名 ID（先頭 8 桁）での表示です。登録が進むと学校・組-番号・メールで探せます。";
+$("pactive").addEventListener("change", () => { pageSize = 60; renderPeople(); });
+document.querySelector("table.people thead").addEventListener("click", (e) => {
+  const th = e.target.closest("th[data-sort]"); if (!th) return;
+  if (sortKey === th.dataset.sort) sortAsc = !sortAsc; else { sortKey = th.dataset.sort; sortAsc = th.dataset.sort === "id"; }
+  renderPeople();
+});
+
+function renderPerson() {
+  const P = personDetail(D, selected, range.from, range.to, TODAY);
+  const boxColor = (b) => (b ? `var(${ORD[b - 1]})` : "var(--line-strong)");
+  const wordsTable = (rows, emptyMsg) => rows.length ? `<table>
+    <thead><tr><th>語 / 設問</th><th class="num">回答</th><th class="num">誤答率</th><th>箱</th><th>最終</th></tr></thead>
+    <tbody>${rows.map((w) => `<tr>
+      <td>${esc(w.label || w.qid)}${w.kind === "文法" ? ` <span class="badge">文法</span>` : ""}</td>
+      <td class="num">${w.c}/${w.n}</td>
+      <td class="num" style="color:${w.err >= 50 ? errColor(w.err) : "inherit"}">${w.err}%</td>
+      <td>${w.box ? `<span class="boxdot" style="background:${boxColor(w.box)}"></span>${w.box}` : "—"}</td>
+      <td class="q">${md(w.last)}</td>
+    </tr>`).join("")}</tbody></table>` : `<div class="empty">${emptyMsg}</div>`;
+
+  $("person").innerHTML = `<div class="person">
+    <div class="head">
+      <h3>${P.registered ? esc(`${P.school}${P.klass ? "　" + P.klass : ""}${P.mail ? "　" + P.mail : ""}`) : esc(P.id)}</h3>
+      <span class="range">${P.registered ? `ID ${esc(P.id)}　` : "未登録　"}${esc(rangeLabel())}${P.first ? `　初回 ${P.first}　最終 ${P.last}` : ""}</span>
+      <button type="button" class="close" id="pclose">閉じる</button>
+    </div>
+    <div class="tiles small">
+      <div class="tile"><div class="k">回答</div><div class="v">${fmt(P.ans)}<small>回</small></div><div class="s">うち文法 ${fmt(P.grammarAns)} 回</div></div>
+      <div class="tile"><div class="k">正答率</div><div class="v">${P.correctPct}<small>%</small></div><div class="s">触れた語 ${fmt(P.words)}</div></div>
+      <div class="tile"><div class="k">定着（箱5）</div><div class="v">${fmt(P.srs.boxes[4])}<small>語</small></div><div class="s">SRS 記録 ${fmt(P.srs.rows)} 語</div></div>
+      <div class="tile"><div class="k">復習期限切れ</div><div class="v">${fmt(P.srs.due)}<small>語</small></div><div class="s">${P.srs.duePct}%</div></div>
+    </div>
+    <div class="cols">
+      <div class="panel">
+        <h4>苦手な語（誤答率 50% 以上・2回以上）</h4>
+        <p class="sub">${P.weak.length} 語</p>
+        ${wordsTable(P.weak, "苦手と言える語はありません")}
+      </div>
+      <div class="panel">
+        <h4>最近触れた語</h4>
+        <p class="sub">最終学習日の新しい順に 15 語</p>
+        ${wordsTable(P.recent, "この期間の記録はありません")}
+      </div>
+    </div>
+    <div class="cols">
+      <div class="panel">
+        <h4>単語番号帯ごとの回答</h4>
+        <p class="sub">どこまで進んでいるか</p>
+        ${hbars(P.bands.map((b) => ({ label: b.band, n: b.n, tip: `${b.band}番: ${fmt(b.n)} 回` })), { suffix: " 回" })}
+      </div>
+      <div class="panel">
+        <h4>SRS の箱</h4>
+        <p class="sub">箱 5 が定着</p>
+        ${hbars(boxItems(P.srs.boxes), { colors: ORD, suffix: " 語" })}
+      </div>
+    </div>
+    <div class="cols">
+      <div class="panel">
+        <h4>文法道場</h4>
+        <p class="sub">${P.topics.length} トピック</p>
+        ${P.topics.length ? `<table>
+          <thead><tr><th>トピック</th><th class="num">正解/出題</th><th class="num">習得度</th><th>更新</th></tr></thead>
+          <tbody>${P.topics.map((x) => `<tr><td>${esc(x.id)}</td><td class="num">${x.correct}/${x.total}</td><td class="num">${x.mastery}%</td><td class="q">${md(x.updated)}</td></tr>`).join("")}</tbody>
+        </table>` : `<div class="empty">文法道場の記録はありません</div>`}
+      </div>
+      <div class="panel">
+        <h4>月別の回答</h4>
+        <p class="sub">最終学習月に計上（概算）</p>
+        ${vbars(P.months, { label: (i) => i.m.slice(2, 7).replace("-", "/"), tip: (i) => `${i.m}　${fmt(i.n)} 回` })}
+      </div>
+    </div>
+  </div>`;
+  $("pclose").addEventListener("click", () => { selected = null; $("person").innerHTML = ""; renderPeople(); });
+}
+
+/* ---- 起動 ------------------------------------------------------------------ */
+$("meta").innerHTML = `集計 ${new Date(D.generatedAt).toLocaleString("ja-JP")}<br>${fmt(D.users.length)} 人・word_stats ${fmt(D.ws.length)} 行`;
+render();
+
+/* ツールチップ */
+const tip = document.getElementById("tip");
+document.addEventListener("mouseover", (e) => {
+  const el2 = e.target.closest("[data-tip]");
+  if (!el2 || !el2.dataset.tip) { tip.style.opacity = 0; return; }
+  tip.textContent = el2.dataset.tip;
+  const r = el2.getBoundingClientRect();
+  tip.style.opacity = 1;
+  const w = tip.offsetWidth;
+  tip.style.left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8) + "px";
+  tip.style.top = Math.max(8, r.top - tip.offsetHeight - 8) + "px";
+});
+document.addEventListener("mouseout", () => { tip.style.opacity = 0; });
+</script>

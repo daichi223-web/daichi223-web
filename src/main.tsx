@@ -7,6 +7,7 @@ import App from './App.tsx'
 import { TestGrading } from './TestGrading.tsx'
 import PWAInstallBanner from './components/PWAInstallBanner.tsx'
 import PullToRefresh from './components/PullToRefresh.tsx'
+import RequireAccount from './components/RequireAccount.tsx'
 import { ensureAnonSession } from './lib/anonAuth.ts'
 import { applyUnlockFromUrl } from './lib/fullAccess.ts'
 import { applyCohortFromUrl } from './lib/cohort.ts'
@@ -62,6 +63,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <PullToRefresh />
       <PWAInstallBanner />
       <Suspense fallback={<Fallback />}>
+        {/* 初回起動時の登録ガード（/account・/auth/callback・/teacher・/test-grading は対象外） */}
+        <RequireAccount>
         <Routes>
           {/* 単語クイズ（ルート） */}
           <Route path="/" element={<App />} />
@@ -90,6 +93,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/grammar/:topicId" element={<GrammarDojoTopic />} />
           <Route path="/read/vocab" element={<VocabPage />} />
         </Routes>
+        </RequireAccount>
       </Suspense>
       </ReiwaThemeProvider>
     </BrowserRouter>
