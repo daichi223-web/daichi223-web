@@ -151,7 +151,7 @@ export default function AccountPage() {
         <header className="mb-4">
           {!required && <Link to="/" className="text-sm font-semibold text-rw-ink-soft hover:text-rw-ink transition-colors">← ホーム</Link>}
           <h1 className="mt-3 text-[28px] font-black tracking-tight text-rw-ink leading-none">
-            {required ? '📮 はじめに登録' : '📮 アカウント'}
+            {required ? '📮 登録のお願い' : '📮 アカウント'}
           </h1>
           <p className="text-xs font-semibold text-rw-ink-soft mt-2 leading-relaxed">
             {required
@@ -163,7 +163,10 @@ export default function AccountPage() {
         {/* 急にこの画面が出て驚かないように、理由と「記録は消えない」ことを先に伝える */}
         {required && status?.isAnonymous && (
           <section className="rounded-2xl border-2 border-rw-ink bg-rw-paper p-4 mb-4">
-            <h2 className="text-sm font-black text-rw-ink mb-2">この画面が出た理由</h2>
+            <h2 className="text-[15px] font-black text-rw-ink mb-1">お知らせ：登録が必要になりました</h2>
+            <p className="text-[12.5px] text-rw-ink-soft font-semibold mb-2.5 leading-relaxed">
+              今日から、古文単を使うには学校のメールでの登録が必要になりました。急にごめんなさい。1回だけの手続きです。
+            </p>
             <ul className="text-[12.5px] text-rw-ink font-semibold leading-relaxed list-none p-0 m-0 flex flex-col gap-1.5">
               <li>
                 <span className="font-black">今までの記録は消えていません。</span>
