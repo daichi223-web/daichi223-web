@@ -10,6 +10,8 @@ export type Profile = {
   grade?: number | null;
   class?: number | null;
   number?: number | null;
+  /** 教員（@spec.ed.jp）は 'teacher'。組・番号を持たない */
+  role?: 'teacher' | 'student';
 };
 
 const CACHE_KEY = 'kobun:profile';
@@ -64,7 +66,7 @@ export async function fetchProfile(): Promise<Profile> {
   return p;
 }
 
-export async function registerProfile(input: { grade: number | null; class: number; number: number; cohort: string }): Promise<Profile> {
+export async function registerProfile(input: { grade: number | null; class: number | null; number: number | null; cohort: string }): Promise<Profile> {
   await callProfile<{ ok: true }>('register', input);
   return fetchProfile();
 }

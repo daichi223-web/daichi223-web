@@ -7,7 +7,7 @@ import {
 } from '@/lib/auth';
 import { fetchProfile, registerProfile, type Profile } from '@/lib/profile';
 import { getCohort } from '@/lib/cohort';
-import { DOMAIN_HINT, SCHOOLS, schoolLabel } from '@/lib/schools';
+import { DOMAIN_HINT, SCHOOLS, isTeacherEmail, schoolLabel } from '@/lib/schools';
 
 // 登録（学校メール＋パスワード＋学年・組・番号）。health-check と同じ方式。
 //   * 初回起動時は必須（RequireAccount が ?required=1&next=<戻り先> 付きでここへ送る）
@@ -66,7 +66,11 @@ export default function AccountPage() {
     else setError(r.message);
   };
 
-  const profileInput = (): { grade: number | null; class: number; number: number; cohort: string } | string => {
+  // 教員（@spec.ed.jp）は組・番号を持たないので入力欄そのものを出さない
+  const teacherMode = isTeacherEmail(email) || profile?.role === 'teacher' || isTeacherEmail(status?.email ?? '');
+
+  const profileInput = (): { grade: number | null; class: number | null; number: number | null; cohort: string } | string => {
+    if (teacherMode) return { grade: null, class: null, number: null, cohort };
     const g = grade ? parseInt(grade, 10) : null;
     const c = parseInt(cls, 10);
     const n = parseInt(number, 10);
@@ -207,13 +211,16 @@ export default function AccountPage() {
               ✓ <span className="font-black">{status.email}</span>{' '}
               <span className="text-rw-ink-soft">
                 （{schoolLabel(profile?.cohort ?? cohort)}
-                {profile?.grade ? ` ${profile.grade}年` : ''}{profile?.class ? ` ${profile.class}組` : ''}{profile?.number ? ` ${profile.number}番` : ''}）
+                {profile?.role === 'teacher'
+                  ? ' 先生'
+                  : `${profile?.grade ? ` ${profile.grade}年` : ''}${profile?.class ? ` ${profile.class}組` : ''}${profile?.number ? ` ${profile.number}番` : ''}`}）
               </span>
               。別の端末でも、このメールとパスワードでログインすれば続きからできます。
             </p>
           ) : (
             <p className="text-sm text-rw-ink leading-relaxed">
-              <span className="font-black">{status.email}</span> でログイン中。学年・組・番号が未登録です。
+              <span className="font-black">{status.email}</span> でログイン中。
+              {teacherMode ? '下の「保存する」で登録が完了します。' : '学年・組・番号が未登録です。'}
             </p>
           )}
         </section>
@@ -257,7 +264,9 @@ export default function AccountPage() {
                 type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
                 placeholder="新しいパスワード（6文字以上）" minLength={6} required className={inputCls}
               />
-              <ClassFields grade={grade} cls={cls} number={number} setGrade={setGrade} setCls={setCls} setNumber={setNumber} />
+              {teacherMode
+                ? <p className="text-[11.5px] text-rw-ink-soft font-semibold">先生用のメールです。組・出席番号の入力は要りません。</p>
+                : <ClassFields grade={grade} cls={cls} number={number} setGrade={setGrade} setCls={setCls} setNumber={setNumber} />}
               <button type="submit" disabled={busy} className="w-full rounded-xl py-3 text-[15px] font-black text-rw-paper disabled:opacity-60" style={{ background: 'var(--rw-accent)' }}>
                 {busy ? '処理中…' : '登録する'}
               </button>
@@ -268,10 +277,12 @@ export default function AccountPage() {
         {/* メールは付いているが組・番号が未登録 */}
         {needsProfile && (
           <section className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-4">
-            <h2 className="text-sm font-black text-rw-ink mb-1">学年・組・番号を登録する</h2>
+            <h2 className="text-sm font-black text-rw-ink mb-1">{teacherMode ? '登録を完了する' : '学年・組・番号を登録する'}</h2>
             <form onSubmit={(e) => { e.preventDefault(); if (!busy) void onSaveProfile(); }} className="flex flex-col gap-2">
               <SchoolField cohort={cohort} known={knownCohort} onChange={setCohortChoice} />
-              <ClassFields grade={grade} cls={cls} number={number} setGrade={setGrade} setCls={setCls} setNumber={setNumber} />
+              {teacherMode
+                ? <p className="text-[11.5px] text-rw-ink-soft font-semibold">先生用のメールです。組・出席番号の入力は要りません。</p>
+                : <ClassFields grade={grade} cls={cls} number={number} setGrade={setGrade} setCls={setCls} setNumber={setNumber} />}
               <button type="submit" disabled={busy} className="w-full rounded-xl py-3 text-[15px] font-black text-rw-paper disabled:opacity-60" style={{ background: 'var(--rw-accent)' }}>
                 {busy ? '処理中…' : '保存する'}
               </button>

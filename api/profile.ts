@@ -20,11 +20,23 @@ import { decrypt, encrypt, getEncryptionKey, sha256hex } from "./_pii.js";
 const ALLOWED_DOMAINS = ["st.spec.ed.jp", "spec.ed.jp"];
 const COHORT_RE = /^[A-Za-z0-9_-]{1,40}$/;
 
-type ProfilePlain = { email: string; grade: number | null; class: number | null; number: number | null };
+type ProfilePlain = {
+  email: string;
+  grade: number | null;
+  class: number | null;
+  number: number | null;
+  /** 教員は 'teacher'。組・番号を持たず、利用状況の集計から外す */
+  role?: "teacher";
+};
 
 function domainOk(email: string): boolean {
   const d = email.split("@")[1]?.toLowerCase();
   return !!d && ALLOWED_DOMAINS.includes(d);
+}
+
+/** 教員のメールは @spec.ed.jp（生徒は @st.spec.ed.jp）。教員は組・番号を省ける */
+function isTeacher(email: string): boolean {
+  return email.split("@")[1]?.toLowerCase() === "spec.ed.jp";
 }
 
 /** 1〜max の整数、または null（空欄）。それ以外は undefined＝不正 */
@@ -77,23 +89,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const plain = await decrypt(data.profile_enc, key);
       if (!plain) return res.json({ registered: false });
       const p = JSON.parse(plain) as ProfilePlain;
-      return res.json({ registered: true, cohort: data.cohort, grade: p.grade, class: p.class, number: p.number });
+      return res.json({
+        registered: true, cohort: data.cohort, grade: p.grade, class: p.class, number: p.number,
+        role: p.role ?? "student",
+      });
     }
 
     // register
+    const teacher = isTeacher(user.email);
     const grade = intOrNull(body.grade, 3);
     const cls = intOrNull(body.class, 20);
     const number = intOrNull(body.number, 60);
     if (grade === undefined || cls === undefined || number === undefined) {
       return res.status(400).json({ error: "学年・組・番号の形式が正しくありません" });
     }
-    if (cls === null || number === null) {
+    // 生徒だけ組・番号が必須。教員（@spec.ed.jp）は持たないので省ける
+    if (!teacher && (cls === null || number === null)) {
       return res.status(400).json({ error: "組と出席番号を入力してください" });
     }
     const cohortRaw = typeof body.cohort === "string" ? body.cohort.trim() : "";
     const cohort = cohortRaw && COHORT_RE.test(cohortRaw) ? cohortRaw : "default";
 
-    const plain: ProfilePlain = { email: user.email, grade, class: cls, number };
+    const plain: ProfilePlain = { email: user.email, grade, class: cls, number, ...(teacher ? { role: "teacher" as const } : {}) };
     const row = {
       id: user.id,
       email_hash: await sha256hex(user.email),

@@ -31,4 +31,9 @@ export function emailDomainOk(email: string): boolean {
   return !!d && ALLOWED_DOMAINS.includes(d);
 }
 
+/** 教員のメール（@spec.ed.jp）。生徒は @st.spec.ed.jp。教員は組・番号を持たない */
+export function isTeacherEmail(email: string): boolean {
+  return email.trim().split('@')[1]?.toLowerCase() === 'spec.ed.jp';
+}
+
 export const DOMAIN_HINT = '学校のメール（@st.spec.ed.jp）';
