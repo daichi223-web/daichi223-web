@@ -160,6 +160,31 @@ export default function AccountPage() {
           </p>
         </header>
 
+        {/* 急にこの画面が出て驚かないように、理由と「記録は消えない」ことを先に伝える */}
+        {required && status?.isAnonymous && (
+          <section className="rounded-2xl border-2 border-rw-ink bg-rw-paper p-4 mb-4">
+            <h2 className="text-sm font-black text-rw-ink mb-2">この画面が出た理由</h2>
+            <ul className="text-[12.5px] text-rw-ink font-semibold leading-relaxed list-none p-0 m-0 flex flex-col gap-1.5">
+              <li>
+                <span className="font-black">今までの記録は消えていません。</span>
+                いつも使っている端末でこのまま登録すれば、単語の記録も復習の箱もそのまま続きます。
+              </li>
+              <li>
+                これまでは「このブラウザだけ」に記録が紐づいていて、機種変更やアプリの入れ直しで消えてしまう状態でした。
+                学校のメールを登録すると、スマホでもPCでも同じ続きからできます。
+              </li>
+              <li>
+                <span className="font-black">用意するもの</span>は学校のメール（@st.spec.ed.jp）と、自分で決めるパスワード（6文字以上）だけ。
+                確認メールは届きません。登録は1回で終わります。
+              </li>
+              <li className="text-rw-ink-soft">
+                パスワードは学校のメールのものと同じでなくて構いません。忘れたときは「パスワードを忘れた」から。
+                それでも入れないときは先生に伝えてください。
+              </li>
+            </ul>
+          </section>
+        )}
+
         {justLinked && <Notice tone="ok">✓ ログインできました。パスワードを忘れた場合は、下でパスワードを設定し直してください。</Notice>}
         {callbackError && <Notice tone="err">リンクを開けませんでした（{callbackError}）。もう一度送信してください。</Notice>}
 
