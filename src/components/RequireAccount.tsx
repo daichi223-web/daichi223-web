@@ -3,18 +3,23 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { ensureAnonSession } from '@/lib/anonAuth';
 import { getAccountStatus } from '@/lib/auth';
 import { cachedProfile, fetchProfile } from '@/lib/profile';
+import { AUTH_REQUIRED } from '@/lib/authFlags';
 
 // 初回起動時の登録ガード。
 //   匿名のまま（メール未登録）→ /account?required=1 へ
 //   メールは付いているがプロフィール（組・番号）未登録 → 同じく /account へ
 // 登録前の匿名記録は同じ uid に残るので、登録後そのまま引き継がれる。
 // /account 自身と、認証コールバック・教師画面・採点テストは対象外。
+//
+// 安全弁: 既定はオフ。Vercel の環境変数 VITE_AUTH_REQUIRED=1 を入れて再デプロイした時だけ必須になる。
+// 生徒が入れなくなる等のトラブルが起きたら、この変数を消して再デプロイすれば元に戻る
+// （コードを revert する必要はない）。オフの間は /account から任意で登録できる。
 
 const EXEMPT = ['/account', '/auth/callback', '/teacher', '/test-grading'];
 
 export default function RequireAccount({ children }: { children: ReactNode }) {
   const loc = useLocation();
-  const exempt = EXEMPT.some((p) => loc.pathname === p || loc.pathname.startsWith(p + '/'));
+  const exempt = !AUTH_REQUIRED || EXEMPT.some((p) => loc.pathname === p || loc.pathname.startsWith(p + '/'));
   const [state, setState] = useState<'checking' | 'ok' | 'redirect'>(exempt ? 'ok' : 'checking');
 
   useEffect(() => {
