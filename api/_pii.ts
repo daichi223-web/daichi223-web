@@ -8,8 +8,9 @@ import { webcrypto } from "crypto";
 const subtle = webcrypto.subtle;
 
 export async function getEncryptionKey(): Promise<CryptoKey> {
-  const keyHex = process.env.PII_ENCRYPTION_KEY;
-  if (!keyHex || !/^[0-9a-fA-F]{64}$/.test(keyHex)) {
+  // CLI 経由で登録すると末尾に改行が付くことがあるので前後の空白は落とす
+  const keyHex = (process.env.PII_ENCRYPTION_KEY ?? "").trim();
+  if (!/^[0-9a-fA-F]{64}$/.test(keyHex)) {
     throw new Error("PII_ENCRYPTION_KEY must be 64-char hex");
   }
   const keyBytes = Buffer.from(keyHex, "hex");
