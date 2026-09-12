@@ -25,12 +25,17 @@ async function accessToken(): Promise<string> {
 }
 
 export async function callProfile<T>(action: 'register' | 'me', body: Record<string, unknown> = {}): Promise<T> {
-  const token = await accessToken();
-  const resp = await fetch('/api/profile', {
+  const post = async (token: string) => fetch('/api/profile', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify({ action, ...body, _accessToken: token }),
   });
+  let resp = await post(await accessToken());
+  if (resp.status === 401) {
+    // メール付与の直後など、手元のトークンが古いことがある。一度だけ更新して再試行
+    const { data } = await supabase.auth.refreshSession();
+    if (data.session?.access_token) resp = await post(data.session.access_token);
+  }
   const json = (await resp.json().catch(() => ({}))) as { error?: string } & T;
   if (!resp.ok || json.error) throw new Error(json.error || `サーバエラー（${resp.status}）`);
   return json;

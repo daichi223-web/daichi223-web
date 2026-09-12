@@ -25,6 +25,7 @@ export default function AccountPage() {
 
   const [status, setStatus] = useState<AccountStatus | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -44,7 +45,9 @@ export default function AccountPage() {
     setStatus(st);
     setPending(!st.isAnonymous ? getPendingMerge() : null);
     if (!st.isAnonymous) {
+      setProfileLoading(true);
       try { setProfile(await fetchProfile()); } catch { setProfile(null); }
+      setProfileLoading(false);
     } else {
       setProfile(null);
     }
@@ -163,7 +166,7 @@ export default function AccountPage() {
         {/* 現在の状態 */}
         <section className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-4 mb-4">
           <h2 className="text-sm font-black text-rw-ink mb-1.5">いまの状態</h2>
-          {!status ? (
+          {!status || (profileLoading && !profile) ? (
             <p className="text-sm text-rw-ink-soft">確認中…</p>
           ) : status.pendingEmail && status.isAnonymous ? (
             <p className="text-sm text-rw-ink leading-relaxed">

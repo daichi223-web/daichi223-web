@@ -20,6 +20,7 @@ export default function RequireAccount({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (exempt) { setState('ok'); return; }
     let alive = true;
+    setState('checking'); // 前のページで決めた結果を持ち越さない（/account から戻った時に再確認）
     (async () => {
       try {
         await ensureAnonSession();
@@ -38,7 +39,8 @@ export default function RequireAccount({ children }: { children: ReactNode }) {
     return () => { alive = false; };
   }, [loc.pathname, exempt]);
 
-  if (state === 'ok') return <>{children}</>;
+  // 除外ページは状態に関係なく素通し（前ページの 'redirect' が残っていても /account でループさせない）
+  if (exempt || state === 'ok') return <>{children}</>;
   if (state === 'redirect') {
     const next = encodeURIComponent(loc.pathname + loc.search);
     return <Navigate to={`/account?required=1&next=${next}`} replace />;
