@@ -27,13 +27,14 @@ const weekOf = (d) => {
 };
 const shiftDay = (day, n) => { const t = new Date(day + "T00:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
 
-/** D.users[u] は "先頭8桁" の文字列（旧）か {id, school?, grade?, cls?, num?, mail?}（登録済み） */
+/** D.users[u] は "先頭8桁" の文字列（旧）か {id, school?, grade?, cls?, num?}（登録済み）。
+ *  個人の識別は学校コード＋年・組・番号だけ（メール等は持たない） */
 const identity = (D, u) => {
   const x = D.users[u];
   const o = typeof x === "string" ? { id: x } : { ...x };
   o.school = o.school ?? "";
   o.klass = o.cls && o.num ? `${o.grade ? o.grade + "-" : ""}${o.cls}-${o.num}` : "";
-  o.registered = !!(x && typeof x === "object" && (x.school || x.mail));
+  o.registered = !!(x && typeof x === "object" && x.school);
   return o;
 };
 
@@ -125,7 +126,15 @@ function aggregate(D, from, to, today) {
     u, ...identity(D, u), ans: s.ans, correctPct: pct(s.c, s.ans), first: s.first === "9999-99-99" ? "" : s.first, last: s.last,
     words: s.words, srs: s.srs, box5: s.box5, due: s.due, topics: s.topics,
     mastery: s.topics ? Math.round(s.mastery / s.topics) : null,
-  })).sort((a, b) => (b.last > a.last ? 1 : b.last < a.last ? -1 : b.ans - a.ans));
+  }));
+  // 登録済みだが期間内に記録がない人も一覧に出す（回答 0）。totals には数えない
+  for (let u = 0; u < (D.users ?? []).length; u++) {
+    const x = D.users[u];
+    if (x && typeof x === "object" && x.school && !users.has(u)) {
+      people.push({ u, ...identity(D, u), inactive: true, ans: 0, correctPct: 0, first: "", last: "", words: 0, srs: 0, box5: 0, due: 0, topics: 0, mastery: null });
+    }
+  }
+  people.sort((a, b) => (b.last > a.last ? 1 : b.last < a.last ? -1 : b.ans - a.ans));
 
   const sortedDays = lastDays.filter(Boolean).sort();
   return {

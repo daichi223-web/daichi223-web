@@ -2,6 +2,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { dataParser } from "../utils/dataParser";
 import bundledTextsIndex from "../data/textsIndex.json";
+import bundledKobunQ from "../data/kobunQ.v2.slim.json";
+import bundledTextsV3Index from "../data/textsV3Index.json";
+// 利用状況ダッシュボード（scripts/usage-report.mjs が作るローカル版と同じテンプレート・同じ集計コードを流用）
+import usageTemplate from "../../scripts/usage-dashboard.template.html?raw";
+import usageAggregateSrc from "../../scripts/usage-aggregate.js?raw";
 import {
   STAGES,
   PORTRAITS,
@@ -72,7 +77,7 @@ async function callAPI(path: string, body?: any) {
 
 export default function Teacher() {
   const [token, setToken] = useState<string | null>(() => getToken());
-  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble" | "quizrange">("answers");
+  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble" | "quizrange" | "usage">("answers");
   const [rows, setRows] = useState<any[]>([]);
   const [candidates, setCandidates] = useState<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
@@ -403,6 +408,16 @@ export default function Teacher() {
         >
           🎎 段位プレビュー
         </button>
+        <button
+          onClick={() => setActiveTab("usage")}
+          className={`px-4 py-2 font-medium transition ${
+            activeTab === "usage"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-slate-600 hover:text-slate-800"
+          }`}
+        >
+          📈 利用状況
+        </button>
       </div>
       </div>
 
@@ -645,6 +660,8 @@ export default function Teacher() {
       {activeTab === "quizrange" && <QuizRangeView />}
 
       {activeTab === "noble" && <NoblePreviewView />}
+
+      {activeTab === "usage" && <UsageView />}
     </div>
   );
 }
@@ -1827,6 +1844,120 @@ function NoblePreviewView() {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+// ---- 利用状況（scripts/usage-report.mjs のダッシュボードを教員画面に埋め込む） ------------
+//
+// API（action=usageData）は生行だけ返す。語・ドリルの見出しはバンドル済み JSON から引き、
+// ローカル版と同じ D を組み立ててテンプレートに埋め込み、sandbox 付き iframe（srcdoc）で表示する。
+// 既定は直近1年。全期間は再取得（行数が増えるので少し重い）。
+type UsagePeriod = "1y" | "all";
+
+function buildUsageHtml(raw: any): string {
+  const wordLabels: Record<string, string> = {};
+  for (const q of bundledKobunQ as any[]) wordLabels[q.qid] = `${q.lemma}（${q.senseNorm ?? q.sense ?? ""}）`;
+  const drillTopics: Record<string, string> = {};
+  for (const [id, topic] of raw.drills as [string, string][]) drillTopics[id] = topic;
+  const published = new Set<string>(raw.publishedSlugs ?? []);
+  const titles = (bundledTextsV3Index as any[])
+    .filter((t) => published.has(t.id))
+    .map((t) => ({ title: t.title, source: t.source }));
+  const D = {
+    generatedAt: raw.generatedAt,
+    today: raw.today,
+    users: raw.users,
+    ws: raw.ws,
+    srs: raw.srs,
+    prog: raw.prog,
+    wordLabels,
+    drillLabels: {}, // 設問文は API から返さない（見出しは topic で足りる）
+    drillTopics,
+    wordTotal: (bundledKobunQ as any[]).length,
+    drillTotal: raw.drills.length,
+    topicTotal: new Set(Object.values(drillTopics)).size,
+    registered: raw.registered,
+    piiDecrypted: raw.piiDecrypted,
+    schools: raw.schools,
+    publications: { cohorts: raw.publicationCohorts ?? [], titles },
+  };
+  const aggSrc = usageAggregateSrc.replace(/^export .*$/m, "");
+  // JSON を <script> に埋めるので "</" を壊して script 終端の誤検出を防ぐ
+  const json = JSON.stringify(D).replace(/<\//g, "<\\/");
+  return usageTemplate.replace("/*__DATA__*/null", json).replace("/*__AGG__*/", aggSrc);
+}
+
+function UsageView() {
+  const [period, setPeriod] = useState<UsagePeriod>("1y");
+  const [html, setHtml] = useState<string | null>(null);
+  const [meta, setMeta] = useState<{ from: string | null; rows: number; users: number; generatedAt: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const load = async (p: UsagePeriod) => {
+    setLoading(true);
+    setErr(null);
+    try {
+      const raw = await callAPI(`/api/teacher?action=usageData&from=${p === "all" ? "all" : ""}`);
+      setHtml(buildUsageHtml(raw));
+      setMeta({ from: raw.from, rows: raw.ws.length + raw.srs.length + raw.prog.length, users: raw.users.length, generatedAt: raw.generatedAt });
+    } catch (e: any) {
+      setErr(String(e?.message || e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void load(period);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [period]);
+
+  return (
+    <div className="p-4 space-y-3">
+      <div className="flex flex-wrap items-center gap-3 text-sm">
+        <span className="font-medium text-slate-700">読み込む範囲</span>
+        <div className="inline-flex rounded-lg border border-slate-300 overflow-hidden">
+          {(["1y", "all"] as UsagePeriod[]).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPeriod(p)}
+              disabled={loading}
+              className={`px-3 py-1.5 ${period === p ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
+            >
+              {p === "1y" ? "直近1年" : "全期間"}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => void load(period)}
+          disabled={loading}
+          className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+        >
+          再読み込み
+        </button>
+        {meta && (
+          <span className="text-slate-500">
+            {meta.from ? `${meta.from} 以降` : "全期間"}・{meta.users.toLocaleString("ja-JP")} 人・{meta.rows.toLocaleString("ja-JP")} 行
+            （取得 {new Date(meta.generatedAt).toLocaleString("ja-JP")}）。細かい期間はページ内の「期間」で絞れます。
+          </span>
+        )}
+      </div>
+      <p className="text-xs text-slate-500">
+        個人の表示は学校コード（KU=県立浦和・UW=浦和西）と年-組-番号だけ。未登録の生徒は匿名 ID の先頭 8 桁。
+      </p>
+      {err && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">{err}</div>}
+      {loading && <div className="text-slate-500 text-sm">読み込み中…</div>}
+      {html && (
+        <iframe
+          title="古文単 利用状況"
+          srcDoc={html}
+          sandbox="allow-scripts"
+          className="w-full rounded-lg border border-slate-200 bg-white"
+          style={{ height: "85vh" }}
+        />
+      )}
     </div>
   );
 }

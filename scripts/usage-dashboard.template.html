@@ -254,7 +254,7 @@
     <h2>個別の生徒</h2>
     <p class="lede" id="plede"></p>
     <div class="people-ctl">
-      <input type="search" id="psearch" placeholder="組-番号・メール・ID で絞り込み" autocomplete="off" spellcheck="false">
+      <input type="search" id="psearch" placeholder="組-番号・ID で絞り込み" autocomplete="off" spellcheck="false">
       <select id="pschool" aria-label="学校"></select>
       <label><input type="checkbox" id="pactive" checked> 期間内に学習した人だけ</label>
       <span class="cnt" id="pcnt"></span>
@@ -264,7 +264,6 @@
         <thead><tr>
           <th data-sort="school">学校</th>
           <th data-sort="klass">組-番号</th>
-          <th data-sort="mail">メール</th>
           <th data-sort="id">ID</th>
           <th class="num" data-sort="ans">回答</th>
           <th class="num" data-sort="correctPct">正答率</th>
@@ -286,7 +285,7 @@
   <footer class="page">
     生成 = <code>node --env-file=.env.local scripts/usage-report.mjs</code>（Supabase への SELECT のみ／user_id は先頭 8 桁だけ埋め込み、reports/ は gitignore）。
     再実行すればこのページが上書きされます。日付は日本時間。<br>
-    <b>このファイルは登録済み生徒の個人情報（学校・組・番号・メールのローカル部）を復号して含みます。</b>共有・配布しないでください。
+    <b>このページは登録済み生徒の学校コード・年・組・番号を含みます。</b>共有・配布しないでください。
   </footer>
 </div>
 <div id="tip"></div>
@@ -511,14 +510,14 @@ let peopleAll = null;
 
 function peopleList() {
   const active = $("pactive").checked;
-  let list = active ? A.people : (peopleAll ??= allPeople());
+  let list = active ? A.people.filter((p) => !p.inactive) : (peopleAll ??= allPeople());
   const school = $("pschool").value;
   if (school === "__none") list = list.filter((p) => !p.registered);
   else if (school) list = list.filter((p) => p.school === school);
   const q = $("psearch").value.trim().toLowerCase();
-  if (q) list = list.filter((p) => p.id.startsWith(q) || (p.mail ?? "").toLowerCase().includes(q) || p.klass === q || p.klass.endsWith("-" + q) || p.klass.startsWith(q));
+  if (q) list = list.filter((p) => p.id.startsWith(q) || p.klass === q || p.klass.endsWith("-" + q) || p.klass.startsWith(q));
   const dir = sortAsc ? 1 : -1;
-  const textKey = ["id", "first", "last", "school", "klass", "mail"].includes(sortKey);
+  const textKey = ["id", "first", "last", "school", "klass"].includes(sortKey);
   const pad = (n) => String(n ?? 0).padStart(2, "0");
   const v = (p) => {
     if (sortKey === "klass") return p.klass ? `${pad(p.grade)}-${pad(p.cls)}-${pad(p.num)}` : "";
@@ -544,7 +543,6 @@ function renderPeople() {
   $("pbody").innerHTML = shown.length ? shown.map((p) => `<tr data-u="${p.u}" class="${p.u === selected ? "sel" : ""}">
     <td>${p.registered ? esc(p.school) : `<span class="badge">未登録</span>`}</td>
     <td class="num" style="text-align:left">${esc(p.klass || "—")}</td>
-    <td class="id">${esc(p.mail || "—")}</td>
     <td class="id">${esc(p.id)}</td>
     <td class="num">${fmt(p.ans)}</td>
     <td class="num">${p.correctPct}%</td>
@@ -555,7 +553,7 @@ function renderPeople() {
     <td class="num">${p.mastery === null ? "—" : p.mastery + "%"}</td>
     <td class="q">${esc(p.first || "—")}</td>
     <td class="q">${esc(p.last || "—")}</td>
-  </tr>`).join("") : `<tr><td colspan="13" class="empty">該当する人はいません</td></tr>`;
+  </tr>`).join("") : `<tr><td colspan="12" class="empty">該当する人はいません</td></tr>`;
   const rest = list.length - shown.length;
   $("pmore").hidden = rest <= 0;
   $("pmore").textContent = `さらに ${fmt(Math.min(rest, 200))} 人を表示（残り ${fmt(rest)} 人）`;
@@ -571,8 +569,8 @@ $("psearch").addEventListener("input", () => { pageSize = 60; renderPeople(); })
 $("pschool").innerHTML = [`<option value="">すべての学校</option>`, ...(D.schools ?? []).map((s) => `<option value="${esc(s)}">${esc(s)}</option>`), `<option value="__none">未登録だけ</option>`].join("");
 $("pschool").addEventListener("change", () => { pageSize = 60; renderPeople(); });
 $("plede").textContent = (D.registered ?? 0)
-  ? `登録済みは学校・組-番号・メール（@の前）で表示${D.piiDecrypted ? "" : "（この生成では暗号化キーが無く、学校以外は伏せています）"}。未登録は匿名 ID の先頭 8 桁だけです。`
-  : "まだ登録者がいないため、全員が匿名 ID（先頭 8 桁）での表示です。登録が進むと学校・組-番号・メールで探せます。";
+  ? `登録済みは学校コード（KU=県立浦和・UW=浦和西）と年-組-番号で表示${D.piiDecrypted ? "" : "（暗号化キーが無く、学校以外は伏せています）"}。未登録は匿名 ID の先頭 8 桁だけです。`
+  : "まだ登録者がいないため、全員が匿名 ID（先頭 8 桁）での表示です。登録が進むと学校コード・年-組-番号で探せます。";
 $("pactive").addEventListener("change", () => { pageSize = 60; renderPeople(); });
 document.querySelector("table.people thead").addEventListener("click", (e) => {
   const th = e.target.closest("th[data-sort]"); if (!th) return;
@@ -595,7 +593,7 @@ function renderPerson() {
 
   $("person").innerHTML = `<div class="person">
     <div class="head">
-      <h3>${P.registered ? esc(`${P.school}${P.klass ? "　" + P.klass : ""}${P.mail ? "　" + P.mail : ""}`) : esc(P.id)}</h3>
+      <h3>${P.registered ? esc(`${P.school}${P.klass ? "　" + P.klass : ""}`) : esc(P.id)}</h3>
       <span class="range">${P.registered ? `ID ${esc(P.id)}　` : "未登録　"}${esc(rangeLabel())}${P.first ? `　初回 ${P.first}　最終 ${P.last}` : ""}</span>
       <button type="button" class="close" id="pclose">閉じる</button>
     </div>

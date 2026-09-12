@@ -64,31 +64,30 @@ async function decryptPii(b64, key) {
     return JSON.parse(new TextDecoder().decode(plain));
   } catch { return null; }
 }
-// 学校の表示名は src/lib/schools.ts の SCHOOLS から拾う（無ければ cohort 名のまま）
+// 学校コード（KU=県立浦和 / UW=浦和西）は src/lib/schools.ts の SCHOOL_CODES から拾う（無ければ cohort 名のまま）
 const schoolNames = {};
 try {
   const src = readFileSync(join(root, "src/lib/schools.ts"), "utf8");
-  const block = src.match(/SCHOOLS[^{]*\{([\s\S]*?)\n\};/)?.[1] ?? "";
+  const block = src.match(/SCHOOL_CODES[^{]*\{([\s\S]*?)\n\};/)?.[1] ?? "";
   for (const m of block.matchAll(/^\s*['"]?([A-Za-z0-9_-]+)['"]?\s*:\s*'([^']+)'/gm)) schoolNames[m[1]] = m[2];
 } catch { /* noop */ }
 const piiKey = await loadPiiKey();
 if (profiles.length && !piiKey) console.error("PII_ENCRYPTION_KEY が無いので、学校以外の個人情報は表示しません");
-const identity = new Map(); // user_id -> {school, grade, cls, num, mail}
+const identity = new Map(); // user_id -> {school, grade, cls, num}（メールは持たない：識別は年・組・番号だけ）
 let decryptFailed = 0;
 for (const p of profiles) {
-  const ident = { school: schoolNames[p.cohort] ?? p.cohort };
+  const ident = { school: schoolNames[p.cohort ?? "default"] ?? p.cohort ?? "default" };
   if (piiKey) {
     const plain = await decryptPii(p.profile_enc, piiKey);
     if (plain) {
       ident.grade = plain.grade ?? null; ident.cls = plain.class ?? null; ident.num = plain.number ?? null;
-      ident.mail = String(plain.email ?? "").split("@")[0];
     } else decryptFailed++;
   }
   identity.set(p.id, ident);
 }
 if (decryptFailed) console.error(`復号できないプロフィール ${decryptFailed} 件（鍵違い？）`);
 
-// ---- 匿名 ID → index（HTML には先頭 8 桁＋登録済みなら学校・組・番号・メールのローカル部） ---
+// ---- 匿名 ID → index（HTML には先頭 8 桁＋登録済みなら学校コード・年・組・番号） ---
 const uidx = new Map();
 const users = [];
 const seen = new Set();
@@ -118,7 +117,7 @@ const D = {
   topicTotal: new Set(drills.map((d) => d.topic_id)).size,
   registered: profiles.length,
   piiDecrypted: !!piiKey,
-  schools: [...new Set(profiles.map((p) => schoolNames[p.cohort] ?? p.cohort))].sort(),
+  schools: [...new Set(profiles.map((p) => schoolNames[p.cohort ?? "default"] ?? p.cohort ?? "default"))].sort(),
   publications: null,
 };
 

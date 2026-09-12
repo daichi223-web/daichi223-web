@@ -15,6 +15,17 @@ export function schoolLabel(cohort: string): string {
   return SCHOOLS[cohort] ?? cohort;
 }
 
+/** cohort → 教員向けの短い学校コード（利用状況ダッシュボードで使う）。未登録の cohort はコード名のまま */
+export const SCHOOL_CODES: Record<string, string> = {
+  default: 'KU', // 県立浦和
+  nishi: 'UW', // 浦和西
+};
+
+export function schoolCode(cohort: string | null | undefined): string {
+  const c = cohort ?? 'default';
+  return SCHOOL_CODES[c] ?? c;
+}
+
 export function emailDomainOk(email: string): boolean {
   const d = email.trim().split('@')[1]?.toLowerCase();
   return !!d && ALLOWED_DOMAINS.includes(d);
