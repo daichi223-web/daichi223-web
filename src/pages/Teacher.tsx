@@ -299,12 +299,12 @@ export default function Teacher() {
   return (
     <div className="p-4 sm:p-8 max-w-7xl mx-auto">
       <div className="static sm:sticky sm:top-0 bg-white z-10 pb-4">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-slate-800">教員管理画面</h2>
+        <div className="flex items-center justify-between gap-2 mb-3 sm:mb-6">
+          <h2 className="text-lg sm:text-2xl font-bold text-slate-800">教員管理画面</h2>
           <div className="flex gap-2 flex-wrap items-center">
             <button
               onClick={aggregateCandidates}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
+              className="px-2.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
             >
               📊 候補を集計
             </button>
@@ -320,13 +320,13 @@ export default function Teacher() {
                   setLoading(false);
                 }
               }}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition"
+              className="px-2.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition"
             >
               📤 候補をエクスポート
             </button>
             <button
               onClick={deleteAllData}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition"
+              className="px-2.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition"
             >
               🗑️ 全データ削除
             </button>
@@ -338,7 +338,7 @@ export default function Teacher() {
                 setRows([]);
                 setCandidates([]);
               }}
-              className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg transition"
+              className="px-2.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg transition"
               title="セッション cookie を失効させて再度ログインが必要な状態に戻す"
             >
               ログアウト
@@ -350,73 +350,80 @@ export default function Teacher() {
         <div className="flex border-b border-slate-200 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
         <button
           onClick={() => setActiveTab("answers")}
-          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
             activeTab === "answers"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          回答一覧
+          <span className="sm:hidden">回答</span>
+          <span className="hidden sm:inline">回答一覧</span>
         </button>
         <button
           onClick={() => setActiveTab("candidates")}
-          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
             activeTab === "candidates"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          選択肢候補
+          <span className="sm:hidden">候補</span>
+          <span className="hidden sm:inline">選択肢候補</span>
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
-          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
             activeTab === "analytics"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          📊 誤答分析
+          <span className="sm:hidden">📊誤</span>
+          <span className="hidden sm:inline">📊 誤答分析</span>
         </button>
         <button
           onClick={() => setActiveTab("texts")}
-          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
             activeTab === "texts"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          📚 教材公開管理
+          <span className="sm:hidden">📚教</span>
+          <span className="hidden sm:inline">📚 教材公開管理</span>
         </button>
         <button
           onClick={() => setActiveTab("quizrange")}
-          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
             activeTab === "quizrange"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          📌 小テスト範囲
+          <span className="sm:hidden">📌小</span>
+          <span className="hidden sm:inline">📌 小テスト範囲</span>
         </button>
         <button
           onClick={() => setActiveTab("noble")}
-          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
             activeTab === "noble"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          🎎 段位プレビュー
+          <span className="sm:hidden">🎎段</span>
+          <span className="hidden sm:inline">🎎 段位プレビュー</span>
         </button>
         <button
           onClick={() => setActiveTab("usage")}
-          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
             activeTab === "usage"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          📈 利用状況
+          <span className="sm:hidden">📈利</span>
+          <span className="hidden sm:inline">📈 利用状況</span>
         </button>
       </div>
       </div>
