@@ -81,7 +81,10 @@
     font-size: 15px;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
   }
+  /* 狭い画面でだけ出す補助行 */
+  .only-narrow { display: none; }
   .mincho { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 72px; }
 
@@ -168,7 +171,7 @@
   .flag p { margin: 2px 0 0; font-size: 13px; color: var(--ink-2); }
 
   /* 表 */
-  .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
   table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 13px; }
   th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
   th { font-size: 11.5px; letter-spacing: .08em; color: var(--muted); font-weight: 600; background: var(--surface-2); position: sticky; top: 0; }
@@ -229,12 +232,72 @@
   }
   @media (prefers-reduced-motion: reduce) { #tip { transition: none; } }
   @media (max-width: 780px) {
-    .tiles { grid-template-columns: repeat(2, 1fr); }
-    .cols { grid-template-columns: 1fr; }
-    header.page .meta { margin-left: 0; text-align: left; }
-    .ctl { position: static; }
+    .only-narrow { display: block; }
+    .wrap { padding: 16px 12px 48px; }
+    header.page { padding-bottom: 12px; margin-bottom: 14px; gap: 4px 12px; }
+    header.page h1 { font-size: 22px; }
+    header.page .meta { margin-left: 0; text-align: left; font-size: 12px; }
+    section { margin-top: 30px; }
+    section > h2 { font-size: 17px; }
+    section > .lede { font-size: 13px; margin-bottom: 14px; }
+
+    /* 期間コントロール: 指で押せる大きさに */
+    .ctl { position: static; padding: 9px 10px; margin-bottom: 18px; gap: 7px 8px; }
+    .ctl button { padding: 7px 13px; font-size: 13px; }
+    .ctl input[type="date"] { padding: 6px 7px; font-size: 13px; }
+    .ctl .sep { display: none; }
     .ctl .sum { margin-left: 0; width: 100%; }
+
+    .tiles { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .tile { padding: 12px 13px 11px; }
+    .tile .v { font-size: 26px; }
+    .tile .v small { font-size: 13px; }
+    .tile .s { font-size: 11.5px; }
+    .tiles.small .tile .v { font-size: 20px; }
+
+    .cols { grid-template-columns: 1fr; gap: 14px; }
+    .panel { padding: 14px 14px 16px; }
+
+    /* 横バー: ラベル幅を詰めて本体を見せる */
+    .hrow { grid-template-columns: minmax(62px, 38%) 1fr minmax(44px, auto); gap: 9px; }
+    .hrow .lab, .hrow .val { font-size: 12px; }
+
+    /* 表全般 */
+    th, td { padding: 7px 9px; }
+    table { font-size: 12.5px; }
+
+    /* 個別の生徒: 主要な列だけ残す（詳しくは行をタップ） */
+    table.people { min-width: 0; }
+    table.people .opt { display: none; }
+    .people-ctl { gap: 8px; }
+    .people-ctl input[type="search"] { width: 100%; }
+    .people-ctl select { flex: 1; min-width: 0; }
+    .people-ctl label { flex: 1 1 100%; }
+    .people-ctl .cnt { margin-left: 0; }
+
+    .person { padding: 15px 14px 17px; }
+    .person .head h3 { font-size: 16px; }
+    .more { padding: 11px 8px; }
   }
+  @media (max-width: 480px) {
+    /* さらに狭い端末: 生徒表を詰めて、横スクロールをなるべく無くす */
+    table.people { font-size: 12px; }
+    table.people th, table.people td { padding: 7px 6px; }
+    table.people td.id { font-size: 11px; letter-spacing: 0; }
+    .wrap { padding: 14px 10px 40px; }
+  }
+  @media (max-width: 560px) {
+    /* 縦バー: 数値を重ねると潰れるので消し、タップで出す */
+    .vbars { height: 132px; gap: 3px; }
+    .vbars .num { display: none; }
+    .vbars .col { gap: 0; }
+    .vlabels { gap: 3px; }
+    .vlabels div { font-size: 9.5px; }
+    .tiles { gap: 8px; }
+    .tile .v { font-size: 23px; }
+  }
+  /* タップで数値を出す要素は、押した時のハイライトを出さない */
+  [data-tip] { -webkit-tap-highlight-color: transparent; }
 </style>
 
 <div class="wrap">
@@ -249,6 +312,9 @@
     <input type="date" id="from" aria-label="開始日"> <span style="color:var(--muted)">〜</span> <input type="date" id="to" aria-label="終了日">
     <span class="sum" id="ctlsum"></span>
   </div>
+  <p class="note only-narrow" style="margin-top:-18px;margin-bottom:20px">
+    グラフのバーをタップすると数値が出ます。表は横にスクロールできます。生徒の行をタップすると全項目の内訳が開きます。
+  </p>
   <main id="app"></main>
   <section id="people-sec">
     <h2>個別の生徒</h2>
@@ -267,12 +333,12 @@
           <th data-sort="id">ID</th>
           <th class="num" data-sort="ans">回答</th>
           <th class="num" data-sort="correctPct">正答率</th>
-          <th class="num" data-sort="words">触れた語</th>
-          <th class="num" data-sort="box5">定着(箱5)</th>
-          <th class="num" data-sort="due">期限切れ</th>
-          <th class="num" data-sort="topics">文法T</th>
+          <th class="num opt" data-sort="words">触れた語</th>
+          <th class="num opt" data-sort="box5">定着(箱5)</th>
+          <th class="num opt" data-sort="due">期限切れ</th>
+          <th class="num opt" data-sort="topics">文法T</th>
           <th class="num" data-sort="mastery">習得度</th>
-          <th data-sort="first">初回</th>
+          <th class="opt" data-sort="first">初回</th>
           <th data-sort="last">最終</th>
         </tr></thead>
         <tbody id="pbody"></tbody>
@@ -546,12 +612,12 @@ function renderPeople() {
     <td class="id">${esc(p.id)}</td>
     <td class="num">${fmt(p.ans)}</td>
     <td class="num">${p.correctPct}%</td>
-    <td class="num">${fmt(p.words)}</td>
-    <td class="num">${fmt(p.box5)}</td>
-    <td class="num">${fmt(p.due)}</td>
-    <td class="num">${fmt(p.topics)}</td>
+    <td class="num opt">${fmt(p.words)}</td>
+    <td class="num opt">${fmt(p.box5)}</td>
+    <td class="num opt">${fmt(p.due)}</td>
+    <td class="num opt">${fmt(p.topics)}</td>
     <td class="num">${p.mastery === null ? "—" : p.mastery + "%"}</td>
-    <td class="q">${esc(p.first || "—")}</td>
+    <td class="q opt">${esc(p.first || "—")}</td>
     <td class="q">${esc(p.last || "—")}</td>
   </tr>`).join("") : `<tr><td colspan="12" class="empty">該当する人はいません</td></tr>`;
   const rest = list.length - shown.length;
@@ -650,17 +716,32 @@ function renderPerson() {
 $("meta").innerHTML = `集計 ${new Date(D.generatedAt).toLocaleString("ja-JP")}<br>${fmt(D.users.length)} 人・word_stats ${fmt(D.ws.length)} 行`;
 render();
 
-/* ツールチップ */
+/* ツールチップ（マウスはホバー、タッチはタップ） */
 const tip = document.getElementById("tip");
+let tipTimer = null;
+function showTip(el2) {
+  tip.textContent = el2.dataset.tip;
+  tip.style.opacity = 1;
+  const r = el2.getBoundingClientRect();
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  tip.style.left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8) + "px";
+  // 上に出すと画面外になる時（狭い画面の上端）は下に回す
+  tip.style.top = (r.top - h - 8 < 8 ? Math.min(r.bottom + 8, window.innerHeight - h - 8) : r.top - h - 8) + "px";
+}
+function hideTip() { tip.style.opacity = 0; clearTimeout(tipTimer); tipTimer = null; }
 document.addEventListener("mouseover", (e) => {
   const el2 = e.target.closest("[data-tip]");
-  if (!el2 || !el2.dataset.tip) { tip.style.opacity = 0; return; }
-  tip.textContent = el2.dataset.tip;
-  const r = el2.getBoundingClientRect();
-  tip.style.opacity = 1;
-  const w = tip.offsetWidth;
-  tip.style.left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8) + "px";
-  tip.style.top = Math.max(8, r.top - tip.offsetHeight - 8) + "px";
+  if (!el2 || !el2.dataset.tip) { hideTip(); return; }
+  showTip(el2);
 });
-document.addEventListener("mouseout", () => { tip.style.opacity = 0; });
+document.addEventListener("mouseout", hideTip);
+// タッチ端末ではホバーが無いので、タップで出して数秒で消す
+document.addEventListener("click", (e) => {
+  const el2 = e.target.closest("[data-tip]");
+  if (!el2 || !el2.dataset.tip) { hideTip(); return; }
+  showTip(el2);
+  clearTimeout(tipTimer);
+  tipTimer = setTimeout(hideTip, 2600);
+});
+window.addEventListener("scroll", hideTip, { passive: true });
 </script>

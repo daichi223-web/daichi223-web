@@ -297,8 +297,8 @@ export default function Teacher() {
   );
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <div className="sticky top-0 bg-white z-10 pb-4">
+    <div className="p-4 sm:p-8 max-w-7xl mx-auto">
+      <div className="static sm:sticky sm:top-0 bg-white z-10 pb-4">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-slate-800">教員管理画面</h2>
           <div className="flex gap-2 flex-wrap items-center">
@@ -347,10 +347,10 @@ export default function Teacher() {
         </div>
 
         {/* タブ切り替え */}
-        <div className="flex border-b border-slate-200">
+        <div className="flex border-b border-slate-200 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
         <button
           onClick={() => setActiveTab("answers")}
-          className={`px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
             activeTab === "answers"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
@@ -360,7 +360,7 @@ export default function Teacher() {
         </button>
         <button
           onClick={() => setActiveTab("candidates")}
-          className={`px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
             activeTab === "candidates"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
@@ -370,7 +370,7 @@ export default function Teacher() {
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
-          className={`px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
             activeTab === "analytics"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
@@ -380,7 +380,7 @@ export default function Teacher() {
         </button>
         <button
           onClick={() => setActiveTab("texts")}
-          className={`px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
             activeTab === "texts"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
@@ -390,7 +390,7 @@ export default function Teacher() {
         </button>
         <button
           onClick={() => setActiveTab("quizrange")}
-          className={`px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
             activeTab === "quizrange"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
@@ -400,7 +400,7 @@ export default function Teacher() {
         </button>
         <button
           onClick={() => setActiveTab("noble")}
-          className={`px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
             activeTab === "noble"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
@@ -410,7 +410,7 @@ export default function Teacher() {
         </button>
         <button
           onClick={() => setActiveTab("usage")}
-          className={`px-4 py-2 font-medium transition ${
+          className={`shrink-0 whitespace-nowrap px-4 py-2 font-medium transition ${
             activeTab === "usage"
               ? "text-blue-600 border-b-2 border-blue-600"
               : "text-slate-600 hover:text-slate-800"
@@ -1915,8 +1915,8 @@ function UsageView() {
   }, [period]);
 
   return (
-    <div className="p-4 space-y-3">
-      <div className="flex flex-wrap items-center gap-3 text-sm">
+    <div className="p-2 sm:p-4 space-y-3">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
         <span className="font-medium text-slate-700">読み込む範囲</span>
         <div className="inline-flex rounded-lg border border-slate-300 overflow-hidden">
           {(["1y", "all"] as UsagePeriod[]).map((p) => (
@@ -1924,7 +1924,7 @@ function UsageView() {
               key={p}
               onClick={() => setPeriod(p)}
               disabled={loading}
-              className={`px-3 py-1.5 ${period === p ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
+              className={`px-4 py-2 sm:px-3 sm:py-1.5 ${period === p ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
             >
               {p === "1y" ? "直近1年" : "全期間"}
             </button>
@@ -1933,12 +1933,12 @@ function UsageView() {
         <button
           onClick={() => void load(period)}
           disabled={loading}
-          className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          className="px-4 py-2 sm:px-3 sm:py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50"
         >
           再読み込み
         </button>
         {meta && (
-          <span className="text-slate-500">
+          <span className="text-slate-500 basis-full sm:basis-auto">
             {meta.from ? `${meta.from} 以降` : "全期間"}・{meta.users.toLocaleString("ja-JP")} 人・{meta.rows.toLocaleString("ja-JP")} 行
             （取得 {new Date(meta.generatedAt).toLocaleString("ja-JP")}）。細かい期間はページ内の「期間」で絞れます。
           </span>
@@ -1955,7 +1955,7 @@ function UsageView() {
           srcDoc={html}
           sandbox="allow-scripts"
           className="w-full rounded-lg border border-slate-200 bg-white"
-          style={{ height: "85vh" }}
+          style={{ height: "calc(100dvh - 6rem)", minHeight: 460 }}
         />
       )}
     </div>
