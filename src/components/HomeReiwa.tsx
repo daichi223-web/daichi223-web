@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAccountStatus, type AccountStatus } from '@/lib/auth';
 import { getCohort } from '@/lib/cohort';
-import { schoolLabel } from '@/lib/schools';
+import { schoolLabel, isTeacherEmail } from '@/lib/schools';
 import { AUTH_REQUIRED } from '@/lib/authFlags';
 import { Link } from 'react-router-dom';
 import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
@@ -375,6 +375,27 @@ export default function HomeReiwa({
               </span>
               <span className="block text-[10.5px] text-rw-ink-soft font-semibold truncate">
                 {account.isAnonymous ? '学校のメールで登録すると、別の端末・別のブラウザでも続きから' : account.email}
+              </span>
+            </span>
+            <span className="text-rw-ink-soft text-sm">→</span>
+          </div>
+        </Link>
+      )}
+
+      {/* 先生（@spec.ed.jp）だけに出す管理画面への入口。
+          画面自体は先生用パスワードで守られているので、このリンクは道しるべにすぎない */}
+      {account && !account.isAnonymous && isTeacherEmail(account.email ?? '') && (
+        <Link
+          to="/teacher"
+          className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-2.5 mb-4 hover:border-rw-ink-soft transition no-underline text-rw-ink"
+          style={{ textDecoration: 'none' }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-lg">🗂️</span>
+            <span className="flex-1 min-w-0">
+              <span className="block text-[13px] font-black tracking-tight">教員管理画面</span>
+              <span className="block text-[10.5px] text-rw-ink-soft font-semibold truncate">
+                利用状況・教材公開・小テスト範囲（先生用のパスワードが必要）
               </span>
             </span>
             <span className="text-rw-ink-soft text-sm">→</span>
