@@ -300,13 +300,14 @@ export default function Teacher() {
     <div className="p-4 sm:p-8 max-w-7xl mx-auto">
       <div className="static sm:sticky sm:top-0 bg-white z-10 pb-4">
         <div className="flex items-center justify-between gap-2 mb-3 sm:mb-6">
-          <h2 className="text-lg sm:text-2xl font-bold text-slate-800">教員管理画面</h2>
+          <h2 className="text-base sm:text-2xl font-bold text-slate-800 shrink-0">教員管理画面</h2>
           <div className="flex gap-2 flex-wrap items-center">
             <button
               onClick={aggregateCandidates}
               className="px-2.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
             >
-              📊 候補を集計
+              <span className="sm:hidden">📊集</span>
+              <span className="hidden sm:inline">📊 候補を集計</span>
             </button>
             <button
               onClick={async () => {
@@ -322,7 +323,8 @@ export default function Teacher() {
               }}
               className="px-2.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition"
             >
-              📤 候補をエクスポート
+              <span className="sm:hidden">📤出</span>
+              <span className="hidden sm:inline">📤 候補をエクスポート</span>
             </button>
             <button
               onClick={deleteAllData}
@@ -341,7 +343,8 @@ export default function Teacher() {
               className="px-2.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg transition"
               title="セッション cookie を失効させて再度ログインが必要な状態に戻す"
             >
-              ログアウト
+              <span className="sm:hidden">ログ</span>
+              <span className="hidden sm:inline">ログアウト</span>
             </button>
           </div>
         </div>
