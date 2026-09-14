@@ -63,7 +63,7 @@ function humanize(message: string): string {
     return `パスワードは${MIN_PASSWORD}文字以上にしてください。`;
   if (m.includes('already registered') || m.includes('already been registered') || m.includes('already exists'))
     return 'このメールは登録済みです。「登録済みのメールでログイン」から入ってください。';
-  if (m.includes('signups not allowed')) return 'このメールはまだ登録されていません。最初に使った端末で登録してください。';
+  if (m.includes('signups not allowed')) return 'このメールはまだ登録されていません。「はじめて使う人：登録する」から登録してください。';
   if (m.includes('email not confirmed')) return 'メールの確認が終わっていません。届いたメールのリンクを開いてください。';
   if (m.includes('invalid') && m.includes('email')) return 'メールアドレスの形式が正しくありません。';
   return `できませんでした（${message}）`;

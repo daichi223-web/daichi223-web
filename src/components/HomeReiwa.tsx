@@ -374,7 +374,7 @@ export default function HomeReiwa({
                   : AUTH_REQUIRED ? 'はじめに登録' : '記録を引き継ぐ'}
               </span>
               <span className="block text-[10.5px] text-rw-ink-soft font-semibold truncate">
-                {account.isAnonymous ? '学校のメールで登録すると、別の端末でも続きから' : account.email}
+                {account.isAnonymous ? '学校のメールで登録すると、別の端末・別のブラウザでも続きから' : account.email}
               </span>
             </span>
             <span className="text-rw-ink-soft text-sm">→</span>

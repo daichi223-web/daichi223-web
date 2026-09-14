@@ -96,7 +96,7 @@ export default function AccountPage() {
       return;
     }
     setBusy(false); setPassword('');
-    setMessage('登録しました。この端末の記録はそのまま引き継がれ、別の端末からも同じメールとパスワードで続けられます。');
+    setMessage('登録しました。ここまでの記録はそのまま引き継がれ、ほかの端末・ほかのブラウザからも同じメールとパスワードで続けられます。');
     await refresh();
     if (required) navigate(next, { replace: true });
   };
@@ -123,11 +123,11 @@ export default function AccountPage() {
   );
   const onReset = () => run(
     () => sendResetLink(email),
-    `${email.trim()} にログイン用のリンクを送りました。開いたあと、この画面でパスワードを設定し直してください。`,
+    `${email.trim()} にログイン用のリンクを送りました。メールのリンクを開くとログインできます（メールアプリが使うブラウザで開くので、いつものブラウザと違っても大丈夫です）。開いた先の「パスワードを変更する」で新しいパスワードを決めてください。`,
   );
   const onChangePassword = () => run(() => changePassword(newPassword), 'パスワードを変更しました。');
   const onSignOut = async () => {
-    if (!confirm('この端末からログアウトします。記録はアカウントに残ります。よろしいですか？')) return;
+    if (!confirm('このブラウザからログアウトします。記録はアカウントに残るので、次はメールとパスワードで入り直せます。よろしいですか？')) return;
     await signOutToAnonymous();
     navigate('/');
   };
@@ -159,8 +159,8 @@ export default function AccountPage() {
           </h1>
           <p className="text-xs font-semibold text-rw-ink-soft mt-2 leading-relaxed">
             {required
-              ? `古文単を使うには、${DOMAIN_HINT}とパスワード、学年・組・番号の登録が必要です。登録すると、スマホやPCなど別の端末からも同じ記録で続けられます。`
-              : '学校のメールとパスワードで、別の端末からも同じ記録で続けられます。'}
+              ? `古文単を使うには、${DOMAIN_HINT}とパスワード、学年・組・番号の登録が必要です。登録すると、スマホやPCなど別の端末・別のブラウザからも同じ記録で続けられます。`
+              : '学校のメールとパスワードで、ほかの端末・ほかのブラウザからも同じ記録で続けられます。'}
           </p>
         </header>
 
@@ -174,11 +174,18 @@ export default function AccountPage() {
             <ul className="text-[12.5px] text-rw-ink font-semibold leading-relaxed list-none p-0 m-0 flex flex-col gap-1.5">
               <li>
                 <span className="font-black">今までの記録は消えていません。</span>
-                いつも使っている端末でこのまま登録すれば、単語の記録も復習の箱もそのまま続きます。
+                いつも使っている端末・ブラウザでこのまま登録すれば、単語の記録も復習の箱もそのまま続きます。
               </li>
               <li>
-                これまでは「このブラウザだけ」に記録が紐づいていて、機種変更やアプリの入れ直しで消えてしまう状態でした。
-                学校のメールを登録すると、スマホでもPCでも同じ続きからできます。
+                これまでは「このブラウザだけ」に記録が紐づいていて、機種変更やアプリの入れ直し、
+                ブラウザを変えただけでも消えてしまう状態でした。学校のメールを登録すると、スマホでもPCでも同じ続きからできます。
+              </li>
+              <li>
+                <span className="font-black">2回目以降にこの画面が出たら、ブラウザが違うだけです。</span>
+                記録は端末ではなく<span className="font-black">ブラウザごと</span>に分かれていて、Safari と Chrome、
+                アプリの中で開いたページなどはそれぞれ別のブラウザとして扱われます。登録し直さずに、下の
+                <span className="font-black">「登録済みのメールでログイン」</span>から入ってください
+                （同じメールで登録し直すことはできません）。
               </li>
               <li>
                 <span className="font-black">用意するもの</span>は学校のメール（@st.spec.ed.jp）と、自分で決めるパスワード（6文字以上）だけ。
@@ -192,7 +199,7 @@ export default function AccountPage() {
           </section>
         )}
 
-        {justLinked && <Notice tone="ok">✓ ログインできました。パスワードを忘れた場合は、下でパスワードを設定し直してください。</Notice>}
+        {justLinked && <Notice tone="ok">✓ ログインできました。パスワードを忘れて入った人は、下の「パスワードを変更する」で新しいパスワードを決めてください。</Notice>}
         {callbackError && <Notice tone="err">リンクを開けませんでした（{callbackError}）。もう一度送信してください。</Notice>}
 
         {/* 現在の状態 */}
@@ -205,7 +212,9 @@ export default function AccountPage() {
               <span className="font-black">{status.pendingEmail}</span> に確認メールを送ってあります。届いたリンクを開くと登録が完了します。
             </p>
           ) : status.isAnonymous ? (
-            <p className="text-sm text-rw-ink leading-relaxed">未登録。<span className="font-black">この端末だけ</span>の記録です。</p>
+            <p className="text-sm text-rw-ink leading-relaxed">
+              未登録。<span className="font-black">このブラウザだけ</span>の記録です（同じ端末でも、別のブラウザには引き継がれません）。
+            </p>
           ) : registered ? (
             <p className="text-sm text-rw-ink leading-relaxed">
               ✓ <span className="font-black">{status.email}</span>{' '}
@@ -215,7 +224,7 @@ export default function AccountPage() {
                   ? ' 先生'
                   : `${profile?.grade ? ` ${profile.grade}年` : ''}${profile?.class ? ` ${profile.class}組` : ''}${profile?.number ? ` ${profile.number}番` : ''}`}）
               </span>
-              。別の端末でも、このメールとパスワードでログインすれば続きからできます。
+              。ほかの端末・ほかのブラウザでも、このメールとパスワードでログインすれば続きからできます。
             </p>
           ) : (
             <p className="text-sm text-rw-ink leading-relaxed">
@@ -231,7 +240,7 @@ export default function AccountPage() {
         {/* 統合の確認: 共用PCで他人の記録を取り込まないよう、必ず本人に選ばせる */}
         {pending && status && !status.isAnonymous && (
           <section className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-4 mb-4">
-            <h2 className="text-sm font-black text-rw-ink mb-1">この端末に、登録前の記録があります</h2>
+            <h2 className="text-sm font-black text-rw-ink mb-1">このブラウザに、登録前の記録があります</h2>
             <p className="text-[12px] text-rw-ink font-semibold mb-2.5 leading-relaxed">
               単語の記録 {pending.counts.word_stats} 件・復習の箱 {pending.counts.srs_state} 件。
               <span className="font-black">あなた自身の記録なら</span>統合できます。学校の共用PCなど、他の人が使った可能性があれば「統合しない」を選んでください。
@@ -252,7 +261,9 @@ export default function AccountPage() {
           <section className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-4">
             <h2 className="text-sm font-black text-rw-ink mb-1">はじめて使う人：登録する</h2>
             <p className="text-[11px] text-rw-ink-soft font-semibold mb-2.5 leading-snug">
-              {DOMAIN_HINT}とパスワード（6文字以上）。確認メールは送られません。この端末で進めた記録はそのまま引き継がれます。
+              {DOMAIN_HINT}とパスワード（6文字以上）。確認メールは送られません。このブラウザで進めた記録はそのまま引き継がれます。
+              <br />
+              <span className="font-black">すでに登録した人は、下の「登録済みのメールでログイン」へ。</span>
             </p>
             <form onSubmit={(e) => { e.preventDefault(); if (!busy) void onRegister(); }} className="flex flex-col gap-2">
               <SchoolField cohort={cohort} known={knownCohort} onChange={setCohortChoice} />
@@ -295,7 +306,9 @@ export default function AccountPage() {
           <section className="bg-rw-paper border border-rw-rule rounded-2xl p-4 mb-4">
             <h2 className="text-sm font-black text-rw-ink mb-1">登録済みのメールでログイン</h2>
             <p className="text-[11px] text-rw-ink-soft font-semibold mb-2.5 leading-snug">
-              別の端末で先に登録した人はこちら。この端末で登録前に進めた記録があれば、ログイン後に統合するか選べます。
+              <span className="font-black">別の端末・別のブラウザで先に登録した人はこちら。</span>
+              ブラウザを変えるとログインし直しが必要ですが、記録はアカウント側にあるので消えていません。
+              このブラウザで登録前に進めた記録があれば、ログイン後に統合するか選べます。
             </p>
             <form onSubmit={(e) => { e.preventDefault(); if (!busy) onSignIn(); }} className="flex flex-col gap-2">
               <input
@@ -316,7 +329,8 @@ export default function AccountPage() {
             {showReset && (
               <div className="mt-2 rounded-xl border border-rw-rule p-3">
                 <p className="text-[11px] text-rw-ink-soft font-semibold mb-2 leading-snug">
-                  上のメールアドレス宛にログイン用のリンクを送ります。開いたあと、この画面でパスワードを設定し直せます。届かない時は先生に伝えてください。
+                  上のメールアドレス宛にログイン用のリンクを送ります。リンクはメールアプリが使うブラウザで開きます（いつものブラウザと違っても大丈夫です）。
+                  開いた先の「パスワードを変更する」で新しいパスワードを決めて、そのパスワードでいつものブラウザからログインしてください。届かない時は先生に伝えてください。
                 </p>
                 <button type="button" onClick={onReset} disabled={busy} className="w-full rounded-xl py-2.5 text-[13px] font-black border border-rw-ink text-rw-ink disabled:opacity-60">
                   リンクを送る
@@ -343,7 +357,7 @@ export default function AccountPage() {
             </section>
             <section className="px-4 mb-4">
               <button onClick={onSignOut} className="text-[12px] font-bold text-rw-ink-soft underline">
-                この端末からログアウトする（学校の共用PCなど）
+                このブラウザからログアウトする（学校の共用PCなど）
               </button>
             </section>
           </>
