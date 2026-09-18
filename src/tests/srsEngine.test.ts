@@ -3,7 +3,30 @@
  * DB を叩かない部分（box 進行と review 日計算）のみをカバー。
  */
 import { describe, it, expect } from "vitest";
-import { nextBox, getNextReviewDate, BOX_INTERVALS_DAYS } from "../lib/srsEngine";
+import { nextBox, getNextReviewDate, BOX_INTERVALS_DAYS, reviewTransition } from "../lib/srsEngine";
+
+describe('復習期限に基づく定着判定（単語・文法共通）', () => {
+  const now = new Date('2026-09-19T10:00:00Z');
+  const future = '2026-09-20T10:00:00Z';
+  it('同日の連続正解で段階を進めず、元の期限も延ばさない', () => {
+    let state = { box: 2, next_review: future };
+    for (let i = 0; i < 5; i++) state = reviewTransition(state, true, now);
+    expect(state).toEqual({ box: 2, next_review: future });
+  });
+  it('期限到来ちょうどの正解で次の段階へ進む', () => {
+    expect(reviewTransition({ box: 2, next_review: now.toISOString() }, true, now))
+      .toEqual({ box: 3, next_review: getNextReviewDate(3, now) });
+  });
+  it('期限前でも間違えたら直ちに再学習へ戻す', () => {
+    expect(reviewTransition({ box: 5, next_review: future }, false, now))
+      .toEqual({ box: 1, next_review: now.toISOString() });
+  });
+  it('誤答の解き直しができたら翌日確認へ進み、連続正解では止まる', () => {
+    const state = reviewTransition({ box: 1, next_review: now.toISOString() }, true, now);
+    expect(state.box).toBe(2);
+    expect(reviewTransition(state, true, now)).toEqual(state);
+  });
+});
 
 describe("nextBox", () => {
   it("初回 + 正解 → box 2", () => {

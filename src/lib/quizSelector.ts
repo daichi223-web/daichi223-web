@@ -30,7 +30,7 @@ export type PickInput<T> = {
 
 export type PickResult<T> = { picked: T[]; composition: Record<Bucket, number> };
 
-const WEAK_MIN_ATTEMPTS = 2;
+const WEAK_MIN_ATTEMPTS = 1;
 const WEAK_ERR_RATE = 0.4;
 const STRONG_MIN_ATTEMPTS = 3;
 const STRONG_ERR_RATE = 0.2;
@@ -42,8 +42,11 @@ export function classify(stat: ItemStat | undefined, box?: number): Bucket {
   const total = (stat?.correct ?? 0) + (stat?.incorrect ?? 0);
   if (!stat || total === 0) return 'new';
   const err = stat.incorrect / total;
+  if (box === 1) return 'weak';
   if (total >= WEAK_MIN_ATTEMPTS && err >= WEAK_ERR_RATE) return 'weak';
   if ((box ?? 0) >= STRONG_BOX) return 'strong';
+  // 記録がある場合は間隔を空けた確認を優先。同日の正解数だけで得意にしない。
+  if (box != null) return 'mid';
   if (total >= STRONG_MIN_ATTEMPTS && err <= STRONG_ERR_RATE) return 'strong';
   return 'mid';
 }

@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import type { GrammarTopic, GrammarMedia, GrammarDrill, TopicProgress } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 import { fetchMedia, fetchDrills, markWatched, saveTopicResult, getAllTopicProgress, drillLevel } from "@/lib/kobun/dojoData";
+import { getWordStats } from '@/lib/wordStats';
+import { pickQuestions, type ItemStat } from '@/lib/quizSelector';
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 
 const LEVEL_LABEL: Record<number, string> = {
@@ -40,14 +42,6 @@ function maxUnlockedLevel(
 
 /** 1セッションで出題する問題数（各レベル約20問のバンクからシャッフルして抽出） */
 const SESSION_SIZE = 8;
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 import { VideoEmbed } from "@/components/grammar/VideoEmbed";
 import { DrillSession, type DrillResult } from "@/components/grammar/DrillSession";
 
@@ -60,6 +54,7 @@ export default function GrammarDojoTopic() {
   const [media, setMedia] = useState<GrammarMedia[]>([]);
   const [drills, setDrills] = useState<GrammarDrill[]>([]);
   const [progress, setProgress] = useState<Record<string, TopicProgress>>({});
+  const [answerStats, setAnswerStats] = useState<Record<string, ItemStat>>({});
   const [loading, setLoading] = useState(true);
   const [phase, setPhase] = useState<Phase>("learn");
   const [result, setResult] = useState<DrillResult | null>(null);
@@ -78,7 +73,8 @@ export default function GrammarDojoTopic() {
   /** バンクからシャッフルしてセッション分を取り出し、ドリル開始 */
   const startDrill = (level: number) => {
     const pool = drills.filter((d) => drillLevel(d) === level);
-    setSessionDrills(shuffle(pool).slice(0, SESSION_SIZE));
+    setSessionDrills(pickQuestions({ items: pool, key: d => d.id, order: d => d.sort ?? 0,
+      stats: answerStats, n: SESSION_SIZE }).picked);
     setSelLevel(level);
     setResult(null);
     setPhase("drill");
@@ -96,12 +92,14 @@ export default function GrammarDojoTopic() {
       fetchMedia(topicId),
       fetchDrills(topicId),
       getAllTopicProgress(),
-    ]).then(([t, m, d, p]) => {
+      getWordStats(),
+    ]).then(([t, m, d, p, stats]) => {
       if (cancelled) return;
       setTopic(t.ok ? t.data : null);
       setMedia(m);
       setDrills(d);
       setProgress(p);
+      setAnswerStats(stats);
       // 全レベル解放中。初期選択は最易レベル（L1）にする。
       const lvls = [1, 2, 3, 4, 5].filter((L) => d.some((x) => drillLevel(x) === L));
       setSelLevel(lvls[0] ?? 1);
@@ -114,6 +112,7 @@ export default function GrammarDojoTopic() {
 
   const handleComplete = (r: DrillResult) => {
     setResult(r);
+    void getWordStats().then(setAnswerStats).catch(() => {});
     setPhase("done");
     if (!topicId) return;
     const key = levelKey(topicId, selLevel);
@@ -175,7 +174,7 @@ export default function GrammarDojoTopic() {
               </span>
             )}
           </div>
-          <DrillSession drills={sessionDrills} onComplete={handleComplete} />
+          <DrillSession drills={sessionDrills} supportBank={drills} stats={answerStats} onComplete={handleComplete} />
         </div>
       </div>
     );
@@ -278,13 +277,17 @@ export default function GrammarDojoTopic() {
             )}
 
             {/* ドリル開始 */}
+            <div className="mb-4 rounded-2xl border border-rw-rule bg-rw-paper p-4 text-sm text-rw-ink">
+              <p className="font-bold">まず自力で解く → つまずきを確認 → 手前の問題へ</p>
+              <p className="mt-2 text-xs leading-relaxed text-rw-ink-soft">最初の最大8問は選んだレベルで挑戦。間違えた問題は、すべて解いた後に下位問題で確認してから再挑戦します。補助は最大6問。本問の得点とは分けて表示します。</p>
+            </div>
             {levelDrills.length > 0 ? (
               <button
                 onClick={() => startDrill(selLevel)}
                 className="block w-full text-center bg-rw-primary text-rw-paper font-black rounded-2xl px-6 py-4 tracking-wider transition-transform hover:-translate-y-0.5"
                 style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
               >
-                ⚔️ {levels.length > 1 ? `${LEVEL_LABEL[selLevel]} を始める` : "ドリルを始める"}（{Math.min(SESSION_SIZE, levelDrills.length)}問・シャッフル）
+                ⚔️ {levels.length > 1 ? `${LEVEL_LABEL[selLevel]} を始める` : "ドリルを始める"}（{Math.min(SESSION_SIZE, levelDrills.length)}問・学習記録を反映）
               </button>
             ) : (
               <div className="text-center bg-rw-paper border-2 border-rw-rule rounded-2xl p-6">
@@ -314,12 +317,13 @@ export default function GrammarDojoTopic() {
               <div className="text-5xl mb-3">{result.masteryPct >= 85 ? "🎉" : "📚"}</div>
               <p className="text-3xl font-black text-rw-ink">{result.masteryPct}%</p>
               <p className="text-sm text-rw-ink-soft mt-1">
-                {result.correct} / {result.total} 正解
+                自力での初回回答：{result.correct} / {result.total} 正解
               </p>
               <p className="text-xs font-black mt-2 text-rw-primary">
-                {result.masteryPct >= 85 ? "定着！" : "もう一度で定着を狙おう"}
+                {result.masteryPct >= 85 ? "今回の本問はクリア。日を空けてもう一度確認しよう" : "つまずいたところから、一つずつ確かめよう"}
               </p>
             </div>
+            {!!result.supportAnswered && <p className="text-sm text-rw-ink-soft mb-5">補助・再挑戦：{result.supportCorrect} / {result.supportAnswered} 正解（本問の得点には含めません）</p>}
             <div className="flex flex-col gap-2">
               {/* 定着して次レベルが解放されたら、その場で挑戦できる */}
               {nextLevel !== undefined && unlockedMax >= nextLevel && (

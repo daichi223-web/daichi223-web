@@ -35,12 +35,13 @@ export async function recordAnswer(qid: string, isCorrect: boolean): Promise<voi
   const userId = await getUserId();
 
   // First, try to get the existing record
-  const { data: existing } = await supabase
+  const { data: existing, error: readError } = await supabase
     .from('word_stats')
     .select('id, correct, incorrect')
     .eq('user_id', userId)
     .eq('qid', qid)
-    .single();
+    .maybeSingle();
+  if (readError) throw readError;
 
   if (existing) {
     // Update existing record
@@ -48,13 +49,14 @@ export async function recordAnswer(qid: string, isCorrect: boolean): Promise<voi
       ? { correct: existing.correct + 1, last_seen: new Date().toISOString() }
       : { incorrect: existing.incorrect + 1, last_seen: new Date().toISOString() };
 
-    await supabase
+    const { error } = await supabase
       .from('word_stats')
       .update(updates)
       .eq('id', existing.id);
+    if (error) throw error;
   } else {
     // Insert new record
-    await supabase
+    const { error } = await supabase
       .from('word_stats')
       .insert({
         user_id: userId,
@@ -63,6 +65,7 @@ export async function recordAnswer(qid: string, isCorrect: boolean): Promise<voi
         incorrect: isCorrect ? 0 : 1,
         last_seen: new Date().toISOString(),
       });
+    if (error) throw error;
   }
 }
 
@@ -100,29 +103,32 @@ export async function getWordStats(): Promise<
  * Get weak words: qids where the error rate exceeds the threshold
  * and the user has attempted the word at least `minAttempts` times.
  *
- * @param threshold - error rate threshold (0-1). Default 0.5 means >= 50% wrong.
- * @param minAttempts - minimum total attempts to be considered. Default 2.
+ * @param threshold - error rate threshold (0-1). Default 0.4 means >= 40% wrong.
+ * @param minAttempts - minimum total attempts to be considered. Default 1.
  * @returns array of qid strings for weak words.
  */
-export async function getWeakWords(threshold = 0.5, minAttempts = 2): Promise<string[]> {
+export async function getWeakWords(threshold = 0.4, minAttempts = 1, qids?: string[]): Promise<string[]> {
+  if (qids?.length === 0) return [];
   const userId = await getUserId();
-
-  const { data, error } = await supabase
-    .from('word_stats')
-    .select('qid, correct, incorrect')
-    .eq('user_id', userId);
-
-  if (error || !data) {
-    console.warn('Failed to fetch word stats for weak words:', error);
-    return [];
+  let statsQuery = supabase.from('word_stats').select('qid, correct, incorrect').eq('user_id', userId);
+  let srsQuery = supabase.from('srs_state').select('qid').eq('user_id', userId).eq('box', 1);
+  if (qids) {
+    statsQuery = statsQuery.in('qid', qids);
+    srsQuery = srsQuery.in('qid', qids);
   }
+  const [{ data, error }, { data: relearning, error: srsError }] = await Promise.all([
+    statsQuery, srsQuery,
+  ]);
 
-  return data
+  if (error || srsError) throw error ?? srsError;
+
+  // 箱1は直近で忘れた語。過去の高い正答率で埋もれないように先頭へ。
+  return [...new Set([...(relearning ?? []).map((row) => row.qid), ...(data ?? [])
     .filter((row) => {
       const total = row.correct + row.incorrect;
       if (total < minAttempts) return false;
       const errorRate = row.incorrect / total;
       return errorRate >= threshold;
     })
-    .map((row) => row.qid);
+    .map((row) => row.qid)])].filter(qid => !qids || qids.includes(qid));
 }

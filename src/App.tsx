@@ -300,13 +300,13 @@ function App() {
     (async () => {
       try {
         const [weak, today, last, range] = await Promise.all([
-          getWeakWords(),
-          getTodayReviewSet(),
+          getWeakWords(undefined, undefined, allWords.map(w => w.qid)),
+          getTodayReviewSet(undefined, allWords.map(w => w.qid)),
           getLastActivity(),
           getActiveQuizRange(),
         ]);
         const gap = gapDays(last);
-        const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? await getWarmupWords() : [];
+        const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? await getWarmupWords(undefined, allWords.map(w => w.qid)) : [];
         if (!cancelled) {
           setWeakWordsCount(weak.length);
           setDueWordsCount(today.qids.length);
@@ -325,7 +325,7 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [showHome]);
+  }, [showHome, allWords]);
 
   // 結果表示時に累計統計を取得
   useEffect(() => {
@@ -572,7 +572,7 @@ function App() {
     const warmup = again ? [] : (welcomeBack?.warmup ?? []);
     let due: string[] = [];
     try {
-      due = (await getTodayReviewSet()).qids;
+      due = (await getTodayReviewSet(undefined, allWords.map(w => w.qid))).qids;
     } catch {
       due = [];
     }
@@ -1718,7 +1718,9 @@ function App() {
               void startTodaySession(false, { from: r.from, to: r.to });
             }}
             onStartReview={async () => {
-              const weak = await getWeakWords();
+              let weak: string[];
+              try { weak = await getWeakWords(undefined, undefined, allWords.map(w => w.qid)); }
+              catch { setHomeDataError(true); return; }
               if (weak.length === 0) return;
               setQuizQidFilter(weak);
               setQuizMode('weak');

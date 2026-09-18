@@ -42,6 +42,19 @@ export function getNextReviewDate(box: number, now: Date = new Date()): string {
   return next.toISOString();
 }
 
+/** 期限前の正解は練習として扱い、箱も復習期限も進めない。 */
+export function reviewTransition(
+  existing: { box: number; next_review: string } | null,
+  isCorrect: boolean,
+  now = new Date(),
+): { box: number; next_review: string } {
+  if (existing && isCorrect && Date.parse(existing.next_review) > now.getTime()) {
+    return { box: existing.box, next_review: existing.next_review };
+  }
+  const box = nextBox(existing?.box ?? null, isCorrect);
+  return { box, next_review: getNextReviewDate(box, now) };
+}
+
 /**
  * Get all words due for review for the current user.
  * A word is "due" when next_review <= now.
@@ -108,38 +121,40 @@ export async function getDueCount(): Promise<number> {
 /**
  * Update SRS state after answering a question.
  *
- * - Correct: move up one box (max 5), set next_review based on new box interval.
+ * - Correct when due: move up one box (max 5). Early practice preserves the schedule.
  * - Incorrect: move back to box 1, set next_review to now (immediately due).
  */
 export async function updateSrsState(qid: string, isCorrect: boolean): Promise<void> {
   const userId = await getUserId();
 
   // Get current SRS state
-  const { data: existing } = await supabase
+  const { data: existing, error: readError } = await supabase
     .from('srs_state')
-    .select('id, box')
+    .select('id, box, next_review')
     .eq('user_id', userId)
     .eq('qid', qid)
-    .single();
+    .maybeSingle();
+
+  if (readError) throw readError;
 
   const now = new Date().toISOString();
 
   if (existing) {
-    const newBox = nextBox(existing.box, isCorrect);
+    const transition = reviewTransition(existing, isCorrect, new Date(now));
 
-    await supabase
+    const { error } = await supabase
       .from('srs_state')
       .update({
-        box: newBox,
-        next_review: getNextReviewDate(newBox),
+        ...transition,
         last_review: now,
       })
       .eq('id', existing.id);
+    if (error) throw error;
   } else {
     // Word not yet in SRS -- initialize it
     const newBox = nextBox(null, isCorrect);
 
-    await supabase
+    const { error } = await supabase
       .from('srs_state')
       .insert({
         user_id: userId,
@@ -148,6 +163,7 @@ export async function updateSrsState(qid: string, isCorrect: boolean): Promise<v
         next_review: getNextReviewDate(newBox),
         last_review: now,
       });
+    if (error) throw error;
   }
 }
 
@@ -206,19 +222,22 @@ export function startOfToday(now: Date = new Date()): string {
  * その場でまた「今日の復習」に戻り、「今日はここまで」が終わらなくなるため）。
  * totalDue は残りの把握用で、UI には出さない前提。
  */
-export async function getTodayReviewSet(cap = DAILY_REVIEW_CAP): Promise<{ qids: string[]; totalDue: number }> {
+export async function getTodayReviewSet(cap = DAILY_REVIEW_CAP, qids?: string[]): Promise<{ qids: string[]; totalDue: number }> {
+  if (qids?.length === 0) return { qids: [], totalDue: 0 };
   const userId = await getUserId();
   const now = new Date().toISOString();
   const today0 = startOfToday();
-  const [{ data, error }, totalDue] = await Promise.all([
-    supabase
+  let query = supabase
       .from('srs_state')
       .select('qid')
       .eq('user_id', userId)
       .lte('next_review', now)
       .or(`last_review.is.null,last_review.lt.${today0}`)
       .order('next_review', { ascending: true })
-      .limit(cap),
+      .limit(cap);
+  if (qids) query = query.in('qid', qids);
+  const [{ data, error }, totalDue] = await Promise.all([
+    query,
     getDueCount(),
   ]);
   if (error || !data) {
@@ -252,14 +271,17 @@ export function gapDays(last: Date | null, now: Date = new Date()): number | nul
  * おかえりウォームアップ用: 箱4〜5の語からランダムに n 語。
  * 「まだ覚えている」を先に体験させるためのもので、正誤は通常どおり SRS に反映する。
  */
-export async function getWarmupWords(n = WELCOME_WARMUP_COUNT): Promise<string[]> {
+export async function getWarmupWords(n = WELCOME_WARMUP_COUNT, qids?: string[]): Promise<string[]> {
+  if (qids?.length === 0) return [];
   const userId = await getUserId();
-  const { data, error } = await supabase
+  let query = supabase
     .from('srs_state')
     .select('qid')
     .eq('user_id', userId)
     .gte('box', 4)
     .limit(200);
+  if (qids) query = query.in('qid', qids);
+  const { data, error } = await query;
   if (error || !data || data.length === 0) return [];
   const pool = data.map((r) => r.qid as string);
   for (let i = pool.length - 1; i > 0; i--) {

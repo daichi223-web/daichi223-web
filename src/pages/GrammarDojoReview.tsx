@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { GrammarDrill } from "@/lib/kobun/types";
-import { fetchDueDrills } from "@/lib/kobun/dojoData";
+import { fetchDueDrills, fetchDrills } from "@/lib/kobun/dojoData";
 import { DrillSession, type DrillResult } from "@/components/grammar/DrillSession";
 
 type Phase = "loading" | "ready" | "drill" | "done" | "empty";
@@ -13,6 +13,7 @@ type Phase = "loading" | "ready" | "drill" | "done" | "empty";
  */
 export default function GrammarDojoReview() {
   const [drills, setDrills] = useState<GrammarDrill[]>([]);
+  const [supportBank, setSupportBank] = useState<GrammarDrill[]>([]);
   const [phase, setPhase] = useState<Phase>("loading");
   const [result, setResult] = useState<DrillResult | null>(null);
 
@@ -22,6 +23,9 @@ export default function GrammarDojoReview() {
       const due = await fetchDueDrills();
       if (cancelled) return;
       setDrills(due);
+      const banks = await Promise.all([...new Set(due.map(d => d.topicId))].map(fetchDrills));
+      if (cancelled) return;
+      setSupportBank(banks.flat());
       setPhase(due.length > 0 ? "ready" : "empty");
     })();
     return () => {
@@ -45,7 +49,7 @@ export default function GrammarDojoReview() {
             </Link>
             <span className="text-xs font-black text-rw-ink">🔁 復習</span>
           </div>
-          <DrillSession drills={drills} onComplete={handleComplete} />
+          <DrillSession drills={drills} supportBank={supportBank} onComplete={handleComplete} />
         </div>
       </div>
     );
@@ -102,12 +106,13 @@ export default function GrammarDojoReview() {
               <div className="text-5xl mb-3">{result.masteryPct >= 85 ? "🎉" : "📚"}</div>
               <p className="text-3xl font-black text-rw-ink">{result.masteryPct}%</p>
               <p className="text-sm text-rw-ink-soft mt-1">
-                {result.correct} / {result.total} 正解
+                初回回答：{result.correct} / {result.total} 正解
               </p>
               <p className="text-xs font-black mt-2 text-rw-primary">
-                {result.masteryPct >= 85 ? "よく定着している！" : "間違えた問題はまた近いうちに戻ってくるよ"}
+                {result.masteryPct >= 85 ? "今回の復習はクリア！" : "間違えた問題はまた近いうちに戻ってくるよ"}
               </p>
             </div>
+            {!!result.supportAnswered && <p className="text-sm text-rw-ink-soft mb-4">補助・再挑戦：{result.supportCorrect} / {result.supportAnswered} 正解（初回の得点とは別）</p>}
             <Link
               to="/read/grammar"
               className="inline-block text-sm font-bold text-rw-ink-soft hover:text-rw-ink transition-colors py-2"
