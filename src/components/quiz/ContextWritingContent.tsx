@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
 import { matchSense } from '../../utils/matchSense';
-import { validateConnections } from '../../lib/validateConnectionsFromFile';
 import { coachWriting, isCoachOptedIn } from '../../lib/nanoCoach';
 import { PolysemyInsight } from './WordInsightPanel';
 
@@ -62,11 +61,9 @@ export function ContextWritingContent({
     word.meanings.forEach(meaning => {
       const userAnswer = (answers[meaning.qid] || '').trim();
 
-      // 文法チェック（接続規則違反など）
-      const issues = validateConnections(userAnswer);
-      if (issues.length > 0) {
-        newGrammarIssues[meaning.qid] = issues;
-      }
+      // 接続規則チェック（validateConnections）は古文用の規則のため、現代語の答えには使わない。
+      // 正しい訳（例「しみじみと心ひかれる」）まで違反と誤判定し、不正解扱いにしていた。
+      const issues: any[] = [];
 
       const correctAnswer = meaning.sense.replace(/〔\s*(.+?)\s*〕/, '$1').trim();
       const candidates = [{ surface: correctAnswer, norm: correctAnswer }];
