@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './HomeReiwa.css';
 import { getAccountStatus, type AccountStatus } from '@/lib/auth';
 import { getCohort } from '@/lib/cohort';
 import { schoolLabel, isTeacherEmail } from '@/lib/schools';
@@ -60,6 +59,7 @@ export default function HomeReiwa({
   wordRange,
   polysemyRange,
   weakWordsCount,
+  dueWordsCount,
   dataError = false,
   welcomeBack = null,
   todayPreview,
@@ -111,7 +111,7 @@ export default function HomeReiwa({
   const quizRangeLine = quizRange ? quizRangeHeadline(quizRange) : null;
 
   return (
-    <div className="study-home bg-rw-bg min-h-dvh px-4 md:px-6 pt-4 md:pt-6 pb-8 text-rw-ink">
+    <div className="bg-rw-bg min-h-dvh -mx-3 md:-mx-6 -mt-16 md:mt-0 px-4 md:px-6 pt-4 md:pt-6 pb-8 text-rw-ink">
       {/* 最小ヘッダ: 日付のみ。位階情報は Today's Quest 内に集約 */}
       <div className="pt-12 md:pt-0 mb-3 flex items-baseline justify-between">
         <div className="text-2xl md:text-3xl font-black tracking-tight leading-none">kobun.</div>
@@ -143,62 +143,155 @@ export default function HomeReiwa({
         </div>
       )}
 
-      <section className="study-intro">
-        <p className="study-eyebrow">毎日の積み重ねを、読める力に。</p>
-        <h1>覚えたつもりを、<br />確かなことばに。</h1>
-        <p>苦手を見つけて、思い出す。今日も少しずつ。</p>
-      </section>
+      {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}
+      <button
+        onClick={onStartToday}
+        className="w-full text-left mb-4 p-4 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
+      >
+        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-rw-pop opacity-30 pointer-events-none" />
+        <div className="absolute -bottom-5 right-5 w-20 h-20 rounded-full bg-rw-accent opacity-30 pointer-events-none" />
+        <div className="relative grid grid-cols-[auto_1fr] gap-3 items-stretch">
+          {/* LEFT: 装束ストリップ (肖像 + 位階 + 進捗 + KPI) */}
+          {nobleStage && noblePortrait ? (
+            <div className="flex flex-col gap-1.5" style={{ width: 140 }}>
+              <div className="flex items-stretch gap-2">
+                <div
+                  className="shrink-0 relative overflow-hidden rounded-md"
+                  style={{
+                    width: 40,
+                    height: 54,
+                    background: '#f6efe0',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                  }}
+                >
+                  <img
+                    src={noblePortrait.thumb}
+                    decoding="async"
+                    alt={noblePortrait.label}
+                    draggable={false}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: `${noblePortrait.focusX}% ${noblePortrait.focusY}%`,
+                      pointerEvents: 'none',
+                    }}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[9px] flex items-baseline gap-1">
+                    <span className="opacity-90 font-bold tracking-wider">{nobleStage.era}</span>
+                    <span className="opacity-70 font-mono text-[8px]">第{nobleStage.n}</span>
+                  </div>
+                  <div
+                    className="text-[15px] font-black leading-none mt-0.5 truncate"
+                    style={{ fontFamily: '"Noto Serif JP", serif' }}
+                  >
+                    {nobleStage.rank}
+                  </div>
+                  <div className="text-[9px] opacity-80 truncate mt-0.5">
+                    {nobleStage.post.split('・')[0]}
+                  </div>
+                </div>
+              </div>
 
-      <section className="study-quest" aria-labelledby="today-heading">
-        <div className="study-quest-top">
-          <span className="study-eyebrow">TODAY’S PRACTICE</span>
-          <span className="study-time">目安 2〜3分</span>
-        </div>
-        <h2 id="today-heading">{welcomeBack ? 'おかえりなさい。少しずつ再開しよう。' : '今日の10問から、はじめよう。'}</h2>
-        <p>{welcomeBack
-          ? `${welcomeBack.gapDays}日ぶり。覚えていた${welcomeBack.warmupCount}語から始めます。`
-          : '復習のタイミングと学習記録に合わせて、出題を選びます。'}</p>
-        <div className="study-session">
-          <div className="study-session-count"><strong>{todayTotal + (welcomeBack?.warmupCount ?? 0)}</strong><span>問の予定</span></div>
-          <div className="study-session-detail">
-            <span>期限が来た復習 <b>{todayPreview.review}</b> 問</span>
-            <span>苦手・未着手など <b>{todayPreview.fresh}</b> 問</span>
+              {/* 次の昇進 */}
+              {nobleNext ? (
+                <div>
+                  <div className="flex items-center gap-1 text-[9px]">
+                    <span className="opacity-70">次</span>
+                    <span className="opacity-95 truncate flex-1 font-bold">
+                      {nobleNext.stage.milestone && <span>★</span>}
+                      {nobleNext.stage.rank}
+                    </span>
+                    <span className="font-mono font-black">{nobleProgress}%</span>
+                  </div>
+                  <div className="h-0.5 mt-0.5 rounded-full bg-white/25">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: `${nobleProgress}%`, background: 'var(--rw-pop)' }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="text-[10px] font-black" style={{ color: 'var(--rw-pop)' }}>
+                  👑 極位達成
+                </div>
+              )}
+
+              {/* 3 KPI 横並び */}
+              <div className="flex justify-between text-[10px] leading-none pt-0.5">
+                <span>
+                  🔥<b className="text-[11px] ml-0.5">{streak}</b>
+                </span>
+                <span>
+                  📚<b className="text-[11px] ml-0.5">{totalAnswered.toLocaleString()}</b>
+                </span>
+                <span>
+                  👑<b className="text-[11px] ml-0.5">{totalMastered}</b>
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div style={{ width: 140 }} />
+          )}
+
+          {/* 区切り線 */}
+          <div className="relative flex flex-col min-w-0">
+            <div
+              className="absolute left-0 top-2 bottom-2 w-px"
+              style={{ background: 'rgba(255,255,255,0.25)', marginLeft: -6 }}
+              aria-hidden
+            />
+
+            {/* RIGHT: クイズ CTA */}
+            <div className="flex flex-col justify-between min-w-0 h-full">
+              <div>
+                <div className="text-[10px] opacity-90 font-bold tracking-wider uppercase">
+                  Today's Quest
+                </div>
+                {welcomeBack ? (
+                  <>
+                    <div className="text-base md:text-lg font-black mt-1 leading-tight">
+                      おかえり
+                    </div>
+                    <div className="text-[11px] opacity-90 font-bold leading-tight">
+                      {welcomeBack.gapDays}日ぶり。まず覚えていた{welcomeBack.warmupCount}語から
+                    </div>
+                    <div className="flex items-baseline gap-1 mt-1.5">
+                      <span className="text-3xl font-black">{welcomeBack.warmupCount + todayTotal}</span>
+                      <span className="text-xs opacity-90">語・2〜3分</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-base md:text-lg font-black mt-1 leading-tight">
+                      今日の分
+                    </div>
+                    <div className="text-[11px] opacity-90 font-bold leading-tight truncate">
+                      {todayPreview.review > 0
+                        ? `復習 ${todayPreview.review}語 ＋ 新しく ${todayPreview.fresh}語`
+                        : `${rangeLabel} から、苦手・未着手を優先`}
+                    </div>
+                    <div className="flex items-baseline gap-1 mt-1.5">
+                      <span className="text-3xl font-black">{todayTotal}</span>
+                      <span className="text-xs opacity-90">語・2〜3分</span>
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className="mt-2 inline-block self-start bg-rw-paper text-rw-primary text-xs font-black px-3.5 py-1.5 rounded-full tracking-wide group-hover:translate-x-1 transition-transform">
+                {welcomeBack ? 'おかえり ▶' : '今日の分 ▶'}
+              </div>
+            </div>
           </div>
         </div>
-        <button className="study-start" onClick={onStartToday}>今日の学習をはじめる <span aria-hidden="true">→</span></button>
-        <div className="study-range">出題範囲：{rangeLabel} <span>※復習は範囲外を含む場合があります</span></div>
-      </section>
-
-      <section className="study-review" aria-labelledby="review-heading">
-        <div>
-          <span className="study-eyebrow">REVIEW</span>
-          <h2 id="review-heading">苦手を、そのままにしない。</h2>
-          <p>{dataError ? '学習記録を再読み込みしてください。' : weakWordsCount > 0 ? `${weakWordsCount}件の意味を重点的に復習できます。` : '苦手が見つかると、ここからまとめて復習できます。'}</p>
-        </div>
-        <button onClick={onStartReview} disabled={dataError || weakWordsCount === 0}>苦手を復習 <span aria-hidden="true">↗</span></button>
-      </section>
-      <details className="study-method">
-        <summary>どうやって定着させるの？</summary>
-        <ol>
-          <li><b>間違えた意味を記録。</b> 初回の誤答から、苦手の候補に入ります。</li>
-          <li><b>解き直して、翌日も確認。</b> その場の正解だけで定着とは判定しません。</li>
-          <li><b>1日 → 3日 → 7日 → 14日。</b> 復習期限を迎えて正解すると間隔が延び、間違えると最初の段階に戻ります。</li>
-        </ol>
-        <p>今日の復習は最大10問。解き直しは結果画面から、次の日の確認は「今日の学習」から。</p>
-      </details>
-
-      {nobleStage && noblePortrait && (
-        <Link to="/stats" className="study-achievement">
-          <img src={noblePortrait.thumb} alt={noblePortrait.label} style={{ objectPosition: `${noblePortrait.focusX}% ${noblePortrait.focusY}%` }} />
-          <div><span className="study-eyebrow">あなたの歩み</span><strong>{nobleStage.rank} <small>{nobleStage.post.split('・')[0]}</small></strong>
-            <span>{nobleNext ? `次は ${nobleNext.stage.rank}・${nobleProgress}%` : '極位達成'}</span></div>
-          <div className="study-achievement-stats"><b>{streak}日</b><span>連続学習</span><span>回答 {totalAnswered.toLocaleString()} / 習得 {totalMastered}</span></div>
-        </Link>
-      )}
-      <div className="study-section-label"><h2>学び方を選ぶ</h2><span>自分のペースで、もう一歩。</span></div>
+      </button>
 
       {/* 4 タイル */}
-      <div className="study-modes grid grid-cols-2 gap-2.5 mb-4">
+      <div className="grid grid-cols-2 gap-2.5 mb-4">
         <Tile
           emoji="📚"
           label="単語"
@@ -246,7 +339,7 @@ export default function HomeReiwa({
       </div>
 
       {/* 単語帳・学習履歴ショートカット */}
-      <div className="study-shortcuts grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3">
+      <div className="grid grid-cols-3 gap-2.5 mb-3">
         <TileLinkInline
           href="/read/vocab"
           label={vocab.length > 0 ? `単語帳 ${vocab.length}` : '単語帳'}
@@ -371,7 +464,7 @@ function Tile({
         {emoji}
       </div>
       <div className="text-base font-black mt-2 tracking-tight text-rw-ink">{label}</div>
-      <div className="text-[11px] font-bold mt-0.5 text-rw-ink-soft">
+      <div className="text-[11px] font-bold mt-0.5" style={{ color: fgColor }}>
         {stat}
       </div>
     </button>

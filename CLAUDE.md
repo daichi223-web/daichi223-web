@@ -23,7 +23,7 @@
 
 | 担当 | 触っている範囲 |
 |---|---|
-| CODEX（2026-09-19 ローカル実装済み） | 単語ホームUI・復習判定・文法の自力回答→下位問題→再挑戦 = `src/components/HomeReiwa.*` / `src/App.tsx` / `src/lib/{srsEngine,wordStats,quizSelector}.ts` / `src/lib/kobun/drillSupport.ts` / `src/components/grammar/DrillSession.tsx` / `src/pages/GrammarDojo{Topic,Review}.tsx` / 関連テスト。詳細 `docs/adaptive-learning-review.md` |
+| CODEX（2026-09-19 機能公開済み・ホームUIは旧版へ復元） | 単語ホームUI・復習判定・文法の自力回答→下位問題→再挑戦 = `src/components/HomeReiwa.*` / `src/App.tsx` / `src/lib/{srsEngine,wordStats,quizSelector}.ts` / `src/lib/kobun/drillSupport.ts` / `src/components/grammar/DrillSession.tsx` / `src/pages/GrammarDojo{Topic,Review}.tsx` / 関連テスト。詳細 `docs/adaptive-learning-review.md` |
 | CODEX | 位階システム = `src/lib/nobleData.ts` / `src/lib/portraitTone.ts` / `src/components/noble/` / `public/portraits/` / `assets-src/portraits/` / `docs/noble-rank-system.md` |
 | Claude Code | 読解教材データ = `public/texts-v3/` / `public/analysis/` / `public/reading/` / `scripts/check-texts.mjs` ほか検査・修正スクリプト |
 | Claude Code | 登録必須化＋暗号化プロフィール（2026-09-12〜）= `api/profile.ts` / `api/_pii.ts` / `src/lib/{profile,schools,auth}.ts` / `src/components/RequireAccount.tsx` / `src/pages/AccountPage.tsx` / `src/main.tsx` / `supabase/migrations/013_profiles.sql` / 利用状況 `scripts/usage-*` / 教員画面の利用状況タブ `api/_teacher_usageData.ts` / `api/teacher.ts` / `src/pages/Teacher.tsx`（UsageView のみ） |
