@@ -186,6 +186,11 @@ function PopoverContent({
         )}
       </div>
 
+      {/* 意味の決め手（例文集と同じモデル：型＋手がかり＋理由）。品詞・活用の表より先に見せる */}
+      {!isScaffold && analysis?.decider && (
+        <DeciderPanel decider={analysis.decider} token={token} sentenceText={sentenceText} />
+      )}
+
       {(() => {
         // 助動詞・助詞の「接続」、抽象省略表記の「活用形」を補完
         const enriched = enrichGrammarInfo(
@@ -246,11 +251,6 @@ function PopoverContent({
           <p className="text-xs font-black text-rw-ink mb-0.5 tracking-wider">重要ポイント</p>
           <p className="text-sm text-rw-ink">{token.hint}</p>
         </div>
-      )}
-
-      {/* 意味の決め手（例文集と同じモデル：型＋手がかり＋理由） */}
-      {!isScaffold && analysis?.decider && (
-        <DeciderPanel decider={analysis.decider} token={token} sentenceText={sentenceText} />
       )}
 
       {/* 判別の筋道（分析対象のみ） */}
