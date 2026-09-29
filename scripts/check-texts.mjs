@@ -27,6 +27,7 @@
  *   T8 決め手          analysis/<id>.json があるとき、その参照 token が実在するか
  *   T13 決め手の食い違い  決め手の意味が、その token の品詞分解の意味と食い違わないか
  *   T14 壊れた品詞タグ    pos/意味/活用形に wikilink の断片が残っていないか
+ *   T15 一覧参照        affixRefs が public/affixes.json（接頭語・接尾語一覧）に実在するか
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -40,6 +41,7 @@ const BUNDLED_V3_INDEX = path.join(ROOT, 'src/data/textsV3Index.json');
 const PUBLIC_V3_INDEX = path.join(V3, 'index.json');
 const GRAMMAR = path.join(ROOT, 'public/grammar');
 const ANALYSIS = path.join(ROOT, 'public/analysis');
+const AFFIXES = path.join(ROOT, 'public/affixes.json');
 
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
@@ -156,6 +158,10 @@ const grammarIds = new Set(
     : [],
 );
 
+const affixKeys = new Set(
+  exists(AFFIXES) ? read(AFFIXES).sections.flatMap((s) => s.entries.map((e) => e.key)) : [],
+);
+
 const findings = [];
 const add = (id, code, detail) => findings.push({ id, code, detail });
 
@@ -228,6 +234,10 @@ for (const id of targets) {
       // T7 文法参照
       if (t.grammarRefId && !grammarIds.has(t.grammarRefId)) {
         add(id, 'T7-文法参照切れ', `${t.id}: ${t.grammarRefId}`);
+      }
+      // T15 一覧参照（接頭語・接尾語一覧）
+      for (const key of t.affixRefs || []) {
+        if (!affixKeys.has(key)) add(id, 'T15-一覧参照切れ', `${t.id}: ${key}`);
       }
     }
 

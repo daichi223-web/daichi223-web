@@ -62,6 +62,22 @@ export default function ReferenceHome() {
           })}
         </div>
 
+        {/* 接頭語・接尾語一覧（教材のポップオーバーからも飛んでくる） */}
+        <Link
+          to="/read/affixes"
+          className="flex items-center gap-3 bg-rw-paper border-2 border-rw-ink rounded-2xl px-3.5 py-3 mb-4 hover:border-rw-ink-soft transition-colors"
+          style={{ boxShadow: "0 3px 0 var(--rw-primary)" }}
+        >
+          <span className="text-xl">🧩</span>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm font-extrabold leading-snug text-rw-ink">接頭語・接尾語 一覧</h3>
+            <p className="text-[11px] text-rw-ink-soft mt-0.5 leading-relaxed">
+              うち〜・もの〜、〜げなり・〜めく、〜わたる・〜あかす など
+            </p>
+          </div>
+          <div className="text-sm text-rw-ink-soft flex-shrink-0">→</div>
+        </Link>
+
         {/* トピック一覧 */}
         <div className="flex flex-col gap-2">
           {topics.map((topic) => (

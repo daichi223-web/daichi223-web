@@ -8,6 +8,7 @@ import VocabModal from "@/components/VocabModal";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
 import { enrichGrammarInfo } from "@/lib/kobun/auxiliaryInfo";
 import { resolveVocabKey } from "@/lib/vocabAlias";
+import { useAffixes, indexAffixes, type AffixLookup } from "@/lib/kobun/affixes";
 
 /** 文法道場にクイズがある単元（grammarRefId の解決先がこの集合にあれば挑戦ボタンを出す） */
 const QUIZ_TOPICS = new Set<string>([
@@ -253,6 +254,17 @@ function PopoverContent({
         </div>
       )}
 
+      {/* 接頭語・接尾語（一覧の該当項目へ飛べる） */}
+      {!isScaffold && token.affixRefs && token.affixRefs.length > 0 && (
+        <AffixPanel
+          refs={token.affixRefs}
+          onOpen={(key) => {
+            onClose();
+            navigate(`/read/affixes#${key}`);
+          }}
+        />
+      )}
+
       {/* 判別の筋道（分析対象のみ） */}
       {!isScaffold && analysis && analysis.reasoning && analysis.reasoning.length > 0 && (
         <div className="border-t border-rw-rule pt-3 space-y-2">
@@ -368,6 +380,37 @@ function PopoverContent({
       {vocabLemma && (
         <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} textId={textId} />
       )}
+    </div>
+  );
+}
+
+/** 接頭語・接尾語パネル。一覧（public/affixes.json）の該当項目を短く示し、一覧へ飛ばす */
+function AffixPanel({ refs, onOpen }: { refs: string[]; onOpen: (key: string) => void }) {
+  const doc = useAffixes(refs.length > 0);
+  const index = doc ? indexAffixes(doc) : null;
+  const items = index ? refs.map((k) => index.get(k)).filter((x): x is AffixLookup => !!x) : [];
+  if (items.length === 0) return null;
+
+  return (
+    <div className="space-y-2">
+      {items.map(({ entry, section }) => (
+        <div
+          key={entry.key}
+          className="rounded-xl px-3 py-2 border-l-4"
+          style={{ borderColor: "var(--rw-tertiary)", background: "color-mix(in srgb, var(--rw-tertiary) 14%, transparent)" }}
+        >
+          <p className="text-xs font-black tracking-wider mb-0.5 text-rw-ink">
+            {section.title}「{entry.word}」
+          </p>
+          <p className="text-sm text-rw-ink">{entry.means.map((m) => m.meaning).join("／")}</p>
+          <button
+            className="mt-1 text-sm font-bold text-rw-ink underline decoration-rw-tertiary underline-offset-2 hover:opacity-80"
+            onClick={() => onOpen(entry.key)}
+          >
+            🧩 一覧で見る →
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

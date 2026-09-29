@@ -61,6 +61,8 @@ export interface Token {
   translation?: string;
   grammarRefId?: string;
   hint?: string;
+  /** 接頭語・接尾語一覧（public/affixes.json）の entry.key */
+  affixRefs?: string[];
 }
 
 export interface GrammarTag {

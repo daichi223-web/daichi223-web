@@ -69,6 +69,9 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
     ? { hasQuiz: false, hasExplanation: false, quizQids: [], explanationLemma: null }
     : lookupVocabStatus(token.text, baseForm, pos);
   const markerStyle = vocabMarkerStyle(status);
+  // 接頭語・接尾語一覧につながる語は、重要語の印が無くてもタップで解説を開けるようにする
+  const tappable = !!markerStyle || !!token.affixRefs?.length;
+  const tapStyle = markerStyle ?? (tappable ? { borderBottom: "1px dotted var(--rw-tertiary)" } : undefined);
   const titleHint =
     status.hasQuiz && status.hasExplanation
       ? '重要語: クイズ + 詳細解説あり'
@@ -81,11 +84,11 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
   // 読解レイヤー (5): 全トークンをプレーンテキストとして表示するが、
   // vocab status マーカーは付与する (重要語の見落とし防止)
   if (currentLayer === 5) {
-    if (markerStyle) {
+    if (tappable) {
       return (
         <span
           className="inline cursor-pointer"
-          style={markerStyle}
+          style={tapStyle}
           onClick={onClick}
           role="button"
           tabIndex={0}
@@ -105,11 +108,11 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
 
   // layer 0 (名詞等) or symbols: 通常テキスト + vocab マーカー (あれば)
   if (token.layer === 0 || isSymbol) {
-    if (markerStyle && !isSymbol) {
+    if (tappable && !isSymbol) {
       return (
         <span
           className="inline cursor-pointer"
-          style={markerStyle}
+          style={tapStyle}
           onClick={onClick}
           role="button"
           tabIndex={0}
