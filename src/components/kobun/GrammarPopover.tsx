@@ -73,7 +73,8 @@ export function GrammarPopover({
   }, [textId, token?.text]);
 
   const isScaffold = token.layer > currentLayer;
-  const tag = token.grammarTag;
+  // grammarTag を持たないトークン（埋めトークン等）でも落ちないようにする
+  const tag: Token["grammarTag"] = token.grammarTag ?? { pos: "" };
 
   return (
     <>

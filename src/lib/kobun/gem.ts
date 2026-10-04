@@ -22,7 +22,7 @@ export function buildGemUrl(params: {
   currentLayer: LayerId;
 }): string {
   const { textTitle, sentenceText, token, currentLayer } = params;
-  const tag = token.grammarTag;
+  const tag: Token["grammarTag"] = token.grammarTag ?? { pos: "" };
 
   // 品詞情報を組み立て
   const posInfo = [
@@ -87,7 +87,7 @@ export function buildNotebookLmUrl(params: {
   currentLayer: LayerId;
 }): string {
   const { token } = params;
-  const tag = token.grammarTag;
+  const tag: Token["grammarTag"] = token.grammarTag ?? { pos: "" };
   const query = `${tag.pos} ${tag.baseForm || token.text}`;
   return `${getNotebookLmUrl()}?query=${encodeURIComponent(query)}`;
 }

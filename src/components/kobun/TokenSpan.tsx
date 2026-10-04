@@ -62,7 +62,8 @@ function TokenContent({ token }: { token: Token }) {
 }
 
 export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanProps) {
-  const isSymbol = token.grammarTag.pos === "記号";
+  // 埋めトークン（空白・かっこ・出典表記など）は grammarTag を持たない。落ちずに地の文として出す
+  const isSymbol = token.grammarTag?.pos === "記号";
   const baseForm = token.grammarTag?.baseForm;
   const pos = token.grammarTag?.pos;
   const status = isSymbol

@@ -1,6 +1,6 @@
 # 学習データ基本設計 — 単語・文法・教材をクロスで見る
 
-作成 2026-10-04。段階 B・C はローカル実装済み（本番 DB への適用・コミット・デプロイは未実施）
+作成 2026-10-04。段階 B・C は 2026-10-05 に本番稼働（DB 適用済み・commit 344b997）。教員画面（段階 A・D）は未着手
 
 ## 1. ねらい
 
@@ -187,7 +187,8 @@ A と B は並行でき、どちらも CODEX の範囲に触れない。記録�
 - 追加: `supabase/migrations/014_learning_events.sql`、`src/lib/learningEvents.ts`、`src/tests/learningEvents.test.ts`
 - 差し込み: `src/lib/kobun/progress.ts`、`src/components/kobun/GrammarPopover.tsx`、`src/pages/{TextGuide,VocabCard,ReibunQuiz,GrammarDojoTopic}.tsx`、`src/components/grammar/DrillSession.tsx`、`src/App.tsx`
 - 検証済み: 型検査、全テスト、ビルド。014 はローカルの Postgres 互換環境（PGlite）で、冪等性・生徒の権限（本人の書き込みのみ可）・端末統合の付け替えを確認。
-- 未実施: 本番 DB への適用、適用後の実ブラウザでの記録確認、コミット、デプロイ。
+- 2026-10-05: 本番 DB へ適用し、実ブラウザ（ローカルのビルド→本番 DB）で全種類の行が入ることと、読み込み直し直前の分が届くことを確認。push 後、本番サイトからの送信（201）も確認。
+- 本番は登録必須のため、未登録の自動ブラウザでは本番でクイズまで進めない。回答の記録の確認はローカルのビルドで行った。
 - 適用の順序: **先に DB、後からアプリ**。逆でも学習は止まらない（表が無い間は記録が捨てられるだけ）。
 
 ## 11. 検証
