@@ -1,6 +1,7 @@
 /**
  * 記述の判定を画面から使うための薄い層。
  * - 読み（かな）の辞書を裏で読み込む。済んでいなければ表記だけで判定する
+ * - 教員が決めた正解・不正解の言い方を読み込む
  * - 判定結果を answers 表の auto 欄（既存の教員画面が読む形）に直す
  */
 import { judgeWriting, type WritingJudgeResult } from './writingJudge';
@@ -46,9 +47,42 @@ export function preloadReading(): Promise<void> {
   return loading;
 }
 
+type TeacherRules = Record<string, { ok?: string[]; ng?: string[] }>;
+let teacherRules: TeacherRules = {};
+let rulesLoading: Promise<void> | null = null;
+
+/** 教員が決めた言い方（overrides 表）を1回だけ読み込む。失敗したら無しで判定する */
+function loadTeacherRules(): Promise<void> {
+  if (!rulesLoading) {
+    rulesLoading = fetch('/api/getAcceptedCandidates')
+      .then((r) => (r.ok ? r.json() : {}))
+      .then((data) => {
+        teacherRules = data && typeof data === 'object' ? (data as TeacherRules) : {};
+      })
+      .catch(() => {
+        rulesLoading = null;
+      });
+  }
+  return rulesLoading;
+}
+
+/** 記述問題を出す前に呼ぶ。読みの辞書と教員の判断を裏で用意する（待たなくてよい） */
+export function prepareWritingJudge(): void {
+  void preloadReading();
+  void loadTeacherRules();
+}
+
 /** 記述1問を判定する。siblings は同じ見出し語の全意味（target を含んでよい） */
 export function judgeWritingAnswer(answer: string, target: Word, siblings: Word[]): WritingJudgeResult {
-  return judgeWriting({ answer, target, siblings, toReading: readingFn ?? undefined });
+  const rules = teacherRules[target.qid];
+  return judgeWriting({
+    answer,
+    target,
+    siblings,
+    accepted: rules?.ok,
+    rejected: rules?.ng,
+    toReading: readingFn ?? undefined,
+  });
 }
 
 /** 機械で正誤が確定したか（保留は false） */

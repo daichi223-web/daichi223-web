@@ -6,8 +6,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await requireStaff(req);
 
-    const minFreq = Number(req.query.minFreq || 3);
-    const lookbackDays = Number(req.query.lookbackDays || 7);
+    const minFreq = Number(req.query.minFreq || 2);
+    const lookbackDays = Number(req.query.lookbackDays || 30);
 
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - lookbackDays);
@@ -39,6 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       freq: number;
       lastSeen: string;
       scores: number[];
+      pending: number;
       sampleRaw: string;
     }>();
 
@@ -48,20 +49,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const answerRaw = row.raw?.answerRaw ?? "";
       if (!qid || !answerNorm) continue;
 
-      let score = row.raw?.auto?.score ?? 0;
-      let finalResult = row.final?.result;
-
-      if (row.manual?.result) {
-        finalResult = row.manual.result;
-        if (finalResult === "PARTIAL") continue;
-        score = finalResult === "OK" ? 100 : finalResult === "NG" ? 0 : 50;
-      }
+      // 生徒の自己判定（manual）は点数に混ぜない。正解の辞書に入れるかは教員が決める
+      const score = row.raw?.auto?.score ?? 0;
+      const isPending = row.raw?.auto?.result === "ABSTAIN";
 
       const key = `${qid}::${answerNorm}`;
       const existing = aggregated.get(key);
       if (existing) {
         existing.freq++;
         existing.scores.push(score);
+        if (isPending) existing.pending++;
         if (row.created_at > existing.lastSeen) existing.lastSeen = row.created_at;
       } else {
         aggregated.set(key, {
@@ -70,6 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           freq: 1,
           lastSeen: row.created_at,
           scores: [score],
+          pending: isPending ? 1 : 0,
           sampleRaw: answerRaw,
         });
       }
@@ -81,7 +79,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (agg.freq < minFreq) continue;
       const avgScore = agg.scores.reduce((a, b) => a + b, 0) / agg.scores.length;
       const bandMode = avgScore >= 80 ? "HIGH" : avgScore >= 50 ? "MID" : "LOW";
-      const proposedRole = avgScore >= 80 ? "accept" : avgScore < 50 ? "negative" : "review";
+      // 自動で決まらなかった（保留の）言い方は、教員に確認してもらう
+      const proposedRole = agg.pending > 0 ? "review" : avgScore >= 80 ? "accept" : "negative";
       rowsToSave.push({
         qid: agg.qid,
         answer_norm: agg.answerNorm,

@@ -21,6 +21,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { data, error } = await query.order("freq", { ascending: false }).limit(limit);
     if (error) throw error;
 
+    // 教員がすでに決めた言い方（overrides）に印を付ける
+    const qids = [...new Set((data ?? []).map(r => r.qid))];
+    const decided = new Map<string, string>();
+    for (let i = 0; i < qids.length; i += 200) {
+      const { data: ovs, error: ovErr } = await supabaseAdmin
+        .from("overrides")
+        .select("qid, answer_norm, label")
+        .eq("active", true)
+        .in("qid", qids.slice(i, i + 200));
+      if (ovErr) throw ovErr;
+      for (const o of ovs ?? []) decided.set(`${o.qid}::${o.answer_norm}`, o.label);
+    }
+
     // Preserve frontend-facing field names
     const candidates = (data ?? []).map(r => ({
       id: `${r.qid}::${r.answer_norm}`,
@@ -30,6 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       lastSeen: r.last_seen,
       bandMode: r.band_mode,
       proposedRole: r.proposed_role,
+      override: decided.get(`${r.qid}::${r.answer_norm}`) ?? null,
       avgScore: r.avg_score,
       sampleAny: r.sample_any,
       updatedAt: r.updated_at,

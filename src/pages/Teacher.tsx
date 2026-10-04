@@ -102,7 +102,7 @@ export default function Teacher() {
         setRows(data);
 
         // 候補データも取得
-        const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=100");
+        const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=300");
         setCandidates(candidatesData.candidates || []);
       } catch (e: any) {
         const msg = String(e?.message || e);
@@ -219,6 +219,28 @@ export default function Teacher() {
   // 記述式回答のみをフィルタリング
   const writingRows = rows.filter(r => isWritingAnswer(r.raw?.answerRaw));
 
+  // 記述の言い方を、教員の判断として正解／不正解に決める（null で取り消し）。
+  // 生徒の画面の判定は、ここで決めた言い方だけを辞書として使う。
+  const decideCandidate = async (c: any, label: "OK" | "NG" | null) => {
+    try {
+      await callAPI("/api/teacher?action=upsertOverride", {
+        qid: c.qid,
+        answerRaw: c.sampleAny,
+        label: label ?? c.override ?? "OK",
+        active: label !== null,
+      });
+      setCandidates(cs => cs.map(x => (x.id === c.id ? { ...x, override: label } : x)));
+    } catch (e: any) {
+      alert(`エラー: ${e.message}`);
+    }
+  };
+
+  // 要確認（自動で決まらなかった言い方）を先に、その中は頻度順
+  const sortedCandidates = [...candidates].sort((a, b) => {
+    const rank = (c: any) => (c.override ? 2 : c.proposedRole === "review" ? 0 : 1);
+    return rank(a) - rank(b) || (b.freq ?? 0) - (a.freq ?? 0);
+  });
+
   const aggregateCandidates = async () => {
     if (!confirm("回答データから選択肢候補を集計しますか？\n\n※この処理には時間がかかる場合があります")) {
       return;
@@ -230,7 +252,7 @@ export default function Teacher() {
       alert(`集計完了:\n処理数: ${result.processed}\n集計数: ${result.aggregated}\n保存数: ${result.saved}`);
 
       // 候補データを再取得
-      const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=100");
+      const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=300");
       setCandidates(candidatesData.candidates || []);
     } catch (e: any) {
       alert(`エラー: ${e.message}`);
@@ -258,7 +280,7 @@ export default function Teacher() {
       // データを再取得
       const data = await callAPI("/api/teacher?action=listRecentAnswers&limit=50");
       setRows(data);
-      const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=100");
+      const candidatesData = await callAPI("/api/teacher?action=listCandidates&limit=300");
       setCandidates(candidatesData.candidates || []);
     } catch (e: any) {
       alert(`エラー: ${e.message}`);
@@ -613,18 +635,21 @@ export default function Teacher() {
             <thead className="bg-slate-100 border-b border-slate-200">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">単語</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">正解</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">入力された回答</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">頻度</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">平均点</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">役割</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">最終確認</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">自動判定</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">教員の判断</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {candidates.map((c: any) => (
+              {sortedCandidates.map((c: any) => (
                 <tr key={c.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3 text-sm text-slate-700">
                     {getWordByQid(c.qid)?.lemma || c.qid}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-slate-700">
+                    {getWordByQid(c.qid)?.senseNorm || getWordByQid(c.qid)?.sense || "-"}
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-900">{c.sampleAny}</td>
                   <td className="px-4 py-3 text-sm text-slate-700">
@@ -632,7 +657,6 @@ export default function Teacher() {
                       {c.freq}回
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-slate-700">{c.avgScore}点</td>
                   <td className="px-4 py-3 text-sm">
                     <span className={`inline-flex px-2 py-1 rounded text-xs font-medium ${
                       c.proposedRole === "accept"
@@ -641,12 +665,40 @@ export default function Teacher() {
                         ? "bg-red-100 text-red-700"
                         : "bg-yellow-100 text-yellow-700"
                     }`}>
-                      {c.proposedRole === "accept" ? "正解候補" : c.proposedRole === "negative" ? "誤答候補" : "要確認"}
+                      {c.proposedRole === "accept" ? "正解" : c.proposedRole === "negative" ? "不正解" : "要確認"}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-xs text-slate-500">
-                    {c.lastSeen?.toDate ? new Date(c.lastSeen.toDate()).toLocaleDateString('ja-JP') :
-                     c.lastSeen?._seconds ? new Date(c.lastSeen._seconds * 1000).toLocaleDateString('ja-JP') : '-'}
+                  <td className="px-4 py-3 text-sm whitespace-nowrap">
+                    {c.override ? (
+                      <>
+                        <span className={`inline-flex px-2 py-1 rounded text-xs font-medium ${
+                          c.override === "OK" ? "bg-green-600 text-white" : "bg-red-600 text-white"
+                        }`}>
+                          {c.override === "OK" ? "正解にした" : "不正解にした"}
+                        </span>
+                        <button
+                          onClick={() => decideCandidate(c, null)}
+                          className="ml-2 text-xs text-slate-500 underline hover:text-slate-800"
+                        >
+                          取消
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => decideCandidate(c, "OK")}
+                          className="px-3 py-1 rounded border border-green-600 text-green-700 text-xs font-medium hover:bg-green-50"
+                        >
+                          ○ 正解にする
+                        </button>
+                        <button
+                          onClick={() => decideCandidate(c, "NG")}
+                          className="ml-2 px-3 py-1 rounded border border-red-600 text-red-700 text-xs font-medium hover:bg-red-50"
+                        >
+                          × 不正解にする
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

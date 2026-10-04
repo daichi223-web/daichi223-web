@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
-import { judgeWritingAnswer, preloadReading, toAutoFields } from '../../lib/writingJudgeRuntime';
+import { judgeWritingAnswer, prepareWritingJudge, toAutoFields } from '../../lib/writingJudgeRuntime';
 import { coachWriting, isCoachOptedIn } from '../../lib/nanoCoach';
 import { PolysemyInsight } from './WordInsightPanel';
 import { senseLabel, writingHeadline } from './writingVerdict';
@@ -37,9 +37,9 @@ export function ContextWritingContent({
   const coachFiredRef = useRef<boolean>(false);
   const submittedRef = useRef<boolean>(false);
 
-  // 記述は読み（かな）でも照合する。辞書は答える前に裏で読み込んでおく
+  // 記述は読み（かな）と教員の判断でも照合する。答える前に裏で用意しておく
   useEffect(() => {
-    void preloadReading();
+    prepareWritingJudge();
   }, []);
 
   // Reset answers when word changes

@@ -21,6 +21,7 @@ export type WritingVerdict =
   | 'correct'      // この文脈の意味で書けた
   | 'other_sense'  // 同じ語の別の意味を書いた
   | 'modern_trap'  // 現代語の意味で読んだ
+  | 'wrong'        // 教員が不正解と決めた言い方
   | 'blank'        // 無回答・1文字
   | 'pending';     // 機械では決まらない
 
@@ -41,6 +42,8 @@ export interface WritingJudgeInput {
   siblings?: JudgeSense[];
   /** 教員が正解と認めた言い方（qid ごと） */
   accepted?: string[];
+  /** 教員が不正解と決めた言い方（qid ごと）。書いたとおりの言い方だけに効く */
+  rejected?: string[];
   /** 読み（かな）へ直す関数。渡せば漢字とかなの表記ちがいを吸収する */
   toReading?: (s: string) => string;
 }
@@ -143,13 +146,19 @@ function contains(a: Keys, b: Keys): boolean {
 }
 
 export function judgeWriting(input: WritingJudgeInput): WritingJudgeResult {
-  const { target, siblings = [], accepted = [], toReading } = input;
+  const { target, siblings = [], accepted = [], rejected = [], toReading } = input;
   const norm = normalizeAnswer(input.answer);
   if (!norm) return { verdict: 'blank' };
 
   const ans = keysOf(norm, toReading);
   const hit = (vs: string[]) => vs.some((v) => same(ans, keysOf(v, toReading)));
 
+  // 教員の判断を自動の照合より先に見る。不正解の指定は活用ちがいにまで広げない
+  const exact = (v: string) => {
+    const k = keysOf(v, toReading);
+    return k.raw === ans.raw || (!!k.yomi && k.yomi === ans.yomi);
+  };
+  if (rejected.map(normalizeAnswer).filter(Boolean).some(exact)) return { verdict: 'wrong' };
   if (hit(accepted.map(normalizeAnswer).filter(Boolean))) return { verdict: 'correct' };
 
   const targetVariants = variantsOf(target);

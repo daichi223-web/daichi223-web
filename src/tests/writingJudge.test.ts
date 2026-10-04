@@ -73,6 +73,11 @@ describe('judgeWriting: 正解', () => {
     expect(judgeWriting({ answer: '快方に向かう', target: okotaru, accepted: ['快方に向かう'] }).verdict).toBe('correct');
   });
 
+  it('教員が不正解と決めた言い方は wrong。書いたとおりの言い方だけに効く', () => {
+    expect(judgeWriting({ answer: 'すぐに治る', target: okotaru, rejected: ['すぐに治る'] }).verdict).toBe('wrong');
+    expect(judgeWriting({ answer: 'すぐに治った', target: okotaru, rejected: ['すぐに治る'] }).verdict).toBe('pending');
+  });
+
   it('読みを渡せば漢字とかなの表記ちがいを吸収する', () => {
     expect(judgeWriting({ answer: 'びょうき', target: kokochi }).verdict).toBe('pending');
     expect(judgeWriting({ answer: 'びょうき', target: kokochi, toReading }).verdict).toBe('correct');

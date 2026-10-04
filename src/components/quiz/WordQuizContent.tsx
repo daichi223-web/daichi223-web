@@ -4,7 +4,7 @@ import ExampleDisplay from '../ExampleDisplay';
 import { WordInsightPanel, WordInsightStrip } from './WordInsightPanel';
 import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
-import { preloadReading } from '../../lib/writingJudgeRuntime';
+import { prepareWritingJudge } from '../../lib/writingJudgeRuntime';
 import { senseLabel, writingHeadline } from './writingVerdict';
 
 interface QuizQuestion {
@@ -65,9 +65,9 @@ export function WordQuizContent({
     setShowModernTranslation(false);
   }, [question.correct.qid, contextRequired]);
 
-  // 記述は読み（かな）でも照合する。辞書は答える前に裏で読み込んでおく
+  // 記述は読み（かな）と教員の判断でも照合する。答える前に裏で用意しておく
   React.useEffect(() => {
-    if (quizType === 'meaning-writing') void preloadReading();
+    if (quizType === 'meaning-writing') prepareWritingJudge();
   }, [quizType]);
 
   // 正解時に自動遷移。核イメージがある語は1行だけ「学びの瞬間」を見せてから進む。

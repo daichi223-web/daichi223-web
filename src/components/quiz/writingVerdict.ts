@@ -17,6 +17,8 @@ export function writingHeadline(result: WritingJudgeResult): { mark: string; tex
       return { mark: '△', text: '別の意味で読んでいます', color: 'var(--rw-pop)' };
     case 'modern_trap':
       return { mark: '△', text: '現代語の意味で読んでいます', color: 'var(--rw-pop)' };
+    case 'wrong':
+      return { mark: '×', text: 'この文脈の意味ではありません', color: 'var(--rw-primary)' };
     case 'blank':
       return { mark: '×', text: '答えが書かれていません', color: 'var(--rw-primary)' };
     default:
