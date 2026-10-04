@@ -15,6 +15,19 @@ const KNOWN_EMPTY_EXAMPLE_QIDS = new Set<string>([
   '350-2', // まさに    「ちょうど」    — 出典確定例文を後日補完
 ]);
 
+// kobunQ v2 の増補フィールド（辞書形の意味・核イメージ・決め手・現代語の罠）。
+// Word に写し忘れると、答え合わせのパネルと記述の判定に届かない。
+function v2Fields(word: WordData): Pick<Word, 'pos' | 'keigo' | 'senseNorm' | 'senseCore' | 'decider' | 'trap'> {
+  return {
+    pos: word.pos,
+    keigo: word.keigo,
+    senseNorm: word.senseNorm,
+    senseCore: word.senseCore,
+    decider: word.decider,
+    trap: word.trap,
+  };
+}
+
 export class DataParser {
   private wordData: WordData[] = [];
   private multiMeaningWords: MultiMeaningWord[] = [];
@@ -184,7 +197,8 @@ export class DataParser {
               group: parseInt(word.group) || 0,
               examples: word.examples || [],
               examples_kobun: kobun,
-              examples_modern: modern
+              examples_modern: modern,
+              ...v2Fields(word)
             };
           });
 
@@ -238,7 +252,8 @@ export class DataParser {
           group: parseInt(word.group) || 0,
           examples: word.examples || [],
           examples_kobun: kobun,
-          examples_modern: modern
+          examples_modern: modern,
+          ...v2Fields(word)
         };
       });
   }

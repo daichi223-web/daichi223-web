@@ -5,8 +5,8 @@ import { Word, MultiMeaningWord } from './types';
 import RangeField from './components/RangeField';
 import { useFullSelectInput } from './hooks/useFullSelectInput';
 import { useLocalStorageState } from './hooks/useLocalStorageState';
-import { buildSenseIndex } from './lib/buildSenseIndex';
-import { matchSense, type LearnedCandidate } from './utils/matchSense';
+import type { WritingJudgeResult } from './lib/writingJudge';
+import { judgeWritingAnswer, isDecided, toAutoFields } from './lib/writingJudgeRuntime';
 import { WordQuizContent } from './components/quiz/WordQuizContent';
 import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
@@ -189,9 +189,9 @@ function App() {
   const [showResults, setShowResults] = useState(false);
   const [nextButtonVisible, setNextButtonVisible] = useState(false);
   const [showWritingResult, setShowWritingResult] = useState(false);
-  const [writingResult, setWritingResult] = useState<{score: number; feedback: string; reason?: string}>({ score: 0, feedback: '' });
+  const [writingResult, setWritingResult] = useState<WritingJudgeResult>({ verdict: 'pending' });
   const [showCorrectCircle, setShowCorrectCircle] = useState(false);
-  const [writingUserJudgment, setWritingUserJudgment] = useState<boolean | 'partial' | undefined>(undefined);
+  const [writingUserJudgment, setWritingUserJudgment] = useState<boolean | undefined>(undefined);
   const [currentWritingQid, setCurrentWritingQid] = useState<string>('');
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
   const vocabIndexKeys = useMemo(
@@ -417,21 +417,6 @@ function App() {
       word?.group?.toString().includes(query)
     );
   }, [allWords, indexSearchQuery]);
-
-  // Build sense index for advanced matching
-  const senseIndex = useMemo(() => {
-    if (!Array.isArray(allWords) || allWords.length === 0) return new Map();
-    return buildSenseIndex(allWords as any);
-  }, [allWords]);
-
-  // Learned candidates fetched from Firestore at runtime
-  const [learnedCandidates, setLearnedCandidates] = useState<Record<string, LearnedCandidate[]>>({});
-  useEffect(() => {
-    fetch('/api/getAcceptedCandidates')
-      .then(r => r.ok ? r.json() : {})
-      .then(data => setLearnedCandidates(data))
-      .catch(() => {}); // graceful fallback to empty
-  }, []);
 
   useEffect(() => {
     loadData();
@@ -1157,41 +1142,6 @@ function App() {
     setCurrentQuizData(questions.sort(() => Math.random() - 0.5));
   };
 
-  const evaluateWritingAnswer = (userAnswer: string, correctQid: string) => {
-    const candidates = senseIndex.get(correctQid) ?? [];
-    const learned = learnedCandidates[correctQid] ?? [];
-    const result = matchSense(userAnswer, candidates, learned);
-
-    // matchSense.ts の新しいスコアシステムを使用
-    const scoreToFeedback: Record<number, string> = {
-      100: '完全一致！',
-      90: 'ほぼ正解（語幹のみ一致）',
-      85: '接続部分（〜て、〜で）のみ訳し忘れ',
-      75: '余分な意味を付け加えています',
-      70: '活用形の違い',
-      65: '必須要素が欠落しています',
-      60: '意味的に近い',
-      0: '意味が異なります'
-    };
-
-    if (result.ok && result.score >= 60) {
-      const feedback = scoreToFeedback[result.score] || `${result.score}% - ${result.detail || ''}`;
-      return {
-        score: result.score,
-        feedback: feedback,
-        reason: result.reason,
-        detail: result.detail
-      };
-    }
-
-    return {
-      score: 0,
-      feedback: scoreToFeedback[0],
-      reason: result.reason,
-      detail: result.detail
-    };
-  };
-
   const handleAnswer = (selectedOption: Word, correctOption: Word, isReverse = false) => {
     const isCorrect = selectedOption.qid === correctOption.qid;
     // Track word stats and SRS in Supabase (fire-and-forget)
@@ -1258,60 +1208,68 @@ function App() {
     }
   };
 
+  const addWrongAnswer = (qid: string) => {
+    const word = allWords.find(w => w.qid === qid);
+    if (!word) return;
+    setWrongAnswers(prev =>
+      prev.some(w => w.qid === qid) ? prev : [...prev, { lemma: word.lemma, sense: word.sense, qid }]
+    );
+  };
+
+  // 記述の最終判定を記録する。1回の回答につき1回だけ呼ぶ
+  // （自動判定と自己判定で SRS を二度動かさない）。
+  const finalizeWriting = (qid: string, isCorrect: boolean, result: WritingJudgeResult, selfJudged: boolean) => {
+    recordAnswer(qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
+    updateSrsState(qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
+    // 記述の本文は answers 表に残るので、ここには判定だけ入れる
+    logEvent({
+      area: 'vocab', action: 'answer', targetType: 'word', targetId: qid,
+      correct: isCorrect,
+      format: currentMode === 'polysemy' ? 'context-writing' : 'meaning-writing', route: quizMode,
+      ctx: {
+        mode: currentMode, score: isCorrect ? 100 : 0, verdict: result.verdict, self: selfJudged,
+        ...(result.matchedQid ? { matched: result.matchedQid } : {}),
+      },
+    });
+    if (isCorrect) {
+      recordQuizTypeCorrect(qid, 'writing');
+      // 多義語モードの記述 (context-writing) なら polysemy にもカウント
+      if (currentMode === 'polysemy') recordQuizTypeCorrect(qid, 'polysemy');
+    } else {
+      addWrongAnswer(qid);
+    }
+  };
+
   const handleWritingSubmit = async (userAnswer: string, correctQid: string) => {
     if (!userAnswer.trim()) {
       showErrorMessage('回答を入力してください。');
       return;
     }
+    const target = allWords.find(w => w.qid === correctQid);
+    if (!target) return;
 
-    const evaluation = evaluateWritingAnswer(userAnswer, correctQid);
-    setWritingResult(evaluation);
+    const siblings = dataParser.getWordByLemma(target.lemma)?.meanings ?? [];
+    const result = judgeWritingAnswer(userAnswer, target, siblings);
+    setWritingResult(result);
     setCurrentWritingQid(correctQid);
     setWritingUserJudgment(undefined);
-
-    // Track word stats and SRS in Supabase (fire-and-forget)
-    recordAnswer(correctQid, evaluation.score >= 60).catch((e) => console.warn('[recordAnswer] failed:', e));
-    updateSrsState(correctQid, evaluation.score >= 60).catch((e) => console.warn('[updateSrsState] failed:', e));
-    // 記述の本文は answers 表に残るので、ここには点数だけ入れる
-    logEvent({
-      area: 'vocab', action: 'answer', targetType: 'word', targetId: correctQid,
-      correct: evaluation.score >= 60,
-      format: currentMode === 'polysemy' ? 'context-writing' : 'meaning-writing', route: quizMode,
-      ctx: { mode: currentMode, score: evaluation.score },
-    });
-    // 記述クイズの正答カウント (60点以上を正答扱い)
-    if (evaluation.score >= 60) {
-      recordQuizTypeCorrect(correctQid, 'writing');
-      // 多義語モードの記述 (context-writing) なら polysemy にもカウント
-      if (currentMode === 'polysemy') recordQuizTypeCorrect(correctQid, 'polysemy');
-    }
-
-    // スコア更新と結果表示（即座に）
-    // 60点以上で正解扱い（手動判定で変更可能）
-    if (evaluation.score >= 60) {
-      setScore(prev => prev + 1);
-    } else {
-      // 不正解を記録（セッション末復習用）
-      const correctWord = allWords.find(w => w.qid === correctQid);
-      if (correctWord) {
-        setWrongAnswers(prev => {
-          if (prev.some(w => w.qid === correctQid)) return prev;
-          return [...prev, { lemma: correctWord.lemma, sense: correctWord.sense, qid: correctQid }];
-        });
-      }
-    }
     setShowWritingResult(true);
 
-    // 100点（完全正解）の場合は自動遷移、それ以外は次へボタン表示
-    if (evaluation.score === 100) {
+    if (result.verdict === 'correct') {
+      finalizeWriting(correctQid, true, result, false);
+      setScore(prev => prev + 1);
+      // 正解は核イメージを1行見せてから自動で進む
       setTimeout(() => {
         handleNextQuestion();
-      }, 1500);
+      }, 1600);
     } else {
+      // 別義・現代語・無回答は不正解で確定。保留は自己判定を待つ
+      // （判定せずに「つぎへ」で進んだら記録しない）。
+      if (isDecided(result)) finalizeWriting(correctQid, false, result, false);
       setNextButtonVisible(true);
     }
 
-    // Save to Firestore（バックグラウンド、awaitしない）
+    // 回答の本文を保存（バックグラウンド、awaitしない）
     const anonId = localStorage.getItem('anonId') || `anon_${Date.now()}`;
     if (!localStorage.getItem('anonId')) {
       localStorage.setItem('anonId', anonId);
@@ -1324,9 +1282,7 @@ function App() {
         qid: correctQid,
         answerRaw: userAnswer,
         anonId,
-        autoScore: evaluation.score,
-        autoResult: evaluation.score >= 60 ? 'OK' : 'NG',
-        autoReason: evaluation.feedback,
+        ...toAutoFields(result),
         questionType: 'writing',
       }),
     })
@@ -1341,59 +1297,27 @@ function App() {
       });
   };
 
-  const handleWritingUserJudgment = async (judgment: boolean | 'partial') => {
+  // 自己判定は、機械で決まらなかった（保留の）回答にだけ受け付ける
+  const handleWritingUserJudgment = async (judgment: boolean) => {
+    if (writingResult.verdict !== 'pending' || writingUserJudgment !== undefined) return;
     setWritingUserJudgment(judgment);
     setNextButtonVisible(false); // 次へボタンを非表示
 
-    // 最終判定 (partial は自動評価そのまま、true/false はユーザー判断を優先)
-    const isCorrectFinal: boolean =
-      judgment === 'partial' ? writingResult.score >= 60 : judgment === true;
-
-    // Update score based on user judgment (○表示なし)
-    if (judgment === true && writingResult.score < 60) {
-      // User says correct but auto said wrong
-      setScore(prev => prev + 1);
-    } else if (judgment === false && writingResult.score >= 60) {
-      // User says wrong but auto said correct
-      setScore(prev => Math.max(0, prev - 1));
-    }
-    // judgment === 'partial' の場合はスコアを変更しない
-
-    // Override SRS with manual judgment (fire-and-forget)
-    // partial は自動評価のまま据え置く
-    if (currentWritingQid && judgment !== 'partial') {
-      updateSrsState(currentWritingQid, judgment === true).catch((e) => console.warn('[updateSrsState] failed:', e));
-    }
-
-    // wrongAnswers を最終判定に同期 (自動評価で追加/未追加されていたものを補正)。
-    // セッション末復習リストがユーザーの最終判断と矛盾しないようにする。
     if (currentWritingQid) {
-      setWrongAnswers(prev => {
-        const exists = prev.some(w => w.qid === currentWritingQid);
-        if (isCorrectFinal && exists) {
-          return prev.filter(w => w.qid !== currentWritingQid);
-        }
-        if (!isCorrectFinal && !exists) {
-          const word = allWords.find(w => w.qid === currentWritingQid);
-          if (word) {
-            return [...prev, { lemma: word.lemma, sense: word.sense, qid: currentWritingQid }];
-          }
-        }
-        return prev;
-      });
+      finalizeWriting(currentWritingQid, judgment, writingResult, true);
+      if (judgment) setScore(prev => prev + 1);
     }
 
-    // Save to Firestore（バックグラウンド）- answerIdがあれば保存
+    // 自己判定を回答の行に残す（バックグラウンド）- answerIdがあれば保存
     if (currentWritingAnswerId) {
       const anonId = localStorage.getItem('anonId');
       if (anonId) {
-        const userCorrectionValue = judgment === true ? 'OK' : judgment === 'partial' ? 'PARTIAL' : 'NG';
         fetch('/api/userCorrectAnswer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             answerId: currentWritingAnswerId,
-            userCorrection: userCorrectionValue,
+            userCorrection: judgment ? 'OK' : 'NG',
             userId: anonId,
           }),
         }).catch(e => {
@@ -1402,10 +1326,23 @@ function App() {
       }
     }
 
-    // 判定後0.6秒で自動遷移（常に実行）
+    // 判定後0.6秒で自動遷移
     setTimeout(() => {
       handleNextQuestion();
     }, 600);
+  };
+
+  // 多義語の記述（意味ごとに判定）。final が null の意味は保留のまま進んだもので、記録しない
+  const handleContextWritingJudged = (
+    results: Array<{ qid: string; result: WritingJudgeResult; final: boolean | null }>
+  ) => {
+    for (const r of results) {
+      if (r.final === null) continue;
+      finalizeWriting(r.qid, r.final, r.result, r.result.verdict === 'pending');
+    }
+    if (results.length > 0 && results.every(r => r.final === true)) {
+      setScore(prev => prev + 1);
+    }
   };
 
   const handleNextQuestion = () => {
@@ -2412,10 +2349,8 @@ function App() {
                   <ContextWritingContent
                     word={getCurrentPolysemyWord()!}
                     exampleIndex={polysemyState.currentExampleIndex}
-                    onWritingSubmit={handleWritingSubmit}
+                    onJudged={handleContextWritingJudged}
                     onNext={handleContextWritingNext}
-                    showWritingResult={showWritingResult}
-                    writingResult={writingResult}
                   />
                 )}
               </>

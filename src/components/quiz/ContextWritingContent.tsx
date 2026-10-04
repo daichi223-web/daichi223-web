@@ -1,48 +1,58 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
-import { matchSense } from '../../utils/matchSense';
+import type { WritingJudgeResult } from '../../lib/writingJudge';
+import { judgeWritingAnswer, preloadReading, toAutoFields } from '../../lib/writingJudgeRuntime';
 import { coachWriting, isCoachOptedIn } from '../../lib/nanoCoach';
 import { PolysemyInsight } from './WordInsightPanel';
+import { senseLabel, writingHeadline } from './writingVerdict';
+
+export interface ContextWritingJudged {
+  qid: string;
+  result: WritingJudgeResult;
+  /** 最終の正誤。保留のまま進んだ意味は null（記録しない） */
+  final: boolean | null;
+}
 
 export interface ContextWritingContentProps {
   word: MultiMeaningWord;
   exampleIndex: number;
-  onWritingSubmit: (userAnswer: string, correctAnswer: string) => void;
+  /** 「つぎへ」で確定した判定を、意味ごとに1回だけ渡す */
+  onJudged: (results: ContextWritingJudged[]) => void;
   onNext: () => void;
-  showWritingResult: boolean;
-  writingResult: {score: number; feedback: string};
 }
 
 export function ContextWritingContent({
   word,
-  exampleIndex,
-  onWritingSubmit,
+  onJudged,
   onNext,
-  showWritingResult,
-  writingResult
 }: ContextWritingContentProps) {
   const [answers, setAnswers] = useState<{[key: string]: string}>({});
   const [checked, setChecked] = useState(false);
-  const [grammarIssues, setGrammarIssues] = useState<{[key: string]: any[]}>({});
-  const [matchResults, setMatchResults] = useState<{[key: string]: any}>({});
+  const [results, setResults] = useState<{[key: string]: WritingJudgeResult}>({});
   const [userJudgments, setUserJudgments] = useState<{[key: string]: boolean}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coachComments, setCoachComments] = useState<{[key: string]: string}>({});
   const [coachLoading, setCoachLoading] = useState<{[key: string]: boolean}>({});
   const coachFiredRef = useRef<boolean>(false);
+  const submittedRef = useRef<boolean>(false);
+
+  // 記述は読み（かな）でも照合する。辞書は答える前に裏で読み込んでおく
+  useEffect(() => {
+    void preloadReading();
+  }, []);
 
   // Reset answers when word changes
   React.useEffect(() => {
     setAnswers({});
     setChecked(false);
-    setGrammarIssues({});
-    setMatchResults({});
+    setResults({});
     setUserJudgments({});
     setIsSubmitting(false);
     setCoachComments({});
     setCoachLoading({});
     coachFiredRef.current = false;
+    submittedRef.current = false;
   }, [word.lemma]);
 
   const handleAnswerChange = (meaningQid: string, value: string) => {
@@ -53,132 +63,86 @@ export function ContextWritingContent({
   const handleSubmit = () => {
     if (checked) return;
 
-    // 文法チェック＆matchSenseで採点
-    const newGrammarIssues: {[key: string]: any[]} = {};
-    const newMatchResults: {[key: string]: any} = {};
-    let isPerfectScore = true;
-
+    const next: {[key: string]: WritingJudgeResult} = {};
     word.meanings.forEach(meaning => {
       const userAnswer = (answers[meaning.qid] || '').trim();
-
-      // 接続規則チェック（validateConnections）は古文用の規則のため、現代語の答えには使わない。
-      // 正しい訳（例「しみじみと心ひかれる」）まで違反と誤判定し、不正解扱いにしていた。
-      const issues: any[] = [];
-
-      const correctAnswer = meaning.sense.replace(/〔\s*(.+?)\s*〕/, '$1').trim();
-      const candidates = [{ surface: correctAnswer, norm: correctAnswer }];
-      const result = matchSense(userAnswer, candidates);
-
-      newMatchResults[meaning.qid] = result;
-
-      // 100点満点でない、または文法エラーがあれば完璧ではない
-      if (result.score !== 100 || issues.length > 0) {
-        isPerfectScore = false;
-      }
+      next[meaning.qid] = judgeWritingAnswer(userAnswer, meaning, word.meanings);
     });
 
-    setGrammarIssues(newGrammarIssues);
-    setMatchResults(newMatchResults);
+    setResults(next);
     setChecked(true);
   };
 
-  const handleUserJudgment = async (meaningQid: string, isCorrect: boolean) => {
-    setUserJudgments(prev => ({ ...prev, [meaningQid]: isCorrect }));
-
-    // 判定ボタン押下時に即座に送信
-    const anonId = localStorage.getItem('anonId') || `anon_${Date.now()}`;
-    if (!localStorage.getItem('anonId')) {
-      localStorage.setItem('anonId', anonId);
-    }
-
-    const result = matchResults[meaningQid];
-    const score = result?.score || 0;
-    const userAnswer = (answers[meaningQid] || '').trim();
-
-    try {
-      const response = await fetch('/api/submitAnswer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          qid: meaningQid,
-          answerRaw: userAnswer,
-          anonId,
-          autoScore: score,
-          autoResult: score >= 60 ? 'OK' : 'NG',
-          autoReason: result?.detail || result?.reason || 'auto_grading',
-          questionType: 'writing',
-        }),
-      });
-
-      const data = await response.json();
-
-      // ユーザー訂正を送信
-      if (data.answerId) {
-        await fetch('/api/userCorrectAnswer', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            answerId: data.answerId,
-            userCorrection: isCorrect ? 'OK' : 'NG',
-            userId: anonId,
-          }),
-        });
-      }
-    } catch (e) {
-      console.error(`Failed to submit judgment for ${meaningQid}:`, e);
-    }
-  };
+  // 最終の正誤。機械で決まったものはそのまま、保留は自己判定（未判定なら null）
+  const finalOf = useCallback((qid: string): boolean | null => {
+    const result = results[qid];
+    if (!result) return null;
+    if (result.verdict === 'correct') return true;
+    if (result.verdict === 'pending') return userJudgments[qid] ?? null;
+    return false;
+  }, [results, userJudgments]);
 
   const handleNext = useCallback(async () => {
+    if (submittedRef.current) return;
+    submittedRef.current = true;
     setIsSubmitting(true);
 
     try {
-      // Save to Firestore with user corrections
+      onJudged(word.meanings.map(m => ({ qid: m.qid, result: results[m.qid], final: finalOf(m.qid) })));
+
       const anonId = localStorage.getItem('anonId') || `anon_${Date.now()}`;
       if (!localStorage.getItem('anonId')) {
         localStorage.setItem('anonId', anonId);
       }
 
-      // 並列送信: 未判定の意味のみ送信（判定済みはスキップ）
-      const submitPromises = word.meanings
-        .filter(meaning => userJudgments[meaning.qid] === undefined) // 判定していない意味のみ
-        .map(async (meaning) => {
-          const result = matchResults[meaning.qid];
-          const score = result?.score || 0;
-          const userAnswer = (answers[meaning.qid] || '').trim();
+      // 回答の本文を意味ごとに保存。保留を自己判定したものは、その判定も残す
+      const submitPromises = word.meanings.map(async (meaning) => {
+        const userAnswer = (answers[meaning.qid] || '').trim();
+        const result = results[meaning.qid];
+        if (!userAnswer || !result) return;
 
-          try {
-            // Submit answer (判定なしの回答のみ)
-            await fetch('/api/submitAnswer', {
+        try {
+          const response = await fetch('/api/submitAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              qid: meaning.qid,
+              answerRaw: userAnswer,
+              anonId,
+              ...toAutoFields(result),
+              questionType: 'writing',
+            }),
+          });
+          const judgment = userJudgments[meaning.qid];
+          if (result.verdict !== 'pending' || judgment === undefined) return;
+
+          const data = await response.json();
+          if (data.answerId) {
+            await fetch('/api/userCorrectAnswer', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                qid: meaning.qid,
-                answerRaw: userAnswer,
-                anonId,
-                autoScore: score,
-                autoResult: score >= 60 ? 'OK' : 'NG',
-                autoReason: result?.detail || result?.reason || 'auto_grading',
-                questionType: 'writing',
+                answerId: data.answerId,
+                userCorrection: judgment ? 'OK' : 'NG',
+                userId: anonId,
               }),
             });
-          } catch (e) {
-            console.error(`Failed to submit answer for ${meaning.qid}:`, e);
           }
-        });
+        } catch (e) {
+          console.error(`Failed to submit answer for ${meaning.qid}:`, e);
+        }
+      });
 
-      // すべての送信が完了するまで待つ
       await Promise.all(submitPromises);
 
-      // 正解・不正解に関わらず次の問題へ遷移
       onNext();
     } finally {
       setIsSubmitting(false);
     }
-  }, [word.meanings, matchResults, userJudgments, answers, onNext]);
+  }, [word.meanings, results, userJudgments, answers, finalOf, onJudged, onNext]);
 
-  // AI コーチ: 採点直後、グレーゾーン (31-79点) の意味だけに対して
-  // Nano にコメントを依頼。スコア・既存判定 UI には影響させない。
+  // AI コーチ: 機械で決まらなかった（保留の）意味だけに対して
+  // Nano にコメントを依頼。判定には影響させない。
   useEffect(() => {
     if (!checked) return;
     if (coachFiredRef.current) return;
@@ -186,12 +150,9 @@ export function ContextWritingContent({
     coachFiredRef.current = true;
 
     word.meanings.forEach(async (meaning) => {
-      const result = matchResults[meaning.qid];
-      const score = result?.score ?? 0;
-      if (score >= 80 || score <= 30) return;
+      if (results[meaning.qid]?.verdict !== 'pending') return;
       const userAnswer = (answers[meaning.qid] || '').trim();
       if (!userAnswer) return;
-      const correctAnswer = meaning.sense.replace(/〔\s*(.+?)\s*〕/, '$1').trim();
       const examples = dataParser.getExamplesForSense(meaning, meaning.qid, word);
       const exampleKobun = examples.kobun[0] || meaning.examples?.[0]?.jp || '';
 
@@ -199,7 +160,7 @@ export function ContextWritingContent({
       const comment = await coachWriting({
         kobun: exampleKobun,
         lemma: word.lemma,
-        modelAnswer: correctAnswer,
+        modelAnswer: senseLabel(meaning),
         userAnswer,
       });
       setCoachLoading((prev) => {
@@ -211,41 +172,18 @@ export function ContextWritingContent({
         setCoachComments((prev) => ({ ...prev, [meaning.qid]: comment }));
       }
     });
-  }, [checked, word.meanings, matchResults, answers, word.lemma]);
+  }, [checked, word, results, answers]);
 
-  // 100%のみ自動遷移
+  const allCorrect = checked && word.meanings.every(m => results[m.qid]?.verdict === 'correct');
+
+  // 全部正解のときだけ自動遷移
   useEffect(() => {
-    if (checked) {
-      const isPerfect = word.meanings.every(meaning => {
-        const result = matchResults[meaning.qid];
-        const issues = grammarIssues[meaning.qid] || [];
-        return result?.score === 100 && issues.length === 0;
-      });
-
-      if (isPerfect) {
-        const timer = setTimeout(() => {
-          handleNext();
-        }, 2000);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [checked, matchResults, grammarIssues, word.meanings, handleNext]);
-
-  // 1つでも不正解があれば「次へ」ボタン表示、全問正解なら非表示（自動遷移）
-  const hasIncorrect = checked && word.meanings.some(meaning => {
-    const result = matchResults[meaning.qid];
-    const issues = grammarIssues[meaning.qid] || [];
-    return result?.score !== 100 || issues.length > 0;
-  });
-
-  // スコアに応じた色を返す（CSS variables）
-  const getScoreColor = (score: number) => {
-    if (score === 100) return 'var(--rw-accent)';
-    if (score >= 85) return 'var(--rw-primary)';
-    if (score >= 65) return 'var(--rw-pop)';
-    if (score >= 60) return 'var(--rw-tertiary)';
-    return 'var(--rw-primary)';
-  };
+    if (!allCorrect) return;
+    const timer = setTimeout(() => {
+      handleNext();
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [allCorrect, handleNext]);
 
   return (
     <div>
@@ -257,11 +195,13 @@ export function ContextWritingContent({
       <div className="space-y-4 mb-4">
         {word.meanings.map((meaning) => {
           const userAnswer = answers[meaning.qid] || '';
-          const correctAnswer = meaning.sense.replace(/〔\s*(.+?)\s*〕/, '$1').trim();
-          const result = matchResults[meaning.qid];
-          const score = result?.score || 0;
-          const isCorrect = score === 100 && (grammarIssues[meaning.qid] || []).length === 0;
+          const result = results[meaning.qid];
+          const isCorrect = result?.verdict === 'correct';
+          const pending = result?.verdict === 'pending';
           const userJudgment = userJudgments[meaning.qid];
+          const matched = result?.matchedQid
+            ? word.meanings.find(m => m.qid === result.matchedQid)
+            : undefined;
 
           // Get sense-priority examples for this meaning
           const examples = dataParser.getExamplesForSense(meaning, meaning.qid, word);
@@ -270,7 +210,11 @@ export function ContextWritingContent({
 
           let containerClass = 'p-5 rounded-2xl border-2';
           if (checked) {
-            containerClass += isCorrect ? ' bg-rw-accent-soft border-rw-accent' : ' bg-rw-primary-soft border-rw-primary';
+            containerClass += isCorrect
+              ? ' bg-rw-accent-soft border-rw-accent'
+              : pending
+              ? ' bg-rw-paper border-rw-rule'
+              : ' bg-rw-primary-soft border-rw-primary';
           } else {
             containerClass += ' bg-rw-paper border-rw-ink';
           }
@@ -293,18 +237,29 @@ export function ContextWritingContent({
                 />
               </div>
 
-              {/* チェック後に正解・文法エラー・スコアを表示 */}
-              {checked && (
+              {/* チェック後に判定・正解を表示 */}
+              {checked && result && (
                 <>
-                  {/* スコア表示 */}
-                  <div
-                    className="mb-3 p-3 rounded-xl text-center font-black text-rw-paper"
-                    style={{ background: getScoreColor(score) }}
-                  >
-                    {score}<span className="text-sm font-bold ml-1">点</span> {result?.detail && <span className="text-sm font-medium ml-1">({result.detail})</span>}
-                  </div>
+                  {/* 判定: 点数ではなく「どの意味で読んだか」 */}
+                  {(() => {
+                    const head = writingHeadline(result);
+                    return (
+                      <div
+                        className="mb-3 p-3 rounded-xl text-center font-black text-rw-paper"
+                        style={{ background: head.color }}
+                      >
+                        {head.mark} {head.text}
+                      </div>
+                    );
+                  })()}
 
-                  {/* AI コーチコメント (オプトイン時・グレーゾーンのみ) */}
+                  {matched && (
+                    <p className="mb-3 text-sm text-rw-ink leading-relaxed font-semibold">
+                      書いたのは「{senseLabel(matched)}」の意味。この文脈では「{senseLabel(meaning)}」。
+                    </p>
+                  )}
+
+                  {/* AI コーチコメント (オプトイン時・保留のみ) */}
                   {(coachLoading[meaning.qid] || coachComments[meaning.qid]) && (
                     <div className="mb-3 p-4 rounded-xl bg-rw-paper border-2 border-dashed border-rw-tertiary">
                       <p className="text-xs font-black text-rw-tertiary tracking-wider mb-2">
@@ -320,51 +275,38 @@ export function ContextWritingContent({
                     </div>
                   )}
 
-                  {/* 文法のヒント表示 */}
-                  {grammarIssues[meaning.qid] && grammarIssues[meaning.qid].length > 0 && (
-                    <div className="mb-3 p-4 rounded-xl bg-rw-primary-soft border-l-4 border-rw-primary">
-                      <p className="text-sm font-black text-rw-primary mb-2 tracking-wider">文法のヒント</p>
-                      {grammarIssues[meaning.qid].map((issue, idx) => (
-                        <div key={idx} className="text-sm text-rw-ink mb-1">
-                          <span className="font-black">{issue.token}:</span> {issue.rule}
-                          {issue.where.note && <span className="block text-xs text-rw-ink-soft ml-2 mt-1">→ {issue.where.note}</span>}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* 採点結果訂正UI - すべてのスコアで利用可能 */}
-                  {userJudgment === undefined && (
+                  {/* 自己判定: 機械で決まらなかったときだけ */}
+                  {pending && userJudgment === undefined && (
                     <div className="mb-3 p-4 rounded-xl bg-rw-paper border-2 border-rw-rule">
                       <p className="text-sm font-black text-rw-ink mb-3 text-center">
-                        採点結果に納得できないときは判定してね
+                        正解と見くらべて、自分で判定してね
                       </p>
                       <div className="flex gap-2 justify-center flex-wrap">
                         <button
-                          onClick={() => handleUserJudgment(meaning.qid, true)}
+                          onClick={() => setUserJudgments(prev => ({ ...prev, [meaning.qid]: true }))}
                           className="px-6 py-2 bg-rw-accent text-rw-paper border-2 border-rw-accent font-black rounded-full transition hover:-translate-y-0.5"
                         >
-                          ○ 正解
+                          ○ 合っていた
                         </button>
                         <button
-                          onClick={() => handleUserJudgment(meaning.qid, false)}
+                          onClick={() => setUserJudgments(prev => ({ ...prev, [meaning.qid]: false }))}
                           className="px-6 py-2 bg-rw-primary text-rw-paper border-2 border-rw-primary font-black rounded-full transition hover:-translate-y-0.5"
                         >
-                          × 不正解
+                          × ちがった
                         </button>
                       </div>
                     </div>
                   )}
 
-                  {/* ユーザー判定結果表示と取り消しボタン */}
-                  {userJudgment !== undefined && (
+                  {/* 自己判定の結果と取り消し */}
+                  {pending && userJudgment !== undefined && (
                     <div className="mb-3 p-3 rounded-xl bg-rw-paper border-2 border-rw-rule">
                       <div className="flex items-center justify-between gap-2">
                         <div
                           className="font-black"
                           style={{ color: userJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)' }}
                         >
-                          {userJudgment ? '○ 正解と判定しました' : '× 不正解と判定しました'}
+                          {userJudgment ? '○ 合っていたと判定しました' : '× ちがったと判定しました'}
                         </div>
                         <button
                           onClick={() => setUserJudgments(prev => {
@@ -377,7 +319,6 @@ export function ContextWritingContent({
                           取消
                         </button>
                       </div>
-                      <p className="text-xs text-rw-ink-soft mt-1 font-medium">この訂正は結果に反映されます</p>
                     </div>
                   )}
 
@@ -387,7 +328,7 @@ export function ContextWritingContent({
                     }`}
                   >
                     <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">正解</p>
-                    <p className="text-rw-ink font-black text-base mb-2">{correctAnswer}</p>
+                    <p className="text-rw-ink font-black text-base mb-2">{senseLabel(meaning)}</p>
                     <p className="text-sm text-rw-ink-soft font-serif">{exampleModern}</p>
                   </div>
                 </>
@@ -412,8 +353,8 @@ export function ContextWritingContent({
       {/* 採点後: 核イメージ＋意味ごとの決め手で1つの絵にまとめる */}
       {checked && <PolysemyInsight meanings={word.meanings} className="mb-4" />}
 
-      {/* 1つでも不正解があれば次へボタン表示 */}
-      {hasIncorrect && (
+      {/* 全部正解なら自動で進む。それ以外は次へボタン表示 */}
+      {checked && !allCorrect && (
         <div className="text-center mt-4">
           <button
             onClick={(e) => {
@@ -447,26 +388,13 @@ export function ContextWritingContent({
           <div className="text-center mb-2">
             <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">結果</h3>
             <div className="text-rw-ink font-black text-2xl tracking-tight">
-              {(() => {
-                const correctAnswers = word.meanings.filter(m => {
-                  const result = matchResults[m.qid];
-                  const issues = grammarIssues[m.qid] || [];
-                  const score = result?.score || 0;
-                  const userJudgment = userJudgments[m.qid];
-
-                  console.log(`Result for ${m.qid}:`, { score, issues: issues.length, userJudgment, result });
-
-                  // ユーザー訂正が最優先
-                  if (userJudgment !== undefined) {
-                    return userJudgment === true;
-                  }
-
-                  // 自動採点: 100点で文法エラーなし
-                  return score === 100 && issues.length === 0;
-                });
-                return `${correctAnswers.length} / ${word.meanings.length} 正解`;
-              })()}
+              {word.meanings.filter(m => finalOf(m.qid) === true).length} / {word.meanings.length} 正解
             </div>
+            {word.meanings.some(m => finalOf(m.qid) === null) && (
+              <p className="text-xs text-rw-ink-soft mt-1 font-medium">
+                まだ判定していない答えがあります（判定しないで進むと、その語は記録されません）
+              </p>
+            )}
           </div>
         </div>
       )}

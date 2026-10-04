@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Word } from '../../types';
 import ExampleDisplay from '../ExampleDisplay';
 import { WordInsightPanel, WordInsightStrip } from './WordInsightPanel';
+import { dataParser } from '../../utils/dataParser';
+import type { WritingJudgeResult } from '../../lib/writingJudge';
+import { preloadReading } from '../../lib/writingJudgeRuntime';
+import { senseLabel, writingHeadline } from './writingVerdict';
 
 interface QuizQuestion {
   correct: Word;
@@ -26,9 +30,9 @@ export interface WordQuizContentProps {
   nextButtonVisible: boolean;
   onNext: () => void;
   showWritingResult: boolean;
-  writingResult: {score: number; feedback: string};
-  writingUserJudgment?: boolean | 'partial' | undefined;
-  handleWritingUserJudgment?: (judgment: boolean | 'partial') => void;
+  writingResult: WritingJudgeResult;
+  writingUserJudgment?: boolean | undefined;
+  handleWritingUserJudgment?: (judgment: boolean) => void;
 }
 
 export function WordQuizContent({
@@ -60,6 +64,11 @@ export function WordQuizContent({
     setShowExample(contextRequired);
     setShowModernTranslation(false);
   }, [question.correct.qid, contextRequired]);
+
+  // 記述は読み（かな）でも照合する。辞書は答える前に裏で読み込んでおく
+  React.useEffect(() => {
+    if (quizType === 'meaning-writing') void preloadReading();
+  }, [quizType]);
 
   // 正解時に自動遷移。核イメージがある語は1行だけ「学びの瞬間」を見せてから進む。
   React.useEffect(() => {
@@ -135,110 +144,82 @@ export function WordQuizContent({
           )}
         </div>
 
-        {showWritingResult && (
-          <div className="bg-rw-paper p-6 rounded-2xl border-2 border-rw-ink mb-4">
-            <div className="text-center mb-2">
-              <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">採点結果</h3>
-              <div
-                className="text-4xl font-black mb-2 tracking-tight"
-                style={{
-                  color:
-                    writingResult.score >= 80
-                      ? 'var(--rw-accent)'
-                      : writingResult.score >= 50
-                      ? 'var(--rw-pop)'
-                      : 'var(--rw-primary)'
-                }}
-              >
-                {writingResult.score}<span className="text-base text-rw-ink-soft font-bold ml-1">/100</span>
+        {showWritingResult && (() => {
+          const head = writingHeadline(writingResult);
+          const pending = writingResult.verdict === 'pending';
+          const matched = writingResult.matchedQid
+            ? dataParser.getWordByLemma(question.correct.lemma)?.meanings.find((m) => m.qid === writingResult.matchedQid)
+            : undefined;
+          return (
+            <div className="bg-rw-paper p-6 rounded-2xl border-2 border-rw-ink mb-4">
+              <div className="text-center mb-3">
+                <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">判定</h3>
+                <div className="text-2xl font-black tracking-tight" style={{ color: head.color }}>
+                  {head.mark} {head.text}
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">あなたの回答</p>
+                  <p className="text-rw-ink bg-rw-bg p-3 rounded-xl font-serif border border-rw-rule">{userAnswer}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-black text-rw-accent tracking-wider mb-1">正解</p>
+                  <p className="text-rw-ink bg-rw-accent-soft p-3 rounded-xl font-serif border-2 border-rw-accent">
+                    {senseLabel(question.correct)}
+                  </p>
+                </div>
+                {matched && (
+                  <p className="text-sm text-rw-ink leading-relaxed font-semibold">
+                    書いたのは「{senseLabel(matched)}」の意味。この文脈では「{senseLabel(question.correct)}」。
+                  </p>
+                )}
+
+                {/* 正解は1行だけ見せて進む。それ以外は、なぜこの意味かを示す */}
+                {writingResult.verdict === 'correct' ? (
+                  <WordInsightStrip word={question.correct} />
+                ) : (
+                  <WordInsightPanel word={question.correct} />
+                )}
+
+                {/* 自己判定: 機械で決まらなかったときだけ */}
+                {pending && writingUserJudgment === undefined && (
+                  <div className="mt-4 p-4 rounded-xl bg-rw-bg border-2 border-rw-rule">
+                    <p className="text-sm font-black text-rw-ink mb-3 text-center">
+                      正解と見くらべて、自分で判定してね
+                    </p>
+                    <div className="flex gap-2 justify-center flex-wrap">
+                      <button
+                        onClick={() => handleWritingUserJudgment?.(true)}
+                        className="px-6 py-2 bg-rw-accent text-rw-paper border-2 border-rw-accent font-black rounded-full transition hover:-translate-y-0.5"
+                      >
+                        ○ 合っていた
+                      </button>
+                      <button
+                        onClick={() => handleWritingUserJudgment?.(false)}
+                        className="px-6 py-2 bg-rw-primary text-rw-paper border-2 border-rw-primary font-black rounded-full transition hover:-translate-y-0.5"
+                      >
+                        × ちがった
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {writingUserJudgment !== undefined && (
+                  <div className="mt-4 p-3 rounded-xl bg-rw-bg border-2 border-rw-rule">
+                    <div
+                      className="text-center font-black"
+                      style={{ color: writingUserJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)' }}
+                    >
+                      あなたの判定: {writingUserJudgment ? '○ 合っていた' : '× ちがった'}
+                    </div>
+                    <p className="text-xs text-rw-ink-soft mt-1 text-center font-medium">次の問題に進みます...</p>
+                  </div>
+                )}
               </div>
             </div>
-            <div className="space-y-3">
-              <div>
-                <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">あなたの回答</p>
-                <p className="text-rw-ink bg-rw-bg p-3 rounded-xl font-serif border border-rw-rule">{userAnswer}</p>
-              </div>
-              <div>
-                <p className="text-xs font-black text-rw-accent tracking-wider mb-1">正解</p>
-                <p className="text-rw-ink bg-rw-accent-soft p-3 rounded-xl font-serif border-2 border-rw-accent">
-                  {(() => {
-                    const bracketMatch = question.correct.sense.match(/〔\s*(.+?)\s*〕/);
-                    return bracketMatch ? bracketMatch[1].trim() : question.correct.sense;
-                  })()}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">フィードバック</p>
-                <p className="text-rw-ink leading-relaxed">{writingResult.feedback}</p>
-              </div>
-
-              {/* なぜこの意味か（核イメージ・決め手・罠・意味マップ） */}
-              <WordInsightPanel word={question.correct} />
-
-              {/* 採点結果訂正UI */}
-              {writingUserJudgment === undefined && (
-                <div className="mt-4 p-4 rounded-xl bg-rw-primary-soft border-2 border-rw-primary">
-                  <p className="text-sm font-black text-rw-primary mb-1">
-                    自動採点の結果に異議がありますか？
-                  </p>
-                  <p className="text-xs text-rw-ink-soft mb-3 font-medium">
-                    {writingResult.score >= 60
-                      ? '現在の判定: 正解（+1点）'
-                      : '現在の判定: 不正解（+0点）'}
-                  </p>
-                  <div className="flex gap-2 justify-center flex-wrap">
-                    <button
-                      onClick={() => handleWritingUserJudgment?.(true)}
-                      className={`px-5 py-2 font-black rounded-full transition ${
-                        writingResult.score >= 60
-                          ? 'bg-rw-accent-soft text-rw-accent border-2 border-rw-accent'
-                          : 'bg-rw-accent text-rw-paper border-2 border-rw-accent hover:-translate-y-0.5'
-                      }`}
-                    >
-                      {writingResult.score >= 60 ? '○ 正解のまま' : '○ 正解に変更'}
-                    </button>
-                    <button
-                      onClick={() => handleWritingUserJudgment?.('partial')}
-                      className="px-5 py-2 bg-rw-paper text-rw-ink-soft border-2 border-rw-rule font-black rounded-full transition hover:border-rw-ink-soft"
-                    >
-                      そのまま進む
-                    </button>
-                    <button
-                      onClick={() => handleWritingUserJudgment?.(false)}
-                      className={`px-5 py-2 font-black rounded-full transition ${
-                        writingResult.score < 60
-                          ? 'bg-rw-primary-soft text-rw-primary border-2 border-rw-primary'
-                          : 'bg-rw-primary text-rw-paper border-2 border-rw-primary hover:-translate-y-0.5'
-                      }`}
-                    >
-                      {writingResult.score < 60 ? '× 不正解のまま' : '× 不正解に変更'}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* ユーザー判定結果表示 */}
-              {writingUserJudgment !== undefined && (
-                <div className="mt-4 p-3 rounded-xl bg-rw-bg border-2 border-rw-rule">
-                  <div
-                    className="text-center font-black"
-                    style={{
-                      color:
-                        writingUserJudgment === true
-                          ? 'var(--rw-accent)'
-                          : writingUserJudgment === 'partial'
-                          ? 'var(--rw-pop)'
-                          : 'var(--rw-primary)'
-                    }}
-                  >
-                    あなたの判定: {writingUserJudgment === true ? '○ 正解' : writingUserJudgment === 'partial' ? '△ 部分点' : '× 不正解'}
-                  </div>
-                  <p className="text-xs text-rw-ink-soft mt-1 text-center font-medium">次の問題に進みます...</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {nextButtonVisible && (
           <div className="mt-8 text-center">
