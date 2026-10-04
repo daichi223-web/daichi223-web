@@ -6,6 +6,7 @@ import { fetchMedia, fetchDrills, markWatched, saveTopicResult, getAllTopicProgr
 import { getWordStats } from '@/lib/wordStats';
 import { pickQuestions, type ItemStat } from '@/lib/quizSelector';
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
+import { logEvent } from "@/lib/learningEvents";
 
 const LEVEL_LABEL: Record<number, string> = {
   1: "Lv1 型",
@@ -82,6 +83,7 @@ export default function GrammarDojoTopic() {
 
   useEffect(() => {
     if (!topicId) return;
+    logEvent({ area: "grammar", action: "view", targetType: "topic", targetId: topicId });
     let cancelled = false;
     setLoading(true);
     setPhase("learn");
@@ -205,7 +207,10 @@ export default function GrammarDojoTopic() {
             {media.length > 0 && (
               <div className="mb-6 space-y-4">
                 {media.map((m) => (
-                  <VideoEmbed key={m.storagePath} media={m} onPlay={() => void markWatched(topicId)} />
+                  <VideoEmbed key={m.storagePath} media={m} onPlay={() => {
+                    logEvent({ area: "grammar", action: "view", targetType: "video", targetId: topicId, ctx: { path: m.storagePath } });
+                    void markWatched(topicId);
+                  }} />
                 ))}
               </div>
             )}

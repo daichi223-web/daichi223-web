@@ -1,9 +1,10 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { chooseSupport, insertSupport, SUPPORT_REASONS, SUPPORT_LIMIT, skillLabel, type SupportReason, type DrillStep } from '@/lib/kobun/drillSupport';
 import type { ItemStat } from '@/lib/quizSelector';
 import type { GrammarDrill } from "@/lib/kobun/types";
 import { recordDrillAnswer } from "@/lib/kobun/dojoData";
+import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 
 /** 選択肢の表示順をシャッフル（正解が先頭に固定されるのを防ぐ）。入力は破壊しない。 */
 function shuffleChoices(arr: string[]): string[] {
@@ -93,6 +94,10 @@ export function DrillSession({
   const displayChoices = useMemo(() => shuffleChoices(drill?.choices ?? []), [drill?.id, idx]);
   const answered = selected !== null;
   const isCorrect = answered && drill ? isAnswerCorrect(drill, selected) : false;
+  // 学習の出来事の記録（分析用）: 問いが切り替わった時刻を記し、回答に応答時間を付ける
+  useEffect(() => {
+    markQuestionShown();
+  }, [idx]);
 
   if (!drill) return null;
 
@@ -108,6 +113,11 @@ export function DrillSession({
     }
     setSaveError(false);
     setSaving(true);
+    logEvent({
+      area: 'grammar', action: 'answer', targetType: 'drill', targetId: drill.id,
+      correct: ok, chosen: choice, format: drill.kind,
+      ctx: { topic: drill.topicId, role: step.role, choices: displayChoices },
+    });
     pendingSave.current = recordDrillAnswer(drill.id, ok)
       .catch(() => setSaveError(true)).finally(() => setSaving(false));
   };

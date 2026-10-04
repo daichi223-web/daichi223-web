@@ -6,6 +6,7 @@ import { loadExampleBank, groupBySense, dedupeExamples, type BankExample } from 
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
 import textsIndex from '@/data/textsIndex.json';
+import { logEvent } from '@/lib/learningEvents';
 
 // 単語理解カード（B型：核から意味を見ていく／案1「なぜ」ラベル帯）。
 // 「問う前に読んで理解する場所」。答え合わせ後のパネル(WordInsightPanel)とは別に、
@@ -75,6 +76,7 @@ export default function VocabCard() {
   useEffect(() => {
     if (senses.length > 0) {
       try { localStorage.setItem('kobun-vocab-last-lemma', lemma); } catch { /* noop */ }
+      logEvent({ area: 'vocab', action: 'view', targetType: 'lemma', targetId: lemma });
     }
   }, [lemma, senses.length]);
 

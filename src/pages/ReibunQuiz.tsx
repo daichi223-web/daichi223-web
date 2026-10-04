@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { fetchAllReibun, fetchMeanings, JODOSHI_ORDER } from "@/lib/kobun/reibunData";
 import { recordDrillAnswer } from "@/lib/kobun/dojoData";
+import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 import type { GrammarReibun, GrammarJodoshiMeaning } from "@/lib/kobun/types";
 import { ReibunSentence, ReibunLegend } from "@/components/grammar/ReibunSentence";
 
@@ -26,6 +27,10 @@ export default function ReibunQuiz() {
 
   const [queue, setQueue] = useState<GrammarReibun[]>([]);
   const [idx, setIdx] = useState(0);
+  // 学習の出来事の記録（分析用）: 問いが切り替わった時刻を記し、回答に応答時間を付ける
+  useEffect(() => {
+    markQuestionShown();
+  }, [idx]);
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState(0);
 
@@ -128,6 +133,10 @@ export default function ReibunQuiz() {
     setPicked(c);
     const ok = c === correctMeaning;
     if (ok) setScore((s) => s + 1);
+    logEvent({
+      area: "grammar", action: "answer", targetType: "reibun", targetId: current.id,
+      correct: ok, chosen: c, format: "reibun-imi", ctx: { target },
+    });
     void recordDrillAnswer(current.id, ok); // 進捗記録（qid=reibun.id・既存ドリルとは別空間）
   };
 

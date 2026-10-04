@@ -65,7 +65,11 @@ export function GrammarPopover({
 
   // 開いた瞬間にカウントを増やす (シークレット指標)
   useEffect(() => {
-    if (textId && token?.text) recordHintOpen(textId, token.text);
+    if (textId && token?.text) {
+      recordHintOpen(textId, token.text, {
+        id: token.id, base: token.grammarTag?.baseForm, pos: token.grammarTag?.pos, ref: token.grammarRefId,
+      });
+    }
   }, [textId, token?.text]);
 
   const isScaffold = token.layer > currentLayer;

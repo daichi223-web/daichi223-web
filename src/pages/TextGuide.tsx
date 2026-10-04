@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { fetchJsonAsset } from "@/lib/fetchJson";
+import { logEvent } from "@/lib/learningEvents";
 
 type LoadError = "not-found" | "intercepted" | "network";
 
@@ -60,6 +61,7 @@ export default function TextGuide() {
 
   useEffect(() => {
     if (!textId) return;
+    logEvent({ area: "text", action: "view", targetType: "guide", targetId: textId });
     fetchJsonAsset<GuideData>(`/guides/${textId}.json`).then((r) => {
       if (r.ok) setGuide(r.data);
       else setLoadError(r.kind);

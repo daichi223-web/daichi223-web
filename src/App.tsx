@@ -15,6 +15,7 @@ import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { pickQuestions, type Bucket } from './lib/quizSelector';
 import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
+import { logEvent, markQuestionShown } from './lib/learningEvents';
 import { composeTodaySet, estimateFresh, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
 import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
 import { readStreak } from './lib/streak';
@@ -386,6 +387,11 @@ function App() {
     userAnswers: [],
     quizType: 'example-comprehension'
   });
+
+  // 学習の出来事の記録（分析用）: 問いが切り替わった時刻を記し、回答に応答時間を付ける
+  useEffect(() => {
+    markQuestionShown();
+  }, [currentQuestionIndex, currentQuizData, polysemyState.currentWordIndex, polysemyState.currentExampleIndex]);
 
   // Filter words for index based on search query (defined early for indexButton)
   // Group by lemma to show unique headwords (330 instead of 631)
@@ -1191,6 +1197,16 @@ function App() {
     // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(correctOption.qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
     updateSrsState(correctOption.qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
+    {
+      const q = currentQuizData[currentQuestionIndex] as QuizQuestion | undefined;
+      logEvent({
+        area: 'vocab', action: 'answer', targetType: 'word', targetId: correctOption.qid,
+        correct: isCorrect, chosen: selectedOption.qid,
+        format: currentMode === 'word' ? (q?.resolvedType ?? wordQuizType) : polysemyQuizType,
+        route: quizMode,
+        ctx: { mode: currentMode, reverse: isReverse || undefined, choices: q?.options?.map((o) => o.qid) },
+      });
+    }
     // 多義語モード(=例文理解クイズ等の選択式) の正答もカウント
     if (isCorrect && currentMode === 'polysemy') {
       recordQuizTypeCorrect(correctOption.qid, 'polysemy');
@@ -1218,6 +1234,11 @@ function App() {
     // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(question.correctAnswer.qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
     updateSrsState(question.correctAnswer.qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
+    logEvent({
+      area: 'vocab', action: 'answer', targetType: 'word', targetId: question.correctAnswer.qid,
+      correct: isCorrect, chosen: String(userAnswer), format: 'true-false', route: quizMode,
+      ctx: { mode: currentMode, shown: question.isCorrect },
+    });
     // true-false は polysemy 専用なので正答時にカウント
     if (isCorrect) recordQuizTypeCorrect(question.correctAnswer.qid, 'polysemy');
     if (isCorrect) {
@@ -1251,6 +1272,13 @@ function App() {
     // Track word stats and SRS in Supabase (fire-and-forget)
     recordAnswer(correctQid, evaluation.score >= 60).catch((e) => console.warn('[recordAnswer] failed:', e));
     updateSrsState(correctQid, evaluation.score >= 60).catch((e) => console.warn('[updateSrsState] failed:', e));
+    // 記述の本文は answers 表に残るので、ここには点数だけ入れる
+    logEvent({
+      area: 'vocab', action: 'answer', targetType: 'word', targetId: correctQid,
+      correct: evaluation.score >= 60,
+      format: currentMode === 'polysemy' ? 'context-writing' : 'meaning-writing', route: quizMode,
+      ctx: { mode: currentMode, score: evaluation.score },
+    });
     // 記述クイズの正答カウント (60点以上を正答扱い)
     if (evaluation.score >= 60) {
       recordQuizTypeCorrect(correctQid, 'writing');
@@ -1404,6 +1432,11 @@ function App() {
       updateSrsState(meaning.qid, isCorrect).catch((e) =>
         console.warn('[updateSrsState] failed:', e)
       );
+      logEvent({
+        area: 'vocab', action: 'answer', targetType: 'word', targetId: meaning.qid,
+        correct: isCorrect, chosen: userAnswer, format: 'example-comprehension', route: quizMode,
+        ctx: { mode: currentMode, choices: currentWord.meanings.map((m) => m.qid) },
+      });
       if (isCorrect) recordQuizTypeCorrect(meaning.qid, 'polysemy');
     }
 

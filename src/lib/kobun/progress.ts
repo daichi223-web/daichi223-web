@@ -3,6 +3,7 @@
  */
 
 import type { ReadingProgress, LayerId } from "./types";
+import { logEvent } from "../learningEvents";
 
 const STORAGE_KEY = "kobun-yomi-progress";
 const VOCAB_KEY = "kobun-yomi-vocab";
@@ -128,6 +129,7 @@ export function completeLayer(textId: string, layer: LayerId): void {
 }
 
 export function initProgress(textId: string): ReadingProgress {
+  logEvent({ area: "text", action: "view", targetType: "text", targetId: textId });
   const all = loadAllProgress();
   if (!all[textId]) {
     all[textId] = {
@@ -179,6 +181,7 @@ function saveOpenCounters(c: OpenCounters): void {
 
 export function recordVocabOpen(textId: string, lemma: string): void {
   if (!textId || !lemma) return;
+  logEvent({ area: "text", action: "open", targetType: "lemma", targetId: lemma, ctx: { text: textId } });
   const c = getOpenCounters();
   if (!c.vocab[textId]) c.vocab[textId] = {};
   c.vocab[textId][lemma] = (c.vocab[textId][lemma] || 0) + 1;
@@ -186,8 +189,17 @@ export function recordVocabOpen(textId: string, lemma: string): void {
   saveOpenCounters(c);
 }
 
-export function recordHintOpen(textId: string, token: string): void {
+/** meta = 開いたトークンの id・基本形・品詞・文法リファレンス（分析用。回数カウントには使わない） */
+export function recordHintOpen(
+  textId: string,
+  token: string,
+  meta?: { id?: string; base?: string; pos?: string; ref?: string },
+): void {
   if (!textId || !token) return;
+  logEvent({
+    area: "text", action: "open", targetType: "token", targetId: meta?.id ?? token,
+    ctx: { text: textId, t: token, base: meta?.base, pos: meta?.pos, ref: meta?.ref },
+  });
   const c = getOpenCounters();
   if (!c.hint[textId]) c.hint[textId] = {};
   c.hint[textId][token] = (c.hint[textId][token] || 0) + 1;
