@@ -60,29 +60,6 @@ export class DataParser {
     return { kobun, modern };
   }
 
-  // プレースホルダー {LEMMA} を 〔見出し語〕 に置換
-  private replaceLemmaPlaceholder(text: string, lemma: string): string {
-    return text.replace(/{LEMMA}/g, `〔${lemma}〕`);
-  }
-
-  // 見出し語を 〔 〕 で強調（プレースホルダーがない場合の自動処理）
-  private emphasizeLemma(text: string, lemma: string): string {
-    // 既に {LEMMA} プレースホルダーが処理済みの場合はそのまま
-    if (text.includes(`〔${lemma}〕`)) {
-      return text;
-    }
-
-    // 最初の一致のみを 〔 〕 で囲む
-    const index = text.indexOf(lemma);
-    if (index !== -1) {
-      return text.substring(0, index) +
-             `〔${lemma}〕` +
-             text.substring(index + lemma.length);
-    }
-
-    return text;
-  }
-
   // データ整合性チェック
   private validateExamples(word: WordData): string[] {
     const warnings: string[] = [];
@@ -275,9 +252,11 @@ export class DataParser {
     };
   }
 
-  // 例文を強調付きで取得
-  getEmphasizedExample(text: string, lemma: string): string {
-    return this.emphasizeLemma(this.replaceLemmaPlaceholder(text, lemma), lemma);
+  // 例文をそのまま返す。対象語の印は描画側（components/quiz/MarkedSentence）が
+  // 活用した形のまま・正しい位置に付けるので、ここでは 〔 〕 を入れない。
+  // （呼び出しは src/App.tsx に残っている）
+  getEmphasizedExample(text: string, _lemma: string): string {
+    return text;
   }
 }
 

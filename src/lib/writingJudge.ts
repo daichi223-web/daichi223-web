@@ -82,7 +82,7 @@ const brackets = (s?: string): string[] =>
  * "さっきの（ありつる）" → ["さっきの"]（後ろの括弧は注記として捨てる）
  * "意地が悪い・ひどい" → ["意地が悪い", "ひどい"]
  */
-function expandNorm(senseNorm?: string): string[] {
+export function expandNorm(senseNorm?: string): string[] {
   const src = (senseNorm ?? '').normalize('NFKC');
   if (!src) return [];
   const out: string[] = [];
@@ -93,6 +93,42 @@ function expandNorm(senseNorm?: string): string[] {
     out.push(...lead[2].replace(/\([^)]*\)/g, '').split(/[・\/]/).map((p) => lead[1] + p));
   }
   return out;
+}
+
+/** 正解の言い方を画面で示すための分解（どこまで書けばよいか） */
+export interface NormGuide {
+  /** 「・」「/」で分けた、どれか1つでよい言い方（元の表記のまま） */
+  options: string[];
+  /** 書かなくてよい頭括弧の中身（括弧内に「・」「/」が無いときだけ） */
+  optionalLead?: string;
+  /** 後ろ・途中の括弧、および「・」入りの頭括弧（注記として小さく出す） */
+  notes: string[];
+}
+
+// expandNorm は NFKC 後の半角で見る。こちらは元の表記のまま、同じ位置で分ける
+const PAREN = /[（(]([^）)]*)[）)]/g;
+const SEPARATOR = /[・･/／]/;
+
+/**
+ * 表示用。expandNorm と同じ分け方で、判定が正解にする言い方だけを options に出す。
+ * "（女のもとに）通う" → options ["通う"], optionalLead "女のもとに"
+ * "さっきの（ありつる）" → options ["さっきの"], notes ["ありつる"]
+ * "（詠み・作り）申し上げる" → options ["申し上げる"], notes ["詠み・作り"]
+ */
+export function describeNorm(senseNorm?: string): NormGuide {
+  const src = (senseNorm ?? '').trim();
+  if (!src) return { options: [], notes: [] };
+  const options = src
+    .replace(PAREN, '')
+    .split(SEPARATOR)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const notes = [...src.matchAll(PAREN)].map((m) => m[1].trim()).filter(Boolean);
+  const lead = src.match(/^[（(]([^）)]*)[）)](.+)$/);
+  if (lead && lead[1].trim() && !SEPARATOR.test(lead[1])) {
+    return { options, optionalLead: lead[1].trim(), notes: notes.slice(1) };
+  }
+  return { options, notes };
 }
 
 function variantsOf(s: JudgeSense): string[] {

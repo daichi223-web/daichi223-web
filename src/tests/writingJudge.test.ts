@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { judgeWriting, normalizeAnswer, type JudgeSense } from '../lib/writingJudge';
+import { describeNorm, expandNorm } from '../lib/writingJudge';
+import slimJson from '../data/kobunQ.v2.slim.json';
 
 // kobunQ.v2.slim と同じ形のデータ。203-1・1-1 は実データの抜粋、ほかは形を合わせたテスト用の例。
 const okotaru: JudgeSense = {
@@ -124,5 +126,84 @@ describe('judgeWriting: 正解にしないもの', () => {
   it('決められない答えは pending。一部だけ合えば partial を立てる', () => {
     expect(judgeWriting({ answer: 'サボる', target: okotaru })).toEqual({ verdict: 'pending' });
     expect(judgeWriting({ answer: '病気がよくなって元気になる', target: okotaru })).toEqual({ verdict: 'pending', partial: true });
+  });
+});
+
+describe('describeNorm: 正解の言い方を画面用に分ける', () => {
+  it('「・」で並ぶ言い方は、どれか1つでよい options になる', () => {
+    expect(describeNorm('意地が悪い・ひどい')).toEqual({ options: ['意地が悪い', 'ひどい'], notes: [] });
+  });
+
+  it('頭の括弧は書かなくてよい部分（optionalLead）', () => {
+    expect(describeNorm('（女のもとに）通う')).toEqual({ options: ['通う'], optionalLead: '女のもとに', notes: [] });
+  });
+
+  it('後ろの括弧は注記（notes）', () => {
+    expect(describeNorm('さっきの（ありつる）')).toEqual({ options: ['さっきの'], notes: ['ありつる'] });
+  });
+
+  it('「・」入りの頭括弧は optionalLead にせず注記にする', () => {
+    expect(describeNorm('（詠み・作り）申し上げる')).toEqual({ options: ['申し上げる'], notes: ['詠み・作り'] });
+    expect(describeNorm('（色・香が）あせる・移る')).toEqual({ options: ['あせる', '移る'], notes: ['色・香が'] });
+  });
+
+  it('途中の括弧は注記にして、前後をつないだ言い方を options にする', () => {
+    expect(describeNorm('〜ております（下二段・謙譲/丁寧）の打消系')).toEqual({
+      options: ['〜ておりますの打消系'],
+      notes: ['下二段・謙譲/丁寧'],
+    });
+  });
+
+  it('空・undefined は空の案内', () => {
+    expect(describeNorm('')).toEqual({ options: [], notes: [] });
+    expect(describeNorm(undefined)).toEqual({ options: [], notes: [] });
+  });
+
+  it('代表例は実データの値と同じ', () => {
+    const norm = (qid: string) => (slimJson as unknown as JudgeSense[]).find((w) => w.qid === qid)?.senseNorm;
+    expect(norm('245-1')).toBe('意地が悪い・ひどい');
+    expect(norm('189-1')).toBe('（女のもとに）通う');
+    expect(norm('145-2')).toBe('さっきの（ありつる）');
+    expect(norm('175-2')).toBe('（詠み・作り）申し上げる');
+    expect(norm('356-2')).toBe('（色・香が）あせる・移る');
+    expect(norm('160-1')).toBe('〜ております（下二段・謙譲/丁寧）の打消系');
+  });
+});
+
+// 画面に「正解」として出した言い方を、そのまま写して答えたら必ず正解になること。
+describe('describeNorm と judgeWriting の整合（全 741 件）', () => {
+  const words = slimJson as unknown as JudgeSense[];
+
+  it('options のどれを書いても正解。頭括弧の中身つきでも正解', () => {
+    const failed: string[] = [];
+    let checked = 0;
+    for (const w of words) {
+      const guide = describeNorm(w.senseNorm);
+      if (w.senseNorm && guide.options.length === 0) failed.push(`${w.qid}: options が空（${w.senseNorm}）`);
+      for (const option of guide.options) {
+        const answers = guide.optionalLead ? [option, `（${guide.optionalLead}）${option}`, guide.optionalLead + option] : [option];
+        for (const answer of answers) {
+          checked++;
+          const verdict = judgeWriting({ answer, target: w }).verdict;
+          if (verdict !== 'correct') failed.push(`${w.qid}: 「${answer}」→ ${verdict}（${w.senseNorm}）`);
+        }
+      }
+    }
+    expect(words.length).toBe(741);
+    expect(checked).toBeGreaterThan(741);
+    expect(failed).toEqual([]);
+  });
+
+  it('options は expandNorm（判定が使う言い方）と同じ集合になる', () => {
+    const diff: string[] = [];
+    for (const w of words) {
+      const guide = describeNorm(w.senseNorm);
+      const shown = new Set(guide.options.map(normalizeAnswer));
+      if (guide.optionalLead) for (const o of guide.options) shown.add(normalizeAnswer(guide.optionalLead + o));
+      const judged = new Set(expandNorm(w.senseNorm).map(normalizeAnswer).filter(Boolean));
+      const same = shown.size === judged.size && [...shown].every((x) => judged.has(x));
+      if (!same) diff.push(`${w.qid}: ${w.senseNorm}`);
+    }
+    expect(diff).toEqual([]);
   });
 });

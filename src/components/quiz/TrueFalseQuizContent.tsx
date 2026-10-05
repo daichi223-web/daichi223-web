@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Word } from '../../types';
 import ExampleDisplay from '../ExampleDisplay';
+import { MarkedSentence } from './MarkedSentence';
 import { WordInsightPanel, WordInsightStrip } from './WordInsightPanel';
 
 interface TrueFalseQuestion {
@@ -89,7 +90,9 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
       <div className="text-center mb-6">
         <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-3">この組み合わせは正しいかな？</h3>
         <div className="bg-rw-paper p-5 rounded-2xl border-2 border-rw-ink mb-3 text-left">
-          <p className="text-rw-ink font-serif text-lg leading-relaxed mb-3">{question.exampleKobun || question.example}</p>
+          <p className="text-rw-ink font-serif text-lg leading-relaxed mb-3">
+            <MarkedSentence text={question.exampleKobun || question.example} word={question.correctAnswer} />
+          </p>
           <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">意味</p>
           <p className="text-lg font-black text-rw-ink tracking-tight">{question.meaning}</p>
         </div>

@@ -1,5 +1,5 @@
 import type { Word } from '../../types';
-import type { WritingJudgeResult } from '../../lib/writingJudge';
+import { describeNorm, type WritingJudgeResult } from '../../lib/writingJudge';
 
 /** 意味の表示名（辞書形があればそれ、なければ穴埋め断片の中身） */
 export const senseLabel = (w: Word): string => {
@@ -7,6 +7,22 @@ export const senseLabel = (w: Word): string => {
   const m = w.sense.match(/〔\s*(.+?)\s*〕/);
   return m ? m[1].trim() : w.sense;
 };
+
+// 記述の入力欄の文言。どこまで書けばよいか（語義をひとこと。活用・敬語の形は見ない）を伝える
+export function writingPrompt(lemma: string, hasExample: boolean): { label: string; note: string; placeholder: string } {
+  return {
+    label: hasExample ? `この文での「${lemma}」の意味を、ひとことで` : `「${lemma}」の意味を、ひとことで`,
+    note: '活用や敬語の形は問いません',
+    placeholder: '意味をひとことで',
+  };
+}
+
+// 自己判定の文言。正解の言い方が複数あるときは「どれか1つ」でよいと伝える
+export function selfJudgePrompt(w: Word): string {
+  return describeNorm(w.senseNorm).options.length > 1
+    ? '正解のどれか1つと同じ意味なら ○。活用のちがいは気にしない'
+    : '正解と同じ意味なら ○。活用のちがいは気にしない';
+}
 
 // 記述の判定の見出し。点数ではなく「どの意味で読んだか」を伝える
 export function writingHeadline(result: WritingJudgeResult): { mark: string; text: string; color: string } {

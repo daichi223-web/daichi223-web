@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Word } from '../../types';
 import ExampleDisplay from '../ExampleDisplay';
+import { MarkedSentence } from './MarkedSentence';
 import { WordInsightPanel, WordInsightStrip } from './WordInsightPanel';
 import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
 import { prepareWritingJudge } from '../../lib/writingJudgeRuntime';
-import { senseLabel, writingHeadline } from './writingVerdict';
+import { SenseAnswerGuide } from './SenseAnswerGuide';
+import { selfJudgePrompt, senseLabel, writingHeadline, writingPrompt } from './writingVerdict';
 
 interface QuizQuestion {
   correct: Word;
@@ -106,6 +108,7 @@ export function WordQuizContent({
   const optionLabels = ['A', 'B', 'C', 'D'];
 
   if (quizType === 'meaning-writing') {
+    const prompt = writingPrompt(question.correct.lemma, !!question.exampleKobun);
     return (
       <div>
         <div className="text-center mb-4">
@@ -118,18 +121,20 @@ export function WordQuizContent({
           exampleModern={question.exampleModern}
           phase={showWritingResult ? 'answer' : 'question'}
           className="mb-4"
+          target={question.correct}
         />
 
         <div className="bg-rw-paper p-4 rounded-2xl border-2 border-rw-ink mb-2">
-          <label className="block text-xs font-black text-rw-ink mb-2 tracking-wider">
-            古典単語の意味をかいてね
+          <label className="block text-xs font-black text-rw-ink mb-1 tracking-wider">
+            {prompt.label}
           </label>
-          <textarea
+          <p className="text-[11px] text-rw-ink-soft font-medium mb-2">{prompt.note}</p>
+          <input
+            type="text"
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
-            className="w-full p-4 bg-rw-paper border-2 border-rw-ink rounded-2xl font-serif text-base text-rw-ink resize-none outline-none focus:border-rw-primary transition-colors"
-            rows={3}
-            placeholder="古典単語の意味を入力してください..."
+            className="w-full p-3 bg-rw-paper border-2 border-rw-ink rounded-xl font-serif text-base text-rw-ink outline-none focus:border-rw-primary transition-colors"
+            placeholder={prompt.placeholder}
           />
           {!showWritingResult && (
             <div className="mt-4 text-center">
@@ -165,9 +170,9 @@ export function WordQuizContent({
                 </div>
                 <div>
                   <p className="text-xs font-black text-rw-accent tracking-wider mb-1">正解</p>
-                  <p className="text-rw-ink bg-rw-accent-soft p-3 rounded-xl font-serif border-2 border-rw-accent">
-                    {senseLabel(question.correct)}
-                  </p>
+                  <div className="text-rw-ink bg-rw-accent-soft p-3 rounded-xl border-2 border-rw-accent">
+                    <SenseAnswerGuide word={question.correct} className="font-serif" />
+                  </div>
                 </div>
                 {matched && (
                   <p className="text-sm text-rw-ink leading-relaxed font-semibold">
@@ -186,7 +191,7 @@ export function WordQuizContent({
                 {pending && writingUserJudgment === undefined && (
                   <div className="mt-4 p-4 rounded-xl bg-rw-bg border-2 border-rw-rule">
                     <p className="text-sm font-black text-rw-ink mb-3 text-center">
-                      正解と見くらべて、自分で判定してね
+                      {selfJudgePrompt(question.correct)}
                     </p>
                     <div className="flex gap-2 justify-center flex-wrap">
                       <button
@@ -254,50 +259,6 @@ export function WordQuizContent({
     );
   };
 
-  // ターゲット語をハイライトしてレンダリング (sentence-meaning / meaning-writing 系の文表示)
-  const renderHighlightedSentence = (text: string, lemma: string) => {
-    if (!lemma || !text) return text;
-
-    // 既に〔lemma〕が含まれている場合はその部分をハイライト
-    const bracketed = `〔${lemma}〕`;
-    if (text.includes(bracketed)) {
-      const parts = text.split(bracketed);
-      return parts.flatMap((part, i) =>
-        i < parts.length - 1
-          ? [
-              <React.Fragment key={`p-${i}`}>{part}</React.Fragment>,
-              <span
-                key={`h-${i}`}
-                className="inline-block whitespace-nowrap font-black px-2 rounded"
-                style={{ background: 'var(--rw-pop)', opacity: 0.6 }}
-              >
-                {lemma}
-              </span>
-            ]
-          : [<React.Fragment key={`p-${i}`}>{part}</React.Fragment>]
-      );
-    }
-
-    // lemma が含まれていれば最初の出現箇所をハイライト
-    if (text.includes(lemma)) {
-      const idx = text.indexOf(lemma);
-      return (
-        <>
-          {text.slice(0, idx)}
-          <span
-            className="inline-block whitespace-nowrap font-black px-2 rounded"
-            style={{ background: 'var(--rw-pop)', opacity: 0.6 }}
-          >
-            {lemma}
-          </span>
-          {text.slice(idx + lemma.length)}
-        </>
-      );
-    }
-
-    return text;
-  };
-
   return (
     <div>
       {/* 単語レベルが上がった語は教材の実戦例文で出題されていることを示す */}
@@ -342,14 +303,13 @@ export function WordQuizContent({
             </div>
           </div>
         ) : (
-          // sentence-meaning: 古文を paper card で表示してターゲット語をハイライト
+          // sentence-meaning: 古文を paper card で表示して、問われている語に印を付ける
           <div className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-5">
             <div className="font-serif text-lg text-rw-ink leading-loose font-medium">
-              {(() => {
-                const lemma = question.correct.lemma || '';
-                const exampleText = question.exampleKobun || question.correct.examples?.[0]?.jp || 'データなし';
-                return renderHighlightedSentence(exampleText, lemma);
-              })()}
+              <MarkedSentence
+                text={question.exampleKobun || question.correct.examples?.[0]?.jp || 'データなし'}
+                word={question.correct}
+              />
             </div>
           </div>
         )}
@@ -374,6 +334,7 @@ export function WordQuizContent({
                 showModern={showModernTranslation}
                 forceShowModern={showModernTranslation}
                 phase={answeredCorrectly !== null ? 'answer' : 'question'}
+                target={question.correct}
               />
               {!showModernTranslation && answeredCorrectly === null && (
                 <button
@@ -473,6 +434,7 @@ export function WordQuizContent({
           phase="answer"
           forceShowModern={true}
           className="mt-3 bg-rw-primary-soft rounded-xl border-2 border-rw-primary"
+          target={question.correct}
         />
       )}
 

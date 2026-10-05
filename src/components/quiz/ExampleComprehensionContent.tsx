@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Word, MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
+import { MarkedSentence } from './MarkedSentence';
 import { PolysemyInsight } from './WordInsightPanel';
 
 export interface ExampleComprehensionContentProps {
@@ -73,7 +74,7 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
           return (
             <div key={meaning.qid} className={containerClass}>
               <p className="text-rw-ink font-serif text-base leading-relaxed mb-3">
-                {dataParser.getEmphasizedExample(exampleKobun, word.lemma || '') || 'データなし'}
+                {exampleKobun ? <MarkedSentence text={exampleKobun} word={meaning} /> : 'データなし'}
               </p>
 
               {/* チェック後に誤答の場合は正解と現代語訳を表示 */}

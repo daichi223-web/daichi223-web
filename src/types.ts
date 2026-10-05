@@ -19,6 +19,7 @@ export interface WordData {
     jpBlank?: string;          // Excel 原本の空欄化済みテキスト
     translationBlank?: string;
     source?: string;           // 出典 (jp 末尾の括弧から抽出済み)
+    mark?: [number, number][]; // 問われている語の位置 [開始, 長さ]（jpBlank との差分から生成）
     senseLabel?: string;       // 第2例文セットの意味ラベル (表記が違う場合のみ)
     origin?: string;           // kobunq | excel2
   }>;
@@ -282,6 +283,7 @@ export interface Word {
     jpBlank?: string;
     translationBlank?: string;
     source?: string;
+    mark?: [number, number][];
     senseLabel?: string;
     origin?: string;
   }>;

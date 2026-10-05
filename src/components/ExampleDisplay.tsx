@@ -1,4 +1,6 @@
 import React from 'react';
+import type { Word } from '../types';
+import { MarkedSentence } from './quiz/MarkedSentence';
 
 interface ExampleDisplayProps {
   exampleKobun?: string;
@@ -8,6 +10,7 @@ interface ExampleDisplayProps {
   showModern?: boolean;
   forceShowModern?: boolean; // phaseに関わらず現代語訳を表示
   className?: string;
+  target?: Word; // 渡すと、古文の中の問われている語に印を付ける
 }
 
 const ExampleDisplay: React.FC<ExampleDisplayProps> = ({
@@ -17,7 +20,8 @@ const ExampleDisplay: React.FC<ExampleDisplayProps> = ({
   showKobun = true,
   showModern = true,
   forceShowModern = false,
-  className = ''
+  className = '',
+  target
 }) => {
   if (!exampleKobun && !exampleModern) {
     return null;
@@ -32,7 +36,7 @@ const ExampleDisplay: React.FC<ExampleDisplayProps> = ({
       {showKobun && exampleKobun && (
         <div className="mb-1">
           <div className="text-sm text-slate-800 leading-normal">
-            {exampleKobun}
+            {target ? <MarkedSentence text={exampleKobun} word={target} /> : exampleKobun}
           </div>
         </div>
       )}

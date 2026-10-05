@@ -4,8 +4,10 @@ import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
 import { judgeWritingAnswer, prepareWritingJudge, toAutoFields } from '../../lib/writingJudgeRuntime';
 import { coachWriting, isCoachOptedIn } from '../../lib/nanoCoach';
+import { MarkedSentence } from './MarkedSentence';
 import { PolysemyInsight } from './WordInsightPanel';
-import { senseLabel, writingHeadline } from './writingVerdict';
+import { SenseAnswerGuide } from './SenseAnswerGuide';
+import { selfJudgePrompt, senseLabel, writingHeadline, writingPrompt } from './writingVerdict';
 
 export interface ContextWritingJudged {
   qid: string;
@@ -207,6 +209,7 @@ export function ContextWritingContent({
           const examples = dataParser.getExamplesForSense(meaning, meaning.qid, word);
           const exampleKobun = examples.kobun[0] || meaning.examples?.[0]?.jp || '';
           const exampleModern = examples.modern[0] || meaning.examples?.[0]?.translation || '';
+          const prompt = writingPrompt(word.lemma, !!exampleKobun);
 
           let containerClass = 'p-5 rounded-2xl border-2';
           if (checked) {
@@ -222,18 +225,19 @@ export function ContextWritingContent({
           return (
             <div key={meaning.qid} className={containerClass}>
               <p className="text-rw-ink font-serif text-base leading-relaxed mb-3">
-                {dataParser.getEmphasizedExample(exampleKobun, word.lemma || '') || 'データなし'}
+                {exampleKobun ? <MarkedSentence text={exampleKobun} word={meaning} /> : '（この意味の例文は準備中）'}
               </p>
 
               <div className="mb-3">
-                <label className="block text-xs font-black text-rw-ink-soft tracking-wider mb-2">この文脈での意味をかいてね</label>
+                <label className="block text-xs font-black text-rw-ink-soft tracking-wider mb-1">{prompt.label}</label>
+                <p className="text-[11px] text-rw-ink-soft font-medium mb-2">{prompt.note}</p>
                 <input
                   type="text"
                   value={userAnswer}
                   onChange={(e) => handleAnswerChange(meaning.qid, e.target.value)}
                   disabled={checked}
                   className="w-full p-3 bg-rw-paper border-2 border-rw-ink rounded-xl font-serif text-base text-rw-ink outline-none focus:border-rw-primary transition-colors disabled:opacity-70"
-                  placeholder="意味を入力してください"
+                  placeholder={prompt.placeholder}
                 />
               </div>
 
@@ -279,7 +283,7 @@ export function ContextWritingContent({
                   {pending && userJudgment === undefined && (
                     <div className="mb-3 p-4 rounded-xl bg-rw-paper border-2 border-rw-rule">
                       <p className="text-sm font-black text-rw-ink mb-3 text-center">
-                        正解と見くらべて、自分で判定してね
+                        {selfJudgePrompt(meaning)}
                       </p>
                       <div className="flex gap-2 justify-center flex-wrap">
                         <button
@@ -328,8 +332,8 @@ export function ContextWritingContent({
                     }`}
                   >
                     <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">正解</p>
-                    <p className="text-rw-ink font-black text-base mb-2">{senseLabel(meaning)}</p>
-                    <p className="text-sm text-rw-ink-soft font-serif">{exampleModern}</p>
+                    <SenseAnswerGuide word={meaning} className="text-rw-ink font-black text-base" />
+                    <p className="text-sm text-rw-ink-soft font-serif mt-2">{exampleModern}</p>
                   </div>
                 </>
               )}
