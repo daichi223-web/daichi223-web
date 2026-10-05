@@ -4,13 +4,27 @@
  * - 教員が決めた正解・不正解の言い方を読み込む
  * - 判定結果を answers 表の auto 欄（既存の教員画面が読む形）に直す
  */
-import { judgeWriting, type WritingJudgeResult } from './writingJudge';
+import { baseKeyFromTokens, judgeWriting, type MorphToken, type WritingJudgeResult } from './writingJudge';
 import type { Word } from '../types';
 
 let readingFn: ((s: string) => string) | null = null;
+let baseFn: ((s: string) => string) | null = null;
 let loading: Promise<void> | null = null;
 
-type ReadingToken = { surface_form: string | Uint8Array; reading?: string };
+type ReadingToken = MorphToken & { reading?: string };
+
+/** 結果を言い方ごとに覚える（正解側の言い方は語ごとに1回だけ解析される） */
+function cached(f: (s: string) => string): (s: string) => string {
+  const cache = new Map<string, string>();
+  return (s: string) => {
+    let r = cache.get(s);
+    if (r === undefined) {
+      r = f(s);
+      cache.set(s, r);
+    }
+    return r;
+  };
+}
 
 // ブラウザ用の入口を、記述問題が出たときだけ読み込む（既定の入口は Node 用で、ビルドに入らない）
 async function buildTokenizer(): Promise<{ tokenize(text: string): ReadingToken[] }> {
@@ -20,24 +34,22 @@ async function buildTokenizer(): Promise<{ tokenize(text: string): ReadingToken[
   });
 }
 
-/** 読みの辞書（約18MB・初回だけ通信）を裏で読み込む。失敗しても判定は表記だけで続く */
+/**
+ * 読みの辞書（約18MB・初回だけ通信）を裏で読み込む。失敗しても判定は表記だけで続く。
+ * 同じ辞書から、読み（toReading）と原形の鍵（toBase）の2つを作る
+ */
 export function preloadReading(): Promise<void> {
   if (readingFn) return Promise.resolve();
   if (!loading) {
     loading = buildTokenizer()
       .then((tk) => {
-        const cache = new Map<string, string>();
-        readingFn = (s: string) => {
-          let r = cache.get(s);
-          if (r === undefined) {
-            r = tk
-              .tokenize(s)
-              .map((t) => (t.reading && t.reading !== '*' ? t.reading : String(t.surface_form)))
-              .join('');
-            cache.set(s, r);
-          }
-          return r;
-        };
+        baseFn = cached((s) => baseKeyFromTokens(tk.tokenize(s)));
+        readingFn = cached((s) =>
+          tk
+            .tokenize(s)
+            .map((t) => (t.reading && t.reading !== '*' ? t.reading : String(t.surface_form)))
+            .join(''),
+        );
       })
       .catch((e) => {
         console.warn('[writingJudge] 読みの辞書を読み込めませんでした。表記だけで判定します:', e);
@@ -82,6 +94,7 @@ export function judgeWritingAnswer(answer: string, target: Word, siblings: Word[
     accepted: rules?.ok,
     rejected: rules?.ng,
     toReading: readingFn ?? undefined,
+    toBase: baseFn ?? undefined,
   });
 }
 

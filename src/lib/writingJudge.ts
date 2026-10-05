@@ -46,6 +46,11 @@ export interface WritingJudgeInput {
   rejected?: string[];
   /** 読み（かな）へ直す関数。渡せば漢字とかなの表記ちがいを吸収する */
   toReading?: (s: string) => string;
+  /**
+   * 正規化済みの言い方を「原形の鍵」へ直す関数（形態素解析。baseKeyFromTokens を参照）。
+   * 渡せば活用・時制・丁寧の形ちがい（ひどかった／ひどい、思わなかった／思わない）を吸収する
+   */
+  toBase?: (s: string) => string;
 }
 
 const STRIP = /[〔〕（）()「」『』"'\s、。,.・〜~…ー\-‐–—―?？!！]/g;
@@ -59,16 +64,95 @@ export function normalizeAnswer(s: string): string {
     .replace(/[ァ-ヶ]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60));
 }
 
-/** 文末の言い回しを落とす（気づいた→気づい、通っている→通っ） */
-const TAIL = /(ている|ていた|ました|ます|です|である|こと|た|て|だ|で)$/;
+const I_DAN = 'いきぎしじちぢひびぴみり'; // 「に」は除く（「すぐに」の に は助詞。な行の動詞は「死ぬ」程度）
+const U_DAN = 'うくぐすずつづぬふぶぷむる';
+const E_DAN = 'えけげせぜてでねへべぺめれ';
+/** 語幹の2段目で落としてよい末尾（活用語尾になりうる かな）。あ段・お段・に などは落とさない（すぐに／すぐれ、まさか／まさる） */
+const CUT2 = new RegExp(`[${I_DAN}${U_DAN}${E_DAN}っん]$`);
+/** 連用形の終わり（ます・て・た・ている が付く形）。音便の っ・ん・い を含む */
+const RENYO = new RegExp(`[${I_DAN}${E_DAN}っん]$`);
+/** 連体形の終わり（こと が付く形）: う段・形容詞の い・形容動詞の な・た */
+const RENTAI = new RegExp(`[${U_DAN}いなた]$`);
+const ENDS_KANJI = /[㐀-鿿々]$/;
 
-/** 活用のゆれを吸収する粗い語幹。短くなりすぎる語は削らない */
+/**
+ * 文末の言い回し（気づいた→気づい、通っている→通っ）。直前が付きうる形のときだけ落とす。
+ * 「ますます」「仏事」「こと」のように、言い回しと同じ文字で終わる別の語を削らないため。
+ */
+const TAIL_RULES: Array<{ tail: string; ok: (before: string) => boolean }> = [
+  { tail: 'ている', ok: (b) => RENYO.test(b) },
+  { tail: 'ていた', ok: (b) => RENYO.test(b) },
+  { tail: 'ました', ok: (b) => RENYO.test(b) },
+  { tail: 'ます', ok: (b) => RENYO.test(b) },
+  { tail: 'です', ok: () => true },
+  { tail: 'である', ok: () => true },
+  { tail: 'こと', ok: (b) => RENTAI.test(b) },
+  { tail: 'た', ok: (b) => RENYO.test(b) || ENDS_KANJI.test(b) },
+  { tail: 'て', ok: (b) => RENYO.test(b) || ENDS_KANJI.test(b) },
+  { tail: 'だ', ok: () => true },
+  { tail: 'で', ok: () => true },
+  // 形容動詞の連体・連用（立派な・気の毒に・おろそかな）。漢字の後か、残りが3文字以上のとき（「すぐに」の に は落とさない）
+  { tail: 'な', ok: (b) => ENDS_KANJI.test(b) || b.length >= 3 },
+  { tail: 'に', ok: (b) => ENDS_KANJI.test(b) || b.length >= 3 },
+];
+
+/** 活用のゆれを吸収する粗い語幹。短くなりすぎる語は削らない（語幹は2文字以上） */
 function stem(s: string): { stem: string; cut: boolean } {
   let x = s;
-  const t = x.replace(TAIL, '');
-  if (t.length >= 2) x = t;
-  if (x.length >= 3 && /[ぁ-ん]$/.test(x)) return { stem: x.slice(0, -1), cut: true };
+  for (const r of TAIL_RULES) {
+    if (!x.endsWith(r.tail)) continue;
+    const rest = x.slice(0, -r.tail.length);
+    if (rest.length >= 2 && r.ok(rest)) x = rest;
+    break; // 末尾で最初に当たった言い回しだけを見る（「ていた」を「た」で削り直さない）
+  }
+  if (x.length >= 3 && CUT2.test(x)) return { stem: x.slice(0, -1), cut: true };
   return { stem: x, cut: false };
+}
+
+/** 形態素解析の1語（kuromoji の token のうち使う項目） */
+export interface MorphToken {
+  surface_form: string | Uint8Array;
+  pos: string;
+  pos_detail_1: string;
+  basic_form: string;
+}
+
+const INFLECT = new Set(['動詞', '形容詞', '助動詞']);
+
+/**
+ * 原形の鍵。活用する語（動詞・形容詞・助動詞）は basic_form、ほかは表記のまま並べる。
+ * 末尾の時制・丁寧・補助の言い回し（た・ます・です・接続助詞の て/で・「ている/ておる/てある」・
+ * 名詞や副詞の後の だ・形容動詞語幹の後の に）は落とす。打消（ない・ぬ）と「こと」は落とさない。
+ * 例: ひどかった → ひどい、思わなかった → 思うない、すぐれている → すぐれる、立派な → 立派
+ */
+export function baseKeyFromTokens(tokens: MorphToken[]): string {
+  const x = tokens.map((t) => {
+    const s = String(t.surface_form);
+    return {
+      s,
+      pos: t.pos,
+      d1: t.pos_detail_1,
+      b: t.basic_form,
+      k: INFLECT.has(t.pos) && t.basic_form && t.basic_form !== '*' ? t.basic_form : s,
+    };
+  });
+  for (;;) {
+    const n = x.length;
+    if (n <= 1) break;
+    const L = x[n - 1];
+    const P = x[n - 2];
+    if (L.pos === '助動詞' && ['た', 'ます', 'です'].includes(L.b)) { x.pop(); continue; }
+    if (L.pos === '助動詞' && L.b === 'だ' && (P.pos === '名詞' || P.pos === '副詞')) { x.pop(); continue; }
+    if (L.pos === '助詞' && L.d1 === '接続助詞' && (L.s === 'て' || L.s === 'で')) { x.pop(); continue; }
+    if (L.pos === '助詞' && L.d1 === '副詞化' && L.s === 'に' && P.d1 === '形容動詞語幹') { x.pop(); continue; }
+    if (n >= 3 && (L.pos === '動詞' || L.pos === '助動詞') && ['いる', 'おる', 'ある'].includes(L.b) && (P.s === 'て' || P.s === 'で')) {
+      x.pop();
+      x.pop();
+      continue;
+    }
+    break;
+  }
+  return x.map((t) => t.k).join('');
 }
 
 /** 打消で終わるか。「音を立てる」と「音を立てず」を同じにしないため */
@@ -177,18 +261,46 @@ function trapVariantsOf(s: JudgeSense): string[] {
   return [...v];
 }
 
-type Keys = { raw: string; stem: string; cut: boolean; neg: boolean; yomi?: string; yomiStem?: string; yomiCut?: boolean };
+type Keys = {
+  raw: string;
+  stem: string;
+  cut: boolean;
+  neg: boolean;
+  yomi?: string;
+  yomiStem?: string;
+  yomiCut?: boolean;
+  /** 原形の鍵（toBase があるときだけ） */
+  base?: string;
+  baseYomi?: string;
+};
 
-function keysOf(s: string, toReading?: (s: string) => string): Keys {
+function keysOf(s: string, toReading?: (s: string) => string, toBase?: (s: string) => string): Keys {
   const st = stem(s);
   const k: Keys = { raw: s, stem: st.stem, cut: st.cut, neg: isNegative(s) };
   if (toReading) {
     k.yomi = normalizeAnswer(toReading(s));
-    const ys = stem(k.yomi);
+    // 表記が漢字で終わる語（道理・程度）は、読みの語尾を活用語尾とみなして削らない（道理→どうり→どう と どうして を一致させない）
+    const ys = /[ぁ-ん]$/.test(s) ? stem(k.yomi) : { stem: k.yomi, cut: false };
     k.yomiStem = ys.stem;
     k.yomiCut = ys.cut;
   }
+  if (toBase) {
+    k.base = toBase(s);
+    if (toReading) k.baseYomi = normalizeAnswer(toReading(k.base));
+  }
   return k;
+}
+
+const kanjiOf = (s: string) => new Set([...s].filter((c) => /[㐀-鿿々]/.test(c)));
+
+/**
+ * 読みで照合してよい組か: 片方の漢字がもう片方に全部含まれる（かな書き・送りがな違い）とき。
+ * 「立つ／経つ」「疲れ／使う」「古都／こと」のような、読みだけ同じ別の語を一致させない
+ */
+function readingComparable(a: Keys, b: Keys): boolean {
+  const x = kanjiOf(a.raw);
+  const y = kanjiOf(b.raw);
+  return [...x].every((c) => y.has(c)) || [...y].every((c) => x.has(c));
 }
 
 // 語幹どうしの一致は、両方とも語尾を落とした（または両方落としていない）ときだけ認める。
@@ -196,11 +308,15 @@ function keysOf(s: string, toReading?: (s: string) => string): Keys {
 function same(a: Keys, b: Keys): boolean {
   if (a.raw === b.raw) return true;
   if (a.neg !== b.neg) return false;
-  if (a.stem.length >= 2 && a.stem === b.stem && a.cut === b.cut) return true;
-  if (a.yomi && b.yomi) {
-    if (a.yomi === b.yomi) return true;
-    if (a.yomiStem!.length >= 2 && a.yomiStem === b.yomiStem && a.yomiCut === b.yomiCut) return true;
+  const yomiOk = !!a.yomi && !!b.yomi && readingComparable(a, b);
+  if (yomiOk && a.yomi === b.yomi) return true;
+  // 原形の鍵（1文字の言い方には使わない）
+  if (a.base !== undefined && b.base !== undefined && a.raw.length >= 2 && b.raw.length >= 2) {
+    if (a.base === b.base) return true;
+    if (yomiOk && a.baseYomi && a.baseYomi === b.baseYomi) return true;
   }
+  if (a.stem.length >= 2 && a.stem === b.stem && a.cut === b.cut) return true;
+  if (yomiOk && a.yomiStem!.length >= 2 && a.yomiStem === b.yomiStem && a.yomiCut === b.yomiCut) return true;
   return false;
 }
 
@@ -208,7 +324,7 @@ function contains(a: Keys, b: Keys): boolean {
   if (a.neg !== b.neg) return false;
   const pair = (x?: string, y?: string) =>
     !!x && !!y && x.length >= 2 && y.length >= 2 && (x.includes(y) || y.includes(x));
-  return pair(a.stem, b.stem) || pair(a.yomiStem, b.yomiStem);
+  return pair(a.stem, b.stem) || (readingComparable(a, b) && pair(a.yomiStem, b.yomiStem));
 }
 
 /** 並べ書きの区切り。「意地が悪い・ひどい」「意地が悪い、ひどい」「ひどい 意地が悪い」 */
@@ -219,18 +335,21 @@ const splitListed = (answer: string): string[] =>
   answer.split(LIST_SEP).map(normalizeAnswer).filter(Boolean);
 
 export function judgeWriting(input: WritingJudgeInput): WritingJudgeResult {
-  const { target, siblings = [], accepted = [], rejected = [], toReading } = input;
+  const { target, siblings = [], accepted = [], rejected = [], toReading, toBase } = input;
   const norm = normalizeAnswer(input.answer);
   if (!norm) return { verdict: 'blank' };
 
-  const ans = keysOf(norm, toReading);
-  const hitBy = (k: Keys, vs: string[]) => vs.some((v) => same(k, keysOf(v, toReading)));
+  const K = (s: string) => keysOf(s, toReading, toBase);
+  // 並べて書いた回答は、全体をつないだ形の原形の鍵を使わない（部分ごとの照合では使う）
+  const parts = splitListed(input.answer);
+  const ans = keysOf(norm, toReading, parts.length >= 2 ? undefined : toBase);
+  const hitBy = (k: Keys, vs: string[]) => vs.some((v) => same(k, K(v)));
   const hit = (vs: string[]) => hitBy(ans, vs);
 
   // 教員の判断を自動の照合より先に見る。不正解の指定は活用ちがいにまで広げない
   const exactBy = (k: Keys, v: string) => {
-    const kv = keysOf(v, toReading);
-    return kv.raw === k.raw || (!!kv.yomi && kv.yomi === k.yomi);
+    const kv = K(v);
+    return kv.raw === k.raw || (!!kv.yomi && kv.yomi === k.yomi && readingComparable(kv, k));
   };
   const rejectedNorm = rejected.map(normalizeAnswer).filter(Boolean);
   const acceptedNorm = accepted.map(normalizeAnswer).filter(Boolean);
@@ -240,21 +359,21 @@ export function judgeWriting(input: WritingJudgeInput): WritingJudgeResult {
   const targetVariants = variantsOf(target);
   const onTarget = hit(targetVariants);
   const sibling = siblings.find((s) => s.qid !== target.qid && hit(variantsOf(s)));
-  const partial = targetVariants.some((v) => contains(ans, keysOf(v, toReading)));
+  const partial = targetVariants.some((v) => contains(ans, K(v)));
 
   if (onTarget) return sibling ? { verdict: 'correct', overlap: true } : { verdict: 'correct' };
 
   // 並べて書いた回答（「意地が悪い、ひどい」）は、全部分が正解の言い方なら正解。
   // 別義や現代語の罠が混ざれば、全体での判定（別義・保留）をそのまま返す
-  const parts = splitListed(input.answer);
   if (parts.length >= 2) {
-    const keys = parts.map((p) => keysOf(p, toReading));
+    const keys = parts.map((p) => K(p));
     const allOk = keys.every((k) => hitBy(k, acceptedNorm) || hitBy(k, targetVariants));
     const anyRejected = keys.some((k) => rejectedNorm.some((v) => exactBy(k, v)));
     if (allOk && !anyRejected) return sibling ? { verdict: 'correct', overlap: true } : { verdict: 'correct' };
   }
-  // 別義に当たっても、正解の言い方と重なるなら正解（「いつもの」と「いつものように」）
-  if (sibling) return partial ? { verdict: 'correct', overlap: true } : { verdict: 'other_sense', matchedQid: sibling.qid };
+  // 別義に当たり、正解の言い方とは一部だけ重なる回答（「いつもの」と「いつものように」、「少し」と「少しも」）は、
+  // 正解にも別義にも決めず保留にする（2026-10-06 ユーザー決定。正しく書いた生徒を落とさず、誤りを正解にもしない）
+  if (sibling) return partial ? { verdict: 'pending', partial: true } : { verdict: 'other_sense', matchedQid: sibling.qid };
   if (hit(trapVariantsOf(target))) return { verdict: 'modern_trap' };
 
   // 1文字の正解（「縁」「旨」）があるので、照合のあとで無回答を判定する

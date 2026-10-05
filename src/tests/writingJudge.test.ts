@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { judgeWriting, normalizeAnswer, type JudgeSense } from '../lib/writingJudge';
-import { describeNorm, expandNorm } from '../lib/writingJudge';
+import { baseKeyFromTokens, describeNorm, expandNorm, type MorphToken } from '../lib/writingJudge';
 import slimJson from '../data/kobunQ.v2.slim.json';
 
 // kobunQ.v2.slim と同じ形のデータ。203-1・1-1 は実データの抜粋、ほかは形を合わせたテスト用の例。
@@ -94,9 +94,11 @@ describe('judgeWriting: 取り違え', () => {
     expect(judgeWriting({ answer: '目を覚ます', target: odorokuKizuku, siblings: [odorokuMezameru] }).verdict).toBe('other_sense');
   });
 
-  it('別義と言い方が重なるだけなら正解にする', () => {
+  // 2026-10-06 ユーザー決定で期待値を変更: 以前は「別義に当たっても正解の言い方と重なれば正解（overlap）」だったが、
+  // 「少しも→［少し］」「かわいい→［かわいそうだ］」のような誤りまで正解になるため、正解にも別義にもせず保留にする
+  it('別義に当たり、正解の言い方と一部だけ重なる回答は保留（2026-10-06 ユーザー決定で正解から変更）', () => {
     const r = judgeWriting({ answer: 'いつもの', target: reinoB, siblings: [reinoA, reinoB] });
-    expect(r).toEqual({ verdict: 'correct', overlap: true });
+    expect(r).toEqual({ verdict: 'pending', partial: true });
   });
 
   it('疑問と反語は重なり扱いにしない', () => {
@@ -311,5 +313,152 @@ describe('judgeWriting: 語の意味を表さない短い断片は正解の言�
     expect(judgeWriting({ answer: '縁', target: yoshiEn }).verdict).toBe('correct');
     expect(verdictOf('203-1', '病気がよくなっ')).toBe('correct');
     expect(verdictOf('203-1', '病気がよくなったようなので')).toBe('correct');
+  });
+});
+
+// ---- 2026-10-06 照合の作り替え（語幹の条件・原形の鍵・読みの条件） ----
+// 辞書ありの経路は、本物の kuromoji（public/kuromoji/dict）で確かめた読みと原形の鍵を表にして渡す（2026-10-06 確認）。
+// 表に無い言い方は表記のまま返す。実辞書での全件の確認は、テストの外の全件測定で行う。
+const KUROMOJI: Record<string, [reading: string, base: string]> = {
+  すぐに: ['スグニ', 'すぐに'],
+  すぐれている: ['スグレテイル', 'すぐれる'],
+  まさる: ['マサル', 'まさる'],
+  まさか: ['マサカ', 'まさか'],
+  ますます: ['マスマス', 'ますます'],
+  ます: ['マス', 'ます'],
+  座るている: ['スワルテイル', '座る'],
+  座る: ['スワル', '座る'],
+  ている: ['テイル', 'ている'],
+  仏事こと: ['ブツジコト', '仏事こと'],
+  こと: ['コト', 'こと'],
+  道理: ['ドウリ', '道理'],
+  どうして: ['ドウシテ', 'どうして'],
+  立つ: ['タツ', '立つ'],
+  経つ: ['タツ', '経つ'],
+  疲れ: ['ツカレ', '疲れ'],
+  疲れる: ['ツカレル', '疲れる'],
+  使う: ['ツカウ', '使う'],
+  使っ: ['ツカッ', '使う'],
+  程度: ['テイド', '程度'],
+  かよった: ['カヨッタ', 'かよう'],
+  通う: ['カヨウ', '通う'],
+  ひどかった: ['ヒドカッタ', 'ひどい'],
+  ひどい: ['ヒドイ', 'ひどい'],
+  意地が悪かった: ['イジガワルカッタ', '意地が悪い'],
+  意地が悪い: ['イジガワルイ', '意地が悪い'],
+  まったくなかった: ['マッタクナカッタ', 'まったくない'],
+  まったくない: ['マッタクナイ', 'まったくない'],
+  立派な: ['リッパナ', '立派'],
+  気の毒に: ['キノドクニ', '気の毒'],
+  おろそかな: ['オロソカナ', 'おろそか'],
+  いらっしゃっ: ['イラッシャッ', 'いらっしゃる'],
+  いらっしゃる: ['イラッシャル', 'いらっしゃる'],
+  少しも: ['スコシモ', '少しも'],
+  少し: ['スコシ', '少し'],
+};
+const dict = {
+  toReading: (s: string) => KUROMOJI[s]?.[0] ?? s,
+  toBase: (s: string) => KUROMOJI[s]?.[1] ?? s,
+};
+const modes: Array<[string, Partial<typeof dict>]> = [
+  ['辞書なし', {}],
+  ['辞書あり', dict],
+];
+const judgeReal = (qid: string, answer: string, d: Partial<typeof dict> = {}) => judgeWriting({ answer, ...real(qid), ...d });
+
+describe('judgeWriting: 別の語・別の意味に当たらない（語幹・読み・原形の照合）', () => {
+  it('語幹の2段目は活用語尾になりうる かな だけを落とす（すぐに／すぐれている、まさる／まさか、ますます／ます）', () => {
+    const cases: Array<[string, string]> = [
+      ['254-1', 'すぐに'], // 優美だ・すぐれている
+      ['45-2', 'すぐれている'], // すぐに
+      ['139-1', 'まさる'], // まさか〜ないだろう
+      ['360-3', 'まさか'], // まさる
+      ['165-3', 'ますます'], // 〜ます・〜ございます
+      ['343-2', 'ます'], // ますます
+    ];
+    for (const [name, d] of modes) {
+      for (const [qid, a] of cases) expect(judgeReal(qid, a, d).verdict, `${name} ${qid}「${a}」`).not.toBe('correct');
+    }
+  });
+
+  it('並べ書きは、全体をつないだ形の原形で照合しない（仏事、こと／座る、〜ている）。部分ごとには原形で照合する', () => {
+    for (const [name, d] of modes) {
+      expect(judgeReal('113-1', '仏事、こと', d).verdict, `${name} 113-1`).not.toBe('correct'); // 仏事・法事
+      expect(judgeReal('9-1', '座る、〜ている', d).verdict, `${name} 9-1`).not.toBe('correct'); // 座る
+    }
+    expect(judgeReal('245-1', '意地が悪い、ひどかった', dict).verdict).toBe('correct');
+  });
+
+  it('読みの照合は、片方の漢字がもう片方に全部含まれるときだけ（立つ／経つ、疲れ／使う）', () => {
+    expect(judgeReal('356-3', '立つ', dict).verdict).not.toBe('correct'); // （時が）経つ
+    expect(judgeReal('361-1', '経つ', dict).verdict).not.toBe('correct'); // 立つ
+    expect(judgeReal('197-1', '使う', dict).verdict).not.toBe('correct'); // 疲れる
+    expect(judgeReal('197-1', '使っ', dict).verdict).not.toBe('correct');
+    expect(judgeReal('67-4', '疲れ', dict).verdict).not.toBe('correct'); // 食べる・使う
+  });
+
+  it('表記が漢字で終わる語は、読みの語尾を削らない（道理→どうして、程度→ている）', () => {
+    expect(judgeReal('50-1', '道理', dict).verdict).not.toBe('correct'); // どうして
+    expect(judgeReal('111-1', 'どうして', dict).verdict).not.toBe('correct'); // 道理
+    expect(judgeReal('9-2', '程度', dict).verdict).not.toBe('correct'); // 〜ている
+    expect(judgeReal('109-2', 'ている', dict).verdict).not.toBe('correct'); // 程度
+  });
+
+  it('別義に当たり一部だけ重なる回答は保留（格段に劣る→［格段に（まさる）］、かわいい→［かわいそうだ］、少しも→［少し］）', () => {
+    for (const [name, d] of modes) {
+      expect(judgeReal('293-1', '格段に劣る', d), name).toEqual({ verdict: 'pending', partial: true });
+      expect(judgeReal('86-1', 'かわいい', d), name).toEqual({ verdict: 'pending', partial: true });
+      expect(judgeReal('336-1', '少しも', d), name).toEqual({ verdict: 'pending', partial: true });
+    }
+  });
+});
+
+describe('judgeWriting: 照合を絞っても正解のまま', () => {
+  it('形容動詞の な／に（立派な・気の毒に・おろそかな）と、音便の形（いらっしゃっ）', () => {
+    for (const [name, d] of modes) {
+      expect(judgeReal('22-2', '立派な', d).verdict, name).toBe('correct'); // 立派だ・見事だ
+      expect(judgeReal('84-2', '気の毒に', d).verdict, name).toBe('correct'); // 気の毒だ・心苦しい
+      expect(judgeReal('27-1', 'おろそかな', d).verdict, name).toBe('correct'); // おろそかだ
+      expect(judgeReal('67-6', 'いらっしゃっ', d).verdict, name).toBe('correct'); // いらっしゃる
+    }
+  });
+
+  it('かな書きの活用形は読みで正解（かよった→通う）', () => {
+    expect(judgeReal('189-1', 'かよった', dict).verdict).toBe('correct');
+  });
+
+  it('原形の鍵があれば「〜なかった」「〜かった」も正解（辞書なしでは保留）', () => {
+    expect(judgeReal('49-1', 'まったくなかった', dict).verdict).toBe('correct'); // まったく〜ない
+    expect(judgeReal('245-1', 'ひどかった', dict).verdict).toBe('correct'); // 意地が悪い・ひどい
+    expect(judgeReal('245-1', '意地が悪かった', dict).verdict).toBe('correct');
+    expect(judgeReal('245-1', 'ひどかった').verdict).toBe('pending');
+  });
+});
+
+describe('baseKeyFromTokens: 原形の鍵', () => {
+  // kuromoji の出力（2026-10-06 に本物の辞書で確認）のうち使う項目だけ
+  const t = (surface_form: string, pos: string, pos_detail_1: string, basic_form: string): MorphToken => ({
+    surface_form,
+    pos,
+    pos_detail_1,
+    basic_form,
+  });
+
+  it('活用する語は原形にそろえ、末尾の た・ている・形容動詞の な/に を落とす', () => {
+    expect(baseKeyFromTokens([t('ひどかっ', '形容詞', '自立', 'ひどい'), t('た', '助動詞', '*', 'た')])).toBe('ひどい');
+    expect(
+      baseKeyFromTokens([t('すぐれ', '動詞', '自立', 'すぐれる'), t('て', '助詞', '接続助詞', 'て'), t('いる', '動詞', '非自立', 'いる')]),
+    ).toBe('すぐれる');
+    expect(baseKeyFromTokens([t('立派', '名詞', '形容動詞語幹', '立派'), t('な', '助動詞', '*', 'だ')])).toBe('立派');
+    expect(baseKeyFromTokens([t('気の毒', '名詞', '形容動詞語幹', '気の毒'), t('に', '助詞', '副詞化', 'に')])).toBe('気の毒');
+  });
+
+  it('打消と「こと」は落とさない。1語だけ・「ている」だけなら そのまま', () => {
+    expect(
+      baseKeyFromTokens([t('思わ', '動詞', '自立', '思う'), t('なかっ', '助動詞', '*', 'ない'), t('た', '助動詞', '*', 'た')]),
+    ).toBe('思うない');
+    expect(baseKeyFromTokens([t('仏事', '名詞', '一般', '仏事'), t('こと', '名詞', '非自立', 'こと')])).toBe('仏事こと');
+    expect(baseKeyFromTokens([t('て', '助詞', '接続助詞', 'て'), t('いる', '動詞', '非自立', 'いる')])).toBe('ている');
+    expect(baseKeyFromTokens([t('ます', '助動詞', '*', 'ます')])).toBe('ます');
   });
 });
