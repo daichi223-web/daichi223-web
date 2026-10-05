@@ -1,5 +1,6 @@
 // src/pages/Teacher.tsx
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { dataParser } from "../utils/dataParser";
 import bundledTextsIndex from "../data/textsIndex.json";
 import bundledKobunQ from "../data/kobunQ.v2.slim.json";
@@ -321,6 +322,18 @@ export default function Teacher() {
   return (
     <div className="p-4 sm:p-8 max-w-7xl mx-auto">
       <div className="static sm:sticky sm:top-0 bg-white z-10 pb-4">
+        {/* 生徒画面（学習のホーム）へ戻る道。生徒ホームの「教員管理画面」入口の逆向き。
+            教員セッション（cookie / localStorage）は消さないので、戻ってきても再ログイン不要 */}
+        <div className="mb-2">
+          <Link
+            to="/"
+            className="inline-flex items-center min-h-[44px] px-3 sm:px-4 text-sm sm:text-base font-medium rounded-lg border border-rw-rule bg-rw-paper text-rw-ink hover:border-rw-ink-soft transition no-underline"
+            style={{ textDecoration: "none" }}
+            title="教員のログインは保ったまま、生徒の学習ホームへ移ります"
+          >
+            ← 生徒画面へ
+          </Link>
+        </div>
         <div className="flex items-center justify-between gap-2 mb-3 sm:mb-6">
           <h2 className="text-base sm:text-2xl font-bold text-slate-800 shrink-0">教員管理画面</h2>
           <div className="flex gap-2 flex-wrap items-center">
