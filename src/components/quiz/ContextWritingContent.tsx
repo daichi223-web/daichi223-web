@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
@@ -7,7 +7,10 @@ import { coachWriting, isCoachOptedIn } from '../../lib/nanoCoach';
 import { MarkedSentence } from './MarkedSentence';
 import { PolysemyInsight } from './WordInsightPanel';
 import { SenseAnswerGuide } from './SenseAnswerGuide';
-import { selfJudgePrompt, senseLabel, writingHeadline, writingPrompt } from './writingVerdict';
+import {
+  isSubmitEnter, quizMeanings, scrollBehavior, selfJudgePrompt, senseLabel, softTone,
+  writingHeadline, writingPrompt,
+} from './writingVerdict';
 
 export interface ContextWritingJudged {
   qid: string;
@@ -38,6 +41,11 @@ export function ContextWritingContent({
   const [coachLoading, setCoachLoading] = useState<{[key: string]: boolean}>({});
   const coachFiredRef = useRef<boolean>(false);
   const submittedRef = useRef<boolean>(false);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const firstCardRef = useRef<HTMLDivElement | null>(null);
+
+  // 画面に出して採点する意味（例文のあるもの）。例文の無い意味はカードを出さず、採点・記録もしない
+  const meanings = useMemo(() => quizMeanings(word), [word]);
 
   // 記述は読み（かな）と教員の判断でも照合する。答える前に裏で用意しておく
   useEffect(() => {
@@ -66,7 +74,7 @@ export function ContextWritingContent({
     if (checked) return;
 
     const next: {[key: string]: WritingJudgeResult} = {};
-    word.meanings.forEach(meaning => {
+    meanings.forEach(meaning => {
       const userAnswer = (answers[meaning.qid] || '').trim();
       next[meaning.qid] = judgeWritingAnswer(userAnswer, meaning, word.meanings);
     });
@@ -74,6 +82,24 @@ export function ContextWritingContent({
     setResults(next);
     setChecked(true);
   };
+
+  // Enter で次の入力欄へ。最後の欄では採点する（かな漢字変換の確定の Enter は除く）
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (!isSubmitEnter(e)) return;
+    e.preventDefault();
+    if (checked) return;
+    const nextInput = inputRefs.current[index + 1];
+    if (index < meanings.length - 1 && nextInput) {
+      nextInput.focus();
+    } else {
+      handleSubmit();
+    }
+  };
+
+  // 採点したら1枚目のカードが見える位置へ戻す
+  useEffect(() => {
+    if (checked) firstCardRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+  }, [checked]);
 
   // 最終の正誤。機械で決まったものはそのまま、保留は自己判定（未判定なら null）
   const finalOf = useCallback((qid: string): boolean | null => {
@@ -90,7 +116,7 @@ export function ContextWritingContent({
     setIsSubmitting(true);
 
     try {
-      onJudged(word.meanings.map(m => ({ qid: m.qid, result: results[m.qid], final: finalOf(m.qid) })));
+      onJudged(meanings.map(m => ({ qid: m.qid, result: results[m.qid], final: finalOf(m.qid) })));
 
       const anonId = localStorage.getItem('anonId') || `anon_${Date.now()}`;
       if (!localStorage.getItem('anonId')) {
@@ -98,7 +124,7 @@ export function ContextWritingContent({
       }
 
       // 回答の本文を意味ごとに保存。保留を自己判定したものは、その判定も残す
-      const submitPromises = word.meanings.map(async (meaning) => {
+      const submitPromises = meanings.map(async (meaning) => {
         const userAnswer = (answers[meaning.qid] || '').trim();
         const result = results[meaning.qid];
         if (!userAnswer || !result) return;
@@ -141,7 +167,7 @@ export function ContextWritingContent({
     } finally {
       setIsSubmitting(false);
     }
-  }, [word.meanings, results, userJudgments, answers, finalOf, onJudged, onNext]);
+  }, [meanings, results, userJudgments, answers, finalOf, onJudged, onNext]);
 
   // AI コーチ: 機械で決まらなかった（保留の）意味だけに対して
   // Nano にコメントを依頼。判定には影響させない。
@@ -151,7 +177,7 @@ export function ContextWritingContent({
     if (!isCoachOptedIn()) return;
     coachFiredRef.current = true;
 
-    word.meanings.forEach(async (meaning) => {
+    meanings.forEach(async (meaning) => {
       if (results[meaning.qid]?.verdict !== 'pending') return;
       const userAnswer = (answers[meaning.qid] || '').trim();
       if (!userAnswer) return;
@@ -174,9 +200,10 @@ export function ContextWritingContent({
         setCoachComments((prev) => ({ ...prev, [meaning.qid]: comment }));
       }
     });
-  }, [checked, word, results, answers]);
+  }, [checked, word, meanings, results, answers]);
 
-  const allCorrect = checked && word.meanings.every(m => results[m.qid]?.verdict === 'correct');
+  const allCorrect = checked && meanings.length > 0 && meanings.every(m => results[m.qid]?.verdict === 'correct');
+  const blankCount = meanings.filter(m => !(answers[m.qid] || '').trim()).length;
 
   // 全部正解のときだけ自動遷移
   useEffect(() => {
@@ -195,7 +222,7 @@ export function ContextWritingContent({
       </div>
 
       <div className="space-y-4 mb-4">
-        {word.meanings.map((meaning) => {
+        {meanings.map((meaning, index) => {
           const userAnswer = answers[meaning.qid] || '';
           const result = results[meaning.qid];
           const isCorrect = result?.verdict === 'correct';
@@ -211,7 +238,7 @@ export function ContextWritingContent({
           const exampleModern = examples.modern[0] || meaning.examples?.[0]?.translation || '';
           const prompt = writingPrompt(word.lemma, !!exampleKobun);
 
-          let containerClass = 'p-5 rounded-2xl border-2';
+          let containerClass = 'p-5 rounded-2xl border-2 scroll-mt-16';
           if (checked) {
             containerClass += isCorrect
               ? ' bg-rw-accent-soft border-rw-accent'
@@ -223,9 +250,9 @@ export function ContextWritingContent({
           }
 
           return (
-            <div key={meaning.qid} className={containerClass}>
+            <div key={meaning.qid} ref={index === 0 ? firstCardRef : undefined} className={containerClass}>
               <p className="text-rw-ink font-serif text-base leading-relaxed mb-3">
-                {exampleKobun ? <MarkedSentence text={exampleKobun} word={meaning} /> : '（この意味の例文は準備中）'}
+                <MarkedSentence text={exampleKobun} word={meaning} />
               </p>
 
               <div className="mb-3">
@@ -235,8 +262,17 @@ export function ContextWritingContent({
                   type="text"
                   value={userAnswer}
                   onChange={(e) => handleAnswerChange(meaning.qid, e.target.value)}
-                  disabled={checked}
-                  className="w-full p-3 bg-rw-paper border-2 border-rw-ink rounded-xl font-serif text-base text-rw-ink outline-none focus:border-rw-primary transition-colors disabled:opacity-70"
+                  onKeyDown={(e) => handleInputKeyDown(e, index)}
+                  ref={(el) => { inputRefs.current[index] = el; }}
+                  readOnly={checked}
+                  enterKeyHint={index < meanings.length - 1 ? 'next' : 'done'}
+                  autoCapitalize="off"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  lang="ja"
+                  className={`w-full p-3 border-2 border-rw-ink rounded-xl font-serif text-base text-rw-ink outline-none focus:border-rw-primary transition-colors ${
+                    checked ? 'bg-rw-bg' : 'bg-rw-paper'
+                  }`}
                   placeholder={prompt.placeholder}
                 />
               </div>
@@ -249,8 +285,8 @@ export function ContextWritingContent({
                     const head = writingHeadline(result);
                     return (
                       <div
-                        className="mb-3 p-3 rounded-xl text-center font-black text-rw-paper"
-                        style={{ background: head.color }}
+                        className="mb-3 p-3 rounded-xl border-2 text-center font-black text-rw-ink"
+                        style={softTone(head.color)}
                       >
                         {head.mark} {head.text}
                       </div>
@@ -279,53 +315,6 @@ export function ContextWritingContent({
                     </div>
                   )}
 
-                  {/* 自己判定: 機械で決まらなかったときだけ */}
-                  {pending && userJudgment === undefined && (
-                    <div className="mb-3 p-4 rounded-xl bg-rw-paper border-2 border-rw-rule">
-                      <p className="text-sm font-black text-rw-ink mb-3 text-center">
-                        {selfJudgePrompt(meaning)}
-                      </p>
-                      <div className="flex gap-2 justify-center flex-wrap">
-                        <button
-                          onClick={() => setUserJudgments(prev => ({ ...prev, [meaning.qid]: true }))}
-                          className="px-6 py-2 bg-rw-accent text-rw-paper border-2 border-rw-accent font-black rounded-full transition hover:-translate-y-0.5"
-                        >
-                          ○ 合っていた
-                        </button>
-                        <button
-                          onClick={() => setUserJudgments(prev => ({ ...prev, [meaning.qid]: false }))}
-                          className="px-6 py-2 bg-rw-primary text-rw-paper border-2 border-rw-primary font-black rounded-full transition hover:-translate-y-0.5"
-                        >
-                          × ちがった
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 自己判定の結果と取り消し */}
-                  {pending && userJudgment !== undefined && (
-                    <div className="mb-3 p-3 rounded-xl bg-rw-paper border-2 border-rw-rule">
-                      <div className="flex items-center justify-between gap-2">
-                        <div
-                          className="font-black"
-                          style={{ color: userJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)' }}
-                        >
-                          {userJudgment ? '○ 合っていたと判定しました' : '× ちがったと判定しました'}
-                        </div>
-                        <button
-                          onClick={() => setUserJudgments(prev => {
-                            const next = { ...prev };
-                            delete next[meaning.qid];
-                            return next;
-                          })}
-                          className="text-sm text-rw-ink-soft hover:text-rw-ink underline font-bold"
-                        >
-                          取消
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
                   <div
                     className={`p-4 rounded-xl border-2 ${
                       isCorrect ? 'bg-rw-paper border-rw-accent' : 'bg-rw-paper border-rw-pop'
@@ -335,6 +324,55 @@ export function ContextWritingContent({
                     <SenseAnswerGuide word={meaning} className="text-rw-ink font-black text-base" />
                     <p className="text-sm text-rw-ink-soft font-serif mt-2">{exampleModern}</p>
                   </div>
+
+                  {/* 自己判定: 機械で決まらなかったときだけ。正解の枠のすぐ下に置く */}
+                  {pending && userJudgment === undefined && (
+                    <div className="mt-3 p-4 rounded-xl bg-rw-paper border-2 border-rw-rule">
+                      <p className="text-sm font-black text-rw-ink mb-3 text-center">
+                        {selfJudgePrompt(meaning)}
+                      </p>
+                      <div className="flex gap-2 justify-center flex-wrap">
+                        <button
+                          onClick={() => setUserJudgments(prev => ({ ...prev, [meaning.qid]: true }))}
+                          className="px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5"
+                          style={softTone('var(--rw-accent)')}
+                        >
+                          ○ 合っていた
+                        </button>
+                        <button
+                          onClick={() => setUserJudgments(prev => ({ ...prev, [meaning.qid]: false }))}
+                          className="px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5"
+                          style={softTone('var(--rw-primary)')}
+                        >
+                          × ちがった
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 自己判定の結果と取り消し */}
+                  {pending && userJudgment !== undefined && (
+                    <div
+                      className="mt-3 p-3 rounded-xl border-2"
+                      style={softTone(userJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)')}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="font-black text-rw-ink">
+                          {userJudgment ? '○ 合っていたと判定しました' : '× ちがったと判定しました'}
+                        </div>
+                        <button
+                          onClick={() => setUserJudgments(prev => {
+                            const next = { ...prev };
+                            delete next[meaning.qid];
+                            return next;
+                          })}
+                          className="text-sm text-rw-ink underline font-bold"
+                        >
+                          取消
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -344,6 +382,10 @@ export function ContextWritingContent({
 
       {!checked && (
         <div className="text-center">
+          {/* 未入力があっても採点はできる。数だけ知らせる */}
+          {blankCount > 0 && (
+            <p className="text-xs font-black text-rw-ink tracking-wider mb-3">未入力 {blankCount}件</p>
+          )}
           <button
             onClick={handleSubmit}
             className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
@@ -356,6 +398,23 @@ export function ContextWritingContent({
 
       {/* 採点後: 核イメージ＋意味ごとの決め手で1つの絵にまとめる */}
       {checked && <PolysemyInsight meanings={word.meanings} className="mb-4" />}
+
+      {/* 結果は「つぎへ」より上に置く（押す前に目に入るように） */}
+      {checked && (
+        <div className="bg-rw-paper p-6 rounded-2xl border-2 border-rw-ink mb-4">
+          <div className="text-center mb-2">
+            <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">結果</h3>
+            <div className="text-rw-ink font-black text-2xl tracking-tight">
+              {meanings.filter(m => finalOf(m.qid) === true).length} / {meanings.length} 正解
+            </div>
+            {meanings.some(m => finalOf(m.qid) === null) && (
+              <p className="text-xs text-rw-ink-soft mt-1 font-medium">
+                まだ判定していない答えがあります（判定しないで進むと、その語は記録されません）
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 全部正解なら自動で進む。それ以外は次へボタン表示 */}
       {checked && !allCorrect && (
@@ -370,9 +429,9 @@ export function ContextWritingContent({
             className={`font-black rounded-full px-8 py-3 tracking-widest transition-transform ${
               isSubmitting
                 ? 'bg-rw-ink-soft text-rw-paper cursor-not-allowed opacity-70'
-                : 'bg-rw-primary text-rw-paper hover:-translate-y-0.5'
+                : 'bg-rw-ink text-rw-paper hover:-translate-y-0.5'
             }`}
-            style={!isSubmitting ? { boxShadow: '0 4px 0 var(--rw-ink)' } : undefined}
+            style={!isSubmitting ? { boxShadow: '0 4px 0 var(--rw-primary)' } : undefined}
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center">
@@ -384,22 +443,6 @@ export function ContextWritingContent({
               </span>
             ) : 'つぎへ'}
           </button>
-        </div>
-      )}
-
-      {checked && (
-        <div className="bg-rw-paper p-6 rounded-2xl border-2 border-rw-ink mb-4">
-          <div className="text-center mb-2">
-            <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">結果</h3>
-            <div className="text-rw-ink font-black text-2xl tracking-tight">
-              {word.meanings.filter(m => finalOf(m.qid) === true).length} / {word.meanings.length} 正解
-            </div>
-            {word.meanings.some(m => finalOf(m.qid) === null) && (
-              <p className="text-xs text-rw-ink-soft mt-1 font-medium">
-                まだ判定していない答えがあります（判定しないで進むと、その語は記録されません）
-              </p>
-            )}
-          </div>
         </div>
       )}
     </div>

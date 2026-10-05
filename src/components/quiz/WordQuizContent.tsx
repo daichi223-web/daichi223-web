@@ -7,7 +7,11 @@ import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
 import { prepareWritingJudge } from '../../lib/writingJudgeRuntime';
 import { SenseAnswerGuide } from './SenseAnswerGuide';
-import { selfJudgePrompt, senseLabel, writingHeadline, writingPrompt } from './writingVerdict';
+import {
+  answerTone, hasAnswerBlank, isSubmitEnter, scrollBehavior, selfJudgePrompt, senseLabel,
+  softTone, stripSenseBrackets, writingHeadline, writingPrompt,
+} from './writingVerdict';
+import { resolveTargetSpans } from '../../lib/targetMark';
 
 interface QuizQuestion {
   correct: Word;
@@ -83,6 +87,14 @@ export function WordQuizContent({
     }
   }, [answeredCorrectly, onNext, question.correct]);
 
+  // 記述: 採点したら、判定から自己判定までが見える位置へ寄せる（動かす量は最小限）
+  const verdictRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (quizType === 'meaning-writing' && showWritingResult) {
+      verdictRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: 'nearest' });
+    }
+  }, [quizType, showWritingResult]);
+
   // Defensive check: ensure question and question.correct exist
   if (!question || !question.correct || !question.correct.lemma) {
     return (
@@ -102,6 +114,7 @@ export function WordQuizContent({
   };
 
   const handleWritingSubmitClick = () => {
+    if (showWritingResult) return;
     onWritingSubmit(userAnswer, question.correct.qid);
   };
 
@@ -120,6 +133,7 @@ export function WordQuizContent({
           exampleKobun={question.exampleKobun}
           exampleModern={question.exampleModern}
           phase={showWritingResult ? 'answer' : 'question'}
+          card
           className="mb-4"
           target={question.correct}
         />
@@ -133,7 +147,21 @@ export function WordQuizContent({
             type="text"
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
-            className="w-full p-3 bg-rw-paper border-2 border-rw-ink rounded-xl font-serif text-base text-rw-ink outline-none focus:border-rw-primary transition-colors"
+            onKeyDown={(e) => {
+              // Enter で採点。かな漢字変換の確定の Enter では採点しない
+              if (!isSubmitEnter(e)) return;
+              e.preventDefault();
+              handleWritingSubmitClick();
+            }}
+            readOnly={showWritingResult}
+            enterKeyHint="done"
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
+            lang="ja"
+            className={`w-full p-3 border-2 border-rw-ink rounded-xl font-serif text-base text-rw-ink outline-none focus:border-rw-primary transition-colors ${
+              showWritingResult ? 'bg-rw-bg' : 'bg-rw-paper'
+            }`}
             placeholder={prompt.placeholder}
           />
           {!showWritingResult && (
@@ -157,23 +185,67 @@ export function WordQuizContent({
             : undefined;
           return (
             <div className="bg-rw-paper p-6 rounded-2xl border-2 border-rw-ink mb-4">
-              <div className="text-center mb-3">
-                <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">判定</h3>
-                <div className="text-2xl font-black tracking-tight" style={{ color: head.color }}>
-                  {head.mark} {head.text}
+              {/* 判定→回答→正解→自己判定を続けて置く（正解を見てすぐ判定できるように）。解説はその下 */}
+              <div ref={verdictRef} className="space-y-3 scroll-mt-16 scroll-mb-4">
+                <div className="text-center">
+                  <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">判定</h3>
+                  <div
+                    className="rounded-xl border-2 px-3 py-2 text-base sm:text-xl font-black text-rw-ink leading-snug tracking-tight"
+                    style={softTone(head.color)}
+                  >
+                    {head.mark} {head.text}
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-3">
                 <div>
                   <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">あなたの回答</p>
                   <p className="text-rw-ink bg-rw-bg p-3 rounded-xl font-serif border border-rw-rule">{userAnswer}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-black text-rw-accent tracking-wider mb-1">正解</p>
+                  <p className="text-xs font-black text-rw-ink tracking-wider mb-1">正解</p>
                   <div className="text-rw-ink bg-rw-accent-soft p-3 rounded-xl border-2 border-rw-accent">
                     <SenseAnswerGuide word={question.correct} className="font-serif" />
                   </div>
                 </div>
+
+                {/* 自己判定: 機械で決まらなかったときだけ */}
+                {pending && writingUserJudgment === undefined && (
+                  <div className="p-4 rounded-xl bg-rw-bg border-2 border-rw-rule">
+                    <p className="text-sm font-black text-rw-ink mb-3 text-center">
+                      {selfJudgePrompt(question.correct)}
+                    </p>
+                    <div className="flex gap-2 justify-center flex-wrap">
+                      <button
+                        onClick={() => handleWritingUserJudgment?.(true)}
+                        className="px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5"
+                        style={softTone('var(--rw-accent)')}
+                      >
+                        ○ 合っていた
+                      </button>
+                      <button
+                        onClick={() => handleWritingUserJudgment?.(false)}
+                        className="px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5"
+                        style={softTone('var(--rw-primary)')}
+                      >
+                        × ちがった
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {writingUserJudgment !== undefined && (
+                  <div
+                    className="p-3 rounded-xl border-2"
+                    style={softTone(writingUserJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)')}
+                  >
+                    <div className="text-center font-black text-rw-ink">
+                      あなたの判定: {writingUserJudgment ? '○ 合っていた' : '× ちがった'}
+                    </div>
+                    <p className="text-xs text-rw-ink mt-1 text-center font-medium">次の問題に進みます...</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3 mt-3">
                 {matched && (
                   <p className="text-sm text-rw-ink leading-relaxed font-semibold">
                     書いたのは「{senseLabel(matched)}」の意味。この文脈では「{senseLabel(question.correct)}」。
@@ -186,41 +258,6 @@ export function WordQuizContent({
                 ) : (
                   <WordInsightPanel word={question.correct} />
                 )}
-
-                {/* 自己判定: 機械で決まらなかったときだけ */}
-                {pending && writingUserJudgment === undefined && (
-                  <div className="mt-4 p-4 rounded-xl bg-rw-bg border-2 border-rw-rule">
-                    <p className="text-sm font-black text-rw-ink mb-3 text-center">
-                      {selfJudgePrompt(question.correct)}
-                    </p>
-                    <div className="flex gap-2 justify-center flex-wrap">
-                      <button
-                        onClick={() => handleWritingUserJudgment?.(true)}
-                        className="px-6 py-2 bg-rw-accent text-rw-paper border-2 border-rw-accent font-black rounded-full transition hover:-translate-y-0.5"
-                      >
-                        ○ 合っていた
-                      </button>
-                      <button
-                        onClick={() => handleWritingUserJudgment?.(false)}
-                        className="px-6 py-2 bg-rw-primary text-rw-paper border-2 border-rw-primary font-black rounded-full transition hover:-translate-y-0.5"
-                      >
-                        × ちがった
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {writingUserJudgment !== undefined && (
-                  <div className="mt-4 p-3 rounded-xl bg-rw-bg border-2 border-rw-rule">
-                    <div
-                      className="text-center font-black"
-                      style={{ color: writingUserJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)' }}
-                    >
-                      あなたの判定: {writingUserJudgment ? '○ 合っていた' : '× ちがった'}
-                    </div>
-                    <p className="text-xs text-rw-ink-soft mt-1 text-center font-medium">次の問題に進みます...</p>
-                  </div>
-                )}
               </div>
             </div>
           );
@@ -230,8 +267,8 @@ export function WordQuizContent({
           <div className="mt-8 text-center">
             <button
               onClick={onNext}
-              className="bg-rw-primary text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
-              style={{ boxShadow: '0 4px 0 var(--rw-ink)' }}
+              className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
+              style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
             >
               つぎへ →
             </button>
@@ -259,6 +296,22 @@ export function WordQuizContent({
     );
   };
 
+  // 形式ごとの問いの1行（おまかせで問題ごとに形式が変わっても、何を答えるかが分かるように）
+  const sentenceText = question.exampleKobun || question.correct.examples?.[0]?.jp || '';
+  const isMarked = !!sentenceText && resolveTargetSpans(sentenceText, question.correct).spans.length > 0;
+  const instruction =
+    quizType === 'word-meaning'
+      ? 'この語の意味を選ぼう'
+      : quizType === 'word-reverse'
+      ? 'この意味の語を選ぼう'
+      : quizType === 'blank-fill'
+      ? '空欄に入る語を選ぼう'
+      : isMarked
+      ? '印のついた語の、この文での意味を選ぼう'
+      : `「${question.correct.lemma}」の、この文での意味を選ぼう`;
+  // 回答前の訳は 〔 〕 の中身を伏せて出す。〔 〕 の無い訳は答えの語が見えるので、回答前は出さない
+  const canHintModern = hasAnswerBlank(question.exampleModern);
+
   return (
     <div>
       {/* 単語レベルが上がった語は教材の実戦例文で出題されていることを示す */}
@@ -269,7 +322,8 @@ export function WordQuizContent({
           </span>
         </div>
       )}
-      <div className="mb-4">
+      <p className="text-xs font-black text-rw-ink tracking-wider mb-2 text-center">{instruction}</p>
+      <div className="mb-3">
         {quizType === 'word-meaning' ? (
           <div className="text-center">
             <h2 className="text-3xl font-black text-rw-ink leading-snug tracking-tight">
@@ -279,7 +333,7 @@ export function WordQuizContent({
         ) : quizType === 'word-reverse' ? (
           <div className="text-center">
             <h2 className="text-2xl font-black text-rw-ink leading-snug tracking-tight mb-2">
-              {question.correct?.sense || 'データなし'}
+              {stripSenseBrackets(question.correct?.sense || '') || 'データなし'}
             </h2>
             <div className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-5">
               <div className="font-serif text-base text-rw-ink leading-relaxed">
@@ -323,7 +377,7 @@ export function WordQuizContent({
               onClick={() => setShowExample(true)}
               className="w-full py-3 px-4 bg-rw-paper border-2 border-rw-ink text-rw-ink font-black rounded-full transition hover:bg-rw-bg"
             >
-              例文を表示
+              ヒント：例文
             </button>
           ) : (
             <>
@@ -333,15 +387,16 @@ export function WordQuizContent({
                 showKobun={true}
                 showModern={showModernTranslation}
                 forceShowModern={showModernTranslation}
+                maskAnswer
                 phase={answeredCorrectly !== null ? 'answer' : 'question'}
                 target={question.correct}
               />
-              {!showModernTranslation && answeredCorrectly === null && (
+              {canHintModern && !showModernTranslation && answeredCorrectly === null && (
                 <button
                   onClick={() => setShowModernTranslation(true)}
                   className="w-full mt-2 py-2 px-4 bg-rw-paper border-2 border-rw-rule text-rw-ink-soft font-black rounded-full transition hover:border-rw-ink-soft text-sm"
                 >
-                  現代語訳を表示
+                  ヒント：現代語訳
                 </button>
               )}
             </>
@@ -352,10 +407,13 @@ export function WordQuizContent({
       {/* Example Display for sentence-meaning quiz type */}
       {quizType === 'sentence-meaning' && (
         <>
-          <div className="text-center mb-2">
-            <p className="text-xs text-rw-ink-soft font-black tracking-wider">参考：見出し語</p>
-            <p className="text-rw-ink font-black">{question.correct?.lemma || ''}</p>
-          </div>
+          {/* 印が付かない例文では、指示文に見出し語が入っているので重ねて出さない */}
+          {isMarked && (
+            <div className="text-center mb-2">
+              <p className="text-xs text-rw-ink-soft font-black tracking-wider">参考：見出し語</p>
+              <p className="text-rw-ink font-black">{question.correct?.lemma || ''}</p>
+            </div>
+          )}
           {/* Show modern translation when answered incorrectly */}
           {answeredCorrectly !== null && answeredCorrectly === false && (
             <ExampleDisplay
@@ -387,17 +445,24 @@ export function WordQuizContent({
 
           let buttonClass = 'w-full text-left p-3 rounded-xl border-2 transition font-medium flex items-center';
           let labelBg = 'bg-rw-bg text-rw-ink-soft';
+          // 回答後: 薄い地＋濃い文字＋太い枠。丸の中は記号（正解 ○・選んだ誤答 ×）にして、色だけに頼らない
+          let tone: React.CSSProperties | undefined;
+          let label = optionLabels[index];
 
           if (answered) {
             buttonClass += ' pointer-events-none';
             if (isCorrectOption) {
-              buttonClass += ' bg-rw-accent text-rw-paper border-rw-accent';
-              labelBg = 'bg-rw-paper text-rw-accent';
+              buttonClass += ' text-rw-ink font-black';
+              labelBg = 'bg-rw-paper text-rw-ink';
+              tone = answerTone('var(--rw-accent)');
+              label = '○';
             } else if (isSelectedWrong) {
-              buttonClass += ' bg-rw-primary text-rw-paper border-rw-primary';
-              labelBg = 'bg-rw-paper text-rw-primary';
+              buttonClass += ' text-rw-ink font-black';
+              labelBg = 'bg-rw-paper text-rw-ink';
+              tone = answerTone('var(--rw-primary)');
+              label = '×';
             } else {
-              buttonClass += ' bg-rw-paper border-rw-rule text-rw-ink opacity-60';
+              buttonClass += ' bg-rw-paper border-rw-rule text-rw-ink-soft';
             }
           } else {
             buttonClass += ' bg-rw-paper border-rw-rule text-rw-ink hover:border-rw-ink-soft';
@@ -408,15 +473,15 @@ export function WordQuizContent({
               key={option.qid}
               onClick={() => handleOptionClick(option)}
               className={buttonClass}
-              style={{ minHeight: '44px' }}
+              style={{ minHeight: '44px', ...tone }}
             >
               <span className={`inline-flex items-center justify-center w-7 h-7 mr-3 rounded-full font-black text-sm flex-shrink-0 ${labelBg}`}>
-                {optionLabels[index]}
+                {label}
               </span>
               <span className="flex-1">
                 {quizType === 'word-reverse' || quizType === 'blank-fill'
                   ? (option.lemma || 'データなし')
-                  : (option.sense || 'データなし')}
+                  : (stripSenseBrackets(option.sense || '') || 'データなし')}
               </span>
             </button>
           );
@@ -446,8 +511,8 @@ export function WordQuizContent({
         <div className="mt-8 text-center">
           <button
             onClick={onNext}
-            className="bg-rw-primary text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
-            style={{ boxShadow: '0 4px 0 var(--rw-ink)' }}
+            className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
+            style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
           >
             つぎへ →
           </button>

@@ -3,6 +3,7 @@ import { Word, MultiMeaningWord } from '../../types';
 import { dataParser } from '../../utils/dataParser';
 import { MarkedSentence } from './MarkedSentence';
 import { PolysemyInsight } from './WordInsightPanel';
+import { answerTone, quizMeanings, stripSenseBrackets } from './writingVerdict';
 
 export interface ExampleComprehensionContentProps {
   word: MultiMeaningWord;
@@ -42,8 +43,12 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
     onCheck(answers);
   };
 
-  // 全問正解かどうかを判定
-  const isAllCorrect = checked && word.meanings.every(meaning => answers[meaning.qid] === meaning.qid);
+  // 画面に出す意味（例文のあるもの）。採点・記録（App.tsx）も同じ条件で数える
+  const meanings = quizMeanings(word);
+  const unansweredCount = meanings.filter(meaning => !answers[meaning.qid]).length;
+
+  // 全問正解かどうかを判定（画面に出した意味だけで数える）
+  const isAllCorrect = checked && meanings.length > 0 && meanings.every(meaning => answers[meaning.qid] === meaning.qid);
 
   return (
     <div>
@@ -53,10 +58,12 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
       </div>
 
       <div className="space-y-3 mb-4">
-        {(word.meanings || []).filter(meaning => meaning && meaning.qid && meaning.examples?.[0]?.jp).map((meaning) => {
+        {meanings.map((meaning) => {
           const isCorrect = answers[meaning.qid] === meaning.qid;
-          const hasAnswer = answers[meaning.qid];
+          const hasAnswer = !!answers[meaning.qid];
           const isWrong = hasAnswer && !isCorrect;
+          // 答え合わせの時点で選んでいなかった例文。正解は示すが、自分で当てた例文とは見た目を分ける
+          const isUnanswered = checked && !hasAnswer;
 
           // Get sense-priority examples for this meaning
           const examples = dataParser.getExamplesForSense(meaning, meaning.qid, word);
@@ -66,7 +73,11 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
 
           let containerClass = 'p-5 rounded-2xl border-2';
           if (checked) {
-            containerClass += isCorrect ? ' bg-rw-accent-soft border-rw-accent' : ' bg-rw-primary-soft border-rw-primary';
+            containerClass += isCorrect
+              ? ' bg-rw-accent-soft border-rw-accent'
+              : isUnanswered
+              ? ' bg-rw-paper border-rw-primary border-dashed'
+              : ' bg-rw-primary-soft border-rw-primary';
           } else {
             containerClass += ' bg-rw-paper border-rw-ink';
           }
@@ -77,11 +88,18 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
                 {exampleKobun ? <MarkedSentence text={exampleKobun} word={meaning} /> : 'データなし'}
               </p>
 
-              {/* チェック後に誤答の場合は正解と現代語訳を表示 */}
-              {checked && isWrong && (
+              {/* チェック後、誤答と未回答には正解と現代語訳を表示。未回答は見出しで分かるようにする */}
+              {checked && (isWrong || isUnanswered) && (
                 <div className="mb-3 p-3 bg-rw-paper border-2 border-rw-accent rounded-xl">
-                  <p className="text-xs font-black text-rw-accent tracking-wider mb-1">正解</p>
-                  <p className="text-rw-ink font-black text-base mb-2">{meaning.sense}</p>
+                  <p className="text-xs font-black text-rw-ink tracking-wider mb-1">
+                    正解
+                    {isUnanswered && (
+                      <span className="ml-2 inline-block px-2 py-0.5 rounded-full border border-rw-ink-soft bg-rw-bg text-rw-ink">
+                        未回答
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-rw-ink font-black text-base mb-2">{stripSenseBrackets(meaning.sense)}</p>
                   {meaning.decider && (
                     <p className="text-xs font-bold text-rw-ink mb-2 leading-relaxed">
                       🔑 決め手　{meaning.decider.clue}
@@ -95,17 +113,24 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
               <div className="flex flex-wrap gap-2">
                 {shuffledMeanings.filter(m => m && m.qid && m.sense).map((m) => {
                   let buttonClass = 'px-4 py-2 border-2 rounded-xl transition text-sm font-bold';
+                  // 答え合わせ後: 薄い地＋濃い文字＋太い枠＋記号（正解 ○・選んだ誤答 ×）
+                  let tone: React.CSSProperties | undefined;
+                  let sign = '';
 
                   if (checked) {
                     buttonClass += ' pointer-events-none';
                     if (m.qid === meaning.qid) {
                       // Correct answer
-                      buttonClass += ' bg-rw-accent text-rw-paper border-rw-accent';
+                      buttonClass += ' text-rw-ink';
+                      tone = answerTone('var(--rw-accent)');
+                      sign = '○ ';
                     } else if (answers[meaning.qid] === m.qid) {
                       // Selected wrong answer
-                      buttonClass += ' bg-rw-primary text-rw-paper border-rw-primary';
+                      buttonClass += ' text-rw-ink';
+                      tone = answerTone('var(--rw-primary)');
+                      sign = '× ';
                     } else {
-                      buttonClass += ' bg-rw-paper border-rw-rule text-rw-ink-soft opacity-60';
+                      buttonClass += ' bg-rw-paper border-rw-rule text-rw-ink-soft';
                     }
                   } else {
                     if (answers[meaning.qid] === m.qid) {
@@ -120,8 +145,9 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
                       key={m.qid}
                       onClick={() => handleAnswerSelect(meaning.qid, m.qid)}
                       className={buttonClass}
+                      style={tone}
                     >
-                      {m.sense || 'データなし'}
+                      {sign}{stripSenseBrackets(m.sense) || 'データなし'}
                     </button>
                   );
                 })}
@@ -133,6 +159,10 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
 
       {!checked && (
         <div className="text-center">
+          {/* 未回答があっても答え合わせはできる。数だけ知らせる */}
+          {unansweredCount > 0 && (
+            <p className="text-xs font-black text-rw-ink tracking-wider mb-3">未回答 {unansweredCount}件</p>
+          )}
           <button
             onClick={handleCheck}
             className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
@@ -151,8 +181,8 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
         <div className="text-center mt-6">
           <button
             onClick={onNext}
-            className="bg-rw-primary text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
-            style={{ boxShadow: '0 4px 0 var(--rw-ink)' }}
+            className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
+            style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
           >
             つぎへ
           </button>

@@ -3,6 +3,8 @@ import { Word } from '../../types';
 import ExampleDisplay from '../ExampleDisplay';
 import { MarkedSentence } from './MarkedSentence';
 import { WordInsightPanel, WordInsightStrip } from './WordInsightPanel';
+import { answerTone, stripSenseBrackets } from './writingVerdict';
+import { resolveTargetSpans } from '../../lib/targetMark';
 
 interface TrueFalseQuestion {
   example: string;
@@ -54,47 +56,56 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
     onAnswer(answer);
   };
 
-  // ボタンのスタイル決定
-  const getMaruBtnClass = () => {
-    const base = 'flex-1 font-black py-4 px-6 rounded-xl transition border-2 text-lg tracking-widest';
-    if (!answered) {
-      return `${base} bg-rw-paper border-rw-rule text-rw-ink hover:border-rw-accent`;
+  // ボタンのスタイル決定。答えた後は、薄い地＋濃い文字＋太い枠で示す。
+  // ボタンの文言そのものが ○・× なので、正誤は記号ではなく「正解」「不正解」の語で添える。
+  const base = 'flex-1 font-black py-4 px-6 rounded-xl transition border-2 text-lg tracking-widest';
+  const buttonState = (value: boolean): 'idle' | 'correct' | 'wrong' | 'rest' => {
+    if (!answered) return 'idle';
+    if (value === question.isCorrect) return 'correct'; // こちらが正しい答え
+    return selectedAnswer === value ? 'wrong' : 'rest'; // 選んだ誤答／選ばなかった誤答
+  };
+  const buttonClass = (value: boolean) => {
+    const state = buttonState(value);
+    if (state === 'idle') {
+      return `${base} bg-rw-paper border-rw-rule text-rw-ink ${value ? 'hover:border-rw-accent' : 'hover:border-rw-primary'}`;
     }
-    // 答えた後
-    if (selectedAnswer === true) {
-      // ユーザーが ○ を選んだ
-      return question.isCorrect
-        ? `${base} bg-rw-accent border-rw-accent text-rw-paper opacity-100 pointer-events-none`
-        : `${base} bg-rw-primary border-rw-primary text-rw-paper opacity-100 pointer-events-none`;
-    }
-    // ユーザーが × を選んだ → ○ ボタンは非選択
-    return `${base} bg-rw-paper border-rw-rule text-rw-ink-soft opacity-60 pointer-events-none`;
+    if (state === 'rest') return `${base} bg-rw-paper border-rw-rule text-rw-ink-soft pointer-events-none`;
+    return `${base} text-rw-ink pointer-events-none`;
+  };
+  const buttonTone = (value: boolean): React.CSSProperties | undefined => {
+    const state = buttonState(value);
+    if (state === 'correct') return answerTone('var(--rw-accent)');
+    if (state === 'wrong') return answerTone('var(--rw-primary)');
+    return undefined;
+  };
+  const buttonTag = (value: boolean) => {
+    const state = buttonState(value);
+    if (state !== 'correct' && state !== 'wrong') return null;
+    return (
+      <span className="block text-xs tracking-wider mt-1">
+        {state === 'correct' ? '正解' : '不正解'}
+      </span>
+    );
   };
 
-  const getBatsuBtnClass = () => {
-    const base = 'flex-1 font-black py-4 px-6 rounded-xl transition border-2 text-lg tracking-widest';
-    if (!answered) {
-      return `${base} bg-rw-paper border-rw-rule text-rw-ink hover:border-rw-primary`;
-    }
-    if (selectedAnswer === false) {
-      // ユーザーが × を選んだ
-      return question.isCorrect === false
-        ? `${base} bg-rw-accent border-rw-accent text-rw-paper opacity-100 pointer-events-none`
-        : `${base} bg-rw-primary border-rw-primary text-rw-paper opacity-100 pointer-events-none`;
-    }
-    return `${base} bg-rw-paper border-rw-rule text-rw-ink-soft opacity-60 pointer-events-none`;
-  };
+  // 例文に印が付いているか（付かない例文では、指示文に見出し語を入れる）
+  const sentence = question.exampleKobun || question.example;
+  const isMarked = !!sentence && resolveTargetSpans(sentence, question.correctAnswer).spans.length > 0;
 
   return (
     <div>
       <div className="text-center mb-6">
-        <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-3">この組み合わせは正しいかな？</h3>
+        <h3 className="text-xs font-black text-rw-ink tracking-wider mb-3">
+          {isMarked
+            ? '印のついた語は、この意味で合っている？'
+            : `「${question.correctAnswer.lemma}」は、この文でこの意味で合っている？`}
+        </h3>
         <div className="bg-rw-paper p-5 rounded-2xl border-2 border-rw-ink mb-3 text-left">
           <p className="text-rw-ink font-serif text-lg leading-relaxed mb-3">
-            <MarkedSentence text={question.exampleKobun || question.example} word={question.correctAnswer} />
+            <MarkedSentence text={sentence} word={question.correctAnswer} />
           </p>
           <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">意味</p>
-          <p className="text-lg font-black text-rw-ink tracking-tight">{question.meaning}</p>
+          <p className="text-lg font-black text-rw-ink tracking-tight">{stripSenseBrackets(question.meaning)}</p>
         </div>
 
         {/* Example Display - 補助例文は非表示 */}
@@ -109,16 +120,20 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
           <button
             onClick={() => handleAnswer(true)}
             disabled={answered}
-            className={getMaruBtnClass()}
+            className={buttonClass(true)}
+            style={buttonTone(true)}
           >
             ○ 正しい
+            {buttonTag(true)}
           </button>
           <button
             onClick={() => handleAnswer(false)}
             disabled={answered}
-            className={getBatsuBtnClass()}
+            className={buttonClass(false)}
+            style={buttonTone(false)}
           >
             × 正しくない
+            {buttonTag(false)}
           </button>
         </div>
 
@@ -131,7 +146,7 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
             <div className="p-3 bg-rw-paper border-2 border-rw-accent rounded-xl mb-3">
               <p className="text-xs font-black text-rw-accent tracking-wider mb-1">この例文での正しい意味</p>
               <p className="text-rw-ink font-black text-base">
-                {question.correctAnswer?.senseNorm || question.correctAnswer?.sense}
+                {question.correctAnswer?.senseNorm || stripSenseBrackets(question.correctAnswer?.sense || '')}
               </p>
             </div>
             <WordInsightPanel word={question.correctAnswer} />
@@ -143,8 +158,8 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
           <div className="mt-8 text-center">
             <button
               onClick={onNext}
-              className="bg-rw-primary text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
-              style={{ boxShadow: '0 4px 0 var(--rw-ink)' }}
+              className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
+              style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
             >
               つぎへ
             </button>

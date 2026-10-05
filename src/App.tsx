@@ -11,6 +11,7 @@ import { WordQuizContent } from './components/quiz/WordQuizContent';
 import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
+import { quizMeanings } from './components/quiz/writingVerdict';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { pickQuestions, type Bucket } from './lib/quizSelector';
 import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
@@ -1359,7 +1360,10 @@ function App() {
 
     // 各 meaning の正誤を判定し、word_stats / SRS / quiz_type_correct に per-qid で記録。
     // (元実装では記録漏れがあり、例文理解だけ累計に反映されなかった)
-    for (const meaning of currentWord.meanings) {
+    // 対象は画面に出した意味だけ（例文の無い意味は出題していないので記録しない。
+    // 条件は ExampleComprehensionContent と同じ quizMeanings）。
+    const shownMeanings = quizMeanings(currentWord);
+    for (const meaning of shownMeanings) {
       const userAnswer = answers[meaning.qid];
       const isCorrect = userAnswer === meaning.qid;
       if (isCorrect) correctCount++;
@@ -1378,7 +1382,7 @@ function App() {
     }
 
     // 全問正解の場合のみスコア加算と○表示
-    const isAllCorrect = correctCount === currentWord.meanings.length;
+    const isAllCorrect = shownMeanings.length > 0 && correctCount === shownMeanings.length;
     if (isAllCorrect) {
       setScore(prev => prev + 1);
       setShowCorrectCircle(true);
@@ -1546,6 +1550,11 @@ function App() {
     if (isQuizActive) {
       if (currentMode === 'word') {
         const q = getCurrentQuestion();
+        // 見出し語が答えになる形式（空欄補充・意味→単語。おまかせで解決された場合も含む）は、
+        // 答える前に検索ボタンへ語を出さない
+        const qType = q?.resolvedType ?? wordQuizType;
+        const lemmaIsAnswer = qType === 'blank-fill' || qType === 'word-reverse';
+        if (lemmaIsAnswer && !nextButtonVisible) return '';
         if (q?.correct?.lemma) return q.correct.lemma;
       } else {
         const w = getCurrentPolysemyWord();
