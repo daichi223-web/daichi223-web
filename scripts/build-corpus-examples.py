@@ -26,8 +26,9 @@ def match(sense, meaning):
     cands = [c] + ([c[:-1]] if len(c) >= 3 else [])  # 活用語尾のゆれ（気づい/気づく）を吸収
     return any(x and x in meaning for x in cands)
 
-out = {}
-total = 0
+# 1回目: 意味テキストの照合で各 qid に割り当てる
+assigned = {}   # qid -> rows
+owners = {}     # (lemma, jp) -> その文が当てはまった qid の集合
 for q in qs:
     ents = [e for e in ebl.get(q["lemma"], []) if match(q["sense"], e.get("meaning", ""))]
     rows = []
@@ -39,8 +40,22 @@ for q in qs:
         jp = f"{sent}（{src}）" if src else sent
         rows.append({"jp": jp, "translation": (e.get("context") or "").strip()})
     if rows:
+        assigned[q["qid"]] = rows
+        for r in rows:
+            owners.setdefault((q["lemma"], r["jp"]), set()).add(q["qid"])
+
+# 2回目: 同じ見出し語の複数の意味（qid）に当てはまった文は、どの意味の用例か決められない
+# （意味を併記した用例が両方に入る）ので、どの qid にも割り当てない。
+# 出題でその文が出ると正解が2つになるため。
+out = {}
+total = 0
+dropped = 0
+for q in qs:
+    rows = [r for r in assigned.get(q["qid"], []) if len(owners[(q["lemma"], r["jp"])]) == 1]
+    dropped += len(assigned.get(q["qid"], [])) - len(rows)
+    if rows:
         out[q["qid"]] = rows
         total += len(rows)
 
 json.dump(out, open("public/corpus-examples.json", "w", encoding="utf-8"), ensure_ascii=False)
-print(f"qid {len(out)}/{len(qs)} に {total} 例文を割り当て → public/corpus-examples.json")
+print(f"qid {len(out)}/{len(qs)} に {total} 例文を割り当て（複数の意味に当てはまる文 {dropped} 件を外した）→ public/corpus-examples.json")

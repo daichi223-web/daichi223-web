@@ -20,6 +20,7 @@ import { logEvent, markQuestionShown } from './lib/learningEvents';
 import { composeTodaySet, estimateFresh, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
 import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
 import { readStreak } from './lib/streak';
+import { buildFallbackOptions, pickTrueFalseWrongMeaning } from './lib/senseEquivalence';
 import {
   updateSrsState,
   getSrsBoxes,
@@ -847,107 +848,11 @@ function App() {
       let options: Word[] = apiChoices[i] || [];
       // この問題の実出題形式 (おまかせは prep で解決済み)
       const qType: ResolvedWordQuizType = prep.resolvedType ?? (wordQuizType as ResolvedWordQuizType);
-      // 選択肢が「語」になる形式 (blank-fill は word-reverse と同じ語彙誤答)
-      const lemmaMode = qType === 'word-reverse' || qType === 'blank-fill';
 
-      // フォールバック：API が使えない場合は前後10単語から選択肢を生成（記述モード以外）
+      // フォールバック：API が使えない場合は前後10単語から選択肢を生成（記述モード以外）。
+      // 正解と同じ意味・同じ語の表記ちがいは誤答に入れない（選び方は lib/senseEquivalence）
       if (qType !== 'meaning-writing' && options.length < 4) {
-        const incorrectOptions: Word[] = [];
-        const correctWord = prep.correctWord;
-
-        // 前後10単語の範囲（group番号±10）
-        const nearbyWords = allWords.filter(w =>
-          Math.abs(w.group - correctWord.group) <= 10 && w.qid !== correctWord.qid
-        );
-
-        if (qType === 'sentence-meaning') {
-          // Same word different meanings first (from nearby range)
-          const sameWordMeanings = nearbyWords.filter(w =>
-            w.lemma === correctWord.lemma
-          );
-
-          sameWordMeanings.forEach(meaning => {
-            if (incorrectOptions.length < 2) {
-              incorrectOptions.push(meaning);
-            }
-          });
-
-          // Fill with other nearby words
-          const shuffledNearby = [...nearbyWords].sort(() => Math.random() - 0.5);
-          for (const word of shuffledNearby) {
-            if (incorrectOptions.length >= 3) break;
-
-            if (!word || !word.lemma || !word.sense) continue;
-
-            if (word.sense !== correctWord.sense &&
-                !incorrectOptions.some(opt => opt && opt.sense === word.sense) &&
-                word.lemma !== correctWord.lemma) {
-              incorrectOptions.push(word);
-            }
-          }
-
-          // If still not enough, fall back to all words (試行上限付き)
-          if (incorrectOptions.length < 3) {
-            let attempts = 0;
-            const MAX_ATTEMPTS = 200;
-            while (incorrectOptions.length < 3 && attempts < MAX_ATTEMPTS) {
-              attempts++;
-              const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-              if (!randomWord || !randomWord.lemma || !randomWord.sense) continue;
-
-              if (randomWord.sense !== correctWord.sense &&
-                  !incorrectOptions.some(opt => opt && opt.sense === randomWord.sense) &&
-                  randomWord.lemma !== correctWord.lemma) {
-                incorrectOptions.push(randomWord);
-              }
-            }
-          }
-        } else {
-          // word-meaning / 語彙モード (word-reverse, blank-fill): use nearby words
-          const shuffledNearby = [...nearbyWords].sort(() => Math.random() - 0.5);
-
-          for (const word of shuffledNearby) {
-            if (incorrectOptions.length >= 3) break;
-            if (!word || !word.lemma || !word.sense) continue;
-
-            if (lemmaMode) {
-              if (word.lemma !== correctWord.lemma &&
-                  !incorrectOptions.some(opt => opt && opt.lemma === word.lemma)) {
-                incorrectOptions.push(word);
-              }
-            } else {
-              if (word.sense !== correctWord.sense &&
-                  !incorrectOptions.some(opt => opt && opt.sense === word.sense)) {
-                incorrectOptions.push(word);
-              }
-            }
-          }
-
-          // If still not enough, fall back to all words (試行上限付き)
-          if (incorrectOptions.length < 3) {
-            let attempts = 0;
-            const MAX_ATTEMPTS = 200;
-            while (incorrectOptions.length < 3 && attempts < MAX_ATTEMPTS) {
-              attempts++;
-              const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-              if (!randomWord || !randomWord.lemma || !randomWord.sense) continue;
-
-              if (lemmaMode) {
-                if (randomWord.lemma !== correctWord.lemma &&
-                    !incorrectOptions.some(opt => opt && opt.lemma === randomWord.lemma)) {
-                  incorrectOptions.push(randomWord);
-                }
-              } else {
-                if (randomWord.sense !== correctWord.sense &&
-                    !incorrectOptions.some(opt => opt && opt.sense === randomWord.sense)) {
-                  incorrectOptions.push(randomWord);
-                }
-              }
-            }
-          }
-        }
-
-        options = [correctWord, ...incorrectOptions].sort(() => Math.random() - 0.5);
+        options = buildFallbackOptions(prep.correctWord, allWords, qType);
       }
 
       quizData.push({
@@ -1091,29 +996,12 @@ function App() {
         const randomExample = wordGroup.meanings[Math.floor(Math.random() * wordGroup.meanings.length)];
         const exampleText = firstExampleText(randomExample);
         if (!exampleText) continue; // 例文無し → スキップ
-        let wrongMeaning: Word | null = null;
-
-        if (Math.random() < 0.5 && wordGroup.meanings.length > 1) {
-          // 同じ wordGroup 内の別の意味から選ぶ
-          let attempts = 0;
-          do {
-            wrongMeaning = wordGroup.meanings[Math.floor(Math.random() * wordGroup.meanings.length)];
-          } while (wrongMeaning.qid === randomExample.qid && ++attempts < MAX_RANDOM_ATTEMPTS);
-          if (wrongMeaning.qid === randomExample.qid) wrongMeaning = null;
-        } else {
-          // 全単語からランダムに別 lemma を選ぶ。試行上限と最終 null guard で
-          // 無限ループ・undefined アクセスを防ぐ
-          let attempts = 0;
-          while (attempts < MAX_RANDOM_ATTEMPTS) {
-            const candidate = allWords[Math.floor(Math.random() * allWords.length)];
-            attempts++;
-            if (!candidate || !candidate.lemma || !candidate.sense) continue;
-            if (candidate.lemma !== wordGroup.lemma) {
-              wrongMeaning = candidate;
-              break;
-            }
-          }
-        }
+        // 誤りの意味: 半々で同じ wordGroup 内の別の意味か、全単語からの別 lemma。
+        // 正しい意味と紛れるもの（同じ意味・表記ちがいの語）は除く。試行上限と
+        // 最終 null guard で無限ループ・undefined アクセスを防ぐ（lib/senseEquivalence）
+        const wrongMeaning = pickTrueFalseWrongMeaning(
+          randomExample, wordGroup.meanings, allWords, Math.random, MAX_RANDOM_ATTEMPTS
+        );
         if (!wrongMeaning || !wrongMeaning.sense) continue; // 確保できなければスキップ
 
         // Get examples for the random example (sense-priority)
@@ -1514,7 +1402,8 @@ function App() {
       return currentQuizData.length;
     } else if (currentMode === 'polysemy') {
       if (polysemyQuizType === 'example-comprehension') {
-        return polysemyState.words.reduce((sum, word) => sum + word.meanings.length, 0);
+        // 加点は語ごと（全意味正解で +1。handleExampleComprehensionCheck）なので、分母も語の数
+        return polysemyState.words.length;
       } else if (polysemyQuizType === 'context-writing') {
         return polysemyState.words.length; // 見出し語単位でカウント
       } else {
