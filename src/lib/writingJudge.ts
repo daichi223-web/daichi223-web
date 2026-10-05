@@ -131,11 +131,41 @@ export function describeNorm(senseNorm?: string): NormGuide {
   return { options, notes };
 }
 
-function variantsOf(s: JudgeSense): string[] {
+/** 呼応・補助の言い方の区切り。「まったく〜ない」の「〜」 */
+const TILDE = /[〜~～]/;
+
+/**
+ * 正解（または別義）として照合する言い方。正規化後、重複なし。
+ * senseNorm の言い方に、訳の穴〔…〕の断片を足す。ただし、その語の意味を表していない断片は単独では登録しない:
+ * - 穴が2つ以上ある訳（「〔まったく〕…〔ない〕」「〔お〕…〔申し上げ〕」）の断片は、senseNorm の言い方そのもの、
+ *   または senseNorm を「〜」で区切った語そのものの部分（「まったく」「申し上げる」。呼応の相手の打消「ない」と
+ *   1文字の「お」「か」は除く）に当たるときだけ登録し、代わりに断片をつないだ形（「まったくない」）を登録する
+ * - 1文字の断片（「な」「い」）は登録しない。1文字の正解（「縁」「旨」）は senseNorm の側で登録される
+ */
+export function variantsOf(s: JudgeSense): string[] {
   const v = new Set<string>();
-  for (const p of expandNorm(s.senseNorm)) v.add(normalizeAnswer(p));
-  for (const b of brackets(s.sense)) v.add(normalizeAnswer(b));
-  for (const ex of s.examples ?? []) for (const b of brackets(ex.translation)) v.add(normalizeAnswer(b));
+  const norms = expandNorm(s.senseNorm).map(normalizeAnswer).filter(Boolean);
+  for (const n of norms) v.add(n);
+  const segments = new Set(
+    expandNorm(s.senseNorm)
+      .filter((p) => TILDE.test(p))
+      .flatMap((p) => p.split(TILDE).map(normalizeAnswer))
+      .filter((h) => h.length >= 2 && !isNegative(h)),
+  );
+  const hasOneCharNorm = norms.some((n) => n.length === 1);
+  const addHoles = (text?: string) => {
+    const hs = brackets(text).map(normalizeAnswer).filter(Boolean);
+    if (hs.length >= 2) {
+      const single = hs.filter((h) => norms.includes(h) || segments.has(h));
+      for (const h of single) v.add(h);
+      // 単独で登録しない断片があるときだけ、つないだ形で登録する（同じ語が2回出る訳は不要）
+      if (single.length < hs.length) v.add(hs.join(''));
+      return;
+    }
+    for (const h of hs) if (h.length >= 2 || hasOneCharNorm) v.add(h);
+  };
+  addHoles(s.sense);
+  for (const ex of s.examples ?? []) addHoles(ex.translation);
   v.delete('');
   return [...v];
 }
@@ -181,21 +211,31 @@ function contains(a: Keys, b: Keys): boolean {
   return pair(a.stem, b.stem) || pair(a.yomiStem, b.yomiStem);
 }
 
+/** 並べ書きの区切り。「意地が悪い・ひどい」「意地が悪い、ひどい」「ひどい 意地が悪い」 */
+const LIST_SEP = /[・･、，,／/\s]+/;
+
+/** 回答を並べ書きの部分に分ける。normalizeAnswer は区切りを落とすので、正規化の前の回答で分ける */
+const splitListed = (answer: string): string[] =>
+  answer.split(LIST_SEP).map(normalizeAnswer).filter(Boolean);
+
 export function judgeWriting(input: WritingJudgeInput): WritingJudgeResult {
   const { target, siblings = [], accepted = [], rejected = [], toReading } = input;
   const norm = normalizeAnswer(input.answer);
   if (!norm) return { verdict: 'blank' };
 
   const ans = keysOf(norm, toReading);
-  const hit = (vs: string[]) => vs.some((v) => same(ans, keysOf(v, toReading)));
+  const hitBy = (k: Keys, vs: string[]) => vs.some((v) => same(k, keysOf(v, toReading)));
+  const hit = (vs: string[]) => hitBy(ans, vs);
 
   // 教員の判断を自動の照合より先に見る。不正解の指定は活用ちがいにまで広げない
-  const exact = (v: string) => {
-    const k = keysOf(v, toReading);
-    return k.raw === ans.raw || (!!k.yomi && k.yomi === ans.yomi);
+  const exactBy = (k: Keys, v: string) => {
+    const kv = keysOf(v, toReading);
+    return kv.raw === k.raw || (!!kv.yomi && kv.yomi === k.yomi);
   };
-  if (rejected.map(normalizeAnswer).filter(Boolean).some(exact)) return { verdict: 'wrong' };
-  if (hit(accepted.map(normalizeAnswer).filter(Boolean))) return { verdict: 'correct' };
+  const rejectedNorm = rejected.map(normalizeAnswer).filter(Boolean);
+  const acceptedNorm = accepted.map(normalizeAnswer).filter(Boolean);
+  if (rejectedNorm.some((v) => exactBy(ans, v))) return { verdict: 'wrong' };
+  if (hit(acceptedNorm)) return { verdict: 'correct' };
 
   const targetVariants = variantsOf(target);
   const onTarget = hit(targetVariants);
@@ -203,6 +243,16 @@ export function judgeWriting(input: WritingJudgeInput): WritingJudgeResult {
   const partial = targetVariants.some((v) => contains(ans, keysOf(v, toReading)));
 
   if (onTarget) return sibling ? { verdict: 'correct', overlap: true } : { verdict: 'correct' };
+
+  // 並べて書いた回答（「意地が悪い、ひどい」）は、全部分が正解の言い方なら正解。
+  // 別義や現代語の罠が混ざれば、全体での判定（別義・保留）をそのまま返す
+  const parts = splitListed(input.answer);
+  if (parts.length >= 2) {
+    const keys = parts.map((p) => keysOf(p, toReading));
+    const allOk = keys.every((k) => hitBy(k, acceptedNorm) || hitBy(k, targetVariants));
+    const anyRejected = keys.some((k) => rejectedNorm.some((v) => exactBy(k, v)));
+    if (allOk && !anyRejected) return sibling ? { verdict: 'correct', overlap: true } : { verdict: 'correct' };
+  }
   // 別義に当たっても、正解の言い方と重なるなら正解（「いつもの」と「いつものように」）
   if (sibling) return partial ? { verdict: 'correct', overlap: true } : { verdict: 'other_sense', matchedQid: sibling.qid };
   if (hit(trapVariantsOf(target))) return { verdict: 'modern_trap' };

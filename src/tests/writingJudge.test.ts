@@ -207,3 +207,109 @@ describe('describeNorm と judgeWriting の整合（全 740 件）', () => {
     expect(diff).toEqual([]);
   });
 });
+
+// 実データ（kobunQ.v2.slim）の1語を、同じ見出し語の全意味を siblings にして判定する
+const realWords = slimJson as unknown as Array<JudgeSense & { lemma: string }>;
+const real = (qid: string): { target: JudgeSense; siblings: JudgeSense[] } => {
+  const target = realWords.find((w) => w.qid === qid);
+  if (!target) throw new Error(`qid ${qid} が実データにない`);
+  return { target, siblings: realWords.filter((w) => w.lemma === target.lemma) };
+};
+const verdictOf = (qid: string, answer: string) => judgeWriting({ answer, ...real(qid) }).verdict;
+
+describe('judgeWriting: 並べて書いた回答（正解の言い方を全部書いても正解）', () => {
+  it('「・」「、」空白で並べた正解の言い方は、全部が正解の言い方なら正解', () => {
+    for (const a of ['意地が悪い・ひどい', '意地が悪い、ひどい', 'ひどい 意地が悪い', '意地が悪い／ひどい']) {
+      expect(judgeWriting({ answer: a, target: ayaniku }).verdict).toBe('correct');
+    }
+    expect(verdictOf('245-1', '意地が悪い、ひどい')).toBe('correct');
+  });
+
+  it('正解と別義・現代語の罠を並べたら正解にしない（順序を問わず）', () => {
+    const withSiblings = { target: odorokuKizuku, siblings: [odorokuKizuku, odorokuMezameru] };
+    for (const a of ['気づく、驚く', '驚く、気づく', '気づく、目を覚ます', '目を覚ます、気づく']) {
+      expect(judgeWriting({ answer: a, ...withSiblings }).verdict).not.toBe('correct');
+      expect(verdictOf('1-1', a)).not.toBe('correct');
+    }
+  });
+
+  it('正解の言い方でない部分が1つでもあれば正解にしない', () => {
+    expect(judgeWriting({ answer: '意地が悪い、ひどい、つらい', target: ayaniku }).verdict).not.toBe('correct');
+  });
+
+  it('教員が不正解と決めた言い方が部分に混ざれば正解にしない。全体が不正解の言い方なら wrong のまま', () => {
+    expect(judgeWriting({ answer: 'ひどい、意地が悪い', target: ayaniku, rejected: ['ひどい'] }).verdict).not.toBe('correct');
+    expect(judgeWriting({ answer: 'ひどい', target: ayaniku, rejected: ['ひどい'] }).verdict).toBe('wrong');
+  });
+
+  it('教員が認めた言い方は部分としても正解の言い方に数える', () => {
+    expect(judgeWriting({ answer: '病気がよくなる、快方に向かう', target: okotaru }).verdict).not.toBe('correct');
+    expect(judgeWriting({ answer: '病気がよくなる、快方に向かう', target: okotaru, accepted: ['快方に向かう'] }).verdict).toBe('correct');
+  });
+
+  it('読点を含む正解は、全体の一致が先に効いて正解のまま', () => {
+    expect(verdictOf('150-1', 'さあ、一緒にいらっしゃい')).toBe('correct');
+    expect(verdictOf('278-1', 'しっ、静かに')).toBe('correct');
+    expect(verdictOf('334-2', 'どうして〜か、いや〜ない')).toBe('correct');
+  });
+
+  it('全 740 件: senseNorm をそのまま写しても、「・」の言い方を「、」で全部並べても正解', () => {
+    const failed: string[] = [];
+    let listed = 0;
+    for (const w of realWords) {
+      const guide = describeNorm(w.senseNorm);
+      // 括弧の注記つきの senseNorm は、画面の options を「、」で並べた形で試す
+      const answers = [/[（(]/.test(w.senseNorm ?? '') ? guide.options.join('、') : w.senseNorm ?? ''];
+      if (guide.options.length > 1) {
+        listed++;
+        answers.push(guide.options.join('、'));
+      }
+      for (const answer of answers) {
+        const verdict = judgeWriting({ answer, target: w }).verdict;
+        if (verdict !== 'correct') failed.push(`${w.qid}: 「${answer}」→ ${verdict}（${w.senseNorm}）`);
+      }
+    }
+    expect(listed).toBeGreaterThan(100);
+    expect(failed).toEqual([]);
+  });
+});
+
+describe('judgeWriting: 語の意味を表さない短い断片は正解の言い方にしない', () => {
+  it('訳の穴が2つ以上ある訳の、機能語だけの断片は正解にも別義にもならない', () => {
+    const cases: Array<[string, string]> = [
+      ['155-2', 'お'], // お〜申し上げる（補助動詞）
+      ['159-2', 'お'], // お〜になる（四段・補助動詞）
+      ['49-1', 'ない'], // まったく〜ない
+      ['138-1', 'ない'], // 少しも〜ない
+      ['334-2', 'か'], // どうして〜か、いや〜ない（反語）
+      ['350-1', 'べき'], // 当然〜すべきだ
+    ];
+    for (const [qid, a] of cases) expect(['correct', 'other_sense'], `${qid}「${a}」`).not.toContain(verdictOf(qid, a));
+  });
+
+  it('穴が1つの訳でも、1文字だけの断片は正解にも別義にもならない', () => {
+    const cases: Array<[string, string]> = [
+      ['48-1', 'な'], // 〜するな（禁止）
+      ['67-1', 'い'], // いる
+    ];
+    for (const [qid, a] of cases) expect(['correct', 'other_sense'], `${qid}「${a}」`).not.toContain(verdictOf(qid, a));
+  });
+
+  it('呼応の副詞は、意味を表す側だけでも、つないだ形でも正解のまま', () => {
+    expect(verdictOf('49-1', 'まったく')).toBe('correct');
+    expect(verdictOf('49-1', 'まったく〜ない')).toBe('correct');
+    expect(verdictOf('138-1', '少しも')).toBe('correct');
+    expect(verdictOf('350-1', '当然')).toBe('correct');
+    expect(verdictOf('334-2', 'どうして')).toBe('correct');
+    expect(verdictOf('48-1', '〜するな')).toBe('correct');
+    expect(verdictOf('155-2', 'お〜申し上げる')).toBe('correct');
+    expect(verdictOf('9-2', 'ている')).toBe('correct');
+  });
+
+  it('1文字の senseNorm（122-1「縁」）と、穴が1つの訳の断片（203-1）は従来どおり正解', () => {
+    expect(verdictOf('122-1', '縁')).toBe('correct');
+    expect(judgeWriting({ answer: '縁', target: yoshiEn }).verdict).toBe('correct');
+    expect(verdictOf('203-1', '病気がよくなっ')).toBe('correct');
+    expect(verdictOf('203-1', '病気がよくなったようなので')).toBe('correct');
+  });
+});
