@@ -171,7 +171,7 @@ describe('describeNorm: 正解の言い方を画面用に分ける', () => {
 });
 
 // 画面に「正解」として出した言い方を、そのまま写して答えたら必ず正解になること。
-describe('describeNorm と judgeWriting の整合（全 741 件）', () => {
+describe('describeNorm と judgeWriting の整合（全 740 件）', () => {
   const words = slimJson as unknown as JudgeSense[];
 
   it('options のどれを書いても正解。頭括弧の中身つきでも正解', () => {
@@ -189,8 +189,8 @@ describe('describeNorm と judgeWriting の整合（全 741 件）', () => {
         }
       }
     }
-    expect(words.length).toBe(741);
-    expect(checked).toBeGreaterThan(741);
+    expect(words.length).toBe(740);
+    expect(checked).toBeGreaterThan(740);
     expect(failed).toEqual([]);
   });
 

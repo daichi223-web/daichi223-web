@@ -125,6 +125,8 @@ const lines = [];
   const { group, word_idx } = nextGroup();
   lines.push(entry("こころなし", group, 1, word_idx, nextMeaning(), "思いやりがない", [{ jp: "こころなき人。", translation: "（訳）〔 思いやりがない 〕人。" }]));
   lines.push(entry("こころなし", group, 2, word_idx, nextMeaning(), "情趣を解さない", [{ jp: "こころなき身にもあはれは知られけり鴫立つ沢の秋の夕暮れ。（西行）", translation: "（訳）〔 情趣を解さない 〕身にも感動は感じられることだ、鴫の飛び立つ沢の秋の夕暮れよ。" }]));
+  // 341-3 は欠番（2026-10-06 に外した。古語『心無し』の語義として辞書で裏づけが取れないため）。
+  // この行を消すと後続の meaning_idx がずれるので、スクリプトは当時のまま残す。
   lines.push(entry("こころなし", group, 3, word_idx, nextMeaning(), "なんとなく", []));
 }
 

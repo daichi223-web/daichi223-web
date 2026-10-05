@@ -11,7 +11,6 @@ import bundledKobunQ from '../data/kobunQ.v2.slim.json';
 // 将来例文が補完されたら、この set から該当 qid を外せば再度警告対象に戻る。
 // TODO(data): 出典付きの例文が見つかったら data/kobunQ.json を直接編集
 const KNOWN_EMPTY_EXAMPLE_QIDS = new Set<string>([
-  '341-3', // こころなし 「なんとなく」 — 出典確定例文を後日補完
   '350-2', // まさに    「ちょうど」    — 出典確定例文を後日補完
 ]);
 

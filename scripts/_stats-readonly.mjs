@@ -64,7 +64,7 @@ for (const r of ws) {
   byQid.set(r.qid, q);
 }
 console.log(`- 利用者（user_id 種類）: ${users.size}`);
-console.log(`- 出題された語(qid): ${byQid.size} / 741`);
+console.log(`- 出題された語(qid): ${byQid.size} / 740`);
 console.log(`- 回答総数: ${totalAns}（正答 ${pct(totalCorrect, totalAns)}%）`);
 const ansPerUser = [...users.values()].map((u) => u.ans).sort((a, b) => b - a);
 console.log(`- 1人あたり回答数: 中央値 ${median(ansPerUser)} / 上位5 ${ansPerUser.slice(0, 5).join(",")} / 10回以下の人 ${ansPerUser.filter((x) => x <= 10).length}人`);

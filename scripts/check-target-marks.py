@@ -6,7 +6,7 @@ kobunQ.v2.json（正本）と kobunQ.v2.slim.json（再生成後）を読み、�
   (a) 各範囲が 0<=開始・長さ>=1・開始+長さ<=len(jp)、重なりなし・昇順
   (b) jp の各範囲を空欄記号に置き換えると jpBlank（空欄記号を正規化し二連を1つにしたもの）と一致
   (c) jpBlank を持つ example は必ず mark を持ち、持たない example には mark が無い
-  (d) qid の並びと件数 741 が不変
+  (d) qid の並びと件数 740 が不変
 人が目で確かめる一覧も出す: 複数範囲の件、見出し語より3文字以上長い範囲の件。
 
 usage: python -X utf8 scripts/check-target-marks.py [一覧の出力先.txt]
@@ -25,7 +25,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src", "data", "kobunQ.v2.json")
 SLIM = os.path.join(ROOT, "src", "data", "kobunQ.v2.slim.json")
 
-EXPECTED_WORDS = 741
+EXPECTED_WORDS = 740
 
 
 def main():

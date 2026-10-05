@@ -482,10 +482,12 @@ export default function StatsPage() {
           srs = (data ?? []) as SrsBoxRow[];
         }
         if (cancelled) return;
-        setStats(s);
-        setWeakQids(weak);
-        setDueQids(due);
-        setSrsRows(srs);
+        // 単語データから外した qid（欠番）の記録は、一覧にも件数にも出さない
+        const known = (qid: string) => lemmaIndex[qid] !== undefined;
+        setStats(Object.fromEntries(Object.entries(s).filter(([qid]) => known(qid))));
+        setWeakQids(weak.filter(known));
+        setDueQids(due.filter(known));
+        setSrsRows(srs.filter((r) => known(r.qid)));
       } catch (e) {
         // silent fail
       } finally {
@@ -495,7 +497,7 @@ export default function StatsPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [lemmaIndex]);
 
   const overall = useMemo(() => {
     let answered = 0;

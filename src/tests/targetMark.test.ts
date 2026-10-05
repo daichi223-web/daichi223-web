@@ -125,6 +125,8 @@ describe('resolveTargetSpans', () => {
 // 2026-10-05 の実測（1,246 件）: 一致 869 / 短い 70 / 長い 1 / 内側 13 / 見つからない 291 / 別の場所 2
 // 2026-10-05 単語データ修正（見出し語3語の綴り・第2例文のずれ直し）後の実測（1,245 件）:
 //   一致 882 / 一部重なる 89（短い・長い・内側の内訳は数え直していない）/ 見つからない 271 / 別の場所 3
+// 2026-10-06 単語データ修正・第2弾（第2例文の付け替え。別語の例文など5組を外した）後の実測（1,240 件）:
+//   一致 882 / 一部重なる 86 / 見つからない 269 / 別の場所 3
 describe('findInflectedSpan: 全件の回帰検査', () => {
   // 正解の範囲と交わらない位置を返す既知の件
   //   211-1 さかし   …「さかしうて、まことにさかしき人」の手前の「さかしう」に当たる
@@ -155,7 +157,7 @@ describe('findInflectedSpan: 全件の回帰検査', () => {
       }
     }
     expect(elsewhere).toEqual(KNOWN_ELSEWHERE);
-    expect(total).toBe(1245);
+    expect(total).toBe(1240);
     expect(count.same + count.overlap + count.none + count.elsewhere).toBe(total);
     // 照合が正解と同じ範囲になる割合が落ちていないこと
     expect(count.same).toBeGreaterThanOrEqual(882);

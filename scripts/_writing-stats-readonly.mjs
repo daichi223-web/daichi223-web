@@ -129,7 +129,7 @@ const pendN = byClass.get("未決") ?? 0;
 const md = [];
 md.push(`# 記述回答の集計（read-only）`, ``);
 md.push(`- 記述回答 総数: ${N}`);
-md.push(`- 出題された qid: ${new Set(rows.map((r) => r.qid)).size} / 741`);
+md.push(`- 出題された qid: ${new Set(rows.map((r) => r.qid)).size} / 740`);
 md.push(`- ユニークな (qid, 回答): ${uniq.size}`);
 md.push(`- 回答の長さ（正規化後）: 中央値 ${lens[lens.length >> 1] ?? 0} / 90% ${lens[Math.floor(lens.length * 0.9)] ?? 0} / 最大 ${lens[lens.length - 1] ?? 0}`);
 md.push(`- 自己判定あり: ${manualN}（${pct(manualN, N)}%）`, ``);
