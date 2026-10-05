@@ -28,6 +28,11 @@
  *   T13 決め手の食い違い  決め手の意味が、その token の品詞分解の意味と食い違わないか
  *   T14 壊れた品詞タグ    pos/意味/活用形に wikilink の断片が残っていないか
  *   T15 一覧参照        affixRefs が public/affixes.json（接頭語・接尾語一覧）に実在するか
+ *   T16 語の割れ        1語が文の境界や品詞分解の取りこぼしで2トークンに割れていないか
+ *                       （T2/T3 は連結と位置しか見ないので、連結が合っている割れは素通りする）
+ *                       a) 文の境界をまたいで、同じ品詞分解の活用語が2つに割れている（「つかは｜し」）
+ *                       b) 用言の字が見出し語の語幹を欠いている（「し」の見出し語が「まうす」）
+ *                       c) 印なし（grammarTag なし）の漢字＋活用語尾だけの用言（「申｜し」「呑｜む」）
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -326,6 +331,50 @@ for (const id of targets) {
       if (bad.length > 0) {
         add(id, 'T14-壊れた品詞タグ', `${tk.id}「${tk.text}」: ${bad[0].slice(0, 40)}`);
       }
+    }
+  }
+
+  // T16 語の割れ（連結は本文と一致していても、1語が2トークンに割れている）
+  {
+    const INFLECT = /^(動詞|補助動詞|助動詞|形容詞|形容動詞)$/; // 感動詞は含めない
+    const YOGEN = /^(動詞|補助動詞|形容詞|形容動詞)$/;
+    const KANA = /^[ぁ-ゖ]+$/;
+    const PUNCT = /^[\s　、。，．・「」『』（）()〈〉？！?!…―]+$/; // 句読点への複製は語の割れとは別の問題なので見ない
+    const sameMeta = (x, y) => {
+      const strip = (t) => {
+        const o = { ...t };
+        delete o.id; delete o.text; delete o.start; delete o.end;
+        return JSON.stringify(o);
+      };
+      return strip(x) === strip(y);
+    };
+    // a) 文の境界をまたぐ割れ（行の折り返しで分けた文に、割れた語の両方へ同じ品詞分解が複製されている）
+    for (let i = 0; i + 1 < sentences.length; i++) {
+      const A = sentences[i].tokens || [], B = sentences[i + 1].tokens || [];
+      const x = A[A.length - 1], y = B[0];
+      if (!x || !y) continue;
+      const pos = x.grammarTag?.pos || '';
+      if (INFLECT.test(pos) && x.text !== y.text && !PUNCT.test(x.text) && !PUNCT.test(y.text) && sameMeta(x, y)) {
+        add(id, 'T16-語の割れ', `${x.id}「${x.text}」｜${y.id}「${y.text}」: 文の境界で1語（${pos}）が割れている`);
+      }
+    }
+    for (const st of sentences) {
+      const toks = st.tokens || [];
+      toks.forEach((tk, k) => {
+        const g = tk.grammarTag || {};
+        // b) 語幹の欠け
+        const base = g.baseForm || '';
+        if (YOGEN.test(g.pos || '') && KANA.test(tk.text || '') && KANA.test(base) &&
+            base.length >= 3 && tk.text.length < base.length - 1 && tk.text[0] !== base[0]) {
+          add(id, 'T16-語の割れ', `${tk.id}「${tk.text}」: 見出し語「${base}」の語幹が無い`);
+        }
+        // c) 印なしの漢字＋活用語尾だけの用言
+        const prev = toks[k - 1];
+        if (prev && !('grammarTag' in prev) && /[㐀-鿿豈-﫿々]$/.test(prev.text || '') &&
+            YOGEN.test(g.pos || '') && KANA.test(tk.text || '') && tk.text.length <= 2) {
+          add(id, 'T16-語の割れ', `${prev.id}「${prev.text}」＋${tk.id}「${tk.text}」: 漢字と活用語尾が別トークン（品詞分解は語尾側だけ）`);
+        }
+      });
     }
   }
 

@@ -1984,7 +1984,7 @@
     },
     {
       "id": "s16",
-      "originalText": "母みまかりにける秋、野分しける日、もと住みはべりけ",
+      "originalText": "母みまかりにける秋、野分しける日、もと住みはべりける",
       "modernTranslation": "母が亡くなってしまった秋、野分の吹き荒れた日に、母のもと住んでおりましたところに参りまして",
       "tokens": [
         {
@@ -2131,9 +2131,9 @@
         },
         {
           "id": "s16-t13",
-          "text": "け",
+          "text": "ける",
           "start": 24,
-          "end": 25,
+          "end": 26,
           "layer": 2,
           "grammarTag": {
             "pos": "助動詞",
@@ -2146,37 +2146,24 @@
     },
     {
       "id": "s17",
-      "originalText": "る所にまかりて〈哀傷〉　　　　　　　　　　　　　　　　　　　　　藤原定家",
+      "originalText": "所にまかりて〈哀傷〉　　　　　　　　　　　　　　　　　　　　　藤原定家",
       "modernTranslation": "",
       "tokens": [
         {
           "id": "s17-t1",
-          "text": "る",
+          "text": "所",
           "start": 0,
           "end": 1,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei"
-        },
-        {
-          "id": "s17-t2",
-          "text": "所",
-          "start": 1,
-          "end": 2,
           "layer": 0,
           "grammarTag": {
             "pos": ""
           }
         },
         {
-          "id": "s17-t3",
+          "id": "s17-t2",
           "text": "に",
-          "start": 2,
-          "end": 3,
+          "start": 1,
+          "end": 2,
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
@@ -2185,10 +2172,10 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s17-t4",
+          "id": "s17-t3",
           "text": "まかり",
-          "start": 3,
-          "end": 6,
+          "start": 2,
+          "end": 5,
           "layer": 4,
           "grammarTag": {
             "pos": "動詞",
@@ -2200,20 +2187,30 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s17-t5",
+          "id": "s17-t4",
           "text": "て",
-          "start": 6,
-          "end": 7,
+          "start": 5,
+          "end": 6,
           "layer": 3,
           "grammarTag": {
             "pos": "接続助詞"
           }
         },
         {
-          "id": "s17-t6",
+          "id": "s17-t5",
           "text": "〈哀傷〉",
-          "start": 7,
-          "end": 11,
+          "start": 6,
+          "end": 10,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s17-t6",
+          "text": "　　　　　　　　　　　　　　　　　　　　　",
+          "start": 10,
+          "end": 31,
           "layer": 0,
           "grammarTag": {
             "pos": ""
@@ -2221,19 +2218,9 @@
         },
         {
           "id": "s17-t7",
-          "text": "　　　　　　　　　　　　　　　　　　　　　",
-          "start": 11,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s17-t8",
           "text": "藤原定家",
-          "start": 32,
-          "end": 36,
+          "start": 31,
+          "end": 35,
           "layer": 0,
           "grammarTag": {
             "pos": ""
