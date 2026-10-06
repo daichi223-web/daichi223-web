@@ -11,7 +11,7 @@ import {
   answerTone, hasAnswerBlank, isSubmitEnter, scrollBehavior, selfJudgePrompt, senseLabel,
   softTone, stripSenseBrackets, writingHeadline, writingPrompt,
 } from './writingVerdict';
-import { resolveTargetSpans } from '../../lib/targetMark';
+import { resolveTargetSpans, type Span } from '../../lib/targetMark';
 
 interface QuizQuestion {
   correct: Word;
@@ -24,6 +24,7 @@ interface QuizQuestion {
   corpusExample?: boolean; // 例文が教材実文
   resolvedType?: WordQuizType; // おまかせ時の実出題形式
   jpBlank?: string; // blank-fill: 〔　　　〕入りの例文
+  exampleMark?: Span[]; // exampleKobun に付いてきた対象語の位置（実戦例文の mark）
 }
 
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'blank-fill' | 'meaning-writing';
@@ -136,6 +137,7 @@ export function WordQuizContent({
           card
           className="mb-4"
           target={question.correct}
+          targetSpans={question.exampleMark}
         />
 
         <div className="bg-rw-paper p-4 rounded-2xl border-2 border-rw-ink mb-2">
@@ -298,7 +300,7 @@ export function WordQuizContent({
 
   // 形式ごとの問いの1行（おまかせで問題ごとに形式が変わっても、何を答えるかが分かるように）
   const sentenceText = question.exampleKobun || question.correct.examples?.[0]?.jp || '';
-  const isMarked = !!sentenceText && resolveTargetSpans(sentenceText, question.correct).spans.length > 0;
+  const isMarked = !!sentenceText && resolveTargetSpans(sentenceText, question.correct, question.exampleMark).spans.length > 0;
   const instruction =
     quizType === 'word-meaning'
       ? 'この語の意味を選ぼう'
@@ -363,6 +365,7 @@ export function WordQuizContent({
               <MarkedSentence
                 text={question.exampleKobun || question.correct.examples?.[0]?.jp || 'データなし'}
                 word={question.correct}
+                spans={question.exampleMark}
               />
             </div>
           </div>
@@ -390,6 +393,7 @@ export function WordQuizContent({
                 maskAnswer
                 phase={answeredCorrectly !== null ? 'answer' : 'question'}
                 target={question.correct}
+                targetSpans={question.exampleMark}
               />
               {canHintModern && !showModernTranslation && answeredCorrectly === null && (
                 <button
@@ -500,6 +504,7 @@ export function WordQuizContent({
           forceShowModern={true}
           className="mt-3 bg-rw-primary-soft rounded-xl border-2 border-rw-primary"
           target={question.correct}
+          targetSpans={question.exampleMark}
         />
       )}
 

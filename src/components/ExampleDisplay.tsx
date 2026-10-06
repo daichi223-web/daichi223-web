@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Word } from '../types';
 import { MarkedSentence } from './quiz/MarkedSentence';
+import type { Span } from '../lib/targetMark';
 import { maskTranslation } from './quiz/writingVerdict';
 
 interface ExampleDisplayProps {
@@ -14,6 +15,7 @@ interface ExampleDisplayProps {
   card?: boolean; // 問いの対象の文として、紙のカードに入れて大きく見せる
   className?: string;
   target?: Word; // 渡すと、古文の中の問われている語に印を付ける
+  targetSpans?: readonly Span[]; // exampleKobun に付いてきた位置（実戦例文の mark）。あれば最優先
 }
 
 // 訳の文字色。rw-ink-soft だけだと地の色（rw-bg・primary-soft）の上で比 4.5 を切るので、ink を半分混ぜる
@@ -29,7 +31,8 @@ const ExampleDisplay: React.FC<ExampleDisplayProps> = ({
   maskAnswer = false,
   card = false,
   className = '',
-  target
+  target,
+  targetSpans
 }) => {
   // forceShowModern=true なら常に表示、そうでなければ phase === 'answer' の時のみ表示
   const shouldShowModern = showModern && exampleModern && (forceShowModern || phase === 'answer');
@@ -53,7 +56,7 @@ const ExampleDisplay: React.FC<ExampleDisplayProps> = ({
       {kobunVisible && (
         <div className={modernVisible ? (card ? 'mb-3' : 'mb-1') : ''}>
           <div className={kobunClass}>
-            {target ? <MarkedSentence text={exampleKobun} word={target} /> : exampleKobun}
+            {target ? <MarkedSentence text={exampleKobun} word={target} spans={targetSpans} /> : exampleKobun}
           </div>
         </div>
       )}

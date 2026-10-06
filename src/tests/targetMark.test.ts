@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { findInflectedSpan, resolveTargetSpans, splitBySpans, NO_MATCH_QIDS, type Span } from '../lib/targetMark';
 import type { Word } from '../types';
 import slimJson from '../data/kobunQ.v2.slim.json';
+import corpusJson from '../../public/corpus-examples.json';
 
 // 実データ（kobunQ.v2.slim）。mark は scripts/build-kobunq-slim.py が jpBlank との差分から生成する。
 type SlimWord = Pick<Word, 'qid' | 'lemma' | 'pos' | 'examples'>;
@@ -118,6 +119,56 @@ describe('resolveTargetSpans', () => {
     expect(resolveTargetSpans('身も亡びなむ、かくなせそ（伊勢物語）', w).source).toBe('none');
     const jp = w.examples[0].jp;
     expect(resolveTargetSpans(jp, w).source).toBe('data');
+  });
+
+  it('明示の位置（例文に付いてきた mark）を最優先する', () => {
+    const w = byQid('1-1');
+    const jp = w.examples[0].jp; // slim の mark は [[21, 4]]
+    expect(resolveTargetSpans(jp, w, [[0, 2]])).toEqual({ spans: [[0, 2]], source: 'data' });
+    // 照合で当たる文でも明示の位置が勝つ
+    const jp2 = 'おどろきて見れば、夢なりけり（更級日記）';
+    expect(resolveTargetSpans(jp2, w, [[9, 1], [5, 2]])).toEqual({ spans: [[9, 1], [5, 2]], source: 'data' });
+    // 除外表の語でも明示の位置は使う
+    expect(resolveTargetSpans('身も亡びなむ、かくなせそ（伊勢物語）', byQid('48-1'), [[9, 1], [11, 1]]).source).toBe('data');
+  });
+
+  it('明示の位置が文に収まらなければ使わず、次の順位へ進む', () => {
+    const w = byQid('1-1');
+    const jp = w.examples[0].jp;
+    for (const bad of [[], [[0, 0]], [[-1, 2]], [[jp.length - 1, 2]], [[0, 3], [2, 2]], [[0.5, 1]]] as Span[][]) {
+      expect(resolveTargetSpans(jp, w, bad)).toEqual({ spans: [[21, 4]], source: 'data' });
+    }
+    expect(resolveTargetSpans('おどろきて見れば', w, [[50, 1]])).toEqual({ spans: [[0, 4]], source: 'match' });
+  });
+});
+
+// 実戦例文（public/corpus-examples.json）の mark。位置は scripts/build-corpus-examples.py が
+// data/enrich/corpus-additions.jsonl の target（出現形）から計算する。形の検査は scripts/check-target-marks.py にもある。
+type CorpusRow = { jp: string; translation: string; mark?: Span[] };
+const corpus = corpusJson as unknown as Record<string, CorpusRow[]>;
+
+describe('実戦例文の mark: 全件', () => {
+  const rows = Object.entries(corpus).flatMap(([qid, rs]) => rs.map((r) => ({ qid, ...r })));
+  const marked = rows.filter((r) => r.mark);
+
+  it('mark はすべて例文の内側にあり、重ならず、そのまま印になる', () => {
+    expect(marked.length).toBe(98); // 2026-10-06: 追加98件すべて。教材由来の例文は位置の手がかりが無く mark なし
+    for (const r of marked) {
+      const w = byQid(r.qid);
+      const res = resolveTargetSpans(r.jp, w, r.mark);
+      expect(res.source, `${r.qid} ${r.jp}`).toBe('data');
+      expect(res.spans).toEqual(r.mark);
+      const parts = splitBySpans(r.jp, r.mark!);
+      expect(parts.filter((p) => p.marked).length).toBe(r.mark!.length);
+      expect(parts.map((p) => p.text).join('')).toBe(r.jp);
+    }
+  });
+
+  it('基本動詞の追加例文: 照合では前の「といふ」に付く 355-1-① が「いはく」に付く', () => {
+    const r = corpus['355-1'].find((x) => x.jp.startsWith('それを見て、ある人のいはく'))!;
+    const w = byQid('355-1');
+    expect(cut(r.jp, resolveTargetSpans(r.jp, w).spans)).toEqual(['いふ']); // 位置なし（従来）
+    expect(cut(r.jp, resolveTargetSpans(r.jp, w, r.mark).spans)).toEqual(['いはく']);
   });
 });
 

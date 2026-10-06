@@ -7,7 +7,11 @@ examples-by-lemma.json（教材由来の実例文）を kobun_q の各 qid（lem
 並び順が food い違うため使わない（「おどろく」で実際に逆転を確認済み）。
 さらに data/enrich/corpus-additions.jsonl の人が選んだ例文（qid 明示）を足す（4回目）。
 
-出力: public/corpus-examples.json  { qid: [{jp, translation}] }
+出力: public/corpus-examples.json  { qid: [{jp, translation, mark?}] }
+  mark = 問われている語の位置 [[開始, 長さ], …]（JS の文字列添字。slim の examples[].mark と同じ形）。
+  corpus-additions.jsonl の target（出現形と何番目の出現か）から計算する。
+  教材由来（examples-by-lemma.json）の例文は入力に位置の手がかりが無いので mark を持たない
+  （画面では従来どおり活用照合で印を付ける）。
 使い方: python -X utf8 scripts/build-corpus-examples.py
 """
 import json, re, io, sys
@@ -88,8 +92,12 @@ for q in qs:
 # 4回目: 人が選んだ出典つき例文（qid を明示）を足す。
 # 2026-10-06 ユーザー決定: 基本動詞16語（group 353〜368）の候補116件から、確定91件＋要確認8件を採用。
 # 採用一覧は ADDITIONS_FILE だけに置く（差し替えはこのファイルの行の増減で行う）。
-# 1行 = {id（候補番号）, qid, sentence（出典本文どおり）, work（表示する作品名）, translation,
-#        translation_rule, source, where（取得元）, conf, basis}。jp は「sentence（work）」で作る。
+# 1行 = {id（候補番号）, qid, sentence（出典本文どおり）, target, target_by, target_note?,
+#        work（表示する作品名）, translation, translation_rule, source, where（取得元）, conf, basis}。
+#        jp は「sentence（work）」で作る。
+# target = [[出現形, 何番目の出現か(0始まり)], …]。対象語そのものの出現形（活用形・漢字表記込み、
+#   複合語は対象の語の部分だけ）。呼応など対象が複数語にまたがるときは複数。target_by = 機械（活用照合の
+#   候補が1つで決定と一致）/ 人（本文と根拠を読んで決めた。理由は target_note）。2026-10-06。
 # 1〜3回目と同じ条件を当てる:
 #   - 同じ文を同じ見出し語の複数 qid に指定している → どの qid にも足さない
 #     （追加分どうしに加え、1回目で別の qid に当たった教材文と同じ文も対象）
@@ -113,8 +121,35 @@ def same_sentence(a, b):
     short, long_ = (x, y) if len(x) <= len(y) else (y, x)
     return short == long_ or (len(short) >= 8 and short in long_)
 
+def target_mark(a):
+    """target から mark を計算し、形を assert する（範囲内・重なりなし・昇順・文字列が出現形と一致）。"""
+    sent = a["sentence"].strip()
+    tg = a.get("target")
+    if not (isinstance(tg, list) and tg):
+        raise SystemExit(f"{ADDITIONS_FILE}: {a['id']} に target が無い")
+    if any(ord(c) > 0xFFFF for c in sent):
+        raise SystemExit(f"{ADDITIONS_FILE}: {a['id']} の本文に U+FFFF 超の文字（JS の添字とずれる）")
+    mark = []
+    for item in tg:
+        if not (isinstance(item, list) and len(item) == 2 and isinstance(item[0], str) and item[0]
+                and isinstance(item[1], int) and item[1] >= 0):
+            raise SystemExit(f"{ADDITIONS_FILE}: {a['id']} の target の形が不正 {item}")
+        form, nth = item
+        pos = [m.start() for m in re.finditer(re.escape(form), sent)]
+        if nth >= len(pos):
+            raise SystemExit(f"{ADDITIONS_FILE}: {a['id']} の「{form}」の{nth}番目の出現が本文に無い（{len(pos)}か所）")
+        mark.append((pos[nth], len(form), form))
+    mark.sort()
+    end = 0
+    for s, n, form in mark:
+        if not (s >= end and n >= 1 and s + n <= len(sent) and sent[s:s + n] == form):
+            raise SystemExit(f"{ADDITIONS_FILE}: {a['id']} の範囲が不正（範囲外・重なり・文字列の不一致） {mark}")
+        end = s + n
+    return [[s, n] for s, n, _ in mark]
+
 qid_lemma = {q["qid"]: q["lemma"] for q in qs}
 adds = [json.loads(l) for l in open(ADDITIONS_FILE, encoding="utf-8") if l.strip()]
+add_marks = {a["id"]: target_mark(a) for a in adds}  # 外す行も含めて全行を検査する
 added = 0
 add_skipped = []   # (候補番号, 理由)
 for a in adds:
@@ -139,7 +174,9 @@ for a in adds:
     rows = out.setdefault(qid, [])
     if any(same_sentence(r["jp"], jp) for r in rows):
         add_skipped.append((a["id"], "同じ qid に同じ文が既にある")); continue
-    rows.append({"jp": jp, "translation": (a.get("translation") or "").strip()})
+    # jp は sentence で始まるので、sentence 内の位置がそのまま jp の位置になる
+    assert jp.startswith(sent)
+    rows.append({"jp": jp, "translation": (a.get("translation") or "").strip(), "mark": add_marks[a["id"]]})
     added += 1
 total += added
 

@@ -7,6 +7,7 @@ kobunQ.v2.json（正本）と kobunQ.v2.slim.json（再生成後）を読み、�
   (b) jp の各範囲を空欄記号に置き換えると jpBlank（空欄記号を正規化し二連を1つにしたもの）と一致
   (c) jpBlank を持つ example は必ず mark を持ち、持たない example には mark が無い
   (d) qid の並びと件数 740 が不変
+  (e)(f) 実戦例文 public/corpus-examples.json の mark（check_corpus を参照）
 人が目で確かめる一覧も出す: 複数範囲の件、見出し語より3文字以上長い範囲の件。
 
 usage: python -X utf8 scripts/check-target-marks.py [一覧の出力先.txt]
@@ -26,6 +27,76 @@ SRC = os.path.join(ROOT, "src", "data", "kobunQ.v2.json")
 SLIM = os.path.join(ROOT, "src", "data", "kobunQ.v2.slim.json")
 
 EXPECTED_WORDS = 740
+CORPUS = os.path.join(ROOT, "public", "corpus-examples.json")
+ADDITIONS = os.path.join(ROOT, "data", "enrich", "corpus-additions.jsonl")
+
+
+def check_corpus(errors):
+    """実戦例文 public/corpus-examples.json の mark を全件検査する（2026-10-06〜）。
+      (e) 各範囲が 0<=開始・長さ>=1・本文（末尾の出典括弧の手前）の内側、重なりなし・昇順、U+FFFF 超の文字なし
+      (f) mark の出どころは corpus-additions.jsonl の行（jp =「sentence（work）」）だけ。範囲の文字列が
+          その行の target の出現形と一致し、追加された行は必ず mark を持つ
+    戻り値: 集計の行のリスト
+    """
+    import re
+    with open(CORPUS, encoding="utf-8") as f:
+        corpus = json.load(f)
+    adds = {}
+    with open(ADDITIONS, encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                a = json.loads(line)
+                s = a["sentence"].strip()
+                jp = f"{s}（{a['work']}）" if a.get("work") else s
+                adds[(a["qid"], jp)] = a
+    n_rows = n_mark = n_add = 0
+    for qid, rows in corpus.items():
+        for i, r in enumerate(rows):
+            n_rows += 1
+            where = f"corpus {qid}#{i}"
+            jp = r.get("jp") or ""
+            mark = r.get("mark")
+            a = adds.get((qid, jp))
+            if a is not None:
+                n_add += 1
+                if mark is None:
+                    errors.append(f"{where}: (f) 追加の例文 {a['id']} に mark が無い: {jp}")
+                    continue
+            if mark is None:
+                continue
+            n_mark += 1
+            if a is None:
+                errors.append(f"{where}: (f) corpus-additions.jsonl に無い例文に mark がある: {jp}")
+                continue
+            m = re.search(r"[（(][^（）()]*[）)]\s*$", jp)
+            limit = m.start() if m else len(jp)
+            ok = isinstance(mark, list) and len(mark) >= 1
+            prev_end = 0
+            if ok:
+                for sp in mark:
+                    if not (isinstance(sp, list) and len(sp) == 2 and all(isinstance(x, int) for x in sp)):
+                        ok = False
+                        break
+                    start, length = sp
+                    if start < 0 or length < 1 or start + length > limit or start < prev_end:
+                        ok = False
+                        break
+                    prev_end = start + length
+            if not ok:
+                errors.append(f"{where}: (e) 範囲が不正 {mark}: {jp}")
+                continue
+            if any(ord(c) > 0xFFFF for c in jp):
+                errors.append(f"{where}: (e) jp に U+FFFF 超の文字（JS の添字とずれる）: {jp}")
+            # target（出現形, 何番目）から位置を求め直し、mark と位置・文字列とも一致することを見る
+            body = jp[:limit]
+            want = []
+            for form, nth in a["target"]:
+                pos = [x.start() for x in re.finditer(re.escape(form), body)]
+                want.append((pos[nth], len(form)) if nth < len(pos) else (-1, 0))
+            texts = [jp[s:s + n] for s, n in mark]
+            if sorted(want) != [tuple(sp) for sp in mark] or sorted(texts) != sorted(t[0] for t in a["target"]):
+                errors.append(f"{where}: (f) 範囲 {mark} {texts} が target {a['target']} と一致しない: {jp}")
+    return [f"corpus: rows={n_rows} markあり={n_mark} 追加の例文={n_add}"]
 
 
 def main():
@@ -110,8 +181,12 @@ def main():
                 if len(t) >= len(w["lemma"]) + 3:
                     longer.append(f"{qid}\t{w['lemma']}\t{t}\t{jp}")
 
+    n_err_slim = len(errors)
+    corpus_lines = check_corpus(errors)
+
     lines = [
         f"words: v2={len(v2)} slim={len(slim)}",
+        *corpus_lines,
         f"examples={n_examples} jpBlankあり={n_blank} markあり={n_mark} (単一範囲={n_single} 複数範囲={len(multi)})",
         f"errors={len(errors)}",
         "",
@@ -129,7 +204,9 @@ def main():
             f.write("\n".join(lines) + "\n")
     # 標準出力には集計と件数だけ（cp932 で落ちる文字を出さない）
     print(f"words v2={len(v2)} slim={len(slim)} / examples={n_examples} blank={n_blank} "
-          f"mark={n_mark} single={n_single} multi={len(multi)} longer={len(longer)} / errors={len(errors)}")
+          f"mark={n_mark} single={n_single} multi={len(multi)} longer={len(longer)} / errors={len(errors)}"
+          f" (corpus {len(errors) - n_err_slim})")
+    print(corpus_lines[0].replace("markあり", "mark").replace("追加の例文", "additions"))
     if errors:
         print("NG")
         return 1

@@ -32,7 +32,8 @@ import {
 } from './lib/srsEngine';
 
 // 教材実例文（qid → 例文[]）。箱(単語レベル)が上がった語の出題に使う
-type CorpusExample = { jp: string; translation: string };
+// mark = 問われている語の位置 [[開始, 長さ], …]（あるものだけ。無ければ画面で活用照合）
+type CorpusExample = { jp: string; translation: string; mark?: [number, number][] };
 let corpusExamplesCache: Record<string, CorpusExample[]> | null = null;
 async function loadCorpusExamples(): Promise<Record<string, CorpusExample[]>> {
   if (corpusExamplesCache) return corpusExamplesCache;
@@ -83,6 +84,7 @@ interface QuizQuestion {
   corpusExample?: boolean; // 例文が教材実文（箱3以上で切替）
   resolvedType?: ResolvedWordQuizType; // おまかせ時: この問題の実出題形式
   jpBlank?: string; // blank-fill: 〔　　　〕入りの例文 (Excel原本の手作業空欄)
+  exampleMark?: [number, number][]; // 実戦例文に付いてきた対象語の位置（exampleKobun に対する）
 }
 
 interface TrueFalseQuestion {
@@ -759,7 +761,8 @@ function App() {
         srsBox: 1,
         corpusExample: false,
         resolvedType: undefined as ResolvedWordQuizType | undefined,
-        jpBlank: undefined as string | undefined
+        jpBlank: undefined as string | undefined,
+        exampleMark: undefined as [number, number][] | undefined
       });
     }
 
@@ -775,6 +778,7 @@ function App() {
           const e = pool[Math.floor(Math.random() * pool.length)];
           prep.exampleKobun = e.jp;
           prep.exampleModern = e.translation;
+          prep.exampleMark = e.mark;
           prep.corpusExample = true;
         }
       }
@@ -806,6 +810,7 @@ function App() {
           prep.jpBlank = b.jpBlank;
           prep.exampleKobun = b.jp;
           prep.exampleModern = b.translation;
+          prep.exampleMark = undefined; // 実戦例文の位置は、差し替えた空欄の例文には当てはまらない
           prep.corpusExample = false;
         } else {
           prep.resolvedType = 'sentence-meaning'; // 空欄なし語のフォールバック
@@ -865,7 +870,8 @@ function App() {
         srsBox: prep.srsBox,
         corpusExample: prep.corpusExample,
         resolvedType: qType,
-        jpBlank: prep.jpBlank
+        jpBlank: prep.jpBlank,
+        exampleMark: prep.exampleMark
       });
     }
 

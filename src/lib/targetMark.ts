@@ -1,8 +1,9 @@
 /**
  * 例文の中で「問われている語」がどこにあるかを決める。
  *
- * 優先順: ① データの位置（kobunQ.v2.slim の examples[].mark。空欄つき例文との差分から生成）
- *         ② 見出し語を活用させて例文と照合 ③ どちらも無ければ印なし。
+ * 優先順: ① 例文に付いてきた位置（実戦例文 corpus-examples.json の mark。呼び出し側が渡す）
+ *         ② データの位置（kobunQ.v2.slim の examples[].mark。空欄つき例文との差分から生成）
+ *         ③ 見出し語を活用させて例文と照合 ④ どれも無ければ印なし。
  * 活用した形のまま・正しい位置に印を付けるためのもので、判定には使わない。
  * 純粋関数。DB・画面には触れない。
  */
@@ -153,9 +154,31 @@ export function findInflectedSpan(text: string, lemma: string, pos?: string): Sp
   return best;
 }
 
-/** 例文 text の中の、word の対象語の範囲を決める */
-export function resolveTargetSpans(text: string, word: Pick<Word, 'qid' | 'lemma' | 'pos' | 'examples'>): TargetSpans {
+/** 範囲が text の中に収まり、重ならずに並んでいるか（明示の位置を使ってよいかの確認） */
+function spansFit(text: string, spans: readonly Span[]): boolean {
+  let end = 0;
+  for (const [start, length] of [...spans].sort((a, b) => a[0] - b[0])) {
+    if (!Number.isInteger(start) || !Number.isInteger(length)) return false;
+    if (start < end || length < 1 || start + length > text.length) return false;
+    end = start + length;
+  }
+  return spans.length > 0;
+}
+
+/**
+ * 例文 text の中の、word の対象語の範囲を決める。
+ * explicit = その例文に付いてきた位置（実戦例文 corpus-examples.json の mark など）。
+ * 優先順: ① explicit ② word.examples の mark ③ 活用照合 ④ 印なし。
+ * explicit が text に収まらない（範囲外・重なり）ときは使わずに ② 以降へ進む。
+ */
+export function resolveTargetSpans(
+  text: string,
+  word: Pick<Word, 'qid' | 'lemma' | 'pos' | 'examples'>,
+  explicit?: readonly Span[]
+): TargetSpans {
   if (!text || !word) return { spans: [], source: 'none' };
+
+  if (explicit && spansFit(text, explicit)) return { spans: explicit.map(([s, l]) => [s, l] as Span), source: 'data' };
 
   const mark = word.examples?.find((e) => e.jp === text)?.mark;
   if (mark && mark.length > 0) return { spans: mark, source: 'data' };
