@@ -144,9 +144,23 @@ export default function HomeReiwa({
       )}
 
       {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}
+      <div className="relative mb-4">
+      {/* 肖像＋位階名の上に重ねた学習履歴へのリンク。button の中に a は置けないので、
+          兄弟要素として絶対配置で重ねる（位置は下の p-4＝16px と装束ストリップ幅 140px に合わせる）。
+          それ以外の部分を押したときは従来どおり「今日の分」が始まる */}
+      {nobleStage && noblePortrait && (
+        <Link
+          to="/stats"
+          aria-label="学習履歴を見る"
+          className="absolute z-10 rounded-xl cursor-pointer transition-colors hover:bg-white/10 active:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-white"
+          style={{ top: 12, left: 12, width: 148, height: 62 }}
+        >
+          <span className="sr-only">学習履歴を見る</span>
+        </Link>
+      )}
       <button
         onClick={onStartToday}
-        className="w-full text-left mb-4 p-4 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
+        className="w-full text-left p-4 bg-rw-primary text-rw-paper rounded-3xl relative overflow-hidden group hover:opacity-95 transition-opacity"
       >
         <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-rw-pop opacity-30 pointer-events-none" />
         <div className="absolute -bottom-5 right-5 w-20 h-20 rounded-full bg-rw-accent opacity-30 pointer-events-none" />
@@ -289,6 +303,7 @@ export default function HomeReiwa({
           </div>
         </div>
       </button>
+      </div>
 
       {/* 4 タイル */}
       <div className="grid grid-cols-2 gap-2.5 mb-4">
