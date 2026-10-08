@@ -12,8 +12,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { supabaseAdmin } from "./_supabaseAdmin.js";
 import { requireStaff } from "./_requireStaff.js";
-import { getEncryptionKey, decrypt } from "./_pii.js";
-import { schoolCode } from "../src/lib/schools.js";
+import { loadIdentities, makeUserIndex } from "./_usageIdentity.js";
 
 const PAGE = 1000;
 const PARALLEL = 4;
@@ -58,8 +57,6 @@ function resolveFrom(raw: unknown, today: string): string | null {
   return t.toISOString().slice(0, 10);
 }
 
-type Ident = { school: string; grade?: number | null; cls?: number | null; num?: number | null };
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await requireStaff(req);
@@ -72,7 +69,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const fromIso = from ? new Date(new Date(from + "T00:00:00Z").getTime() - 9 * 3600e3).toISOString() : null;
     const since = (col: string): Filter | undefined => (fromIso ? (q) => q.gte(col, fromIso) : undefined);
 
-    const [ws, srs, drills, prog, pubs, profiles] = await Promise.all([
+    const [ws, srs, drills, prog, pubs, ids] = await Promise.all([
       fetchAll("word_stats", "user_id,qid,correct,incorrect,last_seen,created_at", ["user_id", "qid"], since("last_seen")),
       fetchAll("srs_state", "user_id,qid,box,next_review,last_review", ["user_id", "qid"], since("last_review")),
       fetchAll("grammar_drills", "id,topic_id", ["id"]),
@@ -83,51 +80,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         since("updated_at"),
       ),
       fetchAll("text_publications", "slug,cohort,published", ["slug", "cohort"]),
-      fetchAll("profiles", "id,profile_enc,cohort", ["id"]),
+      loadIdentities(),
     ]);
 
-    // ---- プロフィール復号：学校コード＋年・組・番号だけ（メールは取り出さない） ----
-    let key: CryptoKey | null = null;
-    try {
-      key = await getEncryptionKey();
-    } catch {
-      key = null;
-    }
-    const identity = new Map<string, Ident>();
-    let decryptFailed = 0;
-    for (const p of profiles) {
-      const ident: Ident = { school: schoolCode(p.cohort) };
-      if (key && p.profile_enc) {
-        const plain = await decrypt(p.profile_enc, key);
-        if (plain) {
-          try {
-            const o = JSON.parse(plain);
-            ident.grade = o.grade ?? null;
-            ident.cls = o.class ?? null;
-            ident.num = o.number ?? null;
-          } catch {
-            decryptFailed++;
-          }
-        } else decryptFailed++;
-      }
-      identity.set(p.id, ident);
-    }
-
-    // ---- 匿名 ID → index（先頭 8 桁、衝突時は延長） ----
-    const uidx = new Map<string, number>();
-    const users: Array<{ id: string } & Partial<Ident>> = [];
-    const seen = new Set<string>();
-    const uOf = (uid: string) => {
-      const hit = uidx.get(uid);
-      if (hit !== undefined) return hit;
-      let short = uid.slice(0, 8);
-      while (seen.has(short)) short = uid.slice(0, short.length + 4);
-      seen.add(short);
-      uidx.set(uid, users.length);
-      users.push({ id: short, ...(identity.get(uid) ?? {}) });
-      return users.length - 1;
-    };
-    for (const p of profiles) uOf(p.id); // 登録済みだが学習記録のない人も一覧に出す
+    // ---- 学校コード＋年・組・番号（メールは取り出さない）と、匿名 ID → index（先頭 8 桁） ----
+    const { users, uOf } = makeUserIndex(ids.identity);
+    for (const id of ids.profileIds) uOf(id); // 登録済みだが学習記録のない人も一覧に出す
 
     const cohorts = new Map<string, { pub: number; unpub: number }>();
     for (const p of pubs) {
@@ -156,10 +114,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       drills: drills.map((d) => [d.id, d.topic_id]),
       publishedSlugs: pubs.filter((p) => p.published).map((p) => p.slug),
       publicationCohorts: [...cohorts.entries()].map(([c, o]) => ({ cohort: c, pub: o.pub, unpub: o.unpub })),
-      registered: profiles.length,
-      piiDecrypted: !!key,
-      decryptFailed,
-      schools: [...new Set(profiles.map((p) => schoolCode(p.cohort)))].sort(),
+      registered: ids.profileIds.length,
+      piiDecrypted: ids.piiDecrypted,
+      decryptFailed: ids.decryptFailed,
+      schools: ids.schools,
     });
   } catch (e: any) {
     const msg = String(e?.message || e);

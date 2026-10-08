@@ -1963,7 +1963,7 @@ function buildUsageHtml(raw: any): string {
   return usageTemplate.replace("/*__DATA__*/null", json).replace("/*__AGG__*/", aggSrc);
 }
 
-function UsageView() {
+function UsageCumulativeView() {
   const [period, setPeriod] = useState<UsagePeriod>("1y");
   const [html, setHtml] = useState<string | null>(null);
   const [meta, setMeta] = useState<{ from: string | null; rows: number; users: number; generatedAt: string } | null>(null);
@@ -2032,6 +2032,368 @@ function UsageView() {
           className="w-full rounded-lg border border-slate-200 bg-white"
           style={{ height: "calc(100dvh - 6rem)", minHeight: 460 }}
         />
+      )}
+    </div>
+  );
+}
+
+// ---- 利用状況：「単語と教材」（learning_events を DB 関数 usage_by_area で集計した結果を表示） ----------
+//
+// 単語・教材（読解）・文法道場を分けて、利用者数・操作数・重なり・教材別・生徒別を出す。
+// learning_events は 2026-10-05 から記録しているので、それより前の教材の利用はない（端末内にしか残っていない）。
+// 個人の表示は学校コード＋年-組-番号だけ（未登録は匿名 ID の先頭 8 桁）。
+type UsageMode = "areas" | "cumulative";
+
+function UsageView() {
+  const [mode, setMode] = useState<UsageMode>("areas");
+  return (
+    <div>
+      <div className="px-2 pt-2 sm:px-4 sm:pt-4 flex flex-wrap items-center gap-2 text-sm">
+        <span className="font-medium text-slate-700">表示</span>
+        <div className="inline-flex rounded-lg border border-slate-300 overflow-hidden">
+          {(
+            [
+              ["areas", "単語と教材"],
+              ["cumulative", "単語・文法の累計"],
+            ] as [UsageMode, string][]
+          ).map(([m, label]) => (
+            <button
+              key={m}
+              onClick={() => setMode(m)}
+              className={`px-4 py-2 sm:px-3 sm:py-1.5 ${mode === m ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {mode === "areas" ? <UsageAreasView /> : <UsageCumulativeView />}
+    </div>
+  );
+}
+
+const AREA_LABEL: Record<string, string> = { vocab: "単語", text: "教材（読解）", grammar: "文法道場" };
+const AREA_ORDER = ["vocab", "text", "grammar"];
+const LOG_START = "2026-10-05"; // learning_events の記録開始日（JST）
+
+/** JST の今日から n 日ずらした "YYYY-MM-DD" */
+const jstDayShift = (n: number) => new Date(Date.now() + 9 * 3600e3 + n * 864e5).toISOString().slice(0, 10);
+const pctOf = (a: number, b: number) => (b ? `${Math.round((a / b) * 1000) / 10}%` : "—");
+const fmtN = (n: number | null | undefined) => (n ?? 0).toLocaleString("ja-JP");
+const jstShort = (iso: string | null | undefined) =>
+  iso ? new Date(new Date(iso).getTime() + 9 * 3600e3).toISOString().slice(5, 16).replace("T", " ") : "";
+
+function usagePersonLabel(x: any): string {
+  if (!x) return "";
+  const klass = x.cls && x.num ? `${x.grade ? x.grade + "-" : ""}${x.cls}-${x.num}` : "";
+  return x.school ? `${x.school} ${klass}`.trim() : x.id;
+}
+
+function UsageAreasView() {
+  const [from, setFrom] = useState<string>(LOG_START);
+  const [to, setTo] = useState<string>(jstDayShift(0));
+  const [data, setData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
+  const [school, setSchool] = useState<string>("");
+
+  const load = async (f: string, t: string) => {
+    setLoading(true);
+    setErr(null);
+    try {
+      setData(await callAPI(`/api/teacher?action=usageAreas&from=${f}&to=${t}`));
+    } catch (e: any) {
+      setErr(String(e?.message || e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void load(from, to);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const preset = (f: string) => {
+    const t = jstDayShift(0);
+    setFrom(f);
+    setTo(t);
+    void load(f, t);
+  };
+
+  const titleOf = useMemo(() => {
+    const m: Record<string, string> = {};
+    for (const t of bundledTextsV3Index as any[]) m[t.id] = t.title;
+    return m;
+  }, []);
+
+  const areas: Record<string, any> = {};
+  for (const a of data?.areas ?? []) areas[a.area] = a;
+  const kinds: Record<string, number> = {};
+  for (const k of data?.kinds ?? []) kinds[`${k.area}:${k.action}:${k.type}`] = k.n;
+  const days: Array<{ day: string; cells: Record<string, { users: number; events: number }> }> = [];
+  for (const d of data?.days ?? []) {
+    let row = days[days.length - 1];
+    if (!row || row.day !== d.day) days.push((row = { day: d.day, cells: {} }));
+    row.cells[d.area] = { users: d.users, events: d.events };
+  }
+  const people = ((data?.people ?? []) as any[])
+    .map((p) => ({ ...p, who: data.users[p.u] }))
+    .filter((p) => !school || p.who?.school === school);
+  const ov = data?.overlap ?? {};
+  const th = "px-2 py-1.5 text-left font-medium text-slate-600 whitespace-nowrap";
+  const td = "px-2 py-1.5 whitespace-nowrap";
+  const tdn = "px-2 py-1.5 text-right tabular-nums whitespace-nowrap";
+
+  return (
+    <div className="p-2 sm:p-4 space-y-5 text-sm">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <span className="font-medium text-slate-700">期間</span>
+        {(
+          [
+            ["直近7日", jstDayShift(-6)],
+            ["直近30日", jstDayShift(-29)],
+            ["記録開始から", LOG_START],
+          ] as [string, string][]
+        ).map(([label, f]) => (
+          <button
+            key={label}
+            onClick={() => preset(f)}
+            disabled={loading}
+            className="px-4 py-2 sm:px-3 sm:py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          >
+            {label}
+          </button>
+        ))}
+        <input type="date" value={from} min={LOG_START} onChange={(e) => setFrom(e.target.value)} className="border border-slate-300 rounded px-2 py-1" />
+        <span>〜</span>
+        <input type="date" value={to} min={LOG_START} onChange={(e) => setTo(e.target.value)} className="border border-slate-300 rounded px-2 py-1" />
+        <button
+          onClick={() => void load(from, to)}
+          disabled={loading || !from || !to}
+          className="px-4 py-2 sm:px-3 sm:py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+        >
+          表示
+        </button>
+        {data && (
+          <span className="text-slate-500 basis-full sm:basis-auto">
+            {data.from ?? "…"} 〜 {data.to ?? "…"}・{fmtN(data.events)} 件（取得 {new Date(data.generatedAt).toLocaleString("ja-JP")}）
+          </span>
+        )}
+      </div>
+      <p className="text-xs text-slate-500">
+        学習の出来事の記録（{LOG_START} 開始）から集計しています。それより前の教材の利用は各端末にしか残っていないため出ません。
+        個人の表示は学校コード（KU=県立浦和・UW=浦和西）と年-組-番号だけ。未登録の生徒は匿名 ID の先頭 8 桁。
+      </p>
+      {err && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">{err}</div>}
+      {loading && <div className="text-slate-500">読み込み中…</div>}
+
+      {data && (
+        <>
+          {/* 領域ごとの合計 */}
+          <div className="grid gap-3 sm:grid-cols-3">
+            {AREA_ORDER.map((ar) => {
+              const a = areas[ar] ?? { users: 0, sessions: 0, events: 0, answers: 0, correct: 0 };
+              return (
+                <div key={ar} className="rounded-lg border border-slate-200 bg-white p-3">
+                  <div className="font-semibold text-slate-800">{AREA_LABEL[ar]}</div>
+                  <div className="mt-1 text-2xl font-bold tabular-nums">
+                    {fmtN(a.users)}
+                    <span className="text-sm font-normal text-slate-500"> 人</span>
+                  </div>
+                  <dl className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5 text-slate-600">
+                    <dt>起動回数</dt>
+                    <dd className="text-right tabular-nums">{fmtN(a.sessions)}</dd>
+                    <dt>操作</dt>
+                    <dd className="text-right tabular-nums">{fmtN(a.events)}</dd>
+                    {ar === "text" ? (
+                      <>
+                        <dt>本文を開いた</dt>
+                        <dd className="text-right tabular-nums">{fmtN(kinds["text:view:text"])}</dd>
+                        <dt>語の解説を開いた</dt>
+                        <dd className="text-right tabular-nums">{fmtN(kinds["text:open:token"])}</dd>
+                        <dt>単語解説を開いた</dt>
+                        <dd className="text-right tabular-nums">{fmtN(kinds["text:open:lemma"])}</dd>
+                        <dt>読解ガイド</dt>
+                        <dd className="text-right tabular-nums">{fmtN(kinds["text:view:guide"])}</dd>
+                      </>
+                    ) : (
+                      <>
+                        <dt>回答</dt>
+                        <dd className="text-right tabular-nums">{fmtN(a.answers)}</dd>
+                        <dt>正答率</dt>
+                        <dd className="text-right tabular-nums">{pctOf(a.correct, a.answers)}</dd>
+                      </>
+                    )}
+                  </dl>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* 使い方の重なり */}
+          <section>
+            <h3 className="font-semibold text-slate-800 mb-2">単語と教材の重なり（利用者 {fmtN(ov.all)} 人）</h3>
+            <div className="flex flex-wrap gap-2">
+              {(
+                [
+                  ["単語だけ", ov.vocabOnly],
+                  ["教材だけ", ov.textOnly],
+                  ["単語と教材の両方", ov.both],
+                  ["文法道場だけ", ov.grammarOnly],
+                  ["文法道場を使った（重複あり）", ov.grammar],
+                ] as [string, number][]
+              ).map(([label, n]) => (
+                <div key={label} className="rounded-lg border border-slate-200 bg-white px-3 py-2">
+                  <span className="text-slate-600">{label}</span>
+                  <span className="ml-2 font-semibold tabular-nums">{fmtN(n)} 人</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 日ごと */}
+          <section>
+            <h3 className="font-semibold text-slate-800 mb-2">日ごとの利用（人数／操作数）</h3>
+            <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+              <table className="min-w-full">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className={th}>日付</th>
+                    {AREA_ORDER.map((ar) => (
+                      <th key={ar} className={`${th} text-right`}>{AREA_LABEL[ar]}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {days.map((d) => (
+                    <tr key={d.day} className="border-t border-slate-100">
+                      <td className={td}>{d.day}</td>
+                      {AREA_ORDER.map((ar) => (
+                        <td key={ar} className={tdn}>
+                          {d.cells[ar] ? `${d.cells[ar].users} 人／${fmtN(d.cells[ar].events)}` : "—"}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                  {!days.length && (
+                    <tr>
+                      <td className={td} colSpan={4}>この期間の記録はありません</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* 教材別 */}
+          <section>
+            <h3 className="font-semibold text-slate-800 mb-2">教材別（行を押すと、よく開かれた語の上位10）</h3>
+            <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+              <table className="min-w-full">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className={th}>教材</th>
+                    <th className={`${th} text-right`}>利用者</th>
+                    <th className={`${th} text-right`}>本文を開いた</th>
+                    <th className={`${th} text-right`}>語の解説</th>
+                    <th className={`${th} text-right`}>単語解説</th>
+                    <th className={`${th} text-right`}>読解ガイド</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data.texts ?? []).flatMap((t: any) => {
+                    const terms = (data.terms ?? []).filter((x: any) => x.slug === t.slug);
+                    const rows = [
+                      <tr
+                        key={t.slug}
+                        onClick={() => setOpenSlug(openSlug === t.slug ? null : t.slug)}
+                        className="border-t border-slate-100 cursor-pointer hover:bg-slate-50"
+                      >
+                        <td className={td}>{titleOf[t.slug] ?? t.slug}</td>
+                        <td className={tdn}>{fmtN(t.users)}</td>
+                        <td className={tdn}>{fmtN(t.views)}</td>
+                        <td className={tdn}>{fmtN(t.tokenOpen)}</td>
+                        <td className={tdn}>{fmtN(t.lemmaOpen)}</td>
+                        <td className={tdn}>{fmtN(t.guide)}</td>
+                      </tr>,
+                    ];
+                    if (openSlug === t.slug) {
+                      rows.push(
+                        <tr key={`${t.slug}-terms`} className="bg-slate-50">
+                          <td colSpan={6} className="px-3 py-2">
+                            {terms.length ? (
+                              <ol className="flex flex-wrap gap-x-4 gap-y-1">
+                                {terms.map((x: any, i: number) => (
+                                  <li key={`${x.kind}-${x.label}`}>
+                                    {i + 1}. {x.label}
+                                    <span className="text-slate-500">
+                                      {x.kind === "lemma" ? "（単語解説）" : ""} {fmtN(x.n)} 回・{fmtN(x.users)} 人
+                                    </span>
+                                  </li>
+                                ))}
+                              </ol>
+                            ) : (
+                              <span className="text-slate-500">語の解説は開かれていません</span>
+                            )}
+                          </td>
+                        </tr>,
+                      );
+                    }
+                    return rows;
+                  })}
+                  {!(data.texts ?? []).length && (
+                    <tr>
+                      <td className={td} colSpan={6}>この期間の記録はありません</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* 生徒別 */}
+          <section>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <h3 className="font-semibold text-slate-800">生徒別（{fmtN(people.length)} 人）</h3>
+              {(data.schools ?? []).length > 1 && (
+                <select value={school} onChange={(e) => setSchool(e.target.value)} className="border border-slate-300 rounded px-2 py-1">
+                  <option value="">すべての学校</option>
+                  {(data.schools as string[]).map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              )}
+            </div>
+            <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+              <table className="min-w-full">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className={th}>生徒</th>
+                    <th className={`${th} text-right`}>単語 回答（正答率）</th>
+                    <th className={`${th} text-right`}>教材 開いた本文／操作</th>
+                    <th className={`${th} text-right`}>文法 回答（正答率）</th>
+                    <th className={`${th} text-right`}>利用日数</th>
+                    <th className={th}>最終</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {people.map((p) => (
+                    <tr key={p.u} className="border-t border-slate-100">
+                      <td className={td}>{usagePersonLabel(p.who)}</td>
+                      <td className={tdn}>{p.vocabAns ? `${fmtN(p.vocabAns)}（${pctOf(p.vocabCorrect, p.vocabAns)}）` : "—"}</td>
+                      <td className={tdn}>{p.text ? `${fmtN(p.texts)} 本／${fmtN(p.text)}` : "—"}</td>
+                      <td className={tdn}>{p.grammarAns ? `${fmtN(p.grammarAns)}（${pctOf(p.grammarCorrect, p.grammarAns)}）` : "—"}</td>
+                      <td className={tdn}>{fmtN(p.days)}</td>
+                      <td className={td}>{jstShort(p.last)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </>
       )}
     </div>
   );
