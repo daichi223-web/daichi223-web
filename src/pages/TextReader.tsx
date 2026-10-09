@@ -363,6 +363,12 @@ export default function TextReader() {
           >
             📖 解説
           </Link>
+          <Link
+            to={`/read/texts/${textId}/print`}
+            className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
+          >
+            🖨 品詞分解PDF
+          </Link>
           <a
             href={geminiUrl}
             target="_blank"

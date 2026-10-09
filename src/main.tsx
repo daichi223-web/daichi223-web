@@ -5,7 +5,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 // 単語クイズ本体（初回ロードでほぼ確実に必要なので eager）
 import App from './App.tsx'
 import { TestGrading } from './TestGrading.tsx'
-import PWAInstallBanner from './components/PWAInstallBanner.tsx'
 import PullToRefresh from './components/PullToRefresh.tsx'
 import RequireAccount from './components/RequireAccount.tsx'
 import { ensureAnonSession } from './lib/anonAuth.ts'
@@ -24,6 +23,7 @@ applyCohortFromUrl()
 const HomeV3 = lazy(() => import('./pages/HomeV3.tsx'))
 const TextReader = lazy(() => import('./pages/TextReader.tsx'))
 const TextGuide = lazy(() => import('./pages/TextGuide.tsx'))
+const TextPrint = lazy(() => import('./pages/TextPrint.tsx'))
 const ReferenceHome = lazy(() => import('./pages/ReferenceHome.tsx'))
 const ReferenceTopic = lazy(() => import('./pages/ReferenceTopic.tsx'))
 const AffixList = lazy(() => import('./pages/AffixList.tsx'))
@@ -62,7 +62,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <ReiwaThemeProvider>
       <PullToRefresh />
-      <PWAInstallBanner />
       <Suspense fallback={<Fallback />}>
         {/* 初回起動時の登録ガード（/account・/auth/callback・/teacher・/test-grading は対象外） */}
         <RequireAccount>
@@ -80,6 +79,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read" element={<HomeV3 />} />
           <Route path="/read/texts/:textId" element={<TextReader />} />
           <Route path="/read/texts/:textId/guide" element={<TextGuide />} />
+          <Route path="/read/texts/:textId/print" element={<TextPrint />} />
           <Route path="/read/reference" element={<ReferenceHome />} />
           <Route path="/read/reference/:topicId" element={<ReferenceTopic />} />
           <Route path="/read/affixes" element={<AffixList />} />
