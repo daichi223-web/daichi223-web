@@ -13,12 +13,14 @@ import { circled, findKoou, koouMarks } from "@/lib/kobun/koou";
 
 const COLORS = { yo: "#1f5fbf", jd: "#c62828", js: "#2e7d32", kei: "#7b1fa2", koou: "#d35400" };
 
-// 縦書きは html ごと vertical-rl にしないとページ送りが効かない（Chrome/Safari とも）。
+// 縦書きの印刷は html ごと vertical-rl にしないとページ送りが効かない（Chrome/Safari とも）。
+// ただし画面で html を vertical-rl にすると、iOS Safari で上のボタン帯のタップ位置がずれて押せない。
+// そこで画面では html は横書きのまま、紙面（.hp-page）だけを縦書きの横スクロール枠にし、html の縦書きは印刷時だけにする。
 // この画面にいる間だけ html に class を付け、離れたら外す。
 const CSS = `
 .hp-root { font-family: "Noto Serif JP", "Yu Mincho", "YuMincho", serif; color: #111; background: #fff; }
 .hp-root * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.hp-bar { font-family: "Noto Sans JP", sans-serif; writing-mode: horizontal-tb; position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+.hp-bar { font-family: "Noto Sans JP", sans-serif; writing-mode: horizontal-tb; position: sticky; top: 0; z-index: 10;
   display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px 12px; background: #fff; border-bottom: 2px solid #111; }
 .hp-bar a, .hp-bar button { font-size: 13px; font-weight: 700; border: 2px solid #111; border-radius: 999px; padding: 6px 14px; background: #fff; color: #111; }
 .hp-bar .hp-primary { background: #111; color: #fff; }
@@ -55,7 +57,7 @@ const CSS = `
 .hp-foot { font-family: "Noto Sans JP", sans-serif; font-size: 7pt; color: #777; }
 
 /* 縦書き */
-html.hp-tate { writing-mode: vertical-rl; }
+html.hp-tate .hp-page { writing-mode: vertical-rl; }
 html.hp-tate .hp-page h1 { margin-left: 1mm; }
 html.hp-tate .hp-meta { margin-block-end: 2mm; }
 html.hp-tate .hp-legend { border-block-end: 1.2pt solid #111; padding-block-end: 2mm; margin-block-end: 3mm; }
@@ -86,8 +88,13 @@ html.hp-yoko .hp-koou { margin-top: 1.4mm; }
 html.hp-yoko .hp-tr { padding: 1.2mm 2mm; margin-top: 1.8mm; line-height: 1.5; }
 html.hp-yoko .hp-foot { margin-top: 3mm; }
 
-@media screen { .hp-page { padding-top: calc(12mm + 56px); } }
+@media screen {
+  html.hp-tate .hp-root { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+  html.hp-tate .hp-bar { flex: none; }
+  html.hp-tate .hp-page { flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+}
 @media print {
+  html.hp-tate { writing-mode: vertical-rl; }
   .hp-bar { display: none !important; }
   .hp-page { padding: 0; }
   html, body { background: #fff !important; }
@@ -167,7 +174,7 @@ export default function TextPrint() {
         </button>
         <span className="hp-note">印刷の画面で「PDFに保存」を選ぶとPDFになります</span>
       </div>
-      {error && <p style={{ padding: 16, writingMode: "horizontal-tb" }}>教材を読み込めませんでした。</p>}
+      {error && <p style={{ padding: 16 }}>教材を読み込めませんでした。</p>}
       {text && (
         <div className="hp-page">
           <h1>{text.title}</h1>
