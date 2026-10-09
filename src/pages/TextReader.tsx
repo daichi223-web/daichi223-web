@@ -12,7 +12,6 @@ import {
   markTokenViewed,
   setCurrentLayer,
 } from "@/lib/kobun/progress";
-import { getGemBaseUrl } from "@/lib/kobun/gem";
 import { TokenizedText } from "@/components/kobun/TokenizedText";
 import { SelectionToolbar } from "@/components/kobun/SelectionToolbar";
 import { LearningPointsPanel } from "@/components/kobun/LearningPointsPanel";
@@ -196,7 +195,6 @@ export default function TextReader() {
     );
   }
 
-  const geminiUrl = getGemBaseUrl();
   const layerColorVar = layerVar(currentLayer);
   const layerLabel = LAYER_LABELS[currentLayer];
 
@@ -369,15 +367,7 @@ export default function TextReader() {
           >
             🖨 品詞分解PDF
           </Link>
-          <a
-            href={geminiUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-ink text-white border-2 border-rw-ink transition-colors"
-            style={{ boxShadow: "0 3px 0 var(--rw-primary)" }}
-          >
-            ✨ 先生AI
-          </a>
+          {/* 先生AI のボタンは 2026-10-09 にいったん外した（復帰は getGemBaseUrl） */}
         </div>
       </footer>
     </div>

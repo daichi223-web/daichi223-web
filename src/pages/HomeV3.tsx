@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { loadAllProgress } from "@/lib/kobun/progress";
-import { getGemBaseUrl } from "@/lib/kobun/gem";
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from "react";
 import type { ReadingProgress } from "@/lib/kobun/types";
 import { getPublishedSlugs } from "@/lib/textPublications";
@@ -376,18 +375,8 @@ export default function HomeV3() {
         </div>
       </div>
 
-      {/* 先生AI (段差ボタン) */}
-      <div className="px-[18px] pt-2 pb-6">
-        <a
-          href={getGemBaseUrl()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full text-center px-3.5 py-3.5 bg-rw-ink text-rw-paper rounded-2xl text-sm font-black tracking-wider no-underline hover:opacity-95 transition-opacity"
-          style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
-        >
-          ✨ 先生AIに聞く
-        </a>
-      </div>
+      {/* 先生AI のボタンは 2026-10-09 にいったん外した（Gem の URL 自動送信が非公式のため。復帰は getGemBaseUrl を使う） */}
+      <div className="pb-6" />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { buildGemSelectionUrl } from "@/lib/kobun/gem";
 
 interface SelectionToolbarProps {
   textTitle: string;
@@ -49,10 +48,8 @@ export function SelectionToolbar({ textTitle }: SelectionToolbarProps) {
 
   if (!toolbar) return null;
 
-  const gemUrl = buildGemSelectionUrl({
-    textTitle,
-    selectedText: toolbar.text,
-  });
+  // 「AIに聞く」は 2026-10-09 にいったん外した（復帰は buildGemSelectionUrl({ textTitle, selectedText: toolbar.text })）
+  void textTitle;
 
   return (
     <div
@@ -72,16 +69,6 @@ export function SelectionToolbar({ textTitle }: SelectionToolbarProps) {
         }}
       >
         {copied ? "OK" : "コピー"}
-      </button>
-      <div className="w-px h-4 bg-white/30" />
-      <button
-        className="px-3 py-1.5 text-xs rounded hover:bg-white/20 transition-colors text-sakura"
-        onPointerDown={(e) => {
-          e.preventDefault();
-          window.open(gemUrl, "_blank", "noopener,noreferrer");
-        }}
-      >
-        AIに聞く
       </button>
     </div>
   );

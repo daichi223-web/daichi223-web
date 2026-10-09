@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Token, LayerId, TokenAnalysis, TokenDecider } from "@/lib/kobun/types";
 import { ReibunSentence, DECIDER_STYLE } from "@/components/grammar/ReibunSentence";
-import { buildGemUrl, buildNotebookLmUrl } from "@/lib/kobun/gem";
 import { addVocabEntry, recordHintOpen } from "@/lib/kobun/progress";
 import VocabModal from "@/components/VocabModal";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
@@ -147,8 +146,7 @@ function PopoverContent({
   onClose: () => void;
 }) {
   const navigate = useNavigate();
-  const gemUrl = buildGemUrl({ textTitle, sentenceText, token, currentLayer });
-  const nlmUrl = buildNotebookLmUrl({ token, currentLayer });
+  // 先生AI・NLM のリンクは 2026-10-09 にいったん外した（復帰は buildGemUrl / buildNotebookLmUrl）
 
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
   const [addedToVocab, setAddedToVocab] = useState(false);
@@ -363,22 +361,6 @@ function PopoverContent({
         ) : (
           <span />
         )}
-        <button
-          className="text-rw-tertiary hover:underline"
-          onClick={() => {
-            window.open(nlmUrl, "_blank", "noopener,noreferrer");
-          }}
-        >
-          NLM →
-        </button>
-        <button
-          className="text-rw-primary font-bold hover:opacity-80 transition-colors"
-          onClick={() => {
-            window.open(gemUrl, "_blank", "noopener,noreferrer");
-          }}
-        >
-          先生AI →
-        </button>
       </div>
 
       {/* VocabModal — popover より前面に重ねる */}
