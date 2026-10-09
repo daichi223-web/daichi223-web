@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 const THRESHOLD = 80;
 const MAX_PULL = 140;
+// タップの指のぶれを引き下げと取り違えない距離。これを超えるまでは preventDefault しない
+// （preventDefault するとタッチ端末でタップ＝クリックが取り消される）
+const TAP_SLOP = 10;
 
 async function hardReload(): Promise<void> {
   try {
@@ -50,10 +53,21 @@ export default function PullToRefresh() {
       return false;
     };
 
+    // ボタン・リンク・入力欄の上で始めたタッチ、品詞分解の印刷画面（縦書きで縦スクロールが常に先頭）では使わない
+    const isExcluded = (el: Element | null): boolean =>
+      !!el?.closest?.('a, button, input, select, textarea, label, [role="button"]') ||
+      document.documentElement.classList.contains('hp-tate') ||
+      document.documentElement.classList.contains('hp-yoko');
+
     const onTouchStart = (e: TouchEvent) => {
       if (refreshing) return;
       if (!atTop()) return;
       if (e.touches.length !== 1) return;
+      if (isExcluded(e.target as Element | null)) {
+        startY.current = null;
+        startX.current = null;
+        return;
+      }
       // 横スクロール可能な要素内で開始した touch には関与しない
       if (isInsideHorizontalScroller(e.target as Element | null)) {
         startY.current = null;
@@ -84,12 +98,13 @@ export default function PullToRefresh() {
         setPull(0);
         return;
       }
+      if (dy < TAP_SLOP) return;
       if (!atTop()) {
         startY.current = null;
         setPull(0);
         return;
       }
-      const damped = Math.min(MAX_PULL, dy * 0.55);
+      const damped = Math.min(MAX_PULL, (dy - TAP_SLOP) * 0.55);
       setPull(damped);
       // ブラウザ既定のスクロール (および pull-to-refresh) を完全に止めるため
       // 縦方向の動きが少しでもあれば preventDefault する
@@ -115,6 +130,7 @@ export default function PullToRefresh() {
       if (e.pointerType === 'touch') return;
       if (refreshing) return;
       if (!atTop()) return;
+      if (isExcluded(e.target as Element | null)) return;
       activeId.current = e.pointerId;
       startY.current = e.clientY;
     };
