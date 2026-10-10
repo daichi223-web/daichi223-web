@@ -4,8 +4,8 @@
  * 「印刷・PDFで保存」でブラウザの印刷を開く（iPad は共有→PDF でも保存できる）。
  * 紙面の作りは配布プリントの生成スクリプト（F:\A2A\teaching\補助プリント\品詞分解\make_hinshi_pdf.py）と同じ。
  */
-import { useEffect, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import type { KobunText } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 import { hinshiLabel, toCells, type HinshiCell } from "@/lib/kobun/hinshiLabel";
@@ -22,7 +22,7 @@ const CSS = `
 .hp-root * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .hp-bar { font-family: "Noto Sans JP", sans-serif; writing-mode: horizontal-tb; position: sticky; top: 0; z-index: 10;
   display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px 12px; background: #fff; border-bottom: 2px solid #111; }
-.hp-bar a, .hp-bar button { font-size: 13px; font-weight: 700; border: 2px solid #111; border-radius: 999px; padding: 6px 14px; background: #fff; color: #111; }
+.hp-bar a, .hp-bar button { touch-action: manipulation; font-size: 13px; font-weight: 700; border: 2px solid #111; border-radius: 999px; padding: 6px 14px; background: #fff; color: #111; }
 .hp-bar .hp-primary { background: #111; color: #fff; }
 .hp-bar .hp-note { font-size: 11px; color: #555; }
 .hp-page { padding: 12mm; }
@@ -101,6 +101,35 @@ html.hp-yoko .hp-foot { margin-top: 3mm; }
 }
 `;
 
+/**
+ * 上のボタン帯のタップ。iOS Safari は紙面の横スクロールが惰性で動いている間のタップを
+ * 「スクロールを止める操作」に使い、click を出さないことがある。指を離した時点（pointerup）で動かし、
+ * 続いて来る click は捨てる。マウス・キーボードは従来どおり click で動く。
+ */
+function useTap() {
+  const down = useRef<{ x: number; y: number; el: EventTarget } | null>(null);
+  const firedAt = useRef(0);
+  return (action: () => void) => ({
+    onPointerDown: (e: ReactPointerEvent) => {
+      down.current = e.pointerType === "mouse" ? null : { x: e.clientX, y: e.clientY, el: e.currentTarget };
+    },
+    onPointerUp: (e: ReactPointerEvent) => {
+      const d = down.current;
+      down.current = null;
+      if (!d || d.el !== e.currentTarget || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 12) return;
+      firedAt.current = Date.now();
+      action();
+    },
+    onClick: (e: ReactMouseEvent) => {
+      // リンクの Ctrl/⌘/Shift+クリック（新しいタブ・窓で開く）はブラウザに任せる
+      if (e.currentTarget instanceof HTMLAnchorElement && (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey)) return;
+      e.preventDefault();
+      if (Date.now() - firedAt.current < 800) return;
+      action();
+    },
+  });
+}
+
 function Cell({ c, marks }: { c: HinshiCell; marks?: string[] }) {
   if (!c.token) {
     return (
@@ -135,6 +164,8 @@ export default function TextPrint() {
   const yoko = searchParams.get("mode") === "yoko";
   const [text, setText] = useState<KobunText | null>(null);
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
+  const tap = useTap();
 
   useEffect(() => {
     if (!textId) return;
@@ -165,11 +196,11 @@ export default function TextPrint() {
     <div className="hp-root">
       <style>{CSS + page}</style>
       <div className="hp-bar">
-        <Link to={`/read/texts/${textId}`}>← 教材へ</Link>
-        <button className="hp-primary" onClick={() => window.print()} disabled={!text}>
+        <Link to={`/read/texts/${textId}`} {...tap(() => navigate(`/read/texts/${textId}`))}>← 教材へ</Link>
+        <button className="hp-primary" {...tap(() => window.print())} disabled={!text}>
           印刷・PDFで保存
         </button>
-        <button onClick={() => setSearchParams(yoko ? {} : { mode: "yoko" }, { replace: true })}>
+        <button {...tap(() => setSearchParams(yoko ? {} : { mode: "yoko" }, { replace: true }))}>
           {yoko ? "縦書きにする" : "横書きにする"}
         </button>
         <span className="hp-note">印刷の画面で「PDFに保存」を選ぶとPDFになります</span>
