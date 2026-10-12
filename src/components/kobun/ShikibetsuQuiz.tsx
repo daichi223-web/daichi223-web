@@ -1,16 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Token } from "@/lib/kobun/types";
 import { GROUPS, choiceOf, type ShikibetsuTarget } from "@/lib/kobun/shikibetsu";
+import { judgeShikibetsu, type Yure } from "@/lib/kobun/shikibetsuYure";
 
 interface ShikibetsuQuizProps {
   target: ShikibetsuTarget;
   tokens: Token[];
   /** この語の決め手・学習ポイント（教材データにあるものだけ） */
   notes: string[];
+  /** どちらとも取れる箇所の指定（両方正解・△） */
+  yure?: Yure;
   /** 選んだ選択肢の id（未回答なら null） */
   chosen: string | null;
   onAnswer: (choiceId: string) => void;
+  /** 答えを消して、この問題をもう一度解く */
+  onRetry: () => void;
   onClose: () => void;
 }
 
@@ -72,12 +77,29 @@ function SentenceWithTarget({ tokens, target }: { tokens: Token[]; target: Shiki
   );
 }
 
-function QuizContent({ target, tokens, notes, chosen, onAnswer, onClose }: ShikibetsuQuizProps) {
+function QuizContent({ target, tokens, notes, yure, chosen, onAnswer, onRetry, onClose }: ShikibetsuQuizProps) {
   const group = GROUPS[target.group];
   const answered = chosen !== null;
-  const correct = chosen === target.answer;
-  const right = choiceOf(target, target.answer);
+  const verdict = chosen === null ? null : judgeShikibetsu(target, chosen, yure);
+  const correct = verdict === "correct";
+  const partial = verdict === "partial";
+  // 正解の表示に使う選択肢（両方正解の箇所で別の正解を選んだら、それを正解として見せる）
+  const shown = correct && chosen ? chosen : target.answer;
+  const right = choiceOf(target, shown);
   const picked = chosen ? choiceOf(target, chosen) : undefined;
+  // 解説は長いので折りたたむ（答えるたび・問題が変わるたびに閉じる）
+  const [showExplain, setShowExplain] = useState(false);
+  useEffect(() => setShowExplain(false), [target.id, chosen]);
+  const explainToggle = (
+    <button
+      onClick={() => setShowExplain((v) => !v)}
+      aria-expanded={showExplain}
+      className="text-xs font-bold underline text-rw-ink"
+      style={{ touchAction: "manipulation" }}
+    >
+      {showExplain ? "▲ 解説を閉じる" : "▼ 解説を見る"}
+    </button>
+  );
 
   return (
     <div className="space-y-3">
@@ -96,8 +118,9 @@ function QuizContent({ target, tokens, notes, chosen, onAnswer, onClose }: Shiki
 
       <div className="grid gap-1.5">
         {group.choices.map((c) => {
-          const isRight = answered && c.id === target.answer;
-          const isWrongPick = answered && c.id === chosen && !correct;
+          const isRight = answered && (c.id === target.answer || !!yure?.both?.includes(c.id));
+          const isPartialPick = answered && partial && c.id === chosen;
+          const isWrongPick = answered && c.id === chosen && verdict === "wrong";
           return (
             <button
               key={c.id}
@@ -106,6 +129,8 @@ function QuizContent({ target, tokens, notes, chosen, onAnswer, onClose }: Shiki
               className={`text-left text-sm font-bold rounded-xl px-3 py-2 border-2 transition-colors ${
                 isRight
                   ? "border-green-600 bg-green-50 text-green-800"
+                  : isPartialPick
+                  ? "border-amber-500 bg-amber-50 text-amber-800"
                   : isWrongPick
                   ? "border-red-600 bg-red-50 text-red-800"
                   : answered
@@ -114,7 +139,7 @@ function QuizContent({ target, tokens, notes, chosen, onAnswer, onClose }: Shiki
               }`}
               style={{ touchAction: "manipulation" }}
             >
-              {isRight ? "○ " : isWrongPick ? "✕ " : ""}
+              {isRight ? "○ " : isPartialPick ? "△ " : isWrongPick ? "✕ " : ""}
               {c.label}
             </button>
           );
@@ -124,18 +149,55 @@ function QuizContent({ target, tokens, notes, chosen, onAnswer, onClose }: Shiki
       {answered && correct && right && (
         <div className="rounded-xl p-3 bg-green-50 border border-green-200 space-y-1">
           <p className="text-sm font-black text-green-800">正解！ {right.label}</p>
-          <p className="text-xs text-rw-ink leading-relaxed">決め手: {target.clue}</p>
+          {yure?.both && <p className="text-xs font-bold text-green-800">この箇所はどちらとも取れます（{yure.both.map((id) => choiceOf(target, id)?.label).join("・")}）</p>}
+          {explainToggle}
+          {showExplain && (
+            <>
+              <p className="text-xs text-rw-ink leading-relaxed">決め手: {target.clue}</p>
+              {yure && <p className="text-xs text-rw-ink leading-relaxed">{yure.note}</p>}
+            </>
+          )}
         </div>
       )}
 
-      {answered && !correct && right && (
+      {answered && partial && right && picked && (
+        <div className="rounded-xl p-3 bg-amber-50 border border-amber-200 space-y-2">
+          <p className="text-sm font-black text-amber-800">△ {picked.label}とも取れる。ふつうは{right.label}</p>
+          {explainToggle}
+          {showExplain && (
+            <dl className="text-xs text-rw-ink leading-relaxed space-y-1.5">
+              <div>
+                <dt className="font-black">この箇所の揺れ</dt>
+                <dd>{yure?.note}</dd>
+              </div>
+              <div>
+                <dt className="font-black">この箇所の手がかり</dt>
+                <dd>{target.clue}</dd>
+              </div>
+            </dl>
+          )}
+        </div>
+      )}
+
+      {answered && verdict === "wrong" && right && (
         <div className="rounded-xl p-3 bg-red-50 border border-red-200 space-y-2">
-          <p className="text-sm font-black text-red-800">正解: {right.label}</p>
+          <p className="text-sm font-black text-red-800">
+            正解: {yure?.both ? yure.both.map((id) => choiceOf(target, id)?.label).join("・") + "（どちらとも取れる）" : right.label}
+          </p>
+          {explainToggle}
+          {showExplain && (
+          <>
           <dl className="text-xs text-rw-ink leading-relaxed space-y-1.5">
             <div>
               <dt className="font-black">この箇所の手がかり</dt>
               <dd>{target.clue}</dd>
             </div>
+            {yure?.both && (
+              <div>
+                <dt className="font-black">この箇所の揺れ</dt>
+                <dd>{yure.note}</dd>
+              </div>
+            )}
             <div>
               <dt className="font-black">{right.label}の見分け方</dt>
               <dd>{right.rule}</dd>
@@ -162,7 +224,19 @@ function QuizContent({ target, tokens, notes, chosen, onAnswer, onClose }: Shiki
           >
             文法道場で{group.title}を確認 →
           </Link>
+          </>
+          )}
         </div>
+      )}
+
+      {answered && (
+        <button
+          onClick={onRetry}
+          className="w-full text-sm font-bold rounded-xl px-3 py-2 border-2 border-rw-ink bg-rw-paper text-rw-ink hover:bg-rw-bg"
+          style={{ touchAction: "manipulation" }}
+        >
+          ↻ もう一度解く
+        </button>
       )}
     </div>
   );

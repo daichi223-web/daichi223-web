@@ -120,6 +120,8 @@ export default function TextReader() {
     (layerParam !== null ? Number(layerParam) : 1) as LayerId
   );
   const [showTranslation, setShowTranslation] = useState(false);
+  // 識別レイヤーの「すべてやり直す」（数が変わると各文の答えを消す）
+  const [shikiResetKey, setShikiResetKey] = useState(0);
   const [activeSentence, setActiveSentence] = useState<string | null>(null);
 
   useEffect(() => {
@@ -270,6 +272,15 @@ export default function TextReader() {
               ? "「に」「なり」「なむ」「らむ」など紛らわしい語をタップして、正体を当てよう"
               : "全体構造と主語の補完、読解のヒントを確認")}
         </div>
+        {currentLayer === 6 && (
+          <button
+            onClick={() => setShikiResetKey((k) => k + 1)}
+            className="mt-2 rounded-full font-bold text-xs px-3 py-1 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg"
+            style={{ touchAction: "manipulation" }}
+          >
+            ↻ 識別をすべてやり直す
+          </button>
+        )}
       </div>
 
       {/* 本文 */}
@@ -319,6 +330,7 @@ export default function TextReader() {
                 textTitle={text.title}
                 textId={textId}
                 onTokenView={handleTokenView}
+                shikiResetKey={shikiResetKey}
                 readingAnnotation={
                   readingGuide?.annotations.find(
                     (a) => a.sentenceId === sentence.id

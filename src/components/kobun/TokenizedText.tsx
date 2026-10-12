@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   Sentence,
   LayerId,
@@ -11,6 +11,7 @@ import { GrammarPopover } from "@/components/kobun/GrammarPopover";
 import { ShikibetsuQuiz } from "@/components/kobun/ShikibetsuQuiz";
 import { findShikibetsu, choiceOf, type ShikibetsuTarget } from "@/lib/kobun/shikibetsu";
 import { logEvent } from "@/lib/learningEvents";
+import { judgeShikibetsu, yureOf } from "@/lib/kobun/shikibetsuYure";
 
 interface TokenizedTextProps {
   sentence: Sentence;
@@ -20,6 +21,8 @@ interface TokenizedTextProps {
   textId: string;
   onTokenView: (tokenId: string) => void;
   readingAnnotation?: ReadingAnnotation | null;
+  /** 変わるたびに識別の答えをすべて消す（教材全体のやり直し） */
+  shikiResetKey?: number;
 }
 
 const hintMeta: Record<ReadingHintType, { icon: string; color: string; bg: string }> = {
@@ -48,6 +51,7 @@ export function TokenizedText({
   textId,
   onTokenView,
   readingAnnotation,
+  shikiResetKey = 0,
 }: TokenizedTextProps) {
   const [activeTokenId, setActiveTokenId] = useState<string | null>(null);
   const [openHints, setOpenHints] = useState<Set<number>>(new Set());
@@ -60,6 +64,14 @@ export function TokenizedText({
   }, [shikiTargets]);
   const [activeShikiId, setActiveShikiId] = useState<string | null>(null);
   const [shikiAnswers, setShikiAnswers] = useState<Record<string, string>>({});
+  // 何回目の解答か（やり直しを学習ログで初回と分けるため）
+  const shikiAttempts = useRef<Record<string, number>>({});
+  // 教材全体の「識別をすべてやり直す」
+  useEffect(() => {
+    if (shikiResetKey === 0) return;
+    setShikiAnswers({});
+    setActiveShikiId(null);
+  }, [shikiResetKey]);
   const isShiki = currentLayer === 6;
   const activeShiki = isShiki ? shikiTargets.find((t) => t.id === activeShikiId) ?? null : null;
 
@@ -77,15 +89,26 @@ export function TokenizedText({
 
   const handleShikiAnswer = (target: ShikibetsuTarget, choiceId: string) => {
     setShikiAnswers((prev) => ({ ...prev, [target.id]: choiceId }));
+    const attempt = (shikiAttempts.current[target.id] ?? 0) + 1;
+    const verdict = judgeShikibetsu(target, choiceId, yureOf(textId, target));
+    shikiAttempts.current[target.id] = attempt;
     logEvent({
       area: "text",
       action: "answer",
       targetType: "shikibetsu",
       targetId: `${textId}:${target.id}`,
-      correct: choiceId === target.answer,
+      correct: verdict === "correct",
       chosen: choiceOf(target, choiceId)?.label ?? choiceId,
       format: "shikibetsu",
-      ctx: { group: target.group, form: target.form, answer: target.answer },
+      ctx: { group: target.group, form: target.form, answer: target.answer, attempt, verdict },
+    });
+  };
+
+  const retryShiki = (target: ShikibetsuTarget) => {
+    setShikiAnswers((prev) => {
+      const next = { ...prev };
+      delete next[target.id];
+      return next;
     });
   };
 
@@ -127,8 +150,9 @@ export function TokenizedText({
         const shiki = isShiki ? shikiByToken.get(token.id) : undefined;
         if (shiki) {
           const chosen = shikiAnswers[shiki.target.id];
+          const verdict = chosen === undefined ? null : judgeShikibetsu(shiki.target, chosen, yureOf(textId, shiki.target));
           const color =
-            chosen === undefined ? "var(--layer-6)" : chosen === shiki.target.answer ? "#16a34a" : "#dc2626";
+            verdict === null ? "var(--layer-6)" : verdict === "correct" ? "#16a34a" : verdict === "partial" ? "#d97706" : "#dc2626";
           const open = () => openShiki(shiki.target);
           return (
             <span
@@ -240,8 +264,10 @@ export function TokenizedText({
           target={activeShiki}
           tokens={sentence.tokens}
           notes={shikiNotes(activeShiki)}
+          yure={yureOf(textId, activeShiki)}
           chosen={shikiAnswers[activeShiki.id] ?? null}
           onAnswer={(id) => handleShikiAnswer(activeShiki, id)}
+          onRetry={() => retryShiki(activeShiki)}
           onClose={() => setActiveShikiId(null)}
         />
       )}
