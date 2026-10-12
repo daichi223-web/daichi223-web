@@ -24,6 +24,7 @@ export default {
         'layer-3': 'var(--layer-3)',
         'layer-4': 'var(--layer-4)',
         'layer-5': 'var(--layer-5)',
+        'layer-6': 'var(--layer-6)',
         // Reiwa palette (テーマピッカーで切り替え可能)
         'rw-bg': 'var(--rw-bg)',
         'rw-paper': 'var(--rw-paper)',

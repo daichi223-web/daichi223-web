@@ -3,8 +3,10 @@
  */
 
 /** 文法層の定義 */
-export type LayerId = 1 | 2 | 3 | 4 | 5;
-// 1=用言, 2=助動詞, 3=助詞, 4=敬語, 5=読解
+export type LayerId = 1 | 2 | 3 | 4 | 5 | 6;
+// 1=用言, 2=助動詞, 3=助詞, 4=敬語, 5=読解, 6=識別
+// 6（識別）は後から足したので番号と並びが違う。画面では 敬語(4)→識別(6)→読解(5) の順に並べる。
+// 教材データの token.layer は 0〜4 のまま（識別の対象は shikibetsu.ts が grammarTag から決める）
 
 export interface KobunText {
   id: string;

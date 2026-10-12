@@ -25,6 +25,7 @@ const LAYER_LABELS: Record<LayerId, string> = {
   3: "助詞",
   4: "敬語",
   5: "読解",
+  6: "識別",
 };
 
 const LAYER_BG_CLASSES: Record<LayerId, string> = {
@@ -33,7 +34,12 @@ const LAYER_BG_CLASSES: Record<LayerId, string> = {
   3: "bg-layer-3",
   4: "bg-layer-4",
   5: "bg-layer-5",
+  6: "bg-layer-6",
 };
+
+// 画面での並び。識別(6)は後から足したので、敬語(4)と読解(5)の間に置く。表示の番号は並び順
+const LAYER_ORDER: LayerId[] = [1, 2, 3, 4, 6, 5];
+const layerNo = (layer: LayerId) => LAYER_ORDER.indexOf(layer) + 1;
 
 // レイヤー番号→ CSS variable 文字列（インラインスタイル用）
 const layerVar = (layer: LayerId) => `var(--layer-${layer})`;
@@ -49,21 +55,22 @@ function ReiwaLayerSelector({
   currentLayer,
   onChange,
 }: ReiwaLayerSelectorProps) {
-  // 1〜5 を順序固定で並べる（layers 配列の存在有無で活性/非活性を判断）
-  const layerIds: LayerId[] = [1, 2, 3, 4, 5];
+  // 順序固定で並べる（layers 配列の存在有無で活性/非活性を判断。識別は教材データに定義が無く、いつでも開ける）
   const layerMap = new Map<LayerId, LayerDefinition>(
     layers.map((l) => [l.id, l])
   );
 
   return (
     <div className="flex gap-1 mt-2">
-      {layerIds.map((id) => {
+      {LAYER_ORDER.map((id) => {
         const def = layerMap.get(id);
         const label = LAYER_LABELS[id];
         const isActive = id === currentLayer;
         const isLocked =
-          !def ||
-          (id !== 5 && def.prerequisite ? def.prerequisite > currentLayer : false);
+          id === 6
+            ? false
+            : !def ||
+              (id !== 5 && def.prerequisite ? def.prerequisite > currentLayer : false);
 
         if (isActive) {
           return (
@@ -74,7 +81,7 @@ function ReiwaLayerSelector({
               style={{ boxShadow: "0 2px 0 var(--rw-ink)" }}
               title={def?.label ?? label}
             >
-              {id}・{label}
+              {layerNo(id)}・{label}
             </button>
           );
         }
@@ -91,7 +98,7 @@ function ReiwaLayerSelector({
             }`}
             title={def?.label ?? label}
           >
-            {id}・{label}
+            {layerNo(id)}・{label}
           </button>
         );
       })}
@@ -247,7 +254,7 @@ export default function TextReader() {
           className="text-[10px] font-black tracking-widest"
           style={{ color: layerColorVar }}
         >
-          LAYER {currentLayer} · {layerLabel}
+          LAYER {layerNo(currentLayer)} · {layerLabel}
         </div>
         <div className="text-xs font-semibold text-rw-ink mt-0.5 leading-relaxed">
           {currentLayerDef?.description ??
@@ -259,6 +266,8 @@ export default function TextReader() {
               ? "係り結びや接続助詞のはたらきに注目"
               : currentLayer === 4
               ? "尊敬語・謙譲語・丁寧語の主体に注目"
+              : currentLayer === 6
+              ? "「に」「なり」「なむ」「らむ」など紛らわしい語をタップして、正体を当てよう"
               : "全体構造と主語の補完、読解のヒントを確認")}
         </div>
       </div>

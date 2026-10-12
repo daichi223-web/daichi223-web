@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type {
   Sentence,
   LayerId,
@@ -8,6 +8,9 @@ import type {
 } from "@/lib/kobun/types";
 import { TokenSpan } from "@/components/kobun/TokenSpan";
 import { GrammarPopover } from "@/components/kobun/GrammarPopover";
+import { ShikibetsuQuiz } from "@/components/kobun/ShikibetsuQuiz";
+import { findShikibetsu, choiceOf, type ShikibetsuTarget } from "@/lib/kobun/shikibetsu";
+import { logEvent } from "@/lib/learningEvents";
 
 interface TokenizedTextProps {
   sentence: Sentence;
@@ -48,6 +51,48 @@ export function TokenizedText({
 }: TokenizedTextProps) {
   const [activeTokenId, setActiveTokenId] = useState<string | null>(null);
   const [openHints, setOpenHints] = useState<Set<number>>(new Set());
+  // 識別レイヤー: 対象（文ごとに grammarTag から決める）・開いている対象・答え（このページを開いている間だけ）
+  const shikiTargets = useMemo(() => findShikibetsu(sentence.tokens), [sentence.tokens]);
+  const shikiByToken = useMemo(() => {
+    const m = new Map<string, { target: ShikibetsuTarget; from: number }>();
+    for (const t of shikiTargets) for (const p of t.parts) m.set(p.tokenId, { target: t, from: p.from });
+    return m;
+  }, [shikiTargets]);
+  const [activeShikiId, setActiveShikiId] = useState<string | null>(null);
+  const [shikiAnswers, setShikiAnswers] = useState<Record<string, string>>({});
+  const isShiki = currentLayer === 6;
+  const activeShiki = isShiki ? shikiTargets.find((t) => t.id === activeShikiId) ?? null : null;
+
+  // 解説に添える、この語の決め手（analysis の decider）と学習ポイント（token.hint）
+  const shikiNotes = (target: ShikibetsuTarget): string[] => {
+    const out: string[] = [];
+    for (const p of target.parts) {
+      const tok = sentence.tokens.find((t) => t.id === p.tokenId);
+      const decider = p.from === 0 ? analysis?.tokenAnalyses.find((a) => a.tokenId === p.tokenId)?.decider : undefined;
+      if (decider?.summary) out.push(decider.summary);
+      if (tok?.hint) out.push(tok.hint);
+    }
+    return [...new Set(out)];
+  };
+
+  const handleShikiAnswer = (target: ShikibetsuTarget, choiceId: string) => {
+    setShikiAnswers((prev) => ({ ...prev, [target.id]: choiceId }));
+    logEvent({
+      area: "text",
+      action: "answer",
+      targetType: "shikibetsu",
+      targetId: `${textId}:${target.id}`,
+      correct: choiceId === target.answer,
+      chosen: choiceOf(target, choiceId)?.label ?? choiceId,
+      format: "shikibetsu",
+      ctx: { group: target.group, form: target.form, answer: target.answer },
+    });
+  };
+
+  const openShiki = (target: ShikibetsuTarget) => {
+    setActiveTokenId(null);
+    setActiveShikiId(activeShikiId === target.id ? null : target.id);
+  };
 
   const activeToken = activeTokenId
     ? sentence.tokens.find((t) => t.id === activeTokenId) ?? null
@@ -78,15 +123,60 @@ export function TokenizedText({
 
   return (
     <div className="relative leading-[2.2] text-lg">
-      {sentence.tokens.map((token) => (
-        <TokenSpan
-          key={token.id}
-          token={token}
-          currentLayer={currentLayer}
-          isActive={activeTokenId === token.id}
-          onClick={() => handleTokenClick(token.id)}
-        />
-      ))}
+      {sentence.tokens.map((token) => {
+        const shiki = isShiki ? shikiByToken.get(token.id) : undefined;
+        if (shiki) {
+          const chosen = shikiAnswers[shiki.target.id];
+          const color =
+            chosen === undefined ? "var(--layer-6)" : chosen === shiki.target.answer ? "#16a34a" : "#dc2626";
+          const open = () => openShiki(shiki.target);
+          return (
+            <span
+              key={token.id}
+              data-shikibetsu-target={shiki.target.id}
+              className="inline cursor-pointer"
+              onClick={open}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && open()}
+              title={`「${shiki.target.form}」の識別`}
+            >
+              {shiki.from > 0 && !token.furigana ? token.text.slice(0, shiki.from) : null}
+              <span
+                className="font-bold rounded-sm"
+                style={{
+                  color,
+                  background: `color-mix(in srgb, ${color} ${activeShikiId === shiki.target.id ? 30 : 14}%, transparent)`,
+                  borderBottom: `2px solid ${color}`,
+                }}
+              >
+                {token.furigana ? (
+                  <ruby>
+                    {token.text}
+                    <rp>(</rp>
+                    <rt className="text-xs">{token.furigana}</rt>
+                    <rp>)</rp>
+                  </ruby>
+                ) : (
+                  token.text.slice(shiki.from)
+                )}
+              </span>
+            </span>
+          );
+        }
+        return (
+          <TokenSpan
+            key={token.id}
+            token={token}
+            currentLayer={currentLayer}
+            isActive={activeTokenId === token.id}
+            onClick={() => {
+              setActiveShikiId(null);
+              handleTokenClick(token.id);
+            }}
+          />
+        );
+      })}
 
       {/* 読解レイヤーのアノテーション */}
       {currentLayer === 5 && readingAnnotation && (
@@ -143,6 +233,17 @@ export function TokenizedText({
             })}
           </div>
         </div>
+      )}
+
+      {activeShiki && (
+        <ShikibetsuQuiz
+          target={activeShiki}
+          tokens={sentence.tokens}
+          notes={shikiNotes(activeShiki)}
+          chosen={shikiAnswers[activeShiki.id] ?? null}
+          onAnswer={(id) => handleShikiAnswer(activeShiki, id)}
+          onClose={() => setActiveShikiId(null)}
+        />
       )}
 
       {activeToken && currentLayer !== 5 && (

@@ -82,9 +82,9 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
       ? '詳細解説あり'
       : undefined;
 
-  // 読解レイヤー (5): 全トークンをプレーンテキストとして表示するが、
-  // vocab status マーカーは付与する (重要語の見落とし防止)
-  if (currentLayer === 5) {
+  // 読解レイヤー (5)・識別レイヤー (6): 全トークンをプレーンテキストとして表示するが、
+  // vocab status マーカーは付与する (重要語の見落とし防止)。識別の対象は TokenizedText が別に描く
+  if (currentLayer === 5 || currentLayer === 6) {
     if (tappable) {
       return (
         <span
