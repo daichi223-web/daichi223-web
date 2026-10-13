@@ -80,7 +80,7 @@ export async function fetchDrills(topicId: string): Promise<GrammarDrill[]> {
   return data.map(toDrill);
 }
 
-/** 複数単元のドリルをまとめて取得（学び直しの判定用。sort 昇順） */
+/** 複数単元のドリルをまとめて取得（学び始めの判定用。sort 昇順） */
 export async function fetchDrillsForTopics(topicIds: string[]): Promise<GrammarDrill[]> {
   if (topicIds.length === 0) return [];
   const { data, error } = await supabase

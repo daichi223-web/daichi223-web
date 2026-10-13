@@ -1,4 +1,5 @@
-// 学び直し（どこから始めたらいいかわからない生徒の入口）。
+// 学び始め（どこから始めたらいいかわからない生徒の入口。旧名 学び直し。URL /manabinaoshi と記録の mode はそのまま）。
+// やる気がなくても、やっているうちに学べることを目指す（下の段は問いが先、説明はあと）。
 //
 // 日本語教育の組み立てを借りる:
 //  - 自分の位置は Can-do（「〜ができる」）の文で選ぶ。用語を知らなくても選べる
@@ -35,6 +36,8 @@ export interface Stage {
   canDo: string[];
   /** 文法道場のカテゴリ（0 は道場の単元を持たない） */
   category: DojoCategory | null;
+  /** 段の入口の「〜とは」（見出しと説明。段0は持たない） */
+  about?: { heading: string; body: string; points: (string | [string, string])[] };
   /** この段で初めて出てくる言葉 */
   terms: TermCard[];
 }
@@ -303,6 +306,15 @@ export const STAGES: Stage[] = [
     title: "形の変わり方（用言）",
     canDo: ["「書く」に「ず」をつけて「書かず」と言える", "「起く」「受く」にも「ず」をつけた形が作れる"],
     category: "用言",
+    about: {
+      heading: "用言とは",
+      body: "それだけで文の述語（「どうする」「どんなだ」）になれて、後ろに続く言葉によって形が変わる（活用する）言葉。動詞・形容詞・形容動詞の3つ。言い切りの形（終止形）の終わり方で見分ける。",
+      points: [
+        ["動詞", "ウ段で終わる（書く・見る・来）。ラ変だけは「り」（あり・をり）"],
+        ["形容詞", "「し」で終わる（高し・美し）"],
+        ["形容動詞", "「なり」「たり」で終わる（静かなり・堂々たり）"],
+      ],
+    },
     terms: YOUGEN_TERMS,
   },
   {
@@ -310,6 +322,15 @@ export const STAGES: Stage[] = [
     title: "意味をそえる小さな言葉（助動詞）",
     canDo: ["「けり」「む」「ず」が文にどんな意味をそえるか言える", "「む」の前の形を正しく作れる"],
     category: "助動詞",
+    about: {
+      heading: "助動詞とは",
+      body: "用言などの後ろについて、打消・過去・推量などの意味をそえる言葉。自分だけでは使えず、助動詞も活用する。1つの助動詞ごとに、次の3つをおさえる。",
+      points: [
+        ["接続", "前の語を何形にするか（「ず」は未然形）"],
+        ["意味", "どんな意味をそえるか（「けり」は過去・詠嘆）"],
+        ["活用", "助動詞自身の形の変わり方"],
+      ],
+    },
     terms: JODOSHI_TERMS,
   },
   {
@@ -317,6 +338,15 @@ export const STAGES: Stage[] = [
     title: "つなぐ言葉・強める言葉（助詞）",
     canDo: ["「降らば」と「降れば」の意味のちがいが言える", "「ぞ」「こそ」があると文の終わりの形が変わるとわかる"],
     category: "助詞",
+    about: {
+      heading: "助詞とは",
+      body: "後ろについて、言葉どうしの関係を示したり意味をそえたりする言葉。活用しない。古文の読解で特に大事なのは、文と文のつなぎ方と、文の終わりの形を変える係り結び。",
+      points: [
+        ["格助詞", "の・が・を・に（言葉どうしの関係）"],
+        ["接続助詞", "ば・ども・て（前と後ろのつなぎ方）"],
+        ["係助詞", "ぞ・なむ・や・か・こそ（係り結び）"],
+      ],
+    },
     terms: JOSHI_TERMS,
   },
   {
@@ -324,6 +354,15 @@ export const STAGES: Stage[] = [
     title: "誰が誰を高めているか（敬語）",
     canDo: ["「給ふ」があると、誰を高めているか言える", "主語が書かれていなくても、敬語から誰の動作か見当がつく"],
     category: "敬語",
+    about: {
+      heading: "敬語とは",
+      body: "話し手（書き手）が、登場人物や聞き手（読み手）を高めて敬意を表す言い方。誰から誰への敬意かを考えると、書かれていない主語が見えてくる。",
+      points: [
+        ["尊敬語", "動作をする人を高める（おはす・給ふ）"],
+        ["謙譲語", "動作を受ける人を高める（申す・奉る）"],
+        ["丁寧語", "聞き手（読み手）を高める（侍り・候ふ）"],
+      ],
+    },
     terms: KEIGO_TERMS,
   },
 ];
@@ -337,6 +376,8 @@ export const STAGES: Stage[] = [
 export interface StageStyle {
   /** step = 1画面1枚 / list = 全部を1ページに */
   layout: "step" | "list";
+  /** まず問いに答え、説明は答えたあと（とヒント）で出す。読む気がなくても、やるうちに説明が入る */
+  questionFirst: boolean;
   /** 選択肢の上限（正解は必ず残す） */
   maxChoices: number;
   /** 間違えたら同じ問いに答え直す（正誤の記録は最初の1回） */
@@ -346,9 +387,9 @@ export interface StageStyle {
 }
 
 export function stageStyle(id: StageId): StageStyle {
-  if (id === 0) return { layout: "step", maxChoices: 3, retry: true, stopAfterMisses: 0 };
-  if (id <= 2) return { layout: "step", maxChoices: 4, retry: true, stopAfterMisses: 2 };
-  return { layout: "list", maxChoices: 99, retry: false, stopAfterMisses: 2 };
+  if (id === 0) return { layout: "step", questionFirst: true, maxChoices: 3, retry: true, stopAfterMisses: 0 };
+  if (id <= 2) return { layout: "step", questionFirst: true, maxChoices: 4, retry: true, stopAfterMisses: 2 };
+  return { layout: "list", questionFirst: false, maxChoices: 99, retry: false, stopAfterMisses: 2 };
 }
 
 /** 選択肢を max 個までに減らす。正解は必ず残し、残りは元の並びの先頭から */

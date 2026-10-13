@@ -1,4 +1,4 @@
-/** 文法道場の単元の教育的な並び順（道場ホームと学び直しで共通）。未掲載の id は末尾へ。 */
+/** 文法道場の単元の教育的な並び順（道場ホームと学び始めで共通）。未掲載の id は末尾へ。 */
 export const CURRICULUM = [
   "doushi-katsuyo", "doushi-yodan", "doushi-kami-ichidan", "doushi-shimo-nidan",
   "doushi-kahen", "doushi-sahen", "doushi-rahen",

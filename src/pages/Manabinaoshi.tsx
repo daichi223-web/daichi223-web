@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import type { GrammarDrill, GrammarTopic } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
@@ -18,6 +18,7 @@ import {
   type TermCard,
 } from "@/lib/kobun/manabinaoshi";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
+import { splitGloss, type GlossEntry } from "@/lib/kobun/glossary";
 
 /** 例文の【】（問われている語）を太字に、《》（手がかり）は印だけ外す */
 function renderContext(text: string) {
@@ -77,7 +78,93 @@ function ChoiceButtons({
   );
 }
 
-/** 用語カード: やさしい説明＋例＋確認の1問。retry なら間違えたあと同じ問いに答え直す */
+/** 用語をタップしたら下から「〜とは」を出す */
+const GlossContext = createContext<(e: GlossEntry) => void>(() => {});
+
+/** 文の中の用語に点線を引き、タップで「〜とは」を開く（1つの文につき各語の最初の1回だけ） */
+function GlossText({ text, exclude }: { text: string; exclude?: string[] }) {
+  const open = useContext(GlossContext);
+  return (
+    <>
+      {splitGloss(text, exclude).map((p, i) =>
+        p.entry ? (
+          <button
+            key={i}
+            type="button"
+            onClick={(ev) => {
+              ev.stopPropagation();
+              open(p.entry!);
+            }}
+            className="inline p-0 m-0 bg-transparent border-0 font-[inherit] text-[inherit] text-rw-ink underline decoration-dotted decoration-2 underline-offset-4 decoration-rw-accent cursor-help"
+          >
+            {p.text}
+          </button>
+        ) : (
+          <span key={i}>{p.text}</span>
+        )
+      )}
+    </>
+  );
+}
+
+function GlossSheet({ entry, onClose }: { entry: GlossEntry | null; onClose: () => void }) {
+  if (!entry) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/30" onClick={onClose} role="dialog" aria-label={`${entry.term}とは`}>
+      <div
+        className="w-full max-w-2xl bg-rw-paper border-t-2 border-rw-ink rounded-t-3xl p-5 pb-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-black text-rw-ink tracking-tight flex-1">📘 {entry.term}とは</span>
+          <button onClick={onClose} className="text-sm font-black text-rw-ink-soft px-2 py-1" aria-label="閉じる">
+            ✕
+          </button>
+        </div>
+        <p className="text-[15px] text-rw-ink leading-relaxed mt-2">
+          <GlossText text={entry.body} exclude={[entry.term]} />
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** 用語カードの説明＋例 */
+function TermExplain({ card }: { card: TermCard }) {
+  return (
+    <>
+      <p className="text-[14px] text-rw-ink leading-relaxed mt-1">
+        <GlossText text={card.plain} exclude={[card.term]} />
+      </p>
+      <div className="mt-2 space-y-1">
+        {card.examples.map((ex, i) =>
+          Array.isArray(ex) ? (
+            <div key={i} className="flex gap-2 text-[13px] leading-snug">
+              <span className="font-black text-rw-ink shrink-0 min-w-[7em]">
+                <GlossText text={ex[0]} exclude={[card.term]} />
+              </span>
+              <span className="text-rw-ink font-serif">
+                <GlossText text={ex[1]} exclude={[card.term]} />
+              </span>
+            </div>
+          ) : (
+            <div key={i} className="text-[13px] text-rw-ink font-serif leading-snug">
+              <GlossText text={ex} exclude={[card.term]} />
+            </div>
+          )
+        )}
+      </div>
+    </>
+  );
+}
+
+/**
+ * 用語カード。
+ * questionFirst（下の段）: まず問いに答える。説明は「ヒントを見る」で開けて、答えたら自動で出る
+ *   ＝読む気がなくても、やっているうちに説明が入ってくる。
+ * それ以外（上の段）: 説明を読んでから答える。
+ * retry なら間違えたあと同じ問いに答え直す（正誤の記録は最初の1回）。
+ */
 function TermCardView({
   card,
   stage,
@@ -93,29 +180,23 @@ function TermCardView({
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const [hint, setHint] = useState(false);
   const choices = useMemo(
     () => shuffle(limitChoices(card.check.choices, card.check.answer, style.maxChoices)),
     [card.id, attempt, style.maxChoices]
   );
   const ok = selected !== null && selected === card.check.answer;
+  const showExplain = !style.questionFirst || hint || selected !== null || attempt > 0;
   return (
     <div className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-4">
+      {style.questionFirst && <div className="text-[11px] font-black text-rw-ink-soft tracking-wider">きょうの言葉</div>}
       <div className="text-lg font-black text-rw-ink tracking-tight">{card.term}</div>
-      <p className="text-[14px] text-rw-ink leading-relaxed mt-1">{card.plain}</p>
-      <div className="mt-2 space-y-1">
-        {card.examples.map((ex, i) =>
-          Array.isArray(ex) ? (
-            <div key={i} className="flex gap-2 text-[13px] leading-snug">
-              <span className="font-black text-rw-ink shrink-0 min-w-[7em]">{ex[0]}</span>
-              <span className="text-rw-ink font-serif">{ex[1]}</span>
-            </div>
-          ) : (
-            <div key={i} className="text-[13px] text-rw-ink font-serif leading-snug">{ex}</div>
-          )
-        )}
-      </div>
-      <div className="border-t border-rw-rule mt-3 pt-3">
-        <p className="text-[14px] font-black text-rw-ink mb-2">✅ {card.check.prompt}</p>
+      {!style.questionFirst && <TermExplain card={card} />}
+
+      <div className={style.questionFirst ? "mt-2" : "border-t border-rw-rule mt-3 pt-3"}>
+        <p className="text-[14px] font-black text-rw-ink mb-2">
+          ✅ <GlossText text={card.check.prompt} />
+        </p>
         <ChoiceButtons
           choices={choices}
           answer={card.check.answer}
@@ -126,16 +207,21 @@ function TermCardView({
             logEvent({
               area: "grammar", action: "answer", targetType: "term", targetId: card.id,
               correct: good, chosen: c, format: "term-check",
-              ctx: { mode: "manabinaoshi", stage, attempt },
+              ctx: { mode: "manabinaoshi", stage, attempt, hint },
             });
             if (attempt === 0) onAnswered(card.id, good);
             if (good || !style.retry) onSolved(card.id);
           }}
         />
+        {style.questionFirst && selected === null && !hint && attempt === 0 && (
+          <button onClick={() => setHint(true)} className="mt-2 text-[13px] font-black text-rw-accent underline">
+            わからない → ヒントを見る
+          </button>
+        )}
         {selected !== null && (
-          <p className={`text-[13px] mt-2 leading-relaxed ${ok ? "text-rw-accent" : "text-rw-primary"}`}>
-            <span className="font-black">{ok ? "◯ " : "× "}</span>
-            {card.check.explanation}
+          <p className={`text-[14px] mt-2 leading-relaxed ${ok ? "text-rw-accent" : "text-rw-primary"}`}>
+            <span className="font-black">{ok ? (attempt === 0 ? "◯ せいかい！ " : "◯ できた！ ") : "× "}</span>
+            <GlossText text={card.check.explanation} />
           </p>
         )}
         {selected !== null && !ok && style.retry && (
@@ -146,10 +232,17 @@ function TermCardView({
             }}
             className="mt-2 w-full px-4 py-2.5 border-2 border-rw-ink rounded-xl text-[14px] font-black text-rw-ink"
           >
-            説明を読んだら、もう一度答える
+            {style.questionFirst ? "下の説明を見て、もう一度答える" : "説明を読んだら、もう一度答える"}
           </button>
         )}
       </div>
+
+      {style.questionFirst && showExplain && (
+        <div className="border-t border-rw-rule mt-3 pt-3">
+          <div className="text-[11px] font-black text-rw-ink-soft tracking-wider">{card.term}って？</div>
+          <TermExplain card={card} />
+        </div>
+      )}
     </div>
   );
 }
@@ -164,6 +257,8 @@ type Phase = "choose" | "stage" | "quiz" | "result";
 
 export default function Manabinaoshi() {
   const [phase, setPhase] = useState<Phase>("choose");
+  // タップした用語の「〜とは」
+  const [gloss, setGloss] = useState<GlossEntry | null>(null);
   const [stageId, setStageId] = useState<StageId>(0);
   const stage: Stage = STAGES[stageId];
   const style = stageStyle(stageId);
@@ -302,11 +397,12 @@ export default function Manabinaoshi() {
           ← 戻る
         </button>
       )}
-      <h1 className="text-[22px] sm:text-2xl font-black text-rw-ink tracking-tight">🧭 学び直し</h1>
+      <h1 className="text-[22px] sm:text-2xl font-black text-rw-ink tracking-tight">🧭 学び始め</h1>
     </div>
   );
 
   return (
+    <GlossContext.Provider value={setGloss}>
     <div className="min-h-dvh bg-rw-bg">
       <div className="max-w-2xl mx-auto p-5">
         {header}
@@ -352,10 +448,29 @@ export default function Manabinaoshi() {
             <div className="text-[11px] font-black text-rw-ink-soft tracking-wider">段 {stage.id}</div>
             <h2 className="text-xl font-black text-rw-ink tracking-tight mb-1">{stage.title}</h2>
             <p className="text-[13px] text-rw-ink-soft leading-relaxed mb-4">
-              {stage.id === 0
-                ? "文法の言葉を、短い説明と1問で確かめよう。わからなくても大丈夫。説明を読めば答えられるようにしてある。"
-                : "この段で初めて出てくる言葉。知っている言葉は1問だけ答えて先へ。そのあと判定に進もう。"}
+              {style.questionFirst
+                ? "まず答えてみよう。わからなければヒントを見てOK。まちがえても説明が出るから大丈夫。点線の言葉はタップすると意味が出るよ。"
+                : "この段で初めて出てくる言葉。知っている言葉は1問だけ答えて先へ。そのあと判定に進もう。点線の言葉はタップすると意味が出るよ。"}
             </p>
+
+            {stage.about && (
+              <div className="bg-rw-primary-soft/40 border-2 border-rw-ink rounded-2xl p-4 mb-4">
+                <div className="text-lg font-black text-rw-ink tracking-tight">📘 {stage.about.heading}</div>
+                <p className="text-[14px] text-rw-ink leading-relaxed mt-1"><GlossText text={stage.about.body} /></p>
+                <div className="mt-2 space-y-1">
+                  {stage.about.points.map((pt, i) =>
+                    Array.isArray(pt) ? (
+                      <div key={i} className="flex gap-2 text-[13px] leading-snug">
+                        <span className="font-black text-rw-ink shrink-0 min-w-[5em]"><GlossText text={pt[0]} /></span>
+                        <span className="text-rw-ink"><GlossText text={pt[1]} /></span>
+                      </div>
+                    ) : (
+                      <div key={i} className="text-[13px] text-rw-ink leading-snug"><GlossText text={pt} /></div>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
 
             {(() => {
               const cardProps = (card: TermCard) => ({
@@ -476,14 +591,14 @@ export default function Manabinaoshi() {
                   <div className="border-b border-rw-rule my-2" />
                 </>
               )}
-              <p className="text-[15px] font-black text-rw-ink leading-snug">{drill.prompt}</p>
+              <p className="text-[15px] font-black text-rw-ink leading-snug"><GlossText text={drill.prompt} /></p>
             </div>
             <ChoiceButtons choices={quizChoices} answer={drill.answer} selected={selected} onSelect={answerQuiz} />
             {selected !== null && (
               <>
                 {drill.explanation && (
                   <p className="text-[13px] text-rw-ink leading-relaxed mt-3 bg-rw-paper border border-rw-rule rounded-xl p-3">
-                    {drill.explanation}
+                    <GlossText text={drill.explanation} />
                   </p>
                 )}
                 <button onClick={nextQuiz} className="mt-3 w-full px-4 py-3 bg-rw-ink text-rw-paper rounded-2xl font-black">
@@ -593,6 +708,8 @@ export default function Manabinaoshi() {
             );
           })()}
       </div>
+      <GlossSheet entry={gloss} onClose={() => setGloss(null)} />
     </div>
+    </GlossContext.Provider>
   );
 }

@@ -15,6 +15,14 @@ describe("用語カード", () => {
       }
   });
 
+  it("段1〜4の入口に「〜とは」の説明がある", () => {
+    for (const s of STAGES.filter((x) => x.id > 0)) {
+      expect(s.about?.heading).toMatch(/とは$/);
+      expect(s.about?.points.length).toBeGreaterThan(0);
+    }
+    expect(STAGES.find((s) => s.category === "用言")?.about?.heading).toBe("用言とは");
+  });
+
   it("用語カードの id は段をまたいで重複しない", () => {
     const ids = STAGES.flatMap((s) => s.terms.map((c) => c.id));
     expect(new Set(ids).size).toBe(ids.length);
