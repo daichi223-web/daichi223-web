@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { STAGES, judgePlacement, pickPlacementDrills } from "@/lib/kobun/manabinaoshi";
+import { STAGES, judgePlacement, limitChoices, pickPlacementDrills, shouldStop, stageStyle } from "@/lib/kobun/manabinaoshi";
 import type { GrammarDrill } from "@/lib/kobun/types";
 
 const d = (id: string, topicId: string, sort: number, extra: Partial<GrammarDrill> = {}): GrammarDrill => ({
@@ -52,6 +52,37 @@ describe("判定の問題選び", () => {
 
   it("段に含まれない単元の問題は入れない", () => {
     expect(pickPlacementDrills([d("x", "keigo", 1)], ["onbin"])).toEqual([]);
+  });
+});
+
+describe("段ごとの見せ方", () => {
+  it("下の段ほど簡単に: 0 は1枚ずつ・3択・答え直し、上の段は一覧", () => {
+    expect(stageStyle(0)).toMatchObject({ layout: "step", maxChoices: 3, retry: true });
+    expect(stageStyle(1)).toMatchObject({ layout: "step", retry: true });
+    expect(stageStyle(4)).toMatchObject({ layout: "list", retry: false });
+  });
+
+  it("選択肢を減らしても正解は残り、元の並びを保つ", () => {
+    expect(limitChoices(["書く", "美し", "静かなり", "花"], "花", 3)).toEqual(["書く", "美し", "花"]);
+    expect(limitChoices(["a", "b"], "b", 3)).toEqual(["a", "b"]);
+    expect(limitChoices(["a", "b", "c", "d"], ["d", "c"], 2)).toEqual(["a", "c"]);
+  });
+
+  it("用語カードは3択にしても正解が残る", () => {
+    for (const s of STAGES)
+      for (const c of s.terms) {
+        const got = limitChoices(c.check.choices, c.check.answer, stageStyle(s.id).maxChoices);
+        expect(got).toContain(c.check.answer);
+        expect(got.length).toBeGreaterThanOrEqual(2);
+      }
+  });
+
+  it("判定は × が上限に達したら止める", () => {
+    const miss = { id: "a", correct: false };
+    const hit = { id: "b", correct: true };
+    expect(shouldStop([miss, hit], 2)).toBe(false);
+    expect(shouldStop([miss, hit, miss], 2)).toBe(true);
+    expect(shouldStop([miss, miss, miss], 0)).toBe(false);
   });
 });
 

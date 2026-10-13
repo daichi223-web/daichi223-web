@@ -7,10 +7,14 @@ import {
   STAGES,
   isCorrect,
   judgePlacement,
+  limitChoices,
   pickPlacementDrills,
+  shouldStop,
+  stageStyle,
   type PlacementItem,
   type Stage,
   type StageId,
+  type StageStyle,
   type TermCard,
 } from "@/lib/kobun/manabinaoshi";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
@@ -73,18 +77,26 @@ function ChoiceButtons({
   );
 }
 
-/** 用語カード: やさしい説明＋例＋確認の1問 */
+/** 用語カード: やさしい説明＋例＋確認の1問。retry なら間違えたあと同じ問いに答え直す */
 function TermCardView({
   card,
   stage,
+  style,
   onAnswered,
+  onSolved,
 }: {
   card: TermCard;
   stage: StageId;
+  style: StageStyle;
   onAnswered: (id: string, ok: boolean) => void;
+  onSolved: (id: string) => void;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
-  const choices = useMemo(() => shuffle(card.check.choices), [card.id]);
+  const [attempt, setAttempt] = useState(0);
+  const choices = useMemo(
+    () => shuffle(limitChoices(card.check.choices, card.check.answer, style.maxChoices)),
+    [card.id, attempt, style.maxChoices]
+  );
   const ok = selected !== null && selected === card.check.answer;
   return (
     <div className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-4">
@@ -114,9 +126,10 @@ function TermCardView({
             logEvent({
               area: "grammar", action: "answer", targetType: "term", targetId: card.id,
               correct: good, chosen: c, format: "term-check",
-              ctx: { mode: "manabinaoshi", stage },
+              ctx: { mode: "manabinaoshi", stage, attempt },
             });
-            onAnswered(card.id, good);
+            if (attempt === 0) onAnswered(card.id, good);
+            if (good || !style.retry) onSolved(card.id);
           }}
         />
         {selected !== null && (
@@ -124,6 +137,17 @@ function TermCardView({
             <span className="font-black">{ok ? "◯ " : "× "}</span>
             {card.check.explanation}
           </p>
+        )}
+        {selected !== null && !ok && style.retry && (
+          <button
+            onClick={() => {
+              setSelected(null);
+              setAttempt((a) => a + 1);
+            }}
+            className="mt-2 w-full px-4 py-2.5 border-2 border-rw-ink rounded-xl text-[14px] font-black text-rw-ink"
+          >
+            説明を読んだら、もう一度答える
+          </button>
         )}
       </div>
     </div>
@@ -142,9 +166,12 @@ export default function Manabinaoshi() {
   const [phase, setPhase] = useState<Phase>("choose");
   const [stageId, setStageId] = useState<StageId>(0);
   const stage: Stage = STAGES[stageId];
+  const style = stageStyle(stageId);
 
   // 用語カードの正誤（段ごとにリセット）
   const [termResults, setTermResults] = useState<Record<string, boolean>>({});
+  const [solved, setSolved] = useState<Record<string, boolean>>({});
+  const [cardIdx, setCardIdx] = useState(0);
 
   // 単元の一覧（道場の単元＝ドリルがあるもの）
   const [topics, setTopics] = useState<TopicMeta[] | null>(null);
@@ -155,6 +182,8 @@ export default function Manabinaoshi() {
   const [qIdx, setQIdx] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [items, setItems] = useState<PlacementItem[]>([]);
+  // 途中で止めたあと「続けて確かめる」を選んだら、残りは止めずに最後まで
+  const [noStop, setNoStop] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -197,7 +226,10 @@ export default function Manabinaoshi() {
 
   const quiz = drills ?? [];
   const drill = quiz[qIdx];
-  const quizChoices = useMemo(() => shuffle(drill?.choices ?? []), [drill?.id]);
+  const quizChoices = useMemo(
+    () => (drill ? shuffle(limitChoices(drill.choices ?? [], drill.answer, style.maxChoices)) : []),
+    [drill?.id, style.maxChoices]
+  );
   useEffect(() => {
     if (phase === "quiz") markQuestionShown();
   }, [phase, qIdx]);
@@ -205,6 +237,9 @@ export default function Manabinaoshi() {
   const goStage = (id: StageId) => {
     setStageId(id);
     setTermResults({});
+    setSolved({});
+    setCardIdx(0);
+    setNoStop(false);
     setItems([]);
     setQIdx(0);
     setSelected(null);
@@ -213,6 +248,7 @@ export default function Manabinaoshi() {
   };
 
   const startQuiz = () => {
+    setNoStop(false);
     setItems([]);
     setQIdx(0);
     setSelected(null);
@@ -233,7 +269,7 @@ export default function Manabinaoshi() {
   };
 
   const nextQuiz = () => {
-    if (qIdx + 1 >= quiz.length) {
+    if (qIdx + 1 >= quiz.length || (!noStop && shouldStop(items, style.stopAfterMisses))) {
       setPhase("result");
       window.scrollTo(0, 0);
       return;
@@ -246,6 +282,8 @@ export default function Manabinaoshi() {
     .filter((c) => c.id in termResults)
     .map((c) => ({ id: c.id, correct: termResults[c.id] }));
   const allTermsAnswered = termItems.length === stage.terms.length;
+  const allTermsSolved = stage.terms.every((c) => solved[c.id]);
+  const stepDone = style.layout === "list" || (cardIdx >= stage.terms.length - 1 && allTermsSolved);
   const termJudge = judgePlacement(termItems);
   const nextStage = STAGES[stageId + 1];
   const prevStage = stageId > 0 ? STAGES[stageId - 1] : null;
@@ -319,18 +357,64 @@ export default function Manabinaoshi() {
                 : "この段で初めて出てくる言葉。知っている言葉は1問だけ答えて先へ。そのあと判定に進もう。"}
             </p>
 
-            <div className="space-y-3">
-              {stage.terms.map((card) => (
-                <TermCardView
-                  key={`${stage.id}-${card.id}`}
-                  card={card}
-                  stage={stage.id}
-                  onAnswered={(id, ok) => setTermResults((r) => (id in r ? r : { ...r, [id]: ok }))}
-                />
-              ))}
-            </div>
+            {(() => {
+              const cardProps = (card: TermCard) => ({
+                card,
+                stage: stage.id,
+                style,
+                onAnswered: (id: string, ok: boolean) => setTermResults((r) => (id in r ? r : { ...r, [id]: ok })),
+                onSolved: (id: string) => setSolved((r) => ({ ...r, [id]: true })),
+              });
+              if (style.layout === "list")
+                return (
+                  <div className="space-y-3">
+                    {stage.terms.map((card) => (
+                      <TermCardView key={`${stage.id}-${card.id}`} {...cardProps(card)} />
+                    ))}
+                  </div>
+                );
+              const card = stage.terms[cardIdx];
+              const last = cardIdx >= stage.terms.length - 1;
+              return (
+                <>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex-1 h-1.5 rounded-full bg-rw-rule overflow-hidden">
+                      <div
+                        className="h-full bg-rw-accent transition-all"
+                        style={{ width: `${Math.round(((cardIdx + (solved[card.id] ? 1 : 0)) / stage.terms.length) * 100)}%` }}
+                      />
+                    </div>
+                    <span className="text-[11px] font-black text-rw-ink-soft">
+                      {cardIdx + 1} / {stage.terms.length}
+                    </span>
+                  </div>
+                  <TermCardView key={`${stage.id}-${card.id}`} {...cardProps(card)} />
+                  <div className="flex gap-2 mt-3">
+                    {cardIdx > 0 && (
+                      <button
+                        onClick={() => setCardIdx((i) => i - 1)}
+                        className="px-4 py-3 border-2 border-rw-rule rounded-2xl font-black text-rw-ink-soft"
+                      >
+                        ← 前へ
+                      </button>
+                    )}
+                    {solved[card.id] && !last && (
+                      <button
+                        onClick={() => {
+                          setCardIdx((i) => i + 1);
+                          window.scrollTo(0, 0);
+                        }}
+                        className="flex-1 px-4 py-3 bg-rw-ink text-rw-paper rounded-2xl font-black"
+                      >
+                        つぎの言葉へ ▸
+                      </button>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
 
-            {stage.id === 0 ? (
+            {!stepDone ? null : stage.id === 0 ? (
               allTermsAnswered && (
                 <div className="mt-5 bg-rw-paper border-2 border-rw-ink rounded-2xl p-4">
                   <div className="font-black text-rw-ink">
@@ -470,7 +554,37 @@ export default function Manabinaoshi() {
                       <span className="text-rw-ink-soft text-sm">→</span>
                     </Link>
                   ))}
+                  {quiz.slice(items.length).map((d) => (
+                    <div
+                      key={d.topicId}
+                      className="flex items-center gap-3 bg-rw-paper border border-dashed border-rw-rule rounded-xl px-3 py-2 text-rw-ink-soft"
+                    >
+                      <span className="font-black">－</span>
+                      <span className="flex-1 text-[14px] font-bold">{titleOf(d.topicId)}</span>
+                      <span className="text-[11px] font-bold">まだ確かめていない</span>
+                    </div>
+                  ))}
                 </div>
+
+                {items.length < quiz.length && (
+                  <div className="mt-3">
+                    <p className="text-[12px] text-rw-ink-soft leading-relaxed mb-2">
+                      ×が2つ出たので、ここで止めたよ。まずは「ここから始めよう」の単元を学んでから戻ってくるのがおすすめ。
+                    </p>
+                    <button
+                      onClick={() => {
+                        setNoStop(true);
+                        setQIdx(items.length);
+                        setSelected(null);
+                        setPhase("quiz");
+                        window.scrollTo(0, 0);
+                      }}
+                      className="w-full px-4 py-2.5 border-2 border-rw-ink rounded-2xl text-[14px] font-black text-rw-ink"
+                    >
+                      残り {quiz.length - items.length} 単元も続けて確かめる
+                    </button>
+                  </div>
+                )}
 
                 <button onClick={() => setPhase("choose")} className="mt-4 text-[13px] font-black text-rw-ink-soft underline">
                   段を選び直す

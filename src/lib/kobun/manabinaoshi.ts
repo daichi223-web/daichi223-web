@@ -328,6 +328,43 @@ export const STAGES: Stage[] = [
   },
 ];
 
+/**
+ * 段ごとの見せ方（学習レベルで簡易さと複雑さを変える）。
+ * 下の段ほど一度に見せる量を減らし、間違えたら同じ問いに答え直して正解で終える。
+ * 上の段は一覧で見渡せて、知っている言葉は飛ばせる（初学者には手順を、
+ * 進んだ学習者には手引きを減らす＝専門知識逆転効果）。
+ */
+export interface StageStyle {
+  /** step = 1画面1枚 / list = 全部を1ページに */
+  layout: "step" | "list";
+  /** 選択肢の上限（正解は必ず残す） */
+  maxChoices: number;
+  /** 間違えたら同じ問いに答え直す（正誤の記録は最初の1回） */
+  retry: boolean;
+  /** 判定はこの数だけ × がついたら止める（0 = 止めない） */
+  stopAfterMisses: number;
+}
+
+export function stageStyle(id: StageId): StageStyle {
+  if (id === 0) return { layout: "step", maxChoices: 3, retry: true, stopAfterMisses: 0 };
+  if (id <= 2) return { layout: "step", maxChoices: 4, retry: true, stopAfterMisses: 2 };
+  return { layout: "list", maxChoices: 99, retry: false, stopAfterMisses: 2 };
+}
+
+/** 選択肢を max 個までに減らす。正解は必ず残し、残りは元の並びの先頭から */
+export function limitChoices(choices: string[], answer: string | string[], max: number): string[] {
+  if (choices.length <= max) return choices;
+  const ans = Array.isArray(answer) ? answer : [answer];
+  const right = choices.filter((c) => ans.includes(c)).slice(0, 1);
+  const wrong = choices.filter((c) => !ans.includes(c)).slice(0, Math.max(0, max - right.length));
+  return choices.filter((c) => right.includes(c) || wrong.includes(c));
+}
+
+/** 判定を止めるか（× の数が上限に達した） */
+export function shouldStop(items: PlacementItem[], stopAfterMisses: number): boolean {
+  return stopAfterMisses > 0 && items.filter((i) => !i.correct).length >= stopAfterMisses;
+}
+
 /** 判定に使えるドリル＝2択以上で、正解が選択肢に入っているもの */
 function usable(d: GrammarDrill): boolean {
   if (!d.choices || d.choices.length < 2) return false;
