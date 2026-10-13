@@ -24,6 +24,7 @@ import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
 //  1. ヘッダ: kobun. + 日付 + 単語帳件数 (🔥)
 //  2. Today's Quest カード: 「今日の分」1ボタン（おかえり語→今日の復習→範囲から補充、で約10問）
 //  3. 4 タイル: 単語クイズ / 多義語クイズ / 読解 / 単語帳
+//     （その下に 学び直し の1行、学習履歴 / テーマ。単語帳のショートカットは 2026-10-13 にユーザー指示で外した）
 //  4. 気になってる単語: localStorage の単語帳から最新 5 件
 //  5. テーマピッカーへの誘導 (詳細設定は別途、クイズ画面でアクセス可能)
 
@@ -353,13 +354,24 @@ export default function HomeReiwa({
         />
       </div>
 
-      {/* 単語帳・学習履歴ショートカット */}
-      <div className="grid grid-cols-3 gap-2.5 mb-3">
-        <TileLinkInline
-          href="/read/vocab"
-          label={vocab.length > 0 ? `単語帳 ${vocab.length}` : '単語帳'}
-          emoji="📒"
-        />
+      {/* 学び直し（どこから始めればいいかわからない生徒の入口） */}
+      <Link
+        to="/manabinaoshi"
+        className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 mb-2.5 hover:border-rw-ink-soft transition no-underline text-rw-ink"
+        style={{ textDecoration: 'none' }}
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-xl">🧭</span>
+          <span className="flex-1 min-w-0">
+            <span className="block font-black text-rw-ink tracking-tight">学び直し</span>
+            <span className="block text-[11px] font-bold text-rw-ink-soft truncate">どこから始めればいいか、自分で選んで確かめる</span>
+          </span>
+          <span className="text-rw-ink-soft text-sm">→</span>
+        </div>
+      </Link>
+
+      {/* 学習履歴・テーマのショートカット */}
+      <div className="grid grid-cols-2 gap-2.5 mb-3">
         <TileLinkInline href="/stats" label="学習履歴" emoji="📊" />
         <button
           onClick={onOpenThemePicker}

@@ -28,6 +28,7 @@ const ReferenceHome = lazy(() => import('./pages/ReferenceHome.tsx'))
 const ReferenceTopic = lazy(() => import('./pages/ReferenceTopic.tsx'))
 const AffixList = lazy(() => import('./pages/AffixList.tsx'))
 const GrammarDojoHome = lazy(() => import('./pages/GrammarDojoHome.tsx'))
+const Manabinaoshi = lazy(() => import('./pages/Manabinaoshi.tsx'))
 const VocabDojoHome = lazy(() => import('./pages/VocabDojoHome.tsx'))
 const GrammarDojoReview = lazy(() => import('./pages/GrammarDojoReview.tsx'))
 const GrammarDojoTopic = lazy(() => import('./pages/GrammarDojoTopic.tsx'))
@@ -84,6 +85,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/reference/:topicId" element={<ReferenceTopic />} />
           <Route path="/read/affixes" element={<AffixList />} />
           <Route path="/read/grammar" element={<GrammarDojoHome />} />
+          <Route path="/manabinaoshi" element={<Manabinaoshi />} />
           <Route path="/tango-dojo" element={<VocabDojoHome />} />
           <Route path="/vocab" element={<VocabHome />} />
           <Route path="/word/:lemma" element={<VocabCard />} />

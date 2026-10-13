@@ -80,6 +80,23 @@ export async function fetchDrills(topicId: string): Promise<GrammarDrill[]> {
   return data.map(toDrill);
 }
 
+/** 複数単元のドリルをまとめて取得（学び直しの判定用。sort 昇順） */
+export async function fetchDrillsForTopics(topicIds: string[]): Promise<GrammarDrill[]> {
+  if (topicIds.length === 0) return [];
+  const { data, error } = await supabase
+    .from("grammar_drills")
+    .select("id, topic_id, kind, prompt, context, choices, answer, explanation, ref_heading, sort")
+    .in("topic_id", topicIds)
+    .order("sort", { ascending: true });
+
+  if (error || !data) {
+    console.warn("[dojo] fetchDrillsForTopics failed:", error);
+    return [];
+  }
+
+  return data.map(toDrill);
+}
+
 /**
  * SRS の期日が到来した文法ドリルを、単元を横断して取得する（復習導線）。
  * - getDueWords() は単語 qid も含むため、grammar_drills 側で id 一致のみ拾う

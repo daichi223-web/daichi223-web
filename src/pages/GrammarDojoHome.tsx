@@ -4,6 +4,7 @@ import type { GrammarTopic, LayerId, TopicProgress } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 import { fetchDojoTopicIds, getAllTopicProgress, fetchDueDrillCount } from "@/lib/kobun/dojoData";
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
+import { orderIndex } from "@/lib/kobun/curriculum";
 
 type Category = "用言" | "助動詞" | "助詞" | "敬語" | "識別" | "単語";
 
@@ -26,25 +27,6 @@ const CATEGORY_META: Record<Category, { emoji: string; desc: string }> = {
   単語: { emoji: "🎯", desc: "紛らわしい単語を「決め手」で見分ける" },
 };
 
-/** カテゴリ内の教育的な並び順。未掲載の id は末尾へ（layer→id） */
-const CURRICULUM = [
-  "doushi-katsuyo", "doushi-yodan", "doushi-kami-ichidan", "doushi-shimo-nidan",
-  "doushi-kahen", "doushi-sahen", "doushi-rahen",
-  "keiyoshi-katsuyo", "keiyoshi-ku", "keiyoshi-shiku", "keiyoshi-gokan", "onbin",
-  "jodoshi-toha",
-  "jodoshi-jisei", "jodoshi-keri", "jodoshi-tsu", "jodoshi-nu", "jodoshi-tari", "jodoshi-ri",
-  "jodoshi-mu", "jodoshi-suiryo", "jodoshi-beshi", "jodoshi-zu",
-  "jodoshi-ru", "jodoshi-su", "jodoshi-ganbou", "jodoshi-dantei", "jodoshi-nari",
-  "joshi-kaku", "joshi-setsuzoku", "joshi-fuku-kakari", "joshi-shujoshi", "kakari-musubi",
-  "keigo", "keigo-sonkei", "keigo-kenjou", "keigo-teinei",
-  "shikibetsu", "shikibetsu-ni", "shikibetsu-nu-ne", "shikibetsu-namu",
-  "shikibetsu-ru-re", "shikibetsu-nari", "shikibetsu-shi",
-  "vocab-kokon", "vocab-kokon-2", "vocab-shiten", "vocab-dan", "vocab-kinsetsu", "vocab-koou", "vocab-tagi",
-];
-const orderIndex = (id: string) => {
-  const i = CURRICULUM.indexOf(id);
-  return i < 0 ? 999 : i;
-};
 
 const OPEN_KEY = "kobun-dojo-cats-v1";
 
