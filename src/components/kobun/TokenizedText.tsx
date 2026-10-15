@@ -23,6 +23,12 @@ interface TokenizedTextProps {
   readingAnnotation?: ReadingAnnotation | null;
   /** 変わるたびに識別の答えをすべて消す（教材全体のやり直し） */
   shikiResetKey?: number;
+  /** 浮かぶ解説カード（useWordCard）が有効なとき true。語のクリックはカード側が扱い、ここでは GrammarPopover を開かない */
+  cardMode?: boolean;
+  /** カードが出ている語（色を付ける） */
+  highlightTokenId?: string | null;
+  /** カードの「もっと」：この語の従来の解説（GrammarPopover）を開く。n は同じ語でもう一度開けるようにする番号 */
+  moreRequest?: { id: string; n: number } | null;
 }
 
 const hintMeta: Record<ReadingHintType, { icon: string; color: string; bg: string }> = {
@@ -52,8 +58,20 @@ export function TokenizedText({
   onTokenView,
   readingAnnotation,
   shikiResetKey = 0,
+  cardMode = false,
+  highlightTokenId = null,
+  moreRequest = null,
 }: TokenizedTextProps) {
   const [activeTokenId, setActiveTokenId] = useState<string | null>(null);
+
+  // 浮かぶ解説カードの「もっと」：この文の語なら、従来の解説（GrammarPopover）を開く
+  useEffect(() => {
+    if (moreRequest && sentence.tokens.some((t) => t.id === moreRequest.id)) {
+      setActiveShikiId(null);
+      setActiveTokenId(moreRequest.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moreRequest?.id, moreRequest?.n]);
   const [openHints, setOpenHints] = useState<Set<number>>(new Set());
   // 識別レイヤー: 対象（文ごとに grammarTag から決める）・開いている対象・答え（このページを開いている間だけ）
   const shikiTargets = useMemo(() => findShikibetsu(sentence.tokens), [sentence.tokens]);
@@ -193,8 +211,9 @@ export function TokenizedText({
             key={token.id}
             token={token}
             currentLayer={currentLayer}
-            isActive={activeTokenId === token.id}
+            isActive={activeTokenId === token.id || highlightTokenId === token.id}
             onClick={() => {
+              if (cardMode) return; // 浮かぶカードが有効なときは、教材画面の useWordCard が扱う
               setActiveShikiId(null);
               handleTokenClick(token.id);
             }}

@@ -391,10 +391,15 @@ for (const id of targets) {
     // 実データのキーは tokenAnalyses（旧名の deciders / tokens も一応見る）
     const deciders = an && (an.tokenAnalyses || an.deciders || an.tokens || []);
     if (Array.isArray(deciders)) {
-      // token id → 品詞分解の意味
+      // token id → 品詞分解の意味・品詞
       const meaningOf = new Map();
+      const posOf = new Map();
       for (const st of sentences)
-        for (const tk of st.tokens || []) meaningOf.set(tk.id, tk.grammarTag?.meaning || '');
+        for (const tk of st.tokens || []) {
+          meaningOf.set(tk.id, tk.grammarTag?.meaning || '');
+          posOf.set(tk.id, tk.grammarTag?.pos || '');
+        }
+      const isGrammarPos = (p) => p === '助動詞' || /助詞$/.test(p);
       for (const d of deciders) {
         const tid = d.tokenId || d.id;
         if (tid && !seenToken.has(tid)) {
@@ -408,6 +413,9 @@ for (const id of targets) {
         const got = meaningOf.get(tid);
         if (got === undefined) continue;
         if (got === '') {
+          // 単語の「理由」（2026-10-16〜、scripts/vocab-deciders-apply.mjs）は品詞分解に意味ラベルが無い語にも付く。
+          // 意味は決め手側が持つので、助詞・助動詞以外は食い違いとしない
+          if (!isGrammarPos(posOf.get(tid))) continue;
           add(id, 'T13-決め手の食い違い', `${tid}: 決め手「${want}」だが品詞分解に意味が無い`);
         } else if (!got.startsWith(want) && !want.startsWith(got)) {
           add(id, 'T13-決め手の食い違い', `${tid}: 品詞分解「${got}」/ 決め手「${want}」`);

@@ -22,6 +22,7 @@ const layerColors: Record<number, string> = {
  * - 両方: 上記の組み合わせ
  *
  * クリックすると GrammarPopover が開く既存挙動はそのまま (タップ可能性は変わらない)。
+ * 記号以外の span には data-token-id を付ける（WordCard の試作が、重ねた・触れた語を探すのに使う）。
  */
 function vocabMarkerStyle(status: ReturnType<typeof lookupVocabStatus>) {
   const { hasQuiz, hasExplanation } = status;
@@ -88,6 +89,7 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
     if (tappable) {
       return (
         <span
+          data-token-id={token.id}
           className="inline cursor-pointer"
           style={tapStyle}
           onClick={onClick}
@@ -101,7 +103,7 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
       );
     }
     return (
-      <span className="inline">
+      <span data-token-id={isSymbol ? undefined : token.id} className="inline">
         <TokenContent token={token} />
       </span>
     );
@@ -112,6 +114,7 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
     if (tappable && !isSymbol) {
       return (
         <span
+          data-token-id={token.id}
           className="inline cursor-pointer"
           style={tapStyle}
           onClick={onClick}
@@ -125,7 +128,7 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
       );
     }
     return (
-      <span className="inline">
+      <span data-token-id={isSymbol ? undefined : token.id} className="inline">
         <TokenContent token={token} />
       </span>
     );
@@ -136,6 +139,7 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
   if (isScaffold) {
     return (
       <span
+        data-token-id={token.id}
         className="token-scaffold inline cursor-pointer"
         style={markerStyle}
         onClick={onClick}
@@ -154,6 +158,7 @@ export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanP
 
   return (
     <span
+      data-token-id={token.id}
       className={`token-active inline ${colorClass} ${isActive ? "bg-sumi/10 rounded" : ""}`}
       style={markerStyle}
       onClick={onClick}

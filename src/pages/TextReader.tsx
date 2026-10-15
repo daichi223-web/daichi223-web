@@ -1,5 +1,5 @@
 import { useParams, useSearchParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type {
   KobunText,
   LayerId,
@@ -13,6 +13,7 @@ import {
   setCurrentLayer,
 } from "@/lib/kobun/progress";
 import { TokenizedText } from "@/components/kobun/TokenizedText";
+import { useWordCard, type WordCardTokenInfo } from "@/components/kobun/useWordCard";
 import { SelectionToolbar } from "@/components/kobun/SelectionToolbar";
 import { LearningPointsPanel } from "@/components/kobun/LearningPointsPanel";
 import { fetchJsonAsset } from "@/lib/fetchJson";
@@ -120,6 +121,18 @@ export default function TextReader() {
     (layerParam !== null ? Number(layerParam) : 1) as LayerId
   );
   const [showTranslation, setShowTranslation] = useState(false);
+  // 語の近くに浮かぶ短い解説カード＋画面下の訳の帯（2026-10-16〜）。既定で全教材。端末ごとに「従来の表示」へ戻せる。
+  // 読解(5)は従来どおり解説を出さず、識別(6)は識別の出題を使う
+  const [cardPref, setCardPref] = useState<boolean>(() => {
+    try { return localStorage.getItem("kobun-word-card") !== "off"; } catch { return true; }
+  });
+  const cardMode = cardPref && currentLayer !== 5 && currentLayer !== 6;
+  const toggleCardPref = () => {
+    setCardPref((v) => { try { localStorage.setItem("kobun-word-card", v ? "off" : "on"); } catch { /* noop */ } return !v; });
+  };
+  const [focusSentence, setFocusSentence] = useState<string | null>(null);
+  const [moreRequest, setMoreRequest] = useState<{ id: string; n: number } | null>(null);
+  const CARD_BAND_H = 150; // 画面下の帯＋ボタン列のおおよその高さ（カードを重ねない）
   // 識別レイヤーの「すべてやり直す」（数が変わると各文の答えを消す）
   const [shikiResetKey, setShikiResetKey] = useState(0);
   const [activeSentence, setActiveSentence] = useState<string | null>(null);
@@ -160,6 +173,22 @@ export default function TextReader() {
   const handleTokenView = (tokenId: string) => {
     markTokenViewed(textId, tokenId);
   };
+
+  // 浮かぶ解説カード：教材の全トークン（id → トークンと文）。フックは早期 return より前に呼ぶ
+  const cardTokens = useMemo(() => {
+    const m = new Map<string, WordCardTokenInfo>();
+    for (const s of text?.sentences ?? []) for (const t of s.tokens) m.set(t.id, { token: t, sentenceId: s.id });
+    return m;
+  }, [text]);
+  const wordCard = useWordCard({
+    enabled: cardMode && !!text,
+    textId,
+    tokens: cardTokens,
+    analysis,
+    avoidBottom: CARD_BAND_H,
+    onFocusSentence: (sid) => { setFocusSentence(sid); },
+    onMore: (id) => { handleTokenView(id); setMoreRequest((r) => ({ id, n: (r?.n ?? 0) + 1 })); },
+  });
 
   if (loadError) {
     return (
@@ -316,6 +345,7 @@ export default function TextReader() {
           />
         )}
 
+        <div ref={wordCard.rootRef} {...wordCard.bind} className="space-y-3">
         {text.sentences.map((sentence) => (
           <div key={sentence.id} className="space-y-1.5">
             {/* 本文 (枠なし、行間広めの読み物体裁) */}
@@ -331,6 +361,9 @@ export default function TextReader() {
                 textId={textId}
                 onTokenView={handleTokenView}
                 shikiResetKey={shikiResetKey}
+                cardMode={cardMode}
+                highlightTokenId={wordCard.activeId}
+                moreRequest={moreRequest}
                 readingAnnotation={
                   readingGuide?.annotations.find(
                     (a) => a.sentenceId === sentence.id
@@ -362,6 +395,8 @@ export default function TextReader() {
             )}
           </div>
         ))}
+        </div>
+        {wordCard.element}
       </main>
 
       {/* テキスト選択ツールバー */}
@@ -369,7 +404,39 @@ export default function TextReader() {
 
       {/* スティッキーフッター */}
       <footer className="sticky bottom-0 bg-rw-paper border-t-2 border-rw-ink px-3 py-2">
+        {/* 触れた語のある文の訳（高さ固定。本文は動かさない） */}
+        {cardMode && (
+          <div
+            className="text-sm leading-relaxed text-rw-ink mb-2 px-1 overflow-y-auto"
+            style={{ height: "4.2em", borderLeft: "4px solid var(--rw-primary)", paddingLeft: 10, background: "var(--rw-primary-soft)" }}
+            aria-live="polite"
+          >
+            {(() => {
+              const s = focusSentence ? text.sentences.find((x) => x.id === focusSentence) : null;
+              return s ? (
+                <>
+                  <span className="text-[11px] font-bold text-rw-ink-soft mr-2">訳</span>
+                  {s.modernTranslation}
+                </>
+              ) : (
+                <span className="text-rw-ink-soft text-xs">
+                  語にマウスを重ねる・指を当てると説明が出て、その文の訳がここに出ます。クリック・タップで固定。
+                </span>
+              );
+            })()}
+          </div>
+        )}
         <div className="flex gap-2 justify-center flex-wrap">
+          {currentLayer !== 5 && currentLayer !== 6 && (
+            <button
+              onClick={toggleCardPref}
+              aria-pressed={cardPref}
+              title={cardPref ? "語の解説を従来の表示（文の下・画面下のシート）に戻す" : "語の近くに浮かぶ解説に切り替える"}
+              className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
+            >
+              {cardPref ? "解説：カード" : "解説：従来"}
+            </button>
+          )}
           <button
             onClick={() => setShowTranslation(!showTranslation)}
             className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"

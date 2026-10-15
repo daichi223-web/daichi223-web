@@ -5,6 +5,7 @@
  */
 import bundledKobunQ from '@/data/kobunQ.v2.slim.json';
 import bundledVocabIndex from '@/data/vocabIndex.json';
+import { resolveVocabKey } from '@/lib/vocabAlias';
 
 type KobunQEntry = { qid: string; lemma: string; pos?: string; sense?: string };
 type VocabIndexEntry = { slug: string; title: string; pos: string; category: string };
@@ -100,6 +101,8 @@ export function lookupVocabStatus(
       break;
     }
   }
+  // 漢字表記・派生形・連用形などは別名表（vocabAlias）で見出しへ。本文の下線と解説ボタンの判定をそろえる（2026-10-16）
+  if (!explLemma) explLemma = resolveVocabKey(tokenText, baseForm);
   return {
     hasQuiz: qids.length > 0,
     hasExplanation: explLemma !== null,
