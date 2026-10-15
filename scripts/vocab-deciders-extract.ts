@@ -23,13 +23,13 @@ for (const s of text.sentences) {
   const targets = (s.tokens as any[]).filter((t) => {
     const g = t.grammarTag ?? {};
     if (g.pos === "助動詞" || /助詞$/.test(g.pos ?? "") || g.pos === "記号") return false;
-    return !!resolveVocabKey(t.text, g.baseForm);
+    return !!resolveVocabKey(t.text, g.baseForm, g.pos);
   });
   if (!targets.length) continue;
   md.push(`## ${s.id}`, `本文：${s.originalText}`, `訳　：${s.modernTranslation ?? ""}`, "");
   for (const t of targets) {
     const g = t.grammarTag ?? {};
-    const lemma = resolveVocabKey(t.text, g.baseForm)!;
+    const lemma = resolveVocabKey(t.text, g.baseForm, g.pos)!;
     const senses = (byLemma.get(lemma) ?? []).filter((q) => !g.pos || !q.pos || q.pos === g.pos || true);
     const seen = new Set<string>(); const list: Q[] = [];
     for (const q of senses.sort((a, b) => (a.meaning_idx ?? 0) - (b.meaning_idx ?? 0))) {

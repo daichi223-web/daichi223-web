@@ -151,7 +151,7 @@ function PopoverContent({
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
   const [addedToVocab, setAddedToVocab] = useState(false);
   // 見出し語 / 表層形 / 漢字表記揺れ / 派生形の解決を vocabAlias に集約。
-  const vocabCandidate = resolveVocabKey(token.text, tag.baseForm);
+  const vocabCandidate = resolveVocabKey(token.text, tag.baseForm, tag.pos);
 
   // 文法クイズ（道場）への解決先。動詞/助動詞/助詞/敬語など、文法タグから挑戦できる
   const grammarQuizTopic = resolveQuizTopic(token.grammarRefId, tag.meaning ?? undefined);

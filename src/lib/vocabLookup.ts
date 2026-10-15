@@ -102,7 +102,7 @@ export function lookupVocabStatus(
     }
   }
   // 漢字表記・派生形・連用形などは別名表（vocabAlias）で見出しへ。本文の下線と解説ボタンの判定をそろえる（2026-10-16）
-  if (!explLemma) explLemma = resolveVocabKey(tokenText, baseForm);
+  if (!explLemma) explLemma = resolveVocabKey(tokenText, baseForm, pos);
   return {
     hasQuiz: qids.length > 0,
     hasExplanation: explLemma !== null,

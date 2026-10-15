@@ -21,7 +21,8 @@ const DERIVATIVE_TO_LEMMA: Record<string, string> = {
 // === 連用形・連体形などで baseForm が取れていないケース ===
 const INFLECTION_ALIAS: Record<string, string> = {
   'はべる': 'はべり',
-  'あはれ': 'あはれなり',
+  // 'あはれ' → 'あはれなり' は外した（2026-10-16）。感動詞「あはれ」・名詞「もののあはれ」が形容動詞に紐づいていた。
+  // 形容動詞の活用形は baseForm「あはれなり」で直接当たる
   'おぼし': 'おぼす・おぼしめす',
   'おぼしめし': 'おぼす・おぼしめす',
 };
@@ -35,7 +36,7 @@ const KANJI_VARIANTS: Record<string, string[]> = {
   'ありく':  ['歩く', '歩き', '歩か', '歩け'],
   'いづ':    ['出づ', '出で', '出る'],
   'いふ':    ['言ふ', '言ひ', '言は', '言へ', '云ふ', '云ひ'],
-  'いぬ':    ['寝', '寝ぬ', '寝な', '寝に'],
+  // 'いぬ'（往ぬ）に「寝」を当てていたのは誤り（寝＝ナ行下二段「寝（ぬ）」。2026-10-16 に外した）
   'うす':    ['失す', '失せ'],
   'うつる':  ['移る', '移り', '移ら', '移れ', '写る'],
   'うつろふ': ['移ろふ', '移ろひ'],
@@ -43,7 +44,7 @@ const KANJI_VARIANTS: Record<string, string[]> = {
   'おぼゆ':  ['覚ゆ', '覚え', '覚ゆる'],
   'おほす':  ['仰す', '仰せ', '仰せらる'],
   'おもひやる': ['思ひやる', '思ひやり'],
-  'かく':    ['書く', '書き', '書か', '書け', '描く'],
+  // 'かく'（斯く＝このように）に「書く・描く」を当てていたのは誤り（2026-10-16 に外した）
   'かしづく': ['傅く', '傅き', '傅か'],
   'かたみ':  ['形見'],
   'かなし':  ['悲し', '哀し'],
@@ -64,9 +65,9 @@ const KANJI_VARIANTS: Record<string, string[]> = {
   'たまふ':  ['給ふ', '給ひ', '給は', '給へ', '賜ふ', '賜ひ'],
   'たまはる': ['給はる', '賜る', '賜はり'],
   'ちぎり':  ['契り'],
-  'とく':    ['解く', '解き', '説く', '疾く', '早く'],
+  'とく':    ['解く', '解き', '説く', '疾く'], // 「早く」は「はやく」なので外した（2026-10-16）
   'とぶらふ': ['訪ふ', '訪ひ'],
-  'ながむ':  ['眺む', '眺め', '詠む', '詠め', '詠み'],
+  'ながむ':  ['眺む', '眺め'], // 「詠む（よむ）」は別語なので外した（2026-10-16）
   'なつかし': ['懐かし'],
   'にほふ':  ['匂ふ', '匂ひ', '匂は'],
   'ひく':    ['引く', '引き', '引か', '引け'],
@@ -84,9 +85,9 @@ const KANJI_VARIANTS: Record<string, string[]> = {
   'ものす':  ['物す', '物し'],
   'やすらふ': ['安らふ', '安らひ'],
   'やつす':  ['窶す', '窶し'],
-  'ゆゑ':    ['故'],
+  // 'ゆゑ' に「故」を当てるのはやめた（「故大納言」の接頭語「こ」に当たる。かな「ゆゑ」は直接一致する。2026-10-16）
   'わたる':  ['渡る', '渡り', '渡ら', '渡れ'],
-  'ゐる':    ['居る', '居', '居り', '居れ'],
+  'ゐる':    ['居る', '居', '居れ'], // 「居り」はラ変「をり」なので外した（2026-10-16）
   'をかし':  ['可笑し'],
   'あさまし': ['浅まし', '浅ましく', '浅ましき'],
   'あやし':  ['怪し', '怪しき', '怪しく', '賤し'],
@@ -143,14 +144,39 @@ for (const [lemma, variants] of Object.entries(KANJI_VARIANTS)) {
  * - エイリアス経由で解決できる場合はその先の key を返す
  * - 該当なしなら null
  */
-export function resolveVocabKey(text: string, baseForm: string | undefined | null): string | null {
+export function resolveVocabKey(text: string, baseForm: string | undefined | null, pos?: string | null): string | null {
   const base = (baseForm ?? '').trim();
-  if (base && vocabKeys.has(base)) return base;
   const t = (text ?? '').trim().replace(/^[、。「」『』（）\s]+|[、。「」『』（）\s]+$/g, '');
-  if (t && vocabKeys.has(t)) return t;
-  if (base && ALIAS_TO_VOCAB_KEY[base]) return ALIAS_TO_VOCAB_KEY[base];
-  if (t && ALIAS_TO_VOCAB_KEY[t]) return ALIAS_TO_VOCAB_KEY[t];
+  const cands = [
+    base && vocabKeys.has(base) ? base : null,
+    t && vocabKeys.has(t) ? t : null,
+    base ? ALIAS_TO_VOCAB_KEY[base] : null,
+    t ? ALIAS_TO_VOCAB_KEY[t] : null,
+  ];
+  for (const k of cands) if (k && posCompatible(k, pos)) return k;
   return null;
+}
+
+/**
+ * 品詞の食い違いで同形の別語に紐づくのを防ぐ（2026-10-16）。
+ * 例：接尾語「さ」「たち」、感動詞「あはれ」、連体詞「さる」が、副詞「さ」・動詞「たつ」・形容動詞「あはれなり」・動詞「避る」に当たっていた。
+ * 品詞分解に品詞が無い語（多くの名詞）は従来どおり通す。
+ */
+const vocabPosOf = bundledVocabIndex as Record<string, { pos?: string }>;
+const FAMILY: Record<string, string> = {
+  動詞: '動詞', 補助動詞: '動詞', 形容詞: '形容詞', 形容動詞: '形容動詞', 副詞: '副詞',
+  名詞: '名詞', 代名詞: '名詞', 感動詞: '感動詞', 連体詞: '連体詞', 接続詞: '接続詞',
+};
+function posCompatible(vocabKey: string, pos?: string | null): boolean {
+  const p = (pos ?? '').trim();
+  if (!p) return true;
+  if (p === '接尾語' || p === '接頭語' || p === '記号') return false;
+  const fam = FAMILY[p];
+  if (!fam) return true;
+  const vp = (vocabPosOf[vocabKey]?.pos ?? '').replace(/形容動詞/g, 'ケイヨウドウシ');
+  if (!vp || vp.includes('連語')) return true;
+  const want = fam === '形容動詞' ? 'ケイヨウドウシ' : fam;
+  return vp.includes(want);
 }
 
 // テスト/デバッグ用 export

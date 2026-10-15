@@ -74,11 +74,14 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
   const [pos, setPos] = useState<{ left: number; top: number; below: boolean; arrowLeft: number } | null>(null);
 
   const tag = token.grammarTag ?? { pos: "" };
-  const vocabKey = resolveVocabKey(token.text, tag.baseForm);
+  const vocabKey = resolveVocabKey(token.text, tag.baseForm, tag.pos);
   const qids = vocabKey ? getQuizQidsForLemma(vocabKey, tag.pos) : [];
   const group = qids.length ? Number(qids[0].split("-")[0]) : undefined;
   const senses = vocabKey ? sensesOf(vocabKey, Number.isFinite(group) ? group : undefined) : [];
   const decider = analysis?.decider;
+  // 理由データが「単語帳の意味（…）とは別に、」で始まる語は、本文では単語帳の見出しと別の語（同形異語・接尾語など）。
+  // 見出し番号と意味の一覧は出さず、単語カードへのリンクだけ残す（「単語帳の○○とは別」と分かるように）
+  const offList = !!decider?.summary && /^単語帳の意味/.test(decider.summary);
   const enriched = enrichGrammarInfo(tag.pos, token.text, tag.baseForm, tag.conjugationType, tag.conjugationForm, tag.meaning);
   const isGrammar = tag.pos === "助動詞" || /助詞$/.test(tag.pos);
 
@@ -136,7 +139,7 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
       <div className="flex items-baseline gap-2 flex-wrap">
         <span className="text-lg font-black font-serif">{token.text}</span>
         {tag.baseForm && tag.baseForm !== token.text && <span className="text-xs text-rw-ink-soft">← {tag.baseForm}</span>}
-        {vocabKey && Number.isFinite(group) ? (
+        {vocabKey && Number.isFinite(group) && !offList ? (
           <span className="text-[11px] font-bold rounded px-1.5" style={{ background: "var(--rw-primary-soft)", color: "var(--rw-primary)" }}>
             No.{group}
           </span>
@@ -189,7 +192,7 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
       )}
 
       {/* 単語帳の意味の一覧（この箇所の意味を太く）。意味が決まらず一覧を上に出したときは省く */}
-      {senses.length > 1 && (tag.meaning || decider?.meaning) && (
+      {senses.length > 1 && (tag.meaning || decider?.meaning) && !offList && (
         <ol className="mt-1 pl-5 text-[13px] text-rw-ink-soft list-decimal">
           {senses.map((s) => {
             const cur = sameSense(tag.meaning ?? decider?.meaning, s.senseNorm ?? s.sense);
@@ -207,7 +210,7 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
         <div className="flex gap-2 mt-2 pt-2 border-t border-rw-rule text-sm">
           {vocabKey && (
             <Link to={`/word/${encodeURIComponent(vocabKey)}`} className="font-bold" style={{ color: "var(--rw-primary)" }}>
-              → 単語カード「{vocabKey}」
+              {offList ? `単語帳の「${vocabKey}」を見る（この箇所とは別の意味）` : `→ 単語カード「${vocabKey}」`}
             </Link>
           )}
           <button onClick={onMore} className="ml-auto font-bold text-rw-ink-soft">
