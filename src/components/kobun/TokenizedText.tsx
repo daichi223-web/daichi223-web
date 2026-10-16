@@ -27,6 +27,10 @@ interface TokenizedTextProps {
   cardMode?: boolean;
   /** カードが出ている語（色を付ける） */
   highlightTokenId?: string | null;
+  /** カードの決め手の手がかりに当たる語（下線） */
+  cueTokenIds?: Set<string>;
+  /** 単語帳に紐づく語か（カードの対象。押すのはカード側） */
+  isVocabToken?: (tokenId: string) => boolean;
   /** カードの「もっと」：この語の従来の解説（GrammarPopover）を開く。n は同じ語でもう一度開けるようにする番号 */
   moreRequest?: { id: string; n: number } | null;
 }
@@ -61,6 +65,8 @@ export function TokenizedText({
   cardMode = false,
   highlightTokenId = null,
   moreRequest = null,
+  cueTokenIds,
+  isVocabToken,
 }: TokenizedTextProps) {
   const [activeTokenId, setActiveTokenId] = useState<string | null>(null);
 
@@ -212,8 +218,11 @@ export function TokenizedText({
             token={token}
             currentLayer={currentLayer}
             isActive={activeTokenId === token.id || highlightTokenId === token.id}
+            // 浮かぶカード有効時：単語帳の語はカード（useWordCard）が扱う。文法は今のレイヤーと前のレイヤーの語だけ押せる
+            clickable={cardMode ? !isVocabToken?.(token.id) && token.layer >= 1 && token.layer <= currentLayer : undefined}
+            isCue={cueTokenIds?.has(token.id)}
             onClick={() => {
-              if (cardMode) return; // 浮かぶカードが有効なときは、教材画面の useWordCard が扱う
+              if (cardMode && isVocabToken?.(token.id)) return;
               setActiveShikiId(null);
               handleTokenClick(token.id);
             }}
@@ -291,7 +300,7 @@ export function TokenizedText({
         />
       )}
 
-      {activeToken && currentLayer !== 5 && (
+      {activeToken && (currentLayer !== 5 || cardMode) && (
         <GrammarPopover
           token={activeToken}
           currentLayer={currentLayer}

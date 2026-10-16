@@ -6,7 +6,13 @@ interface TokenSpanProps {
   currentLayer: LayerId;
   isActive: boolean;
   onClick: () => void;
+  /** 押せるか（浮かぶカード有効時に教材画面が決める）。未指定は従来どおり */
+  clickable?: boolean;
+  /** 浮かぶカードの決め手の手がかりに当たる語（下線を引く） */
+  isCue?: boolean;
 }
+
+const CUE_STYLE = { textDecoration: "underline wavy var(--rw-primary)", textUnderlineOffset: "5px" } as const;
 
 const layerColors: Record<number, string> = {
   1: "text-layer-1",
@@ -62,7 +68,28 @@ function TokenContent({ token }: { token: Token }) {
   return <>{token.text}</>;
 }
 
-export function TokenSpan({ token, currentLayer, isActive, onClick }: TokenSpanProps) {
+export function TokenSpan({ token, currentLayer, isActive, onClick, clickable, isCue }: TokenSpanProps) {
+  // 浮かぶカード有効時（clickable が指定されている）：押せる語は押せる形、それ以外は地の文。色分け（レイヤー）は従来どおり
+  if (clickable !== undefined && token.grammarTag?.pos !== "記号") {
+    const status0 = lookupVocabStatus(token.text, token.grammarTag?.baseForm, token.grammarTag?.pos);
+    const marker = vocabMarkerStyle(status0);
+    const inLayer = token.layer >= 1 && token.layer <= currentLayer && currentLayer !== 5;
+    const color = inLayer ? layerColors[token.layer] || "" : "";
+    const style = { ...(marker ?? {}), ...(isCue ? CUE_STYLE : {}) };
+    return (
+      <span
+        data-token-id={token.id}
+        className={`inline ${color} ${clickable ? "cursor-pointer" : ""} ${isActive ? "bg-sumi/10 rounded" : ""}`}
+        style={style}
+        onClick={clickable ? onClick : undefined}
+        role={clickable ? "button" : undefined}
+        tabIndex={clickable ? 0 : undefined}
+        onKeyDown={clickable ? (e) => e.key === "Enter" && onClick() : undefined}
+      >
+        <TokenContent token={token} />
+      </span>
+    );
+  }
   // 埋めトークン（空白・かっこ・出典表記など）は grammarTag を持たない。落ちずに地の文として出す
   const isSymbol = token.grammarTag?.pos === "記号";
   const baseForm = token.grammarTag?.baseForm;

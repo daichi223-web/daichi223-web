@@ -6,8 +6,9 @@
  * スマホ：語に指を当てている間に出る。横になぞると指の下の語に切り替わり、離すと消える（横書きなので横がなぞり）。
  *         動かさずに離した（タップ）ときは出したままにし、同じ語をもう一度タップすると閉じる。縦はページのスクロール。
  */
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent, type MouseEvent, type TouchEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type MouseEvent, type TouchEvent } from "react";
 import type { Token, TextAnalysis } from "@/lib/kobun/types";
+import { resolveVocabKey } from "@/lib/vocabAlias";
 import { recordHintOpen } from "@/lib/kobun/progress";
 import { touchMode, tapOutcome, type TouchMode } from "@/lib/kobun/wordCardLayout";
 import { WordCard, type WordCardAnchor } from "@/components/kobun/WordCard";
@@ -46,13 +47,19 @@ export function useWordCard(o: Options) {
   const cardRef = useRef(card);
   cardRef.current = card;
 
-  const explainable = useCallback(
-    (id: string) => {
-      const t = o.tokens.get(id)?.token;
-      return !!t && !!t.grammarTag?.pos && t.grammarTag.pos !== "記号" && !!t.text.trim();
-    },
-    [o.tokens],
-  );
+  // カードを出すのは単語帳（330）に紐づく語だけ（2026-10-16 ユーザー指示）。文法はレイヤーごとの従来の解説で
+  const vocabIds = useMemo(() => {
+    const s = new Set<string>();
+    for (const [id, { token: t }] of o.tokens) {
+      const g = t.grammarTag ?? { pos: "" };
+      const p = g.pos ?? "";
+      // 品詞が空の語（名詞の多くは品詞分解に品詞が入っていない）も対象にする
+      if (p === "記号" || p === "助動詞" || /助詞$/.test(p) || !t.text.trim()) continue;
+      if (resolveVocabKey(t.text, g.baseForm, p)) s.add(id);
+    }
+    return s;
+  }, [o.tokens]);
+  const explainable = useCallback((id: string) => vocabIds.has(id), [vocabIds]);
 
   /** 本文の中の、点の下にある語（重なっているカードは透かして見る） */
   const tokenAt = useCallback((x: number, y: number): { id: string; el: HTMLElement } | null => {
@@ -127,6 +134,7 @@ export function useWordCard(o: Options) {
     const span = (e.target as HTMLElement).closest("[data-token-id]") as HTMLElement | null;
     if (!span) return;
     const id = span.dataset.tokenId!;
+    if (!explainable(id)) { close(); return; } // 文法の語は従来の解説（TokenizedText 側）
     if (cardRef.current?.pinned && cardRef.current.id === id) { close(); return; }
     show(id, span, { x: e.clientX, y: e.clientY }, { pinned: true, held: false });
   };
@@ -154,9 +162,12 @@ export function useWordCard(o: Options) {
     const tc = touch.current;
     touch.current = null;
     if (!o.enabled || !tc) return;
-    if (tc.mode !== "pan") { suppressClick.current = true; setTimeout(() => (suppressClick.current = false), 400); }
+    // 単語の操作のあとに来る click は無視する。文法の語のタップは click に通す（従来の解説を開くため）
+    const vocabTap = tc.mode === null && !!tc.id && explainable(tc.id);
+    if (tc.mode === "scrub" || vocabTap) { suppressClick.current = true; setTimeout(() => (suppressClick.current = false), 400); }
     if (tc.mode === "scrub") { setCard((c) => (c && !c.pinned ? null : c)); return; }
     if (tc.mode === "pan") return;
+    if (tc.id && !explainable(tc.id)) { close(); return; } // 文法の語：カードは閉じ、click で従来の解説が開く
     if (tapOutcome(tc.id, tc.pinnedBefore) === "close") { close(); return; }
     setCard((c) => (c && c.id === tc.id ? { ...c, pinned: true, held: false } : c));
   };
@@ -168,11 +179,28 @@ export function useWordCard(o: Options) {
   const bind = { onPointerOver, onPointerOut, onClick, onTouchStart, onTouchMove, onTouchEnd, onTouchCancel, style };
 
   const info = card ? o.tokens.get(card.id) : undefined;
+  const cardDecider = card ? o.analysis?.tokenAnalyses.find((a) => a.tokenId === card.id)?.decider : undefined;
+  // 決め手の手がかり（cues の text）に当たる語：同じ文の語を順につないだ文字列の中で探し、重なる語に下線を引く
+  const cueIds = useMemo(() => {
+    const s = new Set<string>();
+    if (!info || !cardDecider?.cues?.length) return s;
+    const sentTokens = [...o.tokens.values()].filter((x) => x.sentenceId === info.sentenceId).map((x) => x.token);
+    let joined = "";
+    const spans: { id: string; from: number; to: number }[] = [];
+    for (const t of sentTokens) { spans.push({ id: t.id, from: joined.length, to: joined.length + t.text.length }); joined += t.text; }
+    for (const c of cardDecider.cues) {
+      if (!c.text) continue;
+      const at = joined.indexOf(c.text);
+      if (at < 0 || joined.indexOf(c.text, at + 1) >= 0) continue; // 見つからない・2回以上出る手がかりは引かない
+      for (const sp of spans) if (sp.from < at + c.text.length && sp.to > at && sp.id !== card!.id) s.add(sp.id);
+    }
+    return s;
+  }, [info, cardDecider, o.tokens, card]);
   const element =
     o.enabled && card && info ? (
       <WordCard
         token={info.token}
-        analysis={o.analysis?.tokenAnalyses.find((a) => a.tokenId === card.id) ?? null}
+        analysis={o.analysis?.tokenAnalyses.find((a) => a.tokenId === card.id) ?? null /* 決め手（cueIds と同じもの） */}
         anchor={card.anchor}
         pinned={card.pinned}
         preferAbove={card.held}
@@ -182,5 +210,5 @@ export function useWordCard(o: Options) {
       />
     ) : null;
 
-  return { rootRef, bind, element, activeId: card?.id ?? null, close };
+  return { rootRef, bind, element, activeId: card?.id ?? null, close, cueIds, isVocab: explainable };
 }
