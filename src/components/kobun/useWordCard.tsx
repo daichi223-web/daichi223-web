@@ -107,6 +107,17 @@ export function useWordCard(o: Options) {
     return () => { document.removeEventListener("pointerdown", onDown); document.removeEventListener("keydown", onKey); };
   }, [card?.pinned, close]);
 
+  // 長押しで文字選択・コピーのメニューが出ないようにする（2026-10-16 ユーザー指示：意図しない操作）。
+  // CSS の user-select / touch-callout に加え、選択の開始と長押しメニューを止める
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!o.enabled || !el) return;
+    const stop = (e: Event) => e.preventDefault();
+    el.addEventListener("selectstart", stop);
+    el.addEventListener("contextmenu", stop);
+    return () => { el.removeEventListener("selectstart", stop); el.removeEventListener("contextmenu", stop); };
+  }, [o.enabled]);
+
   // 教材が切り替わったら閉じる
   useEffect(() => { setCard(null); }, [o.textId, o.enabled]);
   // ページがスクロールしたら閉じる（カードは画面に固定なので、語から離れてしまう）

@@ -128,6 +128,9 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
         fontSize: 15,
         lineHeight: 1.75,
         boxShadow: "0 10px 32px rgba(40,25,10,.22)",
+        WebkitUserSelect: "none",
+        userSelect: "none",
+        WebkitTouchCallout: "none",
         visibility: pos ? "visible" : "hidden",
         pointerEvents: pinned ? "auto" : "none",
       }}
@@ -171,8 +174,9 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
 
       {/* 意味（単語）。教材の意味ラベル → 決め手の意味（単語の理由データ）→ 単語帳の意味、の順 */}
       {!isGrammar && (tag.meaning || decider?.meaning || senses.length > 0) && (
-        <p className="font-bold text-[16px] mt-1.5">
-          意味：{tag.meaning ?? decider?.meaning ?? senses.map((s) => (s.senseNorm ?? s.sense ?? "").replace(/〔|〕/g, "")).join("／")}
+        <p className="font-bold text-[20px] leading-snug mt-1.5">
+          <span className="text-[13px] text-rw-ink-soft mr-1.5 align-middle">意味</span>
+          {tag.meaning ?? decider?.meaning ?? senses.map((s) => (s.senseNorm ?? s.sense ?? "").replace(/〔|〕/g, "")).join("／")}
         </p>
       )}
 

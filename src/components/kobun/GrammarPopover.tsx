@@ -196,8 +196,30 @@ function PopoverContent({
         <DeciderPanel decider={analysis.decider} token={token} sentenceText={sentenceText} />
       )}
 
+      {/* 意味（大きく）と訳 */}
+      {tag.meaning && (
+        <p className="text-xl font-black leading-snug">
+          <span className="text-xs font-bold text-rw-ink-soft mr-2 align-middle">意味</span>
+          {tag.meaning}
+        </p>
+      )}
+      {token.translation && (
+        <p className="text-base">
+          <span className="text-xs font-bold text-rw-ink-soft mr-2">訳</span>
+          {token.translation}
+        </p>
+      )}
+
+      {/* 重要ポイント（hint）。品詞・活用より先に見せる（2026-10-16 ユーザー指示） */}
+      {!isScaffold && token.hint && (
+        <div className="rounded-xl px-3 py-2 border-l-4 border-rw-pop" style={{ background: 'var(--rw-pop)' + '33' }}>
+          <p className="text-xs font-black text-rw-ink mb-0.5 tracking-wider">重要ポイント</p>
+          <p className="text-sm text-rw-ink">{token.hint}</p>
+        </div>
+      )}
+
       {(() => {
-        // 助動詞・助詞の「接続」、抽象省略表記の「活用形」を補完
+        // 助動詞・助詞の「接続」、抽象省略表記の「活用形」を補完。縦の表にせず横一列に並べる
         const enriched = enrichGrammarInfo(
           tag.pos,
           token.text,
@@ -207,56 +229,25 @@ function PopoverContent({
           tag.meaning,
         );
         const isInflectingPos = tag.pos === '動詞' || tag.pos === '形容詞' || tag.pos === '形容動詞' || tag.pos === '助動詞';
+        const items: [string, string][] = [];
+        if (tag.pos) items.push(['品詞', tag.pos]);
+        if (enriched.connection) items.push(['接続', enriched.connection]);
+        if (!isScaffold && isInflectingPos) {
+          items.push(['活用型', enriched.conjugationType || '—']);
+          items.push(['活用形', enriched.conjugationForm || '—']);
+        }
+        if (!items.length) return null;
         return (
-          <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-sm">
-            <span className="text-rw-ink-soft font-bold">品詞</span>
-            <span>{tag.pos}</span>
-
-            {enriched.connection && (
-              <>
-                <span className="text-rw-ink-soft font-bold">接続</span>
-                <span>{enriched.connection}</span>
-              </>
-            )}
-
-            {tag.meaning && (
-              <>
-                <span className="text-rw-ink-soft font-bold">意味</span>
-                <span>{tag.meaning}</span>
-              </>
-            )}
-
-            {token.translation && (
-              <>
-                <span className="text-rw-ink-soft font-bold">訳</span>
-                <span>{token.translation}</span>
-              </>
-            )}
-
-            {!isScaffold && isInflectingPos && (
-              <>
-                <span className="text-rw-ink-soft font-bold">活用型</span>
-                <span>{enriched.conjugationType || <span className="text-rw-ink-soft/60">—</span>}</span>
-              </>
-            )}
-
-            {!isScaffold && isInflectingPos && (
-              <>
-                <span className="text-rw-ink-soft font-bold">活用形</span>
-                <span>{enriched.conjugationForm || <span className="text-rw-ink-soft/60">—</span>}</span>
-              </>
-            )}
-          </div>
+          <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            {items.map(([k, v]) => (
+              <span key={k} className="whitespace-nowrap">
+                <span className="text-rw-ink-soft font-bold mr-1">{k}</span>
+                {v}
+              </span>
+            ))}
+          </p>
         );
       })()}
-
-      {/* 重要ポイント（hint） */}
-      {!isScaffold && token.hint && (
-        <div className="rounded-xl px-3 py-2 border-l-4 border-rw-pop" style={{ background: 'var(--rw-pop)' + '33' }}>
-          <p className="text-xs font-black text-rw-ink mb-0.5 tracking-wider">重要ポイント</p>
-          <p className="text-sm text-rw-ink">{token.hint}</p>
-        </div>
-      )}
 
       {/* 接頭語・接尾語（一覧の該当項目へ飛べる） */}
       {!isScaffold && token.affixRefs && token.affixRefs.length > 0 && (
