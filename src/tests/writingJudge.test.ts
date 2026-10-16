@@ -173,7 +173,7 @@ describe('describeNorm: 正解の言い方を画面用に分ける', () => {
 });
 
 // 画面に「正解」として出した言い方を、そのまま写して答えたら必ず正解になること。
-describe('describeNorm と judgeWriting の整合（全 740 件）', () => {
+describe('describeNorm と judgeWriting の整合（全 748 件）', () => {
   const words = slimJson as unknown as JudgeSense[];
 
   it('options のどれを書いても正解。頭括弧の中身つきでも正解', () => {
@@ -191,8 +191,8 @@ describe('describeNorm と judgeWriting の整合（全 740 件）', () => {
         }
       }
     }
-    expect(words.length).toBe(740);
-    expect(checked).toBeGreaterThan(740);
+    expect(words.length).toBe(748);
+    expect(checked).toBeGreaterThan(748);
     expect(failed).toEqual([]);
   });
 
@@ -255,7 +255,7 @@ describe('judgeWriting: 並べて書いた回答（正解の言い方を全部�
     expect(verdictOf('334-2', 'どうして〜か、いや〜ない')).toBe('correct');
   });
 
-  it('全 740 件: senseNorm をそのまま写しても、「・」の言い方を「、」で全部並べても正解', () => {
+  it('全 748 件: senseNorm をそのまま写しても、「・」の言い方を「、」で全部並べても正解', () => {
     const failed: string[] = [];
     let listed = 0;
     for (const w of realWords) {

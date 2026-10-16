@@ -1625,8 +1625,8 @@ function App() {
     const isMasterAchievement = isPerfectScore && totalScore === 330 &&
       (wordRange.from === 1 && wordRange.to === 330);
 
-    // 単語最強王：多義語モード196問完全制覇（範囲1-330）
-    const isUltimateMasterAchievement = isPerfectScore && totalScore === 196 &&
+    // 単語最強王：多義語モード200問完全制覇（範囲1-330。多義語の見出し語数。2026-10-16 に8意味を追加して 196→200）
+    const isUltimateMasterAchievement = isPerfectScore && totalScore === 200 &&
       (polysemyRange.from === 1 && polysemyRange.to === 330);
 
     return (
@@ -1726,7 +1726,7 @@ function App() {
                       }}>
                         単語最強王
                       </p>
-                      <p className="text-base font-black text-rw-primary mb-1">全196問完全制覇！</p>
+                      <p className="text-base font-black text-rw-primary mb-1">全200問完全制覇！</p>
                       <p className="text-sm text-rw-ink-soft">あなたは最強の単語マスターです！</p>
                     </>
                   ) : isMasterAchievement ? (
