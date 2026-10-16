@@ -44,6 +44,7 @@ export function useWordCard(o: Options) {
   const [card, setCard] = useState<CardState | null>(null);
   const touch = useRef<{ x: number; y: number; mode: TouchMode; id: string | null; pinnedBefore: string | null } | null>(null);
   const suppressClick = useRef(false);
+  const ignoreScrollUntil = useRef(0); // ‹ › で語へスクロールした直後は、スクロールで閉じない
   const cardRef = useRef(card);
   cardRef.current = card;
 
@@ -60,6 +61,8 @@ export function useWordCard(o: Options) {
     return s;
   }, [o.tokens]);
   const explainable = useCallback((id: string) => vocabIds.has(id), [vocabIds]);
+  // ‹ › で移る順（本文の順に並んだ単語帳の語）
+  const vocabOrder = useMemo(() => [...o.tokens.keys()].filter((id) => vocabIds.has(id)), [o.tokens, vocabIds]);
 
   /** 本文の中の、点の下にある語（重なっているカードは透かして見る） */
   const tokenAt = useCallback((x: number, y: number): { id: string; el: HTMLElement } | null => {
@@ -109,7 +112,7 @@ export function useWordCard(o: Options) {
   // ページがスクロールしたら閉じる（カードは画面に固定なので、語から離れてしまう）
   useEffect(() => {
     if (!card) return;
-    const onScroll = () => setCard(null);
+    const onScroll = () => { if (performance.now() > ignoreScrollUntil.current) setCard(null); };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [card]);
@@ -171,6 +174,26 @@ export function useWordCard(o: Options) {
     if (tapOutcome(tc.id, tc.pinnedBefore) === "close") { close(); return; }
     setCard((c) => (c && c.id === tc.id ? { ...c, pinned: true, held: false } : c));
   };
+  // 固定中の ‹ ›：前・次の単語帳の語へ。画面の外なら中央までスクロールしてから出す
+  const step = (d: number) => {
+    const cur = cardRef.current;
+    if (!cur) return;
+    const i = vocabOrder.indexOf(cur.id) + d;
+    if (i < 0 || i >= vocabOrder.length) return;
+    const id = vocabOrder[i];
+    const el = rootRef.current?.querySelector(`[data-token-id="${id}"]`) as HTMLElement | null;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.top < 60 || r.bottom > window.innerHeight - o.avoidBottom - 20) {
+      ignoreScrollUntil.current = performance.now() + 400;
+      el.scrollIntoView({ block: "center" });
+    }
+    requestAnimationFrame(() => {
+      setCard({ id, anchor: { rect: el.getBoundingClientRect() }, pinned: true, held: false });
+      const info = o.tokens.get(id);
+      if (info) o.onFocusSentence?.(info.sentenceId);
+    });
+  };
   const onTouchCancel = () => { touch.current = null; setCard((c) => (c && !c.pinned ? null : c)); };
 
   const style: CSSProperties | undefined = o.enabled
@@ -207,6 +230,8 @@ export function useWordCard(o: Options) {
         avoidBottom={o.avoidBottom}
         onClose={close}
         onMore={() => { hoverBlockUntil.current = performance.now() + 600; close(); o.onMore(card.id); }}
+        onPrev={vocabOrder.indexOf(card.id) > 0 ? () => step(-1) : undefined}
+        onNext={vocabOrder.indexOf(card.id) < vocabOrder.length - 1 ? () => step(1) : undefined}
       />
     ) : null;
 

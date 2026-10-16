@@ -67,9 +67,16 @@ interface WordCardProps {
   avoidBottom: number;
   onClose: () => void;
   onMore: () => void;
+  /** 前・次の単語帳の語へ（固定中だけ） */
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
-export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBottom, onClose, onMore }: WordCardProps) {
+/** 見出し番号の札・帯のボタン（月の琴の試作と同じ見た目。2026-10-16 ユーザー指定） */
+const BADGE = { background: "color-mix(in srgb, var(--layer-1) 14%, transparent)", color: "var(--layer-1)" } as const;
+const BAR_BTN = "min-w-[40px] h-9 px-2 rounded-lg border border-rw-ink/20 bg-rw-paper text-rw-ink text-base leading-none active:scale-95";
+
+export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBottom, onClose, onMore, onPrev, onNext }: WordCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number; below: boolean; arrowLeft: number } | null>(null);
 
@@ -89,13 +96,16 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // 画面下のボタン列の実際の高さ（スマホでは2段になる）を測り、その上に収める
+    const foot = document.querySelector("footer");
+    const footH = foot ? Math.max(0, window.innerHeight - foot.getBoundingClientRect().top) : 0;
     setPos(
       placeCard({
         rect: anchor.rect,
         point: anchor.x !== undefined && anchor.y !== undefined ? { x: anchor.x, y: anchor.y } : null,
         size: { width: el.offsetWidth, height: el.offsetHeight },
         viewport: { width: window.innerWidth, height: window.innerHeight },
-        avoidBottom,
+        avoidBottom: Math.max(avoidBottom, footH),
         preferAbove,
       }),
     );
@@ -107,16 +117,17 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
       data-word-card
       role="dialog"
       aria-label={`${token.text} の解説`}
-      className="fixed z-40 bg-rw-paper rounded-2xl shadow-lg border-2 border-rw-ink text-rw-ink animate-popover-in"
+      className="fixed z-40 bg-rw-paper rounded-2xl border border-rw-ink/20 text-rw-ink animate-popover-in"
       style={{
         left: pos?.left ?? -9999,
         top: pos?.top ?? -9999,
-        width: "min(92vw, 340px)",
+        width: "min(92vw, 360px)",
         maxHeight: `calc(100vh - ${avoidBottom + 16}px)`,
         overflowY: "auto",
-        padding: "10px 14px 12px",
-        fontSize: 14,
-        lineHeight: 1.7,
+        padding: "0 16px 14px",
+        fontSize: 15,
+        lineHeight: 1.75,
+        boxShadow: "0 10px 32px rgba(40,25,10,.22)",
         visibility: pos ? "visible" : "hidden",
         pointerEvents: pinned ? "auto" : "none",
       }}
@@ -125,50 +136,55 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
       {pos && (
         <span
           aria-hidden
-          className="absolute w-3.5 h-3.5 bg-rw-paper border-rw-ink"
+          className="absolute w-3.5 h-3.5 bg-rw-paper border-rw-ink/20"
           style={{
             left: pos.arrowLeft,
             [pos.below ? "top" : "bottom"]: -8,
             transform: "rotate(45deg)",
-            borderWidth: pos.below ? "2px 0 0 2px" : "0 2px 2px 0",
+            borderWidth: pos.below ? "1px 0 0 1px" : "0 1px 1px 0",
             borderStyle: "solid",
           }}
         />
       )}
 
-      <div className="flex items-baseline gap-2 flex-wrap">
-        <span className="text-lg font-black font-serif">{token.text}</span>
+      {/* 固定したとき：上の帯（‹ › ✕） */}
+      {pinned ? (
+        <div className="flex items-center gap-2 py-2 mb-2 border-b border-rw-ink/15 sticky top-0 bg-rw-paper z-[1]">
+          <span className="flex-1 text-[13px] text-rw-ink-soft">タップした語の説明</span>
+          {onPrev && <button onClick={onPrev} aria-label="前の語" className={BAR_BTN}>‹</button>}
+          {onNext && <button onClick={onNext} aria-label="次の語" className={BAR_BTN}>›</button>}
+          <button onClick={onClose} aria-label="閉じる" className={BAR_BTN}>✕</button>
+        </div>
+      ) : (
+        <div className="pt-3" />
+      )}
+
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-[22px] font-serif leading-tight">{token.text}</span>
         {tag.baseForm && tag.baseForm !== token.text && <span className="text-xs text-rw-ink-soft">← {tag.baseForm}</span>}
         {vocabKey && Number.isFinite(group) && !offList ? (
-          <span className="text-[11px] font-bold rounded px-1.5" style={{ background: "var(--rw-primary-soft)", color: "var(--rw-primary)" }}>
-            No.{group}
-          </span>
+          <span className="text-[13px] rounded-md px-2 py-0.5" style={BADGE}>No.{group}</span>
         ) : (
-          tag.pos && <span className="text-[11px] font-bold rounded px-1.5 bg-rw-bg text-rw-ink-soft">{tag.pos}</span>
-        )}
-        {pinned && (
-          <button onClick={onClose} aria-label="閉じる" className="ml-auto text-rw-ink-soft text-base leading-none px-1">
-            ✕
-          </button>
+          tag.pos && <span className="text-[12px] rounded-md px-2 py-0.5 bg-rw-bg text-rw-ink-soft">{tag.pos}</span>
         )}
       </div>
 
       {/* 意味（単語）。教材の意味ラベル → 決め手の意味（単語の理由データ）→ 単語帳の意味、の順 */}
       {!isGrammar && (tag.meaning || decider?.meaning || senses.length > 0) && (
-        <p className="font-bold mt-0.5">
+        <p className="font-bold text-[16px] mt-1.5">
           意味：{tag.meaning ?? decider?.meaning ?? senses.map((s) => (s.senseNorm ?? s.sense ?? "").replace(/〔|〕/g, "")).join("／")}
         </p>
       )}
 
-      {/* この箇所での決め手（analysis）。無ければ重要ポイント（hint） */}
+      {/* この箇所でその意味になる理由（analysis の決め手）。無ければ重要ポイント（hint） */}
       {decider?.summary ? (
-        <p className="mt-0.5">
-          <span className="text-[11px] font-bold text-rw-ink-soft mr-1">決め手</span>
+        <p className="mt-1">
+          <span className="text-[12px] font-bold text-rw-ink-soft mr-1.5">理由</span>
           {decider.summary}
         </p>
       ) : token.hint ? (
-        <p className="mt-0.5">
-          <span className="text-[11px] font-bold text-rw-ink-soft mr-1">ポイント</span>
+        <p className="mt-1">
+          <span className="text-[12px] font-bold text-rw-ink-soft mr-1.5">ポイント</span>
           {token.hint}
         </p>
       ) : null}
@@ -193,11 +209,15 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
 
       {/* 単語帳の意味の一覧（この箇所の意味を太く）。意味が決まらず一覧を上に出したときは省く */}
       {senses.length > 1 && (tag.meaning || decider?.meaning) && !offList && (
-        <ol className="mt-1 pl-5 text-[13px] text-rw-ink-soft list-decimal">
-          {senses.map((s) => {
-            const cur = sameSense(tag.meaning ?? decider?.meaning, s.senseNorm ?? s.sense);
+        <ol className="mt-2 pl-6 text-[14px] text-rw-ink-soft list-decimal marker:font-normal space-y-0.5">
+          {senses.map((s, _i, all) => {
+            // 完全に一致する意味があればそれだけを太字に（「生きている」で「いる」まで太字にしない）。無ければ部分一致
+            const m = tag.meaning ?? decider?.meaning;
+            const key = (x?: string) => (x ?? "").replace(/〔|〕|[〜～()（）\s]/g, "");
+            const exact = all.some((x) => key(x.senseNorm ?? x.sense) === key(m));
+            const cur = exact ? key(s.senseNorm ?? s.sense) === key(m) : sameSense(m, s.senseNorm ?? s.sense);
             return (
-              <li key={s.qid} className={cur ? "text-rw-ink font-bold" : ""}>
+              <li key={s.qid} className={cur ? "text-rw-ink font-bold marker:font-bold" : ""}>
                 {(s.senseNorm ?? s.sense ?? "").replace(/〔|〕/g, "")}
               </li>
             );
@@ -207,7 +227,7 @@ export function WordCard({ token, analysis, anchor, pinned, preferAbove, avoidBo
 
       {/* 固定したときだけ：詳細へ */}
       {pinned ? (
-        <div className="flex gap-2 mt-2 pt-2 border-t border-rw-rule text-sm">
+        <div className="flex gap-2 mt-3 pt-2 border-t border-rw-ink/15 text-sm">
           {vocabKey && (
             <Link to={`/word/${encodeURIComponent(vocabKey)}`} className="font-bold" style={{ color: "var(--rw-primary)" }}>
               {offList ? `単語帳の「${vocabKey}」を見る（この箇所とは別の意味）` : `→ 単語カード「${vocabKey}」`}
