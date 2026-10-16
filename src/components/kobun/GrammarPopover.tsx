@@ -7,6 +7,7 @@ import VocabModal from "@/components/VocabModal";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
 import { enrichGrammarInfo } from "@/lib/kobun/auxiliaryInfo";
 import { resolveVocabKey } from "@/lib/vocabAlias";
+import { excerptForDecider } from "@/lib/kobun/deciderExcerpt";
 import { useAffixes, indexAffixes, type AffixLookup } from "@/lib/kobun/affixes";
 
 /** 文法道場にクイズがある単元（grammarRefId の解決先がこの集合にあれば挑戦ボタンを出す） */
@@ -452,9 +453,9 @@ function DeciderPanel({
         <span className="text-[11px] font-black text-rw-ink">→「{decider.meaning}」</span>
       </div>
 
-      {/* 例文集と同じ：本文中の手がかりを色つき下線で（タップで理由） */}
+      {/* 例文集と同じ：本文中の手がかりを色つき下線で（タップで理由）。長い文は語と手がかりの周りだけ（前後は…） */}
       <p className="text-[15px] text-rw-ink leading-relaxed mb-1.5 font-serif">
-        <ReibunSentence text={marked} cues={decider.cues} />
+        <ReibunSentence text={excerptForDecider(marked, (decider.cues ?? []).map((c) => c.text))} cues={decider.cues} />
       </p>
 
       <p className="text-[12.5px] text-rw-ink leading-relaxed">{decider.summary}</p>
