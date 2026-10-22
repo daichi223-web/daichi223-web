@@ -59,7 +59,7 @@ export function useWordCard(o: Options) {
       const p = g.pos ?? "";
       // 品詞が空の語（名詞の多くは品詞分解に品詞が入っていない）も対象にする
       if (p === "記号" || p === "助動詞" || /助詞$/.test(p) || !t.text.trim()) continue;
-      if (resolveVocabKey(t.text, g.baseForm, p)) s.add(id);
+      if (resolveVocabKey(t.text, g.baseForm, p, g)) s.add(id);
     }
     return s;
   }, [o.tokens]);

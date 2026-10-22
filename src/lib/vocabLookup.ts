@@ -87,6 +87,7 @@ export function lookupVocabStatus(
   tokenText: string,
   baseForm?: string,
   pos?: string,
+  tag?: { conjugationType?: string | null; honorific?: string | null } | null,
 ): VocabStatus {
   const candidates = [baseForm, tokenText].filter(Boolean) as string[];
   let qids: string[] = [];
@@ -94,15 +95,9 @@ export function lookupVocabStatus(
     qids = getQuizQidsForLemma(c, pos);
     if (qids.length > 0) break;
   }
-  let explLemma: string | null = null;
-  for (const c of candidates) {
-    if (hasVocabExplanation(c)) {
-      explLemma = c;
-      break;
-    }
-  }
-  // 漢字表記・派生形・連用形などは別名表（vocabAlias）で見出しへ。本文の下線と解説ボタンの判定をそろえる（2026-10-16）
-  if (!explLemma) explLemma = resolveVocabKey(tokenText, baseForm, pos);
+  // 見出しの判定は別名表（vocabAlias）の resolveVocabKey に一本化する。直接一致も品詞・活用の種類・敬語の規則を通す（2026-10-23）。
+  // 漢字表記・派生形・連用形も同じ関数で見出しへ。本文の下線と解説カードの判定をそろえる（2026-10-16）
+  const explLemma: string | null = resolveVocabKey(tokenText, baseForm, pos, tag);
   return {
     hasQuiz: qids.length > 0,
     hasExplanation: explLemma !== null,

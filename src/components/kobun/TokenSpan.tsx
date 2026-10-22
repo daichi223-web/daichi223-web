@@ -73,7 +73,7 @@ function TokenContent({ token }: { token: Token }) {
 export function TokenSpan({ token, currentLayer, isActive, onClick, clickable, isCue, isVocab = false }: TokenSpanProps) {
   // 浮かぶカード有効時（clickable が指定されている）：押せる語は押せる形、それ以外は地の文。色分け（レイヤー）は従来どおり
   if (clickable !== undefined && token.grammarTag?.pos !== "記号") {
-    const status0 = lookupVocabStatus(token.text, token.grammarTag?.baseForm, token.grammarTag?.pos);
+    const status0 = lookupVocabStatus(token.text, token.grammarTag?.baseForm, token.grammarTag?.pos, token.grammarTag);
     const marker = vocabMarkerStyle(status0);
     const inLayer = token.layer >= 1 && token.layer <= currentLayer && currentLayer !== 5;
     const color = inLayer ? layerColors[token.layer] || "" : "";
@@ -103,7 +103,7 @@ export function TokenSpan({ token, currentLayer, isActive, onClick, clickable, i
   const pos = token.grammarTag?.pos;
   const status = isSymbol
     ? { hasQuiz: false, hasExplanation: false, quizQids: [], explanationLemma: null }
-    : lookupVocabStatus(token.text, baseForm, pos);
+    : lookupVocabStatus(token.text, baseForm, pos, token.grammarTag);
   const markerStyle = vocabMarkerStyle(status);
   // 接頭語・接尾語一覧につながる語は、重要語の印が無くてもタップで解説を開けるようにする
   const tappable = !!markerStyle || !!token.affixRefs?.length;

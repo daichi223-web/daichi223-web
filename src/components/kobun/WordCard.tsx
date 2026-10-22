@@ -85,7 +85,7 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
   const maxH = Math.min(window.innerHeight * 0.52, 440, window.innerHeight - avoidBottom - 16);
 
   const tag = token.grammarTag ?? { pos: "" };
-  const vocabKey = resolveVocabKey(token.text, tag.baseForm, tag.pos);
+  const vocabKey = resolveVocabKey(token.text, tag.baseForm, tag.pos, tag);
   const qids = vocabKey ? getQuizQidsForLemma(vocabKey, tag.pos) : [];
   const group = qids.length ? Number(qids[0].split("-")[0]) : undefined;
   const senses = vocabKey ? sensesOf(vocabKey, Number.isFinite(group) ? group : undefined) : [];

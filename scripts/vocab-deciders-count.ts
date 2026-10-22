@@ -23,7 +23,7 @@ for (const f of fs.readdirSync(path.join(root, "public/texts-v3"))) {
   for (const s of d.sentences) for (const t of s.tokens ?? []) {
     const g = t.grammarTag ?? {};
     if (g.pos === "助動詞" || /助詞$/.test(g.pos ?? "") || g.pos === "記号") continue;
-    if (!resolveVocabKey(t.text, g.baseForm, g.pos)) continue;
+    if (!resolveVocabKey(t.text, g.baseForm, g.pos, g)) continue;
     n++; if (an[t.id]?.decider) h++;
   }
   rows.push([n, h, id, titles.get(id) ?? "?"]); texts++; total += n; have += h;
