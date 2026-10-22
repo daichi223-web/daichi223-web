@@ -9,6 +9,7 @@ import { getAllTopicProgress, fetchDueDrillCount } from "@/lib/kobun/dojoData";
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 
 const HOME_SCROLL_KEY = "kobun-home-scroll-v1";
+const HOME_OPEN_WORKS_KEY = "kobun-home-open-works-v1";
 
 interface TextIndexEntry {
   id: string;
@@ -50,6 +51,17 @@ function normalizeGenre(raw: string): string {
   return base || GENRE_OTHER;
 }
 
+// 作品名：「枕草子（一）」「源氏物語（二）」の巻数を外して1つの作品にまとめる。作品名が無い教材は題名を作品として扱う
+function workName(t: TextIndexEntry): string {
+  const w = (t.source_work || "").replace(/（[^）]*）$/, "").trim();
+  return w || t.title;
+}
+
+interface WorkGroup {
+  work: string;
+  texts: TextIndexEntry[];
+}
+
 function normalizeEra(raw: string | undefined): string {
   if (!raw) return ERA_OTHER;
   return ERA_ORDER.includes(raw) ? raw : ERA_OTHER;
@@ -85,6 +97,28 @@ export default function HomeV3() {
   const [index] = useState<TextIndexEntry[]>(bundledTextsIndex as TextIndexEntry[]);
   const [publishedSet, setPublishedSet] = useState<Set<string> | null>(null);
   const [query, setQuery] = useState("");
+  // 開いている作品（時代・ジャンル・作品の組）。戻ってきても開いたままにする
+  const [openWorks, setOpenWorks] = useState<Set<string>>(() => {
+    try {
+      const raw = sessionStorage.getItem(HOME_OPEN_WORKS_KEY);
+      return new Set<string>(raw ? JSON.parse(raw) : []);
+    } catch {
+      return new Set<string>();
+    }
+  });
+  const toggleWork = (key: string) => {
+    setOpenWorks((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      try {
+        sessionStorage.setItem(HOME_OPEN_WORKS_KEY, JSON.stringify([...next]));
+      } catch {
+        /* quota exceeded etc. */
+      }
+      return next;
+    });
+  };
   const matrixWrapRef = useRef<HTMLDivElement>(null);
   const restoredRef = useRef(false);
 
@@ -172,14 +206,19 @@ export default function HomeV3() {
   const { eras, genres, matrix } = useMemo(() => {
     const usedEras = new Set<string>();
     const usedGenres = new Set<string>();
-    const m: Record<string, TextIndexEntry[]> = {};
+    // 升目（時代×ジャンル）の中を作品ごとにまとめる。作品・章段の並びは索引の順
+    const m: Record<string, WorkGroup[]> = {};
     for (const t of filtered) {
       const e = normalizeEra(t.era);
       const g = normalizeGenre(t.genre);
       usedEras.add(e);
       usedGenres.add(g);
       const key = `${e} ${g}`;
-      (m[key] ||= []).push(t);
+      const groups = (m[key] ||= []);
+      const w = workName(t);
+      const grp = groups.find((x) => x.work === w);
+      if (grp) grp.texts.push(t);
+      else groups.push({ work: w, texts: [t] });
     }
     const erasArr = [...ERA_ORDER, ERA_OTHER].filter((e) => usedEras.has(e));
     const genresArr = [...GENRE_ORDER, GENRE_OTHER].filter((g) =>
@@ -187,6 +226,46 @@ export default function HomeV3() {
     );
     return { eras: erasArr, genres: genresArr, matrix: m };
   }, [filtered]);
+
+  // 章段1本のカード。inWork=true のときは作品名を省く（見出しに出ているため）
+  const renderText = (t: TextIndexEntry, inWork: boolean) => {
+    const p = progress[t.id];
+    const currentLayer = p?.currentLayer ?? 1;
+    const linkLayer = p ? currentLayer : 1;
+    const showBadge = (t.hintCoverage ?? 0) >= 50;
+    return (
+      <Link
+        key={t.id}
+        to={`/read/texts/${t.slug}?layer=${linkLayer}`}
+        className="block bg-rw-bg rounded-lg px-2 py-1.5 no-underline text-rw-ink hover:bg-rw-primary-soft/40 transition-colors"
+        style={{ border: "1.5px solid var(--rw-ink)" }}
+      >
+        <div className="font-black text-[11px] leading-tight flex items-center gap-1 flex-wrap">
+          <span>{t.title}</span>
+          {showBadge && (
+            <span
+              className="bg-rw-accent text-white text-[8px] font-bold px-1 rounded"
+              title={`重要ポイント入り (${t.hintCoverage}%)`}
+            >
+              ✓
+            </span>
+          )}
+        </div>
+        {!inWork && (t.source_work || t.author) && (
+          <div className="text-[9px] text-rw-ink-soft mt-0.5 leading-tight">
+            {t.source_work}
+            {t.author && t.author !== "不明" && <span> · {t.author}</span>}
+          </div>
+        )}
+        <div
+          className="text-[8px] font-black mt-0.5 tracking-wide"
+          style={{ color: layerVar[currentLayer] ?? layerVar[1] }}
+        >
+          L{currentLayer}
+        </div>
+      </Link>
+    );
+  };
 
   return (
     <div className="bg-rw-bg min-h-dvh text-rw-ink font-noto">
@@ -307,44 +386,33 @@ export default function HomeV3() {
                         className="bg-rw-paper p-1.5 flex flex-col gap-1"
                         style={{ minHeight: 56 }}
                       >
-                        {cell.map((t) => {
-                          const p = progress[t.id];
-                          const currentLayer = p?.currentLayer ?? 1;
-                          const linkLayer = p ? currentLayer : 1;
-                          const showBadge = (t.hintCoverage ?? 0) >= 50;
+                        {cell.map((grp) => {
+                          // 章段が1本だけの作品は、従来どおりそのまま開く
+                          if (grp.texts.length === 1) return renderText(grp.texts[0], false);
+                          const wkey = `${e}|${g}|${grp.work}`;
+                          // 検索中は該当する作品を開いて見せる
+                          const open = !!query || openWorks.has(wkey);
                           return (
-                            <Link
-                              key={t.id}
-                              to={`/read/texts/${t.slug}?layer=${linkLayer}`}
-                              className="block bg-rw-bg rounded-lg px-2 py-1.5 no-underline text-rw-ink hover:bg-rw-primary-soft/40 transition-colors"
-                              style={{ border: "1.5px solid var(--rw-ink)" }}
-                            >
-                              <div className="font-black text-[11px] leading-tight flex items-center gap-1 flex-wrap">
-                                <span>{t.title}</span>
-                                {showBadge && (
-                                  <span
-                                    className="bg-rw-accent text-white text-[8px] font-bold px-1 rounded"
-                                    title={`重要ポイント入り (${t.hintCoverage}%)`}
-                                  >
-                                    ✓
-                                  </span>
-                                )}
-                              </div>
-                              {(t.source_work || t.author) && (
-                                <div className="text-[9px] text-rw-ink-soft mt-0.5 leading-tight">
-                                  {t.source_work}
-                                  {t.author && t.author !== "不明" && (
-                                    <span> · {t.author}</span>
-                                  )}
+                            <div key={wkey} className="flex flex-col gap-1">
+                              <button
+                                type="button"
+                                onClick={() => toggleWork(wkey)}
+                                aria-expanded={open}
+                                className="w-full text-left bg-rw-primary-soft/60 rounded-lg px-2 py-1.5 text-rw-ink hover:bg-rw-primary-soft transition-colors flex items-center gap-1.5"
+                                style={{ border: "1.5px solid var(--rw-ink)" }}
+                              >
+                                <span className="text-[10px] text-rw-primary w-3 flex-shrink-0" aria-hidden>
+                                  {open ? "▼" : "▶"}
+                                </span>
+                                <span className="font-black text-[11px] leading-tight flex-1 min-w-0">{grp.work}</span>
+                                <span className="text-[9px] font-bold text-rw-ink-soft flex-shrink-0">{grp.texts.length}章段</span>
+                              </button>
+                              {open && (
+                                <div className="flex flex-col gap-1 pl-2.5 border-l-2 border-rw-primary/40 ml-1.5">
+                                  {grp.texts.map((t) => renderText(t, true))}
                                 </div>
                               )}
-                              <div
-                                className="text-[8px] font-black mt-0.5 tracking-wide"
-                                style={{ color: layerVar[currentLayer] ?? layerVar[1] }}
-                              >
-                                L{currentLayer}
-                              </div>
-                            </Link>
+                            </div>
                           );
                         })}
                       </div>
