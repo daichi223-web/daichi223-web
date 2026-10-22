@@ -36,6 +36,23 @@ describe("浮かぶ解説カード：置き場所", () => {
     expect(placeCard({ rect: { left: 100, right: 130, top: 400, bottom: 430 }, size, viewport, preferAbove: true }).below).toBe(false);
     expect(placeCard({ rect: { left: 100, right: 130, top: 20, bottom: 50 }, size, viewport, preferAbove: true }).below).toBe(true);
   });
+  it("指で操作中、上に入り切らず下に入り切るなら下（上で止めて語に被せない）", () => {
+    // 上の余地 190px（3割以上はある）に 300px のカードは入らない。下は 460px あるので下
+    const p = placeCard({ rect: { left: 100, right: 130, top: 300, bottom: 330 }, size: { width: 340, height: 300 }, viewport, avoidTop: 100, preferAbove: true });
+    expect(p.below).toBe(true);
+    expect(p.top).toBe(340);
+  });
+  it("指で操作中、どちらにも入り切らないときは上に3割以上あれば上（月の琴の規則）", () => {
+    const p = placeCard({ rect: { left: 100, right: 130, top: 400, bottom: 430 }, size: { width: 340, height: 500 }, viewport, preferAbove: true });
+    expect(p.below).toBe(false);
+    expect(p.top).toBe(8); // 上端で止まる
+  });
+  it("上の固定ヘッダには重ねない（月の琴は本文の枠の上端より上に出さない）", () => {
+    const p = placeCard({ rect: { left: 100, right: 130, top: 230, bottom: 260 }, size, viewport, avoidTop: 56, preferAbove: true });
+    expect(p.top).toBeGreaterThanOrEqual(56 + 8);
+    // 上に 200px 入らない（230 - 56 - 10 = 164）ので下に出る
+    expect(p.below).toBe(true);
+  });
   it("画面の下の帯には重ねない", () => {
     const p = placeCard({ rect: { left: 100, right: 130, top: 590, bottom: 620 }, size, viewport, avoidBottom: 150 });
     expect(p.top + size.height).toBeLessThanOrEqual(800 - 150 - 8);

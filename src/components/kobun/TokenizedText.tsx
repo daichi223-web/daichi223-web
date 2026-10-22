@@ -221,6 +221,7 @@ export function TokenizedText({
             // 浮かぶカード有効時：単語帳の語はカード（useWordCard）が扱う。文法は今のレイヤーと前のレイヤーの語だけ押せる
             clickable={cardMode ? !isVocabToken?.(token.id) && token.layer >= 1 && token.layer <= currentLayer : undefined}
             isCue={cueTokenIds?.has(token.id)}
+            isVocab={cardMode ? !!isVocabToken?.(token.id) : false}
             onClick={() => {
               if (cardMode && isVocabToken?.(token.id)) return;
               setActiveShikiId(null);

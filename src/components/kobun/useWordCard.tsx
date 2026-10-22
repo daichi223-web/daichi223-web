@@ -36,7 +36,10 @@ interface CardState {
   id: string;
   anchor: WordCardAnchor;
   pinned: boolean;
+  /** 指を当てている間（まだ固定していない） */
   held: boolean;
+  /** 指（タッチ）で出した。固定したあとも上を優先し続ける（月の琴と同じ。held だけで判定すると、タップで固定した瞬間に下へ飛ぶ） */
+  touch: boolean;
 }
 
 export function useWordCard(o: Options) {
@@ -74,7 +77,7 @@ export function useWordCard(o: Options) {
   }, []);
 
   const show = useCallback(
-    (id: string, el: HTMLElement, pt: { x: number; y: number } | null, opts: { pinned: boolean; held: boolean }) => {
+    (id: string, el: HTMLElement, pt: { x: number; y: number } | null, opts: { pinned: boolean; held: boolean; touch: boolean }) => {
       if (!explainable(id)) return;
       setCard({ id, anchor: { rect: el.getBoundingClientRect(), x: pt?.x, y: pt?.y }, ...opts });
       const info = o.tokens.get(id);
@@ -120,13 +123,34 @@ export function useWordCard(o: Options) {
 
   // 教材が切り替わったら閉じる
   useEffect(() => { setCard(null); }, [o.textId, o.enabled]);
-  // ページがスクロールしたら閉じる（カードは画面に固定なので、語から離れてしまう）
+  // ページがスクロールしたら：固定中のカードは語について動き、語が本文の見える範囲（ヘッダと下の帯の間）から出たら閉じる（月の琴と同じ）。
+  // 重ねているだけ・指を当てているだけのカードは閉じる
+  const open = !!card;
   useEffect(() => {
-    if (!card) return;
-    const onScroll = () => { if (performance.now() > ignoreScrollUntil.current) setCard(null); };
+    if (!open) return;
+    let raf = 0;
+    const onScroll = () => {
+      if (performance.now() <= ignoreScrollUntil.current) return;
+      const cur = cardRef.current;
+      if (!cur) return;
+      if (!cur.pinned) { setCard(null); return; }
+      if (raf) cancelAnimationFrame(raf); // 最後のスクロールの位置で置き直す（慣性スクロールの途中で止まらないように）
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const c = cardRef.current;
+        if (!c?.pinned) return;
+        const el = rootRef.current?.querySelector(`[data-token-id="${c.id}"]`) as HTMLElement | null;
+        if (!el) { setCard(null); return; }
+        const r = el.getBoundingClientRect();
+        const head = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
+        const foot = document.querySelector("footer")?.getBoundingClientRect().top ?? window.innerHeight;
+        if (r.bottom < head || r.top > foot) { setCard(null); return; }
+        setCard({ ...c, anchor: { rect: r } });
+      });
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [card]);
+    return () => { window.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, [open]);
   /** 従来の詳しい解説（GrammarPopover）が開いている間と、「もっと」で開く直前は、重ねても出さない */
   const hoverBlockUntil = useRef(0);
   const popoverOpen = () => performance.now() < hoverBlockUntil.current || !!document.querySelector("[data-grammar-popover]");
@@ -135,7 +159,7 @@ export function useWordCard(o: Options) {
   const onPointerOver = (e: PointerEvent<HTMLDivElement>) => {
     if (!o.enabled || e.pointerType === "touch" || cardRef.current?.pinned || popoverOpen()) return;
     const span = (e.target as HTMLElement).closest("[data-token-id]") as HTMLElement | null;
-    if (span) show(span.dataset.tokenId!, span, { x: e.clientX, y: e.clientY }, { pinned: false, held: false });
+    if (span) show(span.dataset.tokenId!, span, { x: e.clientX, y: e.clientY }, { pinned: false, held: false, touch: false });
   };
   const onPointerOut = (e: PointerEvent<HTMLDivElement>) => {
     if (!o.enabled || e.pointerType === "touch" || cardRef.current?.pinned) return;
@@ -150,7 +174,7 @@ export function useWordCard(o: Options) {
     const id = span.dataset.tokenId!;
     if (!explainable(id)) { close(); return; } // 文法の語は従来の解説（TokenizedText 側）
     if (cardRef.current?.pinned && cardRef.current.id === id) { close(); return; }
-    show(id, span, { x: e.clientX, y: e.clientY }, { pinned: true, held: false });
+    show(id, span, { x: e.clientX, y: e.clientY }, { pinned: true, held: false, touch: false });
   };
   // ---- タッチ ----
   const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
@@ -158,7 +182,7 @@ export function useWordCard(o: Options) {
     const t = e.touches[0];
     const hit = tokenAt(t.clientX, t.clientY);
     touch.current = { x: t.clientX, y: t.clientY, mode: null, id: hit?.id ?? null, pinnedBefore: cardRef.current?.pinned ? cardRef.current.id : null };
-    if (hit) show(hit.id, hit.el, { x: t.clientX, y: t.clientY }, { pinned: false, held: true });
+    if (hit) show(hit.id, hit.el, { x: t.clientX, y: t.clientY }, { pinned: false, held: true, touch: true });
   };
   const onTouchMove = (e: TouchEvent<HTMLDivElement>) => {
     const tc = touch.current;
@@ -170,7 +194,7 @@ export function useWordCard(o: Options) {
     }
     if (tc.mode !== "scrub") return;
     const hit = tokenAt(t.clientX, t.clientY);
-    if (hit && hit.id !== cardRef.current?.id) show(hit.id, hit.el, { x: t.clientX, y: t.clientY }, { pinned: false, held: true });
+    if (hit && hit.id !== cardRef.current?.id) show(hit.id, hit.el, { x: t.clientX, y: t.clientY }, { pinned: false, held: true, touch: true });
   };
   const onTouchEnd = () => {
     const tc = touch.current;
@@ -200,7 +224,7 @@ export function useWordCard(o: Options) {
       el.scrollIntoView({ block: "center" });
     }
     requestAnimationFrame(() => {
-      setCard({ id, anchor: { rect: el.getBoundingClientRect() }, pinned: true, held: false });
+      setCard({ id, anchor: { rect: el.getBoundingClientRect() }, pinned: true, held: false, touch: cur.touch });
       const info = o.tokens.get(id);
       if (info) o.onFocusSentence?.(info.sentenceId);
     });
@@ -237,7 +261,7 @@ export function useWordCard(o: Options) {
         analysis={o.analysis?.tokenAnalyses.find((a) => a.tokenId === card.id) ?? null /* 決め手（cueIds と同じもの） */}
         anchor={card.anchor}
         pinned={card.pinned}
-        preferAbove={card.held}
+        touch={card.touch}
         avoidBottom={o.avoidBottom}
         onClose={close}
         onMore={() => { hoverBlockUntil.current = performance.now() + 600; close(); o.onMore(card.id); }}

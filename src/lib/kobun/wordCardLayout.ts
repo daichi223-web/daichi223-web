@@ -32,6 +32,8 @@ export interface PlaceInput {
   viewport: { width: number; height: number };
   /** 画面下の帯などに重ねないための余白 */
   avoidBottom?: number;
+  /** 画面上の固定ヘッダなどに重ねないための余白（月の琴は本文の枠の上端より上に出さない） */
+  avoidTop?: number;
   /** 指で操作中は上を優先（指と手で隠れないように） */
   preferAbove?: boolean;
   margin?: number;
@@ -40,14 +42,20 @@ export interface Placement { left: number; top: number; below: boolean; arrowLef
 
 export function placeCard(i: PlaceInput): Placement {
   const m = i.margin ?? 8, gap = 10, arrow = 7;
+  const T = i.avoidTop ?? 0;
   const W = i.viewport.width, H = i.viewport.height - (i.avoidBottom ?? 0);
   const { width: w, height: h } = i.size;
   const r = i.rect;
   const cx = i.point ? i.point.x : (r.left + r.right) / 2;
-  const roomBelow = H - r.bottom - gap, roomAbove = r.top - gap;
-  const below = i.preferAbove ? roomAbove < Math.min(h, H * 0.3) : roomBelow >= h || roomBelow >= roomAbove;
+  const roomBelow = H - r.bottom - gap, roomAbove = r.top - T - gap;
+  const fitsAbove = roomAbove >= h, fitsBelow = roomBelow >= h;
+  // 指で操作中：上に入り切れば上。上に入り切らず下に入り切るなら下（上で止めると語に被さる）。
+  // どちらにも入り切らないときは月の琴と同じ規則（上に画面の3割以上あれば上、無ければ下）
+  const below = i.preferAbove
+    ? fitsAbove ? false : fitsBelow ? true : roomAbove < Math.min(h, (H - T) * 0.3)
+    : fitsBelow || roomBelow >= roomAbove;
   let top = below ? r.bottom + gap : r.top - h - gap;
-  top = Math.max(m, Math.min(top, H - h - m));
+  top = Math.max(T + m, Math.min(top, H - h - m));
   const left = Math.max(m, Math.min(cx - w / 2, W - w - m));
   const arrowLeft = Math.max(14, Math.min(cx - left - arrow, w - 28));
   return { left, top, below, arrowLeft };
