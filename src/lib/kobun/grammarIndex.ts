@@ -45,14 +45,14 @@ export const grammarTopics: GrammarTopicSummary[] = [
     title: "助動詞 推量系",
     category: "助動詞",
     layer: 2,
-    summary: "む・らむ・けむ・べし・まじ・らし・めり・なり(伝聞)",
+    summary: "む・らむ・けむ・べし・まじ・じ・らし・めり・なり(伝聞)",
   },
   {
     id: "jodoshi-hitei",
     title: "助動詞 否定系",
     category: "助動詞",
     layer: 2,
-    summary: "ず・じ — 打消・打消推量",
+    summary: "ず — 打消（打消推量の「じ」は推量系で扱う）",
   },
   {
     id: "jodoshi-ukemi-shieki-sonkei",
