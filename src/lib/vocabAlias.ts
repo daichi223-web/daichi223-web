@@ -323,6 +323,9 @@ function posCompatible(vocabKey: string, pos?: string | null): boolean {
   const p = (pos ?? '').trim();
   if (!p) return true;
   if (p === '接尾語' || p === '接頭語' || p === '記号') return false;
+  // 助詞・助動詞は単語帳の同形の語に当てない。単語帳に助詞・助動詞1語の見出しは無い（助詞・助動詞を含む見出しは連語だけ）。
+  // 接続助詞「て」→名詞「て（手）」1,793・断定「なり」→動詞「なる」・格助詞「より」→動詞「よる」・副助詞「など」→副詞「など」ほか約2,500か所が当たっていた（2026-10-25）
+  if (p === '助動詞' || /助詞$/.test(p)) return false;
   const fam = FAMILY[p];
   if (!fam) return true;
   const vp = `${vocabPosOf[vocabKey]?.pos ?? ''} ${quizPosOf[vocabKey] ?? ''}`.trim().replace(/形容動詞/g, 'ケイヨウドウシ');

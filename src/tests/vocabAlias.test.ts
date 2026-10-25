@@ -87,6 +87,15 @@ describe("resolveVocabKey 紐づけ漏れ", () => {
     expect(resolveVocabKey("女はらから", undefined, "")).toBe("はらから");
     expect(resolveVocabKey("おぼつかなさ", undefined, "")).toBe("おぼつかなし");
   });
+  it("助詞・助動詞は単語帳の同形の語に当てない（接続助詞「て」は名詞「て（手）」ではない）", () => {
+    expect(resolveVocabKey("て", undefined, "接続助詞")).toBeNull();
+    expect(resolveVocabKey("なり", undefined, "助動詞")).toBeNull();
+    expect(resolveVocabKey("より", undefined, "格助詞")).toBeNull();
+    expect(resolveVocabKey("など", undefined, "副助詞")).toBeNull();
+    expect(resolveVocabKey("しか", undefined, "助動詞")).toBeNull();
+    expect(resolveVocabKey("て", undefined, "")).toBe("て");
+    expect(resolveVocabKey("など", undefined, "副詞")).toBe("など・などか");
+  });
   it("接頭語「うち」の複合語は名詞の見出し「うち」（宮中・中）に当てない", () => {
     expect(resolveVocabKey("うち泣き", "うち泣く", "動詞", { conjugationType: "カ四" })).toBeNull();
   });
