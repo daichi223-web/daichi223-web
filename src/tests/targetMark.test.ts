@@ -3,6 +3,7 @@ import { findInflectedSpan, resolveTargetSpans, splitBySpans, NO_MATCH_QIDS, typ
 import type { Word } from '../types';
 import slimJson from '../data/kobunQ.v2.slim.json';
 import corpusJson from '../../public/corpus-examples.json';
+import v2Json from '../data/kobunQ.v2.json';
 
 // 実データ（kobunQ.v2.slim）。mark は scripts/build-kobunq-slim.py が jpBlank との差分から生成する。
 type SlimWord = Pick<Word, 'qid' | 'lemma' | 'pos' | 'examples'>;
@@ -135,10 +136,52 @@ describe('resolveTargetSpans', () => {
   it('明示の位置が文に収まらなければ使わず、次の順位へ進む', () => {
     const w = byQid('1-1');
     const jp = w.examples[0].jp;
-    for (const bad of [[], [[0, 0]], [[-1, 2]], [[jp.length - 1, 2]], [[0, 3], [2, 2]], [[0.5, 1]]] as Span[][]) {
+    for (const bad of [[[0, 0]], [[-1, 2]], [[jp.length - 1, 2]], [[0, 3], [2, 2]], [[0.5, 1]]] as Span[][]) {
       expect(resolveTargetSpans(jp, w, bad)).toEqual({ spans: [[21, 4]], source: 'data' });
     }
     expect(resolveTargetSpans('おどろきて見れば', w, [[50, 1]])).toEqual({ spans: [[0, 4]], source: 'match' });
+  });
+
+  it('mark が空の配列なら「確かめたうえで印を付けない」（照合もしない。2026-10-25〜）', () => {
+    const w = byQid('1-1');
+    expect(resolveTargetSpans(w.examples[0].jp, w, [])).toEqual({ spans: [], source: 'none' });
+    expect(resolveTargetSpans('おどろきて見れば', w, [])).toEqual({ spans: [], source: 'none' });
+    const w2 = { ...w, examples: [{ jp: 'おどろきて見れば', translation: '', mark: [] as Span[] }] };
+    expect(resolveTargetSpans('おどろきて見れば', w2)).toEqual({ spans: [], source: 'none' });
+  });
+});
+
+// 空欄の無い例文（旧 kobunQ 由来）の mark。scripts/target_marks.py の decide_marks が
+// 手の表 data/enrich/target-marks-manual.jsonl → 照合（候補が1か所のときだけ）で生成する（2026-10-25〜）。
+describe('空欄の無い例文の mark', () => {
+  it('漢字表記の活用形に印が付く（あふ「会ひ」）', () => {
+    const w = byQid('8-2');
+    const jp = w.examples[0].jp;
+    expect(jp).toBe('すずろなるめを見ることと思ふに、修行者会ひたり。（伊勢物語）');
+    const r = resolveTargetSpans(jp, w);
+    expect(r.source).toBe('data');
+    expect(cut(jp, r.spans)).toEqual(['会ひ']);
+  });
+
+  it('語幹1字の語・漢字1字の表記・呼応も位置が付く', () => {
+    const pick = (qid: string, i = 0) => {
+      const w = byQid(qid);
+      const jp = w.examples[i].jp;
+      return cut(jp, resolveTargetSpans(jp, w).spans);
+    };
+    expect(pick('354-2')).toEqual(['出で']); // 月の出でたるに
+    expect(pick('355-1')).toEqual(['いひ']); // と人のいひければ
+    expect(pick('299-2')).toEqual(['心']); // 旅の心を詠め
+    expect(pick('181-3')).toEqual(['知る', '知ら']); // 知る知らぬ
+    const w = byQid('48-1');
+    const jp = w.examples.find((e) => e.jp.startsWith('身も亡びなむ'))!.jp;
+    const r = resolveTargetSpans(jp, w);
+    expect(r.spans).toEqual([[9, 1], [11, 1]]); // 「亡びなむ」の な ではなく「なせそ」の な・そ
+  });
+
+  it('単語帳の例文はすべて mark を持つ（空欄の差分か、空欄の無い例文の生成）', () => {
+    const missing = slim.flatMap((w) => w.examples.filter((e) => !e.mark).map((e) => `${w.qid} ${e.jp}`));
+    expect(missing).toEqual([]);
   });
 });
 
@@ -149,10 +192,11 @@ const corpus = corpusJson as unknown as Record<string, CorpusRow[]>;
 
 describe('実戦例文の mark: 全件', () => {
   const rows = Object.entries(corpus).flatMap(([qid, rs]) => rs.map((r) => ({ qid, ...r })));
-  const marked = rows.filter((r) => r.mark);
+  const marked = rows.filter((r) => r.mark && r.mark.length > 0);
 
   it('mark はすべて例文の内側にあり、重ならず、そのまま印になる', () => {
-    expect(marked.length).toBe(98); // 2026-10-06: 追加98件すべて。教材由来の例文は位置の手がかりが無く mark なし
+    // 2026-10-06: 追加98件。2026-10-25: 教材由来の例文にも手の表と照合で位置を付けた（+667件）
+    expect(marked.length).toBe(765);
     for (const r of marked) {
       const w = byQid(r.qid);
       const res = resolveTargetSpans(r.jp, w, r.mark);
@@ -170,6 +214,18 @@ describe('実戦例文の mark: 全件', () => {
     expect(cut(r.jp, resolveTargetSpans(r.jp, w).spans)).toEqual(['いふ']); // 位置なし（従来）
     expect(cut(r.jp, resolveTargetSpans(r.jp, w, r.mark).spans)).toEqual(['いはく']);
   });
+
+  it('教材由来の例文: 漢字表記に印が付き、別の語に当たる文は印を付けない', () => {
+    const find = (qid: string, head: string) => corpus[qid].find((x) => x.jp.startsWith(head))!;
+    const a = find('7-1', '海の中にはつかに山見ゆ');
+    expect(cut(a.jp, resolveTargetSpans(a.jp, byQid('7-1'), a.mark).spans)).toEqual(['見ゆ']);
+    const b = find('34-1', 'つひに本意のごとく');
+    expect(cut(b.jp, resolveTargetSpans(b.jp, byQid('34-1'), b.mark).spans)).toEqual(['本意']);
+    // 「いと」＋「もの悲し」。照合だけだと「いとも」に付いていた
+    const c = find('338-1', 'つれづれといともの悲しくて');
+    expect(c.mark).toEqual([]);
+    expect(resolveTargetSpans(c.jp, byQid('338-1'), c.mark)).toEqual({ spans: [], source: 'none' });
+  });
 });
 
 // 全件の回帰検査: データの位置（単一範囲）を正解として、活用照合が「別の場所」を指さないことを固定する。
@@ -179,6 +235,13 @@ describe('実戦例文の mark: 全件', () => {
 // 2026-10-06 単語データ修正・第2弾（第2例文の付け替え。別語の例文など5組を外した）後の実測（1,240 件）:
 //   一致 882 / 一部重なる 86 / 見つからない 269 / 別の場所 3
 describe('findInflectedSpan: 全件の回帰検査', () => {
+  // 正解に使うのは空欄つき例文（jpBlank）の差分から作った位置だけ。2026-10-25 から空欄の無い例文にも
+  // 照合・手の表で mark が付くが、照合と同じ規則で作った位置を正解にすると検査にならないので外す
+  const blankKeys = new Set(
+    (v2Json as unknown as { qid: string; examples: { jp: string; jpBlank?: string }[] }[]).flatMap((w) =>
+      w.examples.filter((e) => e.jpBlank && /〔[\s　]*[〕\]]/.test(e.jpBlank)).map((e) => `${w.qid}\t${e.jp}`)
+    )
+  );
   // 正解の範囲と交わらない位置を返す既知の件
   //   211-1 さかし   …「さかしうて、まことにさかしき人」の手前の「さかしう」に当たる
   //   297-1 ことなり …「同じことなれども聞き耳ことなるもの」の手前の「ことなれ」（事なれ）に当たる
@@ -191,7 +254,7 @@ describe('findInflectedSpan: 全件の回帰検査', () => {
     let total = 0;
     for (const w of slim) {
       for (const e of w.examples) {
-        if (!e.mark || e.mark.length !== 1) continue;
+        if (!e.mark || e.mark.length !== 1 || !blankKeys.has(`${w.qid}\t${e.jp}`)) continue;
         total++;
         const [ts, tl] = e.mark[0];
         const found = findInflectedSpan(e.jp, w.lemma, w.pos);

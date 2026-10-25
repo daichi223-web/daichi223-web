@@ -2,8 +2,10 @@
  * 例文の中で「問われている語」がどこにあるかを決める。
  *
  * 優先順: ① 例文に付いてきた位置（実戦例文 corpus-examples.json の mark。呼び出し側が渡す）
- *         ② データの位置（kobunQ.v2.slim の examples[].mark。空欄つき例文との差分から生成）
+ *         ② データの位置（kobunQ.v2.slim の examples[].mark。空欄つき例文との差分、
+ *            空欄の無い例文は手で決めた表と照合から生成。scripts/target_marks.py）
  *         ③ 見出し語を活用させて例文と照合 ④ どれも無ければ印なし。
+ * ①② の mark が空の配列 [] のときは「確かめたうえで印を付けない」（別の語に当たる文など）。③ も行わない。
  * 活用した形のまま・正しい位置に印を付けるためのもので、判定には使わない。
  * 純粋関数。DB・画面には触れない。
  */
@@ -170,6 +172,7 @@ function spansFit(text: string, spans: readonly Span[]): boolean {
  * explicit = その例文に付いてきた位置（実戦例文 corpus-examples.json の mark など）。
  * 優先順: ① explicit ② word.examples の mark ③ 活用照合 ④ 印なし。
  * explicit が text に収まらない（範囲外・重なり）ときは使わずに ② 以降へ進む。
+ * explicit・word.examples の mark が [] なら印なし（データで「付けない」と決めた例文。2026-10-25〜）。
  */
 export function resolveTargetSpans(
   text: string,
@@ -178,9 +181,11 @@ export function resolveTargetSpans(
 ): TargetSpans {
   if (!text || !word) return { spans: [], source: 'none' };
 
+  if (explicit && explicit.length === 0) return { spans: [], source: 'none' };
   if (explicit && spansFit(text, explicit)) return { spans: explicit.map(([s, l]) => [s, l] as Span), source: 'data' };
 
   const mark = word.examples?.find((e) => e.jp === text)?.mark;
+  if (mark && mark.length === 0) return { spans: [], source: 'none' };
   if (mark && mark.length > 0) return { spans: mark, source: 'data' };
 
   if (!NO_MATCH_QIDS.has(word.qid)) {

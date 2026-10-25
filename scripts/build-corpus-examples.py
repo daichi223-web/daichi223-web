@@ -10,11 +10,17 @@ examples-by-lemma.json（教材由来の実例文）を kobun_q の各 qid（lem
 出力: public/corpus-examples.json  { qid: [{jp, translation, mark?}] }
   mark = 問われている語の位置 [[開始, 長さ], …]（JS の文字列添字。slim の examples[].mark と同じ形）。
   corpus-additions.jsonl の target（出現形と何番目の出現か）から計算する。
-  教材由来（examples-by-lemma.json）の例文は入力に位置の手がかりが無いので mark を持たない
-  （画面では従来どおり活用照合で印を付ける）。
+  教材由来（examples-by-lemma.json）の例文は入力に位置の手がかりが無いので、
+  scripts/target_marks.py の decide_marks（手で決めた表 data/enrich/target-marks-manual.jsonl →
+  照合で候補が1か所のときだけ）で決める（2026-10-25〜。漢字表記・語幹1字の語に印が付かなかったため）。
+  mark: [] は「確かめたうえで印を付けない」。決まらない例文は mark を持たない（画面の活用照合に任せる）。
 使い方: python -X utf8 scripts/build-corpus-examples.py
 """
-import json, re, io, sys
+import json, re, io, os, sys
+
+sys.dont_write_bytecode = True  # scripts/__pycache__ を作らない
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from target_marks import decide_marks, load_manual  # noqa: E402
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
@@ -180,8 +186,25 @@ for a in adds:
     added += 1
 total += added
 
+# 5回目: 教材由来の例文（mark の無い行）の対象語の位置を決める。見出し語・品詞は slim と同じ
+# src/data/kobunQ.v2.json から引く（画面の照合 src/lib/targetMark.ts も slim の語で照合する）。
+v2_words = {w["qid"]: w for w in json.load(open("src/data/kobunQ.v2.json", encoding="utf-8"))}
+manual = load_manual(".")
+n_marked = {"manual": 0, "manual-none": 0, "match": 0, "none": 0}
+for qid, rows in out.items():
+    w = v2_words[qid]
+    for r in rows:
+        if "mark" in r:
+            continue
+        mark, how = decide_marks(qid, w["lemma"], w.get("pos"), r["jp"], None, manual)
+        n_marked[how] += 1
+        if mark is not None:
+            r["mark"] = mark
+
 json.dump(out, open("public/corpus-examples.json", "w", encoding="utf-8"), ensure_ascii=False)
 print(f"qid {len(out)}/{len(qs)} に {total} 例文を割り当て（複数の意味に当てはまる文 {dropped} 件、多義語の{MIN_BODY_LEN_POLYSEMOUS}字未満の文 {dropped_short} 件を外した）→ public/corpus-examples.json")
 print(f"うち {ADDITIONS_FILE} から {added}/{len(adds)} 件を追加（外した {len(add_skipped)} 件）")
+print(f"教材由来の例文の印: 手の表 {n_marked['manual']} / 手の表で印なし {n_marked['manual-none']} / "
+      f"照合（1か所）{n_marked['match']} / 決まらない {n_marked['none']}")
 for cid, why in add_skipped:
     print(f"  外した: {cid} {why}")
