@@ -6,7 +6,7 @@
  * 「もっと」（従来の GrammarPopover）は 2026-10-25 にやめた（中身がカードとほぼ同じで、違いはボタンだけだったため）。
  * 文の訳はカードに入れず、TextReader の画面下の帯に出す。操作は useWordCard にまとめてある。
  */
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { makeReturnTo, quizUrlWithReturn } from "@/lib/returnTo";
 import type { Token, TokenAnalysis } from "@/lib/kobun/types";
@@ -41,6 +41,23 @@ interface WordCardProps {
   onNext?: () => void;
 }
 
+/** 見やすさ案B（2026-10-25）：理由の囲み（金色の左線）・見出し・手がかりの波線（本文の波線と同じ）・この箇所の意味の行（青の白抜き） */
+const REASON_BOX = { borderLeft: "4px solid #c9a24a", background: "color-mix(in srgb, #c9a24a 13%, var(--rw-paper))" } as const;
+const REASON_TITLE = { color: "color-mix(in srgb, #8a6a1f 85%, var(--rw-ink))" } as const;
+const CUE_MARK = { textDecoration: "underline wavy var(--rw-primary)", textUnderlineOffset: "4px", color: "var(--rw-ink)" } as const;
+// 青は少し沈めて落ち着いた紺に（2026-10-25 ユーザー指摘「青がやや明るい」）
+const CUR_SENSE = { background: "color-mix(in srgb, var(--layer-1) 62%, var(--rw-ink))", color: "#fff" } as const;
+const QUOTE_MARK = { background: "linear-gradient(transparent 58%, color-mix(in srgb, #facc15 55%, transparent) 58%)", fontWeight: 700 } as const;
+
+/** 理由の文のうち、手がかりの語を含む「…」に蛍光ペンの下地を付ける（手がかりが無い・含まない「…」はそのまま） */
+function markQuotes(summary: string, cues?: { text?: string }[]): ReactNode {
+  const keys = (cues ?? []).map((c) => (c.text ?? "").trim()).filter(Boolean);
+  if (!keys.length) return summary;
+  return summary.split(/(「[^」]*」)/).map((part, i) =>
+    /^「.*」$/.test(part) && keys.some((k) => part.includes(k)) ? <span key={i} style={QUOTE_MARK}>{part}</span> : part,
+  );
+}
+
 /** 見出し番号の札・帯のボタン（月の琴の試作と同じ見た目。2026-10-16 ユーザー指定） */
 const BADGE = { background: "color-mix(in srgb, var(--layer-1) 14%, transparent)", color: "var(--layer-1)" } as const;
 const BAR_BTN = "min-w-[40px] h-9 px-2 rounded-lg border border-rw-ink/20 bg-rw-paper text-rw-ink text-base leading-none active:scale-95";
@@ -54,9 +71,10 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
   const preferAbove = touch;
   // 同じ語・同じ固定状態のまま枠だけ変わった（スクロールで語について動く）ときは、今の側に入るうちは側を変えない
   const placedKey = useRef<string | null>(null);
-  // カード全体の高さの上限（月の琴と同じ min(52dvh, 440px)）。置き場所のためにカードを縮めることはしない（2026-10-25 ユーザー指示「スクロールじゃない方がいい」）。
+  // カード全体の高さの上限。置き場所のためにカードを縮めることはしない（2026-10-25 ユーザー指示「スクロールじゃない方がいい」）。
   // この上限を超えるごく長い中身だけがカードの中でスクロールする（月の琴の #tipbody と同じ）
-  const maxH = Math.min(window.innerHeight * 0.52, 440, window.innerHeight - avoidBottom - 16);
+  // 高さの上限は画面の64%・540px（2026-10-25 に月の琴の52%・440pxから広げた。見やすさ案Bで囲みが増え、中のスクロールを避けるため）
+  const maxH = Math.min(window.innerHeight * 0.64, 540, window.innerHeight - avoidBottom - 16);
 
   const tag = token.grammarTag ?? { pos: "" };
   const vocabKey = resolveVocabKey(token.text, tag.baseForm, tag.pos, tag);
@@ -177,32 +195,35 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
 
       {/* 意味（単語）。教材の意味ラベル → 決め手の意味（単語の理由データ）の順。どちらも無ければこの行は出さず、下の一覧だけ（2026-10-25 ユーザー指示：意味は全部出して今回の意味を太字） */}
       {!isGrammar && meaning && (
-        <p className="font-bold text-[20px] leading-snug mt-1.5">
-          <span className="text-[13px] text-rw-ink-soft mr-1.5 align-middle">意味</span>
-          {meaning}
+        <p className="flex items-center gap-2.5 mt-1 leading-snug">
+          <span className="shrink-0 text-[12px] font-black rounded-full px-2.5 py-0.5 bg-rw-ink text-rw-paper">意味</span>
+          <span className="font-black text-[22px]">{meaning}</span>
         </p>
       )}
 
       {/* この箇所でその意味になる理由（analysis の決め手）。無ければ重要ポイント（hint） */}
+      {/* 見やすさ案B（2026-10-25 ユーザー選択）：理由は金色の左線の囲みにまとめ、手がかりの語を含む「…」に蛍光ペンの下地 */}
       {decider?.summary ? (
-        <p className="mt-1">
-          <span className="text-[12px] font-bold text-rw-ink-soft mr-1.5">理由</span>
-          {decider.summary}
+        <p className="mt-1.5 rounded-r-lg px-3 py-1.5" style={REASON_BOX}>
+          <span className="text-[11.5px] font-black tracking-widest mr-1.5" style={REASON_TITLE}>理由</span>
+          {markQuotes(decider.summary, decider.cues)}
         </p>
       ) : token.hint ? (
-        <p className="mt-1">
-          <span className="text-[12px] font-bold text-rw-ink-soft mr-1.5">ポイント</span>
+        <p className="mt-1.5 rounded-r-lg px-3 py-1.5" style={REASON_BOX}>
+          <span className="text-[11.5px] font-black tracking-widest mr-1.5" style={REASON_TITLE}>ポイント</span>
           {token.hint}
         </p>
       ) : null}
 
       {/* 固定したときだけ：理由の手がかりの注（本文では波線の語）。「もっと」をやめたので、従来の解説にあった注をここに出す */}
       {pinned && decider?.summary && !!decider.cues?.some((c) => c.note) && (
-        <ul className="mt-1 space-y-0.5 text-[13px] text-rw-ink-soft">
+        <ul className="mt-1.5 space-y-0.5 text-[13px] text-rw-ink-soft">
           {decider.cues!.filter((c) => c.note).map((c, i) => (
             <li key={i}>
-              {c.text && <span className="text-rw-ink font-bold mr-1">「{c.text}」</span>}
-              {c.note}
+              {i === 0 && <span className="mr-1">手がかり：</span>}
+              {i > 0 && <span className="mr-1 invisible">手がかり：</span>}
+              {c.text && <span className="font-bold mr-1" style={CUE_MARK}>{c.text}</span>}
+              （{c.note}）
             </li>
           ))}
         </ul>
@@ -229,12 +250,13 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
       {/* 単語帳の意味の一覧は必ず全部出し、この箇所の意味を太くする（2026-10-25 ユーザー指示。1つしか無くても出す）。
           意味が決まっていない語・単語帳の見出しとは別の語（offList）は太字なしで一覧だけ */}
       {!isGrammar && senses.length > 0 && (
-        <ol className="mt-2 pl-6 text-[14px] text-rw-ink-soft list-decimal marker:font-normal space-y-0.5">
+        <ol className="mt-1.5 text-[14px] leading-6">
           {senses.map((s, i) => {
-            const cur = i === curIdx; // 太字は1つだけ（月の琴の senseList と同じ）
+            const cur = i === curIdx; // この箇所の意味は1つだけ。青の白抜きの行（見やすさ案B）
             return (
-              <li key={s.qid} className={cur ? "text-rw-ink font-bold marker:font-bold" : ""}>
-                {(s.senseNorm ?? s.sense ?? "").replace(/〔|〕/g, "")}
+              <li key={s.qid} className={`flex gap-2 rounded-md px-2.5 ${cur ? "font-black" : "text-rw-ink-soft"}`} style={cur ? CUR_SENSE : undefined}>
+                <span className="w-4 shrink-0 text-right">{i + 1}</span>
+                <span>{(s.senseNorm ?? s.sense ?? "").replace(/〔|〕/g, "")}</span>
               </li>
             );
           })}
