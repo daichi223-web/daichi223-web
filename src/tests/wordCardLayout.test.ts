@@ -36,21 +36,20 @@ describe("浮かぶ解説カード：置き場所", () => {
     expect(placeCard({ rect: { left: 100, right: 130, top: 400, bottom: 430 }, size, viewport, preferAbove: true }).below).toBe(false);
     expect(placeCard({ rect: { left: 100, right: 130, top: 20, bottom: 50 }, size, viewport, preferAbove: true }).below).toBe(true);
   });
-  it("指で操作中、上に最小の高さ（160px）があれば入り切らなくても上に出し、語に被らない高さまで縮める（下に出すと指と手の下に隠れ、被せると語が読めない）", () => {
-    // 上の余地 282px に 300px のカードは入り切らない → 上に出し、max-height を 282 にして中をスクロール
+  it("指で操作中、上に入り切らず下に入り切るときは下に本来の高さで出す（縮めて中をスクロールさせない・語に被せない）", () => {
+    // 上の余地 282px に 300px のカードは入り切らない → 下（余地 452px）に 300px のまま
     const p = placeCard({ rect: { left: 100, right: 130, top: 300, bottom: 330 }, size: { width: 340, height: 300 }, viewport, preferAbove: true });
-    expect(p.below).toBe(false);
-    expect(p.maxHeight).toBe(282);
-    expect(p.top + p.maxHeight).toBeLessThanOrEqual(300 - 10); // 語の上端より上で終わる
-    expect(p.top).toBe(8);
+    expect(p.below).toBe(true);
+    expect(p.top).toBe(340);
+    expect(p.top + 300).toBeLessThanOrEqual(800 - 8);
   });
-  it("入り切るときは max-height が使える高さ以上で、縮めない", () => {
+  it("上に入り切るときは語のすぐ上に本来の高さで出す", () => {
     const p = placeCard({ rect: { left: 100, right: 130, top: 400, bottom: 430 }, size, viewport, preferAbove: true });
-    expect(p.maxHeight).toBeGreaterThanOrEqual(200);
+    expect(p.below).toBe(false);
     expect(p.top).toBe(400 - 10 - 200);
   });
-  it("指で操作中、上の余地が最小の高さに足りなければ下（ヘッダの下からの余地で見る）", () => {
-    // ヘッダ 100px、語の上端 250px：余地 132px（250 - 10 - 108）は 160px に足りないので下
+  it("指で操作中、上の余地はヘッダの下から数える", () => {
+    // ヘッダ 100px、語の上端 250px：余地 132px（250 - 10 - 108）に 300px は入らないので下
     const p = placeCard({ rect: { left: 100, right: 130, top: 250, bottom: 280 }, size: { width: 340, height: 300 }, viewport, avoidTop: 100, preferAbove: true });
     expect(p.below).toBe(true);
     expect(p.top).toBe(290);
@@ -64,31 +63,36 @@ describe("浮かぶ解説カード：置き場所", () => {
     expect(flip.below).toBe(true);
     expect(flip.top).toBe(190);
   });
+  it("追従中、今の側に入り切らなくなった時点で反対側へ移る（途中で縮めない）", () => {
+    // 上に出ていた 300px のカード。語の上端 400（余地 382）なら上のまま
+    const keep = placeCard({ rect: { left: 100, right: 130, top: 400, bottom: 430 }, size: { width: 340, height: 300 }, viewport, preferAbove: true, current: false });
+    expect(keep.below).toBe(false);
+    expect(keep.top).toBe(400 - 10 - 300);
+    // 語が上がって余地 250px（300px 未満）→ 下へ、300px のまま
+    const q = placeCard({ rect: { left: 100, right: 130, top: 268, bottom: 298 }, size: { width: 340, height: 300 }, viewport, preferAbove: true, current: false });
+    expect(q.below).toBe(true);
+    expect(q.top).toBe(308);
+  });
   it("指の点が語の枠から外れているときは指の点のまわりを基準にする（スクロール直後の古い枠に引きずられない）", () => {
     const p = placeCard({ rect: { left: 100, right: 130, top: 100, bottom: 130 }, point: { x: 115, y: 500 }, size, viewport, preferAbove: true });
     expect(p.below).toBe(false);
     expect(p.top).toBe(500 - 14 - 200 - 10);
   });
-  it("指で操作中、どちらにも入り切らないときも上に最小の高さがあれば上。高さは上の余地まで", () => {
+  it("指で操作中、どちらにも入り切らないときは月の琴と同じ：上に画面の3割以上あれば上端で止めて出す（語に少し被る）、無ければ下", () => {
+    // 500px のカード。語の上端 400：上の余地 382 ≥ 画面の3割 240 → 上端から
     const p = placeCard({ rect: { left: 100, right: 130, top: 400, bottom: 430 }, size: { width: 340, height: 500 }, viewport, preferAbove: true });
     expect(p.below).toBe(false);
-    expect(p.top).toBe(8); // 上端から
-    expect(p.maxHeight).toBe(400 - 10 - 8); // 語の上端まで
-  });
-  it("スクロールで語について動くとき、今の側に最小の高さが取れるうちは側を変えず高さだけ変える", () => {
-    // 上に出ていた 300px のカード。語が上がって上の余地が 250px → 上のまま 250px に縮む
-    const p = placeCard({ rect: { left: 100, right: 130, top: 268, bottom: 298 }, size: { width: 340, height: 300 }, viewport, preferAbove: true, current: false });
-    expect(p.below).toBe(false);
-    expect(p.maxHeight).toBe(250);
-    // さらに上がって 132px（160px 未満）→ そこで下へ
-    const q = placeCard({ rect: { left: 100, right: 130, top: 150, bottom: 180 }, size: { width: 340, height: 300 }, viewport, preferAbove: true, current: false });
+    expect(p.top).toBe(8);
+    // 語の上端 200：上の余地 182 < 240 → 下、下端で止める
+    const q = placeCard({ rect: { left: 100, right: 130, top: 200, bottom: 230 }, size: { width: 340, height: 500 }, viewport, preferAbove: true });
     expect(q.below).toBe(true);
-    expect(q.top).toBe(190);
+    expect(q.top).toBe(240);
+    expect(q.top + 500).toBeLessThanOrEqual(800 - 8);
   });
   it("上の固定ヘッダには重ねない（月の琴は本文の枠の上端より上に出さない）", () => {
     const p = placeCard({ rect: { left: 100, right: 130, top: 200, bottom: 230 }, size, viewport, avoidTop: 56, preferAbove: true });
     expect(p.top).toBeGreaterThanOrEqual(56 + 8);
-    // 上の余地 126px（200 - 10 - 64）は最小の高さ 160px に足りないので下に出る
+    // 上の余地 126px（200 - 10 - 64）に 200px は入らないので下に出る
     expect(p.below).toBe(true);
     expect(p.top).toBe(240);
   });

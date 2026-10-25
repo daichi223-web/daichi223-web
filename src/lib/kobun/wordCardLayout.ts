@@ -45,23 +45,14 @@ export interface Placement {
   top: number;
   below: boolean;
   arrowLeft: number;
-  /** この側で語に被らずに使える高さ。カードの max-height にし、入り切らない中身はカードの中でスクロールさせる */
-  maxHeight: number;
 }
 
 /**
- * 使い物になる最小の高さ：語の行＋意味の行＋理由の2行ほどが見える 160px（画面が狭ければ3割、ただし 120px は確保）。
- * カード全体がそれより低ければカードの高さ。月の琴の「上に3割以上あれば上」より低めなのは、縮めても中をスクロールできるため
- */
-export function minUsableHeight(cardHeight: number, usableScreen: number): number {
-  return Math.min(cardHeight, Math.max(120, Math.min(160, usableScreen * 0.3)));
-}
-
-/**
- * 語の上か下に置く。**カードは語に被せない**：選んだ側に入り切らないときは、その側で使える高さまで縮めて中をスクロールさせる。
- * - 指で操作中（preferAbove）：上を優先（指と手で隠れないように）。上に最小の高さが取れないときだけ下
+ * 語の上か下に置く。カードは本来の高さのまま出す（縮めて中をスクロールさせない。2026-10-25 ユーザー指示「スクロールじゃない方がいい」）。
+ * - 指で操作中（preferAbove）：上に入り切れば上（指と手で隠れないように）。入り切らなければ下に入り切れば下。
+ *   どちらにも入り切らないときは月の琴と同じ：上に画面の3割以上の余地があれば上端で止めて出す（語に少し被る）、無ければ下
  * - マウス：下に入れば下、入らなければ上、どちらにも入らなければ広いほう
- * - 追従中（current）：今の側に最小の高さが取れるうちは側を変えず、高さだけ変える（語をまたいで飛ばない）
+ * - 追従中（current）：今の側に入り切るうちは側を変えない（語をまたいで飛ばない）
  */
 export function placeCard(i: PlaceInput): Placement {
   const m = i.margin ?? 8, gap = 10, arrow = 7;
@@ -76,17 +67,14 @@ export function placeCard(i: PlaceInput): Placement {
   const aTop = pt && !inR ? pt.y - 14 : r.top, aBot = pt && !inR ? pt.y + 14 : r.bottom;
   // 語に被らずに使える高さ（上：固定ヘッダ＋余白から語まで、下：語から帯＋余白まで）
   const roomAbove = aTop - gap - (T + m), roomBelow = H - m - aBot - gap;
-  const minH = minUsableHeight(h, H - T);
+  const fitsAbove = roomAbove >= h, fitsBelow = roomBelow >= h;
   let below: boolean;
-  if (i.current !== undefined && (i.current ? roomBelow : roomAbove) >= minH) below = i.current;
-  else if (i.preferAbove) below = roomAbove < minH && roomBelow > roomAbove;
-  else below = roomBelow >= h || (roomAbove < h && roomBelow >= roomAbove);
-  const room = below ? roomBelow : roomAbove;
-  const maxHeight = Math.max(96, room); // 画面が極端に狭いときの下限（このときだけ語に被る）
-  const hh = Math.min(h, maxHeight);
-  let top = below ? aBot + gap : aTop - gap - hh;
-  top = Math.max(T + m, Math.min(top, H - hh - m));
+  if (i.current !== undefined && (i.current ? fitsBelow : fitsAbove)) below = i.current;
+  else if (i.preferAbove) below = fitsAbove ? false : fitsBelow ? true : roomAbove < Math.min(h, (H - T) * 0.3);
+  else below = fitsBelow || (!fitsAbove && roomBelow >= roomAbove);
+  let top = below ? aBot + gap : aTop - gap - h;
+  top = Math.max(T + m, Math.min(top, H - h - m));
   const left = Math.max(m, Math.min(cx - w / 2, W - w - m));
   const arrowLeft = Math.max(14, Math.min(cx - left - arrow, w - 28));
-  return { left, top, below, arrowLeft, maxHeight };
+  return { left, top, below, arrowLeft };
 }

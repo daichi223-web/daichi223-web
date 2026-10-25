@@ -83,14 +83,8 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
   const preferAbove = touch;
   // 同じ語・同じ固定状態のまま枠だけ変わった（スクロールで語について動く）ときは、今の側に入るうちは側を変えない
   const placedKey = useRef<string | null>(null);
-  // 語に被らない高さに縮めて中身が隠れているとき、下端に「続きがある」印（薄いぼかし）を出す。いちばん下まで送ったら消す
-  const [moreBelow, setMoreBelow] = useState(false);
-  const checkMore = () => {
-    const b = bodyRef.current;
-    if (!b) return;
-    setMoreBelow(b.scrollHeight - b.clientHeight > 2 && b.scrollTop + b.clientHeight < b.scrollHeight - 2);
-  };
-  // カード全体の高さの上限（月の琴と同じ min(52dvh, 440px)）。中身が長いときはカードの中だけがスクロールする
+  // カード全体の高さの上限（月の琴と同じ min(52dvh, 440px)）。置き場所のためにカードを縮めることはしない（2026-10-25 ユーザー指示「スクロールじゃない方がいい」）。
+  // この上限を超えるごく長い中身だけがカードの中でスクロールする（月の琴の #tipbody と同じ）
   const maxH = Math.min(window.innerHeight * 0.52, 440, window.innerHeight - avoidBottom - 16);
 
   const tag = token.grammarTag ?? { pos: "" };
@@ -125,16 +119,12 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
     const following = placedKey.current === key;
     placedKey.current = key;
     if (bodyRef.current && !following) bodyRef.current.scrollTop = 0; // 語が変わったら中身は先頭から
-    // 本来の高さ＝今の高さ＋中身で隠れている分（前回「語に被らない高さ」に縮めていても、縮める前の高さで置き場所を決める）。
-    // DOM の style を直接いじって測ると、React が前回と同じ値の style を書き戻さないので使わない
-    const body = bodyRef.current;
-    const hidden = body ? Math.max(0, body.scrollHeight - body.clientHeight) : 0;
     setPos((prev) =>
       placeCard({
         current: following ? prev?.below : undefined,
         rect: anchor.rect,
         point: anchor.x !== undefined && anchor.y !== undefined ? { x: anchor.x, y: anchor.y } : null,
-        size: { width: el.offsetWidth, height: el.offsetHeight + hidden },
+        size: { width: el.offsetWidth, height: el.offsetHeight },
         viewport: { width: window.innerWidth, height: window.innerHeight },
         avoidBottom: Math.max(avoidBottom, footH),
         avoidTop: headH,
@@ -143,9 +133,6 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
     );
     // pinned：固定すると上の帯とリンクの行が足されて背が伸びるので置き直す（月の琴もタップ時に place() をやり直す）
   }, [anchor, preferAbove, avoidBottom, token.id, pinned]);
-  // 縮めたあとの実際の高さで「続きがある」かを見る（pos が決まって描画されてから）
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(() => { checkMore(); }, [pos, token.id, pinned]);
 
   return (
     <div
@@ -159,8 +146,8 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         top: pos?.top ?? -9999,
         width: "min(92vw, 360px)",
         margin: 0, // 親の space-y-* の margin-top が fixed にも効いて 12px 下にずれるのを防ぐ
-        maxHeight: pos ? Math.min(maxH, pos.maxHeight) : maxH, // 語に被らない高さまで。入り切らない中身は bodyRef の中でスクロール
-        overflow: "visible", // 矢印は枠の外に出る。スクロールは中の bodyRef だけ（外側を overflow:auto にすると矢印が切れる）
+        maxHeight: maxH,
+        overflow: "visible", // 矢印は枠の外に出る。上限を超えたときのスクロールは中の bodyRef だけ（外側を overflow:auto にすると矢印が切れる）
         fontSize: 15,
         lineHeight: 1.75,
         boxShadow: "0 10px 32px rgba(40,25,10,.22)",
@@ -201,7 +188,6 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         ref={bodyRef}
         className="min-h-0 flex-1"
         style={{ overflowY: "auto", WebkitOverflowScrolling: "touch", padding: pinned ? "8px 16px 14px" : "12px 16px 14px" }}
-        onScroll={checkMore}
       >
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-[22px] font-serif leading-tight">{token.text}</span>
@@ -284,13 +270,6 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         !touch && <p className="text-[11px] text-rw-ink-soft mt-1">クリックで固定</p>
       )}
       </div>
-      {moreBelow && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-0 right-0 bottom-0 h-8 rounded-b-2xl"
-          style={{ background: "linear-gradient(to bottom, rgba(253,250,245,0), var(--rw-paper))" }}
-        />
-      )}
     </div>
   );
 }
