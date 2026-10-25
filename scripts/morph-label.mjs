@@ -51,18 +51,30 @@ export function posFromConjType(ct) {
  * 読み解けないときは { pos: '' } を返す（勝手な品詞名を作らない）。
  */
 export function parseLabel(display) {
-  const t = (display || '').trim();
+  // セルの途中に文法リンクがある書き方（「（複）[[…/動詞の活用\|カ変・用]]」）は、リンクの表示名に置き換えて読む（2026-10-25）
+  const t = (display || '').replace(/\[\[[^\]]*?\\?\|([^\]]*)\]\]/g, '$1').trim();
   if (!t) return { pos: '' };
 
   const honorific = /[（(][^）)]*尊[^）)]*[）)]/.test(t) ? '尊敬'
     : /[（(][^）)]*謙[^）)]*[）)]/.test(t) ? '謙譲' : undefined;
 
-  // 「（接頭）」「（接尾）」「（連語）」だけのセル
-  const only = t.match(/^[（(](接頭|接尾|連語|複)[）)]$/);
-  if (only) return { pos: PLAIN_POS[only[1]] || (only[1] === '複' ? '' : only[1]) };
+  // 「（接頭）」「（接尾）」「（連語）」「（枕詞）」だけのセル。後ろに印が重なっていてもよい
+  // （「（接頭）（尊）」「（連語）（促音）」「（接尾）（接尾）」「（連語）　（接尾）」。2026-10-25）
+  const only = t.match(/^[（(](接頭|接尾|連語|複|枕詞)[）)](?:[\s　]*[（(][^（）()]*[）)])*$/);
+  if (only) {
+    const pos = only[1] === '枕詞' ? '枕詞' : PLAIN_POS[only[1]] || (only[1] === '複' ? '' : only[1]);
+    return honorific && pos ? { pos, honorific } : { pos };
+  }
+  // 全体が括弧でくくられた活用（「（ハ下二・体）」）は中身を読む（2026-10-25）
+  const wrapped = t.match(/^[（(]([^（）()]+・[^（）()]+)[）)]$/);
+  if (wrapped) return parseLabel(wrapped[1]);
 
   // 先頭の「（複）」は複合語の印なので落とす
-  const body = t.replace(/^[（(]複[）)]/, '');
+  let body = t.replace(/^[（(]複[）)]/, '');
+  // 先頭の「（接頭）」の後ろに活用が書いてあれば、接頭語つきの1語として後ろを読む（「（接頭）ラ四・用」＝うちまもり）。
+  // 先頭の「（補動）」は補助動詞の印（「（補動）ヤ下二・用（謙）」）。2026-10-25
+  const pre = body.match(/^[（(](接頭|補動|補助)[）)](.+)$/);
+  if (pre) body = pre[1] === '接頭' ? pre[2] : `補動・${pre[2]}`;
   const segs = body.split('・');
   const b0 = bare(segs[0]);
 
@@ -94,6 +106,9 @@ export function parseLabel(display) {
     out.pos = posFromConjType(b1);
     out.conjugationType = b1;
     if (segs[1]) out.conjugationForm = bare(segs[1]);
+    // 「ナリ（幹）」「ナリ（語幹）」は語幹（texts-v3 の書き方「語幹」にそろえる）
+    else if (/[（(]語?幹[）)]/.test(segs[0])) out.conjugationForm = '語幹';
+    if (out.conjugationForm === '幹') out.conjugationForm = '語幹';
     return out;
   }
   // 助動詞（現在推量・体、命令・終）
