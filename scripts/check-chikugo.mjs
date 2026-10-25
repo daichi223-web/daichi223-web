@@ -59,7 +59,7 @@ for (const f of files) {
       const auxes = toks.filter(({ s: ts, e: te, tk }) => ts >= at && te <= at + o.length && tk.grammarTag?.pos === '助動詞').map(({ tk }) => tk.grammarTag?.meaning || '');
       const has = (re) => auxes.some((m) => re.test(m));
       if (/(だろう|でしょう|であろう)/.test(outside) && !has(/推量|意志|推定|婉曲|仮定|当然|適当|可能|反実仮想/) && !/[むけらべまじ]/.test(o.slice(-3))) warn(`${id} ${sid}: 推量の助動詞が無いのに「だろう」類「${o}」→「${t}」`);
-      if (/(のだ(?!ろう)|のです|のである|のであった)/.test(outside) && !has(/断定/)) warn(`${id} ${sid}: 断定の助動詞が無いのに「のだ」類「${o}」→「${t}」`);
+      if (/(のだ(?!ろう)|のです|のである|のであった)/.test(o.includes("もの") ? outside.replace(/もの(だ|です|である)/g, "") : outside) && !has(/断定/)) warn(`${id} ${sid}: 断定の助動詞が無いのに「のだ」類「${o}」→「${t}」`);
       if (/てしま[うっいわえ]/.test(outside) && !has(/完了|強意/)) warn(`${id} ${sid}: 完了の助動詞が無いのに「てしまう」「${o}」→「${t}」`);
       at += o.length;
     }
