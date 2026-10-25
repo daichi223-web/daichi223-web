@@ -2,7 +2,8 @@
  * 語の近くに浮かぶ短い解説カード（試作、2026-10-16〜）。
  * PC はマウスを重ねるだけで出てクリックで固定、スマホは指を当てている間に出てタップで固定。
  * 出すのは要点だけ（語・330の番号・意味・この箇所での決め手・意味の一覧・品詞の表）。
- * 「→ 単語カード」で /word/:lemma へ直接飛び、「もっと」で従来の GrammarPopover を開く。
+ * 固定したときの下の行は行き先だけ：単語帳の語は「単語カード」「単語クイズ」、文法の語は「文法解説」「文法のクイズ」。
+ * 「もっと」（従来の GrammarPopover）は 2026-10-25 にやめた（中身がカードとほぼ同じで、違いはボタンだけだったため）。
  * 文の訳はカードに入れず、TextReader の画面下の帯に出す。操作は useWordCard にまとめてある。
  */
 import { useLayoutEffect, useRef, useState } from "react";
@@ -12,6 +13,7 @@ import { resolveVocabKey } from "@/lib/vocabAlias";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
 import { enrichGrammarInfo } from "@/lib/kobun/auxiliaryInfo";
 import { placeCard, type Placement } from "@/lib/kobun/wordCardLayout";
+import { grammarQuizTopicOf } from "@/lib/kobun/grammarQuizTopic";
 import bundledKobunQ from "@/data/kobunQ.v2.slim.json";
 
 type QEntry = { qid: string; lemma: string; group?: number; meaning_idx?: number; senseNorm?: string; sense?: string };
@@ -66,7 +68,6 @@ interface WordCardProps {
   /** 画面下の帯などに重ねないための下の余白（px） */
   avoidBottom: number;
   onClose: () => void;
-  onMore: () => void;
   /** 前・次の単語帳の語へ（固定中だけ） */
   onPrev?: () => void;
   onNext?: () => void;
@@ -76,7 +77,7 @@ interface WordCardProps {
 const BADGE = { background: "color-mix(in srgb, var(--layer-1) 14%, transparent)", color: "var(--layer-1)" } as const;
 const BAR_BTN = "min-w-[40px] h-9 px-2 rounded-lg border border-rw-ink/20 bg-rw-paper text-rw-ink text-base leading-none active:scale-95";
 
-export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, onClose, onMore, onPrev, onNext }: WordCardProps) {
+export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, onClose, onPrev, onNext }: WordCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<Placement | null>(null);
@@ -105,6 +106,10 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
   const offList = !!decider?.summary && /^単語帳の意味/.test(decider.summary) && curIdx < 0;
   const enriched = enrichGrammarInfo(tag.pos, token.text, tag.baseForm, tag.conjugationType, tag.conjugationForm, tag.meaning);
   const isGrammar = tag.pos === "助動詞" || /助詞$/.test(tag.pos);
+  // 固定したときの行き先。単語帳の語は単語の行き先、それ以外で参照単元のある語（助詞・助動詞・用言の活用など）は文法の行き先
+  const showVocabLinks = !!vocabKey;
+  const quizTopic = !showVocabLinks ? grammarQuizTopicOf(token.grammarRefId, tag.meaning) : null;
+  const showGrammarLinks = !showVocabLinks && !!token.grammarRefId;
 
   // 位置：語の下に入れば下、入らなければ上。指で操作中は上を優先。横は点を中心に画面内へ収める
   useLayoutEffect(() => {
@@ -220,6 +225,18 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         </p>
       ) : null}
 
+      {/* 固定したときだけ：理由の手がかりの注（本文では波線の語）。「もっと」をやめたので、従来の解説にあった注をここに出す */}
+      {pinned && decider?.summary && !!decider.cues?.some((c) => c.note) && (
+        <ul className="mt-1 space-y-0.5 text-[13px] text-rw-ink-soft">
+          {decider.cues!.filter((c) => c.note).map((c, i) => (
+            <li key={i}>
+              {c.text && <span className="text-rw-ink font-bold mr-1">「{c.text}」</span>}
+              {c.note}
+            </li>
+          ))}
+        </ul>
+      )}
+
       {/* 助詞・助動詞：品詞・接続・用法・活用形 */}
       {isGrammar && (
         <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 mt-1 text-sm">
@@ -258,18 +275,22 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         <p className="text-[13px] text-rw-ink-soft mt-1">この語の解説はまだありません</p>
       )}
 
-      {/* 固定したときだけ：詳細へ */}
+      {/* 固定したときだけ：行き先（単語帳の語＝単語カード・単語クイズ、文法の語＝文法解説・文法のクイズ） */}
       {pinned ? (
-        <div className="flex gap-2 mt-3 pt-2 border-t border-rw-ink/15 text-sm">
-          {vocabKey && (
-            <Link to={`/word/${encodeURIComponent(vocabKey)}`} className="font-bold" style={{ color: "var(--rw-primary)" }}>
-              {offList ? `単語帳の「${vocabKey}」を見る（この箇所とは別の意味）` : `→ 単語カード「${vocabKey}」`}
-            </Link>
-          )}
-          <button onClick={onMore} className="ml-auto font-bold text-rw-ink-soft">
-            もっと ▾
-          </button>
-        </div>
+        (showVocabLinks || showGrammarLinks) && (
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 pt-2 border-t border-rw-ink/15 text-sm font-bold" style={{ color: "var(--rw-primary)" }}>
+            {showVocabLinks && (
+              <Link to={`/word/${encodeURIComponent(vocabKey!)}`}>
+                {offList ? `単語帳の「${vocabKey}」を見る（この箇所とは別の意味）` : `→ 単語カード「${vocabKey}」`}
+              </Link>
+            )}
+            {showVocabLinks && !offList && qids.length > 0 && (
+              <Link to={`/?qid=${encodeURIComponent(qids.join(","))}`}>→ 単語クイズ</Link>
+            )}
+            {showGrammarLinks && <Link to={`/read/reference/${token.grammarRefId}`}>→ 文法解説</Link>}
+            {quizTopic && <Link to={`/read/grammar/${quizTopic}`}>→ 文法のクイズ</Link>}
+          </div>
+        )
       ) : (
         // 指を当てている間は出さない（月の琴にこの行は無い。「クリック」は指の操作に合わない）
         !touch && <p className="text-[11px] text-rw-ink-soft mt-1">クリックで固定</p>

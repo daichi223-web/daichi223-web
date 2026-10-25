@@ -33,8 +33,6 @@ interface TokenizedTextProps {
   isVocabToken?: (tokenId: string) => boolean;
   /** 浮かぶカードが出る語か（句読点以外の全部。押すのはカード側） */
   isCardToken?: (tokenId: string) => boolean;
-  /** カードの「もっと」：この語の従来の解説（GrammarPopover）を開く。n は同じ語でもう一度開けるようにする番号 */
-  moreRequest?: { id: string; n: number } | null;
 }
 
 const hintMeta: Record<ReadingHintType, { icon: string; color: string; bg: string }> = {
@@ -66,21 +64,11 @@ export function TokenizedText({
   shikiResetKey = 0,
   cardMode = false,
   highlightTokenId = null,
-  moreRequest = null,
   cueTokenIds,
   isVocabToken,
   isCardToken,
 }: TokenizedTextProps) {
   const [activeTokenId, setActiveTokenId] = useState<string | null>(null);
-
-  // 浮かぶ解説カードの「もっと」：この文の語なら、従来の解説（GrammarPopover）を開く
-  useEffect(() => {
-    if (moreRequest && sentence.tokens.some((t) => t.id === moreRequest.id)) {
-      setActiveShikiId(null);
-      setActiveTokenId(moreRequest.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [moreRequest?.id, moreRequest?.n]);
   const [openHints, setOpenHints] = useState<Set<number>>(new Set());
   // 識別レイヤー: 対象（文ごとに grammarTag から決める）・開いている対象・答え（このページを開いている間だけ）
   const shikiTargets = useMemo(() => findShikibetsu(sentence.tokens), [sentence.tokens]);

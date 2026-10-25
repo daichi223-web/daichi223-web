@@ -9,30 +9,7 @@ import { enrichGrammarInfo } from "@/lib/kobun/auxiliaryInfo";
 import { resolveVocabKey } from "@/lib/vocabAlias";
 import { excerptForDecider } from "@/lib/kobun/deciderExcerpt";
 import { useAffixes, indexAffixes, type AffixLookup } from "@/lib/kobun/affixes";
-
-/** 文法道場にクイズがある単元（grammarRefId の解決先がこの集合にあれば挑戦ボタンを出す） */
-const QUIZ_TOPICS = new Set<string>([
-  "doushi-katsuyo", "doushi-yodan", "doushi-kami-ichidan", "doushi-shimo-nidan",
-  "doushi-kahen", "doushi-sahen", "doushi-rahen",
-  "keiyoshi-katsuyo", "keiyoshi-ku", "keiyoshi-shiku", "keiyoshi-gokan", "onbin",
-  "jodoshi-jisei", "jodoshi-keri", "jodoshi-tsu", "jodoshi-nu", "jodoshi-tari", "jodoshi-ri",
-  "jodoshi-mu", "jodoshi-suiryo", "jodoshi-beshi", "jodoshi-zu", "jodoshi-ru", "jodoshi-su",
-  "jodoshi-ganbou", "jodoshi-dantei", "jodoshi-nari",
-  "joshi-kaku", "joshi-setsuzoku", "joshi-fuku-kakari", "joshi-shujoshi", "kakari-musubi",
-  "keigo", "keigo-sonkei", "keigo-kenjou", "keigo-teinei",
-  "shikibetsu-ni", "shikibetsu-nu-ne", "shikibetsu-namu", "shikibetsu-ru-re",
-  "shikibetsu-nari", "shikibetsu-shi", "vocab-kokon",
-  "vocab-kokon-2", "vocab-shiten", "vocab-dan", "vocab-kinsetsu", "vocab-koou", "vocab-tagi",
-]);
-
-/** 教材タグの参照単元(grammarRefId)を、ドリルがあるクイズ単元へ解決する */
-function resolveQuizTopic(refId: string | undefined, meaning: string | undefined): string | null {
-  if (!refId) return null;
-  // ドリルの無いグループ参照を、対応する個別クイズ単元へ
-  if (refId === "jodoshi-ukemi-shieki-sonkei") return meaning && meaning.includes("使役") ? "jodoshi-su" : "jodoshi-ru";
-  if (refId === "jodoshi-hitei") return "jodoshi-zu";
-  return refId;
-}
+import { grammarQuizTopicOf } from "@/lib/kobun/grammarQuizTopic";
 
 interface GrammarPopoverProps {
   token: Token;
@@ -155,8 +132,8 @@ function PopoverContent({
   const vocabCandidate = resolveVocabKey(token.text, tag.baseForm, tag.pos, tag);
 
   // 文法クイズ（道場）への解決先。動詞/助動詞/助詞/敬語など、文法タグから挑戦できる
-  const grammarQuizTopic = resolveQuizTopic(token.grammarRefId, tag.meaning ?? undefined);
-  const showGrammarQuiz = !!grammarQuizTopic && QUIZ_TOPICS.has(grammarQuizTopic);
+  const grammarQuizTopic = grammarQuizTopicOf(token.grammarRefId, tag.meaning ?? undefined);
+  const showGrammarQuiz = !!grammarQuizTopic;
 
   // クイズ qid 逆引き: この語が単語クイズに出るかどうか
   const quizQids = (() => {

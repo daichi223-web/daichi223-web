@@ -131,7 +131,6 @@ export default function TextReader() {
   const toggleCardPref = () => {
     setCardPref((v) => { try { localStorage.setItem("kobun-word-card", v ? "off" : "on"); } catch { /* noop */ } return !v; });
   };
-  const [moreRequest, setMoreRequest] = useState<{ id: string; n: number } | null>(null);
   const CARD_BAND_H = 70; // 画面下のボタン列のおおよその高さ（カードを重ねない）
   // 識別レイヤーの「すべてやり直す」（数が変わると各文の答えを消す）
   const [shikiResetKey, setShikiResetKey] = useState(0);
@@ -186,7 +185,7 @@ export default function TextReader() {
     tokens: cardTokens,
     analysis,
     avoidBottom: CARD_BAND_H,
-    onMore: (id) => { handleTokenView(id); setMoreRequest((r) => ({ id, n: (r?.n ?? 0) + 1 })); },
+    onPin: (id) => handleTokenView(id),
   });
 
   if (loadError) {
@@ -362,7 +361,6 @@ export default function TextReader() {
                 shikiResetKey={shikiResetKey}
                 cardMode={cardMode}
                 highlightTokenId={wordCard.activeId}
-                moreRequest={moreRequest}
                 cueTokenIds={wordCard.cueIds}
                 isVocabToken={wordCard.isVocab}
                 isCardToken={wordCard.isCard}

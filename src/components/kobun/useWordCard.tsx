@@ -26,8 +26,8 @@ interface Options {
   analysis: TextAnalysis | null;
   /** 画面下の帯などの高さ（カードを重ねない） */
   avoidBottom: number;
-  /** 「もっと」：従来の詳しい解説を開く */
-  onMore: (tokenId: string) => void;
+  /** カードを固定した（その語を見たと記録する。以前は「もっと」で開いたときだけ記録していた） */
+  onPin?: (tokenId: string) => void;
   /** カードを出した文（画面下の帯に訳を出す） */
   onFocusSentence?: (sentenceId: string) => void;
 }
@@ -98,6 +98,7 @@ export function useWordCard(o: Options) {
     if (!card?.pinned) return;
     const t = o.tokens.get(card.id)?.token;
     if (t && o.textId) recordHintOpen(o.textId, t.text, { id: t.id, base: t.grammarTag?.baseForm, pos: t.grammarTag?.pos, ref: t.grammarRefId });
+    if (t) o.onPin?.(t.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [card?.pinned, card?.id]);
 
@@ -159,9 +160,8 @@ export function useWordCard(o: Options) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => { window.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
   }, [open]);
-  /** 従来の詳しい解説（GrammarPopover）が開いている間と、「もっと」で開く直前は、重ねても出さない */
-  const hoverBlockUntil = useRef(0);
-  const popoverOpen = () => performance.now() < hoverBlockUntil.current || !!document.querySelector("[data-grammar-popover]");
+  /** 従来の詳しい解説（GrammarPopover）が開いている間は、重ねても出さない */
+  const popoverOpen = () => !!document.querySelector("[data-grammar-popover]");
 
   // ---- マウス（ペン）：重ねるだけで出す。固定中は動かさない ----
   const onPointerOver = (e: PointerEvent<HTMLDivElement>) => {
@@ -272,7 +272,6 @@ export function useWordCard(o: Options) {
         touch={card.touch}
         avoidBottom={o.avoidBottom}
         onClose={close}
-        onMore={() => { hoverBlockUntil.current = performance.now() + 600; close(); o.onMore(card.id); }}
         onPrev={cardOrder.indexOf(card.id) > 0 ? () => step(-1) : undefined}
         onNext={cardOrder.indexOf(card.id) < cardOrder.length - 1 ? () => step(1) : undefined}
       />
