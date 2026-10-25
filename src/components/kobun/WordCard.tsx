@@ -253,6 +253,11 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         </ol>
       )}
 
+      {/* 品詞も意味もポイントも無い語（名詞の多く・人名など）：空のカードにせず、まだ解説が無いことを書く */}
+      {!isGrammar && !tag.pos && !meaning && !decider?.summary && !token.hint && senses.length === 0 && (
+        <p className="text-[13px] text-rw-ink-soft mt-1">この語の解説はまだありません</p>
+      )}
+
       {/* 固定したときだけ：詳細へ */}
       {pinned ? (
         <div className="flex gap-2 mt-3 pt-2 border-t border-rw-ink/15 text-sm">

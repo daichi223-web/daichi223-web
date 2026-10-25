@@ -42,6 +42,9 @@ interface CardState {
   touch: boolean;
 }
 
+/** 品詞の無い句読点・かぎ括弧（教材データでは品詞が空のトークンとして入っていることがある）。カードを出さない */
+const PUNCT = /^[\s、。，．・「」『』（）()〈〉《》【】〔〕！？!?…―—]+$/;
+
 export function useWordCard(o: Options) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [card, setCard] = useState<CardState | null>(null);
@@ -51,21 +54,24 @@ export function useWordCard(o: Options) {
   const cardRef = useRef(card);
   cardRef.current = card;
 
-  // カードを出すのは単語帳（330）に紐づく語だけ（2026-10-16 ユーザー指示）。文法はレイヤーごとの従来の解説で
-  const vocabIds = useMemo(() => {
-    const s = new Set<string>();
+  // カードは本文の全部の語に出す（2026-10-25 ユーザー指示「全部の語をカードに」。月の琴も全部の語に出す）。
+  // 外すのは記号と、品詞の無い句読点・かぎ括弧だけ。単語帳（330）に紐づく語は vocabIds で別に持ち、下線と見出し番号に使う
+  const { vocabIds, cardIds } = useMemo(() => {
+    const vocab = new Set<string>(), all = new Set<string>();
     for (const [id, { token: t }] of o.tokens) {
       const g = t.grammarTag ?? { pos: "" };
       const p = g.pos ?? "";
-      // 品詞が空の語（名詞の多くは品詞分解に品詞が入っていない）も対象にする
-      if (p === "記号" || p === "助動詞" || /助詞$/.test(p) || !t.text.trim()) continue;
-      if (resolveVocabKey(t.text, g.baseForm, p, g)) s.add(id);
+      if (p === "記号" || !t.text.trim() || PUNCT.test(t.text)) continue;
+      all.add(id);
+      // 品詞が空の語（名詞の多くは品詞分解に品詞が入っていない）も単語帳の対象にする
+      if (p !== "助動詞" && !/助詞$/.test(p) && resolveVocabKey(t.text, g.baseForm, p, g)) vocab.add(id);
     }
-    return s;
+    return { vocabIds: vocab, cardIds: all };
   }, [o.tokens]);
-  const explainable = useCallback((id: string) => vocabIds.has(id), [vocabIds]);
-  // ‹ › で移る順（本文の順に並んだ単語帳の語）
-  const vocabOrder = useMemo(() => [...o.tokens.keys()].filter((id) => vocabIds.has(id)), [o.tokens, vocabIds]);
+  const explainable = useCallback((id: string) => cardIds.has(id), [cardIds]);
+  const isVocab = useCallback((id: string) => vocabIds.has(id), [vocabIds]);
+  // ‹ › で移る順（本文の順に並んだ全部の語。月の琴の WORDS と同じ）
+  const cardOrder = useMemo(() => [...o.tokens.keys()].filter((id) => cardIds.has(id)), [o.tokens, cardIds]);
 
   /** 本文の中の、点の下にある語（重なっているカードは透かして見る） */
   const tokenAt = useCallback((x: number, y: number): { id: string; el: HTMLElement } | null => {
@@ -174,7 +180,7 @@ export function useWordCard(o: Options) {
     const span = (e.target as HTMLElement).closest("[data-token-id]") as HTMLElement | null;
     if (!span) return;
     const id = span.dataset.tokenId!;
-    if (!explainable(id)) { close(); return; } // 文法の語は従来の解説（TokenizedText 側）
+    if (!explainable(id)) { close(); return; } // 句読点など
     if (cardRef.current?.pinned && cardRef.current.id === id) { close(); return; }
     show(id, span, { x: e.clientX, y: e.clientY }, { pinned: true, held: false, touch: false });
   };
@@ -202,22 +208,22 @@ export function useWordCard(o: Options) {
     const tc = touch.current;
     touch.current = null;
     if (!o.enabled || !tc) return;
-    // 単語の操作のあとに来る click は無視する。文法の語のタップは click に通す（従来の解説を開くため）
+    // 語の操作のあとに来る click は無視する（カードの出ない句読点などのタップだけ click に通す）
     const vocabTap = tc.mode === null && !!tc.id && explainable(tc.id);
     if (tc.mode === "scrub" || vocabTap) { suppressClick.current = true; setTimeout(() => (suppressClick.current = false), 400); }
     if (tc.mode === "scrub") { setCard((c) => (c && !c.pinned ? null : c)); return; }
     if (tc.mode === "pan") return;
-    if (tc.id && !explainable(tc.id)) { close(); return; } // 文法の語：カードは閉じ、click で従来の解説が開く
+    if (tc.id && !explainable(tc.id)) { close(); return; } // 句読点など：カードは閉じる
     if (tapOutcome(tc.id, tc.pinnedBefore) === "close") { close(); return; }
     setCard((c) => (c && c.id === tc.id ? { ...c, pinned: true, held: false } : c));
   };
-  // 固定中の ‹ ›：前・次の単語帳の語へ。画面の外なら中央までスクロールしてから出す
+  // 固定中の ‹ ›：前・次の語へ。画面の外なら中央までスクロールしてから出す
   const step = (d: number) => {
     const cur = cardRef.current;
     if (!cur) return;
-    const i = vocabOrder.indexOf(cur.id) + d;
-    if (i < 0 || i >= vocabOrder.length) return;
-    const id = vocabOrder[i];
+    const i = cardOrder.indexOf(cur.id) + d;
+    if (i < 0 || i >= cardOrder.length) return;
+    const id = cardOrder[i];
     const el = rootRef.current?.querySelector(`[data-token-id="${id}"]`) as HTMLElement | null;
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -267,10 +273,10 @@ export function useWordCard(o: Options) {
         avoidBottom={o.avoidBottom}
         onClose={close}
         onMore={() => { hoverBlockUntil.current = performance.now() + 600; close(); o.onMore(card.id); }}
-        onPrev={vocabOrder.indexOf(card.id) > 0 ? () => step(-1) : undefined}
-        onNext={vocabOrder.indexOf(card.id) < vocabOrder.length - 1 ? () => step(1) : undefined}
+        onPrev={cardOrder.indexOf(card.id) > 0 ? () => step(-1) : undefined}
+        onNext={cardOrder.indexOf(card.id) < cardOrder.length - 1 ? () => step(1) : undefined}
       />
     ) : null;
 
-  return { rootRef, bind, element, activeId: card?.id ?? null, close, cueIds, isVocab: explainable };
+  return { rootRef, bind, element, activeId: card?.id ?? null, close, cueIds, isVocab, isCard: explainable };
 }

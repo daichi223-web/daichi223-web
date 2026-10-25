@@ -365,6 +365,7 @@ export default function TextReader() {
                 moreRequest={moreRequest}
                 cueTokenIds={wordCard.cueIds}
                 isVocabToken={wordCard.isVocab}
+                isCardToken={wordCard.isCard}
                 readingAnnotation={
                   readingGuide?.annotations.find(
                     (a) => a.sentenceId === sentence.id

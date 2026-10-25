@@ -10,8 +10,10 @@ interface TokenSpanProps {
   clickable?: boolean;
   /** 浮かぶカードの決め手の手がかりに当たる語（下線を引く） */
   isCue?: boolean;
-  /** 浮かぶカードが出る語（単語帳の語）。useWordCard の判定をそのまま受け取る（ここで別に判定すると助詞などがずれる） */
+  /** 単語帳の語（下線と、出している間の青い地）。useWordCard の判定をそのまま受け取る（ここで別に判定すると助詞などがずれる） */
   isVocab?: boolean;
+  /** 浮かぶカードが出る語（句読点以外の全部）。重ねると「?」のカーソル */
+  hasCard?: boolean;
 }
 
 const CUE_STYLE = { textDecoration: "underline wavy var(--rw-primary)", textUnderlineOffset: "5px" } as const;
@@ -70,14 +72,14 @@ function TokenContent({ token }: { token: Token }) {
   return <>{token.text}</>;
 }
 
-export function TokenSpan({ token, currentLayer, isActive, onClick, clickable, isCue, isVocab = false }: TokenSpanProps) {
+export function TokenSpan({ token, currentLayer, isActive, onClick, clickable, isCue, isVocab = false, hasCard = false }: TokenSpanProps) {
   // 浮かぶカード有効時（clickable が指定されている）：押せる語は押せる形、それ以外は地の文。色分け（レイヤー）は従来どおり
   if (clickable !== undefined && token.grammarTag?.pos !== "記号") {
     const status0 = lookupVocabStatus(token.text, token.grammarTag?.baseForm, token.grammarTag?.pos, token.grammarTag);
     const marker = vocabMarkerStyle(status0);
     const inLayer = token.layer >= 1 && token.layer <= currentLayer && currentLayer !== 5;
     const color = inLayer ? layerColors[token.layer] || "" : "";
-    // 単語帳の語（カードが出る語）は、重ねると「?」のカーソル、出している間は見出し番号の札と同じ青い地（月の琴の .w.v:hover / .pin と同じ）
+    // カードが出る語は重ねると「?」のカーソル。出している間は、単語帳の語は見出し番号の札と同じ青い地（月の琴の .w.v:hover / .pin）、ほかの語は薄い墨の地（.w.x）
     const style = {
       ...(marker ?? {}),
       ...(isCue ? CUE_STYLE : {}),
@@ -86,7 +88,7 @@ export function TokenSpan({ token, currentLayer, isActive, onClick, clickable, i
     return (
       <span
         data-token-id={token.id}
-        className={`inline ${color} ${clickable ? "cursor-pointer" : isVocab ? "cursor-help" : ""} ${isActive ? (isVocab ? "rounded" : "bg-sumi/10 rounded") : ""}`}
+        className={`inline ${color} ${clickable ? "cursor-pointer" : isVocab || hasCard ? "cursor-help" : ""} ${isActive ? (isVocab ? "rounded" : "bg-sumi/10 rounded") : ""}`}
         style={style}
         onClick={clickable ? onClick : undefined}
         role={clickable ? "button" : undefined}
