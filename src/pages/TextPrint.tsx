@@ -8,6 +8,7 @@ import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type P
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import type { KobunText } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
+import { splitHokan, type Chikugo } from "@/lib/kobun/chikugo";
 import { hinshiLabel, toCells, type HinshiCell } from "@/lib/kobun/hinshiLabel";
 import { circled, findKoou, koouMarks } from "@/lib/kobun/koou";
 
@@ -54,6 +55,9 @@ const CSS = `
 .hp-kei .hp-w { border-color: ${COLORS.kei}; } .hp-kei .hp-l1, .hp-kei .hp-l2 { color: ${COLORS.kei}; }
 .hp-etc .hp-l1 { color: #555; }
 .hp-tr { font-size: 9pt; color: #333; background: #f3f3f3; border-radius: 1mm; line-height: 1.6; }
+/* 逐語訳（2026-10-25 ユーザー指示）：語の訳の区切りに点線、補った語（ ）は薄く。原文の行には点線を入れない（ユーザー指示） */
+.hp-seg + .hp-seg { border-inline-start: 0.8pt dotted #777; padding-inline-start: .3em; margin-inline-start: .3em; }
+.hp-hokan { color: #8a8a8a; }
 .hp-foot { font-family: "Noto Sans JP", sans-serif; font-size: 7pt; color: #777; }
 
 /* 縦書き */
@@ -164,6 +168,7 @@ export default function TextPrint() {
   const yoko = searchParams.get("mode") === "yoko";
   const [text, setText] = useState<KobunText | null>(null);
   const [error, setError] = useState(false);
+  const [chikugo, setChikugo] = useState<Chikugo | null>(null);
   const navigate = useNavigate();
   const tap = useTap();
 
@@ -173,6 +178,8 @@ export default function TextPrint() {
       if (r.ok) setText(r.data);
       else setError(true);
     });
+    // 逐語訳があれば使う（無ければ従来の現代語訳だけ）
+    fetchJsonAsset<Chikugo>(`/chikugo/${textId}.json`).then((r) => setChikugo(r.ok && r.data?.sentences ? r.data : null));
   }, [textId]);
 
   useEffect(() => {
@@ -240,7 +247,11 @@ export default function TextPrint() {
                     ))}
                   </div>
                 )}
-                {s.modernTranslation && <div className="hp-tr">訳　{s.modernTranslation}</div>}
+                {chikugo?.sentences[s.id]?.length ? (
+                  <div className="hp-tr">逐語訳　{chikugo.sentences[s.id].map(([, t], k) => (
+                    <span className="hp-seg" key={k}>{splitHokan(t).map((x, j) => (x.hokan ? <span className="hp-hokan" key={j}>{x.text}</span> : x.text))}</span>
+                  ))}</div>
+                ) : s.modernTranslation && <div className="hp-tr">訳　{s.modernTranslation}</div>}
               </div>
             </section>
             );

@@ -7,6 +7,7 @@
  * 文の訳はカードに入れず、TextReader の画面下の帯に出す。操作は useWordCard にまとめてある。
  */
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { grammarMeaningLabel } from "@/lib/kobun/grammarMeaningLabel";
 import { Link, useLocation } from "react-router-dom";
 import { makeReturnTo, quizUrlWithReturn } from "@/lib/returnTo";
 import type { Token, TokenAnalysis } from "@/lib/kobun/types";
@@ -58,9 +59,10 @@ function markQuotes(summary: string, cues?: { text?: string }[]): ReactNode {
   );
 }
 
-/** 見出し番号の札・帯のボタン（月の琴の試作と同じ見た目。2026-10-16 ユーザー指定） */
-// 助動詞の意味の札（見出しの横。助動詞の層の赤を濃くした地に白字。2026-10-25 ユーザー指示）
+// 助動詞・助詞の意味の札（見出しの横。それぞれの層の色＝助動詞の赤・助詞の緑を濃くした地に白字。2026-10-25 ユーザー指示）
 const JODOSHI_MEANING = { background: "color-mix(in srgb, var(--layer-2) 88%, var(--rw-ink))", color: "#fff" } as const;
+const JOSHI_MEANING = { background: "color-mix(in srgb, var(--layer-3) 82%, var(--rw-ink))", color: "#fff" } as const;
+/** 見出し番号の札・帯のボタン（月の琴の試作と同じ見た目。2026-10-16 ユーザー指定） */
 const BADGE = { background: "color-mix(in srgb, var(--layer-1) 14%, transparent)", color: "var(--layer-1)" } as const;
 const BAR_BTN = "min-w-[40px] h-9 px-2 rounded-lg border border-rw-ink/20 bg-rw-paper text-rw-ink text-base leading-none active:scale-95";
 
@@ -97,8 +99,9 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
   const offList = !!decider?.summary && /^単語帳の意味/.test(decider.summary) && curIdx < 0;
   const enriched = enrichGrammarInfo(tag.pos, token.text, tag.baseForm, tag.conjugationType, tag.conjugationForm, tag.meaning);
   const isGrammar = tag.pos === "助動詞" || /助詞$/.test(tag.pos);
-  // 助動詞はこの箇所の意味（不可能・完了など）を見出しの横に出す。理由の文と食い違わないよう決め手の意味を先に使う
-  const jodoshiMeaning = tag.pos === "助動詞" ? (decider?.meaning || tag.meaning || "") : "";
+  // 助動詞・助詞はこの箇所の意味（不可能・完了・逆接・引用など）を見出しの横に出す。理由の文と食い違わないよう決め手の意味を先に使う
+  const grammarMeaning = isGrammar ? grammarMeaningLabel(decider?.meaning || tag.meaning) : "";
+  const grammarMeaningStyle = tag.pos === "助動詞" ? JODOSHI_MEANING : JOSHI_MEANING;
   // 固定したときの行き先。単語帳の語は単語の行き先、それ以外で参照単元のある語（助詞・助動詞・用言の活用など）は文法の行き先
   const showVocabLinks = !!vocabKey;
   const quizTopic = !showVocabLinks ? grammarQuizTopicOf(token.grammarRefId, tag.meaning) : null;
@@ -189,7 +192,7 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
       >
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-[22px] font-serif leading-tight">{token.text}</span>
-        {jodoshiMeaning && <span className="text-[15px] font-black rounded-md px-2.5 py-0.5 tracking-wide" style={JODOSHI_MEANING}>{jodoshiMeaning}</span>}
+        {grammarMeaning && <span className="text-[15px] font-black rounded-md px-2.5 py-0.5 tracking-wide" style={grammarMeaningStyle}>{grammarMeaning}</span>}
         {tag.baseForm && tag.baseForm !== token.text && <span className="text-xs text-rw-ink-soft">← {tag.baseForm}</span>}
         {vocabKey && Number.isFinite(group) && !offList ? (
           <span className="text-[13px] rounded-md px-2 py-0.5" style={BADGE}>No.{group}</span>
@@ -240,7 +243,7 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
           <dt className="text-[11px] font-bold text-rw-ink-soft pt-0.5">品詞</dt>
           <dd>{tag.pos}{enriched.conjugationForm ? `（${enriched.conjugationForm}）` : ""}</dd>
           {enriched.connection && (<><dt className="text-[11px] font-bold text-rw-ink-soft pt-0.5">接続</dt><dd>{enriched.connection}</dd></>)}
-          {tag.meaning && !jodoshiMeaning && (<><dt className="text-[11px] font-bold text-rw-ink-soft pt-0.5">用法</dt><dd>{tag.meaning}</dd></>)}
+          {tag.meaning && !grammarMeaning && (<><dt className="text-[11px] font-bold text-rw-ink-soft pt-0.5">用法</dt><dd>{tag.meaning}</dd></>)}
           {enriched.conjugationType && (<><dt className="text-[11px] font-bold text-rw-ink-soft pt-0.5">活用型</dt><dd>{enriched.conjugationType}</dd></>)}
         </dl>
       )}
