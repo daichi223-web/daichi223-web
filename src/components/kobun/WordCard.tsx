@@ -14,40 +14,7 @@ import { getQuizQidsForLemma } from "@/lib/vocabLookup";
 import { enrichGrammarInfo } from "@/lib/kobun/auxiliaryInfo";
 import { placeCard, type Placement } from "@/lib/kobun/wordCardLayout";
 import { grammarQuizTopicOf } from "@/lib/kobun/grammarQuizTopic";
-import bundledKobunQ from "@/data/kobunQ.v2.slim.json";
-
-type QEntry = { qid: string; lemma: string; group?: number; meaning_idx?: number; senseNorm?: string; sense?: string };
-const KOBUN_Q = bundledKobunQ as QEntry[];
-let byLemma: Map<string, QEntry[]> | null = null;
-function sensesOf(lemma: string, group?: number): QEntry[] {
-  if (!byLemma) {
-    byLemma = new Map();
-    for (const q of KOBUN_Q) {
-      if (!q.lemma) continue;
-      const arr = byLemma.get(q.lemma) ?? [];
-      arr.push(q);
-      byLemma.set(q.lemma, arr);
-    }
-  }
-  const all = (byLemma.get(lemma) ?? []).filter((q) => group === undefined || q.group === group);
-  all.sort((a, b) => (a.meaning_idx ?? 0) - (b.meaning_idx ?? 0));
-  // 同じ意味（活用違いの qid）はひとつにまとめる
-  const seen = new Set<string>();
-  return all.filter((q) => {
-    const k = (q.senseNorm ?? q.sense ?? "").replace(/（.*?）|\(.*?\)/g, "").trim();
-    if (!k || seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
-}
-
-/** 意味ラベルと単語帳の意味が同じものを指しているか（表記の揺れを少し吸収） */
-function sameSense(meaning: string | undefined, norm: string | undefined): boolean {
-  if (!meaning || !norm) return false;
-  const a = meaning.replace(/[〜～()（）・\s]/g, "");
-  const b = norm.replace(/[〜～()（）・\s]/g, "");
-  return a === b || a.includes(b) || b.includes(a);
-}
+import { cardSenses } from "@/lib/kobun/wordCardSenses";
 
 export interface WordCardAnchor {
   /** 語の枠（画面座標） */
@@ -91,17 +58,17 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
   const tag = token.grammarTag ?? { pos: "" };
   const vocabKey = resolveVocabKey(token.text, tag.baseForm, tag.pos, tag);
   const qids = vocabKey ? getQuizQidsForLemma(vocabKey, tag.pos) : [];
-  const group = qids.length ? Number(qids[0].split("-")[0]) : undefined;
-  const senses = vocabKey ? sensesOf(vocabKey, Number.isFinite(group) ? group : undefined) : [];
+  const defaultGroup = qids.length ? Number(qids[0].split("-")[0]) : undefined;
   const decider = analysis?.decider;
   // 理由データが「単語帳の意味（…）とは別に、」で始まる語は、本文では単語帳の見出しと別の語（同形異語・接尾語など）。
   // 見出し番号と意味の一覧は出さず、単語カードへのリンクだけ残す（「単語帳の○○とは別」と分かるように）
   // この箇所の意味（教材の意味ラベル → 決め手の意味）と、単語帳の一覧の中でそれに当たる1つ。
   // 完全に一致する意味があればそれ（「生きている」で「いる」まで太字にしない）、無ければ部分一致の最初の1つ
   const meaning = tag.meaning ?? decider?.meaning;
-  const keyOf = (x?: string) => (x ?? "").replace(/〔|〕|[〜～()（）\s]/g, "");
-  const exactIdx = meaning ? senses.findIndex((x) => keyOf(x.senseNorm ?? x.sense) === keyOf(meaning)) : -1;
-  const curIdx = exactIdx >= 0 ? exactIdx : meaning ? senses.findIndex((x) => sameSense(meaning, x.senseNorm ?? x.sense)) : -1;
+  // 一覧の群は既定でクイズの最初の qid の群。この箇所の意味が同じ見出しの別の群（下二段の「たまふ」・名詞の「よし」など）にだけあればその群（2026-10-25）
+  const { group, senses, curIdx } = vocabKey
+    ? cardSenses(vocabKey, Number.isFinite(defaultGroup) ? defaultGroup : undefined, meaning)
+    : { group: undefined, senses: [], curIdx: -1 };
   // 理由データが「単語帳の意味とは別に」で始まっていても、単語帳にその意味が（後から）入っていれば普通に扱う（2026-10-16 に 330 へ足した意味がある）
   const offList = !!decider?.summary && /^単語帳の意味/.test(decider.summary) && curIdx < 0;
   const enriched = enrichGrammarInfo(tag.pos, token.text, tag.baseForm, tag.conjugationType, tag.conjugationForm, tag.meaning);
