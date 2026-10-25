@@ -1,4 +1,5 @@
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, useLocation, Link } from "react-router-dom";
+import { tokenIdFromHash } from "@/lib/returnTo";
 import { useState, useEffect, useMemo } from "react";
 import type {
   KobunText,
@@ -187,6 +188,20 @@ export default function TextReader() {
     avoidBottom: CARD_BAND_H,
     onPin: (id) => handleTokenView(id),
   });
+
+  // 単語クイズから戻ったとき（#t=トークンID）：押していた語まで動かし、少し光らせる（2026-10-25）
+  const location = useLocation();
+  useEffect(() => {
+    const id = tokenIdFromHash(location.hash);
+    if (!text || !id) return;
+    const timer = window.setTimeout(() => {
+      const el = document.querySelector(`[data-token-id="${CSS.escape(id)}"]`) as HTMLElement | null;
+      if (!el) return;
+      el.scrollIntoView({ block: "center" });
+      el.animate?.([{ backgroundColor: "rgba(250, 204, 21, 0.6)" }, { backgroundColor: "rgba(250, 204, 21, 0)" }], { duration: 2000 });
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [text, location.hash]);
 
   if (loadError) {
     return (

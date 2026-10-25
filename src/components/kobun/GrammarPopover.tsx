@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { makeReturnTo, quizUrlWithReturn } from "@/lib/returnTo";
 import type { Token, LayerId, TokenAnalysis, TokenDecider } from "@/lib/kobun/types";
 import { ReibunSentence, DECIDER_STYLE } from "@/components/grammar/ReibunSentence";
 import { addVocabEntry, recordHintOpen } from "@/lib/kobun/progress";
@@ -124,6 +125,7 @@ function PopoverContent({
   onClose: () => void;
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   // 先生AI・NLM のリンクは 2026-10-09 にいったん外した（復帰は buildGemUrl / buildNotebookLmUrl）
 
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
@@ -300,7 +302,7 @@ function PopoverContent({
         <button
           onClick={() => {
             onClose();
-            navigate(`/?qid=${encodeURIComponent(quizQids.join(','))}`);
+            navigate(quizUrlWithReturn(quizQids, makeReturnTo(location.pathname, location.search, token.id)));
           }}
           className="w-full text-left px-3 py-2 rounded-xl text-sm font-bold border-2 transition-colors"
           style={{

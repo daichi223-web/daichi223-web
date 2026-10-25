@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { safeReturnPath } from '@/lib/returnTo';
 import { dataParser } from './utils/dataParser';
 import { Word, MultiMeaningWord } from './types';
 import RangeField from './components/RangeField';
@@ -219,6 +220,9 @@ function App() {
   const [showHome, setShowHome] = useState(true);
   // 苦手単語 / SRS 復習用に、特定の qid セットだけで出題する場合に使う
   const [quizQidFilter, setQuizQidFilter] = useState<string[] | null>(null);
+  // 教材から単語クイズに来たときの戻り先（?back=。教材画面のパスだけ受け付ける）。ホームに戻ったら消す（2026-10-25）
+  const [returnTo, setReturnTo] = useState<string | null>(null);
+  const navigate = useNavigate();
   const [quizMode, setQuizMode] = useState<'normal' | 'weak' | 'srs' | 'focus' | 'today'>('normal');
   const [searchParams, setSearchParams] = useSearchParams();
   const [weakWordsCount, setWeakWordsCount] = useState(0);
@@ -252,6 +256,8 @@ function App() {
     // 重複起動を防ぐため、URL から qid を消す
     const next = new URLSearchParams(searchParams);
     next.delete('qid');
+    setReturnTo(safeReturnPath(searchParams.get('back')));
+    next.delete('back');
     setSearchParams(next, { replace: true });
     setQuizQidFilter(qids);
     setQuizMode('focus');
@@ -1463,10 +1469,21 @@ function App() {
     : '/search';
 
   // Index button and modal (always visible)
+  useEffect(() => { if (showHome) setReturnTo(null); }, [showHome]);
+
   const indexButton = (
     <>
       {/* Top-right fixed navigation - compact on mobile */}
       <div className="fixed top-2 right-2 z-50 flex gap-1.5">
+        {!showHome && returnTo && (
+          <button
+            onClick={() => navigate(returnTo)}
+            className="bg-rw-paper hover:bg-rw-primary-soft text-rw-ink border-2 border-rw-ink whitespace-nowrap font-bold py-1 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
+            title="単語クイズを開いた教材に戻る"
+          >
+            📖<span className="ml-1">教材へ</span>
+          </button>
+        )}
         {!showHome && (
           <button
             onClick={() => {
@@ -1925,12 +1942,23 @@ function App() {
                   </>
                 ) : (
                   <>
+                    {returnTo && (
+                      <button
+                        onClick={() => navigate(returnTo)}
+                        className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
+                        style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
+                      >
+                        📖 教材に戻る
+                      </button>
+                    )}
                     <button
                       onClick={restartQuiz}
-                      className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
-                      style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
+                      className={returnTo
+                        ? "w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
+                        : "w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"}
+                      style={returnTo ? undefined : { boxShadow: '0 4px 0 var(--rw-primary)' }}
                     >
-                      同じ範囲を繰り返す ▶
+                      {returnTo ? "もう一度解く ▶" : "同じ範囲を繰り返す ▶"}
                     </button>
                     <button
                       onClick={() => {

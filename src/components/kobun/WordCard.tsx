@@ -7,7 +7,8 @@
  * 文の訳はカードに入れず、TextReader の画面下の帯に出す。操作は useWordCard にまとめてある。
  */
 import { useLayoutEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { makeReturnTo, quizUrlWithReturn } from "@/lib/returnTo";
 import type { Token, TokenAnalysis } from "@/lib/kobun/types";
 import { resolveVocabKey } from "@/lib/vocabAlias";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
@@ -46,6 +47,8 @@ const BAR_BTN = "min-w-[40px] h-9 px-2 rounded-lg border border-rw-ink/20 bg-rw-
 
 export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, onClose, onPrev, onNext }: WordCardProps) {
   const ref = useRef<HTMLDivElement>(null);
+  // 単語クイズへ飛ぶとき、クイズのあとでこの教材のこの語に戻れるようにする
+  const location = useLocation();
   const bodyRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<Placement | null>(null);
   const preferAbove = touch;
@@ -253,7 +256,7 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
               </Link>
             )}
             {showVocabLinks && !offList && qids.length > 0 && (
-              <Link to={`/?qid=${encodeURIComponent(qids.join(","))}`}>→ 単語クイズ</Link>
+              <Link to={quizUrlWithReturn(qids, makeReturnTo(location.pathname, location.search, token.id))}>→ 単語クイズ</Link>
             )}
             {showGrammarLinks && <Link to={`/read/reference/${token.grammarRefId}`}>→ 文法解説</Link>}
             {quizTopic && <Link to={`/read/grammar/${quizTopic}`}>→ 文法のクイズ</Link>}
