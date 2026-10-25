@@ -10,6 +10,7 @@
 // 表記揺れマップはこのファイルに code としてまとめておく (JSON を直接いじると上書きされる)。
 
 import bundledVocabIndex from '@/data/vocabIndex.json';
+import bundledKobunQ from '@/data/kobunQ.v2.slim.json';
 
 const vocabKeys = new Set(Object.keys(bundledVocabIndex as Record<string, unknown>));
 
@@ -56,6 +57,9 @@ const KANJI_VARIANTS: Record<string, string[]> = {
   'こころざし': ['志', '御志'],
   'ことなり': ['異なり', '異なる'],
   'ことわり': ['理', '道理'],
+  // 'さはる'（障る＝妨げられる）。基本形の無い活用形も拾う（天の羽衣「さはらじ」。2026-10-25）。名詞「障り」と紛れる「さはり」は入れない。
+  // 同音の「触る」（触れる）は OTHER_WORD_BASE で外す
+  'さはる':  ['障る', '障ら', '障れ', 'さはら', 'さはれ'],
   'しる':    ['知る', '知ら', '知り', '知れ', '知ろ'],
   'そうす':  ['奏す', '奏し'],
   'たつ':    ['立つ', '立ち', '立て', '立た'],
@@ -163,7 +167,8 @@ KANJI_VARIANTS['おぼす・おぼしめす'].push('思しめす', '思しめし
 KANJI_VARIANTS['おもひやる'].push('思ひやら', '思ひやれ');
 KANJI_VARIANTS['はづかし'].push('恥づかしう', '恥づかしけれ');
 KANJI_VARIANTS['たてまつる'].push('奉らせ');
-KANJI_VARIANTS['なる'] = ['鳴る'];
+// 'なる' は3系統の同音語（成る・鳴る・生る）をまとめた見出し。漢字の「鳴る」の活用形も拾う（芥川「鳴り」。2026-10-25 に活用形を足した）
+KANJI_VARIANTS['なる'] = ['鳴る', '鳴り', '鳴ら', '鳴れ'];
 
 // === 解決テーブルを構築 ===
 // alias key → vocabIndex に実在する正規 key
@@ -198,6 +203,12 @@ for (const [lemma, variants] of Object.entries(KANJI_VARIANTS)) {
 }
 
 /**
+ * 単語帳の見出しと同音だが別の語の基本形（2026-10-25）。教材データの baseForm にこれが入っていれば紐づけない。
+ *   触る（さはる＝触れる）：単語帳の「さはる」は「障る」（妨げられる）。基本形は scripts/fix-affix-pos.cjs が hint から入れる
+ */
+const OTHER_WORD_BASE = new Set<string>(['触る']);
+
+/**
  * トークンの表層形 (text) と基本形 (baseForm) から、対応する vocabIndex の正規 key を解決する。
  * - vocabIndex に直接ある場合はそれを返す
  * - エイリアス経由で解決できる場合はその先の key を返す
@@ -210,6 +221,8 @@ export function resolveVocabKey(
   tag?: { conjugationType?: string | null; honorific?: string | null } | null,
 ): string | null {
   const base = (baseForm ?? '').trim();
+  // 基本形が単語帳の同音語と別の語だと分かっているときは紐づけない（表層形の一致でも拾わない）
+  if (base && OTHER_WORD_BASE.has(base)) return null;
   const t = (text ?? '').trim().replace(/^[、。「」『』（）\s]+|[、。「」『』（）\s]+$/g, '');
   const cands = [
     base && vocabKeys.has(base) ? base : null,
@@ -224,8 +237,22 @@ export function resolveVocabKey(
     if (!conjCompatible(k, pos, tag?.conjugationType)) continue;
     return k;
   }
+  // 表層形が別の品詞の見出しと同じ形で、上の照合で落ちる語（2026-10-25）
+  const redirect = SAME_FORM_OTHER_POS[`${t}|${(pos ?? '').trim()}`];
+  if (redirect && vocabKeys.has(redirect)) return redirect;
   return null;
 }
+
+/**
+ * 表層形が単語帳の別の品詞の見出しと同じ形なので、品詞の照合で落ちてしまう語の行き先（`表層形|品詞` → 見出し）。
+ *   おぼえ（動詞「覚ゆ」の連用形）：見出し「おぼえ」は名詞（評判）なので、動詞は「おぼゆ」へ
+ *   とく（形容詞「疾し」の連用形）：単語帳の副詞「とく」（早く）と同じ語（「いたく」と同じ扱い）
+ */
+const SAME_FORM_OTHER_POS: Record<string, string> = {
+  'おぼえ|動詞': 'おぼゆ',
+  'おぼえ|補助動詞': 'おぼゆ',
+  'とく|形容詞': 'とく',
+};
 
 /**
  * 同音の別の動詞に紐づくのを、活用の種類で防ぐ（2026-10-23）。
@@ -241,6 +268,8 @@ const CONJ_ALLOWED: Record<string, RegExp> = {
   'おくる': /^ラ下二/,
   'あふ': /^ハ四/,
   'あく': /^カ(四|上二)/,
+  // おこす（遣す＝よこす、サ下二）：サ四「起こす」（火をおこす）は別語（2026-10-25）
+  'おこす': /^サ下二/,
 };
 const ADVERB_ONLY = new Set(['かく', 'とく']);
 function conjCompatible(vocabKey: string, pos?: string | null, conjugationType?: string | null): boolean {
@@ -259,6 +288,12 @@ function conjCompatible(vocabKey: string, pos?: string | null, conjugationType?:
  * 品詞分解に品詞が無い語（多くの名詞）は従来どおり通す。
  */
 const vocabPosOf = bundledVocabIndex as Record<string, { pos?: string }>;
+// 単語帳（クイズ）の側の品詞。vocabIndex の pos が古い・粗い見出しがある（はべり＝「はべるの連用形／別表記」、かく＝「動詞（3系統）」、
+// さ＝「接頭辞」、ことなり＝「名詞」）。そのせいで はべり 165・副詞かく 96・副詞さ 42 などが紐づいていなかったので、クイズのデータの品詞も見る（2026-10-25）
+const quizPosOf: Record<string, string> = {};
+for (const q of bundledKobunQ as { lemma?: string; pos?: string }[]) {
+  if (q.lemma && q.pos && !(quizPosOf[q.lemma] ?? '').includes(q.pos)) quizPosOf[q.lemma] = `${quizPosOf[q.lemma] ?? ''} ${q.pos}`;
+}
 const FAMILY: Record<string, string> = {
   動詞: '動詞', 補助動詞: '動詞', 形容詞: '形容詞', 形容動詞: '形容動詞', 副詞: '副詞',
   名詞: '名詞', 代名詞: '名詞', 感動詞: '感動詞', 連体詞: '連体詞', 接続詞: '接続詞',
@@ -269,7 +304,7 @@ function posCompatible(vocabKey: string, pos?: string | null): boolean {
   if (p === '接尾語' || p === '接頭語' || p === '記号') return false;
   const fam = FAMILY[p];
   if (!fam) return true;
-  const vp = (vocabPosOf[vocabKey]?.pos ?? '').replace(/形容動詞/g, 'ケイヨウドウシ');
+  const vp = `${vocabPosOf[vocabKey]?.pos ?? ''} ${quizPosOf[vocabKey] ?? ''}`.trim().replace(/形容動詞/g, 'ケイヨウドウシ');
   if (!vp || vp.includes('連語')) return true;
   const want = fam === '形容動詞' ? 'ケイヨウドウシ' : fam;
   return vp.includes(want);

@@ -64,7 +64,8 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
   // 見出し番号と意味の一覧は出さず、単語カードへのリンクだけ残す（「単語帳の○○とは別」と分かるように）
   // この箇所の意味（教材の意味ラベル → 決め手の意味）と、単語帳の一覧の中でそれに当たる1つ。
   // 完全に一致する意味があればそれ（「生きている」で「いる」まで太字にしない）、無ければ部分一致の最初の1つ
-  const meaning = tag.meaning ?? decider?.meaning;
+  // 意味ラベルが「尊敬語」「謙譲語」「丁寧語」の類別だけのときは、理由データの具体的な意味を使う（類別では単語帳の意味に当たらない。2026-10-25）
+  const meaning = (tag.meaning && !/^(尊敬語|謙譲語|丁寧語)$/.test(tag.meaning) ? tag.meaning : undefined) ?? decider?.meaning ?? tag.meaning;
   // 一覧の群は既定でクイズの最初の qid の群。この箇所の意味が同じ見出しの別の群（下二段の「たまふ」・名詞の「よし」など）にだけあればその群（2026-10-25）
   const { group, senses, curIdx } = vocabKey
     ? cardSenses(vocabKey, Number.isFinite(defaultGroup) ? defaultGroup : undefined, meaning)

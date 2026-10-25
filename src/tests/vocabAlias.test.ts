@@ -39,3 +39,42 @@ describe("resolveVocabKey 活用の種類・敬語の規則", () => {
     expect(resolveVocabKey("たち", undefined, "接尾語")).toBeNull();
   });
 });
+
+// 2026-10-25 紐づけの誤り2件（燕の子安貝の「さはる」＝触る、中世の歌の「はやさよ」の接尾語「さ」）
+describe("resolveVocabKey 同音の別語と接尾語「さ」", () => {
+  it("基本形が「触る」なら単語帳の「さはる」（障る）に当てない", () => {
+    expect(resolveVocabKey("さはる", "触る", "動詞", { conjugationType: "ラ四" })).toBeNull();
+  });
+  it("障るの「さはる」は、漢字表記や基本形の無い活用形（天の羽衣「さはらじ」）でも当たる", () => {
+    expect(resolveVocabKey("さはら", undefined, "動詞", { conjugationType: "ラ四" })).toBe("さはる");
+    expect(resolveVocabKey("障る", undefined, "動詞", { conjugationType: "ラ四" })).toBe("さはる");
+    expect(resolveVocabKey("さはる", undefined, "動詞", { conjugationType: "ラ四" })).toBe("さはる");
+  });
+  it("接尾語の「さ」は単語帳の「さ」に当てない（品詞が空なら従来どおり当たる＝データ側で接尾語にする）", () => {
+    expect(resolveVocabKey("さ", undefined, "接尾語")).toBeNull();
+    expect(resolveVocabKey("さ", undefined, "")).toBe("さ");
+  });
+});
+
+// 2026-10-25 紐づけ漏れの点検（品詞の照合をクイズのデータの品詞でも見る／同じ形で品詞の違う見出し）
+describe("resolveVocabKey 紐づけ漏れ", () => {
+  it("vocabIndex の品詞が粗い見出しでも、クイズのデータの品詞で当たる（はべり・副詞かく・副詞さ・ことなり）", () => {
+    expect(resolveVocabKey("はべり", undefined, "補助動詞", { conjugationType: "ラ変" })).toBe("はべり");
+    expect(resolveVocabKey("かく", undefined, "副詞")).toBe("かく");
+    expect(resolveVocabKey("さ", undefined, "副詞")).toBe("さ");
+    expect(resolveVocabKey("異なり", undefined, "形容動詞", { conjugationType: "ナリ" })).toBe("ことなり");
+  });
+  it("除外は保つ（動詞の「かく」、接尾語の「さ」、ラ変の「さる」）", () => {
+    expect(resolveVocabKey("かけ", "かく", "動詞", { conjugationType: "カ下二" })).toBeNull();
+    expect(resolveVocabKey("さ", undefined, "接尾語")).toBeNull();
+    expect(resolveVocabKey("さる", undefined, "動詞", { conjugationType: "ラ変" })).toBeNull();
+  });
+  it("動詞の「おぼえ」は名詞の見出し「おぼえ」でなく「おぼゆ」、形容詞の「とく」は副詞の見出し「とく」", () => {
+    expect(resolveVocabKey("おぼえ", "おぼえ", "動詞", { conjugationType: "ヤ下二" })).toBe("おぼゆ");
+    expect(resolveVocabKey("おぼえ", undefined, "")).toBe("おぼえ");
+    expect(resolveVocabKey("とく", undefined, "形容詞", { conjugationType: "ク" })).toBe("とく");
+  });
+  it("漢字の「鳴る」は「なる」へ", () => {
+    expect(resolveVocabKey("鳴り", undefined, "動詞", { conjugationType: "ラ四" })).toBe("なる");
+  });
+});
