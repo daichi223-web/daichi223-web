@@ -11,7 +11,7 @@ import type { Token, TokenAnalysis } from "@/lib/kobun/types";
 import { resolveVocabKey } from "@/lib/vocabAlias";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
 import { enrichGrammarInfo } from "@/lib/kobun/auxiliaryInfo";
-import { placeCard } from "@/lib/kobun/wordCardLayout";
+import { placeCard, type Placement } from "@/lib/kobun/wordCardLayout";
 import bundledKobunQ from "@/data/kobunQ.v2.slim.json";
 
 type QEntry = { qid: string; lemma: string; group?: number; meaning_idx?: number; senseNorm?: string; sense?: string };
@@ -79,8 +79,17 @@ const BAR_BTN = "min-w-[40px] h-9 px-2 rounded-lg border border-rw-ink/20 bg-rw-
 export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, onClose, onMore, onPrev, onNext }: WordCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ left: number; top: number; below: boolean; arrowLeft: number } | null>(null);
+  const [pos, setPos] = useState<Placement | null>(null);
   const preferAbove = touch;
+  // 同じ語・同じ固定状態のまま枠だけ変わった（スクロールで語について動く）ときは、今の側に入るうちは側を変えない
+  const placedKey = useRef<string | null>(null);
+  // 語に被らない高さに縮めて中身が隠れているとき、下端に「続きがある」印（薄いぼかし）を出す。いちばん下まで送ったら消す
+  const [moreBelow, setMoreBelow] = useState(false);
+  const checkMore = () => {
+    const b = bodyRef.current;
+    if (!b) return;
+    setMoreBelow(b.scrollHeight - b.clientHeight > 2 && b.scrollTop + b.clientHeight < b.scrollHeight - 2);
+  };
   // カード全体の高さの上限（月の琴と同じ min(52dvh, 440px)）。中身が長いときはカードの中だけがスクロールする
   const maxH = Math.min(window.innerHeight * 0.52, 440, window.innerHeight - avoidBottom - 16);
 
@@ -92,7 +101,14 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
   const decider = analysis?.decider;
   // 理由データが「単語帳の意味（…）とは別に、」で始まる語は、本文では単語帳の見出しと別の語（同形異語・接尾語など）。
   // 見出し番号と意味の一覧は出さず、単語カードへのリンクだけ残す（「単語帳の○○とは別」と分かるように）
-  const offList = !!decider?.summary && /^単語帳の意味/.test(decider.summary);
+  // この箇所の意味（教材の意味ラベル → 決め手の意味）と、単語帳の一覧の中でそれに当たる1つ。
+  // 完全に一致する意味があればそれ（「生きている」で「いる」まで太字にしない）、無ければ部分一致の最初の1つ
+  const meaning = tag.meaning ?? decider?.meaning;
+  const keyOf = (x?: string) => (x ?? "").replace(/〔|〕|[〜～()（）\s]/g, "");
+  const exactIdx = meaning ? senses.findIndex((x) => keyOf(x.senseNorm ?? x.sense) === keyOf(meaning)) : -1;
+  const curIdx = exactIdx >= 0 ? exactIdx : meaning ? senses.findIndex((x) => sameSense(meaning, x.senseNorm ?? x.sense)) : -1;
+  // 理由データが「単語帳の意味とは別に」で始まっていても、単語帳にその意味が（後から）入っていれば普通に扱う（2026-10-16 に 330 へ足した意味がある）
+  const offList = !!decider?.summary && /^単語帳の意味/.test(decider.summary) && curIdx < 0;
   const enriched = enrichGrammarInfo(tag.pos, token.text, tag.baseForm, tag.conjugationType, tag.conjugationForm, tag.meaning);
   const isGrammar = tag.pos === "助動詞" || /助詞$/.test(tag.pos);
 
@@ -105,12 +121,20 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
     const footH = foot ? Math.max(0, window.innerHeight - foot.getBoundingClientRect().top) : 0;
     const head = document.querySelector("header");
     const headH = head ? Math.max(0, head.getBoundingClientRect().bottom) : 0;
-    if (bodyRef.current) bodyRef.current.scrollTop = 0; // 語が変わったら中身は先頭から
-    setPos(
+    const key = `${token.id}:${pinned}`;
+    const following = placedKey.current === key;
+    placedKey.current = key;
+    if (bodyRef.current && !following) bodyRef.current.scrollTop = 0; // 語が変わったら中身は先頭から
+    // 本来の高さ＝今の高さ＋中身で隠れている分（前回「語に被らない高さ」に縮めていても、縮める前の高さで置き場所を決める）。
+    // DOM の style を直接いじって測ると、React が前回と同じ値の style を書き戻さないので使わない
+    const body = bodyRef.current;
+    const hidden = body ? Math.max(0, body.scrollHeight - body.clientHeight) : 0;
+    setPos((prev) =>
       placeCard({
+        current: following ? prev?.below : undefined,
         rect: anchor.rect,
         point: anchor.x !== undefined && anchor.y !== undefined ? { x: anchor.x, y: anchor.y } : null,
-        size: { width: el.offsetWidth, height: el.offsetHeight },
+        size: { width: el.offsetWidth, height: el.offsetHeight + hidden },
         viewport: { width: window.innerWidth, height: window.innerHeight },
         avoidBottom: Math.max(avoidBottom, footH),
         avoidTop: headH,
@@ -119,6 +143,9 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
     );
     // pinned：固定すると上の帯とリンクの行が足されて背が伸びるので置き直す（月の琴もタップ時に place() をやり直す）
   }, [anchor, preferAbove, avoidBottom, token.id, pinned]);
+  // 縮めたあとの実際の高さで「続きがある」かを見る（pos が決まって描画されてから）
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => { checkMore(); }, [pos, token.id, pinned]);
 
   return (
     <div
@@ -126,13 +153,13 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
       data-word-card
       role="dialog"
       aria-label={`${token.text} の解説`}
-      className="fixed z-40 flex flex-col bg-rw-paper rounded-2xl border border-rw-ink/20 text-rw-ink animate-popover-in"
+      className="fixed z-40 flex flex-col bg-rw-paper rounded-2xl border border-rw-ink/20 text-rw-ink" /* 月の琴と同じく即座に出す（浮き上がるアニメは付けない） */
       style={{
         left: pos?.left ?? -9999,
         top: pos?.top ?? -9999,
         width: "min(92vw, 360px)",
         margin: 0, // 親の space-y-* の margin-top が fixed にも効いて 12px 下にずれるのを防ぐ
-        maxHeight: maxH,
+        maxHeight: pos ? Math.min(maxH, pos.maxHeight) : maxH, // 語に被らない高さまで。入り切らない中身は bodyRef の中でスクロール
         overflow: "visible", // 矢印は枠の外に出る。スクロールは中の bodyRef だけ（外側を overflow:auto にすると矢印が切れる）
         fontSize: 15,
         lineHeight: 1.75,
@@ -174,6 +201,7 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         ref={bodyRef}
         className="min-h-0 flex-1"
         style={{ overflowY: "auto", WebkitOverflowScrolling: "touch", padding: pinned ? "8px 16px 14px" : "12px 16px 14px" }}
+        onScroll={checkMore}
       >
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-[22px] font-serif leading-tight">{token.text}</span>
@@ -185,11 +213,11 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         )}
       </div>
 
-      {/* 意味（単語）。教材の意味ラベル → 決め手の意味（単語の理由データ）→ 単語帳の意味、の順 */}
-      {!isGrammar && (tag.meaning || decider?.meaning || senses.length > 0) && (
+      {/* 意味（単語）。教材の意味ラベル → 決め手の意味（単語の理由データ）の順。どちらも無ければこの行は出さず、下の一覧だけ（2026-10-25 ユーザー指示：意味は全部出して今回の意味を太字） */}
+      {!isGrammar && meaning && (
         <p className="font-bold text-[20px] leading-snug mt-1.5">
           <span className="text-[13px] text-rw-ink-soft mr-1.5 align-middle">意味</span>
-          {tag.meaning ?? decider?.meaning ?? senses.map((s) => (s.senseNorm ?? s.sense ?? "").replace(/〔|〕/g, "")).join("／")}
+          {meaning}
         </p>
       )}
 
@@ -224,15 +252,12 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         </p>
       )}
 
-      {/* 単語帳の意味の一覧（この箇所の意味を太く）。意味が決まらず一覧を上に出したときは省く */}
-      {senses.length > 1 && (tag.meaning || decider?.meaning) && !offList && (
+      {/* 単語帳の意味の一覧は必ず全部出し、この箇所の意味を太くする（2026-10-25 ユーザー指示。1つしか無くても出す）。
+          意味が決まっていない語・単語帳の見出しとは別の語（offList）は太字なしで一覧だけ */}
+      {!isGrammar && senses.length > 0 && (
         <ol className="mt-2 pl-6 text-[14px] text-rw-ink-soft list-decimal marker:font-normal space-y-0.5">
-          {senses.map((s, _i, all) => {
-            // 完全に一致する意味があればそれだけを太字に（「生きている」で「いる」まで太字にしない）。無ければ部分一致
-            const m = tag.meaning ?? decider?.meaning;
-            const key = (x?: string) => (x ?? "").replace(/〔|〕|[〜～()（）\s]/g, "");
-            const exact = all.some((x) => key(x.senseNorm ?? x.sense) === key(m));
-            const cur = exact ? key(s.senseNorm ?? s.sense) === key(m) : sameSense(m, s.senseNorm ?? s.sense);
+          {senses.map((s, i) => {
+            const cur = i === curIdx; // 太字は1つだけ（月の琴の senseList と同じ）
             return (
               <li key={s.qid} className={cur ? "text-rw-ink font-bold marker:font-bold" : ""}>
                 {(s.senseNorm ?? s.sense ?? "").replace(/〔|〕/g, "")}
@@ -259,6 +284,13 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         !touch && <p className="text-[11px] text-rw-ink-soft mt-1">クリックで固定</p>
       )}
       </div>
+      {moreBelow && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-0 right-0 bottom-0 h-8 rounded-b-2xl"
+          style={{ background: "linear-gradient(to bottom, rgba(253,250,245,0), var(--rw-paper))" }}
+        />
+      )}
     </div>
   );
 }

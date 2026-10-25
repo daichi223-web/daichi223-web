@@ -101,6 +101,8 @@ export function useWordCard(o: Options) {
     const onDown = (e: globalThis.PointerEvent) => {
       const t = e.target as HTMLElement;
       if (t.closest("[data-word-card]")) return;
+      // 指で本文に触れたときはここでは閉じない：スクロールなら固定カードは語について動き、動かさずに離した（タップ）ときだけ onTouchEnd が閉じる（月の琴と同じ）
+      if (e.pointerType === "touch" && rootRef.current?.contains(t)) return;
       if (rootRef.current?.contains(t) && t.closest("[data-token-id]")) return; // 語の上はクリック・タップ側で扱う
       close();
     };
