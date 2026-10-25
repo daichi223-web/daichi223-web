@@ -77,4 +77,17 @@ describe("resolveVocabKey 紐づけ漏れ", () => {
   it("漢字の「鳴る」は「なる」へ", () => {
     expect(resolveVocabKey("鳴り", undefined, "動詞", { conjugationType: "ラ四" })).toBe("なる");
   });
+  it("1語にまとめた複合語は構成語の見出しへ（品詞・活用は末尾の語のものなので照合しない）", () => {
+    expect(resolveVocabKey("うちまもり", "うちまもる", "動詞", { conjugationType: "ラ四" })).toBe("まもる");
+    expect(resolveVocabKey("聞こえやら", "聞こえやる", "動詞", { conjugationType: "ラ四", honorific: "謙譲" })).toBe("きこゆ・きこえさす");
+    expect(resolveVocabKey("聞こえまほしげなる", "聞こえまほしげなり", "形容動詞", { conjugationType: "ナリ", honorific: "謙譲" })).toBe("きこゆ・きこえさす");
+    expect(resolveVocabKey("帰り参り", "帰り参る", "動詞", { conjugationType: "ラ四", honorific: "謙譲" })).toBe("まゐる");
+    expect(resolveVocabKey("念じあへ", "念じあふ", "動詞", { conjugationType: "ハ下二" })).toBe("ねんず");
+    expect(resolveVocabKey("群れゐ", "群れゐる", "動詞", { conjugationType: "ワ上一" })).toBe("ゐる");
+    expect(resolveVocabKey("女はらから", undefined, "")).toBe("はらから");
+    expect(resolveVocabKey("おぼつかなさ", undefined, "")).toBe("おぼつかなし");
+  });
+  it("接頭語「うち」の複合語は名詞の見出し「うち」（宮中・中）に当てない", () => {
+    expect(resolveVocabKey("うち泣き", "うち泣く", "動詞", { conjugationType: "カ四" })).toBeNull();
+  });
 });

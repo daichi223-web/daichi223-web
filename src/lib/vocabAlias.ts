@@ -209,6 +209,23 @@ for (const [lemma, variants] of Object.entries(KANJI_VARIANTS)) {
 const OTHER_WORD_BASE = new Set<string>(['触る']);
 
 /**
+ * 1語にまとめた複合語・派生語 → 単語帳の構成語の見出し（2026-10-25）。
+ * 正本の品詞分解の表は複合語を（複）（接頭）で1行にしている。品詞・活用は末尾の語のものなので、
+ * 品詞の照合をせずに、学ぶ中心の語（hint が説明している語）の見出しへ送る。基本形か表層形で引く。
+ * 「うち泣く」は入れない（単語帳の「うち」は名詞＝宮中・中で、接頭語ではない）。
+ */
+const COMPOUND_TO_LEMMA: Record<string, string> = {
+  'うちまもる': 'まもる',         // 若紫の君「うちまもりて」
+  '聞こえやる': 'きこゆ',         // 飽かぬ別れ「聞こえやらず」
+  '聞こえまほしげなり': 'きこゆ', // 飽かぬ別れ「聞こえまほしげなること」
+  '帰り参る': 'まゐる',           // 飽かぬ別れ「帰り参りぬ」
+  '念じあふ': 'ねんず',           // 母子の別離「念じあへず」
+  '群れゐる': 'ゐる',             // 東下り（都鳥）「群れゐて」
+  '女はらから': 'はらから',       // 初冠「女はらから」（姉妹）
+  'おぼつかなさ': 'おぼつかなし', // 猟師、仏を射ること（形容詞の名詞形）
+};
+
+/**
  * トークンの表層形 (text) と基本形 (baseForm) から、対応する vocabIndex の正規 key を解決する。
  * - vocabIndex に直接ある場合はそれを返す
  * - エイリアス経由で解決できる場合はその先の key を返す
@@ -224,6 +241,10 @@ export function resolveVocabKey(
   // 基本形が単語帳の同音語と別の語だと分かっているときは紐づけない（表層形の一致でも拾わない）
   if (base && OTHER_WORD_BASE.has(base)) return null;
   const t = (text ?? '').trim().replace(/^[、。「」『』（）\s]+|[、。「」『』（）\s]+$/g, '');
+  const comp = (base && COMPOUND_TO_LEMMA[base]) || (t && COMPOUND_TO_LEMMA[t]) || null;
+  if (comp && vocabKeys.has(comp)) {
+    return comp === 'きこゆ' && tag?.honorific === '謙譲' && vocabKeys.has('きこゆ・きこえさす') ? 'きこゆ・きこえさす' : comp;
+  }
   const cands = [
     base && vocabKeys.has(base) ? base : null,
     t && vocabKeys.has(t) ? t : null,
