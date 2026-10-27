@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  type PartLevels,
   effectiveStage,
   nextStage,
   portraitForStage,
@@ -15,7 +14,8 @@ import { usePortraitTone } from '@/lib/portraitTone';
 // ホームでは /stats へのリンク、StatsPage では非リンク (既に詳細画面)。
 
 type Props = {
-  parts: PartLevels;
+  // 位階の点数 (330 語の★の合計。fieldMastery の rankScore)
+  score: number;
   streak: number;
   totalAnswered: number;
   masterCount: number;
@@ -24,18 +24,18 @@ type Props = {
 };
 
 export default function NobleStatusBar({
-  parts,
+  score,
   streak,
   totalAnswered,
   masterCount,
   linkToStats = true,
 }: Props) {
-  const stage = effectiveStage(parts);
+  const stage = effectiveStage(score);
   const [portraitTone] = usePortraitTone();
-  const next = nextStage(parts, stage.n);
+  const next = nextStage(score, stage.n);
   const portrait = portraitForStage(stage.n, portraitTone);
   const tone = TIER_TONE[stage.era];
-  const progress = next ? Math.round(((5 - next.blocking.length) / 5) * 100) : 100;
+  const progress = next ? next.progress : 100;
 
   useEffect(() => {
     recordPromotion(stage.n);
@@ -119,7 +119,7 @@ export default function NobleStatusBar({
                 className="font-mono font-black shrink-0"
                 style={{ color: tone.accent }}
               >
-                {progress}%
+                あと{next.need}点
               </span>
             </div>
             <div className="h-1 rounded-full" style={{ background: 'var(--rw-rule)' }}>

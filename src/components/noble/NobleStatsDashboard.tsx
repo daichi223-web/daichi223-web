@@ -24,10 +24,13 @@ import { usePortraitTone, type PortraitTone } from '@/lib/portraitTone';
 // 5 部位の装い詳細 + 5 ジャンル動線 + 出世絵巻/装束図鑑/履歴の3導線。
 
 type Props = {
+  // 5 部位の Lv (章ごとの進み具合の表示)
   parts: PartLevels;
+  // 位階の点数 (330 語の★の合計。昇進はこれで決まる)
+  score: number;
 };
 
-export default function NobleStatsDashboard({ parts }: Props) {
+export default function NobleStatsDashboard({ parts, score }: Props) {
   const [showZukan, setShowZukan] = useState(false);
   const [showRefs, setShowRefs] = useState(false);
   const [showRoadmap, setShowRoadmap] = useState(false);
@@ -52,11 +55,11 @@ export default function NobleStatsDashboard({ parts }: Props) {
     }
   };
 
-  const stage = effectiveStage(parts);
-  const next = nextStage(parts, stage.n);
+  const stage = effectiveStage(score);
+  const next = nextStage(score, stage.n);
   const portrait = portraitForStage(stage.n, portraitTone);
   const tone = TIER_TONE[stage.era];
-  const progress = next ? Math.round(((5 - next.blocking.length) / 5) * 100) : 100;
+  const progress = next ? next.progress : 100;
   const bandSize = portrait.toN - portrait.fromN + 1;
   const bandProgress = (stage.n - portrait.fromN + 1) / bandSize;
 
@@ -355,7 +358,7 @@ export default function NobleStatsDashboard({ parts }: Props) {
             <span className="text-xl font-black" style={{ color: tone.accent }}>
               {progress}
             </span>
-            %<br />要 {next.blocking.length} パーツ
+            %<br />あと {next.need} 点
           </div>
         </div>
       ) : (

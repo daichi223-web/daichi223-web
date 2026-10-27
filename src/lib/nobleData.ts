@@ -1,6 +1,7 @@
 // 貴族版「装束×位階」データモデル。handoff/kizoku/data.js を TS 化。
 import type { PortraitTone } from './portraitTone';
 // 21 ステージ × 5 部位 (頭/袍/裾/持物/帯) で平安官人の出世を表現する。
+// 昇進は 330 語の★の合計点 (STAGE_MIN_SCORE) で決まる。5 部位の Lv は章ごとの進み具合の表示。
 
 export type PartKey = 'head' | 'robe' | 'train' | 'item' | 'belt';
 
@@ -31,6 +32,7 @@ export type Stage = {
   rank: string;
   post: string;
   era: Tier;
+  // 装束の格 (部位 Lv の目安)。昇進の判定には使わない。
   head: number;
   robe: number;
   train: number;
@@ -165,31 +167,37 @@ export const PART_CHARTS: Array<{ key: PartKey; label: string; src: string; thum
   { key: 'belt',  label: '帯 ・ 太刀の五段',     src: '/portraits/chart-belt-w1200.webp', thumb: '/portraits/chart-belt-w480.webp',  cap: 5 },
 ];
 
-// 現在のパーツ Lv が全て満たす最高ステージ。
-export function effectiveStage(parts: PartLevels): Stage {
+// 第 n 階に要る点数 (index = n-1)。点数 = 330 語の★0-12 (peak-lock 後) の合計で、最大 3960。
+// 2026-10-27 に本番の実データ (564人) で決めた。旧方式 (5 部位すべての Lv を満たす) では
+// 回答が読解必修・入試必修に偏っているため 98% が無位のままだった。
+// 目安: 21〜60問で第2階、500〜1000問で殿上人 (第8階)。
+// 読解必修＋入試必修の 150 語だけでは最大 1800 点なので、公卿 (第16階) より上は他の章も要る。
+export const STAGE_MIN_SCORE: readonly number[] = [
+  0, 15, 40, 80, 130, 200, 290,                 // 地下 (第1〜7階)
+  400, 520, 660, 820, 1000, 1200, 1420, 1660,   // 殿上人 (第8〜15階)
+  1920, 2250, 2600, 2950, 3300,                 // 公卿 (第16〜20階)
+  3650,                                         // 極位 (第21階)
+];
+
+// 点数で到達している最高ステージ。
+export function effectiveStage(score: number): Stage {
   let best = STAGES[0];
   for (const s of STAGES) {
-    if (parts.head >= s.head && parts.robe >= s.robe && parts.train >= s.train &&
-        parts.item >= s.item && parts.belt >= s.belt) {
-      best = s;
-    }
+    if (score >= STAGE_MIN_SCORE[s.n - 1]) best = s;
   }
   return best;
 }
 
-// 次ステージ + 阻害している部位 (Lv不足)。
-export function nextStage(parts: PartLevels, currentN: number):
+// 次ステージ + あと何点か + 今の階から次の階までの進み具合 (0-100)。
+export function nextStage(score: number, currentN: number):
   | null
-  | { stage: Stage; blocking: Array<{ part: PartKey; label: string; have: number; need: number }> } {
-  if (currentN >= 21) return null;
+  | { stage: Stage; need: number; progress: number } {
+  if (currentN >= STAGES.length) return null;
   const next = STAGES[currentN]; // 0-indexed: stage currentN+1
-  const blocking: Array<{ part: PartKey; label: string; have: number; need: number }> = [];
-  (['head', 'robe', 'train', 'item', 'belt'] as PartKey[]).forEach((k) => {
-    if (parts[k] < next[k]) {
-      blocking.push({ part: k, label: PART_LABEL[k], have: parts[k], need: next[k] });
-    }
-  });
-  return { stage: next, blocking };
+  const from = STAGE_MIN_SCORE[currentN - 1];
+  const to = STAGE_MIN_SCORE[currentN];
+  const ratio = Math.min(1, Math.max(0, (score - from) / (to - from)));
+  return { stage: next, need: Math.max(0, to - score), progress: Math.floor(ratio * 100) };
 }
 
 export function portraitForStage(n: number, portraitTone: PortraitTone = 'sharp'): PortraitBand {

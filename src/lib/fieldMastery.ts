@@ -73,9 +73,12 @@ type GroupEntry = {
 type WordStat = { correct: number; incorrect: number };
 type SrsBoxRow = { qid: string; box: number };
 
-// 単語グループの ★0-12 段位を計算 (StatsPage と同一ロジック)
+// 単語グループの ★0-12 段位を計算 (StatsPage もこれを使う)。
+// 2026-10-27 改定: 1 語あたりの回数 (旧 ★7=25回・★12=85回) を減らし、
+// 日をまたいだ定着 (SRS の箱) と記述・多義の正解で上がるようにした。
+// 箱 5 は 1→3→7→14 日の復習を通した語なので、★10 以上は短期間の詰め込みでは取れない。
 export function computeTier(
-  g: GroupEntry,
+  g: Pick<GroupEntry, 'qids' | 'correct' | 'total'>,
   quizTypeStats: QuizTypeStats,
   srsBoxByQid: Map<string, number>
 ): number {
@@ -93,24 +96,32 @@ export function computeTier(
     const b = srsBoxByQid.get(qid);
     if (b != null && b > maxBox) maxBox = b;
   }
-  if (total >= 85 && acc >= 0.95 && (!isPolysemous || polysemyCorrect >= 5) && writingCorrect >= 7 && maxBox >= 5) return 12;
-  if (total >= 65 && acc >= 0.9  && (!isPolysemous || polysemyCorrect >= 3) && writingCorrect >= 4 && maxBox >= 5) return 11;
-  if (total >= 50 && acc >= 0.9  && (!isPolysemous || polysemyCorrect >= 2) && writingCorrect >= 3 && maxBox >= 4) return 10;
-  if (total >= 40 && acc >= 0.85 && (!isPolysemous || polysemyCorrect >= 2) && writingCorrect >= 2 && maxBox >= 3) return 9;
-  if (total >= 32 && acc >= 0.85 && (!isPolysemous || polysemyCorrect >= 1) && writingCorrect >= 2 && maxBox >= 3) return 8;
-  if (total >= 25 && acc >= 0.85 && (!isPolysemous || polysemyCorrect >= 1) && writingCorrect >= 1 && maxBox >= 3) return 7;
-  if (total >= 20 && acc >= 0.8  && (polysemyCorrect >= 1 || writingCorrect >= 1)) return 6;
-  if (total >= 15 && acc >= 0.8) return 5;
-  if (total >= 10 && acc >= 0.75) return 4;
-  if (total >= 5  && acc >= 0.7)  return 3;
-  if (total >= 3) return 2;
+  if (total >= 25 && acc >= 0.9  && (!isPolysemous || polysemyCorrect >= 3) && writingCorrect >= 4 && maxBox >= 5) return 12;
+  if (total >= 20 && acc >= 0.9  && (!isPolysemous || polysemyCorrect >= 2) && writingCorrect >= 3 && maxBox >= 5) return 11;
+  if (total >= 15 && acc >= 0.85 && (!isPolysemous || polysemyCorrect >= 2) && writingCorrect >= 2 && maxBox >= 5) return 10;
+  if (total >= 12 && acc >= 0.85 && (!isPolysemous || polysemyCorrect >= 1) && writingCorrect >= 2 && maxBox >= 4) return 9;
+  if (total >= 10 && acc >= 0.8  && (!isPolysemous || polysemyCorrect >= 1) && writingCorrect >= 1 && maxBox >= 4) return 8;
+  if (total >= 8  && acc >= 0.8  && writingCorrect >= 1 && maxBox >= 3) return 7;
+  if (total >= 6  && acc >= 0.75 && (polysemyCorrect >= 1 || writingCorrect >= 1) && maxBox >= 3) return 6;
+  if (total >= 5  && acc >= 0.75 && maxBox >= 3) return 5;
+  if (total >= 4  && acc >= 0.7  && maxBox >= 2) return 4;
+  if (total >= 3  && acc >= 0.6) return 3;
+  if (correct >= 2) return 2;
   return 1;
+}
+
+// 位階の点数 = ch1-ch5 の各語の★ (peak-lock 後) の合計。nobleData の STAGE_MIN_SCORE と比べる。
+export function rankScoreOf(tiers: Iterable<number>): number {
+  let s = 0;
+  for (const t of tiers) s += t;
+  return s;
 }
 
 export type FieldMasteryResult = {
   fieldMastery: FieldMastery;
   totalLearned: number;
   totalMastered: number;
+  rankScore: number;
 };
 
 // 集計済データから fieldMastery を計算。
@@ -151,6 +162,7 @@ export function computeFieldMastery(
   };
   let totalLearned = 0;
   let totalMastered = 0;
+  const tiers: number[] = [];
 
   for (const g of groups) {
     const ch = chapterFor(g.group);
@@ -162,6 +174,7 @@ export function computeFieldMastery(
       peakUpdates.push({ group: g.group, tier: currentTier });
     }
     const tier = currentTier > peakTier ? currentTier : peakTier;
+    tiers.push(tier);
     const a = acc[id];
     a.total += 1;
     a.tierSum += tier;
@@ -193,7 +206,7 @@ export function computeFieldMastery(
     };
   });
 
-  return { fieldMastery, totalLearned, totalMastered };
+  return { fieldMastery, totalLearned, totalMastered, rankScore: rankScoreOf(tiers) };
 }
 
 // 初期値 (loading 中に使う)

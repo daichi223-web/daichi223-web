@@ -8,7 +8,6 @@ import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
 import { readStreak } from '@/lib/streak';
 import { useFieldMastery } from '@/lib/fieldMastery';
 import {
-  partsFromFieldMastery,
   effectiveStage,
   nextStage,
   portraitForStage,
@@ -75,7 +74,7 @@ export default function HomeReiwa({
   const [streak, setStreak] = useState(0);
   const [account, setAccount] = useState<AccountStatus | null>(null);
   const [portraitTone] = usePortraitTone();
-  const { fieldMastery, totalAnswered, totalMastered, loading: masteryLoading } = useFieldMastery();
+  const { rankScore, totalAnswered, totalMastered, loading: masteryLoading } = useFieldMastery();
 
   useEffect(() => {
     setVocab(getVocabEntries());
@@ -84,13 +83,10 @@ export default function HomeReiwa({
   }, []);
 
   // 装束ステータス (Today's Quest 内で表示する位階情報) を導出。
-  const parts = !masteryLoading ? partsFromFieldMastery(fieldMastery) : null;
-  const nobleStage = parts ? effectiveStage(parts) : null;
-  const nobleNext = parts && nobleStage ? nextStage(parts, nobleStage.n) : null;
+  const nobleStage = !masteryLoading ? effectiveStage(rankScore) : null;
+  const nobleNext = nobleStage ? nextStage(rankScore, nobleStage.n) : null;
   const noblePortrait = nobleStage ? portraitForStage(nobleStage.n, portraitTone) : null;
-  const nobleProgress = nobleNext
-    ? Math.round(((5 - nobleNext.blocking.length) / 5) * 100)
-    : 100;
+  const nobleProgress = nobleNext ? nobleNext.progress : 100;
 
   // 到達した階位を localStorage に記録 (昇進履歴用)。
   useEffect(() => {

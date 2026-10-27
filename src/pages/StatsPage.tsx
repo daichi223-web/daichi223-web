@@ -12,7 +12,15 @@ import { loadAllProgress, getOpenCounters } from '@/lib/kobun/progress';
 import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
 import { getPublishedSlugs } from '@/lib/textPublications';
 import { hasFullAccess } from '@/lib/fullAccess';
-import { type FieldMastery, type ChapterId, VISIBLE_CHAPTERS, TIER_LABELS, TIER_KAII } from '@/lib/fieldMastery';
+import {
+  type FieldMastery,
+  type ChapterId,
+  VISIBLE_CHAPTERS,
+  TIER_LABELS,
+  TIER_KAII,
+  computeTier as computeSharedTier,
+  rankScoreOf,
+} from '@/lib/fieldMastery';
 import { partsFromFieldMastery } from '@/lib/nobleData';
 import { readPeakTiers, updatePeakTiers } from '@/lib/peakTiers';
 import NobleStatsDashboard from '@/components/noble/NobleStatsDashboard';
@@ -226,67 +234,9 @@ export default function StatsPage() {
     return m;
   }, [srsRows]);
 
+  // 判定本体は fieldMastery.ts の computeTier (ホームと同じ条件)。
   function computeTier(g: GroupEntry): number {
-    const total = g.total;
-    const correct = g.correct;
-    if (correct < 1) return 0;
-    const acc = total > 0 ? correct / total : 0;
-    const isPolysemous = g.qids.length > 1; // group 内に複数 meaning があれば多義
-    let polysemyCorrect = 0;
-    let writingCorrect = 0;
-    let maxBox = 0;
-    for (const qid of g.qids) {
-      const r = quizTypeStats[qid];
-      if (r?.polysemy) polysemyCorrect += r.polysemy;
-      if (r?.writing) writingCorrect += r.writing;
-      const b = srsBoxByQid.get(qid);
-      if (b != null && b > maxBox) maxBox = b;
-    }
-    // 公卿 (★9-12)
-    if (
-      total >= 85 && acc >= 0.95
-      && (!isPolysemous || polysemyCorrect >= 5)
-      && writingCorrect >= 7
-      && maxBox >= 5
-    ) return 12; // 大臣 (= マスター)
-    if (
-      total >= 65 && acc >= 0.9
-      && (!isPolysemous || polysemyCorrect >= 3)
-      && writingCorrect >= 4
-      && maxBox >= 5
-    ) return 11; // 大納言
-    if (
-      total >= 50 && acc >= 0.9
-      && (!isPolysemous || polysemyCorrect >= 2)
-      && writingCorrect >= 3
-      && maxBox >= 4
-    ) return 10; // 大将
-    if (
-      total >= 40 && acc >= 0.85
-      && (!isPolysemous || polysemyCorrect >= 2)
-      && writingCorrect >= 2
-      && maxBox >= 3
-    ) return 9; // 参議
-    // 殿上人 (★4-8)
-    if (
-      total >= 32 && acc >= 0.85
-      && (!isPolysemous || polysemyCorrect >= 1)
-      && writingCorrect >= 2
-      && maxBox >= 3
-    ) return 8; // 頭中将
-    if (
-      total >= 25 && acc >= 0.85
-      && (!isPolysemous || polysemyCorrect >= 1)
-      && writingCorrect >= 1
-      && maxBox >= 3
-    ) return 7; // 中将
-    if (total >= 20 && acc >= 0.8 && (polysemyCorrect >= 1 || writingCorrect >= 1)) return 6; // 弁官
-    if (total >= 15 && acc >= 0.8) return 5; // 受領
-    if (total >= 10 && acc >= 0.75) return 4; // 蔵人
-    // 地下 (★1-3)
-    if (total >= 5 && acc >= 0.7) return 3; // 衛士
-    if (total >= 3) return 2; // 舎人
-    return 1; // 雑色
+    return computeSharedTier(g, quizTypeStats, srsBoxByQid);
   }
 
   // 各 group の peak-lock 後の段位を一元計算 (blueprintMetrics と tierBuckets で共通利用)。
@@ -356,7 +306,15 @@ export default function StatsPage() {
         avgTierPct: a.total > 0 ? Math.round((a.tierSum / (a.total * 12)) * 100) : 0,
       };
     }
-    return { totalLearned, totalMastered, fieldMastery };
+    const rankScore = rankScoreOf(
+      allGroups
+        .filter((g) => {
+          const ch = chapterFor(g);
+          return !!ch && VISIBLE_CHAPTER_IDS.has(ch.id as ChapterId);
+        })
+        .map((g) => tierByGroup[g] ?? 0)
+    );
+    return { totalLearned, totalMastered, fieldMastery, rankScore };
   }, [allGroups, tierByGroup]);
 
   const fieldMastery = blueprintMetrics.fieldMastery;
@@ -569,7 +527,7 @@ export default function StatsPage() {
 
             {/* ① 統合ステータスバー — 位階+次昇進+3 KPI を 1段に集約 (最上部、固定) */}
             <NobleStatusBar
-              parts={partsFromFieldMastery(fieldMastery)}
+              score={blueprintMetrics.rankScore}
               streak={streak.current}
               totalAnswered={overall.answered}
               masterCount={overall.mastered}
@@ -600,7 +558,10 @@ export default function StatsPage() {
 
             {/* ③ 装束ダッシュボード — 学習履歴の核 */}
             <section className="mb-6">
-              <NobleStatsDashboard parts={partsFromFieldMastery(fieldMastery)} />
+              <NobleStatsDashboard
+                parts={partsFromFieldMastery(fieldMastery)}
+                score={blueprintMetrics.rankScore}
+              />
             </section>
 
             {/* 段位別 単語数 (★0-10 のヒストグラム) */}

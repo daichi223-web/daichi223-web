@@ -10,6 +10,7 @@ import usageTemplate from "../../scripts/usage-dashboard.template.html?raw";
 import usageAggregateSrc from "../../scripts/usage-aggregate.js?raw";
 import {
   STAGES,
+  STAGE_MIN_SCORE,
   PORTRAITS,
   PART_CHARTS,
   portraitForStage,
@@ -1761,6 +1762,7 @@ function NoblePreviewView() {
           <h3 className="text-lg font-bold text-slate-800">段位プレビュー (二十一階)</h3>
           <p className="text-xs text-slate-500 mt-1">
             生徒が段位上昇したときに表示される水彩肖像と装束構成を一覧確認できます。
+            昇進は単語330語の★（0〜12）の合計点で決まります（最大3960点）。
           </p>
         </div>
         <button
@@ -1853,6 +1855,9 @@ function NoblePreviewView() {
                   </span>
                   <span className="text-base font-black" style={{ fontFamily: '"Noto Serif JP", serif' }}>
                     {s.rank}
+                  </span>
+                  <span className="ml-auto text-[10px] font-mono text-slate-500">
+                    {STAGE_MIN_SCORE[s.n - 1]}点〜
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-600 mb-2 truncate" title={s.post}>
