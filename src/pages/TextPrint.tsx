@@ -8,7 +8,7 @@ import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type P
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import type { KobunText } from "@/lib/kobun/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
-import { splitHokan, type Chikugo } from "@/lib/kobun/chikugo";
+import { displayTranslations, splitHokan, type Chikugo } from "@/lib/kobun/chikugo";
 import { hinshiLabel, toCells, type HinshiCell } from "@/lib/kobun/hinshiLabel";
 import { circled, findKoou, koouMarks } from "@/lib/kobun/koou";
 
@@ -248,7 +248,7 @@ export default function TextPrint() {
                   </div>
                 )}
                 {chikugo?.sentences[s.id]?.length ? (
-                  <div className="hp-tr">逐語訳　{chikugo.sentences[s.id].map(([, t], k) => (
+                  <div className="hp-tr">逐語訳　{displayTranslations(chikugo.sentences[s.id]).map((t, k) => (
                     <span className="hp-seg" key={k}>{splitHokan(t).map((x, j) => (x.hokan ? <span className="hp-hokan" key={j}>{x.text}</span> : x.text))}</span>
                   ))}</div>
                 ) : s.modernTranslation && <div className="hp-tr">訳　{s.modernTranslation}</div>}

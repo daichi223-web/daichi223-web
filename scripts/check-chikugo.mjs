@@ -6,6 +6,7 @@
  * - texts-v3 に無い文の id が無い・空の訳が無い
  * - （ ）の開き閉じがそろっている
  * - 本文の名詞の漢字が訳の（ ）の中にだけある（本文の語は（ ）の外の訳に入れる）
+ * - 区切りが語（トークン）の途中で切れている／助詞・助動詞・補助動詞がほかの語と同じ区切りにある（2026-10-27〜：これらは1語で区切る。訳さない語の訳は「―」）
  * - 注意（終了コードには入れない）：区切りに推量・断定・完了の助動詞が無いのに「だろう」「のだ」「てしまう」がある
  * NG があれば終了コード1
  */
@@ -36,10 +37,36 @@ for (const f of files) {
     let pos = 0;
     const toks = [];
     for (const tk of s.tokens) { toks.push({ tk, s: pos, e: pos + tk.text.length }); pos += tk.text.length; }
+    // 助詞・助動詞・補助動詞は1語で区切る（2026-10-27 ユーザー指示「助動詞や助詞の現代語訳が点線で切れていない」）。句読点・「」は同じ区切りに付いてよい
+    const isFunc = (tk) => /助詞|助動詞|補助動詞/.test(tk.grammarTag?.pos || '');
+    const isPunct = (tk) => !(tk.grammarTag?.pos) && /^[、。，．・！？!?「」『』（）()〔〕\s　]+$/.test(tk.text);
+    const bounds = new Set(toks.map((x) => x.s));
     let at = 0;
-    for (const [o, t] of pairs) {
+    // 3つ目の数＝訳を後ろへ送る区切りの数（疑問・反語のや・かの訳は結びの後ろ。2026-10-27 ユーザー指示）。負は前へ（強意の「きっと」）
+    pairs.forEach((p, i) => {
+      if (p.length < 3) return;
+      const k = p[2];
+      if (!Number.isInteger(k) || k === 0 || i + k < 0 || i + k >= pairs.length) ng(`${id} ${sid}: 後ろへ送る数が文の外を指す「${p[0]}」${k}`);
+      else if (pairs[i + k].length > 2) ng(`${id} ${sid}: 送った先「${pairs[i + k][0]}」も送られている`);
+    });
+    for (const [o, t, k] of pairs) {
       segs++;
       if (!o || !t) ng(`${id} ${sid}: 空の区切り「${o}」「${t}」`);
+      // 品詞の付いた語の途中で切らない。品詞の無い長い1語（人名の並び・語のデータが壊れた文）は中で切ってよい
+      const cut = at + o.length;
+      if (!bounds.has(cut) && toks.some(({ tk, s: ts, e: te }) => ts < cut && cut < te && tk.grammarTag?.pos)) ng(`${id} ${sid}: 区切りが語の途中で切れている「${o}」`);
+      const inSeg = toks.filter(({ s: ts, e: te }) => ts >= at && te <= at + o.length && te > ts).filter(({ tk }) => !isPunct(tk));
+      if (inSeg.length > 1 && inSeg.some(({ tk }) => isFunc(tk))) ng(`${id} ${sid}: 助詞・助動詞・補助動詞が1語で区切られていない「${o}」（${inSeg.map(({ tk }) => tk.text).join('｜')}）→「${t}」`);
+      // 完了・存続・強意（確述）は品詞の意味どおりに訳す（2026-10-27 ユーザー指示「確述は確述の訳になるように」「完了は完了の訳、存続は存続の訳で」）
+      //   強意＝「きっと」を負の数で述語の前へ／存続＝「ている」の形／完了＝「ている」の形にしない（「た」「てしまう」）
+      if (inSeg.length === 1 && inSeg[0].tk.grammarTag?.pos === '助動詞') {
+        const mean = inSeg[0].tk.grammarTag.meaning || '';
+        const tt = t.replace(/（[^（）]*）/g, '').replace(/[、。，．」』！？!?\s　]+$/, '');
+        const ZONZOKU = /(てい|でい|ている|でいる|ていた|でいた|てある|である|てあっ|であっ|てあり|ておい|ており|ておりま|ております|ていらっしゃ|ておいで|ておられ)$/;
+        if (mean === '強意' && !(tt === 'きっと' && k < 0)) ng(`${id} ${sid}: 強意（確述）の「${o}」は「きっと」を述語の前へ（負の数）→「${t}」`);
+        if (mean === '存続' && !ZONZOKU.test(tt)) ng(`${id} ${sid}: 存続の「${o}」が存続の訳（〜ている）になっていない→「${t}」`);
+        if (/^完了/.test(mean) && ZONZOKU.test(tt)) ng(`${id} ${sid}: 完了の「${o}」が存続の訳（〜ている）になっている→「${t}」`);
+      }
       const open = (t.match(/（/g) || []).length, close = (t.match(/）/g) || []).length;
       if (open !== close) ng(`${id} ${sid}: 訳の（ ）がそろわない「${t}」`);
       // 本文の語は（ ）の外の訳に入れる（2026-10-25 ユーザー指示。特に名詞）。
