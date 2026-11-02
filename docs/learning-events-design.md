@@ -203,3 +203,11 @@ A と B は並行でき、どちらも CODEX の範囲に触れない。記録�
 - 記録: 単語・文法・教材をそれぞれ1回操作し、期待した行が入ることを確かめる。通信を切った状態で学習画面が止まらないことも見る。
 - 集計: 既存の `word_stats` の正誤数と、同じ期間の出来事の件数が合うかを突き合わせる。
 - 端末統合: 匿名側の出来事が登録済みアカウントへ移ることを確かめる。
+
+## 10.3 答え合わせの先生（2026-11-02）
+
+- 単語クイズの答え合わせを LINE 風の吹き出し（右＝自分、左＝先生）にした（設計 `docs/quiz-chat-feedback.md`）。回答の出来事の `ctx` に、そのとき選ばれていた先生を `teacher` として足した。
+- 値 = `sei`（清少納言）／`murasaki`（紫式部）／`michizane`（菅原道真）／`tsurayuki`（紀貫之）／`teika`（藤原定家）。既定は `sei`。端末ごとの設定（localStorage `kobun.chat.teacher`。`src/lib/chatTeacher.ts` の `readChatTeacher()` が許可リスト外を既定に丸める）。
+- 足したのは呼び出し側だけ：`src/App.tsx` の `handleAnswer`（4択・逆引き・例文から意味・空欄）と `finalizeWriting`（記述）の `logEvent(...)` の `ctx`。`src/lib/learningEvents.ts` と表（014）は変えていない（`ctx` は jsonb）。
+- 対象は**単語クイズの `answer` だけ**（`area: 'vocab'`、`format` = word-meaning／word-reverse／sentence-meaning／blank-fill／meaning-writing）。多義語モードの ○×（true-false）・例文理解（example-comprehension）、文法道場・教材の出来事には付けない。多義語の文脈記述（context-writing）は同じ `finalizeWriting` を通るので値は入るが、先生の吹き出しは出ない（集計では `format` で分ける）。
+- 先生は答え合わせの見せ方だけで、出題・判定・SRS には関係しない。使い道は、先生ごとの続けやすさ（回答数の推移）や正答率の差を見ること。集計（教員画面）はまだ無い。

@@ -17,6 +17,8 @@ export const STORAGE_KEYS = {
   // === 表示設定 (任意で export/import) ===
   noblShowKakejiku: 'kobun.noble.showKakejiku', // 装束 (掛軸) ヒーローの開閉状態
   portraitTone: 'kobun.noble.portraitTone',    // 肖像の雰囲気 (ゆる/ポップ/キリッと)
+  chatTeacher: 'kobun.chat.teacher',           // 単語クイズの答え合わせの先生 (sei/murasaki/michizane/tsurayuki/teika)
+  chatBackground: 'kobun.chat.background',     // 単語クイズ画面の和柄 (seigaiha/shippo)
   reiwaTheme: 'kobun.reiwaTheme',                       // 令和テーマ
   characterTheme: 'kobun-tan:dashboard-character-theme', // 庭/装束
   wordRange: 'kobun-wordRange',

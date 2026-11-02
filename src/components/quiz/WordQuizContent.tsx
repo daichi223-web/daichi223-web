@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Word } from '../../types';
 import ExampleDisplay from '../ExampleDisplay';
 import { MarkedSentence } from './MarkedSentence';
-import { WordInsightPanel, WordInsightStrip } from './WordInsightPanel';
+import { ChatFeedback } from './ChatFeedback';
 import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
 import { prepareWritingJudge } from '../../lib/writingJudgeRuntime';
-import { SenseAnswerGuide } from './SenseAnswerGuide';
+import { buildThread } from '../../lib/quiz/chatThread';
+import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from '../../lib/teachers';
+import { useChatTeacher } from '../../lib/chatTeacher';
+import { usePortraitTone } from '../../lib/portraitTone';
+import { readMyStage } from '../../lib/myStage';
 import {
-  answerTone, hasAnswerBlank, isSubmitEnter, scrollBehavior, selfJudgePrompt, senseLabel,
-  softTone, stripSenseBrackets, writingHeadline, writingPrompt,
+  answerTone, hasAnswerBlank, isSubmitEnter, scrollBehavior, senseLabel,
+  stripSenseBrackets, writingPrompt,
 } from './writingVerdict';
 import { resolveTargetSpans, type Span } from '../../lib/targetMark';
 
@@ -64,29 +68,21 @@ export function WordQuizContent({
   const [showModernTranslation, setShowModernTranslation] = useState(false);
 
   // Reset state when question changes
+  // （親はもう問題ごとに unmount しないので、同じ qid で作り直された回でも残らないよう question の同一性でも走らせる）
   React.useEffect(() => {
     setAnsweredCorrectly(null);
     setSelectedOption(null);
     setUserAnswer('');
     setShowExample(contextRequired);
     setShowModernTranslation(false);
-  }, [question.correct.qid, contextRequired]);
+  }, [question, question.correct.qid, contextRequired]);
 
   // 記述は読み（かな）と教員の判断でも照合する。答える前に裏で用意しておく
   React.useEffect(() => {
     if (quizType === 'meaning-writing') prepareWritingJudge();
   }, [quizType]);
 
-  // 正解時に自動遷移。核イメージがある語は1行だけ「学びの瞬間」を見せてから進む。
-  React.useEffect(() => {
-    if (answeredCorrectly === true && onNext) {
-      const hasInsight = !!(question.correct?.senseCore || question.correct?.trap);
-      const timer = setTimeout(() => {
-        onNext();
-      }, hasInsight ? 1600 : 500);
-      return () => clearTimeout(timer);
-    }
-  }, [answeredCorrectly, onNext, question.correct]);
+  // 正解でも自動では進まない（2026-11-02）。答え合わせは ChatFeedback に出し、タップか「つぎへ」で次へ。
 
   // 記述: 採点したら、判定から自己判定までが見える位置へ寄せる（動かす量は最小限）
   const verdictRef = React.useRef<HTMLDivElement>(null);
@@ -95,6 +91,23 @@ export function WordQuizContent({
       verdictRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: 'nearest' });
     }
   }, [quizType, showWritingResult]);
+
+  // 答え合わせ（LINE 風）の画面データ。先生と画風は端末の設定、位階は通信なしで読み、この問の間は固定（セッション中は更新しない）
+  const [teacherId] = useChatTeacher();
+  const [tone] = usePortraitTone();
+  const myStage = useMemo(readMyStage, [question?.correct?.qid]);
+  const teacher = TEACHERS[teacherId];
+  const teacherSrc = teacherImage(teacherId, tone);
+  const chatMe = { stageN: myStage.n, tone, rankLabel: myStage.rank };
+  // 同じ見出し語の意味の一覧（意味マップ）。getWordByLemma は多義語だけ登録されるので、単義語は []
+  const siblings = useMemo(() => {
+    const w = question?.correct;
+    if (!w) return [];
+    return (dataParser.getWordByLemma(w.lemma)?.meanings ?? []).map((m) => ({
+      label: senseLabel(m),
+      current: m.qid === w.qid,
+    }));
+  }, [question?.correct]);
 
   // Defensive check: ensure question and question.correct exist
   if (!question || !question.correct || !question.correct.lemma) {
@@ -179,88 +192,41 @@ export function WordQuizContent({
           )}
         </div>
 
+        {/* 答え合わせ（LINE 風）。右＝書いた意味、左＝先生の判定・正解・核イメージ・罠・意味マップ。
+            保留のときは先生の吹き出しの中の ○× で自己判定し、判定後も自動では進まない（タップか「つぎへ」） */}
         {showWritingResult && (() => {
-          const head = writingHeadline(writingResult);
-          const pending = writingResult.verdict === 'pending';
+          // 別義（other_sense）で書いてしまった意味の表示名
           const matched = writingResult.matchedQid
             ? dataParser.getWordByLemma(question.correct.lemma)?.meanings.find((m) => m.qid === writingResult.matchedQid)
             : undefined;
+          const thread = buildThread({
+            teacher: teacherId,
+            word: question.correct,
+            quizType,
+            userAnswer,
+            writingResult,
+            writingUserJudgment,
+            matchedSense: matched ? senseLabel(matched) : undefined,
+            siblings,
+            exampleKobun: question.exampleKobun,
+            exampleModern: question.exampleModern,
+            seed: question.correct.qid,
+          voice: TEACHER_VOICE_ENABLED,
+          });
           return (
-            <div className="bg-rw-paper p-6 rounded-2xl border-2 border-rw-ink mb-4">
-              {/* 判定→回答→正解→自己判定を続けて置く（正解を見てすぐ判定できるように）。解説はその下 */}
-              <div ref={verdictRef} className="space-y-3 scroll-mt-16 scroll-mb-4">
-                <div className="text-center">
-                  <h3 className="text-xs font-black text-rw-ink-soft tracking-widest mb-2">判定</h3>
-                  <div
-                    className="rounded-xl border-2 px-3 py-2 text-base sm:text-xl font-black text-rw-ink leading-snug tracking-tight"
-                    style={softTone(head.color)}
-                  >
-                    {head.mark} {head.text}
-                  </div>
-                </div>
-                <div>
-                  <p className="text-xs font-black text-rw-ink-soft tracking-wider mb-1">あなたの回答</p>
-                  <p className="text-rw-ink bg-rw-bg p-3 rounded-xl font-serif border border-rw-rule">{userAnswer}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-black text-rw-ink tracking-wider mb-1">正解</p>
-                  <div className="text-rw-ink bg-rw-accent-soft p-3 rounded-xl border-2 border-rw-accent">
-                    <SenseAnswerGuide word={question.correct} className="font-serif" />
-                  </div>
-                </div>
-
-                {/* 自己判定: 機械で決まらなかったときだけ */}
-                {pending && writingUserJudgment === undefined && (
-                  <div className="p-4 rounded-xl bg-rw-bg border-2 border-rw-rule">
-                    <p className="text-sm font-black text-rw-ink mb-3 text-center">
-                      {selfJudgePrompt(question.correct)}
-                    </p>
-                    <div className="flex gap-2 justify-center flex-wrap">
-                      <button
-                        onClick={() => handleWritingUserJudgment?.(true)}
-                        className="px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5"
-                        style={softTone('var(--rw-accent)')}
-                      >
-                        ○ 合っていた
-                      </button>
-                      <button
-                        onClick={() => handleWritingUserJudgment?.(false)}
-                        className="px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5"
-                        style={softTone('var(--rw-primary)')}
-                      >
-                        × ちがった
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {writingUserJudgment !== undefined && (
-                  <div
-                    className="p-3 rounded-xl border-2"
-                    style={softTone(writingUserJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)')}
-                  >
-                    <div className="text-center font-black text-rw-ink">
-                      あなたの判定: {writingUserJudgment ? '○ 合っていた' : '× ちがった'}
-                    </div>
-                    <p className="text-xs text-rw-ink mt-1 text-center font-medium">次の問題に進みます...</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-3 mt-3">
-                {matched && (
-                  <p className="text-sm text-rw-ink leading-relaxed font-semibold">
-                    書いたのは「{senseLabel(matched)}」の意味。この文脈では「{senseLabel(question.correct)}」。
-                  </p>
-                )}
-
-                {/* 正解は1行だけ見せて進む。それ以外は、なぜこの意味かを示す */}
-                {writingResult.verdict === 'correct' ? (
-                  <WordInsightStrip word={question.correct} />
-                ) : (
-                  <WordInsightPanel word={question.correct} />
-                )}
-              </div>
+            // 判定から自己判定までが見える位置へ寄せる（scrollIntoView の的）
+            <div ref={verdictRef} className="scroll-mt-16 scroll-mb-4">
+              <ChatFeedback
+                bubbles={thread.bubbles}
+                canAdvance={thread.canAdvance}
+                onNext={onNext}
+                teacher={teacher}
+                teacherSrc={teacherSrc}
+                me={chatMe}
+                word={question.correct}
+                exampleMark={question.exampleMark}
+                onSelfJudge={handleWritingUserJudgment}
+              />
             </div>
           );
         })()}
@@ -408,28 +374,13 @@ export function WordQuizContent({
         </div>
       )}
 
-      {/* Example Display for sentence-meaning quiz type */}
-      {quizType === 'sentence-meaning' && (
-        <>
-          {/* 印が付かない例文では、指示文に見出し語が入っているので重ねて出さない */}
-          {isMarked && (
-            <div className="text-center mb-2">
-              <p className="text-xs text-rw-ink-soft font-black tracking-wider">参考：見出し語</p>
-              <p className="text-rw-ink font-black">{question.correct?.lemma || ''}</p>
-            </div>
-          )}
-          {/* Show modern translation when answered incorrectly */}
-          {answeredCorrectly !== null && answeredCorrectly === false && (
-            <ExampleDisplay
-              exampleKobun=""
-              exampleModern={question.exampleModern}
-              phase="answer"
-              showKobun={false}
-              showModern={true}
-              className="mb-4"
-            />
-          )}
-        </>
+      {/* sentence-meaning: 印が付かない例文では、指示文に見出し語が入っているので重ねて出さない。
+          不正解時の訳は答え合わせの吹き出し（例文）に出す */}
+      {quizType === 'sentence-meaning' && isMarked && (
+        <div className="text-center mb-2">
+          <p className="text-xs text-rw-ink-soft font-black tracking-wider">参考：見出し語</p>
+          <p className="text-rw-ink font-black">{question.correct?.lemma || ''}</p>
+        </div>
       )}
 
       <div className="space-y-2">
@@ -492,37 +443,45 @@ export function WordQuizContent({
         })}
       </div>
 
-      {/* 正解時：核イメージを1行だけ見せる（テンポは崩さない） */}
-      {answeredCorrectly === true && <WordInsightStrip word={question.correct} />}
-
-      {/* 不正解時：例文で文脈記憶を補強 (blank-fill は空欄が埋まった全文を見せる) */}
-      {answeredCorrectly === false && (quizType === 'word-meaning' || quizType === 'word-reverse' || quizType === 'blank-fill') && (
-        <ExampleDisplay
-          exampleKobun={question.exampleKobun}
-          exampleModern={question.exampleModern}
-          phase="answer"
-          forceShowModern={true}
-          className="mt-3 bg-rw-primary-soft rounded-xl border-2 border-rw-primary"
-          target={question.correct}
-          targetSpans={question.exampleMark}
-        />
-      )}
-
-      {/* 不正解時：なぜこの意味か（核イメージ・決め手・罠・意味マップ） */}
-      {answeredCorrectly === false && <WordInsightPanel word={question.correct} className="mt-3" />}
-
-      {/* 不正解の場合のみ次へボタン表示 */}
-      {answeredCorrectly === false && (
-        <div className="mt-8 text-center">
-          <button
-            onClick={onNext}
-            className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
-            style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
-          >
-            つぎへ →
-          </button>
-        </div>
-      )}
+      {/* 答え合わせ（LINE 風）。右＝選んだ答え、左＝先生の判定・核イメージ・罠・例文と訳・意味マップ。
+          正解でも自動では進まず、タップか「つぎへ」で次へ（blank-fill の例文は空欄が埋まった全文 exampleKobun） */}
+      {answeredCorrectly !== null && (() => {
+        const thread = buildThread({
+          teacher: teacherId,
+          word: question.correct,
+          quizType,
+          selected: selectedOption,
+          isCorrect: answeredCorrectly,
+          siblings,
+          exampleKobun: question.exampleKobun,
+          exampleModern: question.exampleModern,
+          seed: question.correct.qid,
+          voice: TEACHER_VOICE_ENABLED,
+        });
+        return (
+          <>
+            <ChatFeedback
+              bubbles={thread.bubbles}
+              canAdvance={thread.canAdvance}
+              onNext={onNext}
+              teacher={teacher}
+              teacherSrc={teacherSrc}
+              me={chatMe}
+              word={question.correct}
+              exampleMark={question.exampleMark}
+            />
+            <div className="mt-8 text-center">
+              <button
+                onClick={onNext}
+                className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
+                style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
+              >
+                つぎへ →
+              </button>
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 }

@@ -13,6 +13,10 @@ import { TrueFalseQuizContent } from './components/quiz/TrueFalseQuizContent';
 import { ExampleComprehensionContent } from './components/quiz/ExampleComprehensionContent';
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { quizMeanings } from './components/quiz/writingVerdict';
+import { QuizBackground } from './components/quiz/QuizBackground';
+import { QuizLookSettings } from './components/quiz/QuizLookSettings';
+import { useQuizBackground } from './lib/quizBackground';
+import { readChatTeacher } from './lib/chatTeacher';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { pickQuestions, type Bucket } from './lib/quizSelector';
 import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
@@ -195,7 +199,10 @@ function App() {
   const [nextButtonVisible, setNextButtonVisible] = useState(false);
   const [showWritingResult, setShowWritingResult] = useState(false);
   const [writingResult, setWritingResult] = useState<WritingJudgeResult>({ verdict: 'pending' });
+  // 正解の大きな○。今は多義語の○×（handleTrueFalseAnswer）だけが使う。単語クイズは答え合わせの吹き出し（ChatFeedback）に移った（2026-11-02）
   const [showCorrectCircle, setShowCorrectCircle] = useState(false);
+  // 単語クイズ画面の和柄（端末ごと）。出題には関係しないので、setupQuiz を再実行する useEffect の依存には入れない
+  const [quizBackground] = useQuizBackground();
   const [writingUserJudgment, setWritingUserJudgment] = useState<boolean | undefined>(undefined);
   const [currentWritingQid, setCurrentWritingQid] = useState<string>('');
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
@@ -1055,7 +1062,10 @@ function App() {
         correct: isCorrect, chosen: selectedOption.qid,
         format: currentMode === 'word' ? (q?.resolvedType ?? wordQuizType) : polysemyQuizType,
         route: quizMode,
-        ctx: { mode: currentMode, reverse: isReverse || undefined, choices: q?.options?.map((o) => o.qid) },
+        ctx: {
+          mode: currentMode, reverse: isReverse || undefined, choices: q?.options?.map((o) => o.qid),
+          teacher: readChatTeacher(),
+        },
       });
     }
     // 多義語モード(=例文理解クイズ等の選択式) の正答もカウント
@@ -1064,12 +1074,8 @@ function App() {
     }
     if (isCorrect) {
       setScore(prev => prev + 1);
-      setShowCorrectCircle(true);
-      setTimeout(() => {
-        setShowCorrectCircle(false);
-        setCurrentQuestionIndex(prev => prev + 1);
-        setNextButtonVisible(false);
-      }, 500);
+      // 正解でも自動では進まない。答え合わせ（LINE 風の吹き出し）を見せ、タップか「つぎへ」で次へ（2026-11-02）
+      setNextButtonVisible(true);
     } else {
       setNextButtonVisible(true);
       setWrongAnswers(prev => {
@@ -1129,6 +1135,7 @@ function App() {
       format: currentMode === 'polysemy' ? 'context-writing' : 'meaning-writing', route: quizMode,
       ctx: {
         mode: currentMode, score: isCorrect ? 100 : 0, verdict: result.verdict, self: selfJudged,
+        teacher: readChatTeacher(),
         ...(result.matchedQid ? { matched: result.matchedQid } : {}),
       },
     });
@@ -1159,10 +1166,8 @@ function App() {
     if (result.verdict === 'correct') {
       finalizeWriting(correctQid, true, result, false);
       setScore(prev => prev + 1);
-      // 正解は核イメージを1行見せてから自動で進む
-      setTimeout(() => {
-        handleNextQuestion();
-      }, 1600);
+      // 正解でも自動では進まない。答え合わせの吹き出しを見せ、タップか「つぎへ」で次へ（2026-11-02）
+      setNextButtonVisible(true);
     } else {
       // 別義・現代語・無回答は不正解で確定。保留は自己判定を待つ
       // （判定せずに「つぎへ」で進んだら記録しない）。
@@ -1202,7 +1207,6 @@ function App() {
   const handleWritingUserJudgment = async (judgment: boolean) => {
     if (writingResult.verdict !== 'pending' || writingUserJudgment !== undefined) return;
     setWritingUserJudgment(judgment);
-    setNextButtonVisible(false); // 次へボタンを非表示
 
     if (currentWritingQid) {
       finalizeWriting(currentWritingQid, judgment, writingResult, true);
@@ -1227,10 +1231,8 @@ function App() {
       }
     }
 
-    // 判定後0.6秒で自動遷移
-    setTimeout(() => {
-      handleNextQuestion();
-    }, 600);
+    // 判定後も自動では進まない。selfRight / selfWrong の吹き出しを見せ、タップか「つぎへ」で次へ（2026-11-02）
+    setNextButtonVisible(true);
   };
 
   // 多義語の記述（意味ごとに判定）。final が null の意味は保留のまま進んだもので、記録しない
@@ -1983,12 +1985,14 @@ function App() {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="min-h-screen" style={{ background: 'var(--rw-bg)' }}>
+      {/* 和柄の背景（青海波／七宝。クイズ画面だけ）。固定の SVG を z 0 に敷き、中身は relative z-[1] で上に出す */}
+      <QuizBackground pattern={quizBackground} />
       {vocabLemma && (
         <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} />
       )}
       {indexButton}
-      <div className="max-w-2xl mx-auto p-3 md:p-6 pt-16 md:pt-6">
+      <div className="relative z-[1] max-w-2xl mx-auto p-3 md:p-6 pt-16 md:pt-6">
         {/* Feature shortcuts (shown only when no quiz in progress) */}
         {!isQuizActive && !showResults && (
           <div className="grid grid-cols-2 gap-2 mb-3">
@@ -2142,6 +2146,8 @@ function App() {
                   max={330}
                 />
               </div>
+              {/* grid の下に全幅で1行: 先生・背景（端末ごと。setupQuiz を再実行する useEffect の依存には入れない） */}
+              <QuizLookSettings className="col-span-2" />
             </div>
           ) : null}
 
@@ -2229,7 +2235,7 @@ function App() {
         </div>
 
 
-        {/* Correct Answer Circle */}
+        {/* Correct Answer Circle（多義語の○×だけ。単語クイズは答え合わせの吹き出しに移り、ここは使わない） */}
         {showCorrectCircle && (
           <div className="flex justify-center mb-2">
             <div className="text-9xl text-red-500 font-black" style={{fontWeight: 900, WebkitTextStroke: '8px red'}}>

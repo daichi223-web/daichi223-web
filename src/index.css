@@ -59,6 +59,11 @@
 .animate-popover-in { animation: popover-in 0.15s ease-out; }
 .animate-slide-up { animation: slide-up 0.25s ease-out; }
 
+/* 「視差効果を減らす」設定では、吹き出し（ChatFeedback）のせり上がりを出さない */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-up { animation: none; }
+}
+
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
