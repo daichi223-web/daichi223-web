@@ -26,9 +26,9 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
   const [tone] = usePortraitTone();
 
   return (
-    <div className={`mt-1 pt-2 border-t border-slate-200 space-y-2 ${className}`}>
+    <div className={`mt-1 pt-2 border-t border-rw-rule space-y-2 ${className}`}>
       <div>
-        <div className="text-[10px] font-bold text-slate-500 mb-1">先生</div>
+        <div className="text-[10px] font-bold text-rw-ink-soft mb-1">先生</div>
         <div className="flex gap-2 overflow-x-auto scrollbar-hide" role="group" aria-label="答え合わせの先生">
           {TEACHER_IDS.map((id) => {
             const t = TEACHERS[id];
@@ -51,15 +51,15 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
         </div>
         {/* 選んでいる先生の人物像（口調の根拠。史実の範囲内） */}
         {TEACHER_VOICE_ENABLED && (
-        <p className="mt-1.5 text-[11px] leading-snug text-slate-600">
+        <p className="mt-1.5 text-[11px] leading-snug text-rw-ink-soft">
           <span className="font-bold text-rw-ink">{TEACHERS[teacher].name}</span>
-          <span className="text-slate-500">（{TEACHERS[teacher].title}）</span>
+          <span className="text-rw-ink-soft">（{TEACHERS[teacher].title}）</span>
           — {TEACHERS[teacher].profile}
         </p>
         )}
       </div>
       <div>
-        <div className="text-[10px] font-bold text-slate-500 mb-1">背景</div>
+        <div className="text-[10px] font-bold text-rw-ink-soft mb-1">背景</div>
         <div className="grid grid-cols-3 gap-2" role="group" aria-label="クイズ画面の背景">
           {QUIZ_BACKGROUND_IDS.map((id) => {
             const active = id === background;
@@ -80,7 +80,7 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
         </div>
       </div>
       <div>
-        <div className="text-[10px] font-bold text-slate-500 mb-1">色</div>
+        <div className="text-[10px] font-bold text-rw-ink-soft mb-1">色</div>
         <div className="flex gap-2 flex-wrap" role="group" aria-label="背景の色">
           {QUIZ_BACKGROUND_COLOR_IDS.map((id) => {
             const c = QUIZ_BACKGROUND_COLORS[id];

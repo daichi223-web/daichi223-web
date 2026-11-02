@@ -14,7 +14,7 @@ import { ExampleComprehensionContent } from './components/quiz/ExampleComprehens
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { quizMeanings } from './components/quiz/writingVerdict';
 import { QuizBackground } from './components/quiz/QuizBackground';
-import { useQuizBackground, useQuizBackgroundColor } from './lib/quizBackground';
+import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from './lib/quizBackground';
 import { readChatTeacher } from './lib/chatTeacher';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { pickQuestions, type Bucket } from './lib/quizSelector';
@@ -1985,7 +1985,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--rw-bg)' }}>
+    <div className="min-h-screen" style={{ background: QUIZ_BACKGROUND_COLORS[quizBackgroundColor]?.bg ?? 'var(--rw-bg)' }}>
       {/* 和柄の背景（青海波／七宝。クイズ画面だけ）。固定の SVG を z 0 に敷き、中身は relative z-[1] で上に出す */}
       <QuizBackground pattern={quizBackground} color={quizBackgroundColor} />
       {vocabLemma && (
@@ -2022,7 +2022,7 @@ function App() {
         )}
 
         {/* Mode Selection Tabs */}
-        <div className="flex justify-center border-b border-slate-200 mb-4 bg-white rounded-t-2xl shadow-sm">
+        <div className="flex justify-center border-b border-rw-rule mb-4 bg-rw-paper rounded-t-2xl shadow-sm">
           <button
             onClick={() => {
               if (currentMode === 'word') return;
@@ -2035,8 +2035,8 @@ function App() {
             style={{
               padding: '0.75rem 1.5rem',
               fontWeight: 600,
-              color: currentMode === 'word' ? '#3b82f6' : '#64748b',
-              borderBottom: currentMode === 'word' ? '3px solid #3b82f6' : '3px solid transparent',
+              color: currentMode === 'word' ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
+              borderBottom: currentMode === 'word' ? '3px solid var(--rw-primary)' : '3px solid transparent',
               transition: 'all 0.2s ease-in-out',
               cursor: 'pointer',
               minHeight: '44px'
@@ -2056,8 +2056,8 @@ function App() {
             style={{
               padding: '0.75rem 1.5rem',
               fontWeight: 600,
-              color: currentMode === 'polysemy' ? '#3b82f6' : '#64748b',
-              borderBottom: currentMode === 'polysemy' ? '3px solid #3b82f6' : '3px solid transparent',
+              color: currentMode === 'polysemy' ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
+              borderBottom: currentMode === 'polysemy' ? '3px solid var(--rw-primary)' : '3px solid transparent',
               transition: 'all 0.2s ease-in-out',
               cursor: 'pointer',
               minHeight: '44px'
@@ -2068,7 +2068,7 @@ function App() {
         </div>
 
         {/* Settings Area */}
-        <div className="bg-white p-3 rounded-b-2xl shadow-sm border-x border-b border-slate-200 mb-2">
+        <div className="bg-rw-paper p-3 rounded-b-2xl shadow-sm border-x border-b border-rw-rule mb-2">
           {currentMode === 'word' ? (
             <div className="grid grid-cols-2 gap-2">
               {/* 左列: モードと問題数 */}
@@ -2078,7 +2078,7 @@ function App() {
                     ref={wordQuizTypeRef}
                     value={wordQuizType}
                     onChange={(e) => setWordQuizType(e.target.value as WordQuizType)}
-                    className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
+                    className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
                   >
                     <option value="auto">おまかせ（覚えるほど問いが難しくなる）</option>
                     <option value="word-meaning">単語の意味を選ぶ</option>
@@ -2091,20 +2091,20 @@ function App() {
                   <select
                     value={pickMode}
                     onChange={(e) => setPickMode(e.target.value as 'auto' | 'random')}
-                    className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
+                    className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
                     title="どの語を出すか。おまかせは学習記録から、苦手→まだ解いていない語（番号順）→途中の語 の順に配分し、正答率の高い語は頻度を下げる"
                   >
                     <option value="auto">出す語はおまかせ（苦手・未着手を優先）</option>
                     <option value="random">出す語はランダム</option>
                   </select>
                   {pickMode === 'auto' && lastPick && (
-                    <div className="text-[10px] text-slate-500 mt-0.5">
+                    <div className="text-[10px] text-rw-ink-soft mt-0.5">
                       前回の内訳: 苦手 {lastPick.weak}・未着手 {lastPick.new}・途中 {lastPick.mid}{lastPick.strong > 0 ? `・得意 ${lastPick.strong}` : ''}
                     </div>
                   )}
                 </div>
                 <div className="flex items-center space-x-1">
-                  <label className="text-xs text-slate-600 whitespace-nowrap">問題数</label>
+                  <label className="text-xs text-rw-ink-soft whitespace-nowrap">問題数</label>
                   <input
                     type="text"
                     inputMode="numeric"
@@ -2129,7 +2129,7 @@ function App() {
                     min="1"
                     max="330"
                     placeholder="数"
-                    className="w-14 p-1 bg-slate-100 border border-slate-200 rounded text-center text-base"
+                    className="w-14 p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-center text-base"
                     style={{
                       MozAppearance: 'textfield',
                       WebkitAppearance: 'none'
@@ -2162,7 +2162,7 @@ function App() {
                     ref={polysemyQuizTypeRef}
                     value={polysemyQuizType}
                     onChange={(e) => setPolysemyQuizType(e.target.value as PolysemyQuizType)}
-                    className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
+                    className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
                   >
                     <option value="example-comprehension">例文と意味を結びつける</option>
                     <option value="true-false">例文の訳の正誤を判断</option>
@@ -2173,20 +2173,20 @@ function App() {
                   <select
                     value={pickMode}
                     onChange={(e) => setPickMode(e.target.value as 'auto' | 'random')}
-                    className="w-full p-1 bg-slate-100 border border-slate-200 rounded text-xs"
+                    className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
                     title="どの語を出すか。おまかせは学習記録から、苦手→まだ解いていない語（番号順）→途中の語 の順に配分し、正答率の高い語は頻度を下げる"
                   >
                     <option value="auto">出す語はおまかせ（苦手・未着手を優先）</option>
                     <option value="random">出す語はランダム</option>
                   </select>
                   {pickMode === 'auto' && lastPick && (
-                    <div className="text-[10px] text-slate-500 mt-0.5">
+                    <div className="text-[10px] text-rw-ink-soft mt-0.5">
                       前回の内訳: 苦手 {lastPick.weak}・未着手 {lastPick.new}・途中 {lastPick.mid}{lastPick.strong > 0 ? `・得意 ${lastPick.strong}` : ''}
                     </div>
                   )}
                 </div>
                 <div className="flex items-center space-x-1">
-                  <label className="text-xs text-slate-600 whitespace-nowrap">問題数</label>
+                  <label className="text-xs text-rw-ink-soft whitespace-nowrap">問題数</label>
                   <input
                     type="text"
                     inputMode="numeric"
@@ -2211,7 +2211,7 @@ function App() {
                     min="1"
                     max="330"
                     placeholder="数"
-                    className="w-14 p-1 bg-slate-100 border border-slate-200 rounded text-center text-base"
+                    className="w-14 p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-center text-base"
                     style={{
                       MozAppearance: 'textfield',
                       WebkitAppearance: 'none'
@@ -2244,7 +2244,11 @@ function App() {
 
         {/* Quiz Content */}
         {isQuizActive && !showCorrectCircle && (
-          <div className="relative">
+          // 出題・答え合わせは紙の下敷きに載せる（和柄の上に直接文字が乗ると読みにくい。2026-11-02）
+          <div
+            className="relative rounded-2xl border border-rw-rule p-3 shadow-sm"
+            style={{ background: 'color-mix(in srgb, var(--rw-paper) 94%, transparent)' }}
+          >
             {/* Word Mode Quiz */}
             {currentMode === 'word' && getCurrentQuestion() && (
               <WordQuizContent
@@ -2317,22 +2321,22 @@ function App() {
             })()}
 
             {/* Progress Bar */}
-            <div className="mt-3 pt-2 border-t border-slate-200">
+            <div className="mt-3 pt-2 border-t border-rw-rule">
               <div className="flex justify-between items-center mb-2 text-sm">
-                <span className="font-bold text-slate-700">
+                <span className="font-bold text-rw-ink">
                   {getProgress().current}/{getProgress().total}
                 </span>
-                <span className="font-medium text-slate-500">
+                <span className="font-medium text-rw-ink-soft">
                   {getProgress().percent}%
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-rw-ink-soft">
                   スコア: {score}
                 </span>
               </div>
-              <div className="w-full bg-slate-200 rounded-full h-2.5">
+              <div className="w-full rounded-full h-2.5" style={{ background: 'var(--rw-rule)' }}>
                 <div
-                  className="bg-blue-500 h-2.5 rounded-full transition-all duration-300 ease-in-out"
-                  style={{ width: `${getProgress().percent}%` }}
+                  className="h-2.5 rounded-full transition-all duration-300 ease-in-out"
+                  style={{ width: `${getProgress().percent}%`, background: 'var(--rw-primary)' }}
                 />
               </div>
             </div>
