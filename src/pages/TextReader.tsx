@@ -457,33 +457,38 @@ export default function TextReader() {
 
       {/* スティッキーフッター */}
       <footer className="sticky bottom-0 bg-rw-paper border-t-2 border-rw-ink px-3 py-2">
-        <div className="flex gap-2 justify-center flex-wrap">
+        {/* 下段は1行に4つ：現代語訳・解説・問題・PDF（2026-11-02 ユーザー指示「下段を一行にして」） */}
+        <div className="flex gap-1.5 justify-center flex-nowrap">
           <button
             onClick={() => setShowTranslation(!showTranslation)}
-            className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
+            aria-pressed={showTranslation}
+            className={`flex-1 min-w-0 whitespace-nowrap rounded-full font-bold text-xs px-2 py-2 border-2 border-rw-ink transition-colors ${
+              showTranslation ? "bg-rw-ink text-rw-paper" : "bg-rw-paper text-rw-ink hover:bg-rw-bg"
+            }`}
           >
-            {showTranslation ? "現代語訳を隠す" : "現代語訳を表示"}
+            現代語訳
           </button>
           <Link
             to={`/read/texts/${textId}/guide`}
-            className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
+            className="flex-1 min-w-0 whitespace-nowrap text-center rounded-full font-bold text-xs px-2 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
           >
-            📖 解説
-          </Link>
-          <Link
-            to={`/read/texts/${textId}/print`}
-            className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
-          >
-            🖨 品詞分解PDF
+            解説
           </Link>
           {(hasManualTest || autoTestCount > 0) && (
             <Link
               to={`/read/texts/${textId}/test`}
-              className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
+              className="flex-1 min-w-0 whitespace-nowrap text-center rounded-full font-bold text-xs px-2 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
             >
-              📝 読解テスト
+              問題
             </Link>
           )}
+          <Link
+            to={`/read/texts/${textId}/print`}
+            title="品詞分解PDF"
+            className="flex-1 min-w-0 whitespace-nowrap text-center rounded-full font-bold text-xs px-2 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
+          >
+            PDF
+          </Link>
           {/* 先生AI のボタンは 2026-10-09 にいったん外した（復帰は getGemBaseUrl） */}
         </div>
       </footer>
