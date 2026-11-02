@@ -24,6 +24,7 @@ const HomeV3 = lazy(() => import('./pages/HomeV3.tsx'))
 const TextReader = lazy(() => import('./pages/TextReader.tsx'))
 const TextGuide = lazy(() => import('./pages/TextGuide.tsx'))
 const TextPrint = lazy(() => import('./pages/TextPrint.tsx'))
+const ReadingTest = lazy(() => import('./pages/ReadingTest.tsx'))
 const ReferenceHome = lazy(() => import('./pages/ReferenceHome.tsx'))
 const ReferenceTopic = lazy(() => import('./pages/ReferenceTopic.tsx'))
 const AffixList = lazy(() => import('./pages/AffixList.tsx'))
@@ -81,6 +82,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/texts/:textId" element={<TextReader />} />
           <Route path="/read/texts/:textId/guide" element={<TextGuide />} />
           <Route path="/read/texts/:textId/print" element={<TextPrint />} />
+          <Route path="/read/texts/:textId/test" element={<ReadingTest />} />
           <Route path="/read/reference" element={<ReferenceHome />} />
           <Route path="/read/reference/:topicId" element={<ReferenceTopic />} />
           <Route path="/read/affixes" element={<AffixList />} />

@@ -19,6 +19,7 @@ import { SelectionToolbar } from "@/components/kobun/SelectionToolbar";
 import { LearningPointsPanel } from "@/components/kobun/LearningPointsPanel";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 import { displayTranslations, splitHokan, type Chikugo } from "@/lib/kobun/chikugo";
+import { buildReadingTest, fetchManualTest } from "@/lib/kobun/readingTest";
 
 type LoadError = "not-found" | "intercepted" | "network";
 
@@ -168,6 +169,19 @@ export default function TextReader() {
       initProgress(textId);
     }
   }, [textId]);
+
+  // 読解テスト（2026-11-02〜）：手書きの問題ファイルがあればそれ、無ければ自動問題。0問ならボタンを出さない
+  const [hasManualTest, setHasManualTest] = useState(false);
+  useEffect(() => {
+    setHasManualTest(false);
+    if (!text) return;
+    let alive = true;
+    fetchManualTest(textId, text).then((m) => alive && setHasManualTest(!!m));
+    return () => {
+      alive = false;
+    };
+  }, [text, textId]);
+  const autoTestCount = useMemo(() => (text ? buildReadingTest(text, analysis).questions.length : 0), [text, analysis]);
 
   const handleLayerChange = (layer: LayerId) => {
     setLayer(layer);
@@ -462,6 +476,14 @@ export default function TextReader() {
           >
             🖨 品詞分解PDF
           </Link>
+          {(hasManualTest || autoTestCount > 0) && (
+            <Link
+              to={`/read/texts/${textId}/test`}
+              className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
+            >
+              📝 読解テスト
+            </Link>
+          )}
           {/* 先生AI のボタンは 2026-10-09 にいったん外した（復帰は getGemBaseUrl） */}
         </div>
       </footer>

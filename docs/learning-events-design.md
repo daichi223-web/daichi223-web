@@ -211,3 +211,10 @@ A と B は並行でき、どちらも CODEX の範囲に触れない。記録�
 - 足したのは呼び出し側だけ：`src/App.tsx` の `handleAnswer`（4択・逆引き・例文から意味・空欄）と `finalizeWriting`（記述）の `logEvent(...)` の `ctx`。`src/lib/learningEvents.ts` と表（014）は変えていない（`ctx` は jsonb）。
 - 対象は**単語クイズの `answer` だけ**（`area: 'vocab'`、`format` = word-meaning／word-reverse／sentence-meaning／blank-fill／meaning-writing）。多義語モードの ○×（true-false）・例文理解（example-comprehension）、文法道場・教材の出来事には付けない。多義語の文脈記述（context-writing）は同じ `finalizeWriting` を通るので値は入るが、先生の吹き出しは出ない（集計では `format` で分ける）。
 - 先生は答え合わせの見せ方だけで、出題・判定・SRS には関係しない。使い道は、先生ごとの続けやすさ（回答数の推移）や正答率の差を見ること。集計（教員画面）はまだ無い。
+
+## 10.4 読解テスト（2026-11-02）
+
+- 教材の読解テスト（`/read/texts/:textId/test`、`src/pages/ReadingTest.tsx`。設計 `docs/reading-test.md`）の出来事。`src/lib/learningEvents.ts` と表（014）は変えていない。
+- 開始：`area: 'text'`、`action: 'open'`、`targetType: 'readtest'`、`targetId` = 教材ID。`ctx` = `{ source: 'auto' | 'manual', n: 問題数 }`（自動問題か手書きの問題ファイルか）。「もう一度」では送らない（同じ画面の中のやり直し）。
+- 回答：`area: 'text'`、`action: 'answer'`、`targetType: 'readq'`、`targetId` = `教材ID:問題番号`、`correct`、`chosen` = 選んだ選択肢の文字列、`format` = 問題の種類（`vocab`／`grammar`／`subject`／`kakari`／`reading`）。`ctx` = `{ tokenIds: 傍線に重なるトークン, span: [文の中の開始, 終了], source, ms }`（`ms` は `markQuestionShown()` からの応答時間で、`logEvent` が付ける）。
+- 問題番号は生成の結果なので、自動問題のデータ（教材・単語帳・決め手）が変わると同じ番号でも別の問題になりうる。集計で問題を同定するときは `ctx.tokenIds` と `ctx.span` を使う。
