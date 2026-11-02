@@ -8,9 +8,10 @@ const CHANGE_EVENT = 'kobun:portrait-tone-change';
 export function readPortraitTone(): PortraitTone {
   try {
     const value = localStorage.getItem(PORTRAIT_TONE_KEY);
-    return value === 'yuru' || value === 'pop' ? value : 'sharp';
+    // 既定（まだ選んでいない端末）はゆるキャラ（2026-11-02 ユーザー指示）。選んだことがあればその値
+    return value === 'sharp' || value === 'yuru' || value === 'pop' ? value : 'yuru';
   } catch {
-    return 'sharp';
+    return 'yuru';
   }
 }
 
@@ -29,7 +30,7 @@ export function usePortraitTone(): [PortraitTone, (tone: PortraitTone) => void] 
   useEffect(() => {
     const sync = (event: Event) => {
       const custom = event as CustomEvent<PortraitTone>;
-      setTone(custom.detail === 'yuru' || custom.detail === 'pop' ? custom.detail : readPortraitTone());
+      setTone(custom.detail === 'sharp' || custom.detail === 'yuru' || custom.detail === 'pop' ? custom.detail : readPortraitTone());
     };
     window.addEventListener('storage', sync);
     window.addEventListener(CHANGE_EVENT, sync);
