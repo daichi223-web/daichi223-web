@@ -128,12 +128,30 @@ function BubbleBody({
     case 'senses':
       return (
         <div>
-          <p className="text-[10px] font-black text-rw-ink-soft tracking-wider">ほかの意味</p>
-          <ul className="mt-0.5 space-y-0.5">
+          <p className="text-[11px] font-black text-rw-ink-soft tracking-wider">「{word.lemma}」の意味（全部で{bubble.items.length}つ）</p>
+          {/* 意味は1つずつ大きな丸で区切る。小さな「・」だと「〜ている（補助）」のような意味が説明文に見えてしまう（2026-11-02 ユーザー指摘） */}
+          <ul className="mt-1 space-y-1">
             {bubble.items.map((item, i) => (
-              <li key={i} className={item.current ? 'font-black' : 'text-rw-ink-soft'}>
-                {item.current ? '● ' : '・'}
-                {item.label}
+              <li key={i} className={`flex items-start gap-2 ${item.current ? 'font-black text-rw-ink' : 'text-rw-ink'}`}>
+                <span
+                  aria-hidden="true"
+                  className="shrink-0 mt-[0.2em] w-[1em] h-[1em] rounded-full border-2"
+                  style={{
+                    borderColor: item.current ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
+                    background: item.current ? 'var(--rw-primary)' : 'transparent',
+                  }}
+                />
+                <span>
+                  {item.label}
+                  {item.current && (
+                    <span
+                      className="ml-1.5 inline-block px-1.5 py-px rounded-full text-[10px] font-black align-[0.1em]"
+                      style={{ background: 'var(--rw-primary)', color: 'var(--rw-paper)' }}
+                    >
+                      この文
+                    </span>
+                  )}
+                </span>
               </li>
             ))}
           </ul>
