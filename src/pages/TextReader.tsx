@@ -18,6 +18,7 @@ import { useWordCard, type WordCardTokenInfo } from "@/components/kobun/useWordC
 import { SelectionToolbar } from "@/components/kobun/SelectionToolbar";
 import { LearningPointsPanel } from "@/components/kobun/LearningPointsPanel";
 import { fetchJsonAsset } from "@/lib/fetchJson";
+import { displayTranslations, splitHokan, type Chikugo } from "@/lib/kobun/chikugo";
 
 type LoadError = "not-found" | "intercepted" | "network";
 
@@ -118,6 +119,8 @@ export default function TextReader() {
   const [loadError, setLoadError] = useState<LoadError | null>(null);
   const [analysis, setAnalysis] = useState<TextAnalysis | null>(null);
   const [readingGuide, setReadingGuide] = useState<ReadingGuide | null>(null);
+  // 逐語訳（品詞分解PDFと同じ形で現代語訳を出す。無い文は従来の現代語訳。2026-11-02 ユーザー指示）
+  const [chikugo, setChikugo] = useState<Chikugo | null>(null);
   const [currentLayer, setLayer] = useState<LayerId>(
     (layerParam !== null ? Number(layerParam) : 1) as LayerId
   );
@@ -150,6 +153,13 @@ export default function TextReader() {
     if (!textId) return;
     fetchJsonAsset<ReadingGuide>(`/reading/${textId}.json`).then((r) => {
       setReadingGuide(r.ok ? r.data : null);
+    });
+  }, [textId]);
+
+  useEffect(() => {
+    if (!textId) return;
+    fetchJsonAsset<Chikugo>(`/chikugo/${textId}.json`).then((r) => {
+      setChikugo(r.ok && r.data?.sentences ? r.data : null);
     });
   }, [textId]);
 
@@ -397,9 +407,29 @@ export default function TextReader() {
                       : 0.55,
                 }}
               >
-                <p className="text-sm leading-relaxed text-rw-ink">
-                  {sentence.modernTranslation}
-                </p>
+                {chikugo?.sentences[sentence.id]?.length ? (
+                  // 品詞分解PDF（TextPrint）と同じ形：1語ごとの訳を点線で区切り、補った語（（ ）の中）は薄く
+                  <p className="text-sm leading-relaxed text-rw-ink">
+                    {displayTranslations(chikugo.sentences[sentence.id]).map((t, k) => (
+                      <span
+                        key={k}
+                        className={k > 0 ? "border-l border-dotted border-rw-ink-soft pl-1 ml-1" : undefined}
+                      >
+                        {splitHokan(t).map((x, j) =>
+                          x.hokan ? (
+                            <span key={j} className="text-rw-ink-soft">{x.text}</span>
+                          ) : (
+                            x.text
+                          )
+                        )}
+                      </span>
+                    ))}
+                  </p>
+                ) : (
+                  <p className="text-sm leading-relaxed text-rw-ink">
+                    {sentence.modernTranslation}
+                  </p>
+                )}
               </div>
             )}
           </div>
