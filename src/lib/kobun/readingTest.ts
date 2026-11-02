@@ -26,7 +26,7 @@ import { fillTemplate, pickVariant, type TeacherId, type TeacherLines } from "@/
 import { NEUTRAL_LINES, TEACHER_LINES } from "@/lib/teacherLines";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 
-export type ReadingKind = "vocab" | "grammar" | "subject" | "kakari" | "reading";
+export type ReadingKind = "vocab" | "grammar" | "subject" | "kakari" | "reading" | "yaku";
 
 /** 問題の札（「問N」の横） */
 export const READING_KIND_LABEL: Record<ReadingKind, string> = {
@@ -35,6 +35,7 @@ export const READING_KIND_LABEL: Record<ReadingKind, string> = {
   subject: "主語",
   kakari: "係り先",
   reading: "内容",
+  yaku: "現代語訳",
 };
 
 export interface ReadingExplain {
@@ -500,7 +501,7 @@ export interface ManualReadingFile {
   }>;
 }
 
-const KINDS: ReadingKind[] = ["vocab", "grammar", "subject", "kakari", "reading"];
+const KINDS: ReadingKind[] = ["vocab", "grammar", "subject", "kakari", "reading", "yaku"];
 
 /**
  * 手書きの問題ファイルを ReadingQ にそろえる。傍線の文字列（spanText）が本文の該当範囲と合わない問題、
