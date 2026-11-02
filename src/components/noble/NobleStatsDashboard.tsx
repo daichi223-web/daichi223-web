@@ -18,7 +18,7 @@ import {
 import { recordPromotion } from '@/lib/promotionHistory';
 import RoadmapModal from './RoadmapModal';
 import HistoryDrawer from './HistoryDrawer';
-import { usePortraitTone, type PortraitTone } from '@/lib/portraitTone';
+import { usePortraitTone } from '@/lib/portraitTone';
 
 // StatsPage の theme='noble' 区画。掛軸スタイルで水彩肖像をヒーローに、
 // 5 部位の装い詳細 + 5 ジャンル動線 + 出世絵巻/装束図鑑/履歴の3導線。
@@ -28,14 +28,16 @@ type Props = {
   parts: PartLevels;
   // 位階の点数 (330 語の★の合計。昇進はこれで決まる)
   score: number;
+  // 見た目の設定（テーマ画面）を開く。肖像の雰囲気・答え合わせの先生・背景はテーマ画面にまとめた（2026-11-02）
+  onOpenLook?: () => void;
 };
 
-export default function NobleStatsDashboard({ parts, score }: Props) {
+export default function NobleStatsDashboard({ parts, score, onOpenLook }: Props) {
   const [showZukan, setShowZukan] = useState(false);
   const [showRefs, setShowRefs] = useState(false);
   const [showRoadmap, setShowRoadmap] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-  const [portraitTone, setPortraitTone] = usePortraitTone();
+  const [portraitTone] = usePortraitTone();
   // 掛軸ヒーローの開閉。デフォルト畳む (大きいため)。状態は localStorage に永続化。
   const [showKakejiku, setShowKakejiku] = useState<boolean>(() => {
     try {
@@ -81,31 +83,17 @@ export default function NobleStatsDashboard({ parts, score }: Props) {
         <span className="text-rw-ink-soft">{showKakejiku ? '▴' : '▾'}</span>
       </button>
 
-      <div className="px-4 pb-3 pt-1 border-b border-rw-rule">
-        <div className="text-[10px] font-bold text-rw-ink-soft mb-1.5">肖像の雰囲気</div>
-        <div className="flex gap-2" role="group" aria-label="肖像の雰囲気">
-          {([
-            ['yuru', 'ゆるキャラ×史実'],
-            ['pop', 'ポップ学習キャラ'],
-            ['sharp', 'キリッと青年'],
-          ] as Array<[PortraitTone, string]>).map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setPortraitTone(value)}
-              aria-pressed={portraitTone === value}
-              className="px-2.5 py-1 rounded-full text-[10px] font-bold border transition"
-              style={{
-                borderColor: portraitTone === value ? 'var(--rw-primary)' : 'var(--rw-rule)',
-                background: portraitTone === value ? 'var(--rw-primary-soft)' : 'transparent',
-                color: portraitTone === value ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
-              }}
-            >
-              {label}
-            </button>
-          ))}
+      {onOpenLook && (
+        <div className="px-4 pb-3 pt-1 border-b border-rw-rule">
+          <button
+            type="button"
+            onClick={onOpenLook}
+            className="w-full text-left px-3 py-2 rounded-xl border-2 border-rw-rule text-[11px] font-bold text-rw-ink-soft hover:bg-rw-primary-soft/30 transition"
+          >
+            🎨 肖像の雰囲気・答え合わせの先生・背景を変える（テーマ）
+          </button>
         </div>
-      </div>
+      )}
 
       {showKakejiku && (
       <>

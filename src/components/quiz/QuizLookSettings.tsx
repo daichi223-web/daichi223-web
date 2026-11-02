@@ -2,7 +2,10 @@ import { FaceAvatar } from '../noble/FaceAvatar';
 import { PatternSwatch } from './QuizBackground';
 import { TEACHERS, TEACHER_IDS, TEACHER_VOICE_ENABLED, teacherImage } from '../../lib/teachers';
 import { useChatTeacher } from '../../lib/chatTeacher';
-import { QUIZ_BACKGROUND_IDS, QUIZ_BACKGROUND_LABEL, useQuizBackground } from '../../lib/quizBackground';
+import {
+  QUIZ_BACKGROUND_COLORS, QUIZ_BACKGROUND_COLOR_IDS, QUIZ_BACKGROUND_IDS, QUIZ_BACKGROUND_LABEL,
+  useQuizBackground, useQuizBackgroundColor,
+} from '../../lib/quizBackground';
 import { usePortraitTone } from '../../lib/portraitTone';
 
 // 単語クイズの設定パネルの下に置く「先生」「背景」の2行。
@@ -19,6 +22,7 @@ const pillStyle = (active: boolean) => ({
 export function QuizLookSettings({ className = '' }: { className?: string }) {
   const [teacher, setTeacher] = useChatTeacher();
   const [background, setBackground] = useQuizBackground();
+  const [bgColor, setBgColor] = useQuizBackgroundColor();
   const [tone] = usePortraitTone();
 
   return (
@@ -56,7 +60,7 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
       </div>
       <div>
         <div className="text-[10px] font-bold text-slate-500 mb-1">背景</div>
-        <div className="flex gap-2" role="group" aria-label="クイズ画面の背景">
+        <div className="grid grid-cols-3 gap-2" role="group" aria-label="クイズ画面の背景">
           {QUIZ_BACKGROUND_IDS.map((id) => {
             const active = id === background;
             return (
@@ -65,11 +69,36 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
                 type="button"
                 onClick={() => setBackground(id)}
                 aria-pressed={active}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-xl border-2 transition"
+                className="flex items-center gap-1.5 px-1.5 py-1.5 rounded-xl border-2 transition"
                 style={pillStyle(active)}
               >
-                <PatternSwatch pattern={id} width={48} height={30} scale={0.6} className="rounded border border-rw-rule" />
+                <PatternSwatch pattern={id} color={bgColor} width={40} height={28} scale={0.6} className="rounded border border-rw-rule shrink-0" />
                 <span className="text-[11px] font-bold">{QUIZ_BACKGROUND_LABEL[id]}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div>
+        <div className="text-[10px] font-bold text-slate-500 mb-1">色</div>
+        <div className="flex gap-2 flex-wrap" role="group" aria-label="背景の色">
+          {QUIZ_BACKGROUND_COLOR_IDS.map((id) => {
+            const c = QUIZ_BACKGROUND_COLORS[id];
+            const active = id === bgColor;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setBgColor(id)}
+                aria-pressed={active}
+                className="flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full border-2 transition"
+                style={pillStyle(active)}
+              >
+                <span
+                  className="w-5 h-5 rounded-full border"
+                  style={{ background: c.bg, borderColor: c.line, boxShadow: `inset 0 0 0 3px ${c.line}` }}
+                />
+                <span className="text-[11px] font-bold">{c.label}</span>
               </button>
             );
           })}

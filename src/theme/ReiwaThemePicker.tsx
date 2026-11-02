@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { QuizLookSettings } from '../components/quiz/QuizLookSettings';
+import { PortraitTonePicker } from '../components/noble/PortraitTonePicker';
 import { useReiwaTheme } from './ThemeContext';
 import { REIWA_PRESETS, REIWA_QUICK_PRESETS, ReiwaPalettePreset, ReiwaQuickPreset } from './reiwa';
 
@@ -155,6 +157,19 @@ export default function ReiwaThemePicker({ open, onClose }: Props) {
             </button>
           </div>
         )}
+
+        {/* 自分の肖像の画風・答え合わせの先生・背景の柄と色（2026-11-02 ユーザー指示「全部テーマに集める」。
+            学習履歴の自分のキャラをタップしてもここが開く） */}
+        <div className="px-5 pb-5 space-y-4">
+          <div>
+            <p className="text-xs text-rw-ink-soft mb-2">あなたのキャラ（肖像の雰囲気）</p>
+            <PortraitTonePicker />
+          </div>
+          <div>
+            <p className="text-xs text-rw-ink-soft mb-1">単語クイズの答え合わせ</p>
+            <QuizLookSettings />
+          </div>
+        </div>
 
         {/* プレビュー帯 */}
         <PreviewStrip />

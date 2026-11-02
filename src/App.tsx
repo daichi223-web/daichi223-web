@@ -14,8 +14,7 @@ import { ExampleComprehensionContent } from './components/quiz/ExampleComprehens
 import { ContextWritingContent } from './components/quiz/ContextWritingContent';
 import { quizMeanings } from './components/quiz/writingVerdict';
 import { QuizBackground } from './components/quiz/QuizBackground';
-import { QuizLookSettings } from './components/quiz/QuizLookSettings';
-import { useQuizBackground } from './lib/quizBackground';
+import { useQuizBackground, useQuizBackgroundColor } from './lib/quizBackground';
 import { readChatTeacher } from './lib/chatTeacher';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { pickQuestions, type Bucket } from './lib/quizSelector';
@@ -203,6 +202,7 @@ function App() {
   const [showCorrectCircle, setShowCorrectCircle] = useState(false);
   // 単語クイズ画面の和柄（端末ごと）。出題には関係しないので、setupQuiz を再実行する useEffect の依存には入れない
   const [quizBackground] = useQuizBackground();
+  const [quizBackgroundColor] = useQuizBackgroundColor();
   const [writingUserJudgment, setWritingUserJudgment] = useState<boolean | undefined>(undefined);
   const [currentWritingQid, setCurrentWritingQid] = useState<string>('');
   const [vocabLemma, setVocabLemma] = useState<string | null>(null);
@@ -1987,7 +1987,7 @@ function App() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--rw-bg)' }}>
       {/* 和柄の背景（青海波／七宝。クイズ画面だけ）。固定の SVG を z 0 に敷き、中身は relative z-[1] で上に出す */}
-      <QuizBackground pattern={quizBackground} />
+      <QuizBackground pattern={quizBackground} color={quizBackgroundColor} />
       {vocabLemma && (
         <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} />
       )}
@@ -2146,8 +2146,6 @@ function App() {
                   max={330}
                 />
               </div>
-              {/* grid の下に全幅で1行: 先生・背景（端末ごと。setupQuiz を再実行する useEffect の依存には入れない） */}
-              <QuizLookSettings className="col-span-2" />
             </div>
           ) : null}
 

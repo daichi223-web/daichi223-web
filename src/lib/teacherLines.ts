@@ -37,7 +37,6 @@ export const TEACHER_LINES: Record<TeacherId, TeacherLines> = {
       'さらなり（言うまでもない）。正解。',
       '心ときめきするもの。この答え。',
       'うれしきもの。ぴたりと当てた答え。',
-      '香炉峰の雪、見事に上げた。',
     ],
     wrong: [
       'わろし（よくない）。正しくは「{正解}」。さ、次。',
@@ -65,7 +64,6 @@ export const TEACHER_LINES: Record<TeacherId, TeacherLines> = {
     pending: [
       '「{正解}」が答え。合うか、自分で決めろ。',
       '判定は任せる。「{正解}」と比べてみろ。',
-      '私は決めない。「{正解}」と同じか、見てみろ。',
     ],
     selfRight: [
       'よし。自分で見極めた、それがいい。',

@@ -25,6 +25,7 @@ import { partsFromFieldMastery } from '@/lib/nobleData';
 import { readPeakTiers, updatePeakTiers } from '@/lib/peakTiers';
 import NobleStatsDashboard from '@/components/noble/NobleStatsDashboard';
 import NobleStatusBar from '@/components/noble/NobleStatusBar';
+import ReiwaThemePicker from '@/theme/ReiwaThemePicker';
 import BackupSection from '@/components/BackupSection';
 import { chapterFor } from '@/utils/chapters';
 
@@ -158,6 +159,8 @@ export default function StatsPage() {
   const [dueQids, setDueQids] = useState<string[]>([]);
   const [srsRows, setSrsRows] = useState<SrsBoxRow[]>([]);
   const [loading, setLoading] = useState(true);
+  // 見た目の設定（テーマ画面）。自分のキャラ（肖像）をタップで開く（2026-11-02）
+  const [showLook, setShowLook] = useState(false);
   const [streak, setStreak] = useState<StreakSnapshot>({ current: 0, longest: 0, lastActiveDate: null });
 
   useEffect(() => {
@@ -532,7 +535,9 @@ export default function StatsPage() {
               totalAnswered={overall.answered}
               masterCount={overall.mastered}
               linkToStats={false}
+              onPortraitClick={() => setShowLook(true)}
             />
+            <ReiwaThemePicker open={showLook} onClose={() => setShowLook(false)} />
 
             {/* ② 簡易表示 — 2 カード (挑戦単語 / 今日の復習)。累計正答率は単独セクションへ */}
             <section className="grid grid-cols-2 gap-2 mb-6">
@@ -561,6 +566,7 @@ export default function StatsPage() {
               <NobleStatsDashboard
                 parts={partsFromFieldMastery(fieldMastery)}
                 score={blueprintMetrics.rankScore}
+                onOpenLook={() => setShowLook(true)}
               />
             </section>
 

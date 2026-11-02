@@ -21,6 +21,8 @@ type Props = {
   masterCount: number;
   // true なら全体がタップで /stats へ。false なら静的表示。
   linkToStats?: boolean;
+  // 肖像をタップしたとき（学習履歴ではテーマ画面を開く。2026-11-02）
+  onPortraitClick?: () => void;
 };
 
 export default function NobleStatusBar({
@@ -29,6 +31,7 @@ export default function NobleStatusBar({
   totalAnswered,
   masterCount,
   linkToStats = true,
+  onPortraitClick,
 }: Props) {
   const stage = effectiveStage(score);
   const [portraitTone] = usePortraitTone();
@@ -47,7 +50,13 @@ export default function NobleStatusBar({
     >
       {/* 肖像サムネ (固定 56x76) */}
       <div
-        className="shrink-0 relative overflow-hidden rounded-lg"
+        className={`shrink-0 relative overflow-hidden rounded-lg${onPortraitClick ? ' cursor-pointer' : ''}`}
+        role={onPortraitClick ? 'button' : undefined}
+        tabIndex={onPortraitClick ? 0 : undefined}
+        aria-label={onPortraitClick ? '肖像の雰囲気・答え合わせの先生・背景を変える' : undefined}
+        title={onPortraitClick ? 'タップで見た目を変える' : undefined}
+        onClick={onPortraitClick}
+        onKeyDown={onPortraitClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onPortraitClick(); } } : undefined}
         style={{
           width: 56,
           height: 76,
