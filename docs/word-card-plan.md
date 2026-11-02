@@ -11,7 +11,7 @@
 
 - `WordCard.tsx`：語・基本330の番号・意味・決め手（analysis の decider。無ければ hint）・助詞助動詞は品詞/接続/用法/活用型・単語帳の意味の一覧・「→ 単語カード」`/word/:lemma`・「もっと」で従来の GrammarPopover。
 - `useWordCard.tsx`：PC は重ねるだけで出てクリックで固定（Esc・外クリック・スクロールで閉じる）。スマホは指を当てている間に出て、横になぞると指の下の語に切り替わり、離すと消える。タップで出したまま、同じ語の再タップで閉じる。縦はページのスクロール（`touch-action: pan-y`）。状態は教材画面に持ち、文をまたいでなぞれる。
-- `TextReader.tsx`：全教材で既定オン。下部の「解説：カード／従来」で端末ごとに戻せる（`localStorage kobun-word-card=off`）。読解(5)・識別(6)は従来どおり。画面下の帯に、触れた語のある文の現代語訳（高さ固定）。
+- `TextReader.tsx`：全教材でカードのみ（2026-11-02 ユーザー指示で「解説：カード／従来」ボタンを廃止。`localStorage kobun-word-card` は読まない）。読解(5)・識別(6)は従来どおり。画面下の帯に、触れた語のある文の現代語訳（高さ固定）。
 - `vocabLookup.ts`：本文の下線の判定を別名表（`resolveVocabKey`）にそろえた。
 - 検査：`src/tests/wordCardLayout.test.ts`（判定と置き場所）、Playwright で PC（重ねる・固定・Esc・もっと・切替）とスマホ（なぞり・タップ固定・縦スクロール）。実機は未確認。
 

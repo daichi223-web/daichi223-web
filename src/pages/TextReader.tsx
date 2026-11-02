@@ -122,16 +122,10 @@ export default function TextReader() {
     (layerParam !== null ? Number(layerParam) : 1) as LayerId
   );
   const [showTranslation, setShowTranslation] = useState(false);
-  // 語の近くに浮かぶ短い解説カード（2026-10-16〜）。既定で全教材。端末ごとに「従来の表示」へ戻せる。
-  // カードは単語帳（330）に紐づく語だけ。読解(5)でも出す。文法は今のレイヤーと前のレイヤーの語だけ、従来の解説で。
+  // 語の近くに浮かぶ短い解説カード（2026-10-16〜）。全教材でカードのみ。
+  // 2026-11-02 ユーザー指示で「解説：従来」への切り替えボタンを廃止（localStorage kobun-word-card=off も読まない）。
   // 識別(6)は識別の出題を使う
-  const [cardPref, setCardPref] = useState<boolean>(() => {
-    try { return localStorage.getItem("kobun-word-card") !== "off"; } catch { return true; }
-  });
-  const cardMode = cardPref && currentLayer !== 6;
-  const toggleCardPref = () => {
-    setCardPref((v) => { try { localStorage.setItem("kobun-word-card", v ? "off" : "on"); } catch { /* noop */ } return !v; });
-  };
+  const cardMode = currentLayer !== 6;
   const CARD_BAND_H = 70; // 画面下のボタン列のおおよその高さ（カードを重ねない）
   // 識別レイヤーの「すべてやり直す」（数が変わると各文の答えを消す）
   const [shikiResetKey, setShikiResetKey] = useState(0);
@@ -420,16 +414,6 @@ export default function TextReader() {
       {/* スティッキーフッター */}
       <footer className="sticky bottom-0 bg-rw-paper border-t-2 border-rw-ink px-3 py-2">
         <div className="flex gap-2 justify-center flex-wrap">
-          {currentLayer !== 6 && (
-            <button
-              onClick={toggleCardPref}
-              aria-pressed={cardPref}
-              title={cardPref ? "語の解説を従来の表示（文の下・画面下のシート）に戻す" : "語の近くに浮かぶ解説に切り替える"}
-              className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
-            >
-              {cardPref ? "解説：カード" : "解説：従来"}
-            </button>
-          )}
           <button
             onClick={() => setShowTranslation(!showTranslation)}
             className="rounded-full font-bold text-xs px-3.5 py-2 bg-rw-paper border-2 border-rw-ink text-rw-ink hover:bg-rw-bg transition-colors"
