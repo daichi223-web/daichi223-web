@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  buildThread, optionLabel, NO_ANSWER_LABEL,
+  buildThread, optionLabel, auxShort, NO_ANSWER_LABEL,
   type ChatBubble, type ThreadInput, type WordQuizKind,
 } from '../lib/quiz/chatThread';
 import { TEACHER_IDS, fillTemplate, pickVariant } from '../lib/teachers';
@@ -115,7 +115,7 @@ describe('buildThread 4択系（word-meaning / word-reverse / sentence-meaning /
   it.each(CHOICE_TYPES)('%s 正解：自分の答え → 判定 ok → 核（罠は畳む）だけ。進める', (quizType) => {
     const { bubbles, canAdvance } = buildThread(choice({ quizType, isCorrect: true }));
     expect(canAdvance).toBe(true);
-    expect(kinds(bubbles)).toEqual(['answer', 'verdict', 'core']);
+    expect(kinds(bubbles)).toEqual(['answer', 'verdict', 'core', 'senses']);
     expect(bubbles[0]).toEqual({ side: 'me', kind: 'answer', text: optionLabel(HAZUKASHI, quizType) });
     const verdict = find(bubbles, 'verdict')!;
     expect(verdict.verdict).toBe('ok');
@@ -196,7 +196,7 @@ describe('buildThread 記述（meaning-writing）', () => {
   it('correct：判定 ok・正解の示し方は出さない・核に罠を畳む・例文は出さない', () => {
     const { bubbles, canAdvance } = buildThread(writing('correct', { userAnswer: '立派だ' }));
     expect(canAdvance).toBe(true);
-    expect(kinds(bubbles)).toEqual(['answer', 'verdict', 'core']);
+    expect(kinds(bubbles)).toEqual(['answer', 'verdict', 'core', 'senses']);
     expect(bubbles[0]).toEqual({ side: 'me', kind: 'answer', text: '立派だ' });
     expect(find(bubbles, 'verdict')!.verdict).toBe('ok');
     expect(find(bubbles, 'core')!.trapModern).toBe('恥ずかしい');
@@ -405,5 +405,14 @@ describe('voice: false（先生の口調を使わない版）', () => {
       find(buildThread({ teacher, word, quizType: 'word-meaning', selected: byQid('2-1'), isCorrect: false, seed: '1-1', voice: false }).bubbles, 'verdict')!.text);
     expect(new Set(texts).size).toBe(1);
     expect(texts[0]).toBe(`正しくは「${senseLabel(word)}」。`);
+  });
+});
+
+describe('auxShort（補助→補動の表示）', () => {
+  it('「（補助）」「補助動詞」を「補動」にそろえる', () => {
+    expect(auxShort('〜ている（補助）')).toBe('〜ている（補動）');
+    expect(auxShort('お〜申し上げる（補助動詞）')).toBe('お〜申し上げる（補動）');
+    expect(auxShort('〜ます（丁寧・補助動詞）')).toBe('〜ます（丁寧・補動）');
+    expect(auxShort('座る')).toBe('座る');
   });
 });

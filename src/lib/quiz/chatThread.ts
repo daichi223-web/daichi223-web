@@ -62,6 +62,11 @@ export type ThreadInput = {
 
 export const NO_ANSWER_LABEL = '（無回答）';
 
+/** 意味の注記の「補助」「補助動詞」を、品詞分解の略記「補動」にそろえて表示する（2026-11-02 ユーザー指示。データは変えない） */
+export function auxShort(label: string): string {
+  return label.replace(/補助動詞/g, '補動').replace(/（補助）/g, '（補動）').replace(/・補助）/g, '・補動）');
+}
+
 /** 選択肢・自分の吹き出しに出す文字。word-reverse / blank-fill は見出し語、それ以外は 〔 〕 を外した意味（WordQuizContent と同じ規則） */
 export function optionLabel(w: Word, quizType: WordQuizKind): string {
   if (quizType === 'word-reverse' || quizType === 'blank-fill') return w.lemma || 'データなし';
@@ -76,12 +81,12 @@ function decideOutcome(input: ThreadInput): Outcome {
   if (quizType !== 'meaning-writing') {
     // 先生が言う「正解」は辞書の形（senseNorm。例「気づく」）。選択肢の表示は訳の穴の断片（「気づい」）のことがあり、
     // 文に入れると不自然になるため。見出し語を答える形式（word-reverse / blank-fill）はそのまま見出し語。
-    const answer = quizType === 'word-reverse' || quizType === 'blank-fill' ? optionLabel(word, quizType) : senseLabel(word);
+    const answer = quizType === 'word-reverse' || quizType === 'blank-fill' ? optionLabel(word, quizType) : auxShort(senseLabel(word));
     const vars: TeacherVars = { 語: word.lemma, 正解: answer };
     const ok = input.isCorrect ?? (input.selected ? input.selected.qid === word.qid : false);
     return ok ? { verdict: 'ok', lineKey: 'correct', vars } : { verdict: 'ng', lineKey: 'wrong', vars };
   }
-  const vars: TeacherVars = { 語: word.lemma, 正解: senseLabel(word) };
+  const vars: TeacherVars = { 語: word.lemma, 正解: auxShort(senseLabel(word)) };
   switch (input.writingResult?.verdict ?? 'pending') {
     case 'correct':
       return { verdict: 'ok', lineKey: 'correct', vars };
@@ -184,13 +189,13 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
     }
   }
 
-  // 8. 意味マップ（2つ以上あるときだけ）
+  // 8. 意味マップ（2つ以上あるときだけ）。正解でも出す（ほかの意味も見る方が学習になる。2026-11-02 ユーザー指示）
   const siblings = input.siblings ?? [];
-  if (miss && siblings.length >= 2) {
+  if (siblings.length >= 2) {
     bubbles.push({
       side: 'teacher',
       kind: 'senses',
-      items: siblings.map((s) => ({ label: s.label, current: s.current })),
+      items: siblings.map((s) => ({ label: auxShort(s.label), current: s.current })),
     });
   }
 

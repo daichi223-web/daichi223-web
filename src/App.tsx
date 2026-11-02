@@ -2244,10 +2244,13 @@ function App() {
 
         {/* Quiz Content */}
         {isQuizActive && !showCorrectCircle && (
-          // 出題・答え合わせは紙の下敷きに載せる（和柄の上に直接文字が乗ると読みにくい。2026-11-02）
+          // 出題・答え合わせは下敷きに載せる（和柄の上に直接文字が乗ると読みにくい。2026-11-02）
           <div
             className="relative rounded-2xl border border-rw-rule p-3 shadow-sm"
-            style={{ background: 'color-mix(in srgb, var(--rw-paper) 94%, transparent)' }}
+            // 白い紙だと眩しいので、背景の色を混ぜて少し沈める（2026-11-02 ユーザー指摘「下地が白だとやや眩しい」）
+            style={{
+              background: `color-mix(in srgb, color-mix(in srgb, ${QUIZ_BACKGROUND_COLORS[quizBackgroundColor]?.bg ?? 'var(--rw-bg)'} 65%, var(--rw-paper)) 92%, transparent)`,
+            }}
           >
             {/* Word Mode Quiz */}
             {currentMode === 'word' && getCurrentQuestion() && (
