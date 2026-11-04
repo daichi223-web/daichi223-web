@@ -145,10 +145,25 @@ export function WordQuizContent({
 
   const optionLabels = ['A', 'B', 'C', 'D'];
 
+  // 見出し語の番号（単語帳の No.）。語が答えになる形式（意味→単語・空欄）は番号から語が分かるので答えたあとに出す（2026-11-04 ユーザー指示）
+  const answersLemma = quizType === 'word-reverse' || quizType === 'blank-fill';
+  const headwordNo = (show: boolean) =>
+    show && question.correct.group ? (
+      <p className="text-center mb-1">
+        <span
+          className="inline-block text-[11px] font-black px-2.5 py-0.5 rounded-full border border-rw-rule text-rw-ink-soft bg-rw-paper"
+          title={`見出し語の番号（qid ${question.correct.qid}）`}
+        >
+          No.{question.correct.group}
+        </span>
+      </p>
+    ) : null;
+
   if (quizType === 'meaning-writing') {
     const prompt = writingPrompt(question.correct.lemma, !!question.exampleKobun);
     return (
       <div>
+        {headwordNo(true)}
         <div className="text-center mb-4">
           <h2 className="text-2xl font-black text-rw-ink leading-snug tracking-tight">{question.correct?.lemma || 'データなし'}</h2>
         </div>
@@ -301,6 +316,7 @@ export function WordQuizContent({
           </span>
         </div>
       )}
+      {headwordNo(!answersLemma || answeredCorrectly !== null)}
       <p className="text-xs font-black text-rw-ink tracking-wider mb-2 text-center">{instruction}</p>
       <div className="mb-3">
         {quizType === 'word-meaning' ? (

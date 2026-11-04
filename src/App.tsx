@@ -139,6 +139,10 @@ function App() {
   const [allWords, setAllWords] = useState<Word[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
+  // 出題の作り直しの通し番号。最後に始めた作り直しだけを画面に反映する（2026-11-04）。
+  // 作成中にモード・範囲を変えると、古い作成が後から新しい出題を上書きしたり、作成中の印が立ったままになって
+  // 以後の作り直しが止まったりしていた（「単語モードを選んでも一回表示されない」）
+  const setupSeqRef = useRef(0);
   const [error, setError] = useState<string | null>(null);
   const [homeDataError, setHomeDataError] = useState(false);
 
@@ -270,7 +274,7 @@ function App() {
     setQuizMode('focus');
     setCurrentMode('word');
     setShowHome(false);
-    void setupQuiz(qids);
+    void setupQuiz(qids, null, undefined, 'word');
   }, [allWords.length]);
 
   // URL クエリ ?category=重要動詞,敬語動詞 でカテゴリ絞り込みクイズを起動
@@ -288,7 +292,7 @@ function App() {
     setQuizQidFilter(null);
     setCurrentMode('word');
     setShowHome(false);
-    void setupQuiz();
+    void setupQuiz(undefined, null, undefined, 'word');
   }, [allWords.length]);
 
   // URL クエリ ?chapter=ch1 で章範囲のクイズを起動。
@@ -307,7 +311,7 @@ function App() {
     setQuizQidFilter(null);
     setCurrentMode('word');
     setShowHome(false);
-    void setupQuiz();
+    void setupQuiz(undefined, null, undefined, 'word');
   }, [allWords.length]);
 
   // ホーム表示時に学習履歴ベースの集計を取得
@@ -441,34 +445,23 @@ function App() {
 
   // Initial quiz setup when data loads or settings change
   useEffect(() => {
-    if (allWords.length > 0 && !isGeneratingQuiz) {
+    if (allWords.length > 0) {
       // フォーカスクイズ (?qid 経由 / 苦手復習 / SRS復習) が処理中は
       // デフォルト範囲の上書きセットアップを走らせない。
       // URL に ?qid が残っている場合は qid 効果側がまだ走っていないので
       // 同様に抑止 (race condition 回避)。
       if (quizQidFilter || searchParams.get('qid')) return;
 
-      let cancelled = false;
-
-      const runSetup = async () => {
-        setIsGeneratingQuiz(true);
-        try {
-          // モード切替で seed lemma が設定されていれば第1問に同じ語を引き継ぐ
-          const seed = pendingSeedLemma;
-          if (seed) setPendingSeedLemma(null);
-          await setupQuiz(undefined, seed);
-        } finally {
-          if (!cancelled) {
-            setIsGeneratingQuiz(false);
-          }
-        }
-      };
-
-      runSetup();
-
-      return () => {
-        cancelled = true;
-      };
+      // モード切替で seed lemma が設定されていれば第1問に同じ語を引き継ぐ
+      const seed = pendingSeedLemma;
+      if (seed) setPendingSeedLemma(null);
+      setIsGeneratingQuiz(true);
+      // setupQuiz は呼んだ時点（最初の await の前）で通し番号を進める
+      const run = setupQuiz(undefined, seed);
+      const mySeq = setupSeqRef.current;
+      run.finally(() => {
+        if (setupSeqRef.current === mySeq) setIsGeneratingQuiz(false);
+      });
     }
     // pendingSeedLemma は意図的に依存に入れない (mode/range 変更時に最新値を closure で拾う)
   }, [
@@ -556,6 +549,7 @@ function App() {
     opts?: QuizOpts,
     modeOverride?: 'word' | 'polysemy',
   ) => {
+    const seq = ++setupSeqRef.current;
     // Reset all quiz states when switching modes
     setShowResults(false);
     setIsQuizActive(false);
@@ -568,9 +562,9 @@ function App() {
     setWrongAnswers([]);
 
     if ((modeOverride ?? currentMode) === 'word') {
-      await setupWordQuiz(qidFilterOverride, seedLemma ?? undefined, opts);
+      await setupWordQuiz(qidFilterOverride, seedLemma ?? undefined, opts, seq);
     } else {
-      await setupPolysemyQuiz(seedLemma ?? undefined);
+      await setupPolysemyQuiz(seedLemma ?? undefined, seq);
     }
   };
 
@@ -659,7 +653,9 @@ function App() {
     return null;
   };
 
-  const setupWordQuiz = async (qidFilterOverride?: string[], seedLemma?: string, opts?: QuizOpts) => {
+  const setupWordQuiz = async (qidFilterOverride?: string[], seedLemma?: string, opts?: QuizOpts, seq?: number) => {
+    // 後から別の作り直しが始まっていたら、この結果は捨てる
+    const stale = () => seq !== undefined && seq !== setupSeqRef.current;
     // qid フィルタ (引数優先、次に state)。指定があれば苦手単語 / SRS 復習として
     // その qid のみ出題、なければ範囲で絞り込む
     const filter = qidFilterOverride ?? quizQidFilter;
@@ -722,7 +718,7 @@ function App() {
           order: (w) => w.group * 100 + (w.meaning_idx ?? 0),
           stats, boxes, n: opts?.numQuestions ?? wordNumQuestions,
         });
-        if (r.picked.length > 0) { targetWords = r.picked; autoPicked = true; setLastPick(r.composition); }
+        if (r.picked.length > 0 && !stale()) { targetWords = r.picked; autoPicked = true; setLastPick(r.composition); }
       } catch { /* ランダムにフォールバック */ }
     }
 
@@ -897,6 +893,7 @@ function App() {
       });
     }
 
+    if (stale()) return;
     setCurrentQuizData(quizData);
     setCurrentQuestionIndex(0);
     setScore(0);
@@ -906,7 +903,8 @@ function App() {
     setShowWritingResult(false);
   };
 
-  const setupPolysemyQuiz = async (seedLemma?: string) => {
+  const setupPolysemyQuiz = async (seedLemma?: string, seq?: number) => {
+    const stale = () => seq !== undefined && seq !== setupSeqRef.current;
     const start = polysemyRange.from ?? 1;
     const end = polysemyRange.to ?? 330;
     const polysemyWords = getPolysemyWords(allWords, start, end);
@@ -943,7 +941,7 @@ function App() {
           order: (w) => Math.min(...w.meanings.map((m) => m.group)),
           stats: byLemma, n: polysemyNumQuestions,
         });
-        if (r.picked.length > 0) { ordered = r.picked; setLastPick(r.composition); }
+        if (r.picked.length > 0 && !stale()) { ordered = r.picked; setLastPick(r.composition); }
       } catch { /* ランダムにフォールバック */ }
     }
     if (!ordered) ordered = [...polysemyWords].sort(() => Math.random() - 0.5);
@@ -957,6 +955,7 @@ function App() {
       }
     }
     const selectedWords = ordered.slice(0, Math.min(polysemyNumQuestions, ordered.length));
+    if (stale()) return;
 
     setPolysemyState({
       currentWordIndex: 0,
@@ -1628,13 +1627,19 @@ function App() {
               setQuizMode('weak');
               setCurrentMode('word');
               setShowHome(false);
-              void setupQuiz(weak);
+              void setupQuiz(weak, null, undefined, 'word');
             }}
             onSwitchMode={(mode) => {
+              // モードも絞り込みも変わらないときは作り直しの useEffect が走らない。
+              // 出題が空・結果画面のままなら、ここで作り直す（途中の出題はそのまま続ける）
+              const unchanged = mode === currentMode && quizQidFilter == null;
               setQuizQidFilter(null);
               setQuizMode('normal');
               setCurrentMode(mode);
               setShowHome(false);
+              if (unchanged && (currentQuizData.length === 0 || showResults)) {
+                void setupQuiz(undefined, null, undefined, mode);
+              }
             }}
             onOpenThemePicker={() => setShowThemePicker(true)}
           />
@@ -1833,7 +1838,7 @@ function App() {
                           setQuizMode('focus');
                           setShowResults(false);
                           setIsQuizActive(false);
-                          void setupQuiz(qids);
+                          void setupQuiz(qids, null, undefined, 'word');
                         }}
                         className="text-[11px] font-black px-3 py-1 rounded-full transition-colors"
                         style={{
@@ -1879,7 +1884,7 @@ function App() {
                               setQuizMode('focus');
                               setShowResults(false);
                               setIsQuizActive(false);
-                              void setupQuiz([w.qid]);
+                              void setupQuiz([w.qid], null, undefined, 'word');
                             }}
                             className="text-[10px] font-black rounded-full px-2 py-1 shrink-0"
                             style={{
@@ -2038,6 +2043,9 @@ function App() {
               const lemma = getCurrentLemma();
               setShowResults(false);
               if (lemma) setPendingSeedLemma(lemma);
+              // 苦手復習などの絞り込みが残っていると、作り直しの useEffect が何もしない（出題が出ない）
+              setQuizQidFilter(null);
+              setQuizMode('normal');
               setCurrentMode('word');
             }}
             className={`mode-tab ${currentMode === 'word' ? 'active-tab' : ''}`}
@@ -2059,6 +2067,8 @@ function App() {
               const lemma = getCurrentLemma();
               setShowResults(false);
               if (lemma) setPendingSeedLemma(lemma);
+              setQuizQidFilter(null);
+              setQuizMode('normal');
               setCurrentMode('polysemy');
             }}
             className={`mode-tab ${currentMode === 'polysemy' ? 'active-tab' : ''}`}
