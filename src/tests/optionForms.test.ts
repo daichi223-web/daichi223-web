@@ -140,3 +140,15 @@ describe('活用形が決まらないときも誤答は最初の言い方だけ'
     expect(L['x-3']).toBe('あります');
   });
 });
+
+describe('意志の形・「〜」の不一致（2026-11-05 表示の再点検）', () => {
+  it('「〔行こ〕う」→ 意志の形', () => {
+    expect(detectForm('行く', '行こ', 'う')).toBe('ishi');
+    expect(conjugate('いらっしゃる', 'ishi')).toBe('いらっしゃろ');
+    expect(conjugate('工夫する', 'ishi')).toBe('工夫しよ');
+  });
+  it('正解「てい」に誤答「〜てい」を並べない', () => {
+    const L = labelsFor('9-1', 0, ['9-2']);
+    expect(L['9-2']?.startsWith('〜')).toBe(false);
+  });
+});

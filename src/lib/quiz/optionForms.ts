@@ -11,8 +11,9 @@
 
 /** renyoDe = 文を続ける連用形（中止法）: 形容動詞「退屈で」・形容詞「寂しく」・動詞「〜し／〜き」 */
 /** meirei = 命令形（〜ろ・五段は〜え段）、meireiYo = 文語調の命令（〜よ・〜せよ）、te = て形（〜て・〜で） */
-export type FormId = 'shushi' | 'rentai' | 'renyo' | 'renyoTa' | 'renyoDe' | 'te' | 'mizen' | 'katei' | 'meirei' | 'meireiYo';
-const FORMS: FormId[] = ['shushi', 'rentai', 'renyoTa', 'renyo', 'renyoDe', 'te', 'mizen', 'katei', 'meirei', 'meireiYo'];
+/** ishi = 意志・推量の「う／よう」に続く形（行こ・見よ・しよ・高かろ） */
+export type FormId = 'shushi' | 'rentai' | 'renyo' | 'renyoTa' | 'renyoDe' | 'te' | 'mizen' | 'ishi' | 'katei' | 'meirei' | 'meireiYo';
+const FORMS: FormId[] = ['shushi', 'rentai', 'renyoTa', 'renyo', 'renyoDe', 'te', 'mizen', 'ishi', 'katei', 'meirei', 'meireiYo'];
 
 type Cls = 'i' | 'na' | 'ichidan' | 'godan' | 'suru' | 'kuru';
 
@@ -31,16 +32,16 @@ const NOUN_I = ['願い', '思い', '遣い', '違い', '戦い', '争い', '匂
 // ます形が「い」になる敬語の五段
 const HONORIFIC_I = ['いらっしゃる', 'おっしゃる', 'なさる', 'くださる', 'ござる'];
 
-const ROW: Record<string, { a: string; i: string; e: string; ta: string }> = {
-  う: { a: 'わ', i: 'い', e: 'え', ta: 'っ' },
-  く: { a: 'か', i: 'き', e: 'け', ta: 'い' },
-  ぐ: { a: 'が', i: 'ぎ', e: 'げ', ta: 'い' },
-  す: { a: 'さ', i: 'し', e: 'せ', ta: 'し' },
-  つ: { a: 'た', i: 'ち', e: 'て', ta: 'っ' },
-  ぬ: { a: 'な', i: 'に', e: 'ね', ta: 'ん' },
-  ぶ: { a: 'ば', i: 'び', e: 'べ', ta: 'ん' },
-  む: { a: 'ま', i: 'み', e: 'め', ta: 'ん' },
-  る: { a: 'ら', i: 'り', e: 'れ', ta: 'っ' },
+const ROW: Record<string, { a: string; i: string; e: string; o: string; ta: string }> = {
+  う: { a: 'わ', i: 'い', e: 'え', o: 'お', ta: 'っ' },
+  く: { a: 'か', i: 'き', e: 'け', o: 'こ', ta: 'い' },
+  ぐ: { a: 'が', i: 'ぎ', e: 'げ', o: 'ご', ta: 'い' },
+  す: { a: 'さ', i: 'し', e: 'せ', o: 'そ', ta: 'し' },
+  つ: { a: 'た', i: 'ち', e: 'て', o: 'と', ta: 'っ' },
+  ぬ: { a: 'な', i: 'に', e: 'ね', o: 'の', ta: 'ん' },
+  ぶ: { a: 'ば', i: 'び', e: 'べ', o: 'ぼ', ta: 'ん' },
+  む: { a: 'ま', i: 'み', e: 'め', o: 'も', ta: 'ん' },
+  る: { a: 'ら', i: 'り', e: 'れ', o: 'ろ', ta: 'っ' },
 };
 
 function classify(dict: string): Cls | null {
@@ -68,20 +69,20 @@ export function conjugate(dict: string, form: FormId): string | null {
   const stem = dict.slice(0, -1);
   switch (cls) {
     case 'i':
-      return { shushi: dict, rentai: dict, renyo: stem + 'く', renyoTa: stem + 'かっ', renyoDe: stem + 'く', te: stem + 'くて', mizen: stem + 'く', katei: stem + 'けれ', meirei: null, meireiYo: null }[form];
+      return { shushi: dict, rentai: dict, renyo: stem + 'く', renyoTa: stem + 'かっ', renyoDe: stem + 'く', te: stem + 'くて', mizen: stem + 'く', ishi: stem + 'かろ', katei: stem + 'けれ', meirei: null, meireiYo: null }[form];
     case 'na':
-      return { shushi: dict, rentai: stem + 'な', renyo: stem + 'に', renyoTa: stem + 'だっ', renyoDe: stem + 'で', te: stem + 'で', mizen: stem + 'で', katei: stem + 'なら', meirei: null, meireiYo: null }[form];
+      return { shushi: dict, rentai: stem + 'な', renyo: stem + 'に', renyoTa: stem + 'だっ', renyoDe: stem + 'で', te: stem + 'で', mizen: stem + 'で', ishi: stem + 'だろ', katei: stem + 'なら', meirei: null, meireiYo: null }[form];
     case 'suru': {
       const s = dict.slice(0, -2);
-      return { shushi: dict, rentai: dict, renyo: s + 'し', renyoTa: s + 'し', renyoDe: s + 'し', te: s + 'して', mizen: s + 'し', katei: s + 'すれ', meirei: s + 'しろ', meireiYo: s + 'せよ' }[form];
+      return { shushi: dict, rentai: dict, renyo: s + 'し', renyoTa: s + 'し', renyoDe: s + 'し', te: s + 'して', mizen: s + 'し', ishi: s + 'しよ', katei: s + 'すれ', meirei: s + 'しろ', meireiYo: s + 'せよ' }[form];
     }
     case 'kuru': {
       // 来る（くる）: 連用・未然とも漢字は「来」。読みの違い（き／こ）は表記に出ない
       const s = dict.slice(0, -1);
-      return { shushi: dict, rentai: dict, renyo: s, renyoTa: s, renyoDe: s, te: s + 'て', mizen: s, katei: s + 'れ', meirei: s + 'い', meireiYo: s + 'よ' }[form];
+      return { shushi: dict, rentai: dict, renyo: s, renyoTa: s, renyoDe: s, te: s + 'て', mizen: s, ishi: s + 'よ', katei: s + 'れ', meirei: s + 'い', meireiYo: s + 'よ' }[form];
     }
     case 'ichidan':
-      return { shushi: dict, rentai: dict, renyo: stem, renyoTa: stem, renyoDe: stem, te: stem + 'て', mizen: stem, katei: stem + 'れ', meirei: stem + 'ろ', meireiYo: stem + 'よ' }[form];
+      return { shushi: dict, rentai: dict, renyo: stem, renyoTa: stem, renyoDe: stem, te: stem + 'て', mizen: stem, ishi: stem + 'よ', katei: stem + 'れ', meirei: stem + 'ろ', meireiYo: stem + 'よ' }[form];
     case 'godan': {
       const last = dict.slice(-1);
       const r = ROW[last];
@@ -96,6 +97,7 @@ export function conjugate(dict: string, form: FormId): string | null {
         renyoDe: stem + (honor ? 'い' : r.i),
         te: stem + ta + ('ぐぬぶむ'.includes(last) ? 'で' : 'て'),
         mizen: stem + r.a,
+        ishi: stem + r.o,
         katei: stem + r.e,
         // 命令: 五段は え段（いらっしゃる 等は「い」）。文語調の「よ」は五段には無いので同じ形
         meirei: stem + (honor ? 'い' : r.e),
@@ -158,6 +160,7 @@ function inferForm(clsNorm: Cls | null, blank: string, after: string): FormId | 
     if (/[てで]$/.test(blank) && own !== 'na') return 'te';
   }
   if (/^(ず|ない|なかっ|ぬ|れる|られ|せる|させ)/.test(after)) return 'mizen';
+  if (/^う/.test(after) && /[おこごそとのぼもろよ]$/.test(blank)) return 'ishi';
   if (/^(ます|まし|ながら|に行|に来)/.test(after)) return 'renyo';
   if (/^ば/.test(after)) return 'katei';
   if (cls === 'i' || /[しい]い$|い$/.test(blank) && cls !== 'na') {
@@ -198,6 +201,7 @@ export function detectForm(senseNorm: string | undefined, blank: string, after =
       const c = conjugate(b.core, f)?.replace(/^[〜～]/, '');
       if (c && (bare === c || bare.endsWith(c))) {
         if (f === 'shushi' && !SHUSHI_NEXT.test(after)) return 'rentai';
+        if (/^う/.test(after) && conjugate(b.core, 'ishi')?.replace(/^[〜～]/, '') && bare.endsWith(conjugate(b.core, 'ishi')!.replace(/^[〜～]/, ''))) return 'ishi';
         if (f === 'katei' && !/^ば/.test(after)) return /よ$/.test(bare) ? 'meireiYo' : 'meirei';
         return f;
       }
@@ -232,7 +236,8 @@ export function exampleFittedLabels(
     // 活用形が決まらない・変えられないときも、正解（訳の言葉1つ）と見た目をそろえて最初の言い方だけにする
     // （併記「・」や注記（ ）が残ると形から正誤が透ける。2026-11-05 全件判定の指摘）
     const c = (form && classify(b.core) ? conjugate(b.core, form) : null) ?? b.core;
-    const label = b.prefix + c;
+    // 正解（訳の言葉）に「〜」が無ければ誤答からも外す（「てい」に「〜てい」を並べない）
+    const label = b.prefix + (/^[〜～]/.test(blank) ? c : c.replace(/^[〜～]/, ''));
     if (used.has(label)) continue;
     used.add(label);
     out[o.qid] = label;
