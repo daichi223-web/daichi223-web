@@ -127,3 +127,16 @@ describe('命令形・て形・「い」で終わる名詞（2026-11-05）', () 
     expect(conjugate('かねてからの願い', 'renyo')).toBeNull();
   });
 });
+
+describe('活用形が決まらないときも誤答は最初の言い方だけ', () => {
+  it('正解が名詞のとき、誤答に「・」の併記や後ろの注記を残さない', () => {
+    const correct = { qid: 'x-1', senseNorm: '手紙' };
+    const L = exampleFittedLabels(
+      [{ qid: 'x-2', senseNorm: '漢詩・書物' }, { qid: 'x-3', senseNorm: 'あります（丁寧・本動詞）' }],
+      correct,
+      '（訳）〔 手紙 〕を書く。'
+    );
+    expect(L['x-2']).toBe('漢詩');
+    expect(L['x-3']).toBe('あります');
+  });
+});

@@ -223,15 +223,15 @@ export function exampleFittedLabels(
   if (!blank) return out;
   out[correct.qid] = blank;
   const form = detectForm(correct.senseNorm, blank, textAfterBlank(exampleTranslation));
-  if (!form) return out;
   const used = new Set([blank]);
   for (const o of options) {
     if (o.qid === correct.qid) continue;
     const b = baseForm(o.senseNorm);
     if (!b) continue;
-    // 活用しない語（副詞・名詞・「けしからん」など）はそのまま。活用する語は同じ活用形に
-    const c = classify(b.core) ? conjugate(b.core, form) : b.core;
-    if (!c) continue;
+    // 活用しない語（副詞・名詞・「けしからん」など）はそのまま。活用する語は同じ活用形に。
+    // 活用形が決まらない・変えられないときも、正解（訳の言葉1つ）と見た目をそろえて最初の言い方だけにする
+    // （併記「・」や注記（ ）が残ると形から正誤が透ける。2026-11-05 全件判定の指摘）
+    const c = (form && classify(b.core) ? conjugate(b.core, form) : null) ?? b.core;
     const label = b.prefix + c;
     if (used.has(label)) continue;
     used.add(label);
