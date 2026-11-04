@@ -205,9 +205,24 @@ export default function ReadingTest() {
     });
     window.setTimeout(() => feedbackRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: "nearest" }), 60);
   };
+  // 番号の丸から好きな問題へ移れる。「つぎへ」はまだ答えていない次の問題へ（後ろに無ければ前に戻って探す）。
+  const goTo = (k: number) => {
+    if (finished || k === idx) return;
+    setIdx(k);
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
+  };
+  const isAnswered = (k: number) => answers[k] !== null && answers[k] !== undefined;
+  const nextUnanswered = () => {
+    for (let d = 1; d < questions.length; d++) {
+      const k = (idx + d) % questions.length;
+      if (!isAnswered(k)) return k;
+    }
+    return -1;
+  };
   const next = () => {
-    if (idx + 1 < questions.length) {
-      setIdx(idx + 1);
+    const k = nextUnanswered();
+    if (k >= 0) {
+      setIdx(k);
       window.scrollTo({ top: 0, behavior: scrollBehavior() });
     } else {
       setEndAt(Date.now());
@@ -270,18 +285,23 @@ export default function ReadingTest() {
               const done = answers[k] !== null && answers[k] !== undefined;
               const cur = k === idx && !finished;
               return (
-                <li
-                  key={x.no}
-                  aria-current={cur ? "step" : undefined}
-                  className={`w-7 h-7 rounded-full inline-flex items-center justify-center text-xs font-black ${
-                    cur ? "border-[3px] border-rw-ink" : done ? "border-2 border-rw-accent" : "border-2 border-rw-rule"
-                  }`}
-                  style={{
-                    background: done ? "var(--rw-accent)" : "var(--rw-paper)",
-                    color: done ? "var(--rw-paper)" : "var(--rw-ink)",
-                  }}
-                >
-                  {x.no}
+                <li key={x.no}>
+                  <button
+                    type="button"
+                    onClick={() => goTo(k)}
+                    disabled={finished}
+                    aria-current={cur ? "step" : undefined}
+                    aria-label={`問${x.no}へ${done ? "（解答済み）" : ""}`}
+                    className={`w-7 h-7 rounded-full inline-flex items-center justify-center text-xs font-black transition-transform ${
+                      cur ? "border-[3px] border-rw-ink" : done ? "border-2 border-rw-accent" : "border-2 border-rw-rule"
+                    } ${finished ? "cursor-default" : "hover:-translate-y-0.5"}`}
+                    style={{
+                      background: done ? "var(--rw-accent)" : "var(--rw-paper)",
+                      color: done ? "var(--rw-paper)" : "var(--rw-ink)",
+                    }}
+                  >
+                    {x.no}
+                  </button>
                 </li>
               );
             })}
@@ -356,7 +376,7 @@ export default function ReadingTest() {
                       className="bg-rw-ink text-rw-paper font-black rounded-full px-8 py-3 tracking-widest transition-transform hover:-translate-y-0.5"
                       style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
                     >
-                      {idx + 1 < questions.length ? "つぎへ →" : "結果を見る →"}
+                      {nextUnanswered() >= 0 ? "つぎへ →" : "結果を見る →"}
                     </button>
                   </div>
                 </div>
