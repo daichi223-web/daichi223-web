@@ -337,12 +337,12 @@ export default function ReadingTest() {
                     if (isCorrect) {
                       cls += " text-rw-ink font-black";
                       labelBg = "bg-rw-paper text-rw-ink";
-                      toneStyle = answerTone("var(--rw-accent)");
+                      toneStyle = answerTone("var(--rw-ok)");
                       label = "○";
                     } else if (isWrongPick) {
                       cls += " text-rw-ink font-black";
                       labelBg = "bg-rw-paper text-rw-ink";
-                      toneStyle = answerTone("var(--rw-primary)");
+                      toneStyle = answerTone("var(--rw-ng)");
                       label = "×";
                     } else {
                       cls += " bg-rw-paper border-rw-rule text-rw-ink-soft";

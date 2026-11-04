@@ -33,6 +33,11 @@
   --rw-accent-soft: #dfe7da;
   --rw-pop: #d9b574;
   --rw-tertiary: #8896b8;
+
+  /* 正誤の色。テーマ（ReiwaThemeProvider）では上書きしない。
+     primary/accent に任せると「若葉」などで ×＝緑・○＝オレンジに入れ替わる（2026-11-04 ユーザー指摘） */
+  --rw-ok: #4a9a62;
+  --rw-ng: #d0584a;
 }
 
 /* kobun-v3 リーダー用スタイル */

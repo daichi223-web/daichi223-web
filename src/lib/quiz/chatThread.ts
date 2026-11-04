@@ -175,7 +175,9 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
     const lead = say('exampleLead', outcome.vars);
     const fallback = word.examples?.[0];
     const kobun = input.exampleKobun || fallback?.jp || undefined;
-    const modern = input.exampleModern ?? (input.exampleKobun ? undefined : fallback?.translation);
+    // 単語データの訳は先頭に「（訳）」が付いている。吹き出しは「訳：」「→」を自分で付けるので外す（2026-11-04）
+    const rawModern = input.exampleModern ?? (input.exampleKobun ? undefined : fallback?.translation);
+    const modern = rawModern?.replace(/^\s*[（(]訳[）)]\s*/, '') || undefined;
     if (quizType === 'sentence-meaning') {
       if (modern) bubbles.push({ side: 'teacher', kind: 'example', lead, modern });
     } else if (kobun || modern) {

@@ -231,3 +231,62 @@ export function pickTrueFalseWrongMeaning<T extends SenseLike>(
   }
   return null;
 }
+
+/**
+ * 例文の訳の穴（〔 〕の中身）と同じ言葉で表示される誤答を、例文の訳に合わせて入れ替える（2026-11-04）。
+ * 例: さぶらふ 166-2「あります」の例文「浪の下にも都のさぶらふぞ」の訳は「都が〔ございます〕よ」。
+ *     166-3 の表示「ございます」を誤答に出すと、訳どおりに選んだ生徒が×になる（正解が2つ）。
+ * 選択肢が「意味」の形式（word-meaning / sentence-meaning）だけで使う。
+ */
+export function translationBlankKeys(translation?: string): string[] {
+  const inner = [...(translation ?? '').matchAll(/〔\s*(.+?)\s*〕/g)].map((m) => m[1]);
+  const keys = new Set<string>();
+  for (const s of inner) {
+    const k = normalizeAnswer(s.normalize('NFKC').replace(PAREN, ''));
+    if (k) keys.add(k);
+  }
+  const joined = normalizeAnswer(inner.join(''));
+  if (joined) keys.add(joined);
+  return [...keys];
+}
+
+/** 誤答 c の表示が、例文の訳の穴の言葉と同じか */
+export function clashesWithTranslation(c: Pick<SenseLike, 'sense'>, translation?: string): boolean {
+  const keys = translationBlankKeys(translation);
+  if (keys.length === 0) return false;
+  const display = senseDisplayKey(c);
+  const bare = normalizeAnswer(senseInner(c.sense).join('').normalize('NFKC').replace(PAREN, ''));
+  return keys.includes(display) || (!!bare && keys.includes(bare));
+}
+
+/**
+ * 選択肢から「訳の穴と同じ言葉の誤答」を外し、代わりを replacements から足す（足りなければそのまま短くなる）。
+ * 正解は動かさない。並び順は元の位置を保ち、外した位置に代わりを入れる。
+ */
+export function repairTranslationClashes<T extends SenseLike>(
+  options: T[],
+  correct: T,
+  translation: string | undefined,
+  replacements: T[]
+): T[] {
+  const bad = (o: T) => o.qid !== correct.qid && clashesWithTranslation(o, translation);
+  if (!options.some(bad)) return options;
+  const used = new Set(options.map((o) => o.qid));
+  const shown = new Set(options.filter((o) => !bad(o)).map((o) => senseDisplayKey(o)));
+  const pool = replacements.filter(
+    (r) => !used.has(r.qid) && !bad(r) && !isSameMeaning(r, correct) && !shown.has(senseDisplayKey(r))
+  );
+  const out: T[] = [];
+  for (const o of options) {
+    if (!bad(o)) {
+      out.push(o);
+      continue;
+    }
+    const r = pool.shift();
+    if (r) {
+      out.push(r);
+      shown.add(senseDisplayKey(r));
+    }
+  }
+  return out;
+}

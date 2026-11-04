@@ -74,8 +74,8 @@ export function TrueFalseQuizContent({ question, onAnswer, nextButtonVisible, on
   };
   const buttonTone = (value: boolean): React.CSSProperties | undefined => {
     const state = buttonState(value);
-    if (state === 'correct') return answerTone('var(--rw-accent)');
-    if (state === 'wrong') return answerTone('var(--rw-primary)');
+    if (state === 'correct') return answerTone('var(--rw-ok)');
+    if (state === 'wrong') return answerTone('var(--rw-ng)');
     return undefined;
   };
   const buttonTag = (value: boolean) => {

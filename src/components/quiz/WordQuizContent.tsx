@@ -420,12 +420,12 @@ export function WordQuizContent({
             if (isCorrectOption) {
               buttonClass += ' text-rw-ink font-black';
               labelBg = 'bg-rw-paper text-rw-ink';
-              tone = answerTone('var(--rw-accent)');
+              tone = answerTone('var(--rw-ok)');
               label = '○';
             } else if (isSelectedWrong) {
               buttonClass += ' text-rw-ink font-black';
               labelBg = 'bg-rw-paper text-rw-ink';
-              tone = answerTone('var(--rw-primary)');
+              tone = answerTone('var(--rw-ng)');
               label = '×';
             } else {
               buttonClass += ' bg-rw-paper border-rw-rule text-rw-ink-soft';

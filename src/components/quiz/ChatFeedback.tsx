@@ -47,8 +47,8 @@ function teacherBubbleClass(kind: ChatBubble['kind']): string {
 
 // 判定の吹き出しの先頭に付ける印。色だけに頼らない（記号と色は writingHeadline と同じ）
 const VERDICT_MARK: Record<ChatVerdict, { mark: string; color: string }> = {
-  ok: { mark: '○', color: 'var(--rw-accent)' },
-  ng: { mark: '×', color: 'var(--rw-primary)' },
+  ok: { mark: '○', color: 'var(--rw-ok)' },
+  ng: { mark: '×', color: 'var(--rw-ng)' },
   near: { mark: '△', color: 'var(--rw-pop)' },
   pending: { mark: '？', color: 'var(--rw-ink-soft)' },
 };
@@ -169,7 +169,7 @@ function BubbleBody({
                 onSelfJudge?.(true);
               }}
               className={JUDGE_BUTTON}
-              style={softTone('var(--rw-accent)')}
+              style={softTone('var(--rw-ok)')}
             >
               ○ 合っていた
             </button>
@@ -180,7 +180,7 @@ function BubbleBody({
                 onSelfJudge?.(false);
               }}
               className={JUDGE_BUTTON}
-              style={softTone('var(--rw-primary)')}
+              style={softTone('var(--rw-ng)')}
             >
               × ちがった
             </button>

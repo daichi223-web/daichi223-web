@@ -122,12 +122,12 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
                     if (m.qid === meaning.qid) {
                       // Correct answer
                       buttonClass += ' text-rw-ink';
-                      tone = answerTone('var(--rw-accent)');
+                      tone = answerTone('var(--rw-ok)');
                       sign = '○ ';
                     } else if (answers[meaning.qid] === m.qid) {
                       // Selected wrong answer
                       buttonClass += ' text-rw-ink';
-                      tone = answerTone('var(--rw-primary)');
+                      tone = answerTone('var(--rw-ng)');
                       sign = '× ';
                     } else {
                       buttonClass += ' bg-rw-paper border-rw-rule text-rw-ink-soft';

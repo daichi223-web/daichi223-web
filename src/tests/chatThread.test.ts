@@ -147,12 +147,12 @@ describe('buildThread 4択系（word-meaning / word-reverse / sentence-meaning /
     for (const quizType of ['word-meaning', 'word-reverse', 'blank-fill'] as WordQuizKind[]) {
       const ex = find(buildThread(choice({ quizType, isCorrect: false })).bubbles, 'example')!;
       expect(ex.kobun).toBe('いとはづかしき人なり。');
-      expect(ex.modern).toBe('（訳）たいへん立派な人である。');
+      expect(ex.modern).toBe('たいへん立派な人である。');
       expect(LINES.sei.exampleLead).toContain(ex.lead);
     }
     const sm = find(buildThread(choice({ quizType: 'sentence-meaning', isCorrect: false })).bubbles, 'example')!;
     expect(sm.kobun).toBeUndefined();
-    expect(sm.modern).toBe('（訳）たいへん立派な人である。');
+    expect(sm.modern).toBe('たいへん立派な人である。');
   });
 
   it('例文が渡されなければ語の第1例文を使い、訳も無ければ例文の吹き出しを出さない', () => {
@@ -161,7 +161,7 @@ describe('buildThread 4択系（word-meaning / word-reverse / sentence-meaning /
       'example'
     )!;
     expect(fromWord.kobun).toBe(HAZUKASHI.examples[0].jp);
-    expect(fromWord.modern).toBe(HAZUKASHI.examples[0].translation);
+    expect(fromWord.modern).toBe('たいへん〔 立派だ 〕人である。');
     const none = buildThread(
       choice({ quizType: 'sentence-meaning', isCorrect: false, exampleKobun: 'いとはづかしき人なり。', exampleModern: undefined })
     ).bubbles;

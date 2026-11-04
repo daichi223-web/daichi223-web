@@ -28,15 +28,15 @@ export function selfJudgePrompt(w: Word): string {
 export function writingHeadline(result: WritingJudgeResult): { mark: string; text: string; color: string } {
   switch (result.verdict) {
     case 'correct':
-      return { mark: '○', text: '正解', color: 'var(--rw-accent)' };
+      return { mark: '○', text: '正解', color: 'var(--rw-ok)' };
     case 'other_sense':
       return { mark: '△', text: '別の意味で読んでいます', color: 'var(--rw-pop)' };
     case 'modern_trap':
       return { mark: '△', text: '現代語の意味で読んでいます', color: 'var(--rw-pop)' };
     case 'wrong':
-      return { mark: '×', text: 'この文脈の意味ではありません', color: 'var(--rw-primary)' };
+      return { mark: '×', text: 'この文脈の意味ではありません', color: 'var(--rw-ng)' };
     case 'blank':
-      return { mark: '×', text: '答えが書かれていません', color: 'var(--rw-primary)' };
+      return { mark: '×', text: '答えが書かれていません', color: 'var(--rw-ng)' };
     default:
       return result.partial
         ? { mark: '？', text: '正解と一部が重なっています', color: 'var(--rw-ink-soft)' }

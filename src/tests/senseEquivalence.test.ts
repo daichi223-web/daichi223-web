@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   buildFallbackOptions,
+  clashesWithTranslation,
+  repairTranslationClashes,
   canUseAsDistractor,
   indexByLemma,
   isSameLemma,
@@ -235,5 +237,30 @@ describe('pickTrueFalseWrongMeaning（○×の誤りの意味）', () => {
         }
       }
     }
+  });
+});
+
+describe('例文の訳の穴と同じ言葉の誤答（2026-11-04）', () => {
+  const correct = { qid: '166-2', lemma: 'さぶらふ', sense: '〔 ありまし 〕', senseNorm: 'あります（丁寧・本動詞）' };
+  const clash = { qid: '166-3', lemma: 'さぶらふ', sense: '〔 ございます 〕', senseNorm: '〜ます・〜ございます（丁寧・補助動詞）' };
+  const other = { qid: '1-1', lemma: 'あはれなり', sense: '〔 しみじみと趣深い 〕', senseNorm: 'しみじみと趣深い' };
+  const other2 = { qid: '2-1', lemma: 'いみじ', sense: '〔 はなはだしい 〕', senseNorm: 'はなはだしい' };
+  const spare = { qid: '3-1', lemma: 'ゆかし', sense: '〔 見たい 〕', senseNorm: '見たい・知りたい' };
+  const tr = '(訳)波の下にも都が〔 ございます 〕よ。';
+
+  it('訳の穴の言葉と表示が同じ誤答を見つける', () => {
+    expect(clashesWithTranslation(clash, tr)).toBe(true);
+    expect(clashesWithTranslation(other, tr)).toBe(false);
+    expect(clashesWithTranslation(clash, '（訳）そういうことが〔ありまし〕た')).toBe(false);
+  });
+
+  it('入れ替えても正解と位置は動かさない', () => {
+    const out = repairTranslationClashes([other, clash, correct, other2], correct, tr, [clash, spare]);
+    expect(out.map((o) => o.qid)).toEqual(['1-1', '3-1', '166-2', '2-1']);
+  });
+
+  it('代わりが無ければ外すだけ', () => {
+    const out = repairTranslationClashes([other, clash, correct], correct, tr, []);
+    expect(out.map((o) => o.qid)).toEqual(['1-1', '166-2']);
   });
 });

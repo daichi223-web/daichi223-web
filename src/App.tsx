@@ -24,7 +24,7 @@ import { logEvent, markQuestionShown } from './lib/learningEvents';
 import { composeTodaySet, estimateFresh, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
 import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
 import { readStreak } from './lib/streak';
-import { buildFallbackOptions, pickTrueFalseWrongMeaning } from './lib/senseEquivalence';
+import { buildFallbackOptions, pickTrueFalseWrongMeaning, repairTranslationClashes } from './lib/senseEquivalence';
 import {
   updateSrsState,
   getSrsBoxes,
@@ -871,6 +871,15 @@ function App() {
       // 正解と同じ意味・同じ語の表記ちがいは誤答に入れない（選び方は lib/senseEquivalence）
       if (qType !== 'meaning-writing' && options.length < 4) {
         options = buildFallbackOptions(prep.correctWord, allWords, qType);
+      }
+      // 例文の訳の穴と同じ言葉の誤答は、訳どおりに選んだ生徒を×にするので入れ替える（2026-11-04。lib/senseEquivalence）
+      if (qType === 'word-meaning' || qType === 'sentence-meaning') {
+        options = repairTranslationClashes(
+          options,
+          prep.correctWord,
+          prep.exampleModern,
+          buildFallbackOptions(prep.correctWord, allWords, qType).filter((w) => w.qid !== prep.correctWord.qid)
+        );
       }
 
       quizData.push({

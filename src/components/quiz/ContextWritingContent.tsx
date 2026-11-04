@@ -335,14 +335,14 @@ export function ContextWritingContent({
                         <button
                           onClick={() => setUserJudgments(prev => ({ ...prev, [meaning.qid]: true }))}
                           className="px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5"
-                          style={softTone('var(--rw-accent)')}
+                          style={softTone('var(--rw-ok)')}
                         >
                           ○ 合っていた
                         </button>
                         <button
                           onClick={() => setUserJudgments(prev => ({ ...prev, [meaning.qid]: false }))}
                           className="px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5"
-                          style={softTone('var(--rw-primary)')}
+                          style={softTone('var(--rw-ng)')}
                         >
                           × ちがった
                         </button>
@@ -354,7 +354,7 @@ export function ContextWritingContent({
                   {pending && userJudgment !== undefined && (
                     <div
                       className="mt-3 p-3 rounded-xl border-2"
-                      style={softTone(userJudgment ? 'var(--rw-accent)' : 'var(--rw-primary)')}
+                      style={softTone(userJudgment ? 'var(--rw-ok)' : 'var(--rw-ng)')}
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div className="font-black text-rw-ink">
