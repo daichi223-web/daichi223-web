@@ -269,7 +269,21 @@ export function repairTranslationClashes<T extends SenseLike>(
   translation: string | undefined,
   replacements: T[]
 ): T[] {
-  const bad = (o: T) => o.qid !== correct.qid && clashesWithTranslation(o, translation);
+  return repairDistractors(options, correct, (o) => clashesWithTranslation(o, translation), replacements);
+}
+
+/**
+ * 誤答のうち isBad に当たるものを外し、代わりを replacements から足す（足りなければそのまま短くなる）。
+ * 正解は動かさない。並び順は元の位置を保ち、外した位置に代わりを入れる。
+ * 例文ごとの「誤答に出さない意味」（lib/exampleContext の avoid）にも使う。
+ */
+export function repairDistractors<T extends SenseLike>(
+  options: T[],
+  correct: T,
+  isBad: (o: T) => boolean,
+  replacements: T[]
+): T[] {
+  const bad = (o: T) => o.qid !== correct.qid && isBad(o);
   if (!options.some(bad)) return options;
   const used = new Set(options.map((o) => o.qid));
   const shown = new Set(options.filter((o) => !bad(o)).map((o) => senseDisplayKey(o)));

@@ -24,7 +24,9 @@ import { logEvent, markQuestionShown } from './lib/learningEvents';
 import { composeTodaySet, estimateFresh, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
 import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
 import { readStreak } from './lib/streak';
-import { buildFallbackOptions, pickTrueFalseWrongMeaning, repairTranslationClashes } from './lib/senseEquivalence';
+import { buildFallbackOptions, pickTrueFalseWrongMeaning, repairDistractors, repairTranslationClashes } from './lib/senseEquivalence';
+import { lookupExampleContext, type ExampleContext, type ExampleContextMap } from './lib/exampleContext';
+import { exampleFittedLabels } from './lib/quiz/optionForms';
 import {
   updateSrsState,
   getSrsBoxes,
@@ -39,6 +41,19 @@ import {
 // mark = 問われている語の位置 [[開始, 長さ], …]（あるものだけ。無ければ画面で活用照合）
 type CorpusExample = { jp: string; translation: string; mark?: [number, number][] };
 let corpusExamplesCache: Record<string, CorpusExample[]> | null = null;
+// 例文ごとの手当て（誤答に出さない意味・前後の本文・補足）。正本 data/enrich/example-context.jsonl → scripts/build-example-context.mjs
+let exampleContextCache: ExampleContextMap | null = null;
+async function loadExampleContext(): Promise<ExampleContextMap> {
+  if (exampleContextCache) return exampleContextCache;
+  try {
+    const res = await fetch('/example-context.json');
+    exampleContextCache = res.ok ? await res.json() : {};
+  } catch {
+    exampleContextCache = {};
+  }
+  return exampleContextCache!;
+}
+
 async function loadCorpusExamples(): Promise<Record<string, CorpusExample[]>> {
   if (corpusExamplesCache) return corpusExamplesCache;
   try {
@@ -89,6 +104,8 @@ interface QuizQuestion {
   resolvedType?: ResolvedWordQuizType; // おまかせ時: この問題の実出題形式
   jpBlank?: string; // blank-fill: 〔　　　〕入りの例文 (Excel原本の手作業空欄)
   exampleMark?: [number, number][]; // 実戦例文に付いてきた対象語の位置（exampleKobun に対する）
+  exampleContext?: ExampleContext; // 例文1文で意味が決まらないときの前後の本文・補足（sentence-meaning で表示）
+  optionLabels?: Record<string, string>; // 選択肢の文字を例文の訳の活用に合わせたもの（qid → 文字。lib/quiz/optionForms）
 }
 
 interface TrueFalseQuestion {
@@ -137,6 +154,8 @@ function App() {
   // Core state with localStorage persistence for mode
   const [currentMode, setCurrentMode] = useLocalStorageState<AppMode>('kobun-currentMode', 'word');
   const [allWords, setAllWords] = useState<Word[]>([]);
+  // qid → 単語データの行（API の選択肢に辞書の形 senseNorm を補う）
+  const wordByQid = useMemo(() => new Map(allWords.map((w) => [w.qid, w])), [allWords]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
   // 出題の作り直しの通し番号。最後に始めた作り直しだけを画面に反映する（2026-11-04）。
@@ -844,7 +863,8 @@ function App() {
             if (data.choices && data.choices.length >= 4) {
               // 使った選択肢を記録
               data.choices.forEach((c: Word) => addRecentChoice(c.qid));
-              return data.choices;
+              // API は qid・lemma・sense だけ返す。選択肢は辞書の形（senseNorm）で出すので単語データの行に置き換える（罠の疑似選択肢はそのまま）
+              return data.choices.map((c: Word) => wordByQid.get(c.qid) ?? c);
             }
           }
         } catch (e) {
@@ -855,6 +875,9 @@ function App() {
 
       apiChoices = await Promise.all(apiPromises);
     }
+
+    // 例文ごとの手当て（無ければ空。取得に失敗しても出題は続ける）
+    const exampleContexts = await loadExampleContext();
 
     // 各問題を構築
     for (let i = 0; i < questionPrepData.length; i++) {
@@ -877,6 +900,19 @@ function App() {
           buildFallbackOptions(prep.correctWord, allWords, qType).filter((w) => w.qid !== prep.correctWord.qid)
         );
       }
+      // この例文では紛れる意味（同じ語の近い意味）を誤答に出さない（2026-11-05。lib/exampleContext）
+      const ctx = lookupExampleContext(exampleContexts, prep.correctWord.qid, prep.exampleKobun);
+      if (ctx?.avoid?.length && (qType === 'word-meaning' || qType === 'sentence-meaning')) {
+        const avoid = new Set(ctx.avoid);
+        options = repairDistractors(
+          options,
+          prep.correctWord,
+          (o) => avoid.has(o.qid),
+          buildFallbackOptions(prep.correctWord, allWords, qType).filter(
+            (w) => w.qid !== prep.correctWord.qid && !avoid.has(w.qid)
+          )
+        );
+      }
 
       quizData.push({
         correct: prep.correctWord,
@@ -889,7 +925,10 @@ function App() {
         corpusExample: prep.corpusExample,
         resolvedType: qType,
         jpBlank: prep.jpBlank,
-        exampleMark: prep.exampleMark
+        exampleMark: prep.exampleMark,
+        exampleContext: qType === 'sentence-meaning' && ctx && (ctx.before || ctx.after || ctx.note) ? ctx : undefined,
+        // 例文から意味を選ぶ: 選択肢は訳なので例文の訳の活用に合わせる（正解＝訳の穴の言葉、誤答＝同じ活用形。助動詞の訳は足さない）
+        optionLabels: qType === 'sentence-meaning' ? exampleFittedLabels(options, prep.correctWord, prep.exampleModern) : undefined,
       });
     }
 

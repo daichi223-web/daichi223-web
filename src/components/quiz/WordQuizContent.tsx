@@ -6,7 +6,7 @@ import { ChatFeedback } from './ChatFeedback';
 import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
 import { prepareWritingJudge } from '../../lib/writingJudgeRuntime';
-import { buildThread } from '../../lib/quiz/chatThread';
+import { buildThread, optionLabel } from '../../lib/quiz/chatThread';
 import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from '../../lib/teachers';
 import { useChatTeacher } from '../../lib/chatTeacher';
 import { usePortraitTone } from '../../lib/portraitTone';
@@ -16,6 +16,7 @@ import {
   stripSenseBrackets, writingPrompt,
 } from './writingVerdict';
 import { resolveTargetSpans, type Span } from '../../lib/targetMark';
+import type { ExampleContext } from '../../lib/exampleContext';
 
 interface QuizQuestion {
   correct: Word;
@@ -29,6 +30,8 @@ interface QuizQuestion {
   resolvedType?: WordQuizType; // おまかせ時の実出題形式
   jpBlank?: string; // blank-fill: 〔　　　〕入りの例文
   exampleMark?: Span[]; // exampleKobun に付いてきた対象語の位置（実戦例文の mark）
+  exampleContext?: ExampleContext; // 例文1文で意味が決まらないときの前後の本文・補足（lib/exampleContext）
+  optionLabels?: Record<string, string>; // 例文の訳の活用に合わせた選択肢の文字（qid → 文字）
 }
 
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'blank-fill' | 'meaning-writing';
@@ -353,14 +356,32 @@ export function WordQuizContent({
           </div>
         ) : (
           // sentence-meaning: 古文を paper card で表示して、問われている語に印を付ける
+          // 例文1文で意味が決まらないときは、前後の本文を薄く添え、補足を下に出す（例文そのものは変えない。2026-11-05）
           <div className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-5">
             <div className="font-serif text-lg text-rw-ink leading-loose font-medium">
-              <MarkedSentence
-                text={question.exampleKobun || question.correct.examples?.[0]?.jp || 'データなし'}
-                word={question.correct}
-                spans={question.exampleMark}
-              />
+              {question.exampleContext?.before && (
+                <span className="text-rw-ink-soft font-normal">…{question.exampleContext.before}</span>
+              )}
+              {(() => {
+                // 後ろの本文は末尾の（出典）の前に入れる。印の位置は文頭からの文字数なので、末尾を切っても変わらない
+                const full = question.exampleKobun || question.correct.examples?.[0]?.jp || 'データなし';
+                const after = question.exampleContext?.after;
+                const m = after ? full.match(/^([\s\S]*?)\s*([（(][^（）()]*[）)])$/) : null;
+                const body = m ? m[1] : full;
+                return (
+                  <>
+                    <MarkedSentence text={body} word={question.correct} spans={question.exampleMark} />
+                    {after && <span className="text-rw-ink-soft font-normal">{after}…</span>}
+                    {m && <span>{m[2]}</span>}
+                  </>
+                );
+              })()}
             </div>
+            {question.exampleContext?.note && (
+              <p className="mt-2 pt-2 border-t border-dashed border-rw-rule text-[12px] font-bold text-rw-ink-soft">
+                場面：{question.exampleContext.note}
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -461,9 +482,7 @@ export function WordQuizContent({
                 {label}
               </span>
               <span className="flex-1">
-                {quizType === 'word-reverse' || quizType === 'blank-fill'
-                  ? (option.lemma || 'データなし')
-                  : (stripSenseBrackets(option.sense || '') || 'データなし')}
+                {question.optionLabels?.[option.qid] ?? optionLabel(option, quizType)}
               </span>
             </button>
           );
@@ -478,6 +497,7 @@ export function WordQuizContent({
           word: question.correct,
           quizType,
           selected: selectedOption,
+          optionLabels: question.optionLabels,
           isCorrect: answeredCorrectly,
           siblings,
           exampleKobun: question.exampleKobun,

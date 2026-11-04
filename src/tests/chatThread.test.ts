@@ -95,17 +95,24 @@ const writing = (verdict: WritingVerdict, over: Partial<ThreadInput> = {}): Thre
 });
 
 describe('optionLabel（自分の吹き出し・正解に出す文字）', () => {
-  it('word-reverse / blank-fill は見出し語、それ以外は 〔 〕 を外した意味', () => {
+  // 2026-11-05: 意味の選択肢は辞書の形（senseNorm）。訳の穴の断片は最初の例文の活用形のままで、別の例文では形が合わないため。
+  // 例文から意味を選ぶでは、さらに例文の訳の活用に合わせた文字（lib/quiz/optionForms）が優先される
+  it('word-reverse / blank-fill は見出し語、それ以外は辞書の形（senseNorm）', () => {
     expect(optionLabel(HAZUKASHI, 'word-reverse')).toBe('はづかし');
     expect(optionLabel(HAZUKASHI, 'blank-fill')).toBe('はづかし');
-    expect(optionLabel(HAZUKASHI, 'word-meaning')).toBe('立派だ');
-    expect(optionLabel(HAZUKASHI, 'sentence-meaning')).toBe('立派だ');
-    expect(optionLabel(HAZUKASHI, 'meaning-writing')).toBe('立派だ');
+    expect(optionLabel(HAZUKASHI, 'word-meaning')).toBe(HAZUKASHI.senseNorm);
+    expect(optionLabel(HAZUKASHI, 'sentence-meaning')).toBe(HAZUKASHI.senseNorm);
+    expect(optionLabel(HAZUKASHI, 'meaning-writing')).toBe(HAZUKASHI.senseNorm);
   });
 
-  it('実データ全語で WordQuizContent と同じ規則になる', () => {
+  it('senseNorm が無いもの（罠の疑似選択肢など）は 〔 〕 を外した断片', () => {
+    const trap = { ...HAZUKASHI, senseNorm: undefined, sense: '〔 恥ずかしい 〕' };
+    expect(optionLabel(trap, 'word-meaning')).toBe('恥ずかしい');
+  });
+
+  it('実データ全語で、意味の選択肢は辞書の形・見出し語の選択肢は見出し語', () => {
     for (const w of slim) {
-      expect(optionLabel(w, 'word-meaning')).toBe(stripSenseBrackets(w.sense));
+      expect(optionLabel(w, 'word-meaning')).toBe(w.senseNorm ? auxShort(w.senseNorm) : stripSenseBrackets(w.sense));
       expect(optionLabel(w, 'blank-fill')).toBe(w.lemma);
     }
   });

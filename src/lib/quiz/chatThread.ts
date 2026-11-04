@@ -54,6 +54,8 @@ export type ThreadInput = {
   siblings?: { label: string; current: boolean }[];
   exampleKobun?: string;
   exampleModern?: string;
+  /** 選択肢に出した文字（例文の訳の活用に合わせたもの）。自分の吹き出しも同じ文字にする */
+  optionLabels?: Record<string, string>;
   /** variant を決める種（qid） */
   seed: string;
   /** false なら先生の口調（キャラの台詞）を使わず、中立の文（NEUTRAL_LINES）で答え合わせする。既定 true */
@@ -67,9 +69,14 @@ export function auxShort(label: string): string {
   return label.replace(/補助動詞/g, '補動').replace(/（補助）/g, '（補動）').replace(/・補助）/g, '・補動）');
 }
 
-/** 選択肢・自分の吹き出しに出す文字。word-reverse / blank-fill は見出し語、それ以外は 〔 〕 を外した意味（WordQuizContent と同じ規則） */
+/**
+ * 選択肢・自分の吹き出しに出す文字。word-reverse / blank-fill は見出し語、それ以外は辞書の形（senseNorm）。
+ * 訳の穴の断片（sense の 〔 〕）は最初の例文の活用形のままなので、別の例文で出すと形が合わない
+ * （をかし 15-2「始め終りこそをかしけれ」に「おもしろく」。2026-11-05 ユーザー指摘）。senseNorm が無いもの（罠の疑似選択肢など）は断片。
+ */
 export function optionLabel(w: Word, quizType: WordQuizKind): string {
   if (quizType === 'word-reverse' || quizType === 'blank-fill') return w.lemma || 'データなし';
+  if (w.senseNorm) return auxShort(w.senseNorm);
   return stripSenseBrackets(w.sense || '') || 'データなし';
 }
 
@@ -122,7 +129,7 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
   // 1. 自分の答え
   const myText = isWriting
     ? input.userAnswer && input.userAnswer.trim() ? input.userAnswer : NO_ANSWER_LABEL
-    : input.selected ? optionLabel(input.selected, quizType) : NO_ANSWER_LABEL;
+    : input.selected ? (input.optionLabels?.[input.selected.qid] ?? optionLabel(input.selected, quizType)) : NO_ANSWER_LABEL;
   bubbles.push({ side: 'me', kind: 'answer', text: myText });
 
   // 2. 判定（保留で自己判定が決まったら、その後ろに selfRight / selfWrong）
