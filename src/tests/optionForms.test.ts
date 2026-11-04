@@ -74,3 +74,56 @@ describe('例文に合わせた選択肢（2026-11-05 ユーザー指摘の2問�
     }
   });
 });
+
+describe('全件判定で見つかった形（2026-11-05）', () => {
+  it('「〜ている」の訳の穴「てい」に合わせる（9-2 例1）', () => {
+    expect(labelsFor('9-2', 0, ['9-1'])['9-1']).toBe('座っ');
+  });
+  it('「退屈で」「役に立たないで」の中止形に合わせる（29-1・30-1）', () => {
+    expect(labelsFor('29-1', 1, ['29-2'])['29-2']).toBe('しんみりともの寂しく');
+    expect(labelsFor('30-1', 1, ['30-2'])['30-2']).toBe('手持ちぶさたで');
+  });
+});
+
+describe('連用修飾の形（2026-11-05）', () => {
+  it('「平然として」「非常に」に合わせて 形容詞〜く・形容動詞〜に', () => {
+    const a = labelsFor('89-1', 1, ['89-2', '89-3']);
+    expect(Object.values(a)).toContain('平然として');
+    expect(labelsFor('78-4', 1, ['78-1'])['78-1']).toMatch(/[くに]$/);
+  });
+  it('辞書の形と訳の言葉で品詞が違うときは訳の言葉で（親密だ→「親しい」友人＝連体）', () => {
+    expect(labelsFor('79-2', 0, ['79-1'])['79-1']).toBe('端正な');
+  });
+});
+
+describe('カ変「来る」', () => {
+  it('来る → 来（連用）・来れ（仮定）', () => {
+    expect(conjugate('来る', 'renyoTa')).toBe('来');
+    expect(conjugate('やって来る', 'katei')).toBe('やって来れ');
+  });
+});
+
+describe('訳の穴が2か所', () => {
+  it('同じ言葉なら1つ、違えば「～」でつなぐ', () => {
+    expect(translationBlank('〔 順序 〕も〔 順序 〕も')).toBe('順序');
+    expect(translationBlank('〔 お 〕話し〔 申し上げる 〕')).toBe('お～申し上げる');
+  });
+});
+
+describe('命令形・て形・「い」で終わる名詞（2026-11-05）', () => {
+  it('命令: 一段〜ろ／〜よ、サ変〜しろ／〜せよ、五段〜え段', () => {
+    expect(conjugate('閉める', 'meirei')).toBe('閉めろ');
+    expect(conjugate('工夫する', 'meirei')).toBe('工夫しろ');
+    expect(conjugate('指図する', 'meireiYo')).toBe('指図せよ');
+    expect(conjugate('参る', 'meirei')).toBe('参れ');
+    expect(detectForm('準備する', '準備しろ', '。')).toBe('meirei');
+  });
+  it('て形: 五段の濁る行は〜で', () => {
+    expect(conjugate('読む', 'te')).toBe('読んで');
+    expect(conjugate('移る', 'te')).toBe('移って');
+    expect(conjugate('生まれる', 'te')).toBe('生まれて');
+  });
+  it('「かねてからの願い」は名詞なので活用させない', () => {
+    expect(conjugate('かねてからの願い', 'renyo')).toBeNull();
+  });
+});

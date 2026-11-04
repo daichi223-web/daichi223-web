@@ -9,10 +9,12 @@
  * 現代語の活用だけを扱う（形容詞・形容動詞・動詞の主な形）。純粋関数。
  */
 
-export type FormId = 'shushi' | 'rentai' | 'renyo' | 'renyoTa' | 'mizen' | 'katei';
-const FORMS: FormId[] = ['shushi', 'rentai', 'renyoTa', 'renyo', 'mizen', 'katei'];
+/** renyoDe = 文を続ける連用形（中止法）: 形容動詞「退屈で」・形容詞「寂しく」・動詞「〜し／〜き」 */
+/** meirei = 命令形（〜ろ・五段は〜え段）、meireiYo = 文語調の命令（〜よ・〜せよ）、te = て形（〜て・〜で） */
+export type FormId = 'shushi' | 'rentai' | 'renyo' | 'renyoTa' | 'renyoDe' | 'te' | 'mizen' | 'katei' | 'meirei' | 'meireiYo';
+const FORMS: FormId[] = ['shushi', 'rentai', 'renyoTa', 'renyo', 'renyoDe', 'te', 'mizen', 'katei', 'meirei', 'meireiYo'];
 
-type Cls = 'i' | 'na' | 'ichidan' | 'godan' | 'suru';
+type Cls = 'i' | 'na' | 'ichidan' | 'godan' | 'suru' | 'kuru';
 
 const I_DAN = 'いきぎしじちぢにひびぴみりゐ';
 const E_DAN = 'えけげせぜてでねへべぺめれゑ';
@@ -24,6 +26,8 @@ const GODAN_RU = [
 ];
 // 漢字1字＋る の一段（それ以外の 漢字＋る は五段：祈る・座る・守る・移る・去る…）
 const ICHIDAN_KANJI_RU = ['似る', '見る', '寝る', '着る', '煮る', '出る', '得る', '経る', '干る', '居る', '射る', '鋳る'];
+// 「い」で終わる名詞（形容詞として活用させない）
+const NOUN_I = ['願い', '思い', '遣い', '違い', '戦い', '争い', '匂い', '笑い', '祝い', '誓い', '迷い', '扱い', '住まい', '舞い', '構い', 'だいたい'];
 // ます形が「い」になる敬語の五段
 const HONORIFIC_I = ['いらっしゃる', 'おっしゃる', 'なさる', 'くださる', 'ござる'];
 
@@ -43,10 +47,10 @@ function classify(dict: string): Cls | null {
   if (!dict) return null;
   if (dict.endsWith('する')) return 'suru';
   if (dict.endsWith('だ')) return 'na';
-  if (dict.endsWith('い') && dict.length >= 2) return 'i';
+  if (dict.endsWith('い') && dict.length >= 2) return NOUN_I.some((n) => dict.endsWith(n)) ? null : 'i';
   const last = dict.slice(-1);
   if (last === 'る') {
-    if (dict.endsWith('来る') || dict.endsWith('くる')) return null; // カ変は扱わない
+    if (dict.endsWith('来る')) return 'kuru'; // カ変（漢字表記だけ。かな書きの「くる」は 繰る 等と紛れるので扱わない）
     if (GODAN_RU.some((g) => dict.endsWith(g)) || HONORIFIC_I.some((g) => dict.endsWith(g))) return 'godan';
     if (ICHIDAN_KANJI_RU.some((g) => dict.endsWith(g))) return 'ichidan';
     const prev = dict.slice(-2, -1);
@@ -64,15 +68,20 @@ export function conjugate(dict: string, form: FormId): string | null {
   const stem = dict.slice(0, -1);
   switch (cls) {
     case 'i':
-      return { shushi: dict, rentai: dict, renyo: stem + 'く', renyoTa: stem + 'かっ', mizen: stem + 'く', katei: stem + 'けれ' }[form];
+      return { shushi: dict, rentai: dict, renyo: stem + 'く', renyoTa: stem + 'かっ', renyoDe: stem + 'く', te: stem + 'くて', mizen: stem + 'く', katei: stem + 'けれ', meirei: null, meireiYo: null }[form];
     case 'na':
-      return { shushi: dict, rentai: stem + 'な', renyo: stem + 'に', renyoTa: stem + 'だっ', mizen: stem + 'で', katei: stem + 'なら' }[form];
+      return { shushi: dict, rentai: stem + 'な', renyo: stem + 'に', renyoTa: stem + 'だっ', renyoDe: stem + 'で', te: stem + 'で', mizen: stem + 'で', katei: stem + 'なら', meirei: null, meireiYo: null }[form];
     case 'suru': {
       const s = dict.slice(0, -2);
-      return { shushi: dict, rentai: dict, renyo: s + 'し', renyoTa: s + 'し', mizen: s + 'し', katei: s + 'すれ' }[form];
+      return { shushi: dict, rentai: dict, renyo: s + 'し', renyoTa: s + 'し', renyoDe: s + 'し', te: s + 'して', mizen: s + 'し', katei: s + 'すれ', meirei: s + 'しろ', meireiYo: s + 'せよ' }[form];
+    }
+    case 'kuru': {
+      // 来る（くる）: 連用・未然とも漢字は「来」。読みの違い（き／こ）は表記に出ない
+      const s = dict.slice(0, -1);
+      return { shushi: dict, rentai: dict, renyo: s, renyoTa: s, renyoDe: s, te: s + 'て', mizen: s, katei: s + 'れ', meirei: s + 'い', meireiYo: s + 'よ' }[form];
     }
     case 'ichidan':
-      return { shushi: dict, rentai: dict, renyo: stem, renyoTa: stem, mizen: stem, katei: stem + 'れ' }[form];
+      return { shushi: dict, rentai: dict, renyo: stem, renyoTa: stem, renyoDe: stem, te: stem + 'て', mizen: stem, katei: stem + 'れ', meirei: stem + 'ろ', meireiYo: stem + 'よ' }[form];
     case 'godan': {
       const last = dict.slice(-1);
       const r = ROW[last];
@@ -84,8 +93,13 @@ export function conjugate(dict: string, form: FormId): string | null {
         rentai: dict,
         renyo: stem + (honor ? 'い' : r.i),
         renyoTa: stem + ta,
+        renyoDe: stem + (honor ? 'い' : r.i),
+        te: stem + ta + ('ぐぬぶむ'.includes(last) ? 'で' : 'て'),
         mizen: stem + r.a,
         katei: stem + r.e,
+        // 命令: 五段は え段（いらっしゃる 等は「い」）。文語調の「よ」は五段には無いので同じ形
+        meirei: stem + (honor ? 'い' : r.e),
+        meireiYo: stem + (honor ? 'い' : r.e),
       }[form];
     }
   }
@@ -114,10 +128,11 @@ export function baseForm(senseNorm: string | undefined): { prefix: string; core:
   return core ? { prefix, core } : null;
 }
 
-/** 訳の穴の言葉（〔 〕の中）。複数あれば「～」でつなぐ。無ければ null */
+/** 訳の穴の言葉（〔 〕の中）。複数あれば「～」でつなぐ（同じ言葉が2回なら1つ。「順序～順序」にしない）。無ければ null */
 export function translationBlank(translation: string | undefined): string | null {
   const parts = [...(translation ?? '').matchAll(/〔\s*(.+?)\s*〕/g)].map((m) => m[1].trim()).filter(Boolean);
-  return parts.length ? parts.join('～') : null;
+  const uniq = [...new Set(parts)];
+  return uniq.length ? uniq.join('～') : null;
 }
 
 /** 最後の訳の穴の直後の文字列（活用形の手がかり。た・て・ず・ます・。など） */
@@ -131,8 +146,17 @@ export function textAfterBlank(translation: string | undefined): string {
 const SHUSHI_NEXT = /^($|[。、」』！？!?…―]|よ|ね|ぞ|か|と|が|けれど|し[、。]|から|まで|な[。」]|らしい|だろう|でしょう)/;
 
 /** 訳の穴の言葉と直後の文字から活用形を決める（辞書の形と言い方が違う訳のとき） */
-function inferForm(cls: Cls | null, blank: string, after: string): FormId | null {
+function inferForm(clsNorm: Cls | null, blank: string, after: string): FormId | null {
+  // 辞書の形と訳の言葉で品詞が違うとき（親密だ→「親しい」）は訳の言葉の品詞で見る
+  const own = classify(blank);
+  const cls = own === 'i' || own === 'na' ? own : clsNorm;
   if (/[っん]$/.test(blank) && /^[たてだで]/.test(after)) return 'renyoTa';
+  // 命令（文末で え段・ろ・よ）／て形（文末・読点の前の〜て・〜で）
+  if (/^[。」』！!]/.test(after) || after === '') {
+    if (/(せよ|よ)$/.test(blank) && own !== 'i') return 'meireiYo';
+    if (/ろ$/.test(blank)) return 'meirei';
+    if (/[てで]$/.test(blank) && own !== 'na') return 'te';
+  }
   if (/^(ず|ない|なかっ|ぬ|れる|られ|せる|させ)/.test(after)) return 'mizen';
   if (/^(ます|まし|ながら|に行|に来)/.test(after)) return 'renyo';
   if (/^ば/.test(after)) return 'katei';
@@ -147,10 +171,16 @@ function inferForm(cls: Cls | null, blank: string, after: string): FormId | null
     if (/だ$/.test(blank)) return 'shushi';
     if (/だっ$/.test(blank)) return 'renyoTa';
     if (/に$/.test(blank) && cls === 'na') return 'renyo';
+    if (/で$/.test(blank) && cls === 'na') return 'renyoDe';
   }
+  // 「〜ないで」「〜くて」で文を続ける形
+  if (/(ないで|くて)$/.test(blank)) return 'renyoDe';
   if (/の$/.test(blank)) return 'rentai';
   if (/[うくぐすつぬぶむる]$/.test(blank)) return SHUSHI_NEXT.test(after) ? 'shushi' : 'rentai';
   if (/[たてだで]/.test(after.slice(0, 1)) && /[いきぎしちにびみりえけげせてねべめれ]$/.test(blank)) return 'renyoTa';
+  // 活用しない言葉（とても・非常に・はっきり・平然として）が後ろの述語にかかる → 連用修飾（形容詞〜く・形容動詞〜に）
+  if (!own && after && !/^[。、」』！？!?…のがをはへやもとでに]/.test(after)) return 'renyo';
+  if (!own && /に$/.test(blank)) return 'renyo'; // 「むやみに、」のように読点が続く連用修飾
   return null;
 }
 
@@ -164,9 +194,11 @@ export function detectForm(senseNorm: string | undefined, blank: string, after =
   if (b) {
     // 形が同じになる活用形が複数あるときは FORMS の順（終止を先）で決める
     for (const f of FORMS) {
-      const c = conjugate(b.core, f);
+      // 「〜ている（補助）」の「〜」は照合では外す（訳の穴は「てい」）
+      const c = conjugate(b.core, f)?.replace(/^[〜～]/, '');
       if (c && (bare === c || bare.endsWith(c))) {
         if (f === 'shushi' && !SHUSHI_NEXT.test(after)) return 'rentai';
+        if (f === 'katei' && !/^ば/.test(after)) return /よ$/.test(bare) ? 'meireiYo' : 'meirei';
         return f;
       }
     }
