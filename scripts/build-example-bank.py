@@ -14,7 +14,12 @@ build-example-bank.py — 単語学習 全面刷新 Phase A の ETL その2
   public/example-bank/<lemma>.json … 用例本体 (lemma 単位で fetch。egress 対策)
   docs/example-bank-report.md      … 集約統計・sense 未紐付け数 (Phase B の作業量)
 
-usage: python scripts/build-example-bank.py
+usage: python scripts/build-example-bank.py [--out-dir DIR] [--report FILE]
+  --out-dir / --report を付けると、リポジトリの public/example-bank と docs の報告書に書かずに試せる（予行用）
+
+texts-v3 の語は baseForm が見出し語（ひらがな）と一致するものを拾う。漢字表記の用言（言ふ・申す・見ゆ…）は
+src/lib/vocabAlias.ts の KANJI_VARIANTS（画面の下線・解説カードと同じ表）で見出し語に当てる。
+名詞（心・形見 など）は本文に多く紛れるので当てない＝用言の基本形の形のものだけ（2026-11-05 ユーザー承認）。
 """
 import glob
 import json
@@ -31,7 +36,33 @@ TEXTS_DIR = os.path.join(ROOT, "public", "texts-v3")
 OUT_DIR = os.path.join(ROOT, "public", "example-bank")
 OUT_REPORT = os.path.join(ROOT, "docs", "example-bank-report.md")
 
+VOCAB_ALIAS_TS = os.path.join(ROOT, "src", "lib", "vocabAlias.ts")
+
 SNIPPET_MARGIN = 45  # 本文抜粋の前後余白(字)
+
+# 用言の基本形の終わり方（動詞・形容詞・形容動詞）。これに当たる漢字表記だけを見出し語に当てる
+YOGEN_END_RE = re.compile(r"(ふ|く|す|つ|ぬ|む|ゆ|る|ぐ|ぶ|ず|し|なり|たり|り)$")
+
+
+def load_kanji_base_alias(path=VOCAB_ALIAS_TS):
+    """vocabAlias.ts の KANJI_VARIANTS から {漢字表記の基本形: 見出し語} を作る（用言の形のものだけ）。
+    表は TS 側が正本。ここでは読むだけ（二重に持たない）。"""
+    try:
+        src = open(path, encoding="utf-8").read()
+    except OSError:
+        return {}
+    i = src.find("const KANJI_VARIANTS")
+    if i < 0:
+        return {}
+    block = src[i:]
+    block = block[:block.find("\n};")]
+    out = {}
+    for m in re.finditer(r"^\s*'([^']+)':\s*\[([^\]]*)\]", block, re.M):
+        lemma = m.group(1)
+        for v in re.findall(r"'([^']+)'", m.group(2)):
+            if YOGEN_END_RE.search(v):
+                out[v] = lemma
+    return out
 
 
 SOURCE_TAIL_RE = re.compile(r"（[^（）]{1,20}）\s*$")
@@ -162,6 +193,7 @@ def main():
             })
 
     # 4) texts-v3 本文 (意味ラベル＋本文リンク。1ファイルずつ逐次=省メモリ)
+    kanji_alias = load_kanji_base_alias()
     text_files = sorted(glob.glob(os.path.join(TEXTS_DIR, "*.json")))
     parse_errors = []
     for path in text_files:
@@ -184,6 +216,9 @@ def main():
             for tok in sent.get("tokens", []):
                 tag = tok.get("grammarTag") or {}
                 base = tag.get("baseForm") or tok.get("baseForm")
+                if base not in senses_by_lemma and kanji_alias.get(base) in senses_by_lemma:
+                    base = kanji_alias[base]  # 言ふ → いふ など
+                    stats["text-kanji-alias"] += 1
                 if base not in senses_by_lemma:
                     continue
                 start = tok.get("start")
@@ -301,4 +336,14 @@ def main():
 
 
 if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out-dir", help="用例の出力先（既定 public/example-bank）")
+    ap.add_argument("--report", help="報告書の出力先（既定 docs/example-bank-report.md）")
+    args = ap.parse_args()
+    if args.out_dir:
+        OUT_DIR = os.path.abspath(args.out_dir)
+        os.makedirs(OUT_DIR, exist_ok=True)
+    if args.report:
+        OUT_REPORT = os.path.abspath(args.report)
     sys.exit(main())
