@@ -92,6 +92,17 @@ export function WordQuizContent({
     }
   }, [quizType, showWritingResult]);
 
+  // 選択肢: 答えたら、答え合わせ（自分の解答の吹き出し）が画面のいちばん上に来るまでスクロールする（2026-11-04 ユーザー指示）。
+  // scroll-mt-12 で右上の固定ボタン（ホーム・教材へ）の下にそろえる。吹き出しのアニメは transform なので高さは描いた時点で決まっている
+  const feedbackRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (answeredCorrectly === null) return;
+    const id = window.requestAnimationFrame(() => {
+      feedbackRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [answeredCorrectly]);
+
   // 答え合わせ（LINE 風）の画面データ。先生と画風は端末の設定、位階は通信なしで読み、この問の間は固定（セッション中は更新しない）
   const [teacherId] = useChatTeacher();
   const [tone] = usePortraitTone();
@@ -459,7 +470,8 @@ export function WordQuizContent({
           voice: TEACHER_VOICE_ENABLED,
         });
         return (
-          <>
+          // 最低の高さ＝画面の高さ − 上の余白。答え合わせが短くてもページの下が足りず上端まで上がらない、を防ぐ
+          <div ref={feedbackRef} className="scroll-mt-12" style={{ minHeight: 'calc(100dvh - 3rem)' }}>
             <ChatFeedback
               bubbles={thread.bubbles}
               canAdvance={thread.canAdvance}
@@ -479,7 +491,7 @@ export function WordQuizContent({
                 つぎへ →
               </button>
             </div>
-          </>
+          </div>
         );
       })()}
     </div>
