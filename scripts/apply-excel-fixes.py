@@ -22,6 +22,13 @@ fixes.json の形（配列。1要素 = 1セル）
   }
   - after が "" ならセルを空にする。
   - row / col / lemma / cat などほかのキーは記録用で、スクリプトは見ない。
+  - 行を足すとき（2026-11-06〜）は、次のキーを使う:
+      "new_cell": true    まだ無いセル（<c> 要素が無い）を作ってよい。before は "" にする。
+                          行の要素（<row>）が無ければ作る。セルは列の順に差し込み、行の spans と
+                          シートの dimension を必要なら広げる
+      "style_from": "K346"  書式（s 属性）をこのセルから写す（既にある空のセルにも効く）。
+                          行を作るときは行の属性（ht など）もこのセルの行から写す
+      "type": "n"         数値セルとして書く（after は数字の文字列。A 列の通し番号・B 列の番号など）
 
 しくみ（xml 方式）
   xlsx(zip) の中の対象シートの XML と xl/sharedStrings.xml だけを書き換え、ほかの部品は
@@ -32,7 +39,8 @@ fixes.json の形（配列。1要素 = 1セル）
 注意
   - openpyxl で読み書きする方式は持たない。2026-10-05 の試験で、openpyxl で保存すると
     狙っていないほかのシートの524セルと印刷設定が変わった。正本には使わない。
-  - 数式セル・数値セル・まだ無いセル（新規作成）は扱わない（止まる）。
+  - 数式セル・既にある数値セルは扱わない（止まる）。まだ無いセルは "new_cell": true の行だけ作る
+    （無ければ止まる）。
   - 正本そのものを --out にしない。複製に当て、scripts/compare-xlsx.py で全セル比較してから、
     承認を得て正本を置き換える。
 """
@@ -110,6 +118,81 @@ def si_edit(si, before, after):
     return new if si_text(new) == after else None
 
 
+def col_index(letters):
+    n = 0
+    for ch in letters:
+        n = n * 26 + (ord(ch) - 64)
+    return n
+
+
+def col_letters(n):
+    s = ""
+    while n:
+        n, r = divmod(n - 1, 26)
+        s = chr(65 + r) + s
+    return s
+
+
+ROW_RE = r'<row r="%d"(?:\s[^>]*?)?(?:/>|>.*?</row>)'
+CELL_IN_ROW_RE = re.compile(r'<c r="([A-Z]+)\d+"(?:\s[^>]*?)?(?:/>|>.*?</c>)', re.S)
+
+
+def insert_cells(x, inserts, sname):
+    """まだ無いセルを行の中へ列の順に差し込む（2026-11-06〜）。行が無ければ作り、spans と dimension を広げる"""
+    stats_rows = 0
+    by_row = {}
+    for r, c, tag, style_from in inserts:
+        by_row.setdefault(r, []).append((c, tag, style_from))
+    for r in sorted(by_row):
+        cells = sorted(by_row[r])
+        if len({c for c, _, _ in cells}) != len(cells):
+            sys.exit("STOP: %s の %d 行で同じセルを2回作ろうとしている" % (sname, r))
+        m = re.search(ROW_RE % r, x, re.S)
+        if m is None:  # 行を作る。属性は style_from のセルの行から写す（r と spans は付け直す）
+            src_ref = next((sf for _, _, sf in cells if sf), None)
+            attrs = ""
+            if src_ref:
+                sr = int(re.fullmatch(r"[A-Z]+(\d+)", src_ref).group(1))
+                sm = re.search(r'<row r="%d"((?:\s[^>]*?)?)/?>' % sr, x)
+                if sm:
+                    attrs = re.sub(r'\s+(r|spans)="[^"]*"', "", sm.group(1))
+            after = [int(n) for n in re.findall(r'<row r="(\d+)"', x) if int(n) > r]
+            pos = re.search(r'<row r="%d"' % min(after), x).start() if after else x.index("</sheetData>")
+            new_row = '<row r="%d"%s></row>' % (r, attrs)
+            x = x[:pos] + new_row + x[pos:]
+            m = re.search(ROW_RE % r, x, re.S)
+            stats_rows += 1
+        row = m.group(0)
+        if row.endswith("/>"):
+            open_tag, body = row[:-2] + ">", ""
+        else:
+            open_tag = row[:row.index(">") + 1]
+            body = row[len(open_tag):-len("</row>")]
+        have = [(col_index(cm.group(1)), cm.group(0)) for cm in CELL_IN_ROW_RE.finditer(body)]
+        if "".join(t for _, t in have) != body:
+            sys.exit("STOP: %s の %d 行の中身をセルの並びとして読み切れない" % (sname, r))
+        exist = {c for c, _ in have}
+        for c, _, _ in cells:
+            if c in exist:
+                sys.exit("STOP: %s!%s%d は既にある（new_cell にしない）" % (sname, col_letters(c), r))
+        merged = sorted(have + [(c, t) for c, t, _ in cells])
+        cols = [c for c, _ in merged]
+        if re.search(r'\sspans="\d+:\d+"', open_tag):
+            open_tag = re.sub(r'\sspans="\d+:\d+"', ' spans="%d:%d"' % (min(cols), max(cols)), open_tag)
+        x = x[:m.start()] + open_tag + "".join(t for _, t in merged) + "</row>" + x[m.end():]
+    # dimension を広げる
+    dm = re.search(r'<dimension ref="([A-Z]+)(\d+)(?::([A-Z]+)(\d+))?"/>', x)
+    if dm:
+        c1, r1 = col_index(dm.group(1)), int(dm.group(2))
+        c2, r2 = (col_index(dm.group(3)), int(dm.group(4))) if dm.group(3) else (c1, r1)
+        for r, c, _, _ in inserts:
+            c1, r1, c2, r2 = min(c1, c), min(r1, r), max(c2, c), max(r2, r)
+        ref = "%s%d:%s%d" % (col_letters(c1), r1, col_letters(c2), r2)
+        x = x[:dm.start()] + '<dimension ref="%s"/>' % ref + x[dm.end():]
+    insert_cells.new_rows = stats_rows
+    return x
+
+
 def run_xml(fixes, src, dst):
     zin = zipfile.ZipFile(src)
     wbx = zin.read("xl/workbook.xml").decode("utf-8")
@@ -136,7 +219,8 @@ def run_xml(fixes, src, dst):
             sys.exit("STOP: シート %r が無い（あるのは %s）" % (f["sheet"], sorted(sheets)))
         by_sheet.setdefault(f["sheet"], []).append(f)
     new_parts = {}
-    stats = {"copied_index": 0, "edited_in_run": 0, "plain": 0, "cleared": 0, "new_si": 0}
+    stats = {"copied_index": 0, "edited_in_run": 0, "plain": 0, "cleared": 0, "new_si": 0,
+             "new_cell": 0, "new_number": 0, "restyled": 0, "new_row": 0}
     for sname, fs in by_sheet.items():
         part = sheets[sname]
         x = zin.read(part).decode("utf-8")
@@ -159,11 +243,22 @@ def run_xml(fixes, src, dst):
                 return m, int(v.group(1)), si_text(sis[int(v.group(1))])
             sys.exit("STOP: %s!%s は共有文字列でない型 (%s)" % (sname, ref, t.group(1) if t else "n"))
 
+        def style_of(ref):
+            m = find_cell(ref)
+            if m is None:
+                sys.exit("STOP: %s!%s（style_from）のセル要素が無い" % (sname, ref))
+            s = re.match(r'<c\b[^>]*?\ss="(\d+)"', m.group(0))
+            return s.group(1) if s else None
+
         plan = []
         for f in fs:  # 1) 全件の照合（ここで1件でも違えば、何も書かずに止まる）
             m, idx, cur = cell_state(f["cell"])
             if cur != f["before"]:
                 sys.exit("STOP: %s!%s の今の値が一覧と違う\n  一覧: %r\n  実際: %r" % (sname, f["cell"], f["before"], cur))
+            if m is None and not f.get("new_cell"):
+                sys.exit("STOP: %s!%s のセル要素が無い（作るなら new_cell: true）" % (sname, f["cell"]))
+            if f.get("type") == "n" and not re.fullmatch(r"-?\d+(\.\d+)?", f["after"]):
+                sys.exit("STOP: %s!%s は type n だが after が数字でない: %r" % (sname, f["cell"], f["after"]))
             src_idx = None
             if f.get("copy_from") and f["after"] != "":
                 _, src_idx, src_text = cell_state(f["copy_from"])
@@ -171,10 +266,35 @@ def run_xml(fixes, src, dst):
                     sys.exit("STOP: %s!%s の値が after と違う" % (sname, f["copy_from"]))
             plan.append((f, idx, src_idx))
         edits = []
+        inserts = []  # (行番号, 列番号, 新しい <c>, 行の属性を写すセル)
         for f, idx, src_idx in plan:  # 2) 新しい値の決定
             m = find_cell(f["cell"])
-            if m is None:
-                sys.exit("STOP: %s!%s のセル要素が無い（新規作成は未対応）" % (sname, f["cell"]))
+            style = style_of(f["style_from"]) if f.get("style_from") else None
+            if m is None:  # new_cell（1) で確かめ済み）: 列の順に差し込む
+                if f["after"] == "":
+                    sys.exit("STOP: %s!%s は空のまま新しいセルを作ろうとしている" % (sname, f["cell"]))
+                ref = f["cell"]
+                sattr = ' s="%s"' % style if style else ""
+                if f.get("type") == "n":
+                    v = f["after"]
+                    new_tag = '<c r="%s"%s><v>%s</v></c>' % (ref, sattr, v)
+                    stats["new_number"] += 1
+                else:
+                    if src_idx is not None:
+                        new_v = src_idx
+                        stats["copied_index"] += 1
+                    else:
+                        sis.append('<si><t xml:space="preserve">' + esc(f["after"]) + "</t></si>")
+                        stats["new_si"] += 1
+                        stats["plain"] += 1
+                        new_v = len(sis) - 1
+                    new_tag = '<c r="%s"%s t="s"><v>%d</v></c>' % (ref, sattr, new_v)
+                rc = re.fullmatch(r"([A-Z]+)(\d+)", ref)
+                inserts.append((int(rc.group(2)), col_index(rc.group(1)), new_tag, f.get("style_from")))
+                stats["new_cell"] += 1
+                continue
+            if f.get("type") == "n":
+                sys.exit("STOP: %s!%s は既にあるセル。数値の書き換えは未対応" % (sname, f["cell"]))
             if f["after"] == "":
                 new_v = None
                 stats["cleared"] += 1
@@ -194,10 +314,16 @@ def run_xml(fixes, src, dst):
             tag = m.group(0)
             open_tag = re.match(r"<c\b[^>]*?(/?)>", tag).group(0)
             attrs = re.sub(r'\s+t="[^"]*"', "", open_tag.rstrip("/>").rstrip(">"))
+            if style is not None:
+                attrs = re.sub(r'\s+s="[^"]*"', "", attrs) + ' s="%s"' % style
+                stats["restyled"] += 1
             new_tag = attrs + "/>" if new_v is None else attrs + ' t="s"><v>%d</v></c>' % new_v
             edits.append((m.start(), m.end(), new_tag))
         for s, e, nt in sorted(edits, reverse=True):
             x = x[:s] + nt + x[e:]
+        if inserts:
+            x = insert_cells(x, inserts, sname)
+            stats["new_row"] += insert_cells.new_rows
         new_parts[part] = x.encode("utf-8")
     added = len(sis) - n_orig
     if added:

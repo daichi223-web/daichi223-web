@@ -196,7 +196,7 @@ describe('実戦例文の mark: 全件', () => {
 
   it('mark はすべて例文の内側にあり、重ならず、そのまま印になる', () => {
     // 2026-10-06: 追加98件。2026-10-25: 教材由来の例文にも手の表と照合で位置を付けた（+667件）
-    expect(marked.length).toBe(765);
+    expect(marked.length).toBe(764); // 2026-11-06: 355-2「なよ竹のかぐや姫といふ」を本文と合わない用例として外した（data/enrich/example-denylist.jsonl）
     for (const r of marked) {
       const w = byQid(r.qid);
       const res = resolveTargetSpans(r.jp, w, r.mark);

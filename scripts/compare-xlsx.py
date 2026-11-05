@@ -89,6 +89,17 @@ def main():
         if n:
             per_sheet[name] = n
     P("比べたセル:", total, " 変わったセル:", len(changed), per_sheet)
+    # 空だったセルに値が入った（行を足した・空のセルを埋めた）／値が消えた、の内訳（2026-11-06〜）
+    added = sorted(k for k, (va, vb) in changed.items() if va == "" and vb != "")
+    emptied = sorted(k for k, (va, vb) in changed.items() if va != "" and vb == "")
+    P("  うち 空→値（追加）:", len(added), " 値→空（消去）:", len(emptied),
+      " 値→値:", len(changed) - len(added) - len(emptied))
+    if added:
+        P("  追加されたセル:", ", ".join("%s!%s" % k for k in added[:a.max_list]))
+    rows_a = {name: len(wa.get_sheet_by_name(name).to_python()) for name in wa.sheet_names}
+    rows_b = {name: len(wb.get_sheet_by_name(name).to_python()) for name in wb.sheet_names}
+    grown = {n: (rows_a[n], rows_b[n]) for n in rows_b if n in rows_a and rows_a[n] != rows_b[n]}
+    P("  値のある行数が変わったシート:", grown if grown else "なし")
 
     fail = not same_names
     if a.expect:
@@ -96,8 +107,16 @@ def main():
         inc = set(filter(None, a.include_cells.split(",")))
         fixes = [f for f in json.load(open(a.expect, encoding="utf-8")) if f.get("level") in levels or f["cell"] in inc]
         expect = {(f["sheet"], f["cell"]): f for f in fixes}
-        ok = [k for k in changed if k in expect and str(changed[k][1]) == expect[k]["after"]]
-        wrong = [k for k in changed if k in expect and str(changed[k][1]) != expect[k]["after"]]
+        def same(k):
+            v, f = changed[k][1], expect[k]
+            if f.get("type") == "n":  # 数値セル（apply-excel-fixes.py の type n）は数として比べる
+                try:
+                    return float(v) == float(f["after"])
+                except (TypeError, ValueError):
+                    return False
+            return str(v) == f["after"]
+        ok = [k for k in changed if k in expect and same(k)]
+        wrong = [k for k in changed if k in expect and not same(k)]
         unexpected = [k for k in changed if k not in expect]
         missing = [k for k in expect if k not in changed]
         P("一覧との突き合わせ（%d セル）: 狙いどおり %d / 値が違う %d / 狙っていないのに変わった %d / 変わっていない %d"

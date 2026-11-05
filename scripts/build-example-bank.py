@@ -175,6 +175,19 @@ def main():
     # 3) examples-by-lemma.json (用例辞書。meaning ラベルから sense 紐付けを試みる)
     with open(BYLEMMA, encoding="utf-8") as f:
         bylemma = json.load(f)
+    # 本文で確かめられない用例は使わない（正本 data/enrich/example-denylist.jsonl。出題用の build-corpus-examples.py も同じ表を読む）
+    deny = set()
+    deny_path = os.path.join(ROOT, "data", "enrich", "example-denylist.jsonl")
+    if os.path.exists(deny_path):
+        with open(deny_path, encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    r = json.loads(line)
+                    deny.add((r["lemma"], norm_text(r["sentence"])))
+    for lemma in list(bylemma):
+        before = len(bylemma[lemma])
+        bylemma[lemma] = [e for e in bylemma[lemma] if (lemma, norm_text(e.get("sentence"))) not in deny]
+        stats["dict-denied"] += before - len(bylemma[lemma])
     for lemma, exs in bylemma.items():
         if lemma not in senses_by_lemma:
             stats["dict-unknown-lemma"] += 1

@@ -25,6 +25,17 @@ from target_marks import decide_marks, load_manual  # noqa: E402
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 ebl = json.load(open("public/examples-by-lemma.json", encoding="utf-8"))
+# 本文で確かめられない用例（vault 語彙ノートの「典型的な例文」欄の句など）は使わない。正本 data/enrich/example-denylist.jsonl
+def _deny_key(s):
+    return re.sub(r"[\s　。、]", "", _TAIL_SRC0.sub("", (s or "").strip()))
+_TAIL_SRC0 = re.compile(r"\s*[（(][^（()）]*[）)]\s*$")
+_DENY = set()
+if os.path.exists("data/enrich/example-denylist.jsonl"):
+    for _l in open("data/enrich/example-denylist.jsonl", encoding="utf-8"):
+        if _l.strip():
+            _r = json.loads(_l)
+            _DENY.add((_r["lemma"], _deny_key(_r["sentence"])))
+ebl = {lm: [e for e in exs if (lm, _deny_key(e.get("sentence"))) not in _DENY] for lm, exs in ebl.items()}
 qs = [json.loads(l) for l in open("public/kobun_q.jsonl.txt", encoding="utf-8") if l.strip()]
 
 def core(s):
