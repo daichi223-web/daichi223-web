@@ -5,7 +5,7 @@ import type { ReadingProgress } from "@/lib/kobun/types";
 import { getPublishedSlugs } from "@/lib/textPublications";
 import { hasFullAccess } from "@/lib/fullAccess";
 import bundledTextsIndex from "@/data/textsIndex.json";
-import { getAllTopicProgress, fetchDueDrillCount } from "@/lib/kobun/dojoData";
+import { getAllTopicProgress, fetchTodayReviewCount } from "@/lib/kobun/dojoData";
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 
 const HOME_SCROLL_KEY = "kobun-home-scroll-v1";
@@ -128,7 +128,8 @@ export default function HomeV3() {
     setProgress(loadAllProgress());
     getPublishedSlugs().then((s) => setPublishedSet(s));
     // 道場の状態（レベル・復習期日）— 失敗してもカード自体は表示する
-    Promise.all([getAllTopicProgress(), fetchDueDrillCount()])
+    // 復習のバッジは「今日の分」の数（2026-11-06。たまっている総数は出さない。取れなければ 0＝バッジなし）
+    Promise.all([getAllTopicProgress(), fetchTodayReviewCount().catch(() => 0)])
       .then(([p, due]) => setDojo({ level: computeDojoLevel(p).level, due }))
       .catch(() => {});
   }, []);
@@ -303,8 +304,8 @@ export default function HomeV3() {
         >
           <span>⚔️ 文法道場</span>
           {dojo && (
-            <span className="text-[10px] font-black bg-rw-paper/20 rounded-full px-2 py-0.5">
-              Lv.{dojo.level}
+            <span className="text-[10px] font-black bg-rw-paper/20 rounded-full px-2 py-0.5 whitespace-nowrap">
+              道場 Lv.{dojo.level}
             </span>
           )}
           {dojo !== null && dojo.due > 0 && (

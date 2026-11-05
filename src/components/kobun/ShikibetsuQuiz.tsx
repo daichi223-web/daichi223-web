@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import type { Token } from "@/lib/kobun/types";
 import { GROUPS, choiceOf, type ShikibetsuTarget } from "@/lib/kobun/shikibetsu";
 import { judgeShikibetsu, type Yure } from "@/lib/kobun/shikibetsuYure";
+import { makeReturnTo, topicUrlWithBack } from "@/lib/returnTo";
 
 interface ShikibetsuQuizProps {
   target: ShikibetsuTarget;
@@ -79,6 +80,8 @@ function SentenceWithTarget({ tokens, target }: { tokens: Token[]; target: Shiki
 
 function QuizContent({ target, tokens, notes, yure, chosen, onAnswer, onRetry, onClose }: ShikibetsuQuizProps) {
   const group = GROUPS[target.group];
+  // 文法道場の単元ページから、この教材（識別の画面）へ戻れるよう戻り先を付ける（2026-11-06）
+  const location = useLocation();
   const answered = chosen !== null;
   const verdict = chosen === null ? null : judgeShikibetsu(target, chosen, yure);
   const correct = verdict === "correct";
@@ -218,7 +221,7 @@ function QuizContent({ target, tokens, notes, yure, chosen, onAnswer, onRetry, o
             )}
           </dl>
           <Link
-            to={`/read/grammar/${group.topicId}`}
+            to={topicUrlWithBack(group.topicId, makeReturnTo(location.pathname, location.search, target.id))}
             className="inline-block text-xs font-bold underline"
             style={{ color: "var(--layer-6)" }}
           >

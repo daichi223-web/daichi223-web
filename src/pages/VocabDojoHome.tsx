@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchDojoTopicIds, getAllTopicProgress } from "@/lib/kobun/dojoData";
+import { fetchDojoTopicLevels, getAllTopicProgressOrThrow } from "@/lib/kobun/dojoData";
 import type { TopicProgress } from "@/lib/kobun/types";
+import { topicStatus, type TopicState } from "@/lib/kobun/topicStatus";
 
 // 単語道場ホーム。
 // 弁別クラスター（grammar_drills の vocab-* トピック）を「教程順」に並べる単語側の入口。
@@ -35,32 +36,50 @@ const KIMETE_TYPES: { label: string; example: string }[] = [
   { label: "活用の形", example: "たまふる→下二段「ております」" },
 ];
 
-function statusOf(p: TopicProgress | undefined): { label: string; cls: string } {
-  if (!p || (p.drillTotal === 0 && !p.watched)) return { label: "未学習", cls: "text-rw-ink-soft" };
-  if (p.masteryPct >= 85) return { label: "定着", cls: "text-rw-accent" };
-  return { label: `学習中 ${p.masteryPct}%`, cls: "text-rw-primary" };
-}
+/** 札の色（言葉と状態の決め方は lib/kobun/topicStatus.ts。文法道場ホームと共通） */
+const STATE_CLS: Record<TopicState, string> = {
+  new: "text-rw-ink-soft",
+  learning: "text-rw-primary",
+  clear: "text-rw-accent",
+};
+
+/** 単元ページから「← 単語道場」で戻れるように、戻り先を付けて渡す */
+const BACK = encodeURIComponent("/tango-dojo");
 
 export default function VocabDojoHome() {
-  const [available, setAvailable] = useState<Set<string>>(new Set());
+  // 単元ID → その単元にあるレベル（ドリルがある講かどうか・状態の判定に使う）
+  const [levels, setLevels] = useState<Record<string, number[]>>({});
   const [progress, setProgress] = useState<Record<string, TopicProgress>>({});
   const [loading, setLoading] = useState(true);
+  // 通信の失敗は「準備中」と出さず、読み込めなかったと伝える
+  const [loadError, setLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      const [ids, prog] = await Promise.all([fetchDojoTopicIds(), getAllTopicProgress()]);
-      if (cancelled) return;
-      setAvailable(new Set(ids));
-      setProgress(prog);
-      setLoading(false);
-    })();
+    setLoading(true);
+    setLoadError(false);
+    Promise.all([fetchDojoTopicLevels(), getAllTopicProgressOrThrow()])
+      .then(([lv, prog]) => {
+        if (cancelled) return;
+        setLevels(lv);
+        setProgress(prog);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.warn("[vocab-dojo] load failed:", e);
+        if (cancelled) return;
+        setLoadError(true);
+        setLoading(false);
+      });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reloadKey]);
 
-  const doneCount = COURSES.filter((c) => (progress[c.id]?.masteryPct ?? 0) >= 85).length;
+  // クリアの数え方は文法道場と同じ（その講にあるレベルが全部 85% 以上。Lv2 しか無い講も数えられる）
+  const statusOf = (id: string) => topicStatus(id, levels[id] ?? [], progress);
+  const doneCount = COURSES.filter((c) => statusOf(c.id).state === "clear").length;
 
   return (
     <div className="min-h-dvh bg-rw-bg">
@@ -71,7 +90,7 @@ export default function VocabDojoHome() {
           </Link>
           <div className="mt-3 flex items-baseline justify-between">
             <h1 className="text-[30px] font-black tracking-tight text-rw-ink leading-none">🎯 単語道場</h1>
-            <span className="text-xs font-black text-rw-ink-soft">定着 {doneCount} / {COURSES.length}</span>
+            <span className="text-xs font-black text-rw-ink-soft">クリア {doneCount} / {COURSES.length}</span>
           </div>
           <p className="text-xs font-semibold text-rw-ink-soft mt-2 leading-relaxed">
             訳語の丸暗記から、文脈で見分ける力へ。紛らわしい単語を「紛らわしさごと」に対決させる。
@@ -114,10 +133,22 @@ export default function VocabDojoHome() {
         </section>
 
         {/* 教程 */}
+        {loadError && (
+          <div className="text-center bg-rw-paper border border-rw-rule rounded-2xl p-3.5 mb-2.5">
+            <p className="text-[13px] font-black text-rw-ink">読み込めませんでした</p>
+            <p className="text-[11px] text-rw-ink-soft font-semibold mt-0.5">通信を確かめて、もう一度ためしてね。</p>
+            <button
+              onClick={() => setReloadKey((k) => k + 1)}
+              className="mt-2 px-4 py-2 border-2 border-rw-ink rounded-xl text-[13px] font-black text-rw-ink"
+            >
+              もう一度
+            </button>
+          </div>
+        )}
         <div className="space-y-2.5">
-          {COURSES.map((c) => {
-            const ready = available.has(c.id);
-            const st = statusOf(progress[c.id]);
+          {!loadError && COURSES.map((c) => {
+            const ready = !!levels[c.id];
+            const st = statusOf(c.id);
             const inner = (
               <div className="flex items-start gap-3">
                 <div
@@ -139,9 +170,9 @@ export default function VocabDojoHome() {
                 </div>
                 <div className="shrink-0 text-right">
                   {ready ? (
-                    <span className={`text-[11px] font-black ${st.cls}`}>{loading ? "…" : st.label}</span>
+                    <span className={`text-[11px] font-black ${STATE_CLS[st.state]}`}>{st.label}</span>
                   ) : (
-                    <span className="text-[11px] font-black text-rw-ink-soft opacity-60">準備中</span>
+                    <span className="text-[11px] font-black text-rw-ink-soft opacity-60">{loading ? "…" : "準備中"}</span>
                   )}
                   <div className="text-rw-ink-soft text-sm mt-1">{ready ? "▶" : ""}</div>
                 </div>
@@ -150,7 +181,7 @@ export default function VocabDojoHome() {
             return ready ? (
               <Link
                 key={c.id}
-                to={`/read/grammar/${c.id}`}
+                to={`/read/grammar/${c.id}?back=${BACK}`}
                 className="block bg-rw-paper border border-rw-rule rounded-2xl p-3.5 hover:border-rw-ink transition no-underline"
                 style={{ textDecoration: "none" }}
               >

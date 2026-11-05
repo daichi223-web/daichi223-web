@@ -9,7 +9,7 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { grammarMeaningLabel } from "@/lib/kobun/grammarMeaningLabel";
 import { Link, useLocation } from "react-router-dom";
-import { makeReturnTo, quizUrlWithReturn } from "@/lib/returnTo";
+import { makeReturnTo, quizUrlWithReturn, topicUrlWithBack, wordCardUrlWithBack } from "@/lib/returnTo";
 import type { Token, TokenAnalysis } from "@/lib/kobun/types";
 import { resolveVocabKey } from "@/lib/vocabAlias";
 import { getQuizQidsForLemma } from "@/lib/vocabLookup";
@@ -281,7 +281,8 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
         (showVocabLinks || showGrammarLinks) && (
           <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 pt-2 border-t border-rw-ink/15 text-sm font-bold" style={{ color: "var(--rw-primary)" }}>
             {showVocabLinks && (
-              <Link to={`/word/${encodeURIComponent(vocabKey!)}`}>
+              // 単語カードから、この教材のこの語へ戻れるよう戻り先を付ける（2026-11-06）
+              <Link to={wordCardUrlWithBack(vocabKey!, makeReturnTo(location.pathname, location.search, token.id))}>
                 {offList ? `単語帳の「${vocabKey}」を見る（この箇所とは別の意味）` : `→ 単語カード「${vocabKey}」`}
               </Link>
             )}
@@ -289,7 +290,8 @@ export function WordCard({ token, analysis, anchor, pinned, touch, avoidBottom, 
               <Link to={quizUrlWithReturn(qids, makeReturnTo(location.pathname, location.search, token.id))}>→ 単語クイズ</Link>
             )}
             {showGrammarLinks && <Link to={`/read/reference/${token.grammarRefId}`}>→ 文法解説</Link>}
-            {quizTopic && <Link to={`/read/grammar/${quizTopic}`}>→ 文法のクイズ</Link>}
+            {/* 単元ページから、この教材のこの語へ戻れるよう戻り先を付ける（2026-11-06） */}
+            {quizTopic && <Link to={topicUrlWithBack(quizTopic, makeReturnTo(location.pathname, location.search, token.id))}>→ 文法のクイズ</Link>}
           </div>
         )
       ) : (

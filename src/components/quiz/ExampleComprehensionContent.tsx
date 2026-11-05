@@ -4,6 +4,7 @@ import { dataParser } from '../../utils/dataParser';
 import { MarkedSentence } from './MarkedSentence';
 import { PolysemyInsight } from './WordInsightPanel';
 import { answerTone, quizMeanings, stripSenseBrackets } from './writingVerdict';
+import { shuffle } from '../../lib/shuffle';
 
 export interface ExampleComprehensionContentProps {
   word: MultiMeaningWord;
@@ -20,7 +21,7 @@ export function ExampleComprehensionContent({ word, onCheck, onNext }: ExampleCo
     if (!word || !word.lemma || !word.meanings || !Array.isArray(word.meanings)) return;
     setAnswers({});
     setChecked(false);
-    setShuffledMeanings([...word.meanings].sort(() => Math.random() - 0.5));
+    setShuffledMeanings(shuffle(word.meanings));
   }, [word?.lemma, word?.meanings]);
 
   // Defensive check: ensure word exists and has required properties

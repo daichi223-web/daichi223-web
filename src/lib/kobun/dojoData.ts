@@ -10,8 +10,10 @@
  */
 import { supabase } from "@/lib/supabase";
 import { getUserId, recordAnswer } from "@/lib/wordStats";
-import { updateSrsState, getDueWords } from "@/lib/srsEngine";
+import { updateSrsState, getDueWords, startOfToday } from "@/lib/srsEngine";
 import type { GrammarDrill, GrammarDrillKind, GrammarMedia, TopicProgress } from "@/lib/kobun/types";
+import { levelOfSort, levelsByTopic } from "@/lib/kobun/topicStatus";
+import { pickTodayReview, DOJO_REVIEW_CAP, type SrsDueRow, type TodayReview } from "@/lib/kobun/dojoReview";
 
 const VIDEO_BUCKET = "grammar-videos";
 
@@ -54,8 +56,7 @@ function toDrill(r: {
 
 /** sort の100の位 = 難度レベル（<100=Lv1, 100台=Lv2, …, 400台=Lv5 難関） */
 export function drillLevel(d: GrammarDrill): number {
-  const s = d.sort ?? 0;
-  return Math.min(5, Math.floor(s / 100) + 1);
+  return levelOfSort(d.sort); // 式は topicStatus.ts に1つだけ置く（単元の状態の判定と共用）
 }
 
 /** バケット内パス → 公開 URL（R2 設定時は R2、未設定なら Supabase Storage） */
@@ -102,6 +103,8 @@ export async function fetchDrillsForTopics(topicIds: string[]): Promise<GrammarD
  * - getDueWords() は単語 qid も含むため、grammar_drills 側で id 一致のみ拾う
  *   ＝ 文法ドリルだけが残る（単語の段位は混ざらない）。
  * - シャッフルして最大 limit 問に切る。0件＝復習なしを意味する。
+ * ※ 2026-11-06 から、復習の画面とバッジは下の fetchTodayReview・fetchTodayReviewCount（今日の分）を使う。
+ *   この関数と fetchDueDrillCount は期日の ID を全部 URL に並べる取り方のままで、いまは呼び出し元が無い。
  */
 export async function fetchDueDrills(limit = 20): Promise<GrammarDrill[]> {
   const dueQids = await getDueWords();
@@ -172,6 +175,153 @@ export async function fetchDojoTopicIds(): Promise<string[]> {
     return [];
   }
   return Array.from(new Set(data.map((r) => r.topic_id as string)));
+}
+
+// ---------------------------------------------------------------------------
+// 失敗がわかる取得（2026-11-06。見直し ②③⑩）
+//   上の fetchDojoTopicIds・fetchDueDrills・getAllTopicProgress などは、通信に失敗すると空を返す。
+//   画面からは「まだ無い」と「読み込めなかった」の区別が付かないので、道場ホーム・復習・単語道場は
+//   こちら（失敗したら例外を投げる）を使い、「読み込めませんでした／もう一度」を出す。
+//   上の関数は単元ページなどが使っているので、引数・戻り値はそのままにしてある。
+// ---------------------------------------------------------------------------
+
+/** 文法の問題の索引（ID・単元・sort）。1回取って覚える */
+export interface DrillIndexRow {
+  id: string;
+  topicId: string;
+  sort: number;
+}
+
+/** 1回の取得で返る行数が上限で切られたときの、続きの取り方の単位 */
+const PAGE_SIZE = 1000;
+
+let drillIndexCache: Promise<DrillIndexRow[]> | null = null;
+
+/**
+ * 文法の問題の索引を取る（失敗したら例外）。
+ * 単元の一覧・単元ごとの「あるレベル」・復習の「文法の問題かどうか」の3つに使うので、
+ * 画面を移っても取り直さないよう覚えておく（失敗したときは覚えず、次の呼び出しで取り直す）。
+ * 行数が上限で切られていたら（総数より少なければ）続きを取りに行く。
+ */
+export function fetchDrillIndex(): Promise<DrillIndexRow[]> {
+  if (drillIndexCache) return drillIndexCache;
+  const p = (async () => {
+    const rows: { id: string; topic_id: string; sort: number | null }[] = [];
+    let total = Infinity;
+    while (rows.length < total) {
+      const q = supabase
+        .from("grammar_drills")
+        .select("id, topic_id, sort", { count: "exact" })
+        .order("id", { ascending: true });
+      // 1回目は範囲を付けない（これまでと同じ取り方）。切られていたときだけ続きを範囲で取る
+      const { data, error, count } = await (rows.length === 0 ? q : q.range(rows.length, rows.length + PAGE_SIZE - 1));
+      if (error || !data) throw error ?? new Error("grammar_drills: no data");
+      rows.push(...data);
+      total = count ?? rows.length;
+      if (data.length === 0) break;
+    }
+    return rows.map((r) => ({ id: r.id, topicId: r.topic_id, sort: r.sort ?? 0 }));
+  })();
+  drillIndexCache = p;
+  p.catch(() => {
+    if (drillIndexCache === p) drillIndexCache = null;
+  });
+  return p;
+}
+
+/**
+ * ドリルがある単元と、その単元にあるレベル（小さい順）。失敗したら例外。
+ * fetchDojoTopicIds の「レベルも分かる・失敗が分かる」版（単元の状態の判定に使う）。
+ */
+export async function fetchDojoTopicLevels(): Promise<Record<string, number[]>> {
+  return levelsByTopic(await fetchDrillIndex());
+}
+
+/** 全単元の到達度。getAllTopicProgress の「失敗したら例外」版 */
+export async function getAllTopicProgressOrThrow(): Promise<Record<string, TopicProgress>> {
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from("grammar_topic_progress")
+    .select("topic_id, watched, drill_total, drill_correct, mastery_pct")
+    .eq("user_id", userId);
+  if (error || !data) throw error ?? new Error("grammar_topic_progress: no data");
+
+  const out: Record<string, TopicProgress> = {};
+  for (const r of data) {
+    out[r.topic_id] = {
+      topicId: r.topic_id,
+      watched: r.watched,
+      drillTotal: r.drill_total,
+      drillCorrect: r.drill_correct,
+      masteryPct: r.mastery_pct,
+    };
+  }
+  return out;
+}
+
+/** 期日が来た srs_state の行（単語・例文事典の分も含む。絞るのは pickTodayReview）。失敗したら例外 */
+async function fetchDueSrsRows(now: Date): Promise<SrsDueRow[]> {
+  const userId = await getUserId();
+  const rows: { qid: string; next_review: string; last_review: string | null }[] = [];
+  let total = Infinity;
+  while (rows.length < total) {
+    const q = supabase
+      .from("srs_state")
+      .select("qid, next_review, last_review", { count: "exact" })
+      .eq("user_id", userId)
+      .lte("next_review", now.toISOString())
+      .order("next_review", { ascending: true })
+      .order("qid", { ascending: true });
+    const { data, error, count } = await (rows.length === 0 ? q : q.range(rows.length, rows.length + PAGE_SIZE - 1));
+    if (error || !data) throw error ?? new Error("srs_state: no data");
+    rows.push(...data);
+    total = count ?? rows.length;
+    if (data.length === 0) break;
+  }
+  return rows.map((r) => ({ qid: r.qid, nextReview: r.next_review, lastReview: r.last_review }));
+}
+
+/**
+ * 復習の「今日の分」の ID と残りの数（決め方は dojoReview.pickTodayReview）。失敗したら例外。
+ * 以前は期日が来た ID を全部 URL に並べて grammar_drills に問い合わせていた（数百件で URL が長すぎて
+ * 失敗するおそれ）。いまは問題の索引と srs_state の行を手元で突き合わせる。
+ */
+async function resolveTodayReview(exclude?: ReadonlySet<string>): Promise<TodayReview> {
+  const now = new Date();
+  const [index, rows] = await Promise.all([fetchDrillIndex(), fetchDueSrsRows(now)]);
+  return pickTodayReview(rows, new Set(index.map((r) => r.id)), {
+    now,
+    todayStart: startOfToday(now),
+    cap: DOJO_REVIEW_CAP,
+    exclude,
+  });
+}
+
+/** 復習の「今日の分」の問題数（道場ホームの復習カード・教材一覧の文法道場ボタンのバッジ用）。失敗したら例外 */
+export async function fetchTodayReviewCount(): Promise<number> {
+  return (await resolveTodayReview()).ids.length;
+}
+
+/**
+ * 復習の「今日の分」の問題（期日の古い順・最大20問）と、残りの数。失敗したら例外。
+ * exclude = この画面ですでに出した問題（「つづけてもう少し」で同じ問題を出さないため）。
+ */
+export async function fetchTodayReview(
+  exclude?: ReadonlySet<string>
+): Promise<{ drills: GrammarDrill[]; remaining: number }> {
+  const { ids, remaining } = await resolveTodayReview(exclude);
+  if (ids.length === 0) return { drills: [], remaining };
+
+  // ここで URL に並ぶ ID は多くても上限（20）個
+  const { data, error } = await supabase
+    .from("grammar_drills")
+    .select("id, topic_id, kind, prompt, context, choices, answer, explanation, ref_heading, sort")
+    .in("id", ids);
+  if (error || !data) throw error ?? new Error("grammar_drills: no data");
+
+  const byId = new Map(data.map((r) => [r.id as string, toDrill(r)]));
+  const drills = ids.map((id) => byId.get(id)).filter((d): d is GrammarDrill => d !== undefined);
+  return { drills, remaining };
 }
 
 /** ドリル1問の解答を記録（正誤数 + SRS箱）。qid = drill.id */

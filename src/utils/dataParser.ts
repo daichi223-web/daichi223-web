@@ -4,6 +4,7 @@ import { WordData, Word, MultiMeaningWord, ExamplesBySense } from '../types';
 // クイズ未使用フィールドはバンドル軽量化のため slim 生成時に除外
 // (再生成: python scripts/build-kobunq-slim.py。正本は kobunQ.v2.json)。
 import bundledKobunQ from '../data/kobunQ.v2.slim.json';
+import { shuffle } from '../lib/shuffle';
 
 // 例文が意図的に空のエントリ (副 sense で出典確定の例文が無いもの)。
 // これらは validateExamples の警告対象から除外する。
@@ -203,7 +204,7 @@ export class DataParser {
   }
 
   getRandomMultiMeaningWords(count: number): MultiMeaningWord[] {
-    const shuffled = [...this.multiMeaningWords].sort(() => Math.random() - 0.5);
+    const shuffled = shuffle(this.multiMeaningWords);
     return shuffled.slice(0, Math.min(count, shuffled.length));
   }
 

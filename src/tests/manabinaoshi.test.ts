@@ -42,12 +42,45 @@ describe("用語カード", () => {
 });
 
 describe("判定の問題選び", () => {
-  it("各単元のいちばん易しい1問を、教える順に並べる", () => {
+  it("各単元のいちばん低いレベルから1問ずつ、教える順に並べる", () => {
     const got = pickPlacementDrills(
       [d("y2", "doushi-yodan", 120), d("y1", "doushi-yodan", 10), d("k1", "doushi-katsuyo", 50)],
       ["doushi-yodan", "doushi-katsuyo"]
     );
     expect(got.map((x) => x.id)).toEqual(["k1", "y1"]);
+  });
+
+  it("いちばん低いレベルに問題がいくつかあれば、その中から無作為に1問（上のレベルからは選ばない）", () => {
+    const bank = [d("a", "onbin", 10), d("b", "onbin", 20), d("c", "onbin", 99), d("hi", "onbin", 100)];
+    const seen = new Set<string>();
+    // 乱数を 0〜1 の間でまんべんなく動かす
+    for (let i = 0; i < 30; i++) seen.add(pickPlacementDrills(bank, ["onbin"], () => i / 30)[0].id);
+    expect([...seen].sort()).toEqual(["a", "b", "c"]);
+  });
+
+  it("同じ乱数なら同じ問題、選ばれ方は偏らない", () => {
+    const bank = [d("a", "onbin", 1), d("b", "onbin", 2), d("c", "onbin", 3), d("e", "onbin", 4)];
+    expect(pickPlacementDrills(bank, ["onbin"], () => 0.42)[0].id).toBe(pickPlacementDrills(bank, ["onbin"], () => 0.42)[0].id);
+    // 決まった乱数列（線形合同法）で 4000 回。どの問題もおよそ4分の1ずつ
+    let seed = 12345;
+    const rng = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+    const count: Record<string, number> = {};
+    for (let i = 0; i < 4000; i++) {
+      const id = pickPlacementDrills(bank, ["onbin"], rng)[0].id;
+      count[id] = (count[id] ?? 0) + 1;
+    }
+    for (const id of ["a", "b", "c", "e"]) {
+      expect(count[id]).toBeGreaterThan(850);
+      expect(count[id]).toBeLessThan(1150);
+    }
+  });
+
+  it("Lv1 に使える問題が無い単元は、使える問題があるいちばん低いレベルから選ぶ", () => {
+    const got = pickPlacementDrills(
+      [d("bad", "vocab-koou", 5, { choices: undefined }), d("v2", "vocab-koou", 101), d("v3", "vocab-koou", 250)],
+      ["vocab-koou"]
+    );
+    expect(got.map((x) => x.id)).toEqual(["v2"]);
   });
 
   it("選択肢がない・正解が選択肢にない問題は使わない", () => {

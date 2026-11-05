@@ -19,6 +19,10 @@ import {
 } from "@/lib/kobun/manabinaoshi";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 import { splitGloss, type GlossEntry } from "@/lib/kobun/glossary";
+import { writeDojoStartPoint } from "@/lib/kobun/dojoLocal";
+
+/** 単元ページから「← 学び始め」で戻れるように、戻り先を付けて渡す */
+const topicLink = (topicId: string) => `/read/grammar/${topicId}?back=${encodeURIComponent("/manabinaoshi")}`;
 
 /** 例文の【】（問われている語）を太字に、《》（手がかり）は印だけ外す */
 function renderContext(text: string) {
@@ -329,6 +333,14 @@ export default function Manabinaoshi() {
     if (phase === "quiz") markQuestionShown();
   }, [phase, qIdx]);
 
+  // 判定の結果（段・出発点の単元）を端末に残す。文法道場ホームが「🧭 ここから：〇〇」に使う。
+  // 学習の記録ではなく道しるべ（lib/kobun/dojoLocal.ts）。全問正解のときは出発点が決まらないので残さない
+  useEffect(() => {
+    if (phase !== "result") return;
+    const start = judgePlacement(items).startAt;
+    if (start) writeDojoStartPoint(stageId, start);
+  }, [phase, items, stageId]);
+
   const goStage = (id: StageId) => {
     setStageId(id);
     setTermResults({});
@@ -470,6 +482,13 @@ export default function Manabinaoshi() {
                   )}
                 </div>
               </div>
+            )}
+
+            {/* 近道（段1〜4）：用語カードを飛ばして判定へ。用語カードは「← 戻る」でいつでも見られる */}
+            {stage.id > 0 && !loadError && quiz.length > 0 && (
+              <button onClick={startQuiz} className="mb-4 text-[13px] font-black text-rw-accent underline">
+                用語はあとで見る。先に判定する ▸
+              </button>
             )}
 
             {(() => {
@@ -621,7 +640,7 @@ export default function Manabinaoshi() {
 
                 {j.startAt ? (
                   <Link
-                    to={`/read/grammar/${j.startAt}`}
+                    to={topicLink(j.startAt)}
                     className="block bg-rw-ink text-rw-paper rounded-2xl p-4 no-underline mb-3"
                     style={{ textDecoration: "none", boxShadow: "0 4px 0 var(--rw-primary)" }}
                   >
@@ -658,7 +677,7 @@ export default function Manabinaoshi() {
                   {items.map((it) => (
                     <Link
                       key={it.id}
-                      to={`/read/grammar/${it.id}`}
+                      to={topicLink(it.id)}
                       className="flex items-center gap-3 bg-rw-paper border border-rw-rule rounded-xl px-3 py-2 no-underline text-rw-ink"
                       style={{ textDecoration: "none" }}
                     >

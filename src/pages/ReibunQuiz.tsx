@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { fetchAllReibun, fetchMeanings, JODOSHI_ORDER } from "@/lib/kobun/reibunData";
-import { recordDrillAnswer } from "@/lib/kobun/dojoData";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 import type { GrammarReibun, GrammarJodoshiMeaning } from "@/lib/kobun/types";
 import { ReibunSentence, ReibunLegend } from "@/components/grammar/ReibunSentence";
@@ -137,7 +136,8 @@ export default function ReibunQuiz() {
       area: "grammar", action: "answer", targetType: "reibun", targetId: current.id,
       correct: ok, chosen: c, format: "reibun-imi", ctx: { target },
     });
-    void recordDrillAnswer(current.id, ok); // 進捗記録（qid=reibun.id・既存ドリルとは別空間）
+    // word_stats・srs_state には記録しない（2026-11-06）。復習は grammar_drills の問題だけを拾うので、
+    // ここの記録は一度も復習に出ないまま期日だけがたまっていた。分析用の記録（上の logEvent）は残す。
   };
 
   return (

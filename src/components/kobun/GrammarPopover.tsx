@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { makeReturnTo, quizUrlWithReturn } from "@/lib/returnTo";
+import { makeReturnTo, quizUrlWithReturn, topicUrlWithBack } from "@/lib/returnTo";
 import type { Token, LayerId, TokenAnalysis, TokenDecider } from "@/lib/kobun/types";
 import { ReibunSentence, DECIDER_STYLE } from "@/components/grammar/ReibunSentence";
 import { addVocabEntry, recordHintOpen } from "@/lib/kobun/progress";
@@ -287,7 +287,8 @@ function PopoverContent({
         <button
           onClick={() => {
             onClose();
-            navigate(`/read/grammar/${grammarQuizTopic}`);
+            // 単元ページから、この教材のこの語へ戻れるよう戻り先を付ける（2026-11-06）
+            navigate(topicUrlWithBack(grammarQuizTopic, makeReturnTo(location.pathname, location.search, token.id)));
           }}
           className="w-full text-left px-3 py-2 rounded-xl text-sm font-black border-2 transition-colors bg-rw-primary text-rw-paper border-rw-ink hover:opacity-90"
           style={{ boxShadow: "0 3px 0 var(--rw-ink)" }}

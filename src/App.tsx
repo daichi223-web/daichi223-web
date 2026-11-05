@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { safeReturnPath } from '@/lib/returnTo';
+import { returnLabels, safeReturnPath } from '@/lib/returnTo';
 import { dataParser } from './utils/dataParser';
 import { Word, MultiMeaningWord } from './types';
 import RangeField from './components/RangeField';
@@ -17,11 +17,13 @@ import { QuizBackground } from './components/quiz/QuizBackground';
 import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from './lib/quizBackground';
 import { readChatTeacher } from './lib/chatTeacher';
 import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
-import { pickQuestions, type Bucket } from './lib/quizSelector';
+import { compositionLine, pickQuestions, type Bucket } from './lib/quizSelector';
+import { shuffle } from './lib/shuffle';
+import { buildRetryRound, countScored } from './lib/quiz/retryRound';
 import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import { logEvent, markQuestionShown } from './lib/learningEvents';
-import { composeTodaySet, estimateFresh, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
+import { composeTodaySet, estimateToday, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
 import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
 import { readStreak } from './lib/streak';
 import { buildFallbackOptions, pickTrueFalseWrongMeaning, repairDistractors, repairTranslationClashes } from './lib/senseEquivalence';
@@ -30,6 +32,7 @@ import { exampleFittedLabels } from './lib/quiz/optionForms';
 import {
   updateSrsState,
   getSrsBoxes,
+  getDueAmong,
   getTodayReviewSet,
   getLastActivity,
   gapDays,
@@ -106,6 +109,7 @@ interface QuizQuestion {
   exampleMark?: [number, number][]; // 実戦例文に付いてきた対象語の位置（exampleKobun に対する）
   exampleContext?: ExampleContext; // 例文1文で意味が決まらないときの前後の本文・補足（sentence-meaning で表示）
   optionLabels?: Record<string, string>; // 選択肢の文字を例文の訳の活用に合わせたもの（qid → 文字。lib/quiz/optionForms）
+  retry?: boolean; // セッションの最後の「もう一度」（lib/quiz/retryRound。SRS・正答数は進めない）
 }
 
 interface TrueFalseQuestion {
@@ -162,6 +166,8 @@ function App() {
   // 作成中にモード・範囲を変えると、古い作成が後から新しい出題を上書きしたり、作成中の印が立ったままになって
   // 以後の作り直しが止まったりしていた（「単語モードを選んでも一回表示されない」）
   const setupSeqRef = useRef(0);
+  // 間違えた語の「もう一度」を、このセッションで既に足したか（setupQuiz で戻す）
+  const retryAddedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [homeDataError, setHomeDataError] = useState(false);
 
@@ -250,7 +256,7 @@ function App() {
   const [showHome, setShowHome] = useState(true);
   // 苦手単語 / SRS 復習用に、特定の qid セットだけで出題する場合に使う
   const [quizQidFilter, setQuizQidFilter] = useState<string[] | null>(null);
-  // 教材から単語クイズに来たときの戻り先（?back=。教材画面のパスだけ受け付ける）。ホームに戻ったら消す（2026-10-25）
+  // 教材・単語カードから単語クイズに来たときの戻り先（?back=。教材画面と単語カードのパスだけ受け付ける）。ホームに戻ったら消す（2026-10-25、単語カードは 2026-11-06）
   const [returnTo, setReturnTo] = useState<string | null>(null);
   const navigate = useNavigate();
   const [quizMode, setQuizMode] = useState<'normal' | 'weak' | 'srs' | 'focus' | 'today'>('normal');
@@ -332,6 +338,36 @@ function App() {
     setShowHome(false);
     void setupQuiz(undefined, null, undefined, 'word');
   }, [allWords.length]);
+
+  // URL クエリ ?mode=word / ?mode=polysemy でクイズを直接始める（2026-11-06。状態遷移の見直し 案 E）。
+  // 単語ホームの「練習する」など、ほかの画面からクイズへ直接つなぐ道。今までは "/" へ移るとホームが出るだけだった。
+  // ホームを開いたまま同じアドレスへ移ったときも動くよう、クエリの値を依存に入れる。
+  const modeParam = searchParams.get('mode');
+  // 単語データを読み込んだ直後の1回目かどうか（下の「Initial quiz setup」が出題を作る回）
+  const modeEffectRanRef = useRef(false);
+  useEffect(() => {
+    if (allWords.length === 0) return;
+    const justLoaded = !modeEffectRanRef.current;
+    modeEffectRanRef.current = true;
+    if (modeParam !== 'word' && modeParam !== 'polysemy') return;
+    // ?qid（特定の語のクイズ）と一緒に来たときは ?qid を優先する
+    if (searchParams.get('qid')) return;
+    // 重複起動を防ぐため、URL から mode を消す
+    const next = new URLSearchParams(searchParams);
+    next.delete('mode');
+    setSearchParams(next, { replace: true });
+    // ここから下はホームの「単語」「多義語」タイル（onSwitchMode）と同じ考え：
+    // モードも絞り込みも変わらないときは作り直しの useEffect が走らないので、出題が空・結果画面のままならここで作り直す。
+    const unchanged = modeParam === currentMode && quizQidFilter == null;
+    setQuizQidFilter(null);
+    setQuizMode('normal');
+    setCurrentMode(modeParam);
+    setShowHome(false);
+    // 読み込んだ直後の1回目は「Initial quiz setup」が出題を作る。ここでも呼ぶと選択肢を二重に取りに行くので呼ばない
+    if (!justLoaded && unchanged && (currentQuizData.length === 0 || showResults)) {
+      void setupQuiz(undefined, null, undefined, modeParam);
+    }
+  }, [allWords.length, modeParam]);
 
   // ホーム表示時に学習履歴ベースの集計を取得
   useEffect(() => {
@@ -569,6 +605,7 @@ function App() {
     modeOverride?: 'word' | 'polysemy',
   ) => {
     const seq = ++setupSeqRef.current;
+    retryAddedRef.current = false;
     // Reset all quiz states when switching modes
     setShowResults(false);
     setIsQuizActive(false);
@@ -730,12 +767,19 @@ function App() {
     let autoPicked = false;
     if (!filter && pickMode === 'auto') {
       try {
-        const [stats, boxes] = await Promise.all([getWordStats(), getSrsBoxes(targetWords.map((w) => w.qid))]);
+        const rangeQids = targetWords.map((w) => w.qid);
+        // 期限が来た語（古い順）も取り、先に出す（2026-11-06。出す語の決め方を箱と期限にそろえる）。
+        // 取れなければ期限を見ない今までの配分で続ける
+        const [stats, boxes, due] = await Promise.all([
+          getWordStats(),
+          getSrsBoxes(rangeQids),
+          getDueAmong(rangeQids).catch(() => [] as string[]),
+        ]);
         const r = pickQuestions({
           items: targetWords,
           key: (w) => w.qid,
           order: (w) => w.group * 100 + (w.meaning_idx ?? 0),
-          stats, boxes, n: opts?.numQuestions ?? wordNumQuestions,
+          stats, boxes, due, n: opts?.numQuestions ?? wordNumQuestions,
         });
         if (r.picked.length > 0 && !stale()) { targetWords = r.picked; autoPicked = true; setLastPick(r.composition); }
       } catch { /* ランダムにフォールバック */ }
@@ -983,7 +1027,7 @@ function App() {
         if (r.picked.length > 0 && !stale()) { ordered = r.picked; setLastPick(r.composition); }
       } catch { /* ランダムにフォールバック */ }
     }
-    if (!ordered) ordered = [...polysemyWords].sort(() => Math.random() - 0.5);
+    if (!ordered) ordered = shuffle(polysemyWords);
     if (seedLemma) {
       const seedIdx = ordered.findIndex((w) => w.lemma === seedLemma);
       if (seedIdx > 0) {
@@ -1094,14 +1138,21 @@ function App() {
         `データに例文不足の meaning が多い可能性。`
       );
     }
-    setCurrentQuizData(questions.sort(() => Math.random() - 0.5));
+    setCurrentQuizData(shuffle(questions));
   };
+
+  // いま出している問題が、最後の「もう一度」（間違えた語の再出題）か
+  const isRetryQuestion = (): boolean =>
+    currentMode === 'word' && !!(currentQuizData[currentQuestionIndex] as QuizQuestion | undefined)?.retry;
 
   const handleAnswer = (selectedOption: Word, correctOption: Word, isReverse = false) => {
     const isCorrect = selectedOption.qid === correctOption.qid;
-    // Track word stats and SRS in Supabase (fire-and-forget)
-    recordAnswer(correctOption.qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
-    updateSrsState(correctOption.qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
+    const isRetry = isRetryQuestion();
+    // Track word stats and SRS in Supabase (fire-and-forget)。最後の「もう一度」は練習なので進めない
+    if (!isRetry) {
+      recordAnswer(correctOption.qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
+      updateSrsState(correctOption.qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
+    }
     {
       const q = currentQuizData[currentQuestionIndex] as QuizQuestion | undefined;
       logEvent({
@@ -1112,8 +1163,13 @@ function App() {
         ctx: {
           mode: currentMode, reverse: isReverse || undefined, choices: q?.options?.map((o) => o.qid),
           teacher: readChatTeacher(),
+          ...(isRetry ? { retry: true } : {}),
         },
       });
+    }
+    if (isRetry) {
+      setNextButtonVisible(true);
+      return;
     }
     // 多義語モード(=例文理解クイズ等の選択式) の正答もカウント
     if (isCorrect && currentMode === 'polysemy') {
@@ -1173,8 +1229,11 @@ function App() {
   // 記述の最終判定を記録する。1回の回答につき1回だけ呼ぶ
   // （自動判定と自己判定で SRS を二度動かさない）。
   const finalizeWriting = (qid: string, isCorrect: boolean, result: WritingJudgeResult, selfJudged: boolean) => {
-    recordAnswer(qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
-    updateSrsState(qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
+    const isRetry = isRetryQuestion();
+    if (!isRetry) {
+      recordAnswer(qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
+      updateSrsState(qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
+    }
     // 記述の本文は answers 表に残るので、ここには判定だけ入れる
     logEvent({
       area: 'vocab', action: 'answer', targetType: 'word', targetId: qid,
@@ -1184,8 +1243,10 @@ function App() {
         mode: currentMode, score: isCorrect ? 100 : 0, verdict: result.verdict, self: selfJudged,
         teacher: readChatTeacher(),
         ...(result.matchedQid ? { matched: result.matchedQid } : {}),
+        ...(isRetry ? { retry: true } : {}),
       },
     });
+    if (isRetry) return;
     if (isCorrect) {
       recordQuizTypeCorrect(qid, 'writing');
       // 多義語モードの記述 (context-writing) なら polysemy にもカウント
@@ -1210,17 +1271,23 @@ function App() {
     setWritingUserJudgment(undefined);
     setShowWritingResult(true);
 
+    const isRetry = isRetryQuestion();
     if (result.verdict === 'correct') {
       finalizeWriting(correctQid, true, result, false);
-      setScore(prev => prev + 1);
+      if (!isRetry) setScore(prev => prev + 1);
       // 正解でも自動では進まない。答え合わせの吹き出しを見せ、タップか「つぎへ」で次へ（2026-11-02）
       setNextButtonVisible(true);
-    } else {
-      // 別義・現代語・無回答は不正解で確定。保留は自己判定を待つ
-      // （判定せずに「つぎへ」で進んだら記録しない）。
-      if (isDecided(result)) finalizeWriting(correctQid, false, result, false);
+    } else if (isDecided(result)) {
+      // 別義・現代語・無回答は不正解で確定
+      finalizeWriting(correctQid, false, result, false);
       setNextButtonVisible(true);
     }
+    // 保留は自己判定を待つ。「つぎへ」は出さない（2026-11-06。状態遷移の見直し 案 B）。
+    // 以前は保留でも「つぎへ」が出て、判定せずに進むとその回答は点にも箱にも記録されなかった。
+    // 出口は吹き出しの「合っていた／ちがった」だけ。押すと handleWritingUserJudgment が記録して「つぎへ」を出す
+
+    // 「もう一度」は直前に正解を見たあとの回答なので、正解の辞書の候補（answers 表）には入れない
+    if (isRetry) return;
 
     // 回答の本文を保存（バックグラウンド、awaitしない）
     const anonId = localStorage.getItem('anonId') || `anon_${Date.now()}`;
@@ -1257,7 +1324,7 @@ function App() {
 
     if (currentWritingQid) {
       finalizeWriting(currentWritingQid, judgment, writingResult, true);
-      if (judgment) setScore(prev => prev + 1);
+      if (judgment && !isRetryQuestion()) setScore(prev => prev + 1);
     }
 
     // 自己判定を回答の行に残す（バックグラウンド）- answerIdがあれば保存
@@ -1296,6 +1363,22 @@ function App() {
   };
 
   const handleNextQuestion = () => {
+    // 最後の問題を終えたら、間違えた語を1回だけ「もう一度」として後ろに足す（lib/quiz/retryRound）
+    if (
+      currentMode === 'word' &&
+      !retryAddedRef.current &&
+      currentQuestionIndex + 1 >= currentQuizData.length &&
+      wrongAnswers.length > 0
+    ) {
+      const retries = buildRetryRound(
+        currentQuizData as QuizQuestion[],
+        new Set(wrongAnswers.map((w) => w.qid)),
+      );
+      if (retries.length > 0) {
+        retryAddedRef.current = true;
+        setCurrentQuizData((prev) => [...(prev as QuizQuestion[]), ...retries]);
+      }
+    }
     setCurrentQuestionIndex(prev => prev + 1);
     setNextButtonVisible(false);
     setShowWritingResult(false);
@@ -1460,7 +1543,8 @@ function App() {
 
   const getTotalScore = () => {
     if (currentMode === 'word') {
-      return currentQuizData.length;
+      // 最後の「もう一度」は採点に入れない
+      return countScored(currentQuizData as QuizQuestion[]);
     } else if (currentMode === 'polysemy') {
       if (polysemyQuizType === 'example-comprehension') {
         // 加点は語ごと（全意味正解で +1。handleExampleComprehensionCheck）なので、分母も語の数
@@ -1528,9 +1612,10 @@ function App() {
           <button
             onClick={() => navigate(returnTo)}
             className="bg-rw-paper hover:bg-rw-primary-soft text-rw-ink border-2 border-rw-ink whitespace-nowrap font-bold py-1 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-            title="単語クイズを開いた教材に戻る"
+            title={returnLabels(returnTo).title}
           >
-            📖<span className="ml-1">教材へ</span>
+            {/* 戻り先が単語カードのときは「単語カードへ」（2026-11-06） */}
+            📖<span className="ml-1">{returnLabels(returnTo).short}</span>
           </button>
         )}
         {!showHome && (
@@ -1646,10 +1731,7 @@ function App() {
             dueWordsCount={dueWordsCount}
             dataError={homeDataError}
             welcomeBack={welcomeBack ? { gapDays: welcomeBack.gapDays, warmupCount: welcomeBack.warmup.length } : null}
-            todayPreview={{
-              review: dueWordsCount,
-              fresh: estimateFresh(welcomeBack?.warmup.length ?? 0, dueWordsCount),
-            }}
+            todayPreview={estimateToday(welcomeBack?.warmup.length ?? 0, dueWordsCount)}
             quizRange={quizRange}
             onStartToday={() => void startTodaySession()}
             onStartQuizRange={(r) => {
@@ -2003,7 +2085,7 @@ function App() {
                         className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
                         style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
                       >
-                        📖 教材に戻る
+                        📖 {returnLabels(returnTo).long}
                       </button>
                     )}
                     <button
@@ -2157,7 +2239,7 @@ function App() {
                   </select>
                   {pickMode === 'auto' && lastPick && (
                     <div className="text-[10px] text-rw-ink-soft mt-0.5">
-                      前回の内訳: 苦手 {lastPick.weak}・未着手 {lastPick.new}・途中 {lastPick.mid}{lastPick.strong > 0 ? `・得意 ${lastPick.strong}` : ''}
+                      {compositionLine(lastPick)}
                     </div>
                   )}
                 </div>
@@ -2239,7 +2321,7 @@ function App() {
                   </select>
                   {pickMode === 'auto' && lastPick && (
                     <div className="text-[10px] text-rw-ink-soft mt-0.5">
-                      前回の内訳: 苦手 {lastPick.weak}・未着手 {lastPick.new}・途中 {lastPick.mid}{lastPick.strong > 0 ? `・得意 ${lastPick.strong}` : ''}
+                      {compositionLine(lastPick)}
                     </div>
                   )}
                 </div>

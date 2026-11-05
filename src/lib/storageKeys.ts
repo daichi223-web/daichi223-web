@@ -13,6 +13,8 @@ export const STORAGE_KEYS = {
   noblePeakTiers: 'kobun.noble.peakTiers',      // 単語ごとの最高到達 ★段位 (peak-lock)
   noblePromotionHistory: 'kobun.noble.history', // 段位昇進の記録 (PromotionRecord[])
   noblePeakStage: 'kobun.noble.peakStage',      // 装束 stage の最高到達 (1-21)
+  dojoLastTopic: 'kobun.dojo.lastTopic',        // 文法道場: 最後にドリルを始めた単元とレベル（「つづきから」。lib/kobun/dojoLocal）
+  dojoStartPoint: 'kobun.dojo.startPoint',      // 文法道場: 学び始めの判定が決めた出発点の単元（「ここから」。lib/kobun/dojoLocal）
 
   // === 表示設定 (任意で export/import) ===
   noblShowKakejiku: 'kobun.noble.showKakejiku', // 装束 (掛軸) ヒーローの開閉状態

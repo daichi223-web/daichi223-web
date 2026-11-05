@@ -32,6 +32,7 @@ interface QuizQuestion {
   exampleMark?: Span[]; // exampleKobun に付いてきた対象語の位置（実戦例文の mark）
   exampleContext?: ExampleContext; // 例文1文で意味が決まらないときの前後の本文・補足（lib/exampleContext）
   optionLabels?: Record<string, string>; // 例文の訳の活用に合わせた選択肢の文字（qid → 文字）
+  retry?: boolean; // セッションの最後の「もう一度」（間違えた語の再出題。記録は進めない）
 }
 
 type WordQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'blank-fill' | 'meaning-writing';
@@ -311,6 +312,14 @@ export function WordQuizContent({
 
   return (
     <div>
+      {/* 間違えた語の再出題（セッションの最後に1回だけ） */}
+      {question.retry && (
+        <div className="mb-2 text-center">
+          <span className="inline-block text-[11px] font-black px-3 py-1 rounded-full bg-rw-paper border border-rw-ink text-rw-ink">
+            🔁 もう一度（さっき間違えた語）
+          </span>
+        </div>
+      )}
       {/* 単語レベルが上がった語は教材の実戦例文で出題されていることを示す */}
       {question.corpusExample && (
         <div className="mb-2 text-center">

@@ -212,6 +212,20 @@ describe('buildFallbackOptions（API が使えないときの選択肢）', () =
       }
     }
   });
+
+  it('例文つきの sentence-meaning では、同じ語の別の意味を入れる（例文で区別させる）', () => {
+    const w = byQid('1-1'); // おどろく（気づく／目を覚ます）
+    const options = buildFallbackOptions(w, slim, 'sentence-meaning', seeded(5), byLemma);
+    expect(options.some((o) => o.qid !== w.qid && o.lemma === w.lemma)).toBe(true);
+  });
+
+  it('誤答は番号が前後10以内の語から先に選ぶ', () => {
+    const rng = seeded(6);
+    for (const w of slim.filter((_, i) => i % 7 === 0)) {
+      const options = buildFallbackOptions(w as Word & { group: number }, slim as (Word & { group: number })[], 'word-reverse' as 'blank-fill', rng, byLemma);
+      for (const o of options) expect(Math.abs((o as Word & { group: number }).group - (w as Word & { group: number }).group), `${w.qid}→${o.qid}`).toBeLessThanOrEqual(10);
+    }
+  });
 });
 
 describe('pickTrueFalseWrongMeaning（○×の誤りの意味）', () => {

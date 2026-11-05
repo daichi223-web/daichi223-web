@@ -6,10 +6,12 @@ import path from "path";
 import {
   canUseAsDistractor,
   indexByLemma,
+  nearbyFirst,
   trapOverlapsSense,
   type ChoiceMode,
   type SenseLike,
 } from "../src/lib/senseEquivalence.js";
+import { shuffle } from "../src/lib/shuffle.js";
 // 同義判定に使う senseNorm・pos は data/kobun_q.jsonl.txt に無いので slim から補う
 // （約700KB。関数に同梱され、読み込みはコールドスタート時の1回）
 import slimJson from "../src/data/kobunQ.v2.slim.json" with { type: "json" };
@@ -123,7 +125,8 @@ export function buildChoices(input: BuildChoicesInput): BuildChoicesResult {
   // ① 現代語の罠（古今異義語）。罠の文字列が正解の意味と同じになるものは入れない
   let trapPick: Choice[] = [];
   // ② 同一 lemma の別 sense（多義語内の弁別。例文が文脈を与える前提）。
-  //    正解と同じ意味のもの（活用違い・本動詞/補助動詞など）は除く
+  //    正解と同じ意味のもの（活用違い・本動詞/補助動詞など）は除く。
+  //    「この語の意味を選ぶ」でも、意味が2つ以上ある語は例文を最初から出すので入れてよい
   let sameLemmaPick: Choice[] = [];
   if (senseAnswerMode) {
     const usableTraps = traps.filter((t) => !trapOverlapsSense(t, correct));
@@ -159,7 +162,8 @@ export function buildChoices(input: BuildChoicesInput): BuildChoicesResult {
       !exclude.includes(w.qid) &&
       !candidateQids.has(w.qid)
   );
-  const shuffled = availableRandom.sort(() => rng() - 0.5);
+  // 前後10単語を先に、足りなければ残りの全単語から（フォールバックの buildFallbackOptions と同じ順。2026-11-05）
+  const shuffled = nearbyFirst(availableRandom, Number(correct.group), rng);
 
   const remainAfterFixed = 3 - fixedPicks.length;
   let eligibleCandidates = candidateChoices.filter((c) => !fixedQids.has(c.qid));
@@ -195,7 +199,7 @@ export function buildChoices(input: BuildChoicesInput): BuildChoicesResult {
   ].slice(0, 4);
 
   return {
-    choices: choices.sort(() => rng() - 0.5),
+    choices: shuffle(choices, rng),
     meta: {
       candidatesUsed: selectedCandidates.length,
       randomUsed: selectedRandom.length,

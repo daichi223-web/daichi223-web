@@ -2,14 +2,21 @@ import { supabase } from './supabase';
 import { getUserId } from './wordStats';
 
 /**
- * Leitner 5-box spaced repetition system.
+ * 箱5つの間隔反復（Leitner 方式）。単語と文法ドリルで共通。
  *
- * Box intervals:
- *   Box 1: always due (review every session)
- *   Box 2: review after 1 day
- *   Box 3: review after 3 days
- *   Box 4: review after 7 days
- *   Box 5: review after 14 days (mastered)
+ * 箱と、次の復習までの日数:
+ *   箱1: 毎回（いつも期限が来ている）
+ *   箱2: 1日後
+ *   箱3: 3日後
+ *   箱4: 7日後
+ *   箱5: 14日後
+ *   卒業（箱は5のまま）: 箱5で期限後に正解したら、前回の復習からあいた日数の2倍（28〜120日）
+ *
+ * 進み方（2026-11-06 に卒業と落ち方を見直した。docs/state-transition-review.md の案 C）:
+ *   - 期限後に正解 → 箱を1つ上げる（上限5）。箱5は卒業の間隔へ
+ *   - 期限前に正解 → 練習扱い。箱も次の復習日も動かさない
+ *   - 不正解 → 箱1〜3は箱1へ。箱4・5は2つ下げる（箱4→2、箱5→3）
+ * DB の決まりで箱は1〜5（箱6は作れない）。卒業は箱を増やさず、次の復習日だけをのばす。
  */
 
 export const BOX_INTERVALS_DAYS: Record<number, number> = {
@@ -20,36 +27,68 @@ export const BOX_INTERVALS_DAYS: Record<number, number> = {
   5: 14,  // 14 days
 };
 
+/** いちばん上の箱 */
+const TOP_BOX = 5;
+/** 卒業した語の、次の復習までの日数の下限（箱5の14日の2倍） */
+export const GRADUATED_MIN_DAYS = 28;
+/** 卒業した語の、次の復習までの日数の上限 */
+export const GRADUATED_MAX_DAYS = 120;
+
 /**
  * 既存 box と正誤から次の box 番号を算出するピュア関数。
  * - 正解: +1（上限 5）
- * - 不正解: 常に 1（最下段まで落とす）
+ * - 不正解: 箱1〜3は 1 へ。箱4・5は2つ下げる（箱4→2、箱5→3）。
+ *   箱5は記述で出るので、1回の書きそこないでいちばん易しい4択まで戻さないため（2026-11-06）
  * 初回（既存データ無し）の場合、isCorrect=true なら 2、false なら 1。
  */
 export function nextBox(currentBox: number | null, isCorrect: boolean): number {
   if (currentBox == null) return isCorrect ? 2 : 1;
-  if (!isCorrect) return 1;
-  return Math.min(currentBox + 1, 5);
+  if (!isCorrect) return currentBox >= 4 ? currentBox - 2 : 1;
+  return Math.min(currentBox + 1, TOP_BOX);
+}
+
+/** now の days 日後（ISO） */
+function daysLater(days: number, now: Date): string {
+  const next = new Date(now);
+  next.setDate(next.getDate() + days);
+  return next.toISOString();
 }
 
 /**
  * Calculate the next review date based on the Leitner box number.
  */
 export function getNextReviewDate(box: number, now: Date = new Date()): string {
-  const days = BOX_INTERVALS_DAYS[box] ?? 0;
-  const next = new Date(now);
-  next.setDate(next.getDate() + days);
-  return next.toISOString();
+  return daysLater(BOX_INTERVALS_DAYS[box] ?? 0, now);
 }
 
-/** 期限前の正解は練習として扱い、箱も復習期限も進めない。 */
+/**
+ * 卒業した語（箱5で期限後に正解）の、次の復習までの日数。
+ * 前回の復習からあいた日数の2倍（28 → 56 → 112 → 120）。前回の復習の記録が無ければ下限の28日。
+ * 箱5の語が14日ごとにずっと戻ってきて、覚えた語が増えるほど復習が追いつかなくなるのを防ぐ。
+ */
+export function graduatedIntervalDays(lastReview: string | null | undefined, now: Date = new Date()): number {
+  const last = lastReview ? Date.parse(lastReview) : NaN;
+  if (!Number.isFinite(last)) return GRADUATED_MIN_DAYS;
+  const gap = Math.floor((now.getTime() - last) / 86400000);
+  return Math.min(GRADUATED_MAX_DAYS, Math.max(GRADUATED_MIN_DAYS, gap * 2));
+}
+
+/**
+ * 回答1回ぶんの、箱と次の復習日の動き（ピュア関数）。
+ * - 期限前の正解は練習として扱い、箱も復習期限も進めない
+ * - 箱5で期限後に正解したら卒業：箱は5のまま、次の復習日を graduatedIntervalDays でのばす
+ * - それ以外は nextBox の箱と、その箱の日数（BOX_INTERVALS_DAYS）
+ */
 export function reviewTransition(
-  existing: { box: number; next_review: string } | null,
+  existing: { box: number; next_review: string; last_review?: string | null } | null,
   isCorrect: boolean,
   now = new Date(),
 ): { box: number; next_review: string } {
   if (existing && isCorrect && Date.parse(existing.next_review) > now.getTime()) {
     return { box: existing.box, next_review: existing.next_review };
+  }
+  if (existing && isCorrect && existing.box >= TOP_BOX) {
+    return { box: TOP_BOX, next_review: daysLater(graduatedIntervalDays(existing.last_review, now), now) };
   }
   const box = nextBox(existing?.box ?? null, isCorrect);
   return { box, next_review: getNextReviewDate(box, now) };
@@ -98,6 +137,25 @@ export async function getSrsBoxes(qids: string[]): Promise<Record<string, number
 }
 
 /**
+ * 指定 qid 群のうち、期限が来たもの（next_review <= 今）を期限の古い順で返す。
+ * ふつうの出題（おまかせ）でも期限が来た語を先に出すために使う（2026-11-06。出す語の決め方を箱と期限にそろえる）。
+ * 取得に失敗したら空（＝期限を見ない今までの配分で続ける）。
+ */
+export async function getDueAmong(qids: string[], now: Date = new Date()): Promise<string[]> {
+  if (qids.length === 0) return [];
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from('srs_state')
+    .select('qid, next_review')
+    .eq('user_id', userId)
+    .in('qid', qids)
+    .lte('next_review', now.toISOString())
+    .order('next_review', { ascending: true });
+  if (error || !data) return [];
+  return data.map((r) => r.qid as string);
+}
+
+/**
  * Get count of words due for review (useful for badge display).
  */
 export async function getDueCount(): Promise<number> {
@@ -122,15 +180,17 @@ export async function getDueCount(): Promise<number> {
  * Update SRS state after answering a question.
  *
  * - Correct when due: move up one box (max 5). Early practice preserves the schedule.
- * - Incorrect: move back to box 1, set next_review to now (immediately due).
+ *   箱5で期限後に正解したら卒業（箱は5のまま、次の復習日を前回からあいた日数の2倍へ）。
+ * - Incorrect: 箱1〜3は箱1へ（すぐ期限）。箱4・5は2つ下げる。
+ *   どれも reviewTransition が決める。
  */
 export async function updateSrsState(qid: string, isCorrect: boolean): Promise<void> {
   const userId = await getUserId();
 
-  // Get current SRS state
+  // Get current SRS state（last_review は卒業の間隔を決めるのに使う）
   const { data: existing, error: readError } = await supabase
     .from('srs_state')
-    .select('id, box, next_review')
+    .select('id, box, next_review, last_review')
     .eq('user_id', userId)
     .eq('qid', qid)
     .maybeSingle();

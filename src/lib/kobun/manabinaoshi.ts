@@ -5,9 +5,11 @@
 //  - 自分の位置は Can-do（「〜ができる」）の文で選ぶ。用語を知らなくても選べる
 //  - 形は「後ろに何がつくか」で先に覚え、文法の名前はあとからつける（ない形・て形の考え方）
 //  - 用語はその段で初めて要るところで出す（補助動詞・自動詞他動詞は助動詞がわかった後）
-// 判定は各単元のいちばん易しいドリル1問ずつ。SRS は進めない（未習の問題に期日を付けない）。
+// 判定は各単元のいちばん低いレベルのドリルから1問ずつ。SRS は進めない（未習の問題に期日を付けない）。
 import type { GrammarDrill } from "@/lib/kobun/types";
 import { orderIndex } from "@/lib/kobun/curriculum";
+import { levelOfSort } from "@/lib/kobun/topicStatus";
+import { shuffle } from "@/lib/shuffle";
 
 export type StageId = 0 | 1 | 2 | 3 | 4;
 export type DojoCategory = "用言" | "助動詞" | "助詞" | "敬語";
@@ -413,15 +415,30 @@ function usable(d: GrammarDrill): boolean {
   return a.some((x) => d.choices!.includes(x));
 }
 
-/** 各単元のいちばん易しい1問（sort 最小）を、単元の教える順に並べる */
-export function pickPlacementDrills(drills: GrammarDrill[], topicIds: string[]): GrammarDrill[] {
-  const best = new Map<string, GrammarDrill>();
+/**
+ * 各単元から1問ずつ選び、単元の教える順に並べる。
+ * 選ぶのは、その単元のいちばん低いレベル（判定に使える問題があるレベルのうち最小）の中から無作為に1問。
+ * 以前は sort 最小の1問に固定で、やり直すたびに同じ問題が出ていた（2026-11-06）。
+ * rng はテスト用に差し替えられる。選び方は偏りのない shuffle（Fisher–Yates）の先頭。
+ */
+export function pickPlacementDrills(
+  drills: GrammarDrill[],
+  topicIds: string[],
+  rng: () => number = Math.random
+): GrammarDrill[] {
+  const pools = new Map<string, GrammarDrill[]>();
   for (const d of drills) {
     if (!topicIds.includes(d.topicId) || !usable(d)) continue;
-    const cur = best.get(d.topicId);
-    if (!cur || (d.sort ?? 0) < (cur.sort ?? 0)) best.set(d.topicId, d);
+    const pool = pools.get(d.topicId);
+    if (pool) pool.push(d);
+    else pools.set(d.topicId, [d]);
   }
-  return [...best.values()].sort((a, b) => orderIndex(a.topicId) - orderIndex(b.topicId));
+  const picked: GrammarDrill[] = [];
+  for (const pool of pools.values()) {
+    const lowest = Math.min(...pool.map((d) => levelOfSort(d.sort)));
+    picked.push(shuffle(pool.filter((d) => levelOfSort(d.sort) === lowest), rng)[0]);
+  }
+  return picked.sort((a, b) => orderIndex(a.topicId) - orderIndex(b.topicId));
 }
 
 export function isCorrect(answer: string | string[], choice: string): boolean {

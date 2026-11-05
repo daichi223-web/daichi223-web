@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import type { GrammarTopic, SectionPriority } from "@/lib/kobun/types";
 import { TextExampleCard } from "@/components/kobun/TextExampleCard";
 import { fetchJsonAsset } from "@/lib/fetchJson";
+import { drillUrlFromReference } from "@/lib/returnTo";
 
 const priorityOrder: Record<SectionPriority, number> = {
   essential: 0,
@@ -42,6 +43,9 @@ const priorityInline: Record<SectionPriority, { background: string; color: strin
 export default function ReferenceTopic() {
   const params = useParams();
   const topicId = params.topicId as string | undefined;
+  // 文法道場の単元ページから来たとき（?from=単元ID）だけ「← ドリルに戻る」を出す（2026-11-06。解説から道場へ戻る道が無かった）
+  const [searchParams] = useSearchParams();
+  const drillUrl = drillUrlFromReference(searchParams.get("from"), searchParams.get("back"));
   const [topic, setTopic] = useState<GrammarTopic | null>(null);
   const [error, setError] = useState(false);
   const [openSections, setOpenSections] = useState<Set<number>>(new Set());
@@ -82,9 +86,15 @@ export default function ReferenceTopic() {
     return (
       <div className="min-h-dvh bg-rw-bg">
         <div className="max-w-2xl mx-auto p-6">
-          <Link to="/read/reference" className="text-sm text-rw-ink-soft hover:text-rw-ink transition-colors">
-            ← 文法リファレンス
-          </Link>
+          {drillUrl ? (
+            <Link to={drillUrl} className="text-sm text-rw-ink-soft hover:text-rw-ink transition-colors">
+              ← ドリルに戻る
+            </Link>
+          ) : (
+            <Link to="/read/reference" className="text-sm text-rw-ink-soft hover:text-rw-ink transition-colors">
+              ← 文法リファレンス
+            </Link>
+          )}
           <div className="mt-10 text-center bg-rw-paper border-2 border-rw-rule rounded-2xl p-8">
             <div className="text-5xl mb-3">📝</div>
             <p className="text-lg font-black text-rw-ink">準備中</p>
@@ -119,11 +129,19 @@ export default function ReferenceTopic() {
       <div className="max-w-2xl mx-auto p-5">
         {/* ヘッダー */}
         <div className="flex items-center gap-4 mb-6">
+          {drillUrl && (
+            <Link
+              to={drillUrl}
+              className="text-sm font-bold text-rw-ink-soft hover:text-rw-ink transition-colors"
+            >
+              ← ドリルに戻る
+            </Link>
+          )}
           <Link
             to="/read/reference"
             className="text-sm font-bold text-rw-ink-soft hover:text-rw-ink transition-colors"
           >
-            ← 文法リファレンス
+            {drillUrl ? "文法リファレンス" : "← 文法リファレンス"}
           </Link>
         </div>
 

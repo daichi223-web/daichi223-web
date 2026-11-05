@@ -17,6 +17,23 @@
  */
 import { expandNorm, normalizeAnswer } from './writingJudge.js';
 import { isOverlapPair } from './senseOverlap.js';
+import { shuffle } from './shuffle.js';
+
+// 同じ見出し語の別の意味は、誤答に入れてよい（どの形式でも）。意味が2つ以上ある語は、
+// 「この語の意味を選ぶ」でも例文を最初から出している（WordQuizContent の contextRequired）ので、例文で区別できる。
+// 2026-11-05 に一度「word-meaning では入れない」としたが、例文が隠れているという前提が誤りだったので戻した。
+
+/** 番号が近い（前後10以内）語を先に、残りを後に。それぞれの中は偏りなく混ぜる（API とフォールバックで同じ順に揃える） */
+export const NEARBY_GROUP_RANGE = 10;
+export function nearbyFirst<T extends object>(words: T[], group: number, rng: () => number = Math.random): T[] {
+  const near: T[] = [];
+  const far: T[] = [];
+  for (const w of words) {
+    const g = Number((w as { group?: unknown }).group);
+    (Number.isFinite(g) && Math.abs(g - group) <= NEARBY_GROUP_RANGE ? near : far).push(w);
+  }
+  return [...shuffle(near, rng), ...shuffle(far, rng)];
+}
 
 /** 判定に使う1つの意味（Word / kobun_q の1行と同じ形の一部） */
 export interface SenseLike {
@@ -180,34 +197,27 @@ export function buildFallbackOptions<T extends SenseLike & { group: number }>(
   const usable = (w: T | undefined): w is T =>
     !!w && !!w.lemma && !!w.sense && canUseAsDistractor(w, correct, incorrect, mode, byLemma);
 
-  const nearbyWords = allWords.filter((w) => Math.abs(w.group - correct.group) <= 10 && w.qid !== correct.qid);
-  const MAX_ATTEMPTS = 200;
+  const others = allWords.filter((w) => w.qid !== correct.qid);
+  // 前後10単語を先に、足りなければ残りの全単語から（API の buildChoices と同じ順）
+  const ordered = nearbyFirst(others, correct.group, rng);
 
   if (qType === 'sentence-meaning') {
-    for (const m of nearbyWords) {
+    for (const m of ordered) {
       if (incorrect.length >= 2) break;
       if (m.lemma === correct.lemma && usable(m)) incorrect.push(m);
     }
-    for (const w of [...nearbyWords].sort(() => rng() - 0.5)) {
+    for (const w of ordered) {
       if (incorrect.length >= 3) break;
       if (w.lemma !== correct.lemma && usable(w)) incorrect.push(w);
     }
-    for (let attempts = 0; incorrect.length < 3 && attempts < MAX_ATTEMPTS; attempts++) {
-      const w = allWords[Math.floor(rng() * allWords.length)];
-      if (w && w.lemma !== correct.lemma && usable(w)) incorrect.push(w);
-    }
   } else {
-    for (const w of [...nearbyWords].sort(() => rng() - 0.5)) {
+    for (const w of ordered) {
       if (incorrect.length >= 3) break;
-      if (usable(w)) incorrect.push(w);
-    }
-    for (let attempts = 0; incorrect.length < 3 && attempts < MAX_ATTEMPTS; attempts++) {
-      const w = allWords[Math.floor(rng() * allWords.length)];
       if (usable(w)) incorrect.push(w);
     }
   }
 
-  return [correct, ...incorrect].sort(() => rng() - 0.5);
+  return shuffle([correct, ...incorrect], rng);
 }
 
 /**

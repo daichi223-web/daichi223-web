@@ -81,7 +81,8 @@ export default function VocabHome() {
       localStorage.setItem("kobun-wordRange", JSON.stringify({ from, to }));
       localStorage.setItem("kobun-categoryFilter", JSON.stringify(cat === "すべて" ? [] : [cat]));
     } catch { /* noop */ }
-    navigate("/");
+    // "/" へ移るだけだとホームが出てクイズが始まらなかった。?mode=word の印で、App がクイズを直接始める（2026-11-06）
+    navigate("/?mode=word");
   };
 
   const categories = useMemo(() => {
