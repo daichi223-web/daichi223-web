@@ -1,10 +1,10 @@
 # 用例バンク 集約レポート
 
 - 生成: scripts/build-example-bank.py → public/example-bank/
-- 対象 lemma: 365 / 用例総数: **6194**
-- 供給源別: kobunq=1397 corpus=460 dict=449 text=4408
-- 重複除去: dup-kobunq=1, dup-corpus=322, dup-dict=805, dup-text=228
-- sense 未紐付け（Phase B で AI 判定→検品）: **1970**
+- 対象 lemma: 365 / 用例総数: **6195**
+- 供給源別: kobunq=1398 corpus=460 dict=450 text=4407
+- 重複除去: dup-corpus=321, dup-dict=800, dup-text=229
+- sense 未紐付け（Phase B で AI 判定→検品）: **1971**
 
 ## 用例数 上位20語
 
@@ -12,7 +12,7 @@
 |---|---|---|
 | たまふ | 713 | 188 |
 | あり | 316 | 200 |
-| いふ | 259 | 163 |
+| いふ | 258 | 163 |
 | いと | 257 | 35 |
 | なる | 156 | 43 |
 | ほど | 119 | 59 |
