@@ -13,6 +13,7 @@ import {
   senseKeys,
   trapOverlapsSense,
 } from '../lib/senseEquivalence';
+import { isOverlapPair, SENSE_OVERLAP_PAIRS } from '../lib/senseOverlap';
 import type { Word } from '../types';
 import slimJson from '../data/kobunQ.v2.slim.json';
 
@@ -262,5 +263,55 @@ describe('例文の訳の穴と同じ言葉の誤答（2026-11-04）', () => {
   it('代わりが無ければ外すだけ', () => {
     const out = repairTranslationClashes([other, clash, correct], correct, tr, []);
     expect(out.map((o) => o.qid)).toEqual(['1-1', '166-2']);
+  });
+});
+
+describe('意味が重なる組は選択肢に一方だけ（senseOverlap、2026-11-05）', () => {
+  it('表の組は同じ意味の判定とは別（解説の印は変えない）', () => {
+    expect(isOverlapPair('87-1', '87-2')).toBe(true);
+    expect(isOverlapPair('87-2', '87-1')).toBe(true);
+    expect(isOverlapPair('87-1', '87-3')).toBe(false);
+    expect(isSameMeaning(byQid('87-1'), byQid('87-2'))).toBe(false);
+  });
+
+  it('表の組の qid はすべて実データにあり、同じ見出し語どうし', () => {
+    for (const [a, b] of SENSE_OVERLAP_PAIRS) {
+      expect(byQid(a).lemma).toBe(byQid(b).lemma);
+    }
+  });
+
+  it('正解と表で組になる意味は誤答に使わない', () => {
+    const correct = byQid('87-1');
+    expect(canUseAsDistractor(byQid('87-2'), correct, [], 'sense', byLemma)).toBe(false);
+    expect(canUseAsDistractor(byQid('87-3'), correct, [], 'sense', byLemma)).toBe(true);
+  });
+
+  it('誤答どうしでも表の組は一方だけ', () => {
+    // 正解 87-3「情けない」のとき、87-1 を選んだら 87-2 は使わない（87-1⇔87-2 が表の組）
+    const correct = byQid('87-3');
+    expect(canUseAsDistractor(byQid('87-2'), correct, [], 'sense', byLemma)).toBe(false); // 87-2⇔87-3 も組
+    expect(canUseAsDistractor(byQid('15-4'), byQid('15-3'), [byQid('15-2')], 'sense', byLemma)).toBe(false);
+    expect(canUseAsDistractor(byQid('15-4'), byQid('15-3'), [byQid('15-1')], 'sense', byLemma)).toBe(true);
+  });
+
+  it('全組 × 例文つき出題：選択肢に表の組が2つ並ばない（乱数200回ずつ）', () => {
+    const qids = new Set(SENSE_OVERLAP_PAIRS.flat());
+    for (const qid of qids) {
+      const correct = byQid(qid);
+      for (let s = 0; s < 200; s++) {
+        const opts = buildFallbackOptions(correct as Word & { group: number }, slim as (Word & { group: number })[], 'sentence-meaning', seeded(s), byLemma);
+        for (let i = 0; i < opts.length; i++)
+          for (let j = i + 1; j < opts.length; j++) expect(isOverlapPair(opts[i].qid, opts[j].qid)).toBe(false);
+      }
+    }
+  });
+
+  it('○×の誤りの意味に表の組を出さない', () => {
+    const target = byQid('22-1');
+    const group = byLemma.get(target.lemma) ?? [];
+    for (let s = 0; s < 200; s++) {
+      const w = pickTrueFalseWrongMeaning(target, group, slim, seeded(s));
+      if (w) expect(isOverlapPair(w.qid, target.qid)).toBe(false);
+    }
   });
 });

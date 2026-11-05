@@ -16,6 +16,7 @@
  * API は Node の ESM で動くので、import には拡張子 .js を付ける。
  */
 import { expandNorm, normalizeAnswer } from './writingJudge.js';
+import { isOverlapPair } from './senseOverlap.js';
 
 /** 判定に使う1つの意味（Word / kobun_q の1行と同じ形の一部） */
 export interface SenseLike {
@@ -151,10 +152,12 @@ export function canUseAsDistractor<T extends SenseLike>(
     return !picked.some((p) => isSameLemma(c, p));
   }
   if (isSameMeaning(c, correct)) return false;
+  // 意味が重なる組（senseOverlap の表）は、正解と並べない・誤答どうしでも一方だけ（2026-11-05）
+  if (isOverlapPair(c.qid, correct.qid)) return false;
   if (c.lemma !== correct.lemma && isSameLemma(c, correct)) return false;
   const display = senseDisplayKey(c);
   if (display === senseDisplayKey(correct)) return false;
-  return !picked.some((p) => isSameMeaning(c, p) || senseDisplayKey(p) === display);
+  return !picked.some((p) => isSameMeaning(c, p) || isOverlapPair(c.qid, p.qid) || senseDisplayKey(p) === display);
 }
 
 type FallbackQuizType = 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'blank-fill';
@@ -220,7 +223,9 @@ export function pickTrueFalseWrongMeaning<T extends SenseLike>(
   rng: () => number = Math.random,
   maxAttempts = 50
 ): T | null {
-  const sameGroup = groupMeanings.filter((m) => m.qid !== target.qid && !isSameMeaning(m, target));
+  const sameGroup = groupMeanings.filter(
+    (m) => m.qid !== target.qid && !isSameMeaning(m, target) && !isOverlapPair(m.qid, target.qid)
+  );
   if (rng() < 0.5 && sameGroup.length > 0) {
     return sameGroup[Math.floor(rng() * sameGroup.length)];
   }
