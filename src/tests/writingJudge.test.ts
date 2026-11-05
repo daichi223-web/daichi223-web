@@ -167,8 +167,8 @@ describe('describeNorm: 正解の言い方を画面用に分ける', () => {
     expect(norm('189-1')).toBe('（女のもとに）通う');
     expect(norm('145-2')).toBe('さっきの（ありつる）');
     expect(norm('175-2')).toBe('（詠み・作り）申し上げる');
-    expect(norm('356-2')).toBe('（色・香が）あせる・移る');
-    expect(norm('160-1')).toBe('〜ております（下二段・謙譲/丁寧）の打消系');
+    expect(norm('356-2')).toBe('（色・香が）あせる');
+    expect(norm('160-1')).toBe('〜ておりません（下二段・謙譲/丁寧）');
   });
 });
 
