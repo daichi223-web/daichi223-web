@@ -196,7 +196,7 @@ describe('実戦例文の mark: 全件', () => {
 
   it('mark はすべて例文の内側にあり、重ならず、そのまま印になる', () => {
     // 2026-10-06: 追加98件。2026-10-25: 教材由来の例文にも手の表と照合で位置を付けた（+667件）
-    expect(marked.length).toBe(764); // 2026-11-06: 355-2「なよ竹のかぐや姫といふ」を本文と合わない用例として外した（data/enrich/example-denylist.jsonl）
+    expect(marked.length).toBe(761); // 2026-11-06: 355-2「なよ竹のかぐや姫といふ」を本文と合わない用例として外した（data/enrich/example-denylist.jsonl）。同日 347-1 の sense を〔 最後に 〕にして「つひに」の割り当てが −1＋2、増えた2文（出典を確かめられない）は除外表へ（−2）。346-1 の sense を〔 たった 〕にして〈ちょうど〉の2文が外れた（−2）
     for (const r of marked) {
       const w = byQid(r.qid);
       const res = resolveTargetSpans(r.jp, w, r.mark);
@@ -271,7 +271,7 @@ describe('findInflectedSpan: 全件の回帰検査', () => {
       }
     }
     expect(elsewhere).toEqual(KNOWN_ELSEWHERE);
-    expect(total).toBe(1240);
+    expect(total).toBe(1241); // 2026-11-06: 64-1 の第2例文を 64-4 へ移す行を足し、64-1 に別の例を入れた（空欄つき例文 +1）
     expect(count.same + count.overlap + count.none + count.elsewhere).toBe(total);
     // 照合が正解と同じ範囲になる割合が落ちていないこと
     expect(count.same).toBeGreaterThanOrEqual(882);

@@ -8,7 +8,7 @@ kobunQ.v2.json（正本）と kobunQ.v2.slim.json（再生成後）を読み、�
   (c) jpBlank を持つ example は必ず mark を持つ。持たない example の mark は decide_marks
       （手の表 data/enrich/target-marks-manual.jsonl → 照合で候補が1か所のときだけ）の結果と一致する。
       決まらない example は mark を持たない。mark: [] は「確かめたうえで印を付けない」（2026-10-25〜）
-  (d) qid の並びと件数 748 が不変（2026-10-16 基本330に8意味を追加して 740→748）
+  (d) qid の並びと件数 747 が不変（2026-10-16 基本330に8意味を追加して 740→748、2026-11-06 19-2 を欠番にして 748→747）
   (e)(f) 実戦例文 public/corpus-examples.json の mark（check_corpus を参照）
   (g) 手の表の行は、どれも単語帳か実戦例文の例文（qid＋jp）に当たる（使われない行が無い）
 人が目で確かめる一覧も出す: 複数範囲の件、見出し語より3文字以上長い範囲の件、
@@ -33,7 +33,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src", "data", "kobunQ.v2.json")
 SLIM = os.path.join(ROOT, "src", "data", "kobunQ.v2.slim.json")
 
-EXPECTED_WORDS = 748
+EXPECTED_WORDS = 747
 CORPUS = os.path.join(ROOT, "public", "corpus-examples.json")
 ADDITIONS = os.path.join(ROOT, "data", "enrich", "corpus-additions.jsonl")
 
