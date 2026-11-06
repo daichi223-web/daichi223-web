@@ -177,7 +177,57 @@
       }
     },
     {
-      "tokenId": "s8-t9",
+      "tokenId": "s8-t5",
+      "decider": {
+        "meaning": "使役",
+        "type": "形",
+        "summary": "四段未然形『よま』＋せ＝〈使役〉の『す』の連用形。下に尊敬の『給ふ』が無く、守覚法親王が歌を詠ませたので使役。",
+        "cues": [
+          {
+            "text": "よま",
+            "type": "形",
+            "note": "四段未然形＋す（使役・尊敬）"
+          },
+          {
+            "text": "はべり",
+            "type": "後接",
+            "note": "下は丁寧語で『給ふ』ではない＝尊敬ではない"
+          }
+        ]
+      }
+    },
+    {
+      "tokenId": "s8-t6",
+      "decider": {
+        "meaning": "〜ます・〜ございます（丁寧・補助動詞）",
+        "type": "形",
+        "summary": "「よませはべりける」と、連用形『よませ』に付く補助動詞。勅撰集の詞書で作者が読み手へ丁寧に述べる（訳「詠ませました時に」）。〈お仕えする〉や存在の本動詞ではない。",
+        "cues": [
+          {
+            "text": "よませ",
+            "type": "形",
+            "note": "連用形に付く＝補助動詞"
+          }
+        ]
+      }
+    },
+    {
+      "tokenId": "s8-t7",
+      "decider": {
+        "meaning": "過去",
+        "type": "文脈",
+        "summary": "〈過去〉の連体形『ける』。『五十首歌よませはべりけるに』＝『五十首の歌を詠ませました時に』。",
+        "cues": [
+          {
+            "text": "",
+            "type": "文脈",
+            "note": "連用形『はべり』＋ける＝過去の連体形。"
+          }
+        ]
+      }
+    },
+    {
+      "tokenId": "s10-t9",
       "decider": {
         "meaning": "〜ます・〜ございます（丁寧・補助動詞）",
         "type": "形",
@@ -192,7 +242,7 @@
       }
     },
     {
-      "tokenId": "s8-t10",
+      "tokenId": "s10-t10",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -207,7 +257,7 @@
       }
     },
     {
-      "tokenId": "s9-t4",
+      "tokenId": "s11-t4",
       "decider": {
         "meaning": "推量",
         "type": "文脈",
@@ -222,7 +272,87 @@
       }
     },
     {
-      "tokenId": "s10-t4",
+      "tokenId": "s12-t5",
+      "decider": {
+        "meaning": "使役",
+        "type": "形",
+        "summary": "四段未然形『よま』＋せ＝〈使役〉の『す』の連用形。下に尊敬の『給ふ』が無く、作者の良経が歌を詠ませたので使役。",
+        "cues": [
+          {
+            "text": "よま",
+            "type": "形",
+            "note": "四段未然形＋す（使役・尊敬）"
+          },
+          {
+            "text": "はべり",
+            "type": "後接",
+            "note": "下は丁寧語で『給ふ』ではない＝尊敬ではない"
+          }
+        ]
+      }
+    },
+    {
+      "tokenId": "s12-t6",
+      "decider": {
+        "meaning": "〜ます・〜ございます（丁寧・補助動詞）",
+        "type": "形",
+        "summary": "「よませはべりける」と、連用形『よませ』に付く補助動詞。勅撰集の詞書で作者が読み手へ丁寧に述べる（訳「詠ませました時」）。〈お仕えする〉や存在の本動詞ではない。",
+        "cues": [
+          {
+            "text": "よませ",
+            "type": "形",
+            "note": "連用形に付く＝補助動詞"
+          }
+        ]
+      }
+    },
+    {
+      "tokenId": "s12-t7",
+      "decider": {
+        "meaning": "過去",
+        "type": "文脈",
+        "summary": "〈過去〉の連体形『ける』。『五首歌人々によませはべりける時』＝『五首の歌を人々に詠ませました時』。",
+        "cues": [
+          {
+            "text": "",
+            "type": "文脈",
+            "note": "連用形『はべり』＋ける＝過去の連体形。"
+          }
+        ]
+      }
+    },
+    {
+      "tokenId": "s12-t13",
+      "decider": {
+        "meaning": "〜ます・〜ございます（丁寧・補助動詞）",
+        "type": "形",
+        "summary": "「よみはべりける」と、連用形『よみ』に付く補助動詞。勅撰集の詞書で作者が読み手へ丁寧に述べる（訳「詠みました」）。〈お仕えする〉や存在の本動詞ではない。",
+        "cues": [
+          {
+            "text": "よみ",
+            "type": "形",
+            "note": "連用形に付く＝補助動詞"
+          }
+        ]
+      }
+    },
+    {
+      "tokenId": "s12-t14",
+      "decider": {
+        "meaning": "過去",
+        "type": "文脈",
+        "summary": "〈過去〉の連体形『ける』。『夏歌とてよみはべりける』＝『夏の歌として詠みました（歌）』。",
+        "cues": [
+          {
+            "text": "",
+            "type": "文脈",
+            "note": "連用形『はべり』＋ける＝過去の連体形。"
+          }
+        ]
+      }
+    },
+    {
+      "tokenId": "s14-t4",
       "decider": {
         "meaning": "差し上げる（謙譲・本動詞）",
         "type": "文脈",
@@ -237,7 +367,7 @@
       }
     },
     {
-      "tokenId": "s10-t5",
+      "tokenId": "s14-t5",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -257,7 +387,7 @@
       }
     },
     {
-      "tokenId": "s11-t11",
+      "tokenId": "s15-t11",
       "decider": {
         "meaning": "いっそう",
         "type": "後接",
@@ -277,7 +407,7 @@
       }
     },
     {
-      "tokenId": "s12-t4",
+      "tokenId": "s16-t4",
       "decider": {
         "meaning": "差し上げる（謙譲・本動詞）",
         "type": "文脈",
@@ -292,7 +422,7 @@
       }
     },
     {
-      "tokenId": "s12-t5",
+      "tokenId": "s16-t5",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -312,7 +442,7 @@
       }
     },
     {
-      "tokenId": "s13-t7",
+      "tokenId": "s17-t7",
       "decider": {
         "meaning": "打消",
         "type": "形",
@@ -327,7 +457,7 @@
       }
     },
     {
-      "tokenId": "s14-t2",
+      "tokenId": "s18-t2",
       "decider": {
         "meaning": "わかる",
         "type": "文脈",
@@ -342,7 +472,7 @@
       }
     },
     {
-      "tokenId": "s14-t3",
+      "tokenId": "s18-t3",
       "decider": {
         "meaning": "打消",
         "type": "形",
@@ -357,7 +487,7 @@
       }
     },
     {
-      "tokenId": "s15-t5",
+      "tokenId": "s19-t5",
       "decider": {
         "meaning": "存続",
         "type": "文脈",
@@ -377,7 +507,7 @@
       }
     },
     {
-      "tokenId": "s15-t14",
+      "tokenId": "s19-t14",
       "decider": {
         "meaning": "意志",
         "type": "主語",
@@ -397,7 +527,7 @@
       }
     },
     {
-      "tokenId": "s16-t3",
+      "tokenId": "s20-t3",
       "decider": {
         "meaning": "完了",
         "type": "形",
@@ -412,7 +542,7 @@
       }
     },
     {
-      "tokenId": "s16-t4",
+      "tokenId": "s20-t4",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -427,7 +557,7 @@
       }
     },
     {
-      "tokenId": "s16-t7",
+      "tokenId": "s20-t7",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -442,7 +572,7 @@
       }
     },
     {
-      "tokenId": "s16-t12",
+      "tokenId": "s20-t12",
       "decider": {
         "meaning": "〜ます・〜ございます（丁寧・補助動詞）",
         "type": "形",
@@ -457,7 +587,7 @@
       }
     },
     {
-      "tokenId": "s16-t13",
+      "tokenId": "s20-t13",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -472,7 +602,7 @@
       }
     },
     {
-      "tokenId": "s17-t3",
+      "tokenId": "s21-t3",
       "decider": {
         "meaning": "参ります（行くの謙譲・丁寧）",
         "type": "文脈",
@@ -487,7 +617,7 @@
       }
     },
     {
-      "tokenId": "s18-t8",
+      "tokenId": "s22-t8",
       "decider": {
         "meaning": "打消",
         "type": "形",
@@ -502,7 +632,7 @@
       }
     },
     {
-      "tokenId": "s19-t2",
+      "tokenId": "s23-t2",
       "decider": {
         "meaning": "受身",
         "type": "文脈",
@@ -522,7 +652,7 @@
       }
     },
     {
-      "tokenId": "s19-t5",
+      "tokenId": "s23-t5",
       "decider": {
         "meaning": "気持ち・思い",
         "type": "文脈",
@@ -537,7 +667,7 @@
       }
     },
     {
-      "tokenId": "s20-t8",
+      "tokenId": "s24-t8",
       "decider": {
         "meaning": "断定",
         "type": "形",
@@ -552,7 +682,7 @@
       }
     },
     {
-      "tokenId": "s20-t11",
+      "tokenId": "s24-t11",
       "decider": {
         "meaning": "打消",
         "type": "形",
@@ -572,7 +702,7 @@
       }
     },
     {
-      "tokenId": "s21-t10",
+      "tokenId": "s25-t10",
       "decider": {
         "meaning": "名づける",
         "type": "形",
@@ -592,7 +722,7 @@
       }
     },
     {
-      "tokenId": "s22-t3",
+      "tokenId": "s26-t3",
       "decider": {
         "meaning": "打消",
         "type": "形",
@@ -607,7 +737,7 @@
       }
     },
     {
-      "tokenId": "s22-t10",
+      "tokenId": "s26-t10",
       "decider": {
         "meaning": "完了",
         "type": "形",
@@ -622,7 +752,7 @@
       }
     },
     {
-      "tokenId": "s22-t11",
+      "tokenId": "s26-t11",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -637,7 +767,7 @@
       }
     },
     {
-      "tokenId": "s22-t14",
+      "tokenId": "s26-t14",
       "decider": {
         "meaning": "たった・ちょうど",
         "type": "後接",
@@ -652,7 +782,7 @@
       }
     },
     {
-      "tokenId": "s24-t12",
+      "tokenId": "s28-t12",
       "decider": {
         "meaning": "近づく",
         "type": "主語",
@@ -667,7 +797,7 @@
       }
     },
     {
-      "tokenId": "s24-t14",
+      "tokenId": "s28-t14",
       "decider": {
         "meaning": "ある",
         "type": "主語",
@@ -682,7 +812,7 @@
       }
     },
     {
-      "tokenId": "s26-t8",
+      "tokenId": "s30-t8",
       "decider": {
         "meaning": "わかる",
         "type": "文脈",
@@ -697,7 +827,7 @@
       }
     },
     {
-      "tokenId": "s27-t4",
+      "tokenId": "s31-t4",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -712,7 +842,7 @@
       }
     },
     {
-      "tokenId": "s28-t2",
+      "tokenId": "s32-t2",
       "decider": {
         "meaning": "申し上げる（本動詞）",
         "type": "文脈",
@@ -727,7 +857,7 @@
       }
     },
     {
-      "tokenId": "s29-t4",
+      "tokenId": "s33-t4",
       "decider": {
         "meaning": "〜ます・〜ございます（丁寧・補助動詞）",
         "type": "形",
@@ -742,7 +872,7 @@
       }
     },
     {
-      "tokenId": "s29-t5",
+      "tokenId": "s33-t5",
       "decider": {
         "meaning": "過去",
         "type": "文脈",
@@ -757,7 +887,7 @@
       }
     },
     {
-      "tokenId": "s30-t17",
+      "tokenId": "s34-t17",
       "decider": {
         "meaning": "近づく",
         "type": "主語",
@@ -777,7 +907,7 @@
       }
     },
     {
-      "tokenId": "s30-t18",
+      "tokenId": "s34-t18",
       "decider": {
         "meaning": "見える",
         "type": "主語",
@@ -797,7 +927,7 @@
       }
     },
     {
-      "tokenId": "s31-t9",
+      "tokenId": "s35-t9",
       "decider": {
         "meaning": "受身",
         "type": "文脈",
@@ -812,7 +942,7 @@
       }
     },
     {
-      "tokenId": "s31-t13",
+      "tokenId": "s35-t13",
       "decider": {
         "meaning": "ひたすら",
         "type": "後接",
@@ -827,7 +957,7 @@
       }
     },
     {
-      "tokenId": "s32-t1",
+      "tokenId": "s36-t1",
       "decider": {
         "meaning": "度を超えて",
         "type": "形",
@@ -842,7 +972,7 @@
       }
     },
     {
-      "tokenId": "s32-t17",
+      "tokenId": "s36-t17",
       "decider": {
         "meaning": "〜（である）こと（名詞をつくる接尾語）",
         "type": "形",

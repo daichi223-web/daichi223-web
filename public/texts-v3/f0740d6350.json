@@ -80,6 +80,14 @@
             "priority": "important"
           },
           {
+            "text": "清原深養父「冬ながら」は、冬でありながら空から花が散ってくるのは、雲の向こうはもう春だからだろうかと詠む。降る雪を花に見立て、「らむ」（現在推量）で、見えない雲の向こうの今を推し量る。「ながら」は逆接（〜でありながら）。",
+            "priority": "important"
+          },
+          {
+            "text": "壬生忠岑「春日野の」は、春日の祭で見かけた女に、家を探し当てて贈った恋の歌。「春日野の雪間をわけて生ひ出でくる草の」が序詞で「はつかに（わずかに）」を導き、雪の間から芽を出す若草のように、ちらりと見えただけのあなたを慕う。結びの「はも」は詠嘆の終助詞。",
+            "priority": "important"
+          },
+          {
             "text": "「わくらばに」は「たまたま・まれに」の意の副詞。在原行平「わくらばにとふ人あらば」＝たまたま（私のことを）尋ねる人があるならば。",
             "priority": "important"
           },
@@ -1742,12 +1750,336 @@
     },
     {
       "id": "s12",
-      "originalText": "三月の一日より、忍びに人にものら言ひて、のちに、雨",
-      "modernTranslation": "三月一日から、ひそかにある女と言葉を交わして、後で、雨がしょぼしょぼ降った時に詠んで贈った歌",
+      "originalText": "雪の降りけるをよみける〈冬〉　　　　　　　　　　　　　　　　　　清原深養父",
+      "modernTranslation": "雪が降ったのを詠んだ歌",
       "tokens": [
         {
           "id": "s12-t1",
-          "text": "三月",
+          "text": "雪",
+          "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s12-t2",
+          "text": "の",
+          "start": 1,
+          "end": 2,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s12-t3",
+          "text": "降り",
+          "start": 2,
+          "end": 4,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s12-t4",
+          "text": "ける",
+          "start": 4,
+          "end": 6,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s12-t5",
+          "text": "を",
+          "start": 6,
+          "end": 7,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s12-t6",
+          "text": "よみ",
+          "start": 7,
+          "end": 9,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "マ四",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s12-t7",
+          "text": "ける",
+          "start": 9,
+          "end": 11,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s12-t8",
+          "text": "〈冬〉",
+          "start": 11,
+          "end": 14,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s12-t9",
+          "text": "　　　　　　　　　　　　　　　　　　",
+          "start": 14,
+          "end": 32,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s12-t10",
+          "text": "清原深養父",
+          "start": 32,
+          "end": 37,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s13",
+      "originalText": "冬ながら空より花の散りくるは雲のあなたは春にやあるらむ",
+      "modernTranslation": "冬でありながら空から花が散ってくるのは、雲の向こうは（もう）春なのだろうか。",
+      "tokens": [
+        {
+          "id": "s13-t1",
+          "text": "冬",
+          "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s13-t2",
+          "text": "ながら",
+          "start": 1,
+          "end": 4,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞",
+            "meaning": "逆接"
+          }
+        },
+        {
+          "id": "s13-t3",
+          "text": "空",
+          "start": 4,
+          "end": 5,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s13-t4",
+          "text": "より",
+          "start": 5,
+          "end": 7,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "起点"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s13-t5",
+          "text": "花",
+          "start": 7,
+          "end": 8,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s13-t6",
+          "text": "の",
+          "start": 8,
+          "end": 9,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "主格"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s13-t7",
+          "text": "散りくる",
+          "start": 9,
+          "end": 13,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ変",
+            "conjugationForm": "体"
+          }
+        },
+        {
+          "id": "s13-t8",
+          "text": "は",
+          "start": 13,
+          "end": 14,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s13-t9",
+          "text": "雲",
+          "start": 14,
+          "end": 15,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s13-t10",
+          "text": "の",
+          "start": 15,
+          "end": 16,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s13-t11",
+          "text": "あなた",
+          "start": 16,
+          "end": 19,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "代名詞"
+          }
+        },
+        {
+          "id": "s13-t12",
+          "text": "は",
+          "start": 19,
+          "end": 20,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "提示"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s13-t13",
+          "text": "春",
+          "start": 20,
+          "end": 21,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s13-t14",
+          "text": "に",
+          "start": 21,
+          "end": 22,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "断定"
+          },
+          "grammarRefId": "jodoshi-dantei"
+        },
+        {
+          "id": "s13-t15",
+          "text": "や",
+          "start": 22,
+          "end": 23,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "疑問"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s13-t16",
+          "text": "ある",
+          "start": 23,
+          "end": 25,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "補助動詞",
+            "conjugationType": "ラ変",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s13-t17",
+          "text": "らむ",
+          "start": 25,
+          "end": 27,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "現在推量"
+          },
+          "grammarRefId": "jodoshi-suiryo"
+        }
+      ]
+    },
+    {
+      "id": "s14",
+      "originalText": "春日の祭にまかれりける時に、物見に出でたりける女のもとに、家をたづねてつかはせりける〈恋〉　　壬生忠岑",
+      "modernTranslation": "春日神社の祭に参りました時に、見物に出ていた女のもとに、家を探し当てて贈った歌",
+      "tokens": [
+        {
+          "id": "s14-t1",
+          "text": "春日",
           "start": 0,
           "end": 2,
           "layer": 0,
@@ -1756,7 +2088,7 @@
           }
         },
         {
-          "id": "s12-t2",
+          "id": "s14-t2",
           "text": "の",
           "start": 2,
           "end": 3,
@@ -1768,7 +2100,532 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s12-t3",
+          "id": "s14-t3",
+          "text": "祭",
+          "start": 3,
+          "end": 4,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t4",
+          "text": "に",
+          "start": 4,
+          "end": 5,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "目的"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s14-t5",
+          "text": "まかれ",
+          "start": 5,
+          "end": 8,
+          "layer": 4,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "命",
+            "baseForm": "まかる",
+            "honorific": "謙譲"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s14-t6",
+          "text": "り",
+          "start": 8,
+          "end": 9,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s14-t7",
+          "text": "ける",
+          "start": 9,
+          "end": 11,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s14-t8",
+          "text": "時",
+          "start": 11,
+          "end": 12,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t9",
+          "text": "に",
+          "start": 12,
+          "end": 13,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "時間"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s14-t10",
+          "text": "、",
+          "start": 13,
+          "end": 14,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t11",
+          "text": "物見",
+          "start": 14,
+          "end": 16,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t12",
+          "text": "に",
+          "start": 16,
+          "end": 17,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "目的"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s14-t13",
+          "text": "出で",
+          "start": 17,
+          "end": 19,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ダ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s14-t14",
+          "text": "たり",
+          "start": 19,
+          "end": 21,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "存続"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s14-t15",
+          "text": "ける",
+          "start": 21,
+          "end": 23,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s14-t16",
+          "text": "女",
+          "start": 23,
+          "end": 24,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t17",
+          "text": "の",
+          "start": 24,
+          "end": 25,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s14-t18",
+          "text": "もと",
+          "start": 25,
+          "end": 27,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t19",
+          "text": "に",
+          "start": 27,
+          "end": 28,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s14-t20",
+          "text": "、",
+          "start": 28,
+          "end": 29,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t21",
+          "text": "家",
+          "start": 29,
+          "end": 30,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t22",
+          "text": "を",
+          "start": 30,
+          "end": 31,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s14-t23",
+          "text": "たづね",
+          "start": 31,
+          "end": 34,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ナ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s14-t24",
+          "text": "て",
+          "start": 34,
+          "end": 35,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞",
+            "meaning": "単純"
+          }
+        },
+        {
+          "id": "s14-t25",
+          "text": "つかはせ",
+          "start": 35,
+          "end": 39,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ四",
+            "conjugationForm": "命",
+            "baseForm": "つかはす"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s14-t26",
+          "text": "り",
+          "start": 39,
+          "end": 40,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "完了"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s14-t27",
+          "text": "ける",
+          "start": 40,
+          "end": 42,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s14-t28",
+          "text": "〈恋〉",
+          "start": 42,
+          "end": 45,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t29",
+          "text": "　　",
+          "start": 45,
+          "end": 47,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s14-t30",
+          "text": "壬生忠岑",
+          "start": 47,
+          "end": 51,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s15",
+      "originalText": "春日野の雪間をわけて生ひ出でくる草のはつかに見えし君はも",
+      "modernTranslation": "春日野の雪の間を分けて生え出てくる草のように、わずかに見えたあなたよ。",
+      "tokens": [
+        {
+          "id": "s15-t1",
+          "text": "春日野",
+          "start": 0,
+          "end": 3,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s15-t2",
+          "text": "の",
+          "start": 3,
+          "end": 4,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s15-t3",
+          "text": "雪間",
+          "start": 4,
+          "end": 6,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s15-t4",
+          "text": "を",
+          "start": 6,
+          "end": 7,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s15-t5",
+          "text": "わけ",
+          "start": 7,
+          "end": 9,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s15-t6",
+          "text": "て",
+          "start": 9,
+          "end": 10,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞",
+            "meaning": "単純"
+          }
+        },
+        {
+          "id": "s15-t7",
+          "text": "生ひ出でくる",
+          "start": 10,
+          "end": 16,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "カ変",
+            "conjugationForm": "体"
+          }
+        },
+        {
+          "id": "s15-t8",
+          "text": "草",
+          "start": 16,
+          "end": 17,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s15-t9",
+          "text": "の",
+          "start": 17,
+          "end": 18,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "比喩"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s15-t10",
+          "text": "はつかに",
+          "start": 18,
+          "end": 22,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容動詞",
+            "conjugationType": "ナリ",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "keiyoshi-katsuyo"
+        },
+        {
+          "id": "s15-t11",
+          "text": "見え",
+          "start": 22,
+          "end": 24,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ヤ下二",
+            "conjugationForm": "用"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s15-t12",
+          "text": "し",
+          "start": 24,
+          "end": 25,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s15-t13",
+          "text": "君",
+          "start": 25,
+          "end": 26,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s15-t14",
+          "text": "はも",
+          "start": 26,
+          "end": 28,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "終助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        }
+      ]
+    },
+    {
+      "id": "s16",
+      "originalText": "三月の一日より、忍びに人にものら言ひて、のちに、雨",
+      "modernTranslation": "三月一日から、ひそかにある女と言葉を交わして、後で、雨がしょぼしょぼ降った時に詠んで贈った歌",
+      "tokens": [
+        {
+          "id": "s16-t1",
+          "text": "三月",
+          "start": 0,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s16-t2",
+          "text": "の",
+          "start": 2,
+          "end": 3,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s16-t3",
           "text": "一日",
           "start": 3,
           "end": 5,
@@ -1778,7 +2635,7 @@
           }
         },
         {
-          "id": "s12-t4",
+          "id": "s16-t4",
           "text": "より",
           "start": 5,
           "end": 7,
@@ -1791,7 +2648,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s12-t5",
+          "id": "s16-t5",
           "text": "、",
           "start": 7,
           "end": 8,
@@ -1801,7 +2658,7 @@
           }
         },
         {
-          "id": "s12-t6",
+          "id": "s16-t6",
           "text": "忍びに",
           "start": 8,
           "end": 11,
@@ -1811,7 +2668,7 @@
           }
         },
         {
-          "id": "s12-t7",
+          "id": "s16-t7",
           "text": "人",
           "start": 11,
           "end": 12,
@@ -1821,7 +2678,7 @@
           }
         },
         {
-          "id": "s12-t8",
+          "id": "s16-t8",
           "text": "に",
           "start": 12,
           "end": 13,
@@ -1833,7 +2690,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s12-t9",
+          "id": "s16-t9",
           "text": "もの",
           "start": 13,
           "end": 15,
@@ -1844,7 +2701,7 @@
           }
         },
         {
-          "id": "s12-t10",
+          "id": "s16-t10",
           "text": "ら",
           "start": 15,
           "end": 16,
@@ -1854,7 +2711,7 @@
           }
         },
         {
-          "id": "s12-t11",
+          "id": "s16-t11",
           "text": "言ひ",
           "start": 16,
           "end": 18,
@@ -1867,7 +2724,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s12-t12",
+          "id": "s16-t12",
           "text": "て",
           "start": 18,
           "end": 19,
@@ -1877,7 +2734,7 @@
           }
         },
         {
-          "id": "s12-t13",
+          "id": "s16-t13",
           "text": "、",
           "start": 19,
           "end": 20,
@@ -1887,7 +2744,7 @@
           }
         },
         {
-          "id": "s12-t14",
+          "id": "s16-t14",
           "text": "のち",
           "start": 20,
           "end": 22,
@@ -1898,7 +2755,7 @@
           }
         },
         {
-          "id": "s12-t15",
+          "id": "s16-t15",
           "text": "に",
           "start": 22,
           "end": 23,
@@ -1910,7 +2767,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s12-t16",
+          "id": "s16-t16",
           "text": "、",
           "start": 23,
           "end": 24,
@@ -1920,7 +2777,7 @@
           }
         },
         {
-          "id": "s12-t17",
+          "id": "s16-t17",
           "text": "雨",
           "start": 24,
           "end": 25,
@@ -1932,12 +2789,12 @@
       ]
     },
     {
-      "id": "s13",
+      "id": "s17",
       "originalText": "のそほ降りけるによみて遣はしける〈恋〉　　　　　　　　　　　　　在原業平",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s13-t1",
+          "id": "s17-t1",
           "text": "の",
           "start": 0,
           "end": 1,
@@ -1949,7 +2806,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s13-t2",
+          "id": "s17-t2",
           "text": "そほ降り",
           "start": 1,
           "end": 5,
@@ -1962,7 +2819,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s13-t3",
+          "id": "s17-t3",
           "text": "ける",
           "start": 5,
           "end": 7,
@@ -1975,7 +2832,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s13-t4",
+          "id": "s17-t4",
           "text": "に",
           "start": 7,
           "end": 8,
@@ -1987,7 +2844,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s13-t5",
+          "id": "s17-t5",
           "text": "よみ",
           "start": 8,
           "end": 10,
@@ -2000,7 +2857,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s13-t6",
+          "id": "s17-t6",
           "text": "て",
           "start": 10,
           "end": 11,
@@ -2010,7 +2867,7 @@
           }
         },
         {
-          "id": "s13-t7",
+          "id": "s17-t7",
           "text": "遣はし",
           "start": 11,
           "end": 14,
@@ -2023,7 +2880,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s13-t8",
+          "id": "s17-t8",
           "text": "ける",
           "start": 14,
           "end": 16,
@@ -2036,7 +2893,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s13-t9",
+          "id": "s17-t9",
           "text": "〈恋〉",
           "start": 16,
           "end": 19,
@@ -2046,7 +2903,7 @@
           }
         },
         {
-          "id": "s13-t10",
+          "id": "s17-t10",
           "text": "　　　　　　　　　　　　　",
           "start": 19,
           "end": 32,
@@ -2056,7 +2913,7 @@
           }
         },
         {
-          "id": "s13-t11",
+          "id": "s17-t11",
           "text": "在原業平",
           "start": 32,
           "end": 36,
@@ -2068,12 +2925,12 @@
       ]
     },
     {
-      "id": "s14",
+      "id": "s18",
       "originalText": "起きもせず寝もせで夜を明かしては春のものとてながめ暮らしつ",
       "modernTranslation": "起きているのでもなく、寝ているのでもなく夜を明かしては、今日の長雨を春のものとしてぼんやりと眺めて、もの思いにふけってしまった。",
       "tokens": [
         {
-          "id": "s14-t1",
+          "id": "s18-t1",
           "text": "起き",
           "start": 0,
           "end": 2,
@@ -2086,7 +2943,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s14-t2",
+          "id": "s18-t2",
           "text": "も",
           "start": 2,
           "end": 3,
@@ -2098,7 +2955,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s14-t3",
+          "id": "s18-t3",
           "text": "せ",
           "start": 3,
           "end": 4,
@@ -2111,7 +2968,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s14-t4",
+          "id": "s18-t4",
           "text": "ず",
           "start": 4,
           "end": 5,
@@ -2124,7 +2981,7 @@
           "grammarRefId": "jodoshi-hitei"
         },
         {
-          "id": "s14-t5",
+          "id": "s18-t5",
           "text": "寝",
           "start": 5,
           "end": 6,
@@ -2137,7 +2994,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s14-t6",
+          "id": "s18-t6",
           "text": "も",
           "start": 6,
           "end": 7,
@@ -2149,7 +3006,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s14-t7",
+          "id": "s18-t7",
           "text": "せ",
           "start": 7,
           "end": 8,
@@ -2162,7 +3019,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s14-t8",
+          "id": "s18-t8",
           "text": "で",
           "start": 8,
           "end": 9,
@@ -2172,7 +3029,7 @@
           }
         },
         {
-          "id": "s14-t9",
+          "id": "s18-t9",
           "text": "夜",
           "start": 9,
           "end": 10,
@@ -2182,7 +3039,7 @@
           }
         },
         {
-          "id": "s14-t10",
+          "id": "s18-t10",
           "text": "を",
           "start": 10,
           "end": 11,
@@ -2194,7 +3051,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s14-t11",
+          "id": "s18-t11",
           "text": "明かし",
           "start": 11,
           "end": 14,
@@ -2207,7 +3064,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s14-t12",
+          "id": "s18-t12",
           "text": "て",
           "start": 14,
           "end": 15,
@@ -2217,7 +3074,7 @@
           }
         },
         {
-          "id": "s14-t13",
+          "id": "s18-t13",
           "text": "は",
           "start": 15,
           "end": 16,
@@ -2229,7 +3086,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s14-t14",
+          "id": "s18-t14",
           "text": "春",
           "start": 16,
           "end": 17,
@@ -2239,7 +3096,7 @@
           }
         },
         {
-          "id": "s14-t15",
+          "id": "s18-t15",
           "text": "の",
           "start": 17,
           "end": 18,
@@ -2251,7 +3108,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s14-t16",
+          "id": "s18-t16",
           "text": "もの",
           "start": 18,
           "end": 20,
@@ -2262,7 +3119,7 @@
           }
         },
         {
-          "id": "s14-t17",
+          "id": "s18-t17",
           "text": "とて",
           "start": 20,
           "end": 22,
@@ -2274,7 +3131,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s14-t18",
+          "id": "s18-t18",
           "text": "ながめ暮らし",
           "start": 22,
           "end": 28,
@@ -2286,7 +3143,7 @@
           }
         },
         {
-          "id": "s14-t19",
+          "id": "s18-t19",
           "text": "つ",
           "start": 28,
           "end": 29,
@@ -2301,12 +3158,12 @@
       ]
     },
     {
-      "id": "s15",
+      "id": "s19",
       "originalText": "題知らず〈恋〉　　　　　　　　　　　　　　　　　　　　　　　　　　　伊勢",
       "modernTranslation": "題知らず",
       "tokens": [
         {
-          "id": "s15-t1",
+          "id": "s19-t1",
           "text": "題知らず〈恋〉",
           "start": 0,
           "end": 7,
@@ -2316,7 +3173,7 @@
           }
         },
         {
-          "id": "s15-t2",
+          "id": "s19-t2",
           "text": "　　　　　　　　　　　　　　　　　　　　　　　　　　　",
           "start": 7,
           "end": 34,
@@ -2326,7 +3183,7 @@
           }
         },
         {
-          "id": "s15-t3",
+          "id": "s19-t3",
           "text": "伊勢",
           "start": 34,
           "end": 36,
@@ -2338,12 +3195,12 @@
       ]
     },
     {
-      "id": "s16",
+      "id": "s20",
       "originalText": "あひにあひてもの思ふころのわが袖に宿る月さへ濡るる顔なる",
       "modernTranslation": "私の心にぴったり合って、もの思いに耽っているころの（涙に濡れている）私の袖に宿る月までも私と同じように涙に濡れたような顔であるよ。",
       "tokens": [
         {
-          "id": "s16-t1",
+          "id": "s20-t1",
           "text": "あひ",
           "start": 0,
           "end": 2,
@@ -2357,7 +3214,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s16-t2",
+          "id": "s20-t2",
           "text": "に",
           "start": 2,
           "end": 3,
@@ -2369,7 +3226,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s16-t3",
+          "id": "s20-t3",
           "text": "あひ",
           "start": 3,
           "end": 5,
@@ -2383,7 +3240,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s16-t4",
+          "id": "s20-t4",
           "text": "て",
           "start": 5,
           "end": 6,
@@ -2393,7 +3250,7 @@
           }
         },
         {
-          "id": "s16-t5",
+          "id": "s20-t5",
           "text": "もの",
           "start": 6,
           "end": 8,
@@ -2404,7 +3261,7 @@
           }
         },
         {
-          "id": "s16-t6",
+          "id": "s20-t6",
           "text": "思ふ",
           "start": 8,
           "end": 10,
@@ -2417,7 +3274,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s16-t7",
+          "id": "s20-t7",
           "text": "ころ",
           "start": 10,
           "end": 12,
@@ -2427,7 +3284,7 @@
           }
         },
         {
-          "id": "s16-t8",
+          "id": "s20-t8",
           "text": "の",
           "start": 12,
           "end": 13,
@@ -2439,7 +3296,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s16-t9",
+          "id": "s20-t9",
           "text": "わ",
           "start": 13,
           "end": 14,
@@ -2449,7 +3306,7 @@
           }
         },
         {
-          "id": "s16-t10",
+          "id": "s20-t10",
           "text": "が",
           "start": 14,
           "end": 15,
@@ -2461,7 +3318,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s16-t11",
+          "id": "s20-t11",
           "text": "袖",
           "start": 15,
           "end": 16,
@@ -2471,7 +3328,7 @@
           }
         },
         {
-          "id": "s16-t12",
+          "id": "s20-t12",
           "text": "に",
           "start": 16,
           "end": 17,
@@ -2483,7 +3340,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s16-t13",
+          "id": "s20-t13",
           "text": "宿る",
           "start": 17,
           "end": 19,
@@ -2496,7 +3353,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s16-t14",
+          "id": "s20-t14",
           "text": "月",
           "start": 19,
           "end": 20,
@@ -2506,7 +3363,7 @@
           }
         },
         {
-          "id": "s16-t15",
+          "id": "s20-t15",
           "text": "さへ",
           "start": 20,
           "end": 22,
@@ -2516,7 +3373,7 @@
           }
         },
         {
-          "id": "s16-t16",
+          "id": "s20-t16",
           "text": "濡るる",
           "start": 22,
           "end": 25,
@@ -2529,7 +3386,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s16-t17",
+          "id": "s20-t17",
           "text": "顔",
           "start": 25,
           "end": 26,
@@ -2539,7 +3396,7 @@
           }
         },
         {
-          "id": "s16-t18",
+          "id": "s20-t18",
           "text": "なる",
           "start": 26,
           "end": 28,
@@ -2555,12 +3412,12 @@
       ]
     },
     {
-      "id": "s17",
+      "id": "s21",
       "originalText": "題知らず〈恋〉　　　　　　　　　　　　　　　　　　　　　　　　　小野小町",
       "modernTranslation": "題知らず",
       "tokens": [
         {
-          "id": "s17-t1",
+          "id": "s21-t1",
           "text": "題知らず〈恋〉",
           "start": 0,
           "end": 7,
@@ -2570,7 +3427,7 @@
           }
         },
         {
-          "id": "s17-t2",
+          "id": "s21-t2",
           "text": "　　　　　　　　　　　　　　　　　　　　　　　　　",
           "start": 7,
           "end": 32,
@@ -2580,7 +3437,7 @@
           }
         },
         {
-          "id": "s17-t3",
+          "id": "s21-t3",
           "text": "小野小町",
           "start": 32,
           "end": 36,
@@ -2592,12 +3449,12 @@
       ]
     },
     {
-      "id": "s18",
+      "id": "s22",
       "originalText": "色見えで移ろふものは世の中の人の心の花にぞありける",
       "modernTranslation": "それと色に見えることもなく移ろい変わっていくものは、男女の仲の、人の心という花であったのだなあ。",
       "tokens": [
         {
-          "id": "s18-t1",
+          "id": "s22-t1",
           "text": "色",
           "start": 0,
           "end": 1,
@@ -2607,7 +3464,7 @@
           }
         },
         {
-          "id": "s18-t2",
+          "id": "s22-t2",
           "text": "見え",
           "start": 1,
           "end": 3,
@@ -2619,7 +3476,7 @@
           }
         },
         {
-          "id": "s18-t3",
+          "id": "s22-t3",
           "text": "で",
           "start": 3,
           "end": 4,
@@ -2629,7 +3486,7 @@
           }
         },
         {
-          "id": "s18-t4",
+          "id": "s22-t4",
           "text": "移ろふ",
           "start": 4,
           "end": 7,
@@ -2642,7 +3499,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s18-t5",
+          "id": "s22-t5",
           "text": "もの",
           "start": 7,
           "end": 9,
@@ -2653,7 +3510,7 @@
           }
         },
         {
-          "id": "s18-t6",
+          "id": "s22-t6",
           "text": "は",
           "start": 9,
           "end": 10,
@@ -2665,7 +3522,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s18-t7",
+          "id": "s22-t7",
           "text": "世の中",
           "start": 10,
           "end": 13,
@@ -2675,7 +3532,7 @@
           }
         },
         {
-          "id": "s18-t8",
+          "id": "s22-t8",
           "text": "の",
           "start": 13,
           "end": 14,
@@ -2687,7 +3544,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s18-t9",
+          "id": "s22-t9",
           "text": "人",
           "start": 14,
           "end": 15,
@@ -2697,7 +3554,7 @@
           }
         },
         {
-          "id": "s18-t10",
+          "id": "s22-t10",
           "text": "の",
           "start": 15,
           "end": 16,
@@ -2709,7 +3566,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s18-t11",
+          "id": "s22-t11",
           "text": "心",
           "start": 16,
           "end": 17,
@@ -2719,7 +3576,7 @@
           }
         },
         {
-          "id": "s18-t12",
+          "id": "s22-t12",
           "text": "の",
           "start": 17,
           "end": 18,
@@ -2731,7 +3588,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s18-t13",
+          "id": "s22-t13",
           "text": "花",
           "start": 18,
           "end": 19,
@@ -2741,7 +3598,7 @@
           }
         },
         {
-          "id": "s18-t14",
+          "id": "s22-t14",
           "text": "に",
           "start": 19,
           "end": 20,
@@ -2754,7 +3611,7 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s18-t15",
+          "id": "s22-t15",
           "text": "ぞ",
           "start": 20,
           "end": 21,
@@ -2766,7 +3623,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s18-t16",
+          "id": "s22-t16",
           "text": "あり",
           "start": 21,
           "end": 23,
@@ -2780,7 +3637,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s18-t17",
+          "id": "s22-t17",
           "text": "ける",
           "start": 23,
           "end": 25,
@@ -2795,12 +3652,12 @@
       ]
     },
     {
-      "id": "s19",
+      "id": "s23",
       "originalText": "隠岐の国に流されける時に、舟に乗りて出で立つとて、",
       "modernTranslation": "隠岐の国に流された時に、舟に乗って出発しようとして、都にいる人のところへ贈った歌",
       "tokens": [
         {
-          "id": "s19-t1",
+          "id": "s23-t1",
           "text": "隠岐",
           "start": 0,
           "end": 2,
@@ -2810,7 +3667,7 @@
           }
         },
         {
-          "id": "s19-t2",
+          "id": "s23-t2",
           "text": "の",
           "start": 2,
           "end": 3,
@@ -2822,7 +3679,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s19-t3",
+          "id": "s23-t3",
           "text": "国",
           "start": 3,
           "end": 4,
@@ -2832,7 +3689,7 @@
           }
         },
         {
-          "id": "s19-t4",
+          "id": "s23-t4",
           "text": "に",
           "start": 4,
           "end": 5,
@@ -2844,7 +3701,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s19-t5",
+          "id": "s23-t5",
           "text": "流さ",
           "start": 5,
           "end": 7,
@@ -2857,7 +3714,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s19-t6",
+          "id": "s23-t6",
           "text": "れ",
           "start": 7,
           "end": 8,
@@ -2870,7 +3727,7 @@
           "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
         },
         {
-          "id": "s19-t7",
+          "id": "s23-t7",
           "text": "ける",
           "start": 8,
           "end": 10,
@@ -2883,7 +3740,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s19-t8",
+          "id": "s23-t8",
           "text": "時",
           "start": 10,
           "end": 11,
@@ -2893,7 +3750,7 @@
           }
         },
         {
-          "id": "s19-t9",
+          "id": "s23-t9",
           "text": "に",
           "start": 11,
           "end": 12,
@@ -2905,7 +3762,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s19-t10",
+          "id": "s23-t10",
           "text": "、",
           "start": 12,
           "end": 13,
@@ -2915,7 +3772,7 @@
           }
         },
         {
-          "id": "s19-t11",
+          "id": "s23-t11",
           "text": "舟",
           "start": 13,
           "end": 14,
@@ -2925,7 +3782,7 @@
           }
         },
         {
-          "id": "s19-t12",
+          "id": "s23-t12",
           "text": "に",
           "start": 14,
           "end": 15,
@@ -2937,7 +3794,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s19-t13",
+          "id": "s23-t13",
           "text": "乗り",
           "start": 15,
           "end": 17,
@@ -2950,7 +3807,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s19-t14",
+          "id": "s23-t14",
           "text": "て",
           "start": 17,
           "end": 18,
@@ -2960,7 +3817,7 @@
           }
         },
         {
-          "id": "s19-t15",
+          "id": "s23-t15",
           "text": "出で立つ",
           "start": 18,
           "end": 22,
@@ -2972,7 +3829,7 @@
           }
         },
         {
-          "id": "s19-t16",
+          "id": "s23-t16",
           "text": "とて",
           "start": 22,
           "end": 24,
@@ -2984,7 +3841,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s19-t17",
+          "id": "s23-t17",
           "text": "、",
           "start": 24,
           "end": 25,
@@ -2996,12 +3853,12 @@
       ]
     },
     {
-      "id": "s20",
+      "id": "s24",
       "originalText": "京なる人のもとに遣はしける〈羈旅〉　　　　　　　　　　　　　　　　小野篁",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s20-t1",
+          "id": "s24-t1",
           "text": "京",
           "start": 0,
           "end": 1,
@@ -3011,7 +3868,7 @@
           }
         },
         {
-          "id": "s20-t2",
+          "id": "s24-t2",
           "text": "なる",
           "start": 1,
           "end": 3,
@@ -3025,7 +3882,7 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s20-t3",
+          "id": "s24-t3",
           "text": "人",
           "start": 3,
           "end": 4,
@@ -3035,7 +3892,7 @@
           }
         },
         {
-          "id": "s20-t4",
+          "id": "s24-t4",
           "text": "の",
           "start": 4,
           "end": 5,
@@ -3047,7 +3904,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s20-t5",
+          "id": "s24-t5",
           "text": "もと",
           "start": 5,
           "end": 7,
@@ -3057,7 +3914,7 @@
           }
         },
         {
-          "id": "s20-t6",
+          "id": "s24-t6",
           "text": "に",
           "start": 7,
           "end": 8,
@@ -3069,7 +3926,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s20-t7",
+          "id": "s24-t7",
           "text": "遣はし",
           "start": 8,
           "end": 11,
@@ -3082,7 +3939,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s20-t8",
+          "id": "s24-t8",
           "text": "ける",
           "start": 11,
           "end": 13,
@@ -3095,7 +3952,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s20-t9",
+          "id": "s24-t9",
           "text": "〈",
           "start": 13,
           "end": 14,
@@ -3105,7 +3962,7 @@
           }
         },
         {
-          "id": "s20-t10",
+          "id": "s24-t10",
           "text": "羈旅",
           "start": 14,
           "end": 16,
@@ -3115,7 +3972,7 @@
           }
         },
         {
-          "id": "s20-t11",
+          "id": "s24-t11",
           "text": "〉",
           "start": 16,
           "end": 17,
@@ -3125,7 +3982,7 @@
           }
         },
         {
-          "id": "s20-t12",
+          "id": "s24-t12",
           "text": "　　　　　　　　　　　　　　　　",
           "start": 17,
           "end": 33,
@@ -3135,7 +3992,7 @@
           }
         },
         {
-          "id": "s20-t13",
+          "id": "s24-t13",
           "text": "小野篁",
           "start": 33,
           "end": 36,
@@ -3147,12 +4004,12 @@
       ]
     },
     {
-      "id": "s21",
+      "id": "s25",
       "originalText": "わたの原八十島かけて漕ぎ出でぬと人には告げよ海人の釣り舟",
       "modernTranslation": "広い海原をたくさんの島々を目指して漕ぎ出てしまったと、都にいる人に伝えてくれ。漁師の釣り舟よ。",
       "tokens": [
         {
-          "id": "s21-t1",
+          "id": "s25-t1",
           "text": "わたの原",
           "start": 0,
           "end": 4,
@@ -3162,7 +4019,7 @@
           }
         },
         {
-          "id": "s21-t2",
+          "id": "s25-t2",
           "text": "八十島",
           "start": 4,
           "end": 7,
@@ -3172,7 +4029,7 @@
           }
         },
         {
-          "id": "s21-t3",
+          "id": "s25-t3",
           "text": "かけ",
           "start": 7,
           "end": 9,
@@ -3186,7 +4043,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s21-t4",
+          "id": "s25-t4",
           "text": "て",
           "start": 9,
           "end": 10,
@@ -3196,7 +4053,7 @@
           }
         },
         {
-          "id": "s21-t5",
+          "id": "s25-t5",
           "text": "漕ぎ出で",
           "start": 10,
           "end": 14,
@@ -3208,7 +4065,7 @@
           }
         },
         {
-          "id": "s21-t6",
+          "id": "s25-t6",
           "text": "ぬ",
           "start": 14,
           "end": 15,
@@ -3221,7 +4078,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s21-t7",
+          "id": "s25-t7",
           "text": "と",
           "start": 15,
           "end": 16,
@@ -3233,7 +4090,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s21-t8",
+          "id": "s25-t8",
           "text": "人",
           "start": 16,
           "end": 17,
@@ -3243,7 +4100,7 @@
           }
         },
         {
-          "id": "s21-t9",
+          "id": "s25-t9",
           "text": "に",
           "start": 17,
           "end": 18,
@@ -3255,7 +4112,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s21-t10",
+          "id": "s25-t10",
           "text": "は",
           "start": 18,
           "end": 19,
@@ -3267,7 +4124,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s21-t11",
+          "id": "s25-t11",
           "text": "告げよ",
           "start": 19,
           "end": 22,
@@ -3280,7 +4137,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s21-t12",
+          "id": "s25-t12",
           "text": "海人",
           "start": 22,
           "end": 24,
@@ -3290,7 +4147,7 @@
           }
         },
         {
-          "id": "s21-t13",
+          "id": "s25-t13",
           "text": "の",
           "start": 24,
           "end": 25,
@@ -3302,7 +4159,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s21-t14",
+          "id": "s25-t14",
           "text": "釣り舟",
           "start": 25,
           "end": 28,
@@ -3314,12 +4171,12 @@
       ]
     },
     {
-      "id": "s22",
+      "id": "s26",
       "originalText": "ほととぎす〈物名〉　　　　　　　　　　　　　　　　　　　　　　　藤原敏行",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s22-t1",
+          "id": "s26-t1",
           "text": "ほととぎす〈物名〉",
           "start": 0,
           "end": 9,
@@ -3329,7 +4186,7 @@
           }
         },
         {
-          "id": "s22-t2",
+          "id": "s26-t2",
           "text": "　　　　　　　　　　　　　　　　　　　　　　　",
           "start": 9,
           "end": 32,
@@ -3339,7 +4196,7 @@
           }
         },
         {
-          "id": "s22-t3",
+          "id": "s26-t3",
           "text": "藤原敏行",
           "start": 32,
           "end": 36,
@@ -3351,12 +4208,12 @@
       ]
     },
     {
-      "id": "s23",
+      "id": "s27",
       "originalText": "来べきほど時過ぎぬれや待ちわびて鳴くなる声の人をとよむる",
       "modernTranslation": "来るはずの時期がすぎてしまったからだろうか。待ちくたびれた末にようやく鳴いた声が人をどっとわかせるのは。",
       "tokens": [
         {
-          "id": "s23-t1",
+          "id": "s27-t1",
           "text": "来",
           "start": 0,
           "end": 1,
@@ -3369,7 +4226,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s23-t2",
+          "id": "s27-t2",
           "text": "べき",
           "start": 1,
           "end": 3,
@@ -3382,7 +4239,7 @@
           "grammarRefId": "jodoshi-suiryo"
         },
         {
-          "id": "s23-t3",
+          "id": "s27-t3",
           "text": "ほど",
           "start": 3,
           "end": 5,
@@ -3393,7 +4250,7 @@
           }
         },
         {
-          "id": "s23-t4",
+          "id": "s27-t4",
           "text": "時",
           "start": 5,
           "end": 6,
@@ -3403,7 +4260,7 @@
           }
         },
         {
-          "id": "s23-t5",
+          "id": "s27-t5",
           "text": "過ぎ",
           "start": 6,
           "end": 8,
@@ -3416,7 +4273,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s23-t6",
+          "id": "s27-t6",
           "text": "ぬれ",
           "start": 8,
           "end": 10,
@@ -3429,7 +4286,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s23-t7",
+          "id": "s27-t7",
           "text": "や",
           "start": 10,
           "end": 11,
@@ -3441,7 +4298,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s23-t8",
+          "id": "s27-t8",
           "text": "待ちわび",
           "start": 11,
           "end": 15,
@@ -3453,7 +4310,7 @@
           }
         },
         {
-          "id": "s23-t9",
+          "id": "s27-t9",
           "text": "て",
           "start": 15,
           "end": 16,
@@ -3463,7 +4320,7 @@
           }
         },
         {
-          "id": "s23-t10",
+          "id": "s27-t10",
           "text": "鳴く",
           "start": 16,
           "end": 18,
@@ -3476,7 +4333,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s23-t11",
+          "id": "s27-t11",
           "text": "なる",
           "start": 18,
           "end": 20,
@@ -3490,7 +4347,7 @@
           "grammarRefId": "jodoshi-suiryo"
         },
         {
-          "id": "s23-t12",
+          "id": "s27-t12",
           "text": "声",
           "start": 20,
           "end": 21,
@@ -3500,7 +4357,7 @@
           }
         },
         {
-          "id": "s23-t13",
+          "id": "s27-t13",
           "text": "の",
           "start": 21,
           "end": 22,
@@ -3512,7 +4369,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s23-t14",
+          "id": "s27-t14",
           "text": "人",
           "start": 22,
           "end": 23,
@@ -3522,7 +4379,7 @@
           }
         },
         {
-          "id": "s23-t15",
+          "id": "s27-t15",
           "text": "を",
           "start": 23,
           "end": 24,
@@ -3534,7 +4391,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s23-t16",
+          "id": "s27-t16",
           "text": "とよむる",
           "start": 24,
           "end": 28,
@@ -3549,12 +4406,12 @@
       ]
     },
     {
-      "id": "s24",
+      "id": "s28",
       "originalText": "堀川の太政大臣みまかりにける時に、深草の山に",
       "modernTranslation": "堀川の太政大臣が亡くなった時に、深草山に埋葬した後に詠んだ歌",
       "tokens": [
         {
-          "id": "s24-t1",
+          "id": "s28-t1",
           "text": "堀川",
           "start": 0,
           "end": 2,
@@ -3564,7 +4421,7 @@
           }
         },
         {
-          "id": "s24-t2",
+          "id": "s28-t2",
           "text": "の",
           "start": 2,
           "end": 3,
@@ -3576,7 +4433,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s24-t3",
+          "id": "s28-t3",
           "text": "太政大臣",
           "start": 3,
           "end": 7,
@@ -3586,7 +4443,7 @@
           }
         },
         {
-          "id": "s24-t4",
+          "id": "s28-t4",
           "text": "みまかり",
           "start": 7,
           "end": 11,
@@ -3599,7 +4456,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s24-t5",
+          "id": "s28-t5",
           "text": "に",
           "start": 11,
           "end": 12,
@@ -3612,7 +4469,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s24-t6",
+          "id": "s28-t6",
           "text": "ける",
           "start": 12,
           "end": 14,
@@ -3625,7 +4482,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s24-t7",
+          "id": "s28-t7",
           "text": "時",
           "start": 14,
           "end": 15,
@@ -3635,7 +4492,7 @@
           }
         },
         {
-          "id": "s24-t8",
+          "id": "s28-t8",
           "text": "に",
           "start": 15,
           "end": 16,
@@ -3647,7 +4504,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s24-t9",
+          "id": "s28-t9",
           "text": "、深草",
           "start": 16,
           "end": 19,
@@ -3657,7 +4514,7 @@
           }
         },
         {
-          "id": "s24-t10",
+          "id": "s28-t10",
           "text": "の",
           "start": 19,
           "end": 20,
@@ -3669,7 +4526,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s24-t11",
+          "id": "s28-t11",
           "text": "山",
           "start": 20,
           "end": 21,
@@ -3679,7 +4536,7 @@
           }
         },
         {
-          "id": "s24-t12",
+          "id": "s28-t12",
           "text": "に",
           "start": 21,
           "end": 22,
@@ -3693,12 +4550,12 @@
       ]
     },
     {
-      "id": "s25",
+      "id": "s29",
       "originalText": "をさめてけるのちによみける〈哀傷〉　　　　　　　　　　　　　　　　上野岑雄",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s25-t1",
+          "id": "s29-t1",
           "text": "をさめ",
           "start": 0,
           "end": 3,
@@ -3711,7 +4568,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s25-t2",
+          "id": "s29-t2",
           "text": "て",
           "start": 3,
           "end": 4,
@@ -3724,7 +4581,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s25-t3",
+          "id": "s29-t3",
           "text": "ける",
           "start": 4,
           "end": 6,
@@ -3737,7 +4594,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s25-t4",
+          "id": "s29-t4",
           "text": "のち",
           "start": 6,
           "end": 8,
@@ -3748,7 +4605,7 @@
           }
         },
         {
-          "id": "s25-t5",
+          "id": "s29-t5",
           "text": "に",
           "start": 8,
           "end": 9,
@@ -3760,7 +4617,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s25-t6",
+          "id": "s29-t6",
           "text": "よみ",
           "start": 9,
           "end": 11,
@@ -3773,7 +4630,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s25-t7",
+          "id": "s29-t7",
           "text": "ける",
           "start": 11,
           "end": 13,
@@ -3786,7 +4643,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s25-t8",
+          "id": "s29-t8",
           "text": "〈哀傷〉",
           "start": 13,
           "end": 17,
@@ -3796,7 +4653,7 @@
           }
         },
         {
-          "id": "s25-t9",
+          "id": "s29-t9",
           "text": "　　　　　　　　　　　　　　　　",
           "start": 17,
           "end": 33,
@@ -3806,7 +4663,7 @@
           }
         },
         {
-          "id": "s25-t10",
+          "id": "s29-t10",
           "text": "上野岑雄",
           "start": 33,
           "end": 37,
@@ -3818,12 +4675,12 @@
       ]
     },
     {
-      "id": "s26",
+      "id": "s30",
       "originalText": "深草の野辺の桜し心あらば今年ばかりは墨染めに咲け",
       "modernTranslation": "深草の野辺の桜よ、もし心があるのならば、今年だけは墨染色に咲け。",
       "tokens": [
         {
-          "id": "s26-t1",
+          "id": "s30-t1",
           "text": "深草",
           "start": 0,
           "end": 2,
@@ -3833,7 +4690,7 @@
           }
         },
         {
-          "id": "s26-t2",
+          "id": "s30-t2",
           "text": "の",
           "start": 2,
           "end": 3,
@@ -3845,7 +4702,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s26-t3",
+          "id": "s30-t3",
           "text": "野辺",
           "start": 3,
           "end": 5,
@@ -3855,7 +4712,7 @@
           }
         },
         {
-          "id": "s26-t4",
+          "id": "s30-t4",
           "text": "の",
           "start": 5,
           "end": 6,
@@ -3867,7 +4724,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s26-t5",
+          "id": "s30-t5",
           "text": "桜",
           "start": 6,
           "end": 7,
@@ -3877,7 +4734,7 @@
           }
         },
         {
-          "id": "s26-t6",
+          "id": "s30-t6",
           "text": "し",
           "start": 7,
           "end": 8,
@@ -3887,7 +4744,7 @@
           }
         },
         {
-          "id": "s26-t7",
+          "id": "s30-t7",
           "text": "心",
           "start": 8,
           "end": 9,
@@ -3897,7 +4754,7 @@
           }
         },
         {
-          "id": "s26-t8",
+          "id": "s30-t8",
           "text": "あら",
           "start": 9,
           "end": 11,
@@ -3910,7 +4767,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s26-t9",
+          "id": "s30-t9",
           "text": "ば",
           "start": 11,
           "end": 12,
@@ -3920,7 +4777,7 @@
           }
         },
         {
-          "id": "s26-t10",
+          "id": "s30-t10",
           "text": "今年",
           "start": 12,
           "end": 14,
@@ -3930,7 +4787,7 @@
           }
         },
         {
-          "id": "s26-t11",
+          "id": "s30-t11",
           "text": "ばかり",
           "start": 14,
           "end": 17,
@@ -3940,7 +4797,7 @@
           }
         },
         {
-          "id": "s26-t12",
+          "id": "s30-t12",
           "text": "は",
           "start": 17,
           "end": 18,
@@ -3952,7 +4809,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s26-t13",
+          "id": "s30-t13",
           "text": "墨染め",
           "start": 18,
           "end": 21,
@@ -3962,7 +4819,7 @@
           }
         },
         {
-          "id": "s26-t14",
+          "id": "s30-t14",
           "text": "に",
           "start": 21,
           "end": 22,
@@ -3974,7 +4831,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s26-t15",
+          "id": "s30-t15",
           "text": "咲け",
           "start": 22,
           "end": 24,
@@ -3989,12 +4846,12 @@
       ]
     },
     {
-      "id": "s27",
+      "id": "s31",
       "originalText": "田村の御時に、事にあたりて、津の国の須磨といふ所に",
       "modernTranslation": "文徳天皇の御代に、ある事件に関わることがあって、摂津の国の須磨という所にひきこもっていました時に、宮中にお仕えしていた人に送った歌",
       "tokens": [
         {
-          "id": "s27-t1",
+          "id": "s31-t1",
           "text": "田村",
           "start": 0,
           "end": 2,
@@ -4004,7 +4861,7 @@
           }
         },
         {
-          "id": "s27-t2",
+          "id": "s31-t2",
           "text": "の",
           "start": 2,
           "end": 3,
@@ -4016,7 +4873,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s27-t3",
+          "id": "s31-t3",
           "text": "御",
           "start": 3,
           "end": 4,
@@ -4026,7 +4883,7 @@
           }
         },
         {
-          "id": "s27-t4",
+          "id": "s31-t4",
           "text": "時",
           "start": 4,
           "end": 5,
@@ -4036,7 +4893,7 @@
           }
         },
         {
-          "id": "s27-t5",
+          "id": "s31-t5",
           "text": "に",
           "start": 5,
           "end": 6,
@@ -4048,7 +4905,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s27-t6",
+          "id": "s31-t6",
           "text": "、事",
           "start": 6,
           "end": 8,
@@ -4058,7 +4915,7 @@
           }
         },
         {
-          "id": "s27-t7",
+          "id": "s31-t7",
           "text": "に",
           "start": 8,
           "end": 9,
@@ -4070,7 +4927,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s27-t8",
+          "id": "s31-t8",
           "text": "あたり",
           "start": 9,
           "end": 12,
@@ -4084,7 +4941,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s27-t9",
+          "id": "s31-t9",
           "text": "て",
           "start": 12,
           "end": 13,
@@ -4094,7 +4951,7 @@
           }
         },
         {
-          "id": "s27-t10",
+          "id": "s31-t10",
           "text": "、津の国",
           "start": 13,
           "end": 17,
@@ -4104,7 +4961,7 @@
           }
         },
         {
-          "id": "s27-t11",
+          "id": "s31-t11",
           "text": "の",
           "start": 17,
           "end": 18,
@@ -4116,7 +4973,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s27-t12",
+          "id": "s31-t12",
           "text": "須磨",
           "start": 18,
           "end": 20,
@@ -4126,7 +4983,7 @@
           }
         },
         {
-          "id": "s27-t13",
+          "id": "s31-t13",
           "text": "と",
           "start": 20,
           "end": 21,
@@ -4138,7 +4995,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s27-t14",
+          "id": "s31-t14",
           "text": "いふ",
           "start": 21,
           "end": 23,
@@ -4152,7 +5009,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s27-t15",
+          "id": "s31-t15",
           "text": "所",
           "start": 23,
           "end": 24,
@@ -4162,7 +5019,7 @@
           }
         },
         {
-          "id": "s27-t16",
+          "id": "s31-t16",
           "text": "に",
           "start": 24,
           "end": 25,
@@ -4176,12 +5033,12 @@
       ]
     },
     {
-      "id": "s28",
+      "id": "s32",
       "originalText": "こもりはべりけるに、宮のうちにはべりける人につかはしける",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s28-t1",
+          "id": "s32-t1",
           "text": "こもり",
           "start": 0,
           "end": 3,
@@ -4194,7 +5051,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s28-t2",
+          "id": "s32-t2",
           "text": "はべり",
           "start": 3,
           "end": 6,
@@ -4208,7 +5065,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s28-t3",
+          "id": "s32-t3",
           "text": "ける",
           "start": 6,
           "end": 8,
@@ -4221,7 +5078,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s28-t4",
+          "id": "s32-t4",
           "text": "に",
           "start": 8,
           "end": 9,
@@ -4233,7 +5090,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s28-t5",
+          "id": "s32-t5",
           "text": "、",
           "start": 9,
           "end": 10,
@@ -4243,7 +5100,7 @@
           }
         },
         {
-          "id": "s28-t6",
+          "id": "s32-t6",
           "text": "宮",
           "start": 10,
           "end": 11,
@@ -4253,7 +5110,7 @@
           }
         },
         {
-          "id": "s28-t7",
+          "id": "s32-t7",
           "text": "の",
           "start": 11,
           "end": 12,
@@ -4265,7 +5122,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s28-t8",
+          "id": "s32-t8",
           "text": "うち",
           "start": 12,
           "end": 14,
@@ -4275,7 +5132,7 @@
           }
         },
         {
-          "id": "s28-t9",
+          "id": "s32-t9",
           "text": "に",
           "start": 14,
           "end": 15,
@@ -4287,7 +5144,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s28-t10",
+          "id": "s32-t10",
           "text": "はべり",
           "start": 15,
           "end": 18,
@@ -4302,7 +5159,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s28-t11",
+          "id": "s32-t11",
           "text": "ける",
           "start": 18,
           "end": 20,
@@ -4315,7 +5172,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s28-t12",
+          "id": "s32-t12",
           "text": "人",
           "start": 20,
           "end": 21,
@@ -4325,7 +5182,7 @@
           }
         },
         {
-          "id": "s28-t13",
+          "id": "s32-t13",
           "text": "に",
           "start": 21,
           "end": 22,
@@ -4337,7 +5194,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s28-t14",
+          "id": "s32-t14",
           "text": "つかはし",
           "start": 22,
           "end": 26,
@@ -4351,7 +5208,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s28-t15",
+          "id": "s32-t15",
           "text": "ける",
           "start": 26,
           "end": 28,
@@ -4366,12 +5223,12 @@
       ]
     },
     {
-      "id": "s29",
+      "id": "s33",
       "originalText": "〈雑〉　　　　　　　　　　　　　　　　　　　　　　　　　　在原行平",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s29-t1",
+          "id": "s33-t1",
           "text": "〈雑〉",
           "start": 0,
           "end": 3,
@@ -4381,7 +5238,7 @@
           }
         },
         {
-          "id": "s29-t2",
+          "id": "s33-t2",
           "text": "　　　　　　　　　　　　　　　　　　　　　　　　　　",
           "start": 3,
           "end": 29,
@@ -4391,7 +5248,7 @@
           }
         },
         {
-          "id": "s29-t3",
+          "id": "s33-t3",
           "text": "在原行平",
           "start": 29,
           "end": 33,
@@ -4403,12 +5260,12 @@
       ]
     },
     {
-      "id": "s30",
+      "id": "s34",
       "originalText": "わくらばにとふ人あらば須磨の浦に藻塩垂れつつわぶと答へよ",
       "modernTranslation": "たまたま私のことをどうしているかと尋ねる人があるならば、須磨の浦で（塩を取るために海藻にかけた海の水さながらに）しきりに嘆いてはわびしく過ごしていると答えて下さい。",
       "tokens": [
         {
-          "id": "s30-t1",
+          "id": "s34-t1",
           "text": "わくらばに",
           "start": 0,
           "end": 5,
@@ -4418,7 +5275,7 @@
           }
         },
         {
-          "id": "s30-t2",
+          "id": "s34-t2",
           "text": "とふ",
           "start": 5,
           "end": 7,
@@ -4431,7 +5288,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s30-t3",
+          "id": "s34-t3",
           "text": "人",
           "start": 7,
           "end": 8,
@@ -4441,7 +5298,7 @@
           }
         },
         {
-          "id": "s30-t4",
+          "id": "s34-t4",
           "text": "あら",
           "start": 8,
           "end": 10,
@@ -4454,7 +5311,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s30-t5",
+          "id": "s34-t5",
           "text": "ば",
           "start": 10,
           "end": 11,
@@ -4464,7 +5321,7 @@
           }
         },
         {
-          "id": "s30-t6",
+          "id": "s34-t6",
           "text": "須磨の浦",
           "start": 11,
           "end": 15,
@@ -4474,7 +5331,7 @@
           }
         },
         {
-          "id": "s30-t7",
+          "id": "s34-t7",
           "text": "に",
           "start": 15,
           "end": 16,
@@ -4486,7 +5343,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s30-t8",
+          "id": "s34-t8",
           "text": "藻塩",
           "start": 16,
           "end": 18,
@@ -4496,7 +5353,7 @@
           }
         },
         {
-          "id": "s30-t9",
+          "id": "s34-t9",
           "text": "垂れ",
           "start": 18,
           "end": 20,
@@ -4509,7 +5366,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s30-t10",
+          "id": "s34-t10",
           "text": "つつ",
           "start": 20,
           "end": 22,
@@ -4519,7 +5376,7 @@
           }
         },
         {
-          "id": "s30-t11",
+          "id": "s34-t11",
           "text": "わぶ",
           "start": 22,
           "end": 24,
@@ -4533,7 +5390,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s30-t12",
+          "id": "s34-t12",
           "text": "と",
           "start": 24,
           "end": 25,
@@ -4545,7 +5402,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s30-t13",
+          "id": "s34-t13",
           "text": "答へよ",
           "start": 25,
           "end": 28,
@@ -4560,12 +5417,12 @@
       ]
     },
     {
-      "id": "s31",
+      "id": "s35",
       "originalText": "後拾遺和歌集",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s31-t1",
+          "id": "s35-t1",
           "text": "後拾遺和歌集",
           "start": 0,
           "end": 6,
@@ -4577,12 +5434,12 @@
       ]
     },
     {
-      "id": "s32",
+      "id": "s36",
       "originalText": "陸奥国にまかり下りけるに、白河の関にてよみはべりける",
       "modernTranslation": "陸奥国に下向した折に、白河の関で詠みました歌",
       "tokens": [
         {
-          "id": "s32-t1",
+          "id": "s36-t1",
           "text": "陸奥国",
           "start": 0,
           "end": 3,
@@ -4592,7 +5449,7 @@
           }
         },
         {
-          "id": "s32-t2",
+          "id": "s36-t2",
           "text": "に",
           "start": 3,
           "end": 4,
@@ -4604,7 +5461,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s32-t3",
+          "id": "s36-t3",
           "text": "まかり下り",
           "start": 4,
           "end": 9,
@@ -4617,7 +5474,7 @@
           }
         },
         {
-          "id": "s32-t4",
+          "id": "s36-t4",
           "text": "ける",
           "start": 9,
           "end": 11,
@@ -4630,7 +5487,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s32-t5",
+          "id": "s36-t5",
           "text": "に",
           "start": 11,
           "end": 12,
@@ -4642,7 +5499,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s32-t6",
+          "id": "s36-t6",
           "text": "、",
           "start": 12,
           "end": 13,
@@ -4652,7 +5509,7 @@
           }
         },
         {
-          "id": "s32-t7",
+          "id": "s36-t7",
           "text": "白河の関",
           "start": 13,
           "end": 17,
@@ -4662,7 +5519,7 @@
           }
         },
         {
-          "id": "s32-t8",
+          "id": "s36-t8",
           "text": "にて",
           "start": 17,
           "end": 19,
@@ -4674,7 +5531,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s32-t9",
+          "id": "s36-t9",
           "text": "よみ",
           "start": 19,
           "end": 21,
@@ -4687,7 +5544,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s32-t10",
+          "id": "s36-t10",
           "text": "はべり",
           "start": 21,
           "end": 24,
@@ -4701,7 +5558,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s32-t11",
+          "id": "s36-t11",
           "text": "ける",
           "start": 24,
           "end": 26,
@@ -4716,12 +5573,12 @@
       ]
     },
     {
-      "id": "s33",
+      "id": "s37",
       "originalText": "〈羇旅〉　　　　　　　　　　　　　　　　　　　　　　　　　　　　　能因",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s33-t1",
+          "id": "s37-t1",
           "text": "〈羇旅〉",
           "start": 0,
           "end": 4,
@@ -4731,7 +5588,7 @@
           }
         },
         {
-          "id": "s33-t2",
+          "id": "s37-t2",
           "text": "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　",
           "start": 4,
           "end": 33,
@@ -4741,7 +5598,7 @@
           }
         },
         {
-          "id": "s33-t3",
+          "id": "s37-t3",
           "text": "能因",
           "start": 33,
           "end": 35,
@@ -4753,12 +5610,12 @@
       ]
     },
     {
-      "id": "s34",
+      "id": "s38",
       "originalText": "都をば霞とともにたちしかど秋風ぞ吹く白河の関",
       "modernTranslation": "都を春霞が立つのとともに旅立ったけれど、秋風が吹いていることだ、ここ白河の関では。",
       "tokens": [
         {
-          "id": "s34-t1",
+          "id": "s38-t1",
           "text": "都",
           "start": 0,
           "end": 1,
@@ -4768,7 +5625,7 @@
           }
         },
         {
-          "id": "s34-t2",
+          "id": "s38-t2",
           "text": "をば",
           "start": 1,
           "end": 3,
@@ -4778,7 +5635,7 @@
           }
         },
         {
-          "id": "s34-t3",
+          "id": "s38-t3",
           "text": "霞",
           "start": 3,
           "end": 4,
@@ -4788,7 +5645,7 @@
           }
         },
         {
-          "id": "s34-t4",
+          "id": "s38-t4",
           "text": "と",
           "start": 4,
           "end": 5,
@@ -4800,7 +5657,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s34-t5",
+          "id": "s38-t5",
           "text": "とも",
           "start": 5,
           "end": 7,
@@ -4810,7 +5667,7 @@
           }
         },
         {
-          "id": "s34-t6",
+          "id": "s38-t6",
           "text": "に",
           "start": 7,
           "end": 8,
@@ -4822,7 +5679,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s34-t7",
+          "id": "s38-t7",
           "text": "たち",
           "start": 8,
           "end": 10,
@@ -4836,7 +5693,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s34-t8",
+          "id": "s38-t8",
           "text": "しか",
           "start": 10,
           "end": 12,
@@ -4850,7 +5707,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s34-t9",
+          "id": "s38-t9",
           "text": "ど",
           "start": 12,
           "end": 13,
@@ -4860,7 +5717,7 @@
           }
         },
         {
-          "id": "s34-t10",
+          "id": "s38-t10",
           "text": "秋風",
           "start": 13,
           "end": 15,
@@ -4870,7 +5727,7 @@
           }
         },
         {
-          "id": "s34-t11",
+          "id": "s38-t11",
           "text": "ぞ",
           "start": 15,
           "end": 16,
@@ -4882,7 +5739,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s34-t12",
+          "id": "s38-t12",
           "text": "吹く",
           "start": 16,
           "end": 18,
@@ -4895,7 +5752,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s34-t13",
+          "id": "s38-t13",
           "text": "白河の関",
           "start": 18,
           "end": 22,
@@ -4907,503 +5764,13 @@
       ]
     },
     {
-      "id": "s35",
+      "id": "s39",
       "originalText": "女にはじめてつかはしける〈恋〉　　　　　　　　　　　　　　　　　藤原実方",
       "modernTranslation": "（使者に持たせて）意中の女性にはじめて贈った歌",
       "tokens": [
         {
-          "id": "s35-t1",
-          "text": "女",
-          "start": 0,
-          "end": 1,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s35-t2",
-          "text": "に",
-          "start": 1,
-          "end": 2,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s35-t3",
-          "text": "はじめて",
-          "start": 2,
-          "end": 6,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          }
-        },
-        {
-          "id": "s35-t4",
-          "text": "つかはし",
-          "start": 6,
-          "end": 10,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ四",
-            "conjugationForm": "用",
-            "baseForm": "つかはす"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s35-t5",
-          "text": "ける",
-          "start": 10,
-          "end": 12,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei"
-        },
-        {
-          "id": "s35-t6",
-          "text": "〈恋〉　　　　　　　　　　　　　　　　　",
-          "start": 12,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s35-t7",
-          "text": "藤原実方",
-          "start": 32,
-          "end": 36,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        }
-      ]
-    },
-    {
-      "id": "s36",
-      "originalText": "かくとだにえやはいぶきのさしもぐささしも知らじな燃ゆる思ひを",
-      "modernTranslation": "せめてこのようにお慕いしているとだけでも言いたいけれど、言うことができないので、伊吹山のさしも草のようにこれほど燃えている私の思いをあなたは知らないでしょうね。",
-      "tokens": [
-        {
-          "id": "s36-t1",
-          "text": "かく",
-          "start": 0,
-          "end": 2,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞",
-            "baseForm": "かく"
-          }
-        },
-        {
-          "id": "s36-t2",
-          "text": "と",
-          "start": 2,
-          "end": 3,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "引用"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s36-t3",
-          "text": "だに",
-          "start": 3,
-          "end": 5,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "副助詞"
-          }
-        },
-        {
-          "id": "s36-t4",
-          "text": "え",
-          "start": 5,
-          "end": 6,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞",
-            "baseForm": "え"
-          }
-        },
-        {
-          "id": "s36-t5",
-          "text": "やは",
-          "start": 6,
-          "end": 8,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "反語"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s36-t6",
-          "text": "いぶき",
-          "start": 8,
-          "end": 11,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s36-t7",
-          "text": "の",
-          "start": 11,
-          "end": 12,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s36-t8",
-          "text": "さしもぐさ",
-          "start": 12,
-          "end": 17,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s36-t9",
-          "text": "さ",
-          "start": 17,
-          "end": 18,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞"
-          }
-        },
-        {
-          "id": "s36-t10",
-          "text": "しも",
-          "start": 18,
-          "end": 20,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "副助詞"
-          }
-        },
-        {
-          "id": "s36-t11",
-          "text": "知ら",
-          "start": 20,
-          "end": 22,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s36-t12",
-          "text": "じ",
-          "start": 22,
-          "end": 23,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "終",
-            "meaning": "打消推量"
-          },
-          "grammarRefId": "jodoshi-suiryo"
-        },
-        {
-          "id": "s36-t13",
-          "text": "な",
-          "start": 23,
-          "end": 24,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "終助詞",
-            "meaning": "詠嘆"
-          },
-          "grammarRefId": "joshi-shujoshi"
-        },
-        {
-          "id": "s36-t14",
-          "text": "燃ゆる",
-          "start": 24,
-          "end": 27,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ヤ下二",
-            "conjugationForm": "体"
-          }
-        },
-        {
-          "id": "s36-t15",
-          "text": "思ひ",
-          "start": 27,
-          "end": 29,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s36-t16",
-          "text": "を",
-          "start": 29,
-          "end": 30,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "対象"
-          },
-          "grammarRefId": "joshi-kaku"
-        }
-      ]
-    },
-    {
-      "id": "s37",
-      "originalText": "題知らず〈恋〉　　　　　　　　　　　　　　　　　　　　　　　　　和泉式部",
-      "modernTranslation": "題知らず",
-      "tokens": [
-        {
-          "id": "s37-t1",
-          "text": "題知らず〈恋",
-          "start": 0,
-          "end": 6,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s37-t2",
-          "text": "〉",
-          "start": 6,
-          "end": 7,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s37-t3",
-          "text": "　　　　　　　　　　　　　　　　　　　　　　　　　",
-          "start": 7,
-          "end": 32,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s37-t4",
-          "text": "和泉式部",
-          "start": 32,
-          "end": 36,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        }
-      ]
-    },
-    {
-      "id": "s38",
-      "originalText": "黒髪の乱れも知らずうち臥せばまづかきやりし人ぞ恋しき",
-      "modernTranslation": "黒髪の乱れるのも構わずに臥していると、真っ先に髪をかき撫でてくれたあの人のことが恋しく思われるよ。",
-      "tokens": [
-        {
-          "id": "s38-t1",
-          "text": "黒髪",
-          "start": 0,
-          "end": 2,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s38-t2",
-          "text": "の",
-          "start": 2,
-          "end": 3,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "格助詞",
-            "meaning": "体修"
-          },
-          "grammarRefId": "joshi-kaku"
-        },
-        {
-          "id": "s38-t3",
-          "text": "乱れ",
-          "start": 3,
-          "end": 5,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s38-t4",
-          "text": "も",
-          "start": 5,
-          "end": 6,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "強意"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s38-t5",
-          "text": "知ら",
-          "start": 6,
-          "end": 8,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "未"
-          },
-          "grammarRefId": "doushi-katsuyo"
-        },
-        {
-          "id": "s38-t6",
-          "text": "ず",
-          "start": 8,
-          "end": 9,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "用",
-            "meaning": "打消"
-          },
-          "grammarRefId": "jodoshi-hitei"
-        },
-        {
-          "id": "s38-t7",
-          "text": "うち臥せ",
-          "start": 9,
-          "end": 13,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "サ四",
-            "conjugationForm": "已"
-          }
-        },
-        {
-          "id": "s38-t8",
-          "text": "ば",
-          "start": 13,
-          "end": 14,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "接続助詞"
-          }
-        },
-        {
-          "id": "s38-t9",
-          "text": "まづ",
-          "start": 14,
-          "end": 16,
-          "layer": 0,
-          "grammarTag": {
-            "pos": "副詞",
-            "baseForm": "まづ"
-          }
-        },
-        {
-          "id": "s38-t10",
-          "text": "かきやり",
-          "start": 16,
-          "end": 20,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "動詞",
-            "conjugationType": "ラ四",
-            "conjugationForm": "用"
-          }
-        },
-        {
-          "id": "s38-t11",
-          "text": "し",
-          "start": 20,
-          "end": 21,
-          "layer": 2,
-          "grammarTag": {
-            "pos": "助動詞",
-            "conjugationForm": "体",
-            "meaning": "過去"
-          },
-          "grammarRefId": "jodoshi-jisei"
-        },
-        {
-          "id": "s38-t12",
-          "text": "人",
-          "start": 21,
-          "end": 22,
-          "layer": 0,
-          "grammarTag": {
-            "pos": ""
-          }
-        },
-        {
-          "id": "s38-t13",
-          "text": "ぞ",
-          "start": 22,
-          "end": 23,
-          "layer": 3,
-          "grammarTag": {
-            "pos": "係助詞",
-            "meaning": "強意"
-          },
-          "grammarRefId": "joshi-fuku-kakari"
-        },
-        {
-          "id": "s38-t14",
-          "text": "恋しき",
-          "start": 23,
-          "end": 26,
-          "layer": 1,
-          "grammarTag": {
-            "pos": "形容詞",
-            "conjugationType": "シク",
-            "conjugationForm": "体"
-          },
-          "grammarRefId": "keiyoshi-katsuyo"
-        }
-      ]
-    },
-    {
-      "id": "s39",
-      "originalText": "男に忘られてはべりけるころ、貴船に参りて、御手洗川に",
-      "modernTranslation": "男に忘れられておりました頃、貴船神社に参詣して、御手洗川に蛍が飛んでいました",
-      "tokens": [
-        {
           "id": "s39-t1",
-          "text": "男",
+          "text": "女",
           "start": 0,
           "end": 1,
           "layer": 0,
@@ -5419,12 +5786,502 @@
           "layer": 3,
           "grammarTag": {
             "pos": "格助詞",
-            "meaning": "受身"
+            "meaning": "対象"
           },
           "grammarRefId": "joshi-kaku"
         },
         {
           "id": "s39-t3",
+          "text": "はじめて",
+          "start": 2,
+          "end": 6,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s39-t4",
+          "text": "つかはし",
+          "start": 6,
+          "end": 10,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ四",
+            "conjugationForm": "用",
+            "baseForm": "つかはす"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s39-t5",
+          "text": "ける",
+          "start": 10,
+          "end": 12,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s39-t6",
+          "text": "〈恋〉　　　　　　　　　　　　　　　　　",
+          "start": 12,
+          "end": 32,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s39-t7",
+          "text": "藤原実方",
+          "start": 32,
+          "end": 36,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s40",
+      "originalText": "かくとだにえやはいぶきのさしもぐささしも知らじな燃ゆる思ひを",
+      "modernTranslation": "せめてこのようにお慕いしているとだけでも言いたいけれど、言うことができないので、伊吹山のさしも草のようにこれほど燃えている私の思いをあなたは知らないでしょうね。",
+      "tokens": [
+        {
+          "id": "s40-t1",
+          "text": "かく",
+          "start": 0,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞",
+            "baseForm": "かく"
+          }
+        },
+        {
+          "id": "s40-t2",
+          "text": "と",
+          "start": 2,
+          "end": 3,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "引用"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s40-t3",
+          "text": "だに",
+          "start": 3,
+          "end": 5,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "副助詞"
+          }
+        },
+        {
+          "id": "s40-t4",
+          "text": "え",
+          "start": 5,
+          "end": 6,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞",
+            "baseForm": "え"
+          }
+        },
+        {
+          "id": "s40-t5",
+          "text": "やは",
+          "start": 6,
+          "end": 8,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "反語"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s40-t6",
+          "text": "いぶき",
+          "start": 8,
+          "end": 11,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s40-t7",
+          "text": "の",
+          "start": 11,
+          "end": 12,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s40-t8",
+          "text": "さしもぐさ",
+          "start": 12,
+          "end": 17,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s40-t9",
+          "text": "さ",
+          "start": 17,
+          "end": 18,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞"
+          }
+        },
+        {
+          "id": "s40-t10",
+          "text": "しも",
+          "start": 18,
+          "end": 20,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "副助詞"
+          }
+        },
+        {
+          "id": "s40-t11",
+          "text": "知ら",
+          "start": 20,
+          "end": 22,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s40-t12",
+          "text": "じ",
+          "start": 22,
+          "end": 23,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "終",
+            "meaning": "打消推量"
+          },
+          "grammarRefId": "jodoshi-suiryo"
+        },
+        {
+          "id": "s40-t13",
+          "text": "な",
+          "start": 23,
+          "end": 24,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "終助詞",
+            "meaning": "詠嘆"
+          },
+          "grammarRefId": "joshi-shujoshi"
+        },
+        {
+          "id": "s40-t14",
+          "text": "燃ゆる",
+          "start": 24,
+          "end": 27,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ヤ下二",
+            "conjugationForm": "体"
+          }
+        },
+        {
+          "id": "s40-t15",
+          "text": "思ひ",
+          "start": 27,
+          "end": 29,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s40-t16",
+          "text": "を",
+          "start": 29,
+          "end": 30,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "対象"
+          },
+          "grammarRefId": "joshi-kaku"
+        }
+      ]
+    },
+    {
+      "id": "s41",
+      "originalText": "題知らず〈恋〉　　　　　　　　　　　　　　　　　　　　　　　　　和泉式部",
+      "modernTranslation": "題知らず",
+      "tokens": [
+        {
+          "id": "s41-t1",
+          "text": "題知らず〈恋",
+          "start": 0,
+          "end": 6,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s41-t2",
+          "text": "〉",
+          "start": 6,
+          "end": 7,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s41-t3",
+          "text": "　　　　　　　　　　　　　　　　　　　　　　　　　",
+          "start": 7,
+          "end": 32,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s41-t4",
+          "text": "和泉式部",
+          "start": 32,
+          "end": 36,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "s42",
+      "originalText": "黒髪の乱れも知らずうち臥せばまづかきやりし人ぞ恋しき",
+      "modernTranslation": "黒髪の乱れるのも構わずに臥していると、真っ先に髪をかき撫でてくれたあの人のことが恋しく思われるよ。",
+      "tokens": [
+        {
+          "id": "s42-t1",
+          "text": "黒髪",
+          "start": 0,
+          "end": 2,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s42-t2",
+          "text": "の",
+          "start": 2,
+          "end": 3,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "体修"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s42-t3",
+          "text": "乱れ",
+          "start": 3,
+          "end": 5,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s42-t4",
+          "text": "も",
+          "start": 5,
+          "end": 6,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "強意"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s42-t5",
+          "text": "知ら",
+          "start": 6,
+          "end": 8,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "未"
+          },
+          "grammarRefId": "doushi-katsuyo"
+        },
+        {
+          "id": "s42-t6",
+          "text": "ず",
+          "start": 8,
+          "end": 9,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "用",
+            "meaning": "打消"
+          },
+          "grammarRefId": "jodoshi-hitei"
+        },
+        {
+          "id": "s42-t7",
+          "text": "うち臥せ",
+          "start": 9,
+          "end": 13,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "サ四",
+            "conjugationForm": "已"
+          }
+        },
+        {
+          "id": "s42-t8",
+          "text": "ば",
+          "start": 13,
+          "end": 14,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "接続助詞"
+          }
+        },
+        {
+          "id": "s42-t9",
+          "text": "まづ",
+          "start": 14,
+          "end": 16,
+          "layer": 0,
+          "grammarTag": {
+            "pos": "副詞",
+            "baseForm": "まづ"
+          }
+        },
+        {
+          "id": "s42-t10",
+          "text": "かきやり",
+          "start": 16,
+          "end": 20,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "動詞",
+            "conjugationType": "ラ四",
+            "conjugationForm": "用"
+          }
+        },
+        {
+          "id": "s42-t11",
+          "text": "し",
+          "start": 20,
+          "end": 21,
+          "layer": 2,
+          "grammarTag": {
+            "pos": "助動詞",
+            "conjugationForm": "体",
+            "meaning": "過去"
+          },
+          "grammarRefId": "jodoshi-jisei"
+        },
+        {
+          "id": "s42-t12",
+          "text": "人",
+          "start": 21,
+          "end": 22,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s42-t13",
+          "text": "ぞ",
+          "start": 22,
+          "end": 23,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "係助詞",
+            "meaning": "強意"
+          },
+          "grammarRefId": "joshi-fuku-kakari"
+        },
+        {
+          "id": "s42-t14",
+          "text": "恋しき",
+          "start": 23,
+          "end": 26,
+          "layer": 1,
+          "grammarTag": {
+            "pos": "形容詞",
+            "conjugationType": "シク",
+            "conjugationForm": "体"
+          },
+          "grammarRefId": "keiyoshi-katsuyo"
+        }
+      ]
+    },
+    {
+      "id": "s43",
+      "originalText": "男に忘られてはべりけるころ、貴船に参りて、御手洗川に",
+      "modernTranslation": "男に忘れられておりました頃、貴船神社に参詣して、御手洗川に蛍が飛んでいました",
+      "tokens": [
+        {
+          "id": "s43-t1",
+          "text": "男",
+          "start": 0,
+          "end": 1,
+          "layer": 0,
+          "grammarTag": {
+            "pos": ""
+          }
+        },
+        {
+          "id": "s43-t2",
+          "text": "に",
+          "start": 1,
+          "end": 2,
+          "layer": 3,
+          "grammarTag": {
+            "pos": "格助詞",
+            "meaning": "受身"
+          },
+          "grammarRefId": "joshi-kaku"
+        },
+        {
+          "id": "s43-t3",
           "text": "忘ら",
           "start": 2,
           "end": 4,
@@ -5437,7 +6294,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s39-t4",
+          "id": "s43-t4",
           "text": "れ",
           "start": 4,
           "end": 5,
@@ -5450,7 +6307,7 @@
           "grammarRefId": "jodoshi-ukemi-shieki-sonkei"
         },
         {
-          "id": "s39-t5",
+          "id": "s43-t5",
           "text": "て",
           "start": 5,
           "end": 6,
@@ -5460,7 +6317,7 @@
           }
         },
         {
-          "id": "s39-t6",
+          "id": "s43-t6",
           "text": "はべり",
           "start": 6,
           "end": 9,
@@ -5474,7 +6331,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s39-t7",
+          "id": "s43-t7",
           "text": "ける",
           "start": 9,
           "end": 11,
@@ -5487,7 +6344,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s39-t8",
+          "id": "s43-t8",
           "text": "ころ",
           "start": 11,
           "end": 13,
@@ -5497,7 +6354,7 @@
           }
         },
         {
-          "id": "s39-t9",
+          "id": "s43-t9",
           "text": "、",
           "start": 13,
           "end": 14,
@@ -5507,7 +6364,7 @@
           }
         },
         {
-          "id": "s39-t10",
+          "id": "s43-t10",
           "text": "貴船",
           "start": 14,
           "end": 16,
@@ -5517,7 +6374,7 @@
           }
         },
         {
-          "id": "s39-t11",
+          "id": "s43-t11",
           "text": "に",
           "start": 16,
           "end": 17,
@@ -5529,7 +6386,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s39-t12",
+          "id": "s43-t12",
           "text": "参り",
           "start": 17,
           "end": 19,
@@ -5543,7 +6400,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s39-t13",
+          "id": "s43-t13",
           "text": "て",
           "start": 19,
           "end": 20,
@@ -5553,7 +6410,7 @@
           }
         },
         {
-          "id": "s39-t14",
+          "id": "s43-t14",
           "text": "、",
           "start": 20,
           "end": 21,
@@ -5563,7 +6420,7 @@
           }
         },
         {
-          "id": "s39-t15",
+          "id": "s43-t15",
           "text": "御手洗川",
           "start": 21,
           "end": 25,
@@ -5573,7 +6430,7 @@
           }
         },
         {
-          "id": "s39-t16",
+          "id": "s43-t16",
           "text": "に",
           "start": 25,
           "end": 26,
@@ -5587,12 +6444,12 @@
       ]
     },
     {
-      "id": "s40",
+      "id": "s44",
       "originalText": "蛍の飛びはべりけるを見てよめる〈神祇〉　　　　　　　　　　　　　和泉式部",
       "modernTranslation": "のを見て詠んだ歌",
       "tokens": [
         {
-          "id": "s40-t1",
+          "id": "s44-t1",
           "text": "蛍",
           "start": 0,
           "end": 1,
@@ -5602,7 +6459,7 @@
           }
         },
         {
-          "id": "s40-t2",
+          "id": "s44-t2",
           "text": "の",
           "start": 1,
           "end": 2,
@@ -5614,7 +6471,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s40-t3",
+          "id": "s44-t3",
           "text": "飛び",
           "start": 2,
           "end": 4,
@@ -5627,7 +6484,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s40-t4",
+          "id": "s44-t4",
           "text": "はべり",
           "start": 4,
           "end": 7,
@@ -5641,7 +6498,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s40-t5",
+          "id": "s44-t5",
           "text": "ける",
           "start": 7,
           "end": 9,
@@ -5654,7 +6511,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s40-t6",
+          "id": "s44-t6",
           "text": "を",
           "start": 9,
           "end": 10,
@@ -5666,7 +6523,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s40-t7",
+          "id": "s44-t7",
           "text": "見",
           "start": 10,
           "end": 11,
@@ -5679,7 +6536,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s40-t8",
+          "id": "s44-t8",
           "text": "て",
           "start": 11,
           "end": 12,
@@ -5689,7 +6546,7 @@
           }
         },
         {
-          "id": "s40-t9",
+          "id": "s44-t9",
           "text": "よめ",
           "start": 12,
           "end": 14,
@@ -5702,7 +6559,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s40-t10",
+          "id": "s44-t10",
           "text": "る",
           "start": 14,
           "end": 15,
@@ -5715,7 +6572,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s40-t11",
+          "id": "s44-t11",
           "text": "〈神祇〉",
           "start": 15,
           "end": 19,
@@ -5725,7 +6582,7 @@
           }
         },
         {
-          "id": "s40-t12",
+          "id": "s44-t12",
           "text": "　　　　　　　　　　　　　",
           "start": 19,
           "end": 32,
@@ -5735,7 +6592,7 @@
           }
         },
         {
-          "id": "s40-t13",
+          "id": "s44-t13",
           "text": "和泉式部",
           "start": 32,
           "end": 36,
@@ -5747,12 +6604,12 @@
       ]
     },
     {
-      "id": "s41",
+      "id": "s45",
       "originalText": "もの思へば沢の蛍もわが身よりあくがれ出づる魂かとぞ見る",
       "modernTranslation": "もの思いにふけっていると、沢の蛍もわが身から離れ出た魂ではないかと見える。",
       "tokens": [
         {
-          "id": "s41-t1",
+          "id": "s45-t1",
           "text": "もの",
           "start": 0,
           "end": 2,
@@ -5763,7 +6620,7 @@
           }
         },
         {
-          "id": "s41-t2",
+          "id": "s45-t2",
           "text": "思へ",
           "start": 2,
           "end": 4,
@@ -5776,7 +6633,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s41-t3",
+          "id": "s45-t3",
           "text": "ば",
           "start": 4,
           "end": 5,
@@ -5786,7 +6643,7 @@
           }
         },
         {
-          "id": "s41-t4",
+          "id": "s45-t4",
           "text": "沢",
           "start": 5,
           "end": 6,
@@ -5796,7 +6653,7 @@
           }
         },
         {
-          "id": "s41-t5",
+          "id": "s45-t5",
           "text": "の",
           "start": 6,
           "end": 7,
@@ -5808,7 +6665,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s41-t6",
+          "id": "s45-t6",
           "text": "蛍",
           "start": 7,
           "end": 8,
@@ -5818,7 +6675,7 @@
           }
         },
         {
-          "id": "s41-t7",
+          "id": "s45-t7",
           "text": "も",
           "start": 8,
           "end": 9,
@@ -5830,7 +6687,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s41-t8",
+          "id": "s45-t8",
           "text": "わ",
           "start": 9,
           "end": 10,
@@ -5840,7 +6697,7 @@
           }
         },
         {
-          "id": "s41-t9",
+          "id": "s45-t9",
           "text": "が",
           "start": 10,
           "end": 11,
@@ -5852,7 +6709,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s41-t10",
+          "id": "s45-t10",
           "text": "身",
           "start": 11,
           "end": 12,
@@ -5862,7 +6719,7 @@
           }
         },
         {
-          "id": "s41-t11",
+          "id": "s45-t11",
           "text": "より",
           "start": 12,
           "end": 14,
@@ -5875,7 +6732,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s41-t12",
+          "id": "s45-t12",
           "text": "あくがれ出づる",
           "start": 14,
           "end": 21,
@@ -5887,7 +6744,7 @@
           }
         },
         {
-          "id": "s41-t13",
+          "id": "s45-t13",
           "text": "魂",
           "start": 21,
           "end": 22,
@@ -5897,7 +6754,7 @@
           }
         },
         {
-          "id": "s41-t14",
+          "id": "s45-t14",
           "text": "か",
           "start": 22,
           "end": 23,
@@ -5909,7 +6766,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s41-t15",
+          "id": "s45-t15",
           "text": "と",
           "start": 23,
           "end": 24,
@@ -5921,7 +6778,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s41-t16",
+          "id": "s45-t16",
           "text": "ぞ",
           "start": 24,
           "end": 25,
@@ -5933,7 +6790,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s41-t17",
+          "id": "s45-t17",
           "text": "見る",
           "start": 25,
           "end": 27,
@@ -5948,12 +6805,12 @@
       ]
     },
     {
-      "id": "s42",
+      "id": "s46",
       "originalText": "仏は常にいませども　現ならぬぞあはれなる",
       "modernTranslation": "仏は常にいらっしゃるけれども、現実の世界にお姿を現さないのがしみじみと感慨深く思われる。人々が寝静まって物音のしない暁に、ぼんやりとそのお姿を夢に現しなさる。",
       "tokens": [
         {
-          "id": "s42-t1",
+          "id": "s46-t1",
           "text": "仏",
           "start": 0,
           "end": 1,
@@ -5963,7 +6820,7 @@
           }
         },
         {
-          "id": "s42-t2",
+          "id": "s46-t2",
           "text": "は",
           "start": 1,
           "end": 2,
@@ -5975,7 +6832,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s42-t3",
+          "id": "s46-t3",
           "text": "常に",
           "start": 2,
           "end": 4,
@@ -5985,7 +6842,7 @@
           }
         },
         {
-          "id": "s42-t4",
+          "id": "s46-t4",
           "text": "いませ",
           "start": 4,
           "end": 7,
@@ -5999,7 +6856,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s42-t5",
+          "id": "s46-t5",
           "text": "ども",
           "start": 7,
           "end": 9,
@@ -6009,7 +6866,7 @@
           }
         },
         {
-          "id": "s42-t6",
+          "id": "s46-t6",
           "text": "　",
           "start": 9,
           "end": 10,
@@ -6019,7 +6876,7 @@
           }
         },
         {
-          "id": "s42-t7",
+          "id": "s46-t7",
           "text": "現",
           "start": 10,
           "end": 11,
@@ -6029,7 +6886,7 @@
           }
         },
         {
-          "id": "s42-t8",
+          "id": "s46-t8",
           "text": "なら",
           "start": 11,
           "end": 13,
@@ -6043,7 +6900,7 @@
           "grammarRefId": "jodoshi-dantei"
         },
         {
-          "id": "s42-t9",
+          "id": "s46-t9",
           "text": "ぬ",
           "start": 13,
           "end": 14,
@@ -6056,7 +6913,7 @@
           "grammarRefId": "jodoshi-hitei"
         },
         {
-          "id": "s42-t10",
+          "id": "s46-t10",
           "text": "ぞ",
           "start": 14,
           "end": 15,
@@ -6068,7 +6925,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s42-t11",
+          "id": "s46-t11",
           "text": "あはれなる",
           "start": 15,
           "end": 20,
@@ -6084,12 +6941,12 @@
       ]
     },
     {
-      "id": "s43",
+      "id": "s47",
       "originalText": "人の音せぬ暁に　ほのかに夢に見えたまふ",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s43-t1",
+          "id": "s47-t1",
           "text": "人",
           "start": 0,
           "end": 1,
@@ -6099,7 +6956,7 @@
           }
         },
         {
-          "id": "s43-t2",
+          "id": "s47-t2",
           "text": "の",
           "start": 1,
           "end": 2,
@@ -6111,7 +6968,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s43-t3",
+          "id": "s47-t3",
           "text": "音",
           "start": 2,
           "end": 3,
@@ -6121,7 +6978,7 @@
           }
         },
         {
-          "id": "s43-t4",
+          "id": "s47-t4",
           "text": "せ",
           "start": 3,
           "end": 4,
@@ -6134,7 +6991,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s43-t5",
+          "id": "s47-t5",
           "text": "ぬ",
           "start": 4,
           "end": 5,
@@ -6147,7 +7004,7 @@
           "grammarRefId": "jodoshi-hitei"
         },
         {
-          "id": "s43-t6",
+          "id": "s47-t6",
           "text": "暁",
           "start": 5,
           "end": 6,
@@ -6157,7 +7014,7 @@
           }
         },
         {
-          "id": "s43-t7",
+          "id": "s47-t7",
           "text": "に",
           "start": 6,
           "end": 7,
@@ -6169,7 +7026,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s43-t8",
+          "id": "s47-t8",
           "text": "　",
           "start": 7,
           "end": 8,
@@ -6179,7 +7036,7 @@
           }
         },
         {
-          "id": "s43-t9",
+          "id": "s47-t9",
           "text": "ほのかに",
           "start": 8,
           "end": 12,
@@ -6192,7 +7049,7 @@
           "grammarRefId": "keiyoshi-katsuyo"
         },
         {
-          "id": "s43-t10",
+          "id": "s47-t10",
           "text": "夢",
           "start": 12,
           "end": 13,
@@ -6202,7 +7059,7 @@
           }
         },
         {
-          "id": "s43-t11",
+          "id": "s47-t11",
           "text": "に",
           "start": 13,
           "end": 14,
@@ -6214,7 +7071,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s43-t12",
+          "id": "s47-t12",
           "text": "見え",
           "start": 14,
           "end": 16,
@@ -6226,7 +7083,7 @@
           }
         },
         {
-          "id": "s43-t13",
+          "id": "s47-t13",
           "text": "たまふ",
           "start": 16,
           "end": 19,
@@ -6243,12 +7100,12 @@
       ]
     },
     {
-      "id": "s44",
+      "id": "s48",
       "originalText": "遊びをせむとや生まれけむ　戯れせむとや生まれけむ",
       "modernTranslation": "人は遊びをしようとしてこの世に生まれてきたのだろうか。戯れをしようとしてこの世に生まれてきたのだろうか。無心に遊び興じている子供の声を聞くと、わが身までもが自然に動きだす。",
       "tokens": [
         {
-          "id": "s44-t1",
+          "id": "s48-t1",
           "text": "遊び",
           "start": 0,
           "end": 2,
@@ -6258,7 +7115,7 @@
           }
         },
         {
-          "id": "s44-t2",
+          "id": "s48-t2",
           "text": "を",
           "start": 2,
           "end": 3,
@@ -6270,7 +7127,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s44-t3",
+          "id": "s48-t3",
           "text": "せ",
           "start": 3,
           "end": 4,
@@ -6283,7 +7140,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s44-t4",
+          "id": "s48-t4",
           "text": "む",
           "start": 4,
           "end": 5,
@@ -6296,7 +7153,7 @@
           "grammarRefId": "jodoshi-suiryo"
         },
         {
-          "id": "s44-t5",
+          "id": "s48-t5",
           "text": "と",
           "start": 5,
           "end": 6,
@@ -6308,7 +7165,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s44-t6",
+          "id": "s48-t6",
           "text": "や",
           "start": 6,
           "end": 7,
@@ -6320,7 +7177,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s44-t7",
+          "id": "s48-t7",
           "text": "生まれ",
           "start": 7,
           "end": 10,
@@ -6333,7 +7190,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s44-t8",
+          "id": "s48-t8",
           "text": "けむ",
           "start": 10,
           "end": 12,
@@ -6346,7 +7203,7 @@
           "grammarRefId": "jodoshi-jisei"
         },
         {
-          "id": "s44-t9",
+          "id": "s48-t9",
           "text": "　",
           "start": 12,
           "end": 13,
@@ -6356,7 +7213,7 @@
           }
         },
         {
-          "id": "s44-t10",
+          "id": "s48-t10",
           "text": "戯れ",
           "start": 13,
           "end": 15,
@@ -6366,7 +7223,7 @@
           }
         },
         {
-          "id": "s44-t11",
+          "id": "s48-t11",
           "text": "せ",
           "start": 15,
           "end": 16,
@@ -6379,7 +7236,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s44-t12",
+          "id": "s48-t12",
           "text": "む",
           "start": 16,
           "end": 17,
@@ -6392,7 +7249,7 @@
           "grammarRefId": "jodoshi-suiryo"
         },
         {
-          "id": "s44-t13",
+          "id": "s48-t13",
           "text": "と",
           "start": 17,
           "end": 18,
@@ -6404,7 +7261,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s44-t14",
+          "id": "s48-t14",
           "text": "や",
           "start": 18,
           "end": 19,
@@ -6416,7 +7273,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s44-t15",
+          "id": "s48-t15",
           "text": "生まれ",
           "start": 19,
           "end": 22,
@@ -6429,7 +7286,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s44-t16",
+          "id": "s48-t16",
           "text": "けむ",
           "start": 22,
           "end": 24,
@@ -6444,12 +7301,12 @@
       ]
     },
     {
-      "id": "s45",
+      "id": "s49",
       "originalText": "遊ぶ子どもの声聞けば　わが身さへこそ揺るがるれ",
       "modernTranslation": "",
       "tokens": [
         {
-          "id": "s45-t1",
+          "id": "s49-t1",
           "text": "遊ぶ",
           "start": 0,
           "end": 2,
@@ -6462,7 +7319,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s45-t2",
+          "id": "s49-t2",
           "text": "子ども",
           "start": 2,
           "end": 5,
@@ -6472,7 +7329,7 @@
           }
         },
         {
-          "id": "s45-t3",
+          "id": "s49-t3",
           "text": "の",
           "start": 5,
           "end": 6,
@@ -6484,7 +7341,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s45-t4",
+          "id": "s49-t4",
           "text": "声",
           "start": 6,
           "end": 7,
@@ -6494,7 +7351,7 @@
           }
         },
         {
-          "id": "s45-t5",
+          "id": "s49-t5",
           "text": "聞け",
           "start": 7,
           "end": 9,
@@ -6507,7 +7364,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s45-t6",
+          "id": "s49-t6",
           "text": "ば",
           "start": 9,
           "end": 10,
@@ -6517,7 +7374,7 @@
           }
         },
         {
-          "id": "s45-t7",
+          "id": "s49-t7",
           "text": "　",
           "start": 10,
           "end": 11,
@@ -6527,7 +7384,7 @@
           }
         },
         {
-          "id": "s45-t8",
+          "id": "s49-t8",
           "text": "わ",
           "start": 11,
           "end": 12,
@@ -6537,7 +7394,7 @@
           }
         },
         {
-          "id": "s45-t9",
+          "id": "s49-t9",
           "text": "が",
           "start": 12,
           "end": 13,
@@ -6549,7 +7406,7 @@
           "grammarRefId": "joshi-kaku"
         },
         {
-          "id": "s45-t10",
+          "id": "s49-t10",
           "text": "身",
           "start": 13,
           "end": 14,
@@ -6559,7 +7416,7 @@
           }
         },
         {
-          "id": "s45-t11",
+          "id": "s49-t11",
           "text": "さへ",
           "start": 14,
           "end": 16,
@@ -6569,7 +7426,7 @@
           }
         },
         {
-          "id": "s45-t12",
+          "id": "s49-t12",
           "text": "こそ",
           "start": 16,
           "end": 18,
@@ -6581,7 +7438,7 @@
           "grammarRefId": "joshi-fuku-kakari"
         },
         {
-          "id": "s45-t13",
+          "id": "s49-t13",
           "text": "揺るが",
           "start": 18,
           "end": 21,
@@ -6594,7 +7451,7 @@
           "grammarRefId": "doushi-katsuyo"
         },
         {
-          "id": "s45-t14",
+          "id": "s49-t14",
           "text": "るれ",
           "start": 21,
           "end": 23,
