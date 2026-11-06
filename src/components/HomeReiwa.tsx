@@ -22,8 +22,9 @@ import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
 // 構成 (上から):
 //  1. ヘッダ: kobun. + 日付 + 単語帳件数 (🔥)
 //  2. Today's Quest カード: 「今日の分」1ボタン（おかえり語→今日の復習→範囲から補充、で約10問）
-//  3. 4 タイル: 単語クイズ / 多義語クイズ / 読解 / 単語帳
-//     （その下に 学び始め の1行、学習履歴 / テーマ。単語帳のショートカットは 2026-10-13 にユーザー指示で外した）
+//  3. 4 タイル: 単語（クイズ） / 単語一覧（/vocab） / 読解 / 文法道場
+//     （その下に 苦手復習 の1行、学び始め の1行、学習履歴 / テーマ。単語帳のショートカットは 2026-10-13 にユーザー指示で外した。
+//      多義語タイルは 2026-11-06 に外した＝クイズ画面の「多義語モード」タブから行ける。苦手復習は同日にタイルから1行へ）
 //  4. 気になってる単語: localStorage の単語帳から最新 5 件
 //  5. テーマピッカーへの誘導 (詳細設定は別途、クイズ画面でアクセス可能)
 
@@ -313,14 +314,15 @@ export default function HomeReiwa({
           fgColor="var(--rw-accent)"
           active={currentMode === 'word'}
         />
-        <Tile
-          emoji="🌸"
-          label="多義語"
-          stat={currentMode === 'polysemy' ? '選択中' : 'クイズ'}
-          onClick={() => onSwitchMode('polysemy')}
-          iconBg="var(--rw-primary-soft)"
-          fgColor="var(--rw-primary)"
-          active={currentMode === 'polysemy'}
+        {/* 多義語のタイルは 2026-11-06 に外した（クイズ画面の「多義語モード」タブから行ける）。
+            右隣は単語の一覧（/vocab。旧ラベル「単語ホーム」） */}
+        <TileLink
+          href="/vocab"
+          emoji="🗂️"
+          label="単語一覧"
+          stat="意味・用例を見る"
+          iconBg="var(--rw-accent)"
+          fgColor="var(--rw-paper)"
         />
         <TileLink href="/read" emoji="📖" label="読解" stat="本文を読む" iconBg="var(--rw-pop)" fgColor="var(--rw-ink)" />
         <TileLink
@@ -331,24 +333,24 @@ export default function HomeReiwa({
           iconBg="var(--rw-primary)"
           fgColor="var(--rw-paper)"
         />
-        <TileLink
-          href="/vocab"
-          emoji="🗂️"
-          label="単語ホーム"
-          stat="理解・練習・見分け"
-          iconBg="var(--rw-accent)"
-          fgColor="var(--rw-paper)"
-        />
-        <Tile
-          emoji="🔁"
-          label="苦手復習"
-          stat={weakWordsCount > 0 ? `${weakWordsCount}語` : 'まだなし'}
-          onClick={() => weakWordsCount > 0 && onStartReview()}
-          iconBg="var(--rw-tertiary)"
-          fgColor="var(--rw-paper)"
-          disabled={weakWordsCount === 0}
-        />
       </div>
+
+      {/* 苦手復習（2026-11-06 にタイルから1行へ。苦手が無いときは押せない） */}
+      <button
+        type="button"
+        onClick={() => weakWordsCount > 0 && onStartReview()}
+        disabled={weakWordsCount === 0}
+        className="w-full block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 mb-2.5 hover:border-rw-ink-soft transition text-rw-ink text-left disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-rw-rule"
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-xl">🔁</span>
+          <span className="font-black text-rw-ink tracking-tight flex-1">苦手復習</span>
+          <span className="text-[11px] font-bold text-rw-ink-soft">
+            {weakWordsCount > 0 ? `${weakWordsCount}語` : 'まだなし'}
+          </span>
+          <span className="text-rw-ink-soft text-sm">▸</span>
+        </div>
+      </button>
 
       {/* 学び始め（どこから始めればいいかわからない生徒の入口。旧名 学び直し） */}
       <Link
