@@ -20,6 +20,7 @@ import {
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 import { splitGloss, type GlossEntry } from "@/lib/kobun/glossary";
 import { writeDojoStartPoint } from "@/lib/kobun/dojoLocal";
+import { TERM_GROUPS, ALL_TERM_CARDS, groupDone, readTermProgress, resumeIndex, writeTermProgress, type TermProgress } from "@/lib/kobun/grammarTerms";
 
 /** 単元ページから「← 学び始め」で戻れるように、戻り先を付けて渡す */
 const topicLink = (topicId: string) => `/read/grammar/${topicId}?back=${encodeURIComponent("/manabinaoshi")}`;
@@ -175,12 +176,15 @@ function TermCardView({
   style,
   onAnswered,
   onSolved,
+  ctxMode = "manabinaoshi",
 }: {
   card: TermCard;
   stage: StageId;
   style: StageStyle;
   onAnswered: (id: string, ok: boolean) => void;
   onSolved: (id: string) => void;
+  /** 学習の記録の ctx.mode（「文法用語になれる」は manabinaoshi-terms） */
+  ctxMode?: string;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -211,7 +215,7 @@ function TermCardView({
             logEvent({
               area: "grammar", action: "answer", targetType: "term", targetId: card.id,
               correct: good, chosen: c, format: "term-check",
-              ctx: { mode: "manabinaoshi", stage, attempt, hint },
+              ctx: { mode: ctxMode, stage, attempt, hint },
             });
             if (attempt === 0) onAnswered(card.id, good);
             if (good || !style.retry) onSolved(card.id);
@@ -257,10 +261,26 @@ interface TopicMeta {
   category: string;
 }
 
-type Phase = "choose" | "stage" | "quiz" | "result";
+type Phase = "choose" | "stage" | "quiz" | "result" | "terms";
 
 export default function Manabinaoshi() {
   const [phase, setPhase] = useState<Phase>("choose");
+  // 「文法用語になれる」（段0の中の入口。2026-11-08）：開いているグループと、端末に覚えた進み具合
+  const [termGroupIdx, setTermGroupIdx] = useState<number | null>(null);
+  const [termProgress, setTermProgress] = useState<TermProgress>(() => readTermProgress());
+  const [gtCardIdx, setGtCardIdx] = useState(0);
+  const updateTermProgress = (f: (p: TermProgress) => TermProgress) =>
+    setTermProgress((p) => {
+      const next = f(p);
+      writeTermProgress(next);
+      return next;
+    });
+  const openTermGroup = (i: number) => {
+    setTermGroupIdx(i);
+    setGtCardIdx(resumeIndex(TERM_GROUPS[i], termProgress));
+    window.scrollTo(0, 0);
+  };
+  const termsDoneAll = ALL_TERM_CARDS.filter((c) => termProgress.solved.includes(c.id)).length;
   // タップした用語の「〜とは」
   const [gloss, setGloss] = useState<GlossEntry | null>(null);
   const [stageId, setStageId] = useState<StageId>(0);
@@ -403,7 +423,15 @@ export default function Manabinaoshi() {
         </Link>
       ) : (
         <button
-          onClick={() => setPhase(phase === "quiz" || phase === "result" ? "stage" : "choose")}
+          onClick={() => {
+            if (phase === "terms") {
+              if (termGroupIdx !== null) setTermGroupIdx(null);
+              else setPhase("stage");
+              window.scrollTo(0, 0);
+              return;
+            }
+            setPhase(phase === "quiz" || phase === "result" ? "stage" : "choose");
+          }}
           className="text-sm font-bold text-rw-ink-soft hover:text-rw-ink transition-colors"
         >
           ← 戻る
@@ -482,6 +510,29 @@ export default function Manabinaoshi() {
                   )}
                 </div>
               </div>
+            )}
+
+            {/* 段0の中の入口：文法用語になれる（glossary の48語をグループごとに。2026-11-08 ユーザー指示） */}
+            {stage.id === 0 && (
+              <button
+                onClick={() => {
+                  setTermGroupIdx(null);
+                  setPhase("terms");
+                  window.scrollTo(0, 0);
+                }}
+                className="w-full text-left bg-rw-primary-soft/40 border-2 border-rw-ink rounded-2xl p-4 mb-4 hover:bg-rw-primary-soft/60 transition"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-black text-rw-ink tracking-tight flex-1">📚 文法用語になれる（{ALL_TERM_CARDS.length}語）</span>
+                  <span className="text-[11px] font-black text-rw-ink-soft">
+                    {termsDoneAll} / {ALL_TERM_CARDS.length} 済
+                  </span>
+                  <span className="text-rw-ink-soft text-sm">▸</span>
+                </div>
+                <p className="text-[12px] text-rw-ink-soft leading-relaxed mt-1">
+                  きほん・用言・助動詞・助詞・敬語・発展の6つに分けて、1語ずつ「答えてから説明」。わかる言葉は飛ばしてOK。
+                </p>
+              </button>
             )}
 
             {/* 近道（段1〜4）：用語カードを飛ばして判定へ。用語カードは「← 戻る」でいつでも見られる */}
@@ -594,6 +645,123 @@ export default function Manabinaoshi() {
             )}
           </>
         )}
+
+        {phase === "terms" &&
+          (() => {
+            const gStyle = stageStyle(0);
+            if (termGroupIdx === null)
+              return (
+                <>
+                  <div className="text-[11px] font-black text-rw-ink-soft tracking-wider">段 0 ・ ことばのきほん</div>
+                  <h2 className="text-xl font-black text-rw-ink tracking-tight mb-1">📚 文法用語になれる</h2>
+                  <p className="text-[13px] text-rw-ink-soft leading-relaxed mb-4">
+                    古文の文法で出てくる言葉 {ALL_TERM_CARDS.length} 語。上から順でも、気になるところからでもOK。1語ずつ答えてから説明が出るよ。進み具合はこの端末に残る。
+                  </p>
+                  <div className="space-y-2.5">
+                    {TERM_GROUPS.map((g, i) => {
+                      const done = groupDone(g, termProgress);
+                      const all = done === g.cards.length;
+                      return (
+                        <button
+                          key={g.id}
+                          onClick={() => openTermGroup(i)}
+                          className="w-full text-left bg-rw-paper border-2 border-rw-ink rounded-2xl p-4 hover:bg-rw-primary-soft/40 transition"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`w-7 h-7 rounded-full text-sm font-black flex items-center justify-center shrink-0 ${
+                                all ? "bg-rw-accent text-rw-paper" : "bg-rw-ink text-rw-paper"
+                              }`}
+                            >
+                              {all ? "✓" : i + 1}
+                            </span>
+                            <span className="font-black text-rw-ink tracking-tight flex-1">{g.title}</span>
+                            <span className="text-[11px] font-black text-rw-ink-soft">
+                              {done} / {g.cards.length}
+                            </span>
+                            <span className="text-rw-ink-soft text-sm">▸</span>
+                          </div>
+                          <p className="text-[12px] text-rw-ink-soft leading-relaxed mt-1">{g.lead}</p>
+                          <p className="text-[12px] text-rw-ink leading-relaxed mt-1">{g.cards.map((c) => c.term).join("・")}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {termsDoneAll === ALL_TERM_CARDS.length && (
+                    <div className="mt-4 bg-rw-paper border-2 border-rw-accent rounded-2xl p-4">
+                      <div className="font-black text-rw-accent">{ALL_TERM_CARDS.length} 語ぜんぶ済み。</div>
+                      <p className="text-[13px] text-rw-ink leading-relaxed mt-1">文法道場の説明で出てくる言葉は、もう知っている言葉。段1から判定に進もう。</p>
+                      <button onClick={() => goStage(1)} className="mt-3 w-full px-4 py-3 bg-rw-ink text-rw-paper rounded-2xl font-black">
+                        次へ：1. {STAGES[1].title} ▸
+                      </button>
+                    </div>
+                  )}
+                </>
+              );
+            const g = TERM_GROUPS[termGroupIdx];
+            const card = g.cards[gtCardIdx];
+            const solvedHere = termProgress.solved.includes(card.id);
+            const last = gtCardIdx >= g.cards.length - 1;
+            const nextGroup = termGroupIdx + 1 < TERM_GROUPS.length ? termGroupIdx + 1 : null;
+            const done = groupDone(g, termProgress);
+            return (
+              <>
+                <div className="text-[11px] font-black text-rw-ink-soft tracking-wider">文法用語になれる ・ {g.title}</div>
+                <p className="text-[13px] text-rw-ink-soft leading-relaxed mb-3">{g.lead}。知っている言葉は「飛ばす」で次へ。</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex-1 h-1.5 rounded-full bg-rw-rule overflow-hidden">
+                    <div className="h-full bg-rw-accent transition-all" style={{ width: `${Math.round((done / g.cards.length) * 100)}%` }} />
+                  </div>
+                  <span className="text-[11px] font-black text-rw-ink-soft">
+                    {gtCardIdx + 1} / {g.cards.length}
+                  </span>
+                </div>
+                <TermCardView
+                  key={`gt-${g.id}-${card.id}`}
+                  card={card}
+                  stage={0}
+                  style={gStyle}
+                  ctxMode="manabinaoshi-terms"
+                  onAnswered={(id, ok) => updateTermProgress((p) => (id in p.first ? p : { ...p, first: { ...p.first, [id]: ok } }))}
+                  onSolved={(id) => updateTermProgress((p) => (p.solved.includes(id) ? p : { ...p, solved: [...p.solved, id] }))}
+                />
+                <div className="flex gap-2 mt-3">
+                  {gtCardIdx > 0 && (
+                    <button onClick={() => setGtCardIdx((i) => i - 1)} className="px-4 py-3 border-2 border-rw-rule rounded-2xl font-black text-rw-ink-soft">
+                      ← 前へ
+                    </button>
+                  )}
+                  {!last ? (
+                    <button
+                      onClick={() => {
+                        setGtCardIdx((i) => i + 1);
+                        window.scrollTo(0, 0);
+                      }}
+                      className={`flex-1 px-4 py-3 rounded-2xl font-black ${solvedHere ? "bg-rw-ink text-rw-paper" : "border-2 border-rw-ink text-rw-ink"}`}
+                    >
+                      {solvedHere ? "つぎの言葉へ ▸" : "飛ばす ▸"}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        if (nextGroup !== null) openTermGroup(nextGroup);
+                        else {
+                          setTermGroupIdx(null);
+                          window.scrollTo(0, 0);
+                        }
+                      }}
+                      className="flex-1 px-4 py-3 bg-rw-ink text-rw-paper rounded-2xl font-black"
+                    >
+                      {nextGroup !== null ? `つぎ：${TERM_GROUPS[nextGroup].title} ▸` : "一覧にもどる"}
+                    </button>
+                  )}
+                </div>
+                {last && done < g.cards.length && (
+                  <p className="text-[12px] text-rw-ink-soft leading-relaxed mt-2">このグループで済んでいない言葉が {g.cards.length - done} 語あるよ。「← 前へ」で戻れる。</p>
+                )}
+              </>
+            );
+          })()}
 
         {phase === "quiz" && drill && (
           <>

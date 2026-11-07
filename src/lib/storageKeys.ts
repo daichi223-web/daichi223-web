@@ -15,6 +15,7 @@ export const STORAGE_KEYS = {
   noblePeakStage: 'kobun.noble.peakStage',      // 装束 stage の最高到達 (1-21)
   dojoLastTopic: 'kobun.dojo.lastTopic',        // 文法道場: 最後にドリルを始めた単元とレベル（「つづきから」。lib/kobun/dojoLocal）
   dojoStartPoint: 'kobun.dojo.startPoint',      // 文法道場: 学び始めの判定が決めた出発点の単元（「ここから」。lib/kobun/dojoLocal）
+  manabinaoshiTerms: 'kobun.manabinaoshi.terms', // 学び始め: 「文法用語になれる」48語の済んだカードと最初の正誤（lib/kobun/grammarTerms）
 
   // === 表示設定 (任意で export/import) ===
   noblShowKakejiku: 'kobun.noble.showKakejiku', // 装束 (掛軸) ヒーローの開閉状態
