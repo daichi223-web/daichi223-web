@@ -29,6 +29,7 @@
  *   T14 壊れた品詞タグ    pos/意味/活用形に wikilink の断片が残っていないか
  *   T15 一覧参照        affixRefs が public/affixes.json（接頭語・接尾語一覧）に実在するか
  *   T16 語の割れ        1語が文の境界や品詞分解の取りこぼしで2トークンに割れていないか
+ *   T17 和歌の構成      public/waka/<id>.json（歌集名／詞書＋歌人名／歌・句の切れ目）が本文と合っているか
  *                       （T2/T3 は連結と位置しか見ないので、連結が合っている割れは素通りする）
  *                       a) 文の境界をまたいで、同じ品詞分解の活用語が2つに割れている（「つかは｜し」）
  *                       b) 用言の字が見出し語の語幹を欠いている（「し」の見出し語が「まうす」）
@@ -47,6 +48,7 @@ const PUBLIC_V3_INDEX = path.join(V3, 'index.json');
 const GRAMMAR = path.join(ROOT, 'public/grammar');
 const ANALYSIS = path.join(ROOT, 'public/analysis');
 const AFFIXES = path.join(ROOT, 'public/affixes.json');
+const WAKA = path.join(ROOT, 'public/waka');
 
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
@@ -375,6 +377,61 @@ for (const id of targets) {
           add(id, 'T16-語の割れ', `${prev.id}「${prev.text}」＋${tk.id}「${tk.text}」: 漢字と活用語尾が別トークン（品詞分解は語尾側だけ）`);
         }
       });
+    }
+  }
+
+  // T17 和歌の構成（public/waka/<id>.json。2026-11-08〜）
+  //   全文が1回ずつ現れる／句の切れ目がトークンの境界に乗る（短歌4つ・発句2つ）／
+  //   歌人名の文にスペース連続がある／詞書の続きが「」る に」などで始まっていない（割れた詞書の結合漏れ）
+  const wp = path.join(WAKA, `${id}.json`);
+  if (exists(wp)) {
+    let wl;
+    try {
+      wl = read(wp);
+    } catch (e) {
+      add(id, 'T0-壊れJSON(waka)', String(e.message).slice(0, 120));
+      wl = null;
+    }
+    if (wl && Array.isArray(wl.blocks)) {
+      const sentById = new Map(sentences.map((s) => [s.id, s]));
+      const seen = new Map();
+      const touch = (sid, where) => {
+        if (!sentById.has(sid)) add(id, 'T17-和歌の構成', `${where}: 文 ${sid} が texts-v3 に無い`);
+        seen.set(sid, (seen.get(sid) || 0) + 1);
+      };
+      const kuCheck = (line, form, where) => {
+        const s = sentById.get(line.sentenceId);
+        if (!s || !line.ku) return;
+        const want = form === 'hokku' ? 2 : form === 'tanka' ? 4 : null;
+        if (want !== null && line.ku.length !== want) add(id, 'T17-和歌の構成', `${where} ${line.sentenceId}: 句の切れ目が ${line.ku.length} 個（${form} は ${want}）`);
+        const ends = new Set((s.tokens || []).map((t) => t.end));
+        for (const k of line.ku) if (!ends.has(k)) add(id, 'T17-和歌の構成', `${where} ${line.sentenceId}: 切れ目 ${k} がトークンの境界に無い`);
+      };
+      wl.blocks.forEach((b, bi) => {
+        const where = `block${bi}`;
+        if (b.type === 'collection') {
+          for (const sid of b.sentenceIds || []) touch(sid, where);
+          return;
+        }
+        for (const sid of b.kotobagaki || []) touch(sid, where);
+        for (const l of b.lines || []) { touch(l.sentenceId, where); kuCheck(l, b.form, where); }
+        for (const l of b.hanka || []) { touch(l.sentenceId, where); kuCheck(l, 'tanka', where); }
+        if (b.authorSentenceId) {
+          const s = sentById.get(b.authorSentenceId);
+          if (s && !(s.tokens || []).some((t) => /[　 ]{2,}/.test(t.text))) add(id, 'T17-和歌の構成', `${where}: 歌人名の文 ${b.authorSentenceId} にスペース連続が無い`);
+        }
+        // 詞書の2つ目以降は前の文の続きなので、結合されていれば先頭が続きの形でよい。逆に詞書の1つ目が続きの形なら結合漏れ
+        const kot = b.kotobagaki || [];
+        if (kot.length > 0) {
+          const first = sentById.get(kot[0]);
+          if (first && /^[」』）)るにのをはがてでと]/.test(first.originalText)) add(id, 'T17-和歌の構成', `${where}: 詞書の先頭 ${kot[0]}「${first.originalText.slice(0, 8)}」が前の文の続きに見える（結合漏れ）`);
+        }
+      });
+      for (const s of sentences) {
+        const n = seen.get(s.id) || 0;
+        if (n === 0) add(id, 'T17-和歌の構成', `文 ${s.id} が構成ファイルに無い`);
+        if (n > 1) add(id, 'T17-和歌の構成', `文 ${s.id} が構成ファイルに ${n} 回ある`);
+      }
     }
   }
 

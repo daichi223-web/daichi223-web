@@ -1,6 +1,6 @@
 import { useParams, useSearchParams, useLocation, Link } from "react-router-dom";
 import { tokenIdFromHash } from "@/lib/returnTo";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Fragment } from "react";
 import type {
   KobunText,
   LayerId,
@@ -18,8 +18,9 @@ import { useWordCard, type WordCardTokenInfo } from "@/components/kobun/useWordC
 import { SelectionToolbar } from "@/components/kobun/SelectionToolbar";
 import { LearningPointsPanel } from "@/components/kobun/LearningPointsPanel";
 import { fetchJsonAsset } from "@/lib/fetchJson";
-import { displayTranslations, splitHokan, type Chikugo } from "@/lib/kobun/chikugo";
+import { displayTranslations, splitHokan, type Chikugo, type ChikugoPair } from "@/lib/kobun/chikugo";
 import { buildReadingTest, fetchManualTest } from "@/lib/kobun/readingTest";
+import { resolveLayout, dropAttributionPairs, pieceText, type WakaLayout, type Piece, type RenderBlock } from "@/lib/kobun/wakaLayout";
 
 type LoadError = "not-found" | "intercepted" | "network";
 
@@ -126,6 +127,10 @@ export default function TextReader() {
     (layerParam !== null ? Number(layerParam) : 1) as LayerId
   );
   const [showTranslation, setShowTranslation] = useState(false);
+  // 和歌の構成（歌集名／詞書＋歌人名／歌。2026-11-08〜）。無い教材は1文＝1かたまり
+  const [wakaLayout, setWakaLayout] = useState<WakaLayout | null>(null);
+  // 歌の訳は「歌意」（現代語訳）を既定にし、逐語訳は切り替えで出す
+  const [poemChikugo, setPoemChikugo] = useState(false);
   // 語の近くに浮かぶ短い解説カード（2026-10-16〜）。全教材でカードのみ。
   // 2026-11-02 ユーザー指示で「解説：従来」への切り替えボタンを廃止（localStorage kobun-word-card=off も読まない）。
   // 識別(6)は識別の出題を使う
@@ -165,10 +170,20 @@ export default function TextReader() {
   }, [textId]);
 
   useEffect(() => {
+    if (!textId) return;
+    setWakaLayout(null);
+    fetchJsonAsset<WakaLayout>(`/waka/${textId}.json`).then((r) => {
+      setWakaLayout(r.ok && Array.isArray(r.data?.blocks) ? r.data : null);
+    });
+  }, [textId]);
+
+  useEffect(() => {
     if (textId) {
       initProgress(textId);
     }
   }, [textId]);
+
+  const blocks = useMemo(() => (text ? resolveLayout(wakaLayout, text.sentences) : []), [text, wakaLayout]);
 
   // 読解テスト（2026-11-02〜）：手書きの問題ファイルがあればそれ、無ければ自動問題。0問ならボタンを出さない
   const [hasManualTest, setHasManualTest] = useState(false);
@@ -266,6 +281,149 @@ export default function TextReader() {
 
   const layerColorVar = layerVar(currentLayer);
   const layerLabel = LAYER_LABELS[currentLayer];
+
+  // ---- 本文のかたまりの描画（wakaLayout の RenderBlock） ----
+  const BODY = "leading-[2.2] text-[17px]";
+  const renderPiece = (piece: Piece, opts: { className?: string; annotation?: boolean; key?: string } = {}) => (
+    <TokenizedText
+      key={`${piece.sentence.id}${opts.key ?? ""}`}
+      sentence={piece.tokens === piece.sentence.tokens ? piece.sentence : { ...piece.sentence, tokens: piece.tokens }}
+      currentLayer={currentLayer}
+      analysis={analysis}
+      textTitle={text.title}
+      textId={textId}
+      onTokenView={handleTokenView}
+      shikiResetKey={shikiResetKey}
+      cardMode={cardMode}
+      highlightTokenId={wordCard.activeId}
+      cueTokenIds={wordCard.cueIds}
+      isVocabToken={wordCard.isVocab}
+      isCardToken={wordCard.isCard}
+      className={opts.className ?? BODY}
+      kuMarks={piece.kuMarks}
+      readingAnnotation={
+        opts.annotation === false ? null : readingGuide?.annotations.find((a) => a.sentenceId === piece.sentence.id) ?? null
+      }
+    />
+  );
+  // 逐語訳：品詞分解PDF（TextPrint）と同じ形。1語ごとの訳を点線で区切り、補った語（（ ）の中）は薄く
+  const renderChikugo = (pairs: ChikugoPair[], key: string) => (
+    <p key={key} className="text-sm leading-relaxed text-rw-ink">
+      {displayTranslations(pairs).map((t, k) => (
+        <span key={k} className={k > 0 ? "border-l border-dotted border-rw-ink-soft pl-1 ml-1" : undefined}>
+          {splitHokan(t).map((x, j) => (x.hokan ? <span key={j} className="text-rw-ink-soft">{x.text}</span> : x.text))}
+        </span>
+      ))}
+    </p>
+  );
+  /**
+   * 現代語訳の帯。かたまりごとに1つ。訳の無い文は出さない。
+   * 歌（poem）は「歌意」（現代語訳）を既定にし、逐語訳があれば札で切り替える。
+   * 右寄せの歌人名・出典は逐語訳の区切りから除く（tail）
+   */
+  const translationBox = (key: string, pieces: Piece[], opts: { poem?: boolean; toggle?: boolean; tail?: string | null; tailSentenceId?: string } = {}) => {
+    const items = pieces
+      .map((p) => {
+        const raw = chikugo?.sentences[p.sentence.id];
+        const pairs = raw?.length ? dropAttributionPairs(raw, p.sentence.id === opts.tailSentenceId ? opts.tail ?? null : null) : null;
+        const plain = (p.sentence.modernTranslation || "").trim();
+        const useChikugo = !!pairs?.length && (!opts.poem || poemChikugo || !plain);
+        if (useChikugo) return renderChikugo(pairs!, p.sentence.id);
+        if (plain) return <p key={p.sentence.id} className="text-sm leading-relaxed text-rw-ink">{plain}</p>;
+        return null;
+      })
+      .filter(Boolean);
+    if (items.length === 0) return null;
+    const hasChikugo = opts.poem && opts.toggle && pieces.some((p) => (chikugo?.sentences[p.sentence.id]?.length ?? 0) > 0 && (p.sentence.modernTranslation || "").trim());
+    return (
+      <div
+        key={key}
+        onClick={() => setActiveSentence(activeSentence === key ? null : key)}
+        className="border-l-4 border-rw-primary pl-3 py-1 cursor-pointer transition-opacity"
+        style={{ background: "var(--rw-primary-soft)", opacity: activeSentence === null || activeSentence === key ? 1 : 0.55 }}
+      >
+        {hasChikugo && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setPoemChikugo((v) => !v);
+            }}
+            className="float-right ml-2 mt-0.5 rounded-full border border-rw-rule bg-rw-paper px-2 py-0.5 text-[10px] font-bold text-rw-ink-soft"
+            title={poemChikugo ? "歌意（まとまった訳）にする" : "1語ごとの逐語訳にする"}
+          >
+            {poemChikugo ? "歌意" : "逐語訳"}
+          </button>
+        )}
+        {items}
+      </div>
+    );
+  };
+  const renderBlock = (b: RenderBlock, bi: number) => {
+    const key = `b${bi}`;
+    if (b.kind === "collection") {
+      // 歌集名（古今和歌集・新古今和歌集…）。本文に無い見出し（梁塵秘抄・万葉集）は文字だけ
+      return (
+        <div key={key} className="pt-3 border-b border-rw-rule pb-0.5 font-sans text-[12px] font-bold tracking-[0.2em] text-rw-ink-soft">
+          {b.pieces.length > 0 ? b.pieces.map((p) => renderPiece(p, { className: "leading-[1.8] text-[12px] tracking-[0.2em]", annotation: false })) : b.title}
+        </div>
+      );
+    }
+    if (b.kind === "prose") {
+      return (
+        <div key={key} className="space-y-1.5">
+          <div className="font-serif text-rw-ink">
+            {renderPiece(b.piece)}
+            {/* 末尾の右寄せ（出典・作者）：教科書では全角スペースで右へ寄せてあるが、スマホでは行の途中に浮くので行を分ける */}
+            {b.tail && <div className="text-right text-rw-ink-soft">{renderPiece(b.tail, { className: "leading-[1.8] text-[13px]", annotation: false, key: "-tail" })}</div>}
+          </div>
+          {showTranslation && translationBox(key, [b.piece], { tail: b.tail ? pieceText(b.tail) : null, tailSentenceId: b.piece.sentence.id })}
+        </div>
+      );
+    }
+    const multi = b.form === "choka" || b.form === "song";
+    const lineClass = multi ? "leading-[1.9] text-[18px]" : "leading-[1.9] text-[19px]";
+    const tail = b.author ? pieceText(b.author) : null;
+    const tailSentenceId = b.author?.sentence.id;
+    return (
+      <div key={key} className="space-y-1">
+        {/* 詞書（割れていた文もここで inline に続ける＝語の途中で行が変わらない）。部立〈春〉は本文の表記のまま */}
+        {b.kotobagaki.length > 0 && (
+          <div className="font-serif text-rw-ink-soft leading-[1.9] text-[14px]">
+            {b.kotobagaki.map((p) => renderPiece(p, { className: "inline leading-[1.9] text-[14px]" }))}
+          </div>
+        )}
+        {/* 歌。発句は1句ごとに訳を続ける */}
+        {b.form === "hokku" ? (
+          b.lines.map((p, li) => (
+            <Fragment key={p.sentence.id}>
+              <div className="font-serif text-rw-ink border-l-[3px] border-rw-rule pl-3">{renderPiece(p, { className: lineClass })}</div>
+              {showTranslation && translationBox(`${key}-${li}`, [p], { poem: true, toggle: true, tail, tailSentenceId })}
+            </Fragment>
+          ))
+        ) : (
+          <div className={`font-serif text-rw-ink border-l-[3px] border-rw-rule pl-3 ${multi ? "" : "py-0.5"}`}>
+            {b.lines.map((p) => renderPiece(p, { className: lineClass }))}
+          </div>
+        )}
+        {b.hanka.length > 0 && (
+          <>
+            <div className="pt-1 font-sans text-[11px] font-bold text-rw-ink-soft">反歌</div>
+            <div className="font-serif text-rw-ink border-l-[3px] border-rw-rule pl-3 space-y-2">{b.hanka.map((p) => renderPiece(p, { className: lineClass }))}</div>
+          </>
+        )}
+        {b.author && (
+          <div className="text-right font-serif text-rw-ink-soft">{renderPiece(b.author, { className: "leading-[1.6] text-[13px]", annotation: false, key: "-author" })}</div>
+        )}
+        {showTranslation && (
+          <>
+            {/* 詞書の訳も歌と同じく、まとまった訳を既定にし、歌の札で逐語訳に切り替わる */}
+            {translationBox(`${key}-k`, b.kotobagaki, { poem: true, tail, tailSentenceId })}
+            {b.form !== "hokku" && translationBox(`${key}-p`, [...b.lines, ...b.hanka], { poem: true, toggle: true, tail, tailSentenceId })}
+          </>
+        )}
+      </div>
+    );
+  };
 
   // 現在レイヤーの description（layers 定義に存在すれば表示）
   const currentLayerDef = text.layers.find((l) => l.id === currentLayer);
@@ -376,78 +534,9 @@ export default function TextReader() {
           />
         )}
 
+        {/* 本文（枠なし、行間広めの読み物体裁）。和歌の教材は構成ファイルで 歌集名／詞書＋歌人名／歌 のかたまりに、ほかは1文＝1かたまり */}
         <div ref={wordCard.rootRef} {...wordCard.bind} className="space-y-3">
-        {text.sentences.map((sentence) => (
-          <div key={sentence.id} className="space-y-1.5">
-            {/* 本文 (枠なし、行間広めの読み物体裁) */}
-            <div
-              className="font-serif text-rw-ink"
-              style={{ fontSize: "17px", lineHeight: 2.2 }}
-            >
-              <TokenizedText
-                sentence={sentence}
-                currentLayer={currentLayer}
-                analysis={analysis}
-                textTitle={text.title}
-                textId={textId}
-                onTokenView={handleTokenView}
-                shikiResetKey={shikiResetKey}
-                cardMode={cardMode}
-                highlightTokenId={wordCard.activeId}
-                cueTokenIds={wordCard.cueIds}
-                isVocabToken={wordCard.isVocab}
-                isCardToken={wordCard.isCard}
-                readingAnnotation={
-                  readingGuide?.annotations.find(
-                    (a) => a.sentenceId === sentence.id
-                  ) ?? null
-                }
-              />
-            </div>
-            {/* 現代語訳 (薄背景、枠なし、左ボーダーのみ) */}
-            {showTranslation && (
-              <div
-                onClick={() =>
-                  setActiveSentence(
-                    activeSentence === sentence.id ? null : sentence.id
-                  )
-                }
-                className="border-l-4 border-rw-primary pl-3 py-1 cursor-pointer transition-opacity"
-                style={{
-                  background: 'var(--rw-primary-soft)',
-                  opacity:
-                    activeSentence === null || activeSentence === sentence.id
-                      ? 1
-                      : 0.55,
-                }}
-              >
-                {chikugo?.sentences[sentence.id]?.length ? (
-                  // 品詞分解PDF（TextPrint）と同じ形：1語ごとの訳を点線で区切り、補った語（（ ）の中）は薄く
-                  <p className="text-sm leading-relaxed text-rw-ink">
-                    {displayTranslations(chikugo.sentences[sentence.id]).map((t, k) => (
-                      <span
-                        key={k}
-                        className={k > 0 ? "border-l border-dotted border-rw-ink-soft pl-1 ml-1" : undefined}
-                      >
-                        {splitHokan(t).map((x, j) =>
-                          x.hokan ? (
-                            <span key={j} className="text-rw-ink-soft">{x.text}</span>
-                          ) : (
-                            x.text
-                          )
-                        )}
-                      </span>
-                    ))}
-                  </p>
-                ) : (
-                  <p className="text-sm leading-relaxed text-rw-ink">
-                    {sentence.modernTranslation}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+          {blocks.map(renderBlock)}
         </div>
         {wordCard.element}
       </main>

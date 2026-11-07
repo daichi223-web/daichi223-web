@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
 import type {
   Sentence,
+  Token,
   LayerId,
   TextAnalysis,
   ReadingAnnotation,
@@ -33,6 +34,10 @@ interface TokenizedTextProps {
   isVocabToken?: (tokenId: string) => boolean;
   /** 浮かぶカードが出る語か（句読点以外の全部。押すのはカード側） */
   isCardToken?: (tokenId: string) => boolean;
+  /** 文字の大きさ・行間（既定は本文の大きさ）。和歌の詞書・歌人名・歌集名は小さく出す（wakaLayout） */
+  className?: string;
+  /** 句の切れ目（その語の後ろに 句の空き／上の句と下の句の行替え）。和歌の歌の行だけ */
+  kuMarks?: Map<string, "space" | "break">;
 }
 
 const hintMeta: Record<ReadingHintType, { icon: string; color: string; bg: string }> = {
@@ -67,6 +72,8 @@ export function TokenizedText({
   cueTokenIds,
   isVocabToken,
   isCardToken,
+  className = "leading-[2.2] text-lg",
+  kuMarks,
 }: TokenizedTextProps) {
   const [activeTokenId, setActiveTokenId] = useState<string | null>(null);
   const [openHints, setOpenHints] = useState<Set<number>>(new Set());
@@ -159,69 +166,28 @@ export function TokenizedText({
     });
   };
 
+  // 和歌の句の切れ目：語の後ろに空き、第三句の後ろは行替え＋1字下げ
+  const withKu = (token: Token, el: ReactElement) => {
+    const mark = kuMarks?.get(token.id);
+    if (!mark) return el;
+    return (
+      <Fragment key={token.id}>
+        {el}
+        {mark === "break" ? (
+          <>
+            <br />
+            <span className="inline-block w-[1em]" aria-hidden="true" />
+          </>
+        ) : (
+          <span className="inline-block w-[0.6em]" aria-hidden="true" />
+        )}
+      </Fragment>
+    );
+  };
+
   return (
-    <div className="relative leading-[2.2] text-lg">
-      {sentence.tokens.map((token) => {
-        const shiki = isShiki ? shikiByToken.get(token.id) : undefined;
-        if (shiki) {
-          const chosen = shikiAnswers[shiki.target.id];
-          const verdict = chosen === undefined ? null : judgeShikibetsu(shiki.target, chosen, yureOf(textId, shiki.target));
-          const color =
-            verdict === null ? "var(--layer-6)" : verdict === "correct" ? "#16a34a" : verdict === "partial" ? "#d97706" : "#dc2626";
-          const open = () => openShiki(shiki.target);
-          return (
-            <span
-              key={token.id}
-              data-shikibetsu-target={shiki.target.id}
-              className="inline cursor-pointer"
-              onClick={open}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && open()}
-              title={`「${shiki.target.form}」の識別`}
-            >
-              {shiki.from > 0 && !token.furigana ? token.text.slice(0, shiki.from) : null}
-              <span
-                className="font-bold rounded-sm"
-                style={{
-                  color,
-                  background: `color-mix(in srgb, ${color} ${activeShikiId === shiki.target.id ? 30 : 14}%, transparent)`,
-                  borderBottom: `2px solid ${color}`,
-                }}
-              >
-                {token.furigana ? (
-                  <ruby>
-                    {token.text}
-                    <rp>(</rp>
-                    <rt className="text-xs">{token.furigana}</rt>
-                    <rp>)</rp>
-                  </ruby>
-                ) : (
-                  token.text.slice(shiki.from)
-                )}
-              </span>
-            </span>
-          );
-        }
-        return (
-          <TokenSpan
-            key={token.id}
-            token={token}
-            currentLayer={currentLayer}
-            isActive={activeTokenId === token.id || highlightTokenId === token.id}
-            // 浮かぶカード有効時：カードの出る語（句読点以外の全部）はカード（useWordCard）が扱う。下線と青い地は単語帳の語だけ
-            clickable={cardMode ? !isCardToken?.(token.id) && token.layer >= 1 && token.layer <= currentLayer : undefined}
-            isCue={cueTokenIds?.has(token.id)}
-            isVocab={cardMode ? !!isVocabToken?.(token.id) : false}
-            hasCard={cardMode ? !!isCardToken?.(token.id) : false}
-            onClick={() => {
-              if (cardMode && isCardToken?.(token.id)) return;
-              setActiveShikiId(null);
-              handleTokenClick(token.id);
-            }}
-          />
-        );
-      })}
+    <div className={`relative ${className}`}>
+      {sentence.tokens.map((token) => withKu(token, renderToken(token)))}
 
       {/* 読解レイヤーのアノテーション */}
       {currentLayer === 5 && readingAnnotation && (
@@ -306,4 +272,66 @@ export function TokenizedText({
       )}
     </div>
   );
+
+  function renderToken(token: Token): ReactElement {
+        const shiki = isShiki ? shikiByToken.get(token.id) : undefined;
+        if (shiki) {
+          const chosen = shikiAnswers[shiki.target.id];
+          const verdict = chosen === undefined ? null : judgeShikibetsu(shiki.target, chosen, yureOf(textId, shiki.target));
+          const color =
+            verdict === null ? "var(--layer-6)" : verdict === "correct" ? "#16a34a" : verdict === "partial" ? "#d97706" : "#dc2626";
+          const open = () => openShiki(shiki.target);
+          return (
+            <span
+              key={token.id}
+              data-shikibetsu-target={shiki.target.id}
+              className="inline cursor-pointer"
+              onClick={open}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && open()}
+              title={`「${shiki.target.form}」の識別`}
+            >
+              {shiki.from > 0 && !token.furigana ? token.text.slice(0, shiki.from) : null}
+              <span
+                className="font-bold rounded-sm"
+                style={{
+                  color,
+                  background: `color-mix(in srgb, ${color} ${activeShikiId === shiki.target.id ? 30 : 14}%, transparent)`,
+                  borderBottom: `2px solid ${color}`,
+                }}
+              >
+                {token.furigana ? (
+                  <ruby>
+                    {token.text}
+                    <rp>(</rp>
+                    <rt className="text-xs">{token.furigana}</rt>
+                    <rp>)</rp>
+                  </ruby>
+                ) : (
+                  token.text.slice(shiki.from)
+                )}
+              </span>
+            </span>
+          );
+        }
+        return (
+          <TokenSpan
+            key={token.id}
+            token={token}
+            currentLayer={currentLayer}
+            isActive={activeTokenId === token.id || highlightTokenId === token.id}
+            // 浮かぶカード有効時：カードの出る語（句読点以外の全部）はカード（useWordCard）が扱う。下線と青い地は単語帳の語だけ
+            clickable={cardMode ? !isCardToken?.(token.id) && token.layer >= 1 && token.layer <= currentLayer : undefined}
+            isCue={cueTokenIds?.has(token.id)}
+            isVocab={cardMode ? !!isVocabToken?.(token.id) : false}
+            hasCard={cardMode ? !!isCardToken?.(token.id) : false}
+            onClick={() => {
+              if (cardMode && isCardToken?.(token.id)) return;
+              setActiveShikiId(null);
+              handleTokenClick(token.id);
+            }}
+          />
+        );
+  }
 }
