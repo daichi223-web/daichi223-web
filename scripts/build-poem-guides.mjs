@@ -10,6 +10,8 @@ const ROOT = process.cwd();
 const GUIDES = path.join(ROOT, "public", "guides");
 const INDEX = path.join(ROOT, "public", "texts", "index.json");
 const VAULT = "F:/A2A/NotebookLM/kokugo-vault/30-教材/古文";
+// 2026-11-09 教員判断: AI 作成の解説は照合が済むまで vault の下書きに置く（accuracy.md 5）。下書きがあれば下書きを読む
+const DRAFTS = "F:/A2A/NotebookLM/kokugo-vault/00-inbox/_教材下書き/古文/和歌";
 
 const ids = process.argv.slice(2).filter((a) => !a.startsWith("-"));
 if (ids.length === 0) {
@@ -41,7 +43,8 @@ for (const id of ids) {
     continue;
   }
   const full = JSON.parse(fs.readFileSync(path.join(ROOT, "public", "texts", `${id}.json`), "utf8"));
-  const mdPath = path.join(VAULT, full.file_name.replace(/\\/g, "/"));
+  const draftPath = path.join(DRAFTS, `${meta.title}_歌ごとの解説.md`);
+  const mdPath = fs.existsSync(draftPath) ? draftPath : path.join(VAULT, full.file_name.replace(/\\/g, "/"));
   if (!fs.existsSync(mdPath)) {
     console.error(`${id}: 教材 MD が無い ${mdPath}`);
     failed++;
