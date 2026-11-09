@@ -129,6 +129,7 @@ function speciesForText(genre: string | undefined): PlantSpecies {
     case '説話': return PLANT_KUSU;
     case '軍記': return PLANT_MOMIJI;
     case '和歌': return PLANT_UME;
+    case '和歌・韻文': return PLANT_UME;
     case '歌物語': return PLANT_UME;
     default: return PLANT_SUNFLOWER;
   }

@@ -36,19 +36,24 @@ const GENRE_ORDER = [
   "随筆",
   "説話",
   "評論",
-  "和歌・歌謡・俳諧",
+  "和歌・韻文",
   "俳論・俳文",
   "芸能",
   "小説",
   "伝承",
 ];
 const GENRE_OTHER = "その他";
+// 索引や vault に残る別名を画面の列へ寄せる（2026-11-09「和歌・韻文」の項目を立てた。一覧に無い名前は列ごと消えるので寄せておく）
+const GENRE_ALIAS: Record<string, string> = {
+  "和歌": "和歌・韻文",
+  "和歌・歌謡・俳諧": "和歌・韻文",
+};
 
 // 物語（一）／随筆（二）等の末尾連番を取り除いて基底ジャンルに寄せる
 function normalizeGenre(raw: string): string {
   if (!raw) return GENRE_OTHER;
   const base = raw.replace(/（[^）]*）$/, "").trim();
-  return base || GENRE_OTHER;
+  return GENRE_ALIAS[base] ?? (base || GENRE_OTHER);
 }
 
 // 作品名：「枕草子（一）」「源氏物語（二）」の巻数を外して1つの作品にまとめる。作品名が無い教材は題名を作品として扱う
