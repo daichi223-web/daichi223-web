@@ -49,6 +49,7 @@ const GRAMMAR = path.join(ROOT, 'public/grammar');
 const ANALYSIS = path.join(ROOT, 'public/analysis');
 const AFFIXES = path.join(ROOT, 'public/affixes.json');
 const WAKA = path.join(ROOT, 'public/waka');
+const GUIDES = path.join(ROOT, 'public/guides');
 
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
@@ -431,6 +432,48 @@ for (const id of targets) {
         const n = seen.get(s.id) || 0;
         if (n === 0) add(id, 'T17-和歌の構成', `文 ${s.id} が構成ファイルに無い`);
         if (n > 1) add(id, 'T17-和歌の構成', `文 ${s.id} が構成ファイルに ${n} 回ある`);
+      }
+    }
+  }
+
+  // T18 歌ごとの解説（guides の poems。2026-11-08〜）
+  //   各項目の文IDが本文にある／項目の歌本文が、その文の本文（歌人名・スペースを除く）と一致する／
+  //   和歌の構成ファイルがある教材では、歌のかたまり全部に項目がある／歌意・鑑賞がある
+  const gp = path.join(GUIDES, `${id}.json`);
+  if (exists(gp)) {
+    let gd;
+    try {
+      gd = read(gp);
+    } catch (e) {
+      add(id, 'T0-壊れJSON(guides)', String(e.message).slice(0, 120));
+      gd = null;
+    }
+    const poems = gd?.sections?.poems;
+    if (poems && Array.isArray(poems.items)) {
+      const sentById = new Map(sentences.map((s) => [s.id, s]));
+      const headOf = (s) => (s.originalText || '').split(/[　 ]{2,}/)[0].replace(/[\s　]/g, '');
+      const covered = new Set();
+      for (const it of poems.items) {
+        const where = `歌${it.no}`;
+        if (!Array.isArray(it.refs) || it.refs.length === 0) add(id, 'T18-歌ごとの解説', `${where}: 文IDが無い`);
+        const missing = (it.refs || []).filter((r) => !sentById.has(r));
+        if (missing.length) add(id, 'T18-歌ごとの解説', `${where}: 文 ${missing.join(',')} が texts-v3 に無い`);
+        const want = (it.refs || []).filter((r) => sentById.has(r)).map((r) => headOf(sentById.get(r))).join('');
+        const got = (it.text || '').replace(/[\s　／/]/g, '');
+        if (want && got !== want) add(id, 'T18-歌ごとの解説', `${where}: 歌本文が本文と違う「${got.slice(0, 12)}…」vs「${want.slice(0, 12)}…」`);
+        for (const r of it.refs || []) covered.add(r);
+        const keys = new Set((it.fields || []).map((f) => f.key));
+        for (const k of ['歌意', '鑑賞']) if (!keys.has(k)) add(id, 'T18-歌ごとの解説', `${where}: 「${k}」が無い`);
+      }
+      const wp2 = path.join(WAKA, `${id}.json`);
+      if (exists(wp2)) {
+        const wl2 = read(wp2);
+        for (const b of wl2.blocks || []) {
+          if (b.type !== 'poem') continue;
+          for (const l of [...(b.lines || []), ...(b.hanka || [])]) {
+            if (!covered.has(l.sentenceId)) add(id, 'T18-歌ごとの解説', `歌の文 ${l.sentenceId} に解説が無い`);
+          }
+        }
       }
     }
   }

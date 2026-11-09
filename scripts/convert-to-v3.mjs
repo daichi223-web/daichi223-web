@@ -17,6 +17,7 @@
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { parseLabel, posFromConjType } from "./morph-label.mjs";
+import { buildPoemsSection } from "./poem-guides.mjs";
 
 const ROOT = resolve(process.cwd());
 const IN_DIR = join(ROOT, "public", "texts");
@@ -653,6 +654,8 @@ function convertOne(src) {
   const bg = parseBackground(s["出典_背景"] ?? "");
   const characters = (s["登場人物と敬語分析"] ?? "").trim();
   const learningRaw = (s["学習ポイント"] ?? "").trim();
+  // 和歌教材の「歌ごとの解説」（2026-11-08〜）。和歌4本は convert-to-v3 で作り直さず build-poem-guides.mjs で guides だけ更新する
+  const poems = buildPoemsSection(s["歌ごとの解説"] ?? "");
 
   const guide = {
     textId: id,
@@ -664,6 +667,7 @@ function convertOne(src) {
         content: bg.content,
         glossary: bg.glossary,
       },
+      ...(poems ? { poems } : {}),
       ...(learningRaw ? {
         learningPoints: {
           heading: "学習ポイント",

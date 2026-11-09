@@ -17,6 +17,20 @@ interface GuideSection {
   glossary?: GlossaryEntry[];
 }
 
+/** 和歌教材の「歌ごとの解説」（2026-11-08〜）。正本は vault の教材 MD、変換は scripts/poem-guides.mjs */
+interface PoemGuideItem {
+  no: number;
+  text: string;
+  author?: string;
+  /** texts-v3 の文ID（本文の該当箇所へ飛ぶ） */
+  refs: string[];
+  fields: { key: string; label: string; body: string }[];
+}
+interface PoemGuideSection {
+  heading: string;
+  items: PoemGuideItem[];
+}
+
 interface GuideData {
   textId: string;
   title: string;
@@ -25,15 +39,17 @@ interface GuideData {
     background?: GuideSection;
     learningPoints?: GuideSection;
     characters?: GuideSection;
+    poems?: PoemGuideSection;
   };
 }
 
-const sectionKeys = ["background", "learningPoints", "characters"] as const;
+const sectionKeys = ["background", "poems", "learningPoints", "characters"] as const;
 
 type SectionKey = (typeof sectionKeys)[number];
 
 const sectionLabels: Record<SectionKey, string> = {
   background: "出典・背景",
+  poems: "歌ごとの解説",
   learningPoints: "学習ポイント",
   characters: "登場人物・敬語",
 };
@@ -41,9 +57,50 @@ const sectionLabels: Record<SectionKey, string> = {
 // 各セクションのインジケータカラー (学習根幹のレイヤーカラーを温存)
 const sectionIndicatorBg: Record<SectionKey, string> = {
   background: "bg-layer-3",
+  poems: "bg-layer-2",
   learningPoints: "bg-kin",
   characters: "bg-layer-4",
 };
+
+/** 歌ごとの解説の1首。見出し（歌本文・歌人）を押すと中身が開く */
+function PoemGuideCard({ item, textId }: { item: PoemGuideItem; textId: string }) {
+  const [open, setOpen] = useState(false);
+  const firstRef = item.refs[0];
+  return (
+    <article className="rounded-xl border-2 border-rw-ink bg-rw-paper overflow-hidden">
+      <button onClick={() => setOpen((v) => !v)} className="w-full text-left px-3 py-2.5 flex items-start gap-2">
+        <span className="shrink-0 w-6 h-6 rounded-full bg-rw-ink text-rw-paper text-[11px] font-black flex items-center justify-center mt-0.5">
+          {item.no}
+        </span>
+        <span className="flex-1 min-w-0">
+          <span className="block font-serif text-[15px] leading-relaxed text-rw-ink whitespace-pre-wrap">{item.text}</span>
+          {item.author && <span className="block text-[12px] text-rw-ink-soft mt-0.5">{item.author}</span>}
+        </span>
+        <span className={`text-xs text-rw-ink-soft transition-transform mt-1 ${open ? "rotate-180" : ""}`}>▼</span>
+      </button>
+      {open && (
+        <div className="border-t border-rw-rule px-3 py-3 space-y-3">
+          {item.fields.map((f) => (
+            <div key={f.key}>
+              <div className="text-[11px] font-black text-rw-ink-soft tracking-wider">{f.label}</div>
+              <p className="text-sm text-rw-ink/80 whitespace-pre-wrap mt-0.5" style={{ lineHeight: 1.8 }}>
+                {f.body}
+              </p>
+            </div>
+          ))}
+          {firstRef && (
+            <Link
+              to={`/read/texts/${textId}#t=${firstRef}-t1`}
+              className="inline-block text-[12px] font-black text-rw-primary underline"
+            >
+              本文のこの歌へ →
+            </Link>
+          )}
+        </div>
+      )}
+    </article>
+  );
+}
 
 export default function TextGuide() {
   const params = useParams<{ textId: string }>();
@@ -55,6 +112,7 @@ export default function TextGuide() {
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(new Set());
   const sectionRefs = useRef<Record<SectionKey, HTMLElement | null>>({
     background: null,
+    poems: null,
     learningPoints: null,
     characters: null,
   });
@@ -152,10 +210,41 @@ export default function TextGuide() {
   }
 
   const renderSectionContent = (key: SectionKey) => {
-    const section = guide.sections[key];
+    const section = guide.sections[key] as GuideSection | PoemGuideSection | undefined;
     if (!section) return null;
     const isOpen = openSections.has(key);
 
+    if (key === "poems") {
+      const poems = section as PoemGuideSection;
+      return (
+        <section
+          key={key}
+          ref={(el) => {
+            sectionRefs.current[key] = el;
+          }}
+          data-section={key}
+          className="scroll-mt-28"
+        >
+          <button onClick={() => toggleSection(key)} className="w-full flex items-center gap-3 text-left py-2.5">
+            <div className={`w-1 h-6 rounded-sm ${sectionIndicatorBg[key]}`} />
+            <h2 className="text-[17px] font-black text-rw-ink flex-1">
+              {poems.heading}
+              <span className="ml-2 text-[11px] font-bold text-rw-ink-soft">{poems.items.length} 首</span>
+            </h2>
+            <span className={`text-xs text-rw-ink-soft transition-transform ${isOpen ? "rotate-180" : ""}`}>▼</span>
+          </button>
+          {isOpen && (
+            <div className="pl-4 pb-4 space-y-2">
+              {poems.items.map((item) => (
+                <PoemGuideCard key={item.no} item={item} textId={textId} />
+              ))}
+            </div>
+          )}
+        </section>
+      );
+    }
+
+    const gs = section as GuideSection;
     return (
       <section
         key={key}
@@ -171,7 +260,7 @@ export default function TextGuide() {
         >
           <div className={`w-1 h-6 rounded-sm ${sectionIndicatorBg[key]}`} />
           <h2 className="text-[17px] font-black text-rw-ink flex-1">
-            {section.heading}
+            {gs.heading}
           </h2>
           <span
             className={`text-xs text-rw-ink-soft transition-transform ${
@@ -184,7 +273,7 @@ export default function TextGuide() {
 
         {isOpen && (
           <div className="pl-4 pb-4 space-y-4">
-            {section.content?.map((p, i) => (
+            {gs.content?.map((p, i) => (
               <p
                 key={i}
                 className="text-sm text-rw-ink/80 whitespace-pre-wrap"
@@ -194,7 +283,7 @@ export default function TextGuide() {
               </p>
             ))}
 
-            {section.glossary && section.glossary.length > 0 && (
+            {gs.glossary && gs.glossary.length > 0 && (
               <div className="mt-4">
                 <h3 className="text-xs font-black text-rw-ink mb-2">用語解説</h3>
                 <div className="overflow-hidden rounded-xl border-2 border-rw-ink bg-rw-paper">
@@ -213,7 +302,7 @@ export default function TextGuide() {
                       </tr>
                     </thead>
                     <tbody>
-                      {section.glossary.map((entry, i) => (
+                      {gs.glossary.map((entry, i) => (
                         <tr
                           key={i}
                           className="border-t border-rw-rule"
