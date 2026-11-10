@@ -218,3 +218,24 @@ A と B は並行でき、どちらも CODEX の範囲に触れない。記録�
 - 開始：`area: 'text'`、`action: 'open'`、`targetType: 'readtest'`、`targetId` = 教材ID。`ctx` = `{ source: 'auto' | 'manual', n: 問題数 }`（自動問題か手書きの問題ファイルか）。「もう一度」では送らない（同じ画面の中のやり直し）。
 - 回答：`area: 'text'`、`action: 'answer'`、`targetType: 'readq'`、`targetId` = `教材ID:問題番号`、`correct`、`chosen` = 選んだ選択肢の文字列、`format` = 問題の種類（`vocab`／`grammar`／`subject`／`kakari`／`reading`）。`ctx` = `{ tokenIds: 傍線に重なるトークン, span: [文の中の開始, 終了], source, ms }`（`ms` は `markQuestionShown()` からの応答時間で、`logEvent` が付ける）。
 - 問題番号は生成の結果なので、自動問題のデータ（教材・単語帳・決め手）が変わると同じ番号でも別の問題になりうる。集計で問題を同定するときは `ctx.tokenIds` と `ctx.span` を使う。
+
+## 10.5 利用状況タブの組み直し（2026-11-10）
+
+教員画面の利用状況タブを、先生の問いの順に1画面へ並べ直した（ユーザー指示）。上から 絞り込み（期間・学校・年・組）→ 概況 → 何でつまずいているか → 誰が、どの範囲を、どの程度やっているか（クラス別・生徒別）→ 教材別 → 日ごと（折りたたみ）。以前の累計表示（word_stats。登録前を含む）は末尾の折りたたみに残した。
+
+決めたこと（ユーザー指示）:
+
+- 対象は**登録済みの生徒だけ**。匿名 ID の行は出さない。
+- 誤答は**選んだ期間の learning_events だけ**で数える。累計の表（word_stats）は混ぜない。開いたときの期間は直近30日。
+- **誤答率だけで見ない**。語・ドリルごとに 間違えた人／解いた人、初回の誤答（各生徒の期間内の最初の1回）、2回以上間違えた人、何と間違えたか（単語は選んだ別の意味、文法は選んだ選択肢）を並べる。行を押すと、解いた生徒と誤答の回数。
+- 「もう一度」の再出題（単語 `ctx.retry`、ドリル `ctx.role = retry`）は数えない。出す下限は 回答5件・3人（組で絞ったときは 3件・2人）。
+- 生徒別は「やった量と範囲」（単語の番号帯50語ごと・文法の単元・教材）を出す。**使っていないことは身についていないことを意味しない**ので、未利用の強調・止まった人の抽出・順位づけはしない。並びは組・番号順が既定。
+
+作り:
+
+- `supabase/migrations/016_usage_stumbles.sql` … `usage_by_area` に `p_users` を足し（2引数の旧関数は落とす。旧呼び出しは既定値で受ける）、`usage_stumbles`・`usage_stumble_users`・`usage_ranges` を新設。組・番号は暗号化されていて DB では絞れないので、API が復号して該当する生徒の user_id を `p_users` に渡す。
+- API … `api/_teacher_usageAreas.ts`（絞り込み・範囲・学校年組ごとの登録人数 `roster`）、`api/_teacher_usageStumbles.ts`（新規。`action=usageStumbles`、`&type=word|drill|topic&id=` で「誰が」）、共通部品は `api/_usageIdentity.ts`（`parseUsageFilter`・`pickUsers`・`buildRoster`）。
+- 画面 … `src/pages/Teacher.tsx` の `UsageView`・`UsageStumblesSection`・`UsagePeopleSection`・`UsageTextsSection`。文法の単元の題は `/grammar/<id>.json` から引く。
+- 適用の順序は **先に DB、後からアプリ**（旧アプリは 016 適用後もそのまま動く）。
+
+検証（2026-11-10）: 016 を PGlite で手計算と突き合わせ全項目一致（再出題の除外・初回・2回以上・混同先・期間の端と JST 境界・p_users・空配列・旧2引数の呼び出し・anon/authenticated の拒否・冪等）。型検査・全テスト・ビルド。画面は作り物のデータを同じ関数に通した確認用サーバーで、表示・行の展開・学校→年→組の絞り込み・390px 幅を確かめた。**本番 DB への適用と実データでの確認はまだ**。

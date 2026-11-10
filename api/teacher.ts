@@ -19,6 +19,7 @@ import upsertOverride from "./_teacher_upsertOverride.js";
 import { getQuizRange, setQuizRange } from "./_teacher_quizRange.js";
 import usageData from "./_teacher_usageData.js";
 import usageAreas from "./_teacher_usageAreas.js";
+import usageStumbles from "./_teacher_usageStumbles.js";
 
 type Handler = (req: VercelRequest, res: VercelResponse) => Promise<unknown> | unknown;
 
@@ -34,6 +35,7 @@ const ROUTES: Record<string, Handler> = {
   setQuizRange,
   usageData,
   usageAreas,
+  usageStumbles,
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

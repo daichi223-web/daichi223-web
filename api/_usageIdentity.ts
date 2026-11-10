@@ -75,3 +75,61 @@ export function makeUserIndex(identity: Map<string, Ident>) {
   };
   return { users, uOf };
 }
+
+// ---- 期間と絞り込み（usageAreas / usageStumbles 共通） ----------------------------------
+
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+/** "YYYY-MM-DD" だけ通す */
+export const dayParam = (raw: unknown) => {
+  const s = typeof raw === "string" ? raw.trim() : "";
+  return DAY.test(s) ? s : null;
+};
+
+/** JST の "YYYY-MM-DD" の 0 時を UTC の ISO に直す（shift 日ずらす） */
+export const jstStartIso = (day: string, shift = 0) =>
+  new Date(new Date(day + "T00:00:00Z").getTime() + shift * 864e5 - 9 * 3600e3).toISOString();
+
+export type UsageFilter = { school: string | null; grade: number | null; cls: number | null };
+
+const intParam = (raw: unknown) => {
+  const n = typeof raw === "string" && /^\d{1,2}$/.test(raw.trim()) ? Number(raw.trim()) : NaN;
+  return Number.isFinite(n) ? n : null;
+};
+
+/** ?school=KU&grade=1&cls=3 （どれも省略可） */
+export function parseUsageFilter(q: Record<string, unknown>): UsageFilter {
+  const school = typeof q.school === "string" && /^[A-Z]{1,6}$/.test(q.school.trim()) ? q.school.trim() : null;
+  return { school, grade: intParam(q.grade), cls: intParam(q.cls) };
+}
+
+/**
+ * 集計に入れる生徒の user_id。登録済み（プロフィールがある）の生徒だけで、学校・年・組の条件に合う人。
+ * 組・番号は暗号化されていて DB では絞れないので、ここで選んで DB 関数の p_users に渡す。
+ */
+export function pickUsers(identity: Map<string, Ident>, f: UsageFilter): string[] {
+  const out: string[] = [];
+  for (const [uid, x] of identity) {
+    if (f.school && x.school !== f.school) continue;
+    if (f.grade != null && x.grade !== f.grade) continue;
+    if (f.cls != null && x.cls !== f.cls) continue;
+    out.push(uid);
+  }
+  return out;
+}
+
+/** 学校・年・組ごとの登録人数（絞り込みの選択肢とクラス別の分母） */
+export function buildRoster(identity: Map<string, Ident>) {
+  const m = new Map<string, { school: string; grade: number | null; cls: number | null; registered: number }>();
+  for (const x of identity.values()) {
+    const grade = x.grade ?? null;
+    const cls = x.cls ?? null;
+    const k = `${x.school}|${grade}|${cls}`;
+    const row = m.get(k) ?? { school: x.school, grade, cls, registered: 0 };
+    row.registered++;
+    m.set(k, row);
+  }
+  return [...m.values()].sort(
+    (a, b) => a.school.localeCompare(b.school) || (a.grade ?? 99) - (b.grade ?? 99) || (a.cls ?? 99) - (b.cls ?? 99),
+  );
+}
