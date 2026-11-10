@@ -2516,6 +2516,17 @@ function UsageStumblesSection({ stumbles, query, topicTitles }: { stumbles: any;
 
 // ---- 誰が使っているか（クラス別・生徒別と範囲） --------------------------------------------
 
+/** 横棒（value / max）。数字は必ず横に文字でも出すので、棒そのものは読み上げない */
+function UsageBar({ value, max, color, className = "" }: { value: number; max: number; color: string; className?: string }) {
+  const pct = max > 0 ? Math.min(100, (value / max) * 100) : 0;
+  return (
+    <div className={`h-2 rounded-full bg-slate-200 overflow-hidden ${className}`} aria-hidden="true">
+      <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+    </div>
+  );
+}
+const U_BAR = { used: "bg-slate-600", vocab: "bg-blue-600", grammar: "bg-emerald-600", text: "bg-amber-500" };
+
 function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; topicTitles: Record<string, string>; showClasses: boolean }) {
   const [open, setOpen] = useState<number | null>(null);
   const [order, setOrder] = useState<"class" | "last">("class");
@@ -2585,25 +2596,90 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
       {showClasses && classRows.length > 1 && (
         <div>
           <h4 className="font-semibold text-slate-700 mb-1">クラス別</h4>
-          <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+          <p className="text-xs text-slate-500 mb-1">
+            「登録」はその組でアプリに登録している人数（在籍数ではありません）。「使った人」は期間中に単語・文法・教材のどれかを使った人。回答数は組の合計です。
+            棒は、登録している人のうち何割が使ったかを表します。
+          </p>
+          {/* スマホ：1組ずつ縦に並べる */}
+          <div className="sm:hidden rounded-lg border border-slate-200 bg-white divide-y divide-slate-100">
+            {classRows.map((r) => (
+              <div key={classLabel(r)} className="px-3 py-2">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="font-semibold text-slate-800">{classLabel(r)}</span>
+                  <span className="tabular-nums">
+                    <span className="text-slate-500">使った人 </span>
+                    {fmtN(r.used)}／{fmtN(r.registered)} 人
+                    <span className="text-slate-500">（{pctOf(r.used, r.registered)}）</span>
+                  </span>
+                </div>
+                <UsageBar value={r.used} max={r.registered} color={U_BAR.used} className="mt-1" />
+                <dl className="mt-2 grid grid-cols-[2.5rem_4rem_1fr] items-center gap-x-2 gap-y-1 tabular-nums">
+                  <dt className="text-slate-500">単語</dt>
+                  <dd><UsageBar value={r.vocabU} max={r.registered} color={U_BAR.vocab} /></dd>
+                  <dd>{r.vocabU ? `${fmtN(r.vocabU)} 人・回答 ${fmtN(r.vocabAns)}・正答率 ${pctOf(r.vocabCorrect, r.vocabAns)}` : "—"}</dd>
+                  <dt className="text-slate-500">文法</dt>
+                  <dd><UsageBar value={r.grammarU} max={r.registered} color={U_BAR.grammar} /></dd>
+                  <dd>{r.grammarU ? `${fmtN(r.grammarU)} 人・回答 ${fmtN(r.grammarAns)}・正答率 ${pctOf(r.grammarCorrect, r.grammarAns)}` : "—"}</dd>
+                  <dt className="text-slate-500">教材</dt>
+                  <dd><UsageBar value={r.textU} max={r.registered} color={U_BAR.text} /></dd>
+                  <dd>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</dd>
+                </dl>
+              </div>
+            ))}
+          </div>
+          {/* PC・タブレット：列を分けた表 */}
+          <div className="hidden sm:block overflow-x-auto rounded-lg border border-slate-200 bg-white">
             <table className="min-w-full">
               <thead className="bg-slate-50">
                 <tr>
-                  <th className={U_TH}>組</th>
-                  <th className={`${U_TH} text-right`}>使った人／登録</th>
-                  <th className={`${U_TH} text-right`}>単語 人・回答（正答率）</th>
-                  <th className={`${U_TH} text-right`}>文法 人・回答（正答率）</th>
-                  <th className={`${U_TH} text-right`}>教材 人</th>
+                  <th className={U_TH} rowSpan={2}>組</th>
+                  <th className={`${U_TH} text-right`} rowSpan={2}>使った人／登録</th>
+                  <th className={U_TH} rowSpan={2}>
+                    登録した人のうち使った割合
+                    <div className="font-normal text-xs text-slate-500">
+                      <span className="inline-block w-2 h-2 rounded-full bg-slate-600 mr-1" />全体
+                      <span className="inline-block w-2 h-2 rounded-full bg-blue-600 ml-2 mr-1" />単語
+                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-600 ml-2 mr-1" />文法
+                      <span className="inline-block w-2 h-2 rounded-full bg-amber-500 ml-2 mr-1" />教材
+                    </div>
+                  </th>
+                  <th className={`${U_TH} text-center border-l border-slate-200`} colSpan={3}>単語</th>
+                  <th className={`${U_TH} text-center border-l border-slate-200`} colSpan={3}>文法</th>
+                  <th className={`${U_TH} text-center border-l border-slate-200`}>教材</th>
+                </tr>
+                <tr>
+                  <th className={`${U_TH} text-right border-l border-slate-200`}>使った人</th>
+                  <th className={`${U_TH} text-right`}>回答数</th>
+                  <th className={`${U_TH} text-right`}>正答率</th>
+                  <th className={`${U_TH} text-right border-l border-slate-200`}>使った人</th>
+                  <th className={`${U_TH} text-right`}>回答数</th>
+                  <th className={`${U_TH} text-right`}>正答率</th>
+                  <th className={`${U_TH} text-right border-l border-slate-200`}>開いた人</th>
                 </tr>
               </thead>
               <tbody>
                 {classRows.map((r) => (
                   <tr key={classLabel(r)} className="border-t border-slate-100">
                     <td className={U_TD}>{classLabel(r)}</td>
-                    <td className={U_TDN}>{fmtN(r.used)}／{fmtN(r.registered)} 人</td>
-                    <td className={U_TDN}>{r.vocabU ? `${fmtN(r.vocabU)} 人・${fmtN(r.vocabAns)}（${pctOf(r.vocabCorrect, r.vocabAns)}）` : "—"}</td>
-                    <td className={U_TDN}>{r.grammarU ? `${fmtN(r.grammarU)} 人・${fmtN(r.grammarAns)}（${pctOf(r.grammarCorrect, r.grammarAns)}）` : "—"}</td>
-                    <td className={U_TDN}>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</td>
+                    <td className={U_TDN}>
+                      {fmtN(r.used)}／{fmtN(r.registered)} 人
+                      <span className="text-slate-500">（{pctOf(r.used, r.registered)}）</span>
+                    </td>
+                    <td className="px-2 py-1.5 min-w-[11rem]">
+                      <div className="space-y-0.5">
+                        <UsageBar value={r.used} max={r.registered} color={U_BAR.used} />
+                        <UsageBar value={r.vocabU} max={r.registered} color={U_BAR.vocab} className="!h-1.5" />
+                        <UsageBar value={r.grammarU} max={r.registered} color={U_BAR.grammar} className="!h-1.5" />
+                        <UsageBar value={r.textU} max={r.registered} color={U_BAR.text} className="!h-1.5" />
+                      </div>
+                    </td>
+                    <td className={`${U_TDN} border-l border-slate-100`}>{r.vocabU ? `${fmtN(r.vocabU)} 人` : "—"}</td>
+                    <td className={U_TDN}>{r.vocabU ? fmtN(r.vocabAns) : "—"}</td>
+                    <td className={U_TDN}>{r.vocabU ? pctOf(r.vocabCorrect, r.vocabAns) : "—"}</td>
+                    <td className={`${U_TDN} border-l border-slate-100`}>{r.grammarU ? `${fmtN(r.grammarU)} 人` : "—"}</td>
+                    <td className={U_TDN}>{r.grammarU ? fmtN(r.grammarAns) : "—"}</td>
+                    <td className={U_TDN}>{r.grammarU ? pctOf(r.grammarCorrect, r.grammarAns) : "—"}</td>
+                    <td className={`${U_TDN} border-l border-slate-100`}>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</td>
                   </tr>
                 ))}
               </tbody>
