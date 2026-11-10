@@ -417,7 +417,7 @@ export default function Teacher() {
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          <span className="sm:hidden">📊誤</span>
+          <span className="sm:hidden">誤答</span>
           <span className="hidden sm:inline">📊 誤答分析</span>
         </button>
         <button
@@ -428,7 +428,7 @@ export default function Teacher() {
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          <span className="sm:hidden">📚教</span>
+          <span className="sm:hidden">教材</span>
           <span className="hidden sm:inline">📚 教材公開管理</span>
         </button>
         <button
@@ -439,7 +439,7 @@ export default function Teacher() {
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          <span className="sm:hidden">📌小</span>
+          <span className="sm:hidden">範囲</span>
           <span className="hidden sm:inline">📌 小テスト範囲</span>
         </button>
         <button
@@ -450,7 +450,7 @@ export default function Teacher() {
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          <span className="sm:hidden">🎎段</span>
+          <span className="sm:hidden">段位</span>
           <span className="hidden sm:inline">🎎 段位プレビュー</span>
         </button>
         <button
@@ -461,7 +461,7 @@ export default function Teacher() {
               : "text-slate-600 hover:text-slate-800"
           }`}
         >
-          <span className="sm:hidden">📈利</span>
+          <span className="sm:hidden">利用</span>
           <span className="hidden sm:inline">📈 利用状況</span>
         </button>
       </div>
