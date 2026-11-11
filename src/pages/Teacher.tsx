@@ -1,5 +1,5 @@
 // src/pages/Teacher.tsx
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { dataParser } from "../utils/dataParser";
 import bundledTextsIndex from "../data/textsIndex.json";
@@ -379,8 +379,7 @@ export default function Teacher() {
               className="px-2.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg transition"
               title="セッション cookie を失効させて再度ログインが必要な状態に戻す"
             >
-              <span className="sm:hidden">ログ</span>
-              <span className="hidden sm:inline">ログアウト</span>
+              ログアウト
             </button>
           </div>
         </div>
@@ -2299,6 +2298,8 @@ function UsageView() {
             })}
           </div>
 
+          <UsageTrendChart data={data} />
+
           <UsageStumblesSection stumbles={stumbles} query={loadedQuery} topicTitles={topicTitles} />
           <UsagePeopleSection data={data} topicTitles={topicTitles} showClasses={!cls} />
           <UsageTextsSection data={data} />
@@ -2312,6 +2313,151 @@ function UsageView() {
         {showOld && <UsageCumulativeView />}
       </section>
     </div>
+  );
+}
+
+// ---- 日ごとの使った人（時系列） ------------------------------------------------------------
+//
+// 全体（その日に単語・文法・教材のどれかを使った人。重複なし＝migration 017）を太い線、領域別を細い線で描く。
+// 記録の無い日は 0 人として線をつなぐ。数字は下の「日ごとの利用」の表でも読める。
+const U_TREND = [
+  { k: "all", label: "全体", color: "#334155", width: 2.5 },
+  { k: "vocab", label: "単語", color: "#2563eb", width: 1.5 },
+  { k: "grammar", label: "文法", color: "#059669", width: 1.5 },
+  { k: "text", label: "教材", color: "#d97706", width: 1.5 },
+] as const;
+type TrendKey = (typeof U_TREND)[number]["k"];
+
+function UsageTrendChart({ data }: { data: any }) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [w, setW] = useState(640);
+  const [hover, setHover] = useState<number | null>(null);
+
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el) return;
+    const fit = () => setW(Math.max(280, el.clientWidth));
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const hasAll = Array.isArray(data.dayUsers);
+  const rows = useMemo(() => {
+    const m = new Map<string, Record<TrendKey, number>>();
+    const at = (day: string) => {
+      let x = m.get(day);
+      if (!x) m.set(day, (x = { all: 0, vocab: 0, grammar: 0, text: 0 }));
+      return x;
+    };
+    for (const d of data.days ?? []) if (d.area in at(d.day)) at(d.day)[d.area as TrendKey] = d.users;
+    for (const d of data.dayUsers ?? []) at(d.day).all = d.users;
+    const keys = [...m.keys()].sort();
+    const first = data.from ?? keys[0];
+    const last = data.to ?? keys[keys.length - 1];
+    if (!first || !last) return [];
+    const out: Array<{ day: string } & Record<TrendKey, number>> = [];
+    for (let t = Date.parse(first + "T00:00:00Z"), e = Date.parse(last + "T00:00:00Z"); t <= e && out.length < 800; t += 864e5) {
+      const day = new Date(t).toISOString().slice(0, 10);
+      out.push({ day, ...(m.get(day) ?? { all: 0, vocab: 0, grammar: 0, text: 0 }) });
+    }
+    return out;
+  }, [data]);
+
+  const series = U_TREND.filter((s) => s.k !== "all" || hasAll);
+  const n = rows.length;
+  if (!n) return null;
+
+  const H = 200, padL = 34, padR = 12, padT = 10, padB = 22;
+  const innerW = w - padL - padR, innerH = H - padT - padB;
+  const peak = Math.max(1, ...rows.flatMap((r) => series.map((s) => r[s.k])));
+  const rough = peak / 4;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  const step = Math.max(1, [1, 2, 5, 10].map((x) => x * mag).find((x) => x >= rough) ?? 10 * mag);
+  const yMax = step * Math.ceil(peak / step);
+  const x = (i: number) => padL + (n === 1 ? innerW / 2 : (i * innerW) / (n - 1));
+  const y = (v: number) => padT + innerH - (v / yMax) * innerH;
+  const ticks: number[] = [];
+  for (let v = 0; v <= yMax; v += step) ticks.push(v);
+  const xStep = Math.max(1, Math.ceil(n / (w < 480 ? 5 : 10)));
+  const md = (day: string) => `${Number(day.slice(5, 7))}/${Number(day.slice(8, 10))}`;
+  const wd = (day: string) => "日月火水木金土"[new Date(day + "T00:00:00Z").getUTCDay()];
+
+  const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const i = n === 1 ? 0 : Math.round(((e.clientX - r.left - padL) / innerW) * (n - 1));
+    setHover(Math.min(n - 1, Math.max(0, i)));
+  };
+
+  const main: TrendKey = hasAll ? "all" : "vocab";
+  const total = rows.reduce((s, r) => s + r[main], 0);
+  const top = rows.reduce((a, r) => (r[main] > a[main] ? r : a), rows[0]);
+  const h = hover != null ? rows[hover] : null;
+
+  return (
+    <section>
+      <h3 className="text-base font-semibold text-slate-800 mb-1">日ごとの使った人（時系列）</h3>
+      <p className="text-xs text-slate-500 mb-2">
+        {hasAll
+          ? `「全体」は、その日に単語・文法・教材のどれかを使った人（同じ人は1人と数えます）。1日あたり平均 ${
+              Math.round((total / n) * 10) / 10
+            } 人、最も多い日は ${md(top.day)}（${wd(top.day)}）の ${fmtN(top.all)} 人。`
+          : "領域ごとの、その日に使った人です。"}
+      </p>
+      <div className="rounded-lg border border-slate-200 bg-white p-2 sm:p-3">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-700 min-h-[1.5rem] tabular-nums">
+          <span className="font-medium">{h ? `${md(h.day)}（${wd(h.day)}）` : "凡例"}</span>
+          {series.map((s) => (
+            <span key={s.k} className="inline-flex items-center gap-1">
+              <span className="inline-block w-3 rounded-full" style={{ height: s.k === "all" ? 4 : 3, background: s.color }} />
+              {s.label}
+              {h && <span className="font-semibold">{fmtN(h[s.k])} 人</span>}
+            </span>
+          ))}
+          {!h && <span className="text-xs text-slate-500">グラフに触れると、その日の人数が出ます</span>}
+        </div>
+        <div ref={boxRef} className="mt-1">
+          <svg
+            width={w}
+            height={H}
+            role="img"
+            aria-label="日ごとの使った人の折れ線グラフ"
+            style={{ touchAction: "pan-y", display: "block" }}
+            onPointerMove={onMove}
+            onPointerDown={onMove}
+            onPointerLeave={(e) => { if (e.pointerType === "mouse") setHover(null); }}
+          >
+            {ticks.map((v) => (
+              <g key={v}>
+                <line x1={padL} x2={w - padR} y1={y(v)} y2={y(v)} stroke={v === 0 ? "#94a3b8" : "#e2e8f0"} strokeWidth={1} />
+                <text x={padL - 6} y={y(v) + 4} textAnchor="end" fontSize={11} fill="#64748b">{v}</text>
+              </g>
+            ))}
+            {rows.map((r, i) =>
+              i % xStep === 0 && (i === 0 || n - 1 - i >= xStep / 2 || i === n - 1) ? (
+                <text key={r.day} x={x(i)} y={H - 6} textAnchor={i === 0 ? "start" : "middle"} fontSize={11} fill="#64748b">{md(r.day)}</text>
+              ) : null,
+            )}
+            {h && hover != null && <line x1={x(hover)} x2={x(hover)} y1={padT} y2={padT + innerH} stroke="#94a3b8" strokeWidth={1} />}
+            {[...series].reverse().map((s) => (
+              <polyline
+                key={s.k}
+                fill="none"
+                stroke={s.color}
+                strokeWidth={s.width}
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                points={rows.map((r, i) => `${x(i).toFixed(1)},${y(r[s.k]).toFixed(1)}`).join(" ")}
+              />
+            ))}
+            {n === 1 && series.map((s) => <circle key={s.k} cx={x(0)} cy={y(rows[0][s.k])} r={4} fill={s.color} stroke="#fff" strokeWidth={2} />)}
+            {h && hover != null && n > 1 &&
+              series.map((s) => <circle key={s.k} cx={x(hover)} cy={y(h[s.k])} r={4} fill={s.color} stroke="#fff" strokeWidth={2} />)}
+          </svg>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -2530,6 +2676,7 @@ const U_BAR = { used: "bg-slate-600", vocab: "bg-blue-600", grammar: "bg-emerald
 function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; topicTitles: Record<string, string>; showClasses: boolean }) {
   const [open, setOpen] = useState<number | null>(null);
   const [order, setOrder] = useState<"class" | "last">("class");
+  const [openClass, setOpenClass] = useState<string | null>(null);
 
   const titleOf = useMemo(() => {
     const m: Record<string, string> = {};
@@ -2584,118 +2731,11 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
 
   const classLabel = (r: any) => `${r.school} ${r.grade != null && r.cls != null ? `${r.grade}-${r.cls}` : "（年・組なし）"}`;
 
-  return (
-    <section className="space-y-4">
-      <div>
-        <h3 className="text-base font-semibold text-slate-800 mb-1">誰が、どの範囲を、どの程度やっているか</h3>
-        <p className="text-xs text-slate-500">
-          この期間にアプリで学習した量と範囲です。アプリを使っていないことは、身についていないことを意味しません。
-        </p>
-      </div>
+  const peopleOf = (r: any) =>
+    people.filter((p) => p.who?.school === r.school && (p.who?.grade ?? null) === r.grade && (p.who?.cls ?? null) === r.cls);
 
-      {showClasses && classRows.length > 1 && (
-        <div>
-          <h4 className="font-semibold text-slate-700 mb-1">クラス別</h4>
-          <p className="text-xs text-slate-500 mb-1">
-            「登録」はその組でアプリに登録している人数（在籍数ではありません）。「使った人」は期間中に単語・文法・教材のどれかを使った人。回答数は組の合計です。
-            棒は、登録している人のうち何割が使ったかを表します。
-          </p>
-          {/* スマホ：1組ずつ縦に並べる */}
-          <div className="sm:hidden rounded-lg border border-slate-200 bg-white divide-y divide-slate-100">
-            {classRows.map((r) => (
-              <div key={classLabel(r)} className="px-3 py-2">
-                <div className="flex items-baseline justify-between gap-2">
-                  <span className="font-semibold text-slate-800">{classLabel(r)}</span>
-                  <span className="tabular-nums">
-                    <span className="text-slate-500">使った人 </span>
-                    {fmtN(r.used)}／{fmtN(r.registered)} 人
-                    <span className="text-slate-500">（{pctOf(r.used, r.registered)}）</span>
-                  </span>
-                </div>
-                <UsageBar value={r.used} max={r.registered} color={U_BAR.used} className="mt-1" />
-                <dl className="mt-2 grid grid-cols-[2.5rem_4rem_1fr] items-center gap-x-2 gap-y-1 tabular-nums">
-                  <dt className="text-slate-500">単語</dt>
-                  <dd><UsageBar value={r.vocabU} max={r.registered} color={U_BAR.vocab} /></dd>
-                  <dd>{r.vocabU ? `${fmtN(r.vocabU)} 人・回答 ${fmtN(r.vocabAns)}・正答率 ${pctOf(r.vocabCorrect, r.vocabAns)}` : "—"}</dd>
-                  <dt className="text-slate-500">文法</dt>
-                  <dd><UsageBar value={r.grammarU} max={r.registered} color={U_BAR.grammar} /></dd>
-                  <dd>{r.grammarU ? `${fmtN(r.grammarU)} 人・回答 ${fmtN(r.grammarAns)}・正答率 ${pctOf(r.grammarCorrect, r.grammarAns)}` : "—"}</dd>
-                  <dt className="text-slate-500">教材</dt>
-                  <dd><UsageBar value={r.textU} max={r.registered} color={U_BAR.text} /></dd>
-                  <dd>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</dd>
-                </dl>
-              </div>
-            ))}
-          </div>
-          {/* PC・タブレット：列を分けた表 */}
-          <div className="hidden sm:block overflow-x-auto rounded-lg border border-slate-200 bg-white">
-            <table className="min-w-full">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className={U_TH} rowSpan={2}>組</th>
-                  <th className={`${U_TH} text-right`} rowSpan={2}>使った人／登録</th>
-                  <th className={U_TH} rowSpan={2}>
-                    登録した人のうち使った割合
-                    <div className="font-normal text-xs text-slate-500">
-                      <span className="inline-block w-2 h-2 rounded-full bg-slate-600 mr-1" />全体
-                      <span className="inline-block w-2 h-2 rounded-full bg-blue-600 ml-2 mr-1" />単語
-                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-600 ml-2 mr-1" />文法
-                      <span className="inline-block w-2 h-2 rounded-full bg-amber-500 ml-2 mr-1" />教材
-                    </div>
-                  </th>
-                  <th className={`${U_TH} text-center border-l border-slate-200`} colSpan={3}>単語</th>
-                  <th className={`${U_TH} text-center border-l border-slate-200`} colSpan={3}>文法</th>
-                  <th className={`${U_TH} text-center border-l border-slate-200`}>教材</th>
-                </tr>
-                <tr>
-                  <th className={`${U_TH} text-right border-l border-slate-200`}>使った人</th>
-                  <th className={`${U_TH} text-right`}>回答数</th>
-                  <th className={`${U_TH} text-right`}>正答率</th>
-                  <th className={`${U_TH} text-right border-l border-slate-200`}>使った人</th>
-                  <th className={`${U_TH} text-right`}>回答数</th>
-                  <th className={`${U_TH} text-right`}>正答率</th>
-                  <th className={`${U_TH} text-right border-l border-slate-200`}>開いた人</th>
-                </tr>
-              </thead>
-              <tbody>
-                {classRows.map((r) => (
-                  <tr key={classLabel(r)} className="border-t border-slate-100">
-                    <td className={U_TD}>{classLabel(r)}</td>
-                    <td className={U_TDN}>
-                      {fmtN(r.used)}／{fmtN(r.registered)} 人
-                      <span className="text-slate-500">（{pctOf(r.used, r.registered)}）</span>
-                    </td>
-                    <td className="px-2 py-1.5 min-w-[11rem]">
-                      <div className="space-y-0.5">
-                        <UsageBar value={r.used} max={r.registered} color={U_BAR.used} />
-                        <UsageBar value={r.vocabU} max={r.registered} color={U_BAR.vocab} className="!h-1.5" />
-                        <UsageBar value={r.grammarU} max={r.registered} color={U_BAR.grammar} className="!h-1.5" />
-                        <UsageBar value={r.textU} max={r.registered} color={U_BAR.text} className="!h-1.5" />
-                      </div>
-                    </td>
-                    <td className={`${U_TDN} border-l border-slate-100`}>{r.vocabU ? `${fmtN(r.vocabU)} 人` : "—"}</td>
-                    <td className={U_TDN}>{r.vocabU ? fmtN(r.vocabAns) : "—"}</td>
-                    <td className={U_TDN}>{r.vocabU ? pctOf(r.vocabCorrect, r.vocabAns) : "—"}</td>
-                    <td className={`${U_TDN} border-l border-slate-100`}>{r.grammarU ? `${fmtN(r.grammarU)} 人` : "—"}</td>
-                    <td className={U_TDN}>{r.grammarU ? fmtN(r.grammarAns) : "—"}</td>
-                    <td className={U_TDN}>{r.grammarU ? pctOf(r.grammarCorrect, r.grammarAns) : "—"}</td>
-                    <td className={`${U_TDN} border-l border-slate-100`}>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      <div>
-        <div className="flex flex-wrap items-center gap-2 mb-1">
-          <h4 className="font-semibold text-slate-700">生徒別（使った {fmtN(people.length)} 人。行を押すと範囲の内訳）</h4>
-          <select value={order} onChange={(e) => setOrder(e.target.value as "class" | "last")} className={U_SEL} aria-label="並び">
-            <option value="class">組・番号順</option>
-            <option value="last">最近使った順</option>
-          </select>
-        </div>
+  // 生徒の表（生徒別と、クラスを押して開いたときの両方で使う）
+  const studentTable = (list: any[]) => (
         <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
           <table className="min-w-full">
             <thead className="bg-slate-50">
@@ -2711,7 +2751,7 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
               </tr>
             </thead>
             <tbody>
-              {people.flatMap((p) => {
+              {list.flatMap((p) => {
                 const rg = byUser.get(p.u) ?? { vocab: [], grammar: [], text: [] };
                 const words = rg.vocab.reduce((s: number, r: any) => s + r.words, 0);
                 const out = [
@@ -2776,7 +2816,7 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
                 }
                 return out;
               })}
-              {!people.length && (
+              {!list.length && (
                 <tr>
                   <td className={U_TD} colSpan={8}>この期間・対象の記録はありません</td>
                 </tr>
@@ -2784,6 +2824,158 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
             </tbody>
           </table>
         </div>
+  );
+
+  return (
+    <section className="space-y-4">
+      <div>
+        <h3 className="text-base font-semibold text-slate-800 mb-1">誰が、どの範囲を、どの程度やっているか</h3>
+        <p className="text-xs text-slate-500">
+          この期間にアプリで学習した量と範囲です。アプリを使っていないことは、身についていないことを意味しません。
+        </p>
+      </div>
+
+      {showClasses && classRows.length > 1 && (
+        <div>
+          <h4 className="font-semibold text-slate-700 mb-1">クラス別</h4>
+          <p className="text-xs text-slate-500 mb-1">
+            「登録」はその組でアプリに登録している人数（在籍数ではありません）。「使った人」は期間中に単語・文法・教材のどれかを使った人。回答数は組の合計です。
+            棒は、登録している人のうち何割が使ったかを表します。組を押すと、その組で使った生徒が開きます。
+          </p>
+          {/* スマホ：1組ずつ縦に並べる */}
+          <div className="sm:hidden rounded-lg border border-slate-200 bg-white divide-y divide-slate-100">
+            {classRows.map((r) => (
+              <div key={classLabel(r)} className="px-3 py-2">
+                <button
+                  type="button"
+                  onClick={() => setOpenClass(openClass === classLabel(r) ? null : classLabel(r))}
+                  aria-expanded={openClass === classLabel(r)}
+                  className="w-full flex items-baseline justify-between gap-2 text-left py-1"
+                >
+                  <span className="font-semibold text-slate-800">
+                    <span className="text-slate-400 mr-1">{openClass === classLabel(r) ? "▾" : "▸"}</span>
+                    {classLabel(r)}
+                  </span>
+                  <span className="tabular-nums">
+                    <span className="text-slate-500">使った人 </span>
+                    {fmtN(r.used)}／{fmtN(r.registered)} 人
+                    <span className="text-slate-500">（{pctOf(r.used, r.registered)}）</span>
+                  </span>
+                </button>
+                <UsageBar value={r.used} max={r.registered} color={U_BAR.used} className="mt-1" />
+                <dl className="mt-2 grid grid-cols-[2.5rem_4rem_1fr] items-center gap-x-2 gap-y-1 tabular-nums">
+                  <dt className="text-slate-500">単語</dt>
+                  <dd><UsageBar value={r.vocabU} max={r.registered} color={U_BAR.vocab} /></dd>
+                  <dd>{r.vocabU ? `${fmtN(r.vocabU)} 人・回答 ${fmtN(r.vocabAns)}・正答率 ${pctOf(r.vocabCorrect, r.vocabAns)}` : "—"}</dd>
+                  <dt className="text-slate-500">文法</dt>
+                  <dd><UsageBar value={r.grammarU} max={r.registered} color={U_BAR.grammar} /></dd>
+                  <dd>{r.grammarU ? `${fmtN(r.grammarU)} 人・回答 ${fmtN(r.grammarAns)}・正答率 ${pctOf(r.grammarCorrect, r.grammarAns)}` : "—"}</dd>
+                  <dt className="text-slate-500">教材</dt>
+                  <dd><UsageBar value={r.textU} max={r.registered} color={U_BAR.text} /></dd>
+                  <dd>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</dd>
+                </dl>
+                {openClass === classLabel(r) && (
+                  <div className="mt-2">
+                    <div className="text-xs text-slate-500 mb-1">この組で使った生徒（行を押すと範囲の内訳）</div>
+                    {studentTable(peopleOf(r))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          {/* PC・タブレット：列を分けた表 */}
+          <div className="hidden sm:block overflow-x-auto rounded-lg border border-slate-200 bg-white">
+            <table className="min-w-full">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className={U_TH} rowSpan={2}>組</th>
+                  <th className={`${U_TH} text-right`} rowSpan={2}>使った人／登録</th>
+                  <th className={U_TH} rowSpan={2}>
+                    登録した人のうち使った割合
+                    <div className="font-normal text-xs text-slate-500">
+                      <span className="inline-block w-2 h-2 rounded-full bg-slate-600 mr-1" />全体
+                      <span className="inline-block w-2 h-2 rounded-full bg-blue-600 ml-2 mr-1" />単語
+                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-600 ml-2 mr-1" />文法
+                      <span className="inline-block w-2 h-2 rounded-full bg-amber-500 ml-2 mr-1" />教材
+                    </div>
+                  </th>
+                  <th className={`${U_TH} text-center border-l border-slate-200`} colSpan={3}>単語</th>
+                  <th className={`${U_TH} text-center border-l border-slate-200`} colSpan={3}>文法</th>
+                  <th className={`${U_TH} text-center border-l border-slate-200`}>教材</th>
+                </tr>
+                <tr>
+                  <th className={`${U_TH} text-right border-l border-slate-200`}>使った人</th>
+                  <th className={`${U_TH} text-right`}>回答数</th>
+                  <th className={`${U_TH} text-right`}>正答率</th>
+                  <th className={`${U_TH} text-right border-l border-slate-200`}>使った人</th>
+                  <th className={`${U_TH} text-right`}>回答数</th>
+                  <th className={`${U_TH} text-right`}>正答率</th>
+                  <th className={`${U_TH} text-right border-l border-slate-200`}>開いた人</th>
+                </tr>
+              </thead>
+              <tbody>
+                {classRows.flatMap((r) => {
+                  const isOpen = openClass === classLabel(r);
+                  const out = [
+                  <tr
+                    key={classLabel(r)}
+                    onClick={() => setOpenClass(isOpen ? null : classLabel(r))}
+                    className="border-t border-slate-100 cursor-pointer hover:bg-slate-50"
+                  >
+                    <td className={U_TD}>
+                      <button type="button" aria-expanded={isOpen} className="text-left">
+                        <span className="text-slate-400 mr-1">{isOpen ? "▾" : "▸"}</span>
+                        {classLabel(r)}
+                      </button>
+                    </td>
+                    <td className={U_TDN}>
+                      {fmtN(r.used)}／{fmtN(r.registered)} 人
+                      <span className="text-slate-500">（{pctOf(r.used, r.registered)}）</span>
+                    </td>
+                    <td className="px-2 py-1.5 min-w-[11rem]">
+                      <div className="space-y-0.5">
+                        <UsageBar value={r.used} max={r.registered} color={U_BAR.used} />
+                        <UsageBar value={r.vocabU} max={r.registered} color={U_BAR.vocab} className="!h-1.5" />
+                        <UsageBar value={r.grammarU} max={r.registered} color={U_BAR.grammar} className="!h-1.5" />
+                        <UsageBar value={r.textU} max={r.registered} color={U_BAR.text} className="!h-1.5" />
+                      </div>
+                    </td>
+                    <td className={`${U_TDN} border-l border-slate-100`}>{r.vocabU ? `${fmtN(r.vocabU)} 人` : "—"}</td>
+                    <td className={U_TDN}>{r.vocabU ? fmtN(r.vocabAns) : "—"}</td>
+                    <td className={U_TDN}>{r.vocabU ? pctOf(r.vocabCorrect, r.vocabAns) : "—"}</td>
+                    <td className={`${U_TDN} border-l border-slate-100`}>{r.grammarU ? `${fmtN(r.grammarU)} 人` : "—"}</td>
+                    <td className={U_TDN}>{r.grammarU ? fmtN(r.grammarAns) : "—"}</td>
+                    <td className={U_TDN}>{r.grammarU ? pctOf(r.grammarCorrect, r.grammarAns) : "—"}</td>
+                    <td className={`${U_TDN} border-l border-slate-100`}>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</td>
+                  </tr>,
+                  ];
+                  if (isOpen) {
+                    out.push(
+                      <tr key={`${classLabel(r)}-people`} className="bg-slate-50">
+                        <td colSpan={10} className="px-3 py-2">
+                          <div className="text-xs text-slate-500 mb-1">この組で使った生徒（行を押すと範囲の内訳）</div>
+                          {studentTable(peopleOf(r))}
+                        </td>
+                      </tr>,
+                    );
+                  }
+                  return out;
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      <div>
+        <div className="flex flex-wrap items-center gap-2 mb-1">
+          <h4 className="font-semibold text-slate-700">生徒別（使った {fmtN(people.length)} 人。行を押すと範囲の内訳）</h4>
+          <select value={order} onChange={(e) => setOrder(e.target.value as "class" | "last")} className={U_SEL} aria-label="並び">
+            <option value="class">組・番号順</option>
+            <option value="last">最近使った順</option>
+          </select>
+        </div>
+        {studentTable(people)}
         <p className="text-xs text-slate-500 mt-1">「項目」は語の意味ごとの数（1語に意味が複数あれば別に数えます）。番号帯は50語ごと。</p>
       </div>
     </section>

@@ -6,6 +6,7 @@
 // 集計に入れるのは登録済みの生徒だけ（学校・年・組で絞れる）。組・番号は暗号化されているので、
 // ここで該当する生徒の user_id を選び、DB 関数（migration 016）の p_users に渡す。
 //   usage_by_area … 領域別・重なり・日ごと・教材別・生徒別
+//   usage_daily_users … 日ごとの使った人（時系列グラフ。migration 017）
 //   usage_ranges  … 生徒ごとの 単語の番号帯・文法の単元・教材（どの範囲をやっているか）
 // 集計結果だけを返す。生徒ごとの行の user_id は「学校コード＋年・組・番号」（users の index）に置き換える。
 import type { VercelRequest, VercelResponse } from "@vercel/node";
@@ -38,9 +39,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       p_to: to ? jstStartIso(to, 1) : null,
       p_users: picked,
     };
-    const [agg, rng] = await Promise.all([
+    const [agg, rng, daily] = await Promise.all([
       supabaseAdmin.rpc("usage_by_area", args),
       supabaseAdmin.rpc("usage_ranges", args),
+      supabaseAdmin.rpc("usage_daily_users", args),
     ]);
     if (agg.error) throw new Error(`usage_by_area: ${agg.error.message}`);
     if (rng.error) throw new Error(`usage_ranges: ${rng.error.message}`);
@@ -60,6 +62,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       people: swap(data.people),
       ranges: { vocab: swap(ranges.vocab), grammar: swap(ranges.grammar), text: swap(ranges.text) },
       users,
+      // 日ごとの「使った人」（領域をまたいで重複なし。migration 017）。関数が無いときは null（グラフは領域別だけになる）
+      dayUsers: daily.error ? null : daily.data,
       registered: picked.length,
       roster: buildRoster(ids.identity),
       piiDecrypted: ids.piiDecrypted,
