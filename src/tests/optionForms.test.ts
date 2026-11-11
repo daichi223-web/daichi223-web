@@ -4,7 +4,7 @@ import {
 } from '../lib/quiz/optionForms';
 import slimJson from '../data/kobunQ.v2.slim.json';
 
-type W = { qid: string; lemma: string; sense: string; senseNorm?: string; examples?: { jp: string; translation: string }[] };
+type W = { qid: string; lemma: string; sense: string; senseNorm?: string; pos?: string; examples?: { jp: string; translation: string }[] };
 const slim = slimJson as W[];
 const Q = new Map(slim.map((w) => [w.qid, w]));
 const labelsFor = (qid: string, ex: number, others: string[]) => {
@@ -150,5 +150,89 @@ describe('意志の形・「〜」の不一致（2026-11-05 表示の再点検�
   it('正解「てい」に誤答「〜てい」を並べない', () => {
     const L = labelsFor('9-1', 0, ['9-2']);
     expect(L['9-2']?.startsWith('〜')).toBe(false);
+  });
+});
+
+describe('活用の崩れの修正（2026-11-11 05-katsuyo-bug の A〜G。誤答の品詞 pos を使う）', () => {
+  it('A 誤答が副詞・活用済みの言い方（pos が活用しない品詞）のときは活用させない', () => {
+    // いっそう（副詞）を連用タに合わせて「いっそい」にしない。正解 126-1 は〔自然に〕
+    expect(labelsFor('126-1', 0, ['131-1'])['131-1']).toBe('いっそう');
+    // はなはだしく（形容詞の連用形の意味）を五段として「はなはだしき」にしない
+    expect(labelsFor('67-5', 0, ['77-4'])['77-4']).toBe('はなはだしく');
+    // 〜もしるく
+    expect(labelsFor('282-2', 0, ['292-2'])['292-2']).toBe('もしるく');
+  });
+  it('A pos が無いときは従来どおり（後方互換）', () => {
+    const L = exampleFittedLabels([{ qid: 'x-2', senseNorm: 'すばらしい' }], { qid: 'x-1', senseNorm: '手紙' }, '（訳）〔 手紙 〕を書く。');
+    expect(L['x-2']).toBe('すばらしい');
+    const L2 = exampleFittedLabels([{ qid: 'x-2', senseNorm: 'すばらしい' }], { qid: 'x-1', senseNorm: '長年' }, '（訳）〔 長年 〕思って来た。');
+    expect(L2['x-2']).toBe('すばらしく'); // pos 不明なら語尾からの推定（従来）
+    const L3 = exampleFittedLabels([{ qid: 'x-2', senseNorm: 'すばらしい', pos: '動詞' }], { qid: 'x-1', senseNorm: '長年', pos: '名詞' }, '（訳）〔 長年 〕思って来た。');
+    expect(L3['x-2']).toBe('すばらしく'); // 正解が名詞でも直後が述語なら連用修飾にそろえる（誤答の pos は動詞なので活用対象）
+    const L4 = exampleFittedLabels([{ qid: 'x-2', senseNorm: 'すばらしい', pos: '名詞' }], { qid: 'x-1', senseNorm: '長年', pos: '名詞' }, '（訳）〔 長年 〕思って来た。');
+    expect(L4['x-2']).toBe('すばらしい'); // 誤答が名詞なら活用させない
+  });
+  it('B 正解が副詞・名詞のときは語尾の文字で動詞・形容詞の形と推定せず、後ろの述語にかかるなら連用修飾（renyo）、そうでなければ決めない', () => {
+    // 副詞「とても」＋述語 → 誤答は 〜く・〜に・動詞の連用（形で正解が透けない）
+    expect(labelsFor('41-1', 1, ['51-1'])['51-1']).toBe('美しく照り映え');
+    expect(labelsFor('78-4', 1, ['78-1'])['78-1']).toMatch(/[くに]$/);
+    expect(detectForm('自然に', '自然に', '心が晴れていく。', '副詞')).toBe('renyo');
+    // 副詞でも文末・助詞の前は決めない（誤答は辞書の形）
+    expect(detectForm('〜できない', 'できない', '。', '副詞')).toBeNull();
+    expect(detectForm('おそらく', 'おそらく', 'が', '副詞')).toBeNull();
+    // 名詞「長年」（直後が述語）は連用修飾の形にそろえ、直後が「の・が・を・より・から」なら辞書の形
+    expect(labelsFor('31-1', 0, ['22-2', '21-1'])).toMatchObject({ '22-2': '立派に', '21-1': 'めったになく' });
+    expect(labelsFor('32-1', 0, ['22-2'])['22-2']).toBe('立派だ'); // 〔容貌〕よりは
+    expect(labelsFor('34-1', 1, ['30-1'])['30-1']).toBe('むだだ'); // 〔かねてからの願い〕を
+    expect(labelsFor('34-1', 0, ['30-1'])['30-1']).toBe('むだだ'); // 〔かねてからの願い〕どおり
+    // 体言にかかる形（そのほかの・本格的な）は連体
+    expect(detectForm('そのほか', 'そのほかの', '人々は', '副詞')).toBe('rentai');
+    // 活用しない語を語尾の文字で動詞・形容詞に取らない: 「たいそう」（う で終わる）を動詞の連体と取らない（14-1 例文2）
+    expect(labelsFor('14-1', 1, ['18-2'])['18-2']).toBe('年配に');
+    expect(detectForm('とても（程度）', 'たいそう', '自賛しているので', '形容詞')).toBe('renyo');
+    // 辞書の形が活用しない語（pos 無し）で訳の穴も辞書の形と一致しない: 終止/連体と推定しない
+    expect(detectForm('とても', 'たいそう', '自賛している')).toBe('renyo');
+    expect(detectForm('とても', 'たいそう', '。')).toBeNull();
+    expect(detectForm('いとしい', 'いとしい', '人。')).toBe('rentai'); // 活用する語は従来どおり
+  });
+  it('C 副詞「とても」（直後が「うれしい」）を意志形に誤判定しない', () => {
+    const L = labelsFor('14-1', 0, ['6-2', '11-1', '14-3', '12-1']);
+    expect(L['6-2']).toBe('ぼんやり見');
+    expect(L['11-1']).toBe('満足し');
+    expect(L['14-3']).toBe('ひどく');
+    expect(L['12-1']).toBe('かわいらしく');
+    expect(detectForm('行く', '行こ', 'う。')).toBe('ishi');
+    expect(detectForm('行く', '行こ', 'うれしい')).not.toBe('ishi');
+  });
+  it('D 「〜よ」は直後が「う」でなければ命令。「〜ませ＋ん」は命令にしない', () => {
+    const L = labelsFor('67-4', 0, ['64-1', '57-1']); // 〔食べよ〕。
+    expect(L['64-1']).toBe('行け');
+    expect(L['57-1']).toBe('大切に養育せよ');
+    expect(detectForm('食べる', '食べよ', '。')).toBe('meireiYo');
+    expect(detectForm('食べる', '食べよ', 'う。')).toBe('ishi');
+    // 〔出かけませ〕ん → 活用形は決めず、誤答は辞書の形
+    expect(detectForm('出かけます（謙譲・丁寧）', '出かけませ', 'ん。')).toBeNull();
+    expect(labelsFor('172-3', 0, ['163-2'])['163-2']).toBe('お聞きする');
+    // 本当の命令は従来どおり
+    expect(detectForm('準備する', '準備しろ', '。')).toBe('meirei');
+  });
+  it('E 訳の穴が形容詞の連用形（〜らしく）のとき動詞の連体と取らず連用にそろえる', () => {
+    expect(detectForm('大人びている', '大人らしく', 'なられたか。', '形容詞')).toBe('renyo');
+    const L = labelsFor('18-1', 0, ['18-2', '15-2']);
+    expect(L['18-2']).toBe('年配に');
+    expect(L['15-2']).toBe('おもしろく');
+    expect(detectForm('見たい・聞きたい・知りたい', '聞きたく', '思う。', '形容詞')).toBe('renyo');
+  });
+  it('F 断定の「だ」（〜ほどだ・〜ようだ・〜ことだ・〜べきだ）は形容動詞として活用させない', () => {
+    expect(conjugate('驚きあきれるほどだ', 'rentai')).toBeNull();
+    expect(conjugate('当然〜すべきだ', 'renyo')).toBeNull();
+    expect(conjugate('立派だ', 'rentai')).toBe('立派な'); // 本物の形容動詞は従来どおり
+    expect(labelsFor('77-1', 0, ['87-1'])['87-1']).toBe('驚きあきれるほどだ'); // 〔不吉な〕身
+  });
+  it('G 感動詞・連語の「、」で切らない（「しっ、静かに」を「しっ」にしない）', () => {
+    expect(baseForm('しっ、静かに', '連体詞・連語')).toEqual({ prefix: '', core: 'しっ、静かに' });
+    expect(baseForm('しっ、静かに', '感動詞')).toEqual({ prefix: '', core: 'しっ、静かに' });
+    expect(baseForm('しっ、静かに')).toEqual({ prefix: '', core: 'しっ' }); // pos 不明は従来どおり
+    expect(labelsFor('268-1', 0, ['278-1'])['278-1']).toBe('しっ、静かに');
   });
 });
