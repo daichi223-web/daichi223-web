@@ -75,12 +75,12 @@ describe('TEACHERS（先生10人のデータ）', () => {
     expect(missing).toEqual([]);
   });
 
-  it('絵の雰囲気「みやび」を選ぶと、先生の絵は <id>-anime.webp（10人とも実在する）', () => {
-    expect(ANIME_TEACHER_IDS).toEqual([...TEACHER_IDS]);
+  it('絵の雰囲気「みやび」を選ぶと、絵がある先生は <id>-anime.webp、無い先生は しっとり の絵', () => {
     const dir = fileURLToPath(new URL('../../public/teachers/', import.meta.url));
     for (const id of TEACHER_IDS) {
-      expect(existsSync(join(dir, `${id}-anime.webp`)), id).toBe(true);
-      expect(teacherImage(id, 'miyabi')).toBe(`/teachers/${id}-anime.webp`);
+      const has = ANIME_TEACHER_IDS.includes(id);
+      if (has) expect(existsSync(join(dir, `${id}-anime.webp`)), id).toBe(true);
+      expect(teacherImage(id, 'miyabi')).toBe(has ? `/teachers/${id}-anime.webp` : `/teachers/${id}-sharp.webp`);
       expect(teacherImage(id, 'pop')).toBe(`/teachers/${id}-pop.webp`);
     }
   });

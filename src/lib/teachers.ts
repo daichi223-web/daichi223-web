@@ -115,6 +115,7 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
 // 小式部内侍の絵は、提供時は清少納言として描かれたもの。明るい笑顔が清少納言の型（強気なツンデレ）と合わず、
 // 小式部内侍（元気な先輩）に回した（2026-11-13 ユーザー承認）。清少納言は同日、型に合わせて描き直した絵が届いて入れた。
 /** みやびの絵がある先生（public/teachers/<id>-anime.webp）。無い先生は しっとり（sharp）の絵で出す */
+// 2026-11-13 夜（ユーザー指示）：貫之として届いた絵を業平に回し、道真（固め）と貫之（ややファンキー）は40〜50代のイケオジに描き直した（Codex の依頼5）。
 export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
 
 /** 先生の絵のパス。みやびは <id>-anime.webp、ほかは <id>-<tone>.webp */
