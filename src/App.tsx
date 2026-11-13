@@ -25,6 +25,7 @@ import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import { logEvent, markQuestionShown } from './lib/learningEvents';
 import { composeTodaySet, estimateToday, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
 import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
+import { nextWordRange, nextRangeLabel } from './lib/quiz/nextRange';
 import { readStreak } from './lib/streak';
 import { buildFallbackOptions, pickTrueFalseWrongMeaning, repairDistractors, repairTranslationClashes } from './lib/senseEquivalence';
 import { lookupExampleContext, type ExampleContext, type ExampleContextMap } from './lib/exampleContext';
@@ -1476,6 +1477,20 @@ function App() {
     setupQuiz();
   };
 
+  // 終わったあとの「次の範囲へ」（2026-11-13 ユーザー指示）。範囲を同じ幅で後ろへ送り、ふつうの単語クイズを始める。
+  // 範囲が変わると出題を作り直す useEffect（wordRange が依存）が走るので、ここでは状態をそろえるだけ。ホームの「今日の分」も次からこの範囲になる
+  const goNextWordRange = (next: { from: number; to: number }) => {
+    setTodaySession(null);
+    setQuizQidFilter(null);
+    setQuizMode('normal');
+    setCurrentMode('word');
+    setShowResults(false);
+    setIsQuizActive(false);
+    setShowHome(false);
+    setWordRange(next);
+  };
+  const nextRangeForEnd = currentMode === 'word' && quizMode !== 'weak' ? nextWordRange(wordRange) : null;
+
   // Range input completion handlers - 削除（自動遷移しない）
 
   // Check if quiz should end
@@ -2079,6 +2094,20 @@ function App() {
                     >
                       もう1セット ▶
                     </button>
+                    {nextRangeForEnd && (
+                      <button
+                        onClick={() => goNextWordRange(nextRangeForEnd)}
+                        className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
+                      >
+                        {nextRangeLabel(nextRangeForEnd)} ▶
+                      </button>
+                    )}
+                    <button
+                      onClick={() => navigate('/vocab')}
+                      className="w-full font-bold py-3 px-4 rounded-full bg-transparent text-rw-ink-soft border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
+                    >
+                      単語のホーム（単語一覧）へ
+                    </button>
                   </>
                 ) : (
                   <>
@@ -2091,15 +2120,32 @@ function App() {
                         📖 {returnLabels(returnTo).long}
                       </button>
                     )}
+                    {!returnTo && nextRangeForEnd && (
+                      <button
+                        onClick={() => goNextWordRange(nextRangeForEnd)}
+                        className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
+                        style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
+                      >
+                        {nextRangeLabel(nextRangeForEnd)} ▶
+                      </button>
+                    )}
                     <button
                       onClick={restartQuiz}
-                      className={returnTo
+                      className={returnTo || nextRangeForEnd
                         ? "w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
                         : "w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"}
-                      style={returnTo ? undefined : { boxShadow: '0 4px 0 var(--rw-primary)' }}
+                      style={returnTo || nextRangeForEnd ? undefined : { boxShadow: '0 4px 0 var(--rw-primary)' }}
                     >
                       {returnTo ? "もう一度解く ▶" : "同じ範囲を繰り返す ▶"}
                     </button>
+                    {currentMode === 'word' && (
+                      <button
+                        onClick={() => navigate('/vocab')}
+                        className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
+                      >
+                        単語のホーム（単語一覧）へ
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         setShowHome(true);
