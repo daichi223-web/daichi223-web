@@ -9,6 +9,7 @@ export const ALLOWED_DOMAINS = ['st.spec.ed.jp', 'spec.ed.jp'];
 /** cohort → 学校の表示名。新しい学校を足すときはここに1行追加 */
 export const SCHOOLS: Record<string, string> = {
   default: '浦和高校',
+  nishi: '浦和西高校', // 2026-11-14 追加（ユーザー指示）。配る URL は /?cohort=nishi（SCHOOL_CODES の UW と同じ学校）
 };
 
 export function schoolLabel(cohort: string): string {
