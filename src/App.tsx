@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { returnLabels, safeReturnPath } from '@/lib/returnTo';
 import { dataParser } from './utils/dataParser';
 import { Word, MultiMeaningWord } from './types';
-import RangeField from './components/RangeField';
+import { RangeBlockPicker } from './components/RangeBlockPicker';
 import { useFullSelectInput } from './hooks/useFullSelectInput';
 import { useLocalStorageState } from './hooks/useLocalStorageState';
 import type { WritingJudgeResult } from './lib/writingJudge';
@@ -2326,9 +2326,9 @@ function App() {
                   />
                 </div>
               </div>
-              {/* 右列: 範囲選択 */}
+              {/* 右列: 範囲選択（ボタン1つ→シートで幅と区切りをタップ。2026-11-13 ユーザー指示。components/RangeBlockPicker.tsx） */}
               <div>
-                <RangeField
+                <RangeBlockPicker
                   value={wordRange}
                   onChange={handleWordRangeChange}
                   min={1}
@@ -2408,9 +2408,9 @@ function App() {
                   />
                 </div>
               </div>
-              {/* 右列: 範囲選択 */}
+              {/* 右列: 範囲選択（ボタン1つ→シートで幅と区切りをタップ。2026-11-13 ユーザー指示。components/RangeBlockPicker.tsx） */}
               <div>
-                <RangeField
+                <RangeBlockPicker
                   value={polysemyRange}
                   onChange={handlePolysemyRangeChange}
                   min={1}
