@@ -15,6 +15,8 @@ import {
 import { recordPromotion } from '@/lib/promotionHistory';
 import { usePortraitTone } from '@/lib/portraitTone';
 import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
+import { TEACHER_VOICE_ENABLED } from '@/lib/teachers';
+import { TeacherGreeting } from '@/components/quiz/TeacherGreeting';
 
 // Reiwa デザイン版ホーム画面。
 // handoff/dir-reiwa.jsx の RwHome を本番ロジックと結線したもの。
@@ -139,6 +141,11 @@ export default function HomeReiwa({
         <div className="mb-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-900" role="alert">
           学習記録を取得できませんでした。通信状態を確認してから再読み込みしてください。
         </div>
+      )}
+
+      {/* 先生の季節・行事のあいさつ（2026-11-13。台詞の口調と同じ切り替え TEACHER_VOICE_ENABLED で出す。今は false＝出ない） */}
+      {TEACHER_VOICE_ENABLED && (
+        <TeacherGreeting quizDueDate={quizRange?.dueDate ?? null} className="mb-3" />
       )}
 
       {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}

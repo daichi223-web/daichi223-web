@@ -14,6 +14,7 @@ import { FaceAvatar } from '@/components/noble/FaceAvatar';
 import { TEACHERS, teacherImage } from '@/lib/teachers';
 import { useChatTeacher } from '@/lib/chatTeacher';
 import { usePortraitTone } from '@/lib/portraitTone';
+import { useTeacherArt } from '@/lib/teacherArt';
 import { readMyStage } from '@/lib/myStage';
 import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from '@/lib/quizBackground';
 import { addAsk, askKey, buildCardMenu, isMenuEmpty, type CardAsk } from '@/lib/kobun/vocabCardChat';
@@ -160,6 +161,7 @@ export default function VocabCard() {
   const [teacherId] = useChatTeacher();
   const teacher = TEACHERS[teacherId];
   const [tone] = usePortraitTone();
+  const [teacherArt] = useTeacherArt();
   const [background] = useQuizBackground();
   const [backgroundColor] = useQuizBackgroundColor();
   const myStage = useMemo(() => readMyStage(), []);
@@ -195,7 +197,7 @@ export default function VocabCard() {
 
   // 会話の両側。先生・画風・自分の顔・背景は単語クイズの設定（端末ごと）と同じものを使う
   const teacherAvatar = (
-    <FaceAvatar src={teacherImage(teacherId, tone)} size={CHAT_AVATAR_PX} alt={teacher.name} className="mt-4" />
+    <FaceAvatar src={teacherImage(teacherId, tone, teacherArt)} size={CHAT_AVATAR_PX} alt={teacher.name} className="mt-4" />
   );
   const myName = `${myStage.rank} ・ あなた`;
   const myAvatar = (
