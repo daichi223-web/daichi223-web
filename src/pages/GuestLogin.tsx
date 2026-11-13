@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { loginGuest } from '@/lib/guest';
 
 // お試し（ゲスト）のパスワードの画面（/guest）。/?guest=1 で開くとここに来る（lib/guest.ts）。
@@ -58,7 +58,6 @@ export default function GuestLogin() {
         </button>
         <p className="mt-4 text-[11px] text-rw-ink-soft leading-relaxed">
           お試しの間、学習の進み具合はこの端末に残りますが、分析用の記録はとりません。
-          続けて使う人は <Link to="/account" className="underline">登録</Link> してください。
         </p>
       </form>
     </div>

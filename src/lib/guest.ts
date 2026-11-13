@@ -7,7 +7,7 @@
 // 端末は入ったときのパスワードの版（version）を覚える。起動時に照合し、パスワードが変わった・止めたら印を外す。
 // ゲストの間は分析用の記録（learning_events）を送らない（learningEvents.ts の logEvent）。
 // 単語の成績・復習の予定（word_stats / srs_state）は残す（お試しでも今日の分や位階が動くように）。
-// ゲストをやめるには /account で登録するか、?guest=0 を開く。
+// お試しの画面からは登録（/account）へつながない（2026-11-13 ユーザー指示）。ゲストをやめるには ?guest=0 を開く。
 
 import { STORAGE_KEYS } from './storageKeys';
 

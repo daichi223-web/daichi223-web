@@ -65,3 +65,16 @@ describe('お試しのパスワードの照合（api/_guestHash.ts）', () => {
     expect(hashGuestPassword('guest1', m![2])).toBe(m![1]);
   });
 });
+
+describe('お試しの端末の既定の先生（chatTeacher）', () => {
+  beforeEach(() => store.clear());
+
+  it('お試しの端末は菅原道真、ふつうの端末は清少納言。自分で選んだ先生があればそちら', async () => {
+    const { readChatTeacher } = await import('../lib/chatTeacher');
+    expect(readChatTeacher()).toBe('sei');
+    setGuest(1);
+    expect(readChatTeacher()).toBe('michizane');
+    localStorage.setItem('kobun.chat.teacher', 'komachi');
+    expect(readChatTeacher()).toBe('komachi');
+  });
+});

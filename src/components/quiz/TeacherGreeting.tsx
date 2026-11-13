@@ -5,6 +5,7 @@ import { TEACHERS, teacherImage } from '../../lib/teachers';
 import { useChatTeacher } from '../../lib/chatTeacher';
 import { usePortraitTone } from '../../lib/portraitTone';
 import { pickGreeting } from '../../lib/teacherGreetings';
+import { pickPromotion, rankFullName } from '../../lib/teacherPromotions';
 import { daysUntil } from '../../lib/quizRange';
 
 // 先生の季節・行事のあいさつ（1行の吹き出し）。中身は lib/teacherGreetings.ts の pickGreeting。
@@ -24,22 +25,30 @@ type Props = {
   className?: string;
   /** 先生の絵をタップしたとき（無ければ絵は押せない） */
   onAvatarClick?: () => void;
+  /** 昇進した直後なら、新しい階位（季節のあいさつの代わりにお祝いを言う。lib/teacherPromotions.ts） */
+  promotion?: { n: number; rank: string } | null;
 };
 
-export function TeacherGreeting({ quizDueDate = null, className = '', onAvatarClick }: Props) {
+export function TeacherGreeting({ quizDueDate = null, className = '', onAvatarClick, promotion = null }: Props) {
   const [teacher] = useChatTeacher();
   const [tone] = usePortraitTone();
   // 画面に出るたびに種を1つ進め、そのときの「直前の一言」を避ける対象として持つ（どちらも出たときに1回だけ決まる）
   const [visit] = useState(() => ++shownCount);
   const [avoid] = useState(() => lastShown);
   // 同じ訪問の中（描き直し）では同じ一言。先生を変えたら同じ種で選び直す
-  const line = useMemo(
+  const promoLine = useMemo(
+    () => (promotion ? pickPromotion({ teacher, n: promotion.n, rank: promotion.rank, seed: `visit${visit}` }) : null),
+    [teacher, promotion, visit],
+  );
+  const greetingLine = useMemo(
     () => pickGreeting({ teacher, date: new Date(), quizDaysLeft: daysUntil(quizDueDate), seed: `visit${visit}`, avoid }),
     [teacher, quizDueDate, visit, avoid],
   );
+  // 昇進のお祝いがあればそれを優先（台詞の無い先生は季節のあいさつ）
+  const line = promoLine ?? greetingLine;
   useEffect(() => {
-    lastShown = line;
-  }, [line]);
+    if (!promoLine) lastShown = greetingLine;
+  }, [promoLine, greetingLine]);
   if (!line) return null;
 
   const t = TEACHERS[teacher];
@@ -49,6 +58,7 @@ export function TeacherGreeting({ quizDueDate = null, className = '', onAvatarCl
       <ChatRow
         side="teacher"
         name={t.name}
+        tone={promoLine ? 'core' : 'plain'}
         avatar={
           onAvatarClick ? (
             <button
@@ -65,6 +75,9 @@ export function TeacherGreeting({ quizDueDate = null, className = '', onAvatarCl
           )
         }
       >
+        {promoLine && promotion && (
+          <span className="block text-[10px] font-black text-rw-accent mb-0.5">昇進 ― {rankFullName(promotion.rank)}</span>
+        )}
         {line}
       </ChatRow>
     </div>

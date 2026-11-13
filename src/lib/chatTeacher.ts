@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { isTeacherId, type TeacherId } from './teachers';
+import { isGuest } from './guest';
 
 // 答え合わせの先生の選択（端末ごと）。portraitTone.ts と同じ型：
 // 文字列を許可リストで検証して読む・書いたら CustomEvent で同一タブに知らせる・フックは storage と CustomEvent を購読する。
@@ -8,13 +9,16 @@ import { isTeacherId, type TeacherId } from './teachers';
 export const CHAT_TEACHER_KEY = 'kobun.chat.teacher';
 const CHANGE_EVENT = 'kobun:chat-teacher-change';
 const DEFAULT_TEACHER: TeacherId = 'sei';
+// お試し（ゲスト）の端末の既定は菅原道真（2026-11-13 ユーザー指示）。自分で選んだ先生があればそちらが優先
+const GUEST_DEFAULT_TEACHER: TeacherId = 'michizane';
+const defaultTeacher = (): TeacherId => (isGuest() ? GUEST_DEFAULT_TEACHER : DEFAULT_TEACHER);
 
 export function readChatTeacher(): TeacherId {
   try {
     const value = localStorage.getItem(CHAT_TEACHER_KEY);
-    return isTeacherId(value) ? value : DEFAULT_TEACHER;
+    return isTeacherId(value) ? value : defaultTeacher();
   } catch {
-    return DEFAULT_TEACHER;
+    return defaultTeacher();
   }
 }
 

@@ -13,6 +13,7 @@ import {
   portraitForStage,
 } from '@/lib/nobleData';
 import { recordPromotion } from '@/lib/promotionHistory';
+import { celebrationFrom } from '@/lib/teacherPromotions';
 import { usePortraitTone } from '@/lib/portraitTone';
 import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
 import { TEACHER_VOICE_ENABLED } from '@/lib/teachers';
@@ -96,8 +97,13 @@ export default function HomeReiwa({
   const nobleProgress = nobleNext ? nobleNext.progress : 100;
 
   // 到達した階位を localStorage に記録 (昇進履歴用)。
+  // 新しく上がっていたら、先生のあいさつを昇進のお祝いにする（2026-11-13 ユーザー指示「位階に応じて」）。
+  // はじめての記録（第1階を含む＝この端末で初めて）では祝わない。何段か一気に上がったときは一番上の段で祝う
+  const [promotion, setPromotion] = useState<{ n: number; rank: string } | null>(null);
   useEffect(() => {
-    if (nobleStage) recordPromotion(nobleStage.n);
+    if (!nobleStage) return;
+    const c = celebrationFrom(recordPromotion(nobleStage.n));
+    if (c) setPromotion(c);
   }, [nobleStage?.n]);
 
   const range = currentMode === 'word' ? wordRange : polysemyRange;
@@ -121,13 +127,13 @@ export default function HomeReiwa({
         <div className="text-2xl md:text-3xl font-black tracking-tight leading-none">kobun.</div>
         <div className="text-[10px] text-rw-ink-soft font-mono">{todayLabel()}</div>
       </div>
-      {/* お試し（?guest=1 で開いた端末）の目印（lib/guest.ts）。上の右側は固定のボタンに隠れるので、題字の下に1行で出す */}
+      {/* お試し（?guest=1 で開いた端末）の目印（lib/guest.ts）。上の右側は固定のボタンに隠れるので、題字の下に1行で出す。
+          お試しは登録へつながない（2026-11-13 ユーザー指示「お試しサイトは登録にはつながないで」）ので、押せない目印だけ */}
       {isGuest() && (
-        <Link to="/account" className="mb-2.5 flex items-center gap-2 rounded-xl border border-rw-primary bg-rw-primary-soft px-3 py-1.5 text-[11px] font-bold text-rw-primary">
+        <div className="mb-2.5 flex items-center gap-2 rounded-xl border border-rw-primary bg-rw-primary-soft px-3 py-1.5 text-[11px] font-bold text-rw-primary">
           <span className="font-black">お試し中</span>
-          <span className="flex-1 text-rw-ink-soft">登録すると、記録を別の端末にも引き継げます</span>
-          <span aria-hidden>›</span>
-        </Link>
+          <span className="flex-1 text-rw-ink-soft">この端末でお試しできます</span>
+        </div>
       )}
 
       {/* 小テスト範囲（教員が設定したときだけ最上段に出す） */}
@@ -157,7 +163,7 @@ export default function HomeReiwa({
 
       {/* 先生の季節・行事のあいさつ（2026-11-13。台詞の口調と同じ切り替え TEACHER_VOICE_ENABLED で出す。今は false＝出ない） */}
       {TEACHER_VOICE_ENABLED && (
-        <TeacherGreeting quizDueDate={quizRange?.dueDate ?? null} className="mb-3" onAvatarClick={onOpenTeacherPicker ?? onOpenThemePicker} />
+        <TeacherGreeting quizDueDate={quizRange?.dueDate ?? null} promotion={promotion} className="mb-3" onAvatarClick={onOpenTeacherPicker ?? onOpenThemePicker} />
       )}
 
       {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}
@@ -402,8 +408,8 @@ export default function HomeReiwa({
         </button>
       </div>
 
-      {/* 記録の引き継ぎ（匿名なら登録を促し、登録済みなら状態だけ） */}
-      {account && (
+      {/* 記録の引き継ぎ（匿名なら登録を促し、登録済みなら状態だけ）。お試しの端末には出さない（登録へつながない） */}
+      {account && !isGuest() && (
         <Link
           to="/account"
           className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-2.5 mb-4 hover:border-rw-ink-soft transition no-underline text-rw-ink"
