@@ -77,7 +77,8 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
               </button>
             );
           })}
-          {art === 'anime' && (
+          {/* 絵がそろっていない間だけ、ある先生の名前を出す（2026-11-13 夜に10人そろった） */}
+          {art === 'anime' && ANIME_TEACHER_IDS.length < TEACHER_IDS.length && (
             <span className="text-[10px] text-rw-ink-soft">
               {ANIME_TEACHER_IDS.map((id) => TEACHERS[id].name).join('・')}の{ANIME_TEACHER_IDS.length}人
             </span>

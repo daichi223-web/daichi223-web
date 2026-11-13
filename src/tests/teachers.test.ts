@@ -76,7 +76,7 @@ describe('TEACHERS（先生10人のデータ）', () => {
   });
 
   it('4種類目（みやび。ファイル名は anime）は絵がある先生だけ。無い先生は肖像の雰囲気の絵に戻る', () => {
-    expect(ANIME_TEACHER_IDS).toEqual(['sei', 'murasaki', 'komachi', 'izumi', 'koshikibu', 'ukyo']);
+    expect(ANIME_TEACHER_IDS).toEqual(['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira']);
     const dir = fileURLToPath(new URL('../../public/teachers/', import.meta.url));
     for (const id of TEACHER_IDS) {
       const has = ANIME_TEACHER_IDS.includes(id);
@@ -155,6 +155,23 @@ describe('pickVariant（variant を決定的に選ぶ）', () => {
 
   it('空配列なら空文字', () => {
     expect(pickVariant([], 'x')).toBe('');
+  });
+
+  it('同じ配列から続けて選ぶと、直前と同じ文にならない（2026-11-13 ユーザー指示）', () => {
+    const lines = ['一', '二', '三', '四'];
+    let prev = '';
+    for (let i = 0; i < 200; i++) {
+      const got = pickVariant(lines, `${i}-3:correct`);
+      expect(got, `${i}`).not.toBe(prev);
+      prev = got;
+    }
+  });
+
+  it('同じ seed をもう一度選んでも（画面の描き直し）同じ文のまま', () => {
+    const lines = ['甲', '乙'];
+    const a = pickVariant(lines, 'q1:wrong');
+    pickVariant(lines, 'q2:wrong');
+    expect(pickVariant(lines, 'q1:wrong')).toBe(a);
   });
 });
 

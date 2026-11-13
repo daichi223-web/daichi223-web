@@ -97,6 +97,17 @@ export function TeacherDetailSheet({ id, tone, selected, onSelect, onClose }: Pr
             <p className="mt-1 text-[10px] text-rw-ink-soft">絵は想像図（AI 生成）です。</p>
           </div>
 
+          {/* 選ぶボタンは名前のすぐ下（2026-11-13 ユーザー指示「この先生にするのボタンは上部に」）。閉じるは上の ✕ */}
+          <button
+            type="button"
+            onClick={() => { onSelect(id); onClose(); }}
+            disabled={selected}
+            className="mt-3 w-full py-2.5 rounded-xl border-2 border-rw-ink text-[14px] font-black disabled:opacity-60"
+            style={{ background: selected ? 'transparent' : 'var(--rw-primary)', color: selected ? 'var(--rw-ink-soft)' : '#fff' }}
+          >
+            {selected ? 'いま選んでいる先生' : 'この先生にする'}
+          </button>
+
           <Section title="史実" note="史料や作品から確かめられること">
             <Bullets items={p.facts} />
             {p.words.length > 0 && (
@@ -134,17 +145,8 @@ export function TeacherDetailSheet({ id, tone, selected, onSelect, onClose }: Pr
             <p className="mt-3 text-[10.5px] leading-relaxed text-rw-ink-soft">出典：{p.sources.join('／')}</p>
           )}
 
-          <div className="mt-4 flex gap-2">
-            <button
-              type="button"
-              onClick={() => { onSelect(id); onClose(); }}
-              disabled={selected}
-              className="flex-1 py-2.5 rounded-xl border-2 border-rw-ink text-[14px] font-black disabled:opacity-60"
-              style={{ background: selected ? 'transparent' : 'var(--rw-primary)', color: selected ? 'var(--rw-ink-soft)' : '#fff' }}
-            >
-              {selected ? 'いま選んでいる先生' : 'この先生にする'}
-            </button>
-            <button type="button" onClick={onClose} className="px-4 py-2.5 rounded-xl border-2 border-rw-rule text-[14px] font-bold text-rw-ink-soft">
+          <div className="mt-4">
+            <button type="button" onClick={onClose} className="w-full py-2.5 rounded-xl border-2 border-rw-rule text-[14px] font-bold text-rw-ink-soft">
               閉じる
             </button>
           </div>

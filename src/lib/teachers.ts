@@ -2,7 +2,7 @@ import type { PortraitTone } from './portraitTone';
 
 // 単語クイズの答え合わせ（LINE 風）で話す先生。史実の人物像に寄せた口調で話す（台詞の本体は teacherLines.ts）。
 // 絵は public/teachers/<id>-<tone>.webp（200px 正方形。画風は位階の肖像と同じ sharp / yuru / pop）。
-// 6人（清少納言・紫式部・小野小町・和泉式部・小式部内侍・建礼門院右京大夫）には4種類目 <id>-anime.webp もある（teacherImage の art）。
+// 4種類目「みやび」<id>-anime.webp（teacherImage の art）は10人全員ぶんある（男性4人は 2026-11-13 夜に Codex の依頼2 で追加）。
 // 台詞の決まり（変数名・状況・字数）は F:\A2A\_work\kobun-chat-feedback\BRIEF-lines.md。
 
 // 先生の口調（キャラの台詞）を答え合わせに出すか。false の間は中立の文（teacherLines.ts の NEUTRAL_LINES）で出し、
@@ -121,7 +121,7 @@ export const TEACHER_ART_LABEL: Record<TeacherArt, string> = { same: '肖像と�
 // 小式部内侍の絵は、提供時は清少納言として描かれたもの。明るい笑顔が清少納言の型（強気なツンデレ）と合わず、
 // 小式部内侍（元気な先輩）に回した（2026-11-13 ユーザー承認）。清少納言は同日、型に合わせて描き直した絵が届いて入れた。
 /** アニメ調の絵がある先生（public/teachers/<id>-anime.webp）。無い先生は肖像の雰囲気の絵で出す */
-export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'komachi', 'izumi', 'koshikibu', 'ukyo'];
+export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
 
 export function isTeacherArt(v: unknown): v is TeacherArt {
   return v === 'same' || v === 'anime';
@@ -180,8 +180,32 @@ function hashSeed(seed: string): number {
   return h >>> 0;
 }
 
-/** variant を決定的に1つ選ぶ（seed のハッシュ % 個数）。空配列なら '' */
+// 同じ台詞が2回続かないようにする記憶（2026-11-13 ユーザー指示「二連続で同じコメントにならないように」）。
+// - 台詞の配列ごとに、前回選んだ番号を覚える。次に別の seed で選ぶとき、ハッシュの番号が前回と同じなら1つずらす。
+// - 同じ seed（同じ問題の同じ場面）はいつも同じ答えを返す（画面の描き直しで台詞が変わらないように、seed ごとに覚える）。
+// 記憶はページを開いている間だけ（端末にも DB にも残さない）。
+const lastPicked = new WeakMap<readonly string[], number>();
+const pickedBySeed = new WeakMap<readonly string[], Map<string, number>>();
+const MAX_SEEDS_PER_LIST = 500;
+
+/**
+ * variant を1つ選ぶ。基本は seed のハッシュ % 個数で、同じ seed なら同じ文。
+ * ただし同じ配列から直前に選んだ文と同じになるときは次の文にする（2つ以上あるとき）。空配列なら ''。
+ */
 export function pickVariant(variants: readonly string[], seed: string): string {
-  if (variants.length === 0) return '';
-  return variants[hashSeed(seed) % variants.length] ?? '';
+  const n = variants.length;
+  if (n === 0) return '';
+  let bySeed = pickedBySeed.get(variants);
+  const known = bySeed?.get(seed);
+  if (known !== undefined) return variants[known] ?? '';
+  let idx = hashSeed(seed) % n;
+  if (n > 1 && lastPicked.get(variants) === idx) idx = (idx + 1) % n;
+  if (!bySeed) {
+    bySeed = new Map();
+    pickedBySeed.set(variants, bySeed);
+  }
+  if (bySeed.size >= MAX_SEEDS_PER_LIST) bySeed.clear();
+  bySeed.set(seed, idx);
+  lastPicked.set(variants, idx);
+  return variants[idx] ?? '';
 }
