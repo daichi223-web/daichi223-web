@@ -17,6 +17,7 @@ import { usePortraitTone } from '@/lib/portraitTone';
 import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
 import { TEACHER_VOICE_ENABLED } from '@/lib/teachers';
 import { TeacherGreeting } from '@/components/quiz/TeacherGreeting';
+import { isGuest } from '@/lib/guest';
 
 // Reiwa デザイン版ホーム画面。
 // handoff/dir-reiwa.jsx の RwHome を本番ロジックと結線したもの。
@@ -49,6 +50,8 @@ type Props = {
   onStartReview: () => void;
   onSwitchMode: (mode: 'word' | 'polysemy') => void;
   onOpenThemePicker: () => void;
+  /** あいさつの先生の絵をタップしたとき（テーマ画面を先生の欄で開く） */
+  onOpenTeacherPicker?: () => void;
 };
 
 function todayLabel(): string {
@@ -72,6 +75,7 @@ export default function HomeReiwa({
   onStartReview,
   onSwitchMode,
   onOpenThemePicker,
+  onOpenTeacherPicker,
 }: Props) {
   const [vocab, setVocab] = useState<VocabEntry[]>([]);
   const [streak, setStreak] = useState(0);
@@ -117,6 +121,14 @@ export default function HomeReiwa({
         <div className="text-2xl md:text-3xl font-black tracking-tight leading-none">kobun.</div>
         <div className="text-[10px] text-rw-ink-soft font-mono">{todayLabel()}</div>
       </div>
+      {/* お試し（?guest=1 で開いた端末）の目印（lib/guest.ts）。上の右側は固定のボタンに隠れるので、題字の下に1行で出す */}
+      {isGuest() && (
+        <Link to="/account" className="mb-2.5 flex items-center gap-2 rounded-xl border border-rw-primary bg-rw-primary-soft px-3 py-1.5 text-[11px] font-bold text-rw-primary">
+          <span className="font-black">お試し中</span>
+          <span className="flex-1 text-rw-ink-soft">登録すると、記録を別の端末にも引き継げます</span>
+          <span aria-hidden>›</span>
+        </Link>
+      )}
 
       {/* 小テスト範囲（教員が設定したときだけ最上段に出す） */}
       {quizRange && quizRangeLine && onStartQuizRange && (
@@ -145,7 +157,7 @@ export default function HomeReiwa({
 
       {/* 先生の季節・行事のあいさつ（2026-11-13。台詞の口調と同じ切り替え TEACHER_VOICE_ENABLED で出す。今は false＝出ない） */}
       {TEACHER_VOICE_ENABLED && (
-        <TeacherGreeting quizDueDate={quizRange?.dueDate ?? null} className="mb-3" />
+        <TeacherGreeting quizDueDate={quizRange?.dueDate ?? null} className="mb-3" onAvatarClick={onOpenTeacherPicker ?? onOpenThemePicker} />
       )}
 
       {/* Today's Quest — 左に装束 / 右にクイズ CTA の 2 カラム配置 */}

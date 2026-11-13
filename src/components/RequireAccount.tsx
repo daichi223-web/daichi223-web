@@ -4,6 +4,7 @@ import { ensureAnonSession } from '@/lib/anonAuth';
 import { getAccountStatus } from '@/lib/auth';
 import { cachedProfile, fetchProfile } from '@/lib/profile';
 import { AUTH_REQUIRED } from '@/lib/authFlags';
+import { isGuest } from '@/lib/guest';
 
 // 初回起動時の登録ガード。
 //   匿名のまま（メール未登録）→ /account?required=1 へ
@@ -19,7 +20,8 @@ const EXEMPT = ['/account', '/auth/callback', '/teacher', '/test-grading'];
 
 export default function RequireAccount({ children }: { children: ReactNode }) {
   const loc = useLocation();
-  const exempt = !AUTH_REQUIRED || EXEMPT.some((p) => loc.pathname === p || loc.pathname.startsWith(p + '/'));
+  // お試し（?guest=1 で開いた端末）は登録なしで通す（2026-11-13 ユーザー指示。lib/guest.ts）
+  const exempt = !AUTH_REQUIRED || isGuest() || EXEMPT.some((p) => loc.pathname === p || loc.pathname.startsWith(p + '/'));
   const [state, setState] = useState<'checking' | 'ok' | 'redirect'>(exempt ? 'ok' : 'checking');
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { QuizLookSettings } from '../components/quiz/QuizLookSettings';
 import { PortraitTonePicker } from '../components/noble/PortraitTonePicker';
 import { useReiwaTheme } from './ThemeContext';
@@ -10,9 +10,11 @@ import { REIWA_PRESETS, REIWA_QUICK_PRESETS, ReiwaPalettePreset, ReiwaQuickPrese
 type Props = {
   open: boolean;
   onClose: () => void;
+  /** 開いたときにその欄まで送る（'teacher' = 単語クイズの答え合わせ＝先生を選ぶ欄。ホームの先生の絵をタップしたとき） */
+  focus?: 'teacher' | null;
 };
 
-export default function ReiwaThemePicker({ open, onClose }: Props) {
+export default function ReiwaThemePicker({ open, onClose, focus = null }: Props) {
   const {
     themeId,
     custom,
@@ -25,6 +27,14 @@ export default function ReiwaThemePicker({ open, onClose }: Props) {
   } = useReiwaTheme();
 
   const [tab, setTab] = useState<'presets' | 'custom'>(themeId === '__custom' ? 'custom' : 'presets');
+  const teacherRef = useRef<HTMLDivElement>(null);
+
+  // 先生を選ぶ欄から開いたときは、その欄まで送る（2026-11-13 ユーザー指示「ホームの先生の画像をタップで選択にいけるように」）
+  useEffect(() => {
+    if (!open || focus !== 'teacher') return;
+    const id = window.setTimeout(() => teacherRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' }), 80);
+    return () => window.clearTimeout(id);
+  }, [open, focus]);
 
   if (!open) return null;
 
@@ -165,7 +175,8 @@ export default function ReiwaThemePicker({ open, onClose }: Props) {
             <p className="text-xs text-rw-ink-soft mb-2">あなたのキャラ（絵の雰囲気）</p>
             <PortraitTonePicker />
           </div>
-          <div>
+          {/* scrollMarginTop は上の固定ヘッダの高さぶん（送ったときに見出しが隠れないように） */}
+          <div ref={teacherRef} style={{ scrollMarginTop: 140 }}>
             <p className="text-xs text-rw-ink-soft mb-1">単語クイズの答え合わせ</p>
             <QuizLookSettings />
           </div>

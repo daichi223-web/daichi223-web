@@ -40,6 +40,7 @@ export const STORAGE_KEYS = {
   fullAccess: 'kobun:full-access',
   nanoCoach: 'kobun:nano-coach',
   cohort: 'kobun:cohort',                        // 所属コホート (学年・学校・クラス別教材セット)
+  guest: 'kobun.guest',                          // お試し（ゲスト）の端末の印。?guest=1 で付く（lib/guest.ts）
 } as const;
 
 // Export/Import で扱うキー一覧 (上記 STORAGE_KEYS の値全部)

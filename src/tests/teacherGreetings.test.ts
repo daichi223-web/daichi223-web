@@ -87,6 +87,20 @@ describe('pickGreeting（その日の一言）', () => {
     expect([...TEACHER_GREETINGS.sei!.events.newYear, ...TEACHER_GREETINGS.sei!.month[0]]).toContain(ny);
   });
 
+  it('ホームに戻るたび（種が変わるたび）に一言が変わり、直前の一言（avoid）とは同じにならない', () => {
+    for (const id of TEACHER_IDS) {
+      let prev: string | null = null;
+      const seen = new Set<string>();
+      for (let visit = 1; visit <= 40; visit++) {
+        const line: string = pickGreeting({ teacher: id, date: d(10, 20), seed: `visit${visit}`, avoid: prev })!;
+        expect(line, `${id} visit${visit}`).not.toBe(prev);
+        seen.add(line);
+        prev = line;
+      }
+      expect(seen.size, id).toBeGreaterThanOrEqual(3);
+    }
+  });
+
   it('小テストの当日・直前はその台詞だけ。日数を入れる', () => {
     expect(TEACHER_GREETINGS.michizane!.events.quizToday)
       .toContain(pickGreeting({ teacher: 'michizane', date: d(6, 1), quizDaysLeft: 0 }));

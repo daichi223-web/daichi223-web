@@ -8,6 +8,7 @@ import { TestGrading } from './TestGrading.tsx'
 import PullToRefresh from './components/PullToRefresh.tsx'
 import RequireAccount from './components/RequireAccount.tsx'
 import { ensureAnonSession } from './lib/anonAuth.ts'
+import { captureGuestParam } from './lib/guest.ts'
 import { applyUnlockFromUrl } from './lib/fullAccess.ts'
 import { applyCohortFromUrl } from './lib/cohort.ts'
 import { ReiwaThemeProvider } from './theme/ThemeContext'
@@ -49,6 +50,8 @@ const StatsPage = lazy(() => import('./pages/StatsPage.tsx'))
 // Supabase Anonymous Sign-in を起動時に一度だけ発火する。
 // RLS が auth.uid ベースに締まっているので、学習記録系の書き込み前に
 // セッション確立を済ませておく。失敗しても起動は続行（フォールバックあり）。
+// お試しのアドレス（?guest=1）なら、この端末を登録なしで通す印を付ける（lib/guest.ts）
+captureGuestParam()
 void ensureAnonSession().catch(() => {})
 
 function Fallback() {

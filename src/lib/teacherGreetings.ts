@@ -1,11 +1,11 @@
-import { pickVariant, type TeacherId } from './teachers';
+import type { TeacherId } from './teachers';
 
 // 先生の季節・行事のあいさつ（2026-11-13 ユーザー指示「時期や年間の行事とも関連させたコメントも作って」。
 // 決まり = F:\A2A\_work\kobun-chat-feedback\BRIEF-lines.md：キャラは史実と違ってよい／古語に注を付けない／短く（1文30字まで）。
 // キャラ付け（型・語尾・ギャップ）= 同 character-design.md（同日ユーザー指示「キャラゲーを参考に、魅力あるキャラ付けを」）。
 // 絵文字・記号は書かない。変数は {日数}（小テストまでの日数）だけ。
 // 10人全員ぶんある（清少納言・菅原道真・紀貫之が先、残りの7人は同日に追加。7人の正本 = 同 lines7\<id>.json → apply7.py）。
-// まだ画面には出していない（出す場所は開始画面と今日の分の終了画面の予定。TEACHER_VOICE_ENABLED と同じく切り替えてから）。
+// ホームの「今日の分」の上に出す（components/quiz/TeacherGreeting.tsx）。ホームに戻るたびに選び直し、直前と同じ一言は避ける（2026-11-13 ユーザー指示）。
 
 /** 日付で決まる行事。学校ごとに日が違うものは幅を持たせ、台詞もぼかす（「近い人もいるかな」） */
 export type GreetingEvent =
@@ -436,6 +436,8 @@ export type GreetingInput = {
   quizDaysLeft?: number | null;
   /** 同じ日でも場面ごとに変えたいときの種（既定は日付だけ＝その日は同じ一言） */
   seed?: string;
+  /** この一言は避ける（直前に出した一言。候補が2つ以上あるときだけ効く） */
+  avoid?: string | null;
 };
 
 /** 小テストまで何日前から「あと N 日」と言うか */
@@ -445,15 +447,32 @@ export const QUIZ_SOON_DAYS = 7;
  * その日の一言を選ぶ。小テストの当日・直前はそれだけ。ほかは、その日の行事の台詞と月の台詞を合わせた中から選ぶ。
  * あいさつの無い先生は null。
  */
-export function pickGreeting({ teacher, date, quizDaysLeft = null, seed = '' }: GreetingInput): string | null {
+export function pickGreeting({ teacher, date, quizDaysLeft = null, seed = '', avoid = null }: GreetingInput): string | null {
   const g = TEACHER_GREETINGS[teacher];
   if (!g) return null;
   const day = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   const key = `${teacher}:${day}:${seed}`;
-  if (quizDaysLeft === 0) return pickVariant(g.events.quizToday, `${key}:quizToday`);
+  // 候補から1つ。直前の一言（avoid）と同じになったら、候補の中で次の文にずらす
+  const choose = (pool: readonly string[], k: string, fill: (s: string) => string = (s) => s): string | null => {
+    if (pool.length === 0) return null;
+    let i = hashIndex(k, pool.length);
+    if (avoid != null && pool.length > 1 && fill(pool[i]) === avoid) i = (i + 1) % pool.length;
+    return fill(pool[i]);
+  };
+  if (quizDaysLeft === 0) return choose(g.events.quizToday, `${key}:quizToday`);
   if (quizDaysLeft != null && quizDaysLeft > 0 && quizDaysLeft <= QUIZ_SOON_DAYS) {
-    return pickVariant(g.events.quizSoon, `${key}:quizSoon`).replace(/\{日数\}/g, String(quizDaysLeft));
+    return choose(g.events.quizSoon, `${key}:quizSoon`, (s) => s.replace(/\{日数\}/g, String(quizDaysLeft)));
   }
   const pool = [...eventsOn(date).flatMap((e) => g.events[e]), ...(g.month[date.getMonth()] ?? [])];
-  return pool.length ? pickVariant(pool, key) : null;
+  return choose(pool, key);
+}
+
+// seed から候補の番号を決める（teachers.ts の pickVariant と同じ FNV-1a。あいさつは記憶を持たず、直前の文は avoid で渡す）
+function hashIndex(seed: string, n: number): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0) % n;
 }

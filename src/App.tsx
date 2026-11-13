@@ -253,6 +253,8 @@ function App() {
   // Index modal state
   const [showIndexModal, setShowIndexModal] = useState(false);
   const [showThemePicker, setShowThemePicker] = useState(false);
+  // テーマ画面を開いたときに送る欄（ホームの先生の絵から開くと 'teacher'）
+  const [themeFocus, setThemeFocus] = useState<'teacher' | null>(null);
   const [showHome, setShowHome] = useState(true);
   // 苦手単語 / SRS 復習用に、特定の qid セットだけで出題する場合に使う
   const [quizQidFilter, setQuizQidFilter] = useState<string[] | null>(null);
@@ -1680,7 +1682,7 @@ function App() {
       </div>
 
       {/* Theme Picker (5色プリセット + カスタム) */}
-      <ReiwaThemePicker open={showThemePicker} onClose={() => setShowThemePicker(false)} />
+      <ReiwaThemePicker open={showThemePicker} focus={themeFocus} onClose={() => { setShowThemePicker(false); setThemeFocus(null); }} />
 
       {/* Index Modal */}
       {showIndexModal && (
@@ -1763,6 +1765,7 @@ function App() {
               }
             }}
             onOpenThemePicker={() => setShowThemePicker(true)}
+            onOpenTeacherPicker={() => { setThemeFocus('teacher'); setShowThemePicker(true); }}
           />
         </div>
       </div>
