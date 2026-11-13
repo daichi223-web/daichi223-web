@@ -4,7 +4,7 @@ import { ensureAnonSession } from '@/lib/anonAuth';
 import { getAccountStatus } from '@/lib/auth';
 import { cachedProfile, fetchProfile } from '@/lib/profile';
 import { AUTH_REQUIRED } from '@/lib/authFlags';
-import { isGuest } from '@/lib/guest';
+import { isGuest, verifyGuest } from '@/lib/guest';
 
 // 初回起動時の登録ガード。
 //   匿名のまま（メール未登録）→ /account?required=1 へ
@@ -16,12 +16,11 @@ import { isGuest } from '@/lib/guest';
 // 生徒が入れなくなる等のトラブルが起きたら、この変数を消して再デプロイすれば元に戻る
 // （コードを revert する必要はない）。オフの間は /account から任意で登録できる。
 
-const EXEMPT = ['/account', '/auth/callback', '/teacher', '/test-grading'];
+const EXEMPT = ['/account', '/guest', '/auth/callback', '/teacher', '/test-grading'];
 
 export default function RequireAccount({ children }: { children: ReactNode }) {
   const loc = useLocation();
-  // お試し（?guest=1 で開いた端末）は登録なしで通す（2026-11-13 ユーザー指示。lib/guest.ts）
-  const exempt = !AUTH_REQUIRED || isGuest() || EXEMPT.some((p) => loc.pathname === p || loc.pathname.startsWith(p + '/'));
+  const exempt = !AUTH_REQUIRED || EXEMPT.some((p) => loc.pathname === p || loc.pathname.startsWith(p + '/'));
   const [state, setState] = useState<'checking' | 'ok' | 'redirect'>(exempt ? 'ok' : 'checking');
 
   useEffect(() => {
@@ -30,6 +29,11 @@ export default function RequireAccount({ children }: { children: ReactNode }) {
     setState('checking'); // 前のページで決めた結果を持ち越さない（/account から戻った時に再確認）
     (async () => {
       try {
+        // お試し（パスワードで入った端末）は登録なしで通す。パスワードが変わった・止めたら印が外れて登録へ（lib/guest.ts）
+        if (isGuest() && (await verifyGuest())) {
+          if (alive) setState('ok');
+          return;
+        }
         await ensureAnonSession();
         const st = await getAccountStatus();
         if (!alive) return;

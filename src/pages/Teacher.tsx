@@ -79,7 +79,7 @@ async function callAPI(path: string, body?: any) {
 
 export default function Teacher() {
   const [token, setToken] = useState<string | null>(() => getToken());
-  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble" | "quizrange" | "usage">("answers");
+  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble" | "quizrange" | "usage" | "guest">("answers");
   const [rows, setRows] = useState<any[]>([]);
   const [candidates, setCandidates] = useState<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
@@ -442,6 +442,17 @@ export default function Teacher() {
           <span className="hidden sm:inline">📌 小テスト範囲</span>
         </button>
         <button
+          onClick={() => setActiveTab("guest")}
+          className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
+            activeTab === "guest"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-slate-600 hover:text-slate-800"
+          }`}
+        >
+          <span className="sm:hidden">試用</span>
+          <span className="hidden sm:inline">🔑 お試し</span>
+        </button>
+        <button
           onClick={() => setActiveTab("noble")}
           className={`shrink-0 whitespace-nowrap px-2 sm:px-4 py-2 text-sm sm:text-base font-medium transition ${
             activeTab === "noble"
@@ -733,6 +744,7 @@ export default function Teacher() {
       {activeTab === "texts" && <TextsManageView />}
 
       {activeTab === "quizrange" && <QuizRangeView />}
+      {activeTab === "guest" && <GuestAccessView />}
 
       {activeTab === "noble" && <NoblePreviewView />}
 
@@ -874,6 +886,104 @@ type TextEntry = {
   era?: string;
   author?: string;
 };
+
+// お試し（ゲスト）のパスワード（2026-11-13 ユーザー指示）。生徒や見学者に /?guest=1 とパスワードを伝えると、
+// 登録なしでその端末で使える。パスワードはサーバにハッシュでだけ持つので、ここでは今の値は見られない（新しく決め直す）。
+// 変える・止めると、それまでに入った端末もゲストの扱いが外れる。サーバ = api/_guest.ts、表 = guest_access。
+function GuestAccessView() {
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const url = `${window.location.origin}/?guest=1`;
+
+  const load = async () => {
+    setLoading(true);
+    setErr(null);
+    try {
+      const data = await callAPI("/api/teacher?action=getGuestAccess");
+      setEnabled(!!data?.enabled);
+      setUpdatedAt(data?.updated_at ?? null);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    void load();
+  }, []);
+
+  const save = async (stop: boolean) => {
+    setLoading(true);
+    setErr(null);
+    setMsg(null);
+    try {
+      const body: Record<string, unknown> = stop ? { action: "setGuestAccess", enabled: false } : { action: "setGuestAccess", password };
+      const data = await callAPI("/api/teacher", body);
+      setEnabled(!!data?.enabled);
+      setUpdatedAt(data?.updated_at ?? null);
+      setPassword("");
+      setMsg(stop ? "お試しを止めました。入っていた端末も、次に開いたときに登録が必要になります。" : "新しいパスワードにしました。前のパスワードで入った端末は、次に開いたときにもう一度入れ直しになります。");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const pwOk = password.normalize("NFKC").trim().length >= 4 && password.normalize("NFKC").trim().length <= 64;
+
+  return (
+    <div className="bg-white rounded-lg shadow p-6 max-w-2xl">
+      <h2 className="text-lg font-bold text-slate-800 mb-1">🔑 お試し（ゲスト）</h2>
+      <p className="text-sm text-slate-600 mb-4">
+        下のアドレスを開いてパスワードを入れると、登録しなくてもその端末で使えます（見学・体験用）。
+        お試しの端末では分析用の記録（利用状況・つまずきの集計のもと）はとりません。単語の成績と復習の予定はその人の分として残ります。
+      </p>
+      <div className="mb-4 rounded border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+        <div className="text-xs font-bold text-slate-500">お試しのアドレス</div>
+        <div className="font-mono break-all text-slate-800">{url}</div>
+      </div>
+      <div className="mb-4 text-sm">
+        <span className="font-bold text-slate-700">今の状態：</span>
+        {enabled == null ? "読み込み中…" : enabled ? "受け付け中" : "止めています"}
+        {updatedAt && <span className="text-xs text-slate-500">（{new Date(updatedAt).toLocaleString("ja-JP")} に変更）</span>}
+      </div>
+      <label className="block">
+        <span className="text-sm font-bold text-slate-700">新しいパスワード</span>
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="4〜64文字"
+          autoComplete="off"
+          className="mt-1 w-full border border-slate-300 rounded px-3 py-2"
+        />
+        <span className="text-xs text-slate-500">全角で打っても半角と同じに扱います。今のパスワードはここでは見られません（決め直すだけ）。</span>
+      </label>
+      <div className="mt-4 flex gap-2 flex-wrap">
+        <button
+          onClick={() => void save(false)}
+          disabled={loading || !pwOk}
+          className="px-4 py-2 rounded bg-blue-600 text-white font-bold disabled:opacity-50"
+        >
+          このパスワードにして受け付ける
+        </button>
+        <button
+          onClick={() => void save(true)}
+          disabled={loading || enabled === false}
+          className="px-4 py-2 rounded border border-slate-300 text-slate-700 font-bold disabled:opacity-50"
+        >
+          お試しを止める
+        </button>
+      </div>
+      {msg && <p className="mt-3 text-sm text-emerald-700">{msg}</p>}
+      {err && <p className="mt-3 text-sm text-red-600">{err}</p>}
+    </div>
+  );
+}
 
 // 小テスト範囲: 教員が1回設定すると、その cohort の生徒ホーム最上段に出る。
 // 生徒側の「範囲を自分で指定」はそのまま残る（指定の手間を消すだけ）。

@@ -6,6 +6,7 @@
  * - 既存の word_stats / srs_state とは独立。こちらが落ちても学習記録には影響しない
  */
 import { supabase } from './supabase';
+import { isGuest } from './guest';
 import { currentAuthUid } from './anonAuth';
 
 export type LearningArea = 'vocab' | 'grammar' | 'text';
@@ -85,6 +86,8 @@ export function markQuestionShown(): void {
 export function logEvent(e: LearningEvent): void {
   try {
     if (!e.targetId) return;
+    // お試し（ゲスト）の端末では分析用の記録を送らない（2026-11-13 ユーザー指示。lib/guest.ts）
+    if (isGuest()) return;
     const now = Date.now();
     // 同じ閲覧・開閉が続けて来たら1件にまとめる（開発時の二重実行や連打）
     const key = `${e.action}|${e.targetType}|${e.targetId}`;

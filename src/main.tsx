@@ -40,6 +40,7 @@ const VocabPage = lazy(() => import('./pages/VocabPage.tsx'))
 const VocabCard = lazy(() => import('./pages/VocabCard.tsx'))
 const VocabHome = lazy(() => import('./pages/VocabHome.tsx'))
 const AccountPage = lazy(() => import('./pages/AccountPage.tsx'))
+const GuestLogin = lazy(() => import('./pages/GuestLogin.tsx'))
 const AuthCallback = lazy(() => import('./pages/AuthCallback.tsx'))
 const Teacher = lazy(() => import('./pages/Teacher.tsx'))
 const TextDetail = lazy(() => import('./pages/TextDetail.tsx'))
@@ -50,8 +51,11 @@ const StatsPage = lazy(() => import('./pages/StatsPage.tsx'))
 // Supabase Anonymous Sign-in を起動時に一度だけ発火する。
 // RLS が auth.uid ベースに締まっているので、学習記録系の書き込み前に
 // セッション確立を済ませておく。失敗しても起動は続行（フォールバックあり）。
-// お試しのアドレス（?guest=1）なら、この端末を登録なしで通す印を付ける（lib/guest.ts）
-captureGuestParam()
+// お試しのアドレス（?guest=1）なら、まだゲストでない端末をパスワードの画面（/guest）へ。?guest=0 は印を外す（lib/guest.ts）
+{
+  const to = captureGuestParam()
+  if (to) window.history.replaceState(null, '', to)
+}
 void ensureAnonSession().catch(() => {})
 
 function Fallback() {
@@ -95,6 +99,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/vocab" element={<VocabHome />} />
           <Route path="/word/:lemma" element={<VocabCard />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/guest" element={<GuestLogin />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/read/grammar/reibun" element={<ReibunDict />} />
           <Route path="/read/grammar/reibun/quiz" element={<ReibunQuiz />} />
