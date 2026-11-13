@@ -3,10 +3,10 @@ import { PORTRAIT_FACES, STAGE_COUNT, faceFor, faceImgStyle } from '../lib/portr
 import { readMyStage } from '../lib/myStage';
 import { STAGES } from '../lib/nobleData';
 
-const TONES = ['sharp', 'yuru', 'pop'] as const;
+const TONES = ['sharp', 'yuru', 'pop', 'miyabi'] as const;
 
 describe('PORTRAIT_FACES（肖像の顔の位置の表）', () => {
-  it('3画風 × 21階（index = n-1）がそろっている', () => {
+  it('4画風 × 21階（index = n-1）がそろっている（みやびは 2026-11-13 に追加）', () => {
     expect(STAGE_COUNT).toBe(STAGES.length);
     expect(Object.keys(PORTRAIT_FACES).sort()).toEqual([...TONES].sort());
     for (const tone of TONES) expect(PORTRAIT_FACES[tone]).toHaveLength(STAGE_COUNT);

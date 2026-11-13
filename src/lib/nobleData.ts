@@ -203,7 +203,8 @@ export function nextStage(score: number, currentN: number):
 
 // 自分の肖像の「みやび」21枚（Codex の依頼3）が届いたら true にし、public/portraits/miyabi-stage-NN-w1200/-w480.webp を置き、
 // portraitFaces.ts の PORTRAIT_FACES に miyabi の行を足す。それまでは みやび を選んでも肖像は しっとり（sharp）の絵で出す。
-export const MIYABI_PORTRAITS_READY = false;
+// 2026-11-13 夜に21枚そろったので true（Codex の依頼3）
+export const MIYABI_PORTRAITS_READY = true;
 
 /** 肖像の絵として実際に使う画風（みやびの肖像がまだ無い間は sharp に読み替える） */
 export function portraitArtTone(tone: PortraitTone): Exclude<PortraitTone, 'miyabi'> | 'miyabi' {

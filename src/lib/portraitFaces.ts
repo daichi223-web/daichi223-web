@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { PortraitTone } from './portraitTone';
+import { MIYABI_PORTRAITS_READY } from './nobleData';
 
 // 位階の肖像（public/portraits、4:3）から「顔」を丸く切り出すための表。
 // nobleData.ts の PORTRAITS の focusX/focusY（object-position 用、全件 50/50）とは別の概念で、ここでは中心と大きさを持つ。
@@ -18,8 +19,7 @@ export type FaceFocus = { cx: number; cy: number; d: number };
 export const STAGE_COUNT = 21;
 
 /** 画風 × 第 n 階（index = n-1）の顔の位置 */
-// miyabi は肖像が届いて測るまで行が無い（faceFor が sharp で代わりにする）
-export const PORTRAIT_FACES: Record<Exclude<PortraitTone, 'miyabi'>, FaceFocus[]> & { miyabi?: FaceFocus[] } = {
+export const PORTRAIT_FACES: Record<PortraitTone, FaceFocus[]> = {
   // くっきり（写実の水彩・全身立像）。第1階だけ座像で顔が低い（冠なし）。第4・11・12階は細い纓が真上に立ち、d に含めている
   sharp: [
     { cx: 51.0, cy: 26.7, d: 15.0 }, // 第1階 無位
@@ -92,12 +92,37 @@ export const PORTRAIT_FACES: Record<Exclude<PortraitTone, 'miyabi'>, FaceFocus[]
     { cx: 50.0, cy: 21.1, d: 16.0 }, // 第20階 従一
     { cx: 50.6, cy: 21.4, d: 17.3 }, // 第21階 正一
   ],
+  // みやび（Codex 作、2026-11-13）。public/portraits/miyabi-stage-NN-w480.webp を格子で拡大して目で測った（鼻・冠の上端・あご）。
+  // 全身立像で頭が小さめ（d≒13）。第1階は髷で冠なし
+  miyabi: [
+    { cx: 50.5, cy: 14.5, d: 11.3 }, // 第1階 無位
+    { cx: 50.5, cy: 15.0, d: 12.0 }, // 第2階 八位
+    { cx: 51.0, cy: 14.0, d: 12.0 }, // 第3階 七位
+    { cx: 50.2, cy: 16.0, d: 13.1 }, // 第4階 従六下
+    { cx: 50.5, cy: 15.0, d: 12.8 }, // 第5階 従六上
+    { cx: 50.5, cy: 16.0, d: 13.1 }, // 第6階 正六下
+    { cx: 50.5, cy: 16.0, d: 13.5 }, // 第7階 正六上
+    { cx: 50.5, cy: 15.5, d: 13.1 }, // 第8階 従五下
+    { cx: 50.3, cy: 15.0, d: 12.8 }, // 第9階 従五上
+    { cx: 50.5, cy: 15.5, d: 13.1 }, // 第10階 正五下
+    { cx: 50.5, cy: 15.0, d: 13.1 }, // 第11階 正五上
+    { cx: 50.3, cy: 15.5, d: 13.1 }, // 第12階 従四下
+    { cx: 50.0, cy: 16.0, d: 13.1 }, // 第13階 従四上
+    { cx: 50.5, cy: 16.0, d: 13.5 }, // 第14階 正四下
+    { cx: 50.5, cy: 16.0, d: 13.9 }, // 第15階 正四上
+    { cx: 50.5, cy: 16.0, d: 13.5 }, // 第16階 従三
+    { cx: 50.0, cy: 16.0, d: 13.5 }, // 第17階 正三
+    { cx: 50.3, cy: 16.0, d: 13.5 }, // 第18階 従二
+    { cx: 50.3, cy: 16.0, d: 13.9 }, // 第19階 正二
+    { cx: 50.5, cy: 16.0, d: 13.5 }, // 第20階 従一
+    { cx: 50.0, cy: 16.5, d: 13.9 }, // 第21階 正一
+  ],
 };
 
 /** 第 n 階の顔の位置。範囲外（0 以下・22 以上・整数でない）は index 0 */
 export function faceFor(tone: PortraitTone, n: number): FaceFocus {
-  // みやびの肖像がまだ無い間は sharp の絵を出すので、顔の位置も sharp（届いたら PORTRAIT_FACES に miyabi の行を足す）
-  const drawn = tone === 'miyabi' ? (PORTRAIT_FACES.miyabi ? 'miyabi' : 'sharp') : tone;
+  // 肖像の絵として実際に出す画風（みやびの肖像が無い設定のときは sharp の絵なので、顔の位置も sharp）
+  const drawn = tone === 'miyabi' && !MIYABI_PORTRAITS_READY ? 'sharp' : tone;
   const list = PORTRAIT_FACES[drawn] ?? PORTRAIT_FACES.sharp;
   const index = Number.isInteger(n) && n >= 1 && n <= list.length ? n - 1 : 0;
   return list[index];
