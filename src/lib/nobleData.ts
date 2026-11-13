@@ -19,6 +19,7 @@ export const PART_LABEL: Record<PartKey, string> = {
 
 // 21 階位ごとの各部位の正式名称 (平安後期の臣下装束を基準)。
 // 平安後期は「上位ほど紫」ではなく、五位=緋、六位以下=縹、四位以上=黒が基本。
+// 第10・11階（正五位）の袍は、肖像（PORTRAITS の note）と設計書に合わせて緋（2026-11-13 ユーザー指示。それまで表示名だけ黒になっていた）。
 export type StageDisplay = {
   head: string;
   robe: string;
@@ -63,9 +64,9 @@ export const STAGES: Stage[] = [
   { n: 9,  rank: '従五上', post: '大国守・侍従',        head: 5, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人',
     display: { head: '冠(纓中)',          robe: '緋(綾)',          train: '中',         item: '笏+檜扇',            belt: '細太刀' } },
   { n: 10, rank: '正五下', post: '少弁・近衛少将',      head: 6, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人',
-    display: { head: '冠(垂纓)',          robe: '黒',             train: '中',         item: '笏+檜扇',            belt: '細太刀' } },
+    display: { head: '冠(垂纓)',          robe: '緋(上質)',        train: '中',         item: '笏+檜扇',            belt: '細太刀' } },
   { n: 11, rank: '正五上', post: '中弁・大判事',        head: 6, robe: 6, train: 3, item: 4, belt: 3, era: '殿上人',
-    display: { head: '冠(垂纓)',          robe: '黒(地紋)',        train: '中',         item: '笏+檜扇',            belt: '細太刀' } },
+    display: { head: '冠(垂纓)',          robe: '緋(地紋)',        train: '中',         item: '笏+檜扇',            belt: '細太刀' } },
   { n: 12, rank: '従四下', post: '八省輔・近衛中将',    head: 6, robe: 7, train: 4, item: 4, belt: 4, era: '殿上人',
     display: { head: '冠(垂纓)',          robe: '黒',             train: '長',         item: '笏+檜扇',            belt: '飾太刀' } },
   { n: 13, rank: '従四上', post: '京大夫・大宰大弐',    head: 6, robe: 7, train: 4, item: 4, belt: 4, era: '殿上人',
