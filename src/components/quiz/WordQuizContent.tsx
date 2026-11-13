@@ -10,7 +10,6 @@ import { buildThread, optionLabel } from '../../lib/quiz/chatThread';
 import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from '../../lib/teachers';
 import { useChatTeacher } from '../../lib/chatTeacher';
 import { usePortraitTone } from '../../lib/portraitTone';
-import { useTeacherArt } from '../../lib/teacherArt';
 import { readMyStage } from '../../lib/myStage';
 import {
   answerTone, hasAnswerBlank, isSubmitEnter, scrollBehavior, senseLabel,
@@ -111,10 +110,9 @@ export function WordQuizContent({
   // 答え合わせ（LINE 風）の画面データ。先生と画風は端末の設定、位階は通信なしで読み、この問の間は固定（セッション中は更新しない）
   const [teacherId] = useChatTeacher();
   const [tone] = usePortraitTone();
-  const [teacherArt] = useTeacherArt();
   const myStage = useMemo(readMyStage, [question?.correct?.qid]);
   const teacher = TEACHERS[teacherId];
-  const teacherSrc = teacherImage(teacherId, tone, teacherArt);
+  const teacherSrc = teacherImage(teacherId, tone);
   const chatMe = { stageN: myStage.n, tone, rankLabel: myStage.rank };
   // 同じ見出し語の意味の一覧（意味マップ）。getWordByLemma は多義語だけ登録されるので、単義語は []
   const siblings = useMemo(() => {

@@ -4,7 +4,6 @@ import { FaceAvatar } from '../noble/FaceAvatar';
 import { TEACHERS, teacherImage } from '../../lib/teachers';
 import { useChatTeacher } from '../../lib/chatTeacher';
 import { usePortraitTone } from '../../lib/portraitTone';
-import { useTeacherArt } from '../../lib/teacherArt';
 import { pickGreeting } from '../../lib/teacherGreetings';
 import { daysUntil } from '../../lib/quizRange';
 
@@ -23,7 +22,6 @@ type Props = {
 export function TeacherGreeting({ quizDueDate = null, seed = '', className = '' }: Props) {
   const [teacher] = useChatTeacher();
   const [tone] = usePortraitTone();
-  const [art] = useTeacherArt();
   const today = new Date();
   const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
@@ -41,7 +39,7 @@ export function TeacherGreeting({ quizDueDate = null, seed = '', className = '' 
       <ChatRow
         side="teacher"
         name={t.name}
-        avatar={<FaceAvatar src={teacherImage(teacher, tone, art)} size={CHAT_AVATAR_PX} alt={t.name} className="mt-4" />}
+        avatar={<FaceAvatar src={teacherImage(teacher, tone)} size={CHAT_AVATAR_PX} alt={t.name} className="mt-4" />}
       >
         {line}
       </ChatRow>

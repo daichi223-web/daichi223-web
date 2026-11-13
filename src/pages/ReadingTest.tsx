@@ -27,7 +27,6 @@ import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } fro
 import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from "@/lib/teachers";
 import { useChatTeacher } from "@/lib/chatTeacher";
 import { usePortraitTone } from "@/lib/portraitTone";
-import { useTeacherArt } from "@/lib/teacherArt";
 import { readMyStage } from "@/lib/myStage";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 
@@ -185,7 +184,6 @@ export default function ReadingTest() {
   // 答え合わせの先生と自分（単語クイズと同じ設定）
   const [teacherId] = useChatTeacher();
   const [tone] = usePortraitTone();
-  const [teacherArt] = useTeacherArt();
   const myStage = useMemo(readMyStage, []);
   const [quizBackground] = useQuizBackground();
   const [quizBackgroundColor] = useQuizBackgroundColor();
@@ -368,7 +366,7 @@ export default function ReadingTest() {
                     canAdvance
                     onNext={next}
                     teacher={TEACHERS[teacherId]}
-                    teacherSrc={teacherImage(teacherId, tone, teacherArt)}
+                    teacherSrc={teacherImage(teacherId, tone)}
                     me={{ stageN: myStage.n, tone, rankLabel: myStage.rank }}
                     word={feedbackWord(q)}
                   />

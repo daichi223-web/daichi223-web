@@ -201,9 +201,26 @@ export function nextStage(score: number, currentN: number):
   return { stage: next, need: Math.max(0, to - score), progress: Math.floor(ratio * 100) };
 }
 
+// 自分の肖像の「みやび」21枚（Codex の依頼3）が届いたら true にし、public/portraits/miyabi-stage-NN-w1200/-w480.webp を置き、
+// portraitFaces.ts の PORTRAIT_FACES に miyabi の行を足す。それまでは みやび を選んでも肖像は しっとり（sharp）の絵で出す。
+export const MIYABI_PORTRAITS_READY = false;
+
+/** 肖像の絵として実際に使う画風（みやびの肖像がまだ無い間は sharp に読み替える） */
+export function portraitArtTone(tone: PortraitTone): Exclude<PortraitTone, 'miyabi'> | 'miyabi' {
+  return tone === 'miyabi' && !MIYABI_PORTRAITS_READY ? 'sharp' : tone;
+}
+
 export function portraitForStage(n: number, portraitTone: PortraitTone = 'sharp'): PortraitBand {
   const portrait = PORTRAITS.find((p) => n >= p.fromN && n <= p.toN) ?? PORTRAITS[0];
+  portraitTone = portraitArtTone(portraitTone);
   if (portraitTone === 'sharp') return portrait;
+  if (portraitTone === 'miyabi') {
+    return {
+      ...portrait,
+      src: portrait.src.replace('/portraits/stage-', '/portraits/miyabi-stage-'),
+      thumb: portrait.thumb.replace('/portraits/stage-', '/portraits/miyabi-stage-'),
+    };
+  }
   const prefix = portraitTone === 'pop' ? 'pop-stage-' : 'yuru-stage-';
   return {
     ...portrait,

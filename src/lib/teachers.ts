@@ -110,26 +110,16 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
   },
 };
 
-// 先生の絵の4種類目「アニメ調」（2026-11-13 ユーザー提供の絵。背景は透明）。位階の肖像には無い画風なので、
-// 肖像の雰囲気（PortraitTone）とは別の設定にする（lib/teacherArt.ts）。'same' ＝ 肖像の雰囲気と同じ絵。
-export type TeacherArt = 'same' | 'anime';
-
-export const TEACHER_ART_IDS: readonly TeacherArt[] = ['same', 'anime'];
-
-export const TEACHER_ART_LABEL: Record<TeacherArt, string> = { same: '肖像と同じ', anime: 'みやび' };
-
+// 先生の絵の「みやび」（2026-11-13、Codex 作。背景は透明）。ファイル名は作業中の仮の名のまま <id>-anime.webp。
+// 絵の雰囲気（PortraitTone）の miyabi を選ぶとこの絵になる（同日、先生の絵だけの別設定をやめて一本化した）。
 // 小式部内侍の絵は、提供時は清少納言として描かれたもの。明るい笑顔が清少納言の型（強気なツンデレ）と合わず、
 // 小式部内侍（元気な先輩）に回した（2026-11-13 ユーザー承認）。清少納言は同日、型に合わせて描き直した絵が届いて入れた。
-/** アニメ調の絵がある先生（public/teachers/<id>-anime.webp）。無い先生は肖像の雰囲気の絵で出す */
+/** みやびの絵がある先生（public/teachers/<id>-anime.webp）。無い先生は しっとり（sharp）の絵で出す */
 export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
 
-export function isTeacherArt(v: unknown): v is TeacherArt {
-  return v === 'same' || v === 'anime';
-}
-
-/** 先生の絵のパス。art が 'anime' で、その先生にアニメ調の絵があればそれを、無ければ肖像の雰囲気（tone）の絵を返す */
-export function teacherImage(id: TeacherId, tone: PortraitTone, art: TeacherArt = 'same'): string {
-  if (art === 'anime' && ANIME_TEACHER_IDS.includes(id)) return `/teachers/${id}-anime.webp`;
+/** 先生の絵のパス。みやびは <id>-anime.webp、ほかは <id>-<tone>.webp */
+export function teacherImage(id: TeacherId, tone: PortraitTone): string {
+  if (tone === 'miyabi') return ANIME_TEACHER_IDS.includes(id) ? `/teachers/${id}-anime.webp` : `/teachers/${id}-sharp.webp`;
   return `/teachers/${id}-${tone}.webp`;
 }
 

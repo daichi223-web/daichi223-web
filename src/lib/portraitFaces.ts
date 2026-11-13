@@ -18,7 +18,8 @@ export type FaceFocus = { cx: number; cy: number; d: number };
 export const STAGE_COUNT = 21;
 
 /** 画風 × 第 n 階（index = n-1）の顔の位置 */
-export const PORTRAIT_FACES: Record<PortraitTone, FaceFocus[]> = {
+// miyabi は肖像が届いて測るまで行が無い（faceFor が sharp で代わりにする）
+export const PORTRAIT_FACES: Record<Exclude<PortraitTone, 'miyabi'>, FaceFocus[]> & { miyabi?: FaceFocus[] } = {
   // くっきり（写実の水彩・全身立像）。第1階だけ座像で顔が低い（冠なし）。第4・11・12階は細い纓が真上に立ち、d に含めている
   sharp: [
     { cx: 51.0, cy: 26.7, d: 15.0 }, // 第1階 無位
@@ -95,7 +96,9 @@ export const PORTRAIT_FACES: Record<PortraitTone, FaceFocus[]> = {
 
 /** 第 n 階の顔の位置。範囲外（0 以下・22 以上・整数でない）は index 0 */
 export function faceFor(tone: PortraitTone, n: number): FaceFocus {
-  const list = PORTRAIT_FACES[tone] ?? PORTRAIT_FACES.sharp;
+  // みやびの肖像がまだ無い間は sharp の絵を出すので、顔の位置も sharp（届いたら PORTRAIT_FACES に miyabi の行を足す）
+  const drawn = tone === 'miyabi' ? (PORTRAIT_FACES.miyabi ? 'miyabi' : 'sharp') : tone;
+  const list = PORTRAIT_FACES[drawn] ?? PORTRAIT_FACES.sharp;
   const index = Number.isInteger(n) && n >= 1 && n <= list.length ? n - 1 : 0;
   return list[index];
 }

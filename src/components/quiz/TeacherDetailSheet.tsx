@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { TEACHERS, teacherImage, type TeacherId } from '../../lib/teachers';
 import { TEACHER_PROFILES } from '../../lib/teacherProfiles';
 import type { PortraitTone } from '../../lib/portraitTone';
-import { useTeacherArt } from '../../lib/teacherArt';
 
 // 先生の人物解説（先生の選択欄で先生をタップすると開く）。
 // 上から 大きめの絵 → 史実 → 伝わる話（説話・伝説。史実と区別）→ 先生キャラ（このアプリの創作）→ 出典。
@@ -41,7 +40,6 @@ const Bullets = ({ items }: { items: readonly string[] }) => (
 );
 
 export function TeacherDetailSheet({ id, tone, selected, onSelect, onClose }: Props) {
-  const [art] = useTeacherArt();
   useEffect(() => {
     if (!id) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); onClose(); } };
@@ -82,7 +80,7 @@ export function TeacherDetailSheet({ id, tone, selected, onSelect, onClose }: Pr
         <div className="px-4 pb-5">
           <div className="flex flex-col items-center pt-3">
             <img
-              src={teacherImage(id, tone, art)}
+              src={teacherImage(id, tone)}
               alt={`${t.name}の絵`}
               width={176}
               height={176}

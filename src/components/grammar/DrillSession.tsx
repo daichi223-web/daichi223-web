@@ -14,7 +14,6 @@ import { scrollBehavior } from "@/components/quiz/writingVerdict";
 import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from "@/lib/teachers";
 import { useChatTeacher } from "@/lib/chatTeacher";
 import { usePortraitTone } from "@/lib/portraitTone";
-import { useTeacherArt } from "@/lib/teacherArt";
 import { readMyStage } from "@/lib/myStage";
 
 /** 選択肢の表示順をシャッフル（正解が先頭に固定されるのを防ぐ）。入力は破壊しない。 */
@@ -125,7 +124,6 @@ export function DrillSession({
   // 答え合わせの先生と自分（単語クイズと同じ設定）
   const [teacherId] = useChatTeacher();
   const [tone] = usePortraitTone();
-  const [teacherArt] = useTeacherArt();
   const myStage = useMemo(readMyStage, []);
 
   // 学習の出来事の記録（分析用）: 問いが切り替わった時刻を記し、回答に応答時間を付ける
@@ -285,7 +283,7 @@ export function DrillSession({
             canAdvance
             onNext={handleNext}
             teacher={TEACHERS[teacherId]}
-            teacherSrc={teacherImage(teacherId, tone, teacherArt)}
+            teacherSrc={teacherImage(teacherId, tone)}
             me={{ stageN: myStage.n, tone, rankLabel: myStage.rank }}
             word={drillFeedbackWord(drill)}
           />

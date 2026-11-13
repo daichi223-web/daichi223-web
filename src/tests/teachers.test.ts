@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  ANIME_TEACHER_IDS, TEACHERS, TEACHER_IDS, TEACHER_LINE_KEYS, TEACHER_VAR_NAMES, fillTemplate, isTeacherArt, isTeacherId, pickVariant, teacherImage,
+  ANIME_TEACHER_IDS, TEACHERS, TEACHER_IDS, TEACHER_LINE_KEYS, TEACHER_VAR_NAMES, fillTemplate, isTeacherId, pickVariant, teacherImage,
   type TeacherLines,
 } from '../lib/teachers';
 import { TEACHER_LINES } from '../lib/teacherLines';
@@ -75,19 +75,14 @@ describe('TEACHERS（先生10人のデータ）', () => {
     expect(missing).toEqual([]);
   });
 
-  it('4種類目（みやび。ファイル名は anime）は絵がある先生だけ。無い先生は肖像の雰囲気の絵に戻る', () => {
-    expect(ANIME_TEACHER_IDS).toEqual(['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira']);
+  it('絵の雰囲気「みやび」を選ぶと、先生の絵は <id>-anime.webp（10人とも実在する）', () => {
+    expect(ANIME_TEACHER_IDS).toEqual([...TEACHER_IDS]);
     const dir = fileURLToPath(new URL('../../public/teachers/', import.meta.url));
     for (const id of TEACHER_IDS) {
-      const has = ANIME_TEACHER_IDS.includes(id);
-      expect(existsSync(join(dir, `${id}-anime.webp`)), id).toBe(has);
-      expect(teacherImage(id, 'yuru', 'anime')).toBe(has ? `/teachers/${id}-anime.webp` : `/teachers/${id}-yuru.webp`);
-      expect(teacherImage(id, 'pop', 'same')).toBe(`/teachers/${id}-pop.webp`);
+      expect(existsSync(join(dir, `${id}-anime.webp`)), id).toBe(true);
+      expect(teacherImage(id, 'miyabi')).toBe(`/teachers/${id}-anime.webp`);
+      expect(teacherImage(id, 'pop')).toBe(`/teachers/${id}-pop.webp`);
     }
-    expect(isTeacherArt('anime')).toBe(true);
-    expect(isTeacherArt('same')).toBe(true);
-    expect(isTeacherArt('pop')).toBe(false);
-    expect(isTeacherArt(null)).toBe(false);
   });
 });
 

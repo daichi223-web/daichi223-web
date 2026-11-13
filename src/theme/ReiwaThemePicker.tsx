@@ -162,7 +162,7 @@ export default function ReiwaThemePicker({ open, onClose }: Props) {
             学習履歴の自分のキャラをタップしてもここが開く） */}
         <div className="px-5 pb-5 space-y-4">
           <div>
-            <p className="text-xs text-rw-ink-soft mb-2">あなたのキャラ（肖像の雰囲気）</p>
+            <p className="text-xs text-rw-ink-soft mb-2">あなたのキャラ（絵の雰囲気）</p>
             <PortraitTonePicker />
           </div>
           <div>
