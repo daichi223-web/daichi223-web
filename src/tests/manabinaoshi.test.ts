@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { STAGES, judgePlacement, limitChoices, pickPlacementDrills, shouldStop, stageStyle } from "@/lib/kobun/manabinaoshi";
+import { STAGES, judgePlacement, judgeQuickCheck, limitChoices, pickPlacementDrills, pickQuickCheck, quickCheckContinues, shouldStop, stageStyle } from "@/lib/kobun/manabinaoshi";
 import type { GrammarDrill } from "@/lib/kobun/types";
 
 const d = (id: string, topicId: string, sort: number, extra: Partial<GrammarDrill> = {}): GrammarDrill => ({
@@ -143,5 +143,50 @@ describe("判定", () => {
 
   it("ちょうど半分は shaky にしない", () => {
     expect(judgePlacement([{ id: "a", correct: true }, { id: "b", correct: false }]).shaky).toBe(false);
+  });
+});
+
+describe("はじめの確認（段を選ばせず、段0から2問ずつ）", () => {
+  const topics = {
+    1: ["doushi-yodan", "doushi-katsuyo", "doushi-kahen", "onbin"],
+    2: ["jodoshi-keri", "jodoshi-zu"],
+    3: ["kakari-musubi"],
+    4: [],
+  } as const;
+  const drills = {
+    1: [d("y", "doushi-yodan", 10), d("k", "doushi-katsuyo", 10), d("ka", "doushi-kahen", 10), d("o", "onbin", 10)],
+    2: [d("ke", "jodoshi-keri", 10), d("z", "jodoshi-zu", 10)],
+    3: [d("km", "kakari-musubi", 10)],
+    4: [],
+  };
+  const qs = pickQuickCheck(drills, { 1: [...topics[1]], 2: [...topics[2]], 3: [...topics[3]], 4: [] }, () => 0.3);
+
+  it("段0は用語カード2枚、段1〜4は最初の単元と真ん中の単元から1問ずつ（問題の無い段は飛ばす）", () => {
+    expect(qs.map((q) => q.stage)).toEqual([0, 0, 1, 1, 2, 2, 3]);
+    expect(qs.filter((q) => q.stage === 0).every((q) => q.term && !q.drill)).toBe(true);
+    // 段1：教える順は katsuyo → yodan → kahen → onbin。最初＝katsuyo、真ん中＝kahen
+    expect(qs.filter((q) => q.stage === 1).map((q) => q.drill!.id)).toEqual(["k", "ka"]);
+    expect(qs.length).toBeLessThanOrEqual(10);
+  });
+
+  it("×の問いで出発点が決まる：1問目なら最初の単元、2問目なら2番目の単元（段0は用語カードから）", () => {
+    expect(qs.filter((q) => q.stage === 1).map((q) => q.startIfWrong)).toEqual(["doushi-katsuyo", "doushi-yodan"]);
+    expect(qs[0].startIfWrong).toBeNull();
+  });
+
+  it("最初の×で止め、そこより下の段を「できた」にする", () => {
+    // 段0 ○○、段1 ○×
+    const r = judgeQuickCheck(qs, [true, true, true, false]);
+    expect(r).toEqual({ passed: [0], startStage: 1, startTopic: "doushi-yodan" });
+    expect(quickCheckContinues(qs, [true, true, true, false])).toBe(false);
+    expect(quickCheckContinues(qs, [true, true, true])).toBe(true);
+    // 段0 の1問目で×
+    expect(judgeQuickCheck(qs, [false])).toEqual({ passed: [], startStage: 0, startTopic: null });
+  });
+
+  it("全部○なら出発点なし、問いのある段は全部できた", () => {
+    const all = qs.map(() => true);
+    expect(judgeQuickCheck(qs, all)).toEqual({ passed: [0, 1, 2, 3], startStage: null, startTopic: null });
+    expect(quickCheckContinues(qs, all)).toBe(false);
   });
 });

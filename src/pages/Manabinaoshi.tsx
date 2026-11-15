@@ -7,23 +7,31 @@ import {
   STAGES,
   isCorrect,
   judgePlacement,
+  judgeQuickCheck,
   limitChoices,
   pickPlacementDrills,
+  pickQuickCheck,
+  quickCheckContinues,
   shouldStop,
   stageStyle,
   type PlacementItem,
+  type QuickQ,
   type Stage,
   type StageId,
   type StageStyle,
   type TermCard,
 } from "@/lib/kobun/manabinaoshi";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
+import { orderIndex } from "@/lib/kobun/curriculum";
 import { splitGloss, type GlossEntry } from "@/lib/kobun/glossary";
 import { writeDojoStartPoint } from "@/lib/kobun/dojoLocal";
 import { TERM_GROUPS, ALL_TERM_CARDS, groupDone, readTermProgress, resumeIndex, writeTermProgress, type TermProgress } from "@/lib/kobun/grammarTerms";
 
 /** 単元ページから「← 学び始め」で戻れるように、戻り先を付けて渡す */
 const topicLink = (topicId: string) => `/read/grammar/${topicId}?back=${encodeURIComponent("/manabinaoshi")}`;
+
+/** 段の短い名前（「形の変わり方（用言）」→「用言」。かっこが無ければそのまま） */
+const shortTitle = (s: Stage) => s.title.match(/（(.+)）$/)?.[1] ?? s.title;
 
 /** 例文の【】（問われている語）を太字に、《》（手がかり）は印だけ外す */
 function renderContext(text: string) {
@@ -261,10 +269,14 @@ interface TopicMeta {
   category: string;
 }
 
-type Phase = "choose" | "stage" | "quiz" | "result" | "terms";
+// intro → check → checkResult が既定の道（2026-11-15。自分で段を選ばせず、確認から始める）。
+// choose（段を自分で選ぶ）と stage・quiz・result（段ごとの用語カードと判定）は、結果の画面から行ける形で残す
+type Phase = "intro" | "check" | "checkResult" | "choose" | "stage" | "quiz" | "result" | "terms";
 
 export default function Manabinaoshi() {
-  const [phase, setPhase] = useState<Phase>("choose");
+  const [phase, setPhase] = useState<Phase>("intro");
+  // 段の画面の「← 戻る」の行き先（どこから段に入ったか）
+  const [stageBack, setStageBack] = useState<Phase>("choose");
   // 「文法用語になれる」（段0の中の入口。2026-11-08）：開いているグループと、端末に覚えた進み具合
   const [termGroupIdx, setTermGroupIdx] = useState<number | null>(null);
   const [termProgress, setTermProgress] = useState<TermProgress>(() => readTermProgress());
@@ -304,6 +316,12 @@ export default function Manabinaoshi() {
   // 途中で止めたあと「続けて確かめる」を選んだら、残りは止めずに最後まで
   const [noStop, setNoStop] = useState(false);
 
+  // はじめの確認：段1〜4のドリル（段ごとに取る。1回の取得は1,000行で切られるので分ける）
+  const [checkDrills, setCheckDrills] = useState<Partial<Record<StageId, GrammarDrill[]>> | null>(null);
+  const [quickQs, setQuickQs] = useState<QuickQ[]>([]);
+  const [quickAnswers, setQuickAnswers] = useState<boolean[]>([]);
+  const [quickSel, setQuickSel] = useState<string | null>(null);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -323,6 +341,82 @@ export default function Manabinaoshi() {
       cancelled = true;
     };
   }, []);
+
+  const topicIdsByStage = useMemo(() => {
+    const m: Partial<Record<StageId, string[]>> = {};
+    for (const s of STAGES) if (s.category && topics) m[s.id] = topics.filter((t) => t.category === s.category).map((t) => t.id);
+    return m;
+  }, [topics]);
+
+  useEffect(() => {
+    if (!topics || topics.length === 0) return;
+    let cancelled = false;
+    const ids = STAGES.filter((s) => s.category).map((s) => s.id);
+    Promise.all(ids.map((id) => fetchDrillsForTopics(topicIdsByStage[id] ?? []))).then((lists) => {
+      if (cancelled) return;
+      const m: Partial<Record<StageId, GrammarDrill[]>> = {};
+      ids.forEach((id, i) => (m[id] = lists[i]));
+      setCheckDrills(m);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [topics, topicIdsByStage]);
+  const checkReady = checkDrills !== null && Object.values(checkDrills).some((l) => (l?.length ?? 0) > 0);
+
+  const quickQ = quickQs[quickAnswers.length - (quickSel !== null ? 1 : 0)];
+  const quickChoices = useMemo(() => {
+    if (!quickQ) return [];
+    if (quickQ.term) return shuffle(limitChoices(quickQ.term.check.choices, quickQ.term.check.answer, 3));
+    const d = quickQ.drill!;
+    return shuffle(limitChoices(d.choices ?? [], d.answer, 4));
+  }, [quickQ]);
+  useEffect(() => {
+    if (phase === "check" && quickSel === null) markQuestionShown();
+  }, [phase, quickAnswers.length, quickSel]);
+  const quickResult = useMemo(() => judgeQuickCheck(quickQs, quickAnswers), [quickQs, quickAnswers]);
+  // 確認の結果の出発点も、文法道場ホームの「🧭 ここから」に残す（段0から始める人は道場の単元が決まらないので残さない）
+  useEffect(() => {
+    if (phase !== "checkResult") return;
+    if (quickResult.startStage !== null && quickResult.startTopic) writeDojoStartPoint(quickResult.startStage, quickResult.startTopic);
+  }, [phase, quickResult]);
+
+  const startCheck = () => {
+    if (!checkDrills) return;
+    setQuickQs(pickQuickCheck(checkDrills, topicIdsByStage));
+    setQuickAnswers([]);
+    setQuickSel(null);
+    setPhase("check");
+    window.scrollTo(0, 0);
+  };
+
+  const answerCheck = (c: string) => {
+    if (!quickQ || quickSel !== null) return;
+    const answer = quickQ.term ? quickQ.term.check.answer : quickQ.drill!.answer;
+    const ok = isCorrect(answer, c);
+    setQuickSel(c);
+    setQuickAnswers((a) => [...a, ok]);
+    if (quickQ.term)
+      logEvent({
+        area: "grammar", action: "answer", targetType: "term", targetId: quickQ.term.id,
+        correct: ok, chosen: c, format: "term-check",
+        ctx: { mode: "manabinaoshi-check", stage: quickQ.stage, no: quickAnswers.length + 1 },
+      });
+    else
+      logEvent({
+        area: "grammar", action: "answer", targetType: "drill", targetId: quickQ.drill!.id,
+        correct: ok, chosen: c, format: quickQ.drill!.kind,
+        ctx: { mode: "manabinaoshi-check", stage: quickQ.stage, topic: quickQ.drill!.topicId, no: quickAnswers.length + 1, choices: quickChoices },
+      });
+  };
+
+  const nextCheck = () => {
+    setQuickSel(null);
+    if (!quickCheckContinues(quickQs, quickAnswers)) {
+      setPhase("checkResult");
+      window.scrollTo(0, 0);
+    }
+  };
 
   const stageTopicIds = useMemo(
     () => (topics && stage.category ? topics.filter((t) => t.category === stage.category).map((t) => t.id) : []),
@@ -361,7 +455,8 @@ export default function Manabinaoshi() {
     if (start) writeDojoStartPoint(stageId, start);
   }, [phase, items, stageId]);
 
-  const goStage = (id: StageId) => {
+  const goStage = (id: StageId, from?: Phase) => {
+    if (from) setStageBack(from);
     setStageId(id);
     setTermResults({});
     setSolved({});
@@ -417,7 +512,7 @@ export default function Manabinaoshi() {
 
   const header = (
     <div className="flex items-center gap-4 mb-4">
-      {phase === "choose" ? (
+      {phase === "intro" ? (
         <Link to="/" className="text-sm font-bold text-rw-ink-soft hover:text-rw-ink transition-colors">
           ← ホーム
         </Link>
@@ -430,7 +525,10 @@ export default function Manabinaoshi() {
               window.scrollTo(0, 0);
               return;
             }
-            setPhase(phase === "quiz" || phase === "result" ? "stage" : "choose");
+            setPhase(
+              phase === "quiz" || phase === "result" ? "stage" : phase === "stage" ? stageBack : "intro"
+            );
+            window.scrollTo(0, 0);
           }}
           className="text-sm font-bold text-rw-ink-soft hover:text-rw-ink transition-colors"
         >
@@ -447,10 +545,220 @@ export default function Manabinaoshi() {
       <div className="max-w-2xl mx-auto p-5">
         {header}
 
+        {phase === "intro" && (
+          <>
+            <div className="bg-rw-paper border-2 border-rw-ink rounded-3xl p-5 mb-4">
+              <p className="text-[17px] font-black text-rw-ink leading-snug">
+                どこから始めればいいか、
+                <br />
+                問題に答えるだけでわかるよ。
+              </p>
+              <p className="text-[13px] text-rw-ink-soft leading-relaxed mt-2">
+                ことばのきほん → 用言 → 助動詞 → 助詞 → 敬語 の順に2問ずつ。まちがえたところで止まって、そこが「あなたの出発点」になる。
+              </p>
+              <ol className="mt-3 flex flex-wrap items-center gap-1 text-[12px] font-black text-rw-ink">
+                {STAGES.map((s, i) => (
+                  <li key={s.id} className="flex items-center gap-1">
+                    {i > 0 && <span className="text-rw-ink-soft">›</span>}
+                    <span className="px-2 py-0.5 rounded-full border border-rw-rule bg-rw-bg">{shortTitle(s)}</span>
+                  </li>
+                ))}
+              </ol>
+              {loadError ? (
+                <p className="mt-4 text-[13px] text-rw-primary">問題を読み込めなかった。通信を確かめて、もう一度開いてね。</p>
+              ) : (
+                <button
+                  onClick={startCheck}
+                  disabled={!checkReady}
+                  className="mt-4 w-full px-4 py-3.5 bg-rw-ink text-rw-paper rounded-2xl font-black text-[16px] disabled:opacity-50"
+                  style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
+                >
+                  {checkReady ? "はじめる ▶（10問まで・3分くらい）" : checkDrills === null ? "問題を用意しています…" : "問題を読み込めなかった"}
+                </button>
+              )}
+            </div>
+            <button
+              onClick={() => {
+                setPhase("choose");
+                window.scrollTo(0, 0);
+              }}
+              className="w-full text-left bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 hover:border-rw-ink-soft transition"
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex-1 min-w-0">
+                  <span className="block font-black text-rw-ink tracking-tight">段を自分で選ぶ</span>
+                  <span className="block text-[11px] font-bold text-rw-ink-soft">「〜できる」の一覧から選んで、段ごとに確かめる</span>
+                </span>
+                <span className="text-rw-ink-soft text-sm">▸</span>
+              </div>
+            </button>
+          </>
+        )}
+
+        {phase === "check" &&
+          quickQ &&
+          (() => {
+            const q = quickQ;
+            const st = STAGES[q.stage];
+            const answer = q.term ? q.term.check.answer : q.drill!.answer;
+            const ok = quickSel !== null && isCorrect(answer, quickSel);
+            const last = quickSel !== null && !quickCheckContinues(quickQs, quickAnswers);
+            const no = quickAnswers.length - (quickSel !== null ? 1 : 0) + 1;
+            return (
+              <>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex-1 h-1.5 rounded-full bg-rw-rule overflow-hidden">
+                    <div className="h-full bg-rw-accent transition-all" style={{ width: `${Math.round(((no - 1) / quickQs.length) * 100)}%` }} />
+                  </div>
+                  <span className="text-[11px] font-black text-rw-ink-soft">
+                    {no} / {quickQs.length}
+                  </span>
+                </div>
+                <div className="text-[11px] font-black text-rw-ink-soft tracking-wider mb-1.5">
+                  段 {st.id}・{shortTitle(st)}
+                  {q.drill && <span className="ml-1 font-bold">（{titleOf(q.drill.topicId)}）</span>}
+                </div>
+                <div className="bg-rw-paper p-3.5 rounded-2xl border-2 border-rw-ink mb-2.5">
+                  {q.drill?.context && (
+                    <>
+                      <p className="text-rw-ink font-serif text-[15px] leading-relaxed">{renderContext(q.drill.context)}</p>
+                      <div className="border-b border-rw-rule my-2" />
+                    </>
+                  )}
+                  <p className="text-[15px] font-black text-rw-ink leading-snug">
+                    <GlossText text={q.term ? q.term.check.prompt : q.drill!.prompt} />
+                  </p>
+                </div>
+                <ChoiceButtons choices={quickChoices} answer={answer} selected={quickSel} onSelect={answerCheck} />
+                {quickSel !== null && (
+                  <>
+                    <div className="mt-3 bg-rw-paper border border-rw-rule rounded-xl p-3">
+                      <p className={`text-[14px] leading-relaxed ${ok ? "text-rw-accent" : "text-rw-primary"}`}>
+                        <span className="font-black">{ok ? "◯ せいかい！ " : "× "}</span>
+                        <GlossText text={q.term ? q.term.check.explanation : q.drill!.explanation ?? ""} />
+                      </p>
+                      {/* まちがえたときだけ、その言葉の説明（用語カード）を出す */}
+                      {!ok && q.term && (
+                        <div className="border-t border-rw-rule mt-3 pt-3">
+                          <div className="text-[11px] font-black text-rw-ink-soft tracking-wider">{q.term.term}って？</div>
+                          <TermExplain card={q.term} />
+                        </div>
+                      )}
+                    </div>
+                    <button onClick={nextCheck} className="mt-3 w-full px-4 py-3 bg-rw-ink text-rw-paper rounded-2xl font-black">
+                      {last ? "結果を見る" : "つぎへ"}
+                    </button>
+                  </>
+                )}
+              </>
+            );
+          })()}
+
+        {phase === "checkResult" &&
+          (() => {
+            const r = quickResult;
+            const startSt = r.startStage !== null ? STAGES[r.startStage] : null;
+            // 出発点の段の単元（教える順）。出発点の単元から先を「このあと」に並べる
+            const ids = startSt ? [...(topicIdsByStage[startSt.id] ?? [])].sort((a, b) => orderIndex(a) - orderIndex(b)) : [];
+            const at = r.startTopic ? ids.indexOf(r.startTopic) : -1;
+            const after = at < 0 ? [] : ids.slice(at + 1, at + 4);
+            return (
+              <>
+                <h2 className="text-xl font-black text-rw-ink tracking-tight mb-3">{startSt ? "あなたの出発点" : "全部 ◯！"}</h2>
+                <ol className="space-y-1.5 mb-4">
+                  {STAGES.map((s) => {
+                    const passed = r.passed.includes(s.id);
+                    const here = r.startStage === s.id;
+                    return (
+                      <li
+                        key={s.id}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-2 ${
+                          here ? "border-2 border-rw-ink bg-rw-primary-soft/40" : "border border-rw-rule bg-rw-paper"
+                        }`}
+                      >
+                        <span className={`w-6 text-center font-black ${passed ? "text-rw-accent" : here ? "text-rw-primary" : "text-rw-ink-soft"}`}>
+                          {passed ? "✓" : here ? "▶" : "・"}
+                        </span>
+                        <span className={`flex-1 text-[14px] font-bold ${passed || here ? "text-rw-ink" : "text-rw-ink-soft"}`}>
+                          {s.id}. {s.title}
+                        </span>
+                        <span className="text-[11px] font-black text-rw-ink-soft">{passed ? "できた" : here ? "ここから" : ""}</span>
+                      </li>
+                    );
+                  })}
+                </ol>
+
+                {startSt && r.startTopic ? (
+                  <>
+                    <Link
+                      to={topicLink(r.startTopic)}
+                      className="block bg-rw-ink text-rw-paper rounded-2xl p-4 no-underline mb-2"
+                      style={{ textDecoration: "none", boxShadow: "0 4px 0 var(--rw-primary)" }}
+                    >
+                      <div className="text-[11px] font-black opacity-80">ここから始めよう（文法道場）</div>
+                      <div className="text-lg font-black">{titleOf(r.startTopic)} ▸</div>
+                    </Link>
+                    {after.length > 0 && (
+                      <p className="text-[12px] text-rw-ink-soft leading-relaxed mb-3">このあと：{after.map(titleOf).join(" → ")} …</p>
+                    )}
+                    <button
+                      onClick={() => goStage(startSt.id, "checkResult")}
+                      className="w-full text-left bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 mb-2 hover:border-rw-ink-soft transition"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="flex-1 min-w-0">
+                          <span className="block font-black text-rw-ink tracking-tight">先に言葉をおさえる</span>
+                          <span className="block text-[11px] font-bold text-rw-ink-soft">「{shortTitle(startSt)}」の用語カードと、単元ごとの確かめ</span>
+                        </span>
+                        <span className="text-rw-ink-soft text-sm">▸</span>
+                      </div>
+                    </button>
+                  </>
+                ) : startSt ? (
+                  <button
+                    onClick={() => goStage(startSt.id, "checkResult")}
+                    className="w-full text-left bg-rw-ink text-rw-paper rounded-2xl p-4 mb-3"
+                    style={{ boxShadow: "0 4px 0 var(--rw-primary)" }}
+                  >
+                    <div className="text-[11px] font-black opacity-80">ここから始めよう</div>
+                    <div className="text-lg font-black">{startSt.title} ▸</div>
+                    <div className="text-[12px] font-bold opacity-80 mt-0.5">文法の言葉を1つずつ。答えてから説明が出るよ</div>
+                  </button>
+                ) : (
+                  <div className="bg-rw-paper border-2 border-rw-accent rounded-2xl p-4 mb-3">
+                    <p className="text-[14px] font-black text-rw-accent">どの段も2問とも正解。きほんはできているよ。</p>
+                    <Link
+                      to="/read/grammar"
+                      className="mt-3 block w-full text-center px-4 py-3 bg-rw-ink text-rw-paper rounded-2xl font-black no-underline"
+                      style={{ textDecoration: "none" }}
+                    >
+                      文法道場で好きな単元へ ▸
+                    </Link>
+                  </div>
+                )}
+
+                <div className="flex gap-4 mt-4">
+                  <button onClick={startCheck} className="text-[13px] font-black text-rw-ink-soft underline">
+                    もう一度確かめる
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPhase("choose");
+                      window.scrollTo(0, 0);
+                    }}
+                    className="text-[13px] font-black text-rw-ink-soft underline"
+                  >
+                    段を自分で選ぶ
+                  </button>
+                </div>
+              </>
+            );
+          })()}
+
         {phase === "choose" && (
           <>
             <p className="text-[14px] text-rw-ink leading-relaxed mb-1">
-              どこから始めればいいか、自分で選ぼう。上から順に読んで、
+              自分で段を選ぶなら、上から順に読んで、
               <span className="font-black">「できる」と言えなくなった段</span>を選んでね。
             </p>
             <p className="text-[12px] text-rw-ink-soft leading-relaxed mb-4">
@@ -460,7 +768,7 @@ export default function Manabinaoshi() {
               {STAGES.map((s) => (
                 <button
                   key={s.id}
-                  onClick={() => goStage(s.id)}
+                  onClick={() => goStage(s.id, "choose")}
                   className="w-full text-left bg-rw-paper border-2 border-rw-ink rounded-2xl p-4 hover:bg-rw-primary-soft/40 transition"
                 >
                   <div className="flex items-center gap-2">

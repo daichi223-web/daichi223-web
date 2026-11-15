@@ -25,10 +25,10 @@ import { isGuest } from '@/lib/guest';
 //  1. ヘッダ: kobun. + 日付 + 単語帳件数 (🔥)
 //  2. Today's Quest カード: 「今日の分」1ボタン（おかえり語→今日の復習→範囲から補充、で約10問）
 //  3. 4 タイル: 単語（クイズ） / 単語一覧（/vocab） / 読解 / 文法道場
-//     （その下に 苦手復習 の1行、学び始め の1行、学習履歴 / テーマ。単語帳のショートカットは 2026-10-13 にユーザー指示で外した。
+//     （その下に 苦手復習 の1行、学び始め の1行。学習履歴 / テーマの行は 2026-11-15 に外した。単語帳のショートカットは 2026-10-13 にユーザー指示で外した。
 //      多義語タイルは 2026-11-06 に外した＝クイズ画面の「多義語モード」タブから行ける。苦手復習は同日にタイルから1行へ）
 //  4. 気になってる単語: localStorage の単語帳から最新 5 件
-//  5. テーマピッカーへの誘導 (詳細設定は別途、クイズ画面でアクセス可能)
+//  （テーマピッカーへの誘導は 2026-11-15 に外した。右上の 🎨 から開ける）
 
 type Props = {
   currentMode: 'word' | 'polysemy';
@@ -381,26 +381,14 @@ export default function HomeReiwa({
           <span className="text-xl">🧭</span>
           <span className="flex-1 min-w-0">
             <span className="block font-black text-rw-ink tracking-tight">学び始め</span>
-            <span className="block text-[11px] font-bold text-rw-ink-soft truncate">どこから始めればいいか、自分で選んで確かめる</span>
+            <span className="block text-[11px] font-bold text-rw-ink-soft truncate">10問くらい答えて、どこから始めればいいかがわかる</span>
           </span>
           <span className="text-rw-ink-soft text-sm">→</span>
         </div>
       </Link>
 
-      {/* 学習履歴・テーマのショートカット */}
-      <div className="grid grid-cols-2 gap-2.5 mb-3">
-        <TileLinkInline href="/stats" label="学習履歴" emoji="📊" />
-        <button
-          onClick={onOpenThemePicker}
-          className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 hover:border-rw-ink-soft transition text-rw-ink text-left"
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-xl">🎨</span>
-            <span className="font-black text-rw-ink tracking-tight flex-1">テーマ</span>
-            <span className="text-rw-ink-soft text-sm">▸</span>
-          </div>
-        </button>
-      </div>
+      {/* 学習履歴・テーマの行は 2026-11-15 に外した（ユーザー指示「ホーム画面に学習履歴とテーマはなくてもいい」）。
+          学習履歴は上の肖像・位階名をタップ、テーマは右上の 🎨 から開ける */}
 
       {/* 記録の引き継ぎ（匿名なら登録を促す）。お試しの端末には出さない（登録へつながない）。
           登録済みの状態の行と、先生用の「教員管理画面」の行は 2026-11-15 にホームから外した（ユーザー指示「ホームにいらない」）。
@@ -535,22 +523,6 @@ function TileVocabSearch() {
         </button>
       </form>
     </div>
-  );
-}
-
-function TileLinkInline({ href, label, emoji }: { href: string; label: string; emoji: string }) {
-  return (
-    <Link
-      to={href}
-      className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-3 hover:border-rw-ink-soft transition no-underline text-rw-ink"
-      style={{ textDecoration: 'none' }}
-    >
-      <div className="flex items-center gap-3">
-        <span className="text-xl">{emoji}</span>
-        <span className="font-black text-rw-ink tracking-tight flex-1">{label}</span>
-        <span className="text-rw-ink-soft text-sm">→</span>
-      </div>
-    </Link>
   );
 }
 

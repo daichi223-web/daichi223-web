@@ -466,3 +466,74 @@ export function judgePlacement(items: PlacementItem[]): Placement {
   const miss = items.find((i) => !i.correct);
   return { correct, total, startAt: miss ? miss.id : null, shaky: total > 0 && correct * 2 < total };
 }
+
+// ---------------------------------------------------------------------------
+// はじめの確認（2026-11-15 ユーザー選択「自分で段を選ばせず、確認から始める」）
+//   段0→段4 を2問ずつ、下の段から順に出す。最初に × がついたところを出発点にする（そこで止める）。
+//   全部で最大10問。段を自分で選ぶ画面（Can-do の一覧）と段ごとの判定は、結果の画面から行ける形で残す。
+// ---------------------------------------------------------------------------
+
+/** はじめの確認の1問 */
+export interface QuickQ {
+  stage: StageId;
+  /** 段0は用語カードの確認の1問 */
+  term?: TermCard;
+  /** 段1〜4は文法道場のドリル */
+  drill?: GrammarDrill;
+  /** この問いで × のとき、どの単元から始めるか（段0は null＝段0の用語カードから） */
+  startIfWrong: string | null;
+}
+
+/** 1つの段で出す問いの数 */
+export const QUICK_PER_STAGE = 2;
+
+/**
+ * はじめの確認の問いを選ぶ。
+ * 段0: きほんの用語カードから無作為に2枚。
+ * 段1〜4: 各単元のいちばん易しい1問（pickPlacementDrills）を教える順に並べ、最初の単元と真ん中の単元から1問ずつ。
+ *   1問目で × なら最初の単元から、2問目で × なら2番目の単元から始める（1番目は ◯、間の単元はまだ確かめていない）。
+ * drillsByStage は段1〜4のドリル（段ごとに取ったもの）。問題が取れなかった段は飛ばす。
+ */
+export function pickQuickCheck(
+  drillsByStage: Partial<Record<StageId, GrammarDrill[]>>,
+  topicIdsByStage: Partial<Record<StageId, string[]>>,
+  rng: () => number = Math.random
+): QuickQ[] {
+  const out: QuickQ[] = [];
+  for (const term of shuffle(STAGES[0].terms, rng).slice(0, QUICK_PER_STAGE)) out.push({ stage: 0, term, startIfWrong: null });
+  for (const s of STAGES) {
+    if (s.id === 0) continue;
+    const per = pickPlacementDrills(drillsByStage[s.id] ?? [], topicIdsByStage[s.id] ?? [], rng);
+    if (per.length === 0) continue;
+    out.push({ stage: s.id, drill: per[0], startIfWrong: per[0].topicId });
+    if (per.length >= 2) out.push({ stage: s.id, drill: per[Math.max(1, Math.floor(per.length / 2))], startIfWrong: per[1].topicId });
+  }
+  return out;
+}
+
+export interface QuickResult {
+  /** 全問 ◯ で通った段 */
+  passed: StageId[];
+  /** 出発点の段（全部 ◯ なら null） */
+  startStage: StageId | null;
+  /** 出発点の単元（段0なら null＝用語カードから） */
+  startTopic: string | null;
+}
+
+/** answers[i] は questions[i] の正誤。最初の × で出発点が決まる（それより後の答えは見ない） */
+export function judgeQuickCheck(questions: QuickQ[], answers: boolean[]): QuickResult {
+  const miss = answers.findIndex((a) => !a);
+  const upTo = miss < 0 ? answers.length : miss;
+  const startStage = miss < 0 ? null : questions[miss].stage;
+  // 問いがあり、その段の問いが全部「最初の × より前」に入っている段＝通った段
+  const passed = STAGES.map((s) => s.id).filter((id) => {
+    const idx = questions.flatMap((q, i) => (q.stage === id ? [i] : []));
+    return idx.length > 0 && idx.every((i) => i < upTo);
+  });
+  return { passed, startStage, startTopic: miss < 0 ? null : questions[miss].startIfWrong };
+}
+
+/** 次の問いへ進むか（× が出たら止める） */
+export function quickCheckContinues(questions: QuickQ[], answers: boolean[]): boolean {
+  return answers.every((a) => a) && answers.length < questions.length;
+}
