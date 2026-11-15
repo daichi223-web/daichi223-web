@@ -563,6 +563,29 @@ export async function fetchManualTest(textId: string, text: KobunText): Promise<
 // ---------------------------------------------------------------------------
 // 答え合わせ（ChatFeedback に渡す吹き出し）
 
+/**
+ * 解説を一文ずつに分ける。「。」「！」「？」で切るが、「」『』（）〈〉【】の中では切らない。
+ * 閉じかっこが続く「…た。」」は、かっこまで含めて一文にする。空の文は捨てる。
+ */
+export function splitSentences(text: string): string[] {
+  const OPEN = "「『（(〈【";
+  const CLOSE = "」』）)〉】";
+  const out: string[] = [];
+  let depth = 0;
+  let cur = "";
+  for (const ch of text) {
+    cur += ch;
+    if (OPEN.includes(ch)) depth++;
+    else if (CLOSE.includes(ch)) depth = Math.max(0, depth - 1);
+    else if (depth === 0 && "。！？".includes(ch)) {
+      out.push(cur.trim());
+      cur = "";
+    }
+  }
+  if (cur.trim()) out.push(cur.trim());
+  return out.filter(Boolean);
+}
+
 export function readingThread(
   q: ReadingQ,
   chosen: number,
@@ -581,7 +604,8 @@ export function readingThread(
     { side: "teacher", kind: "verdict", text: say, verdict: ok ? "ok" : "ng" },
   ];
   const ex = q.explain;
-  if (ex.text) bubbles.push({ side: "teacher", kind: "text", text: ex.text });
+  // 解説は一文ごとに別の吹き出しにする（2026-11-15 ユーザー指示）
+  for (const t of splitSentences(ex.text ?? "")) bubbles.push({ side: "teacher", kind: "text", text: t });
   if (q.kind === "vocab" && q.lemma && ex.core) {
     bubbles.push({
       side: "teacher",
@@ -594,7 +618,9 @@ export function readingThread(
   } else if (ex.core) {
     bubbles.push({ side: "teacher", kind: "text", text: ex.core });
   }
-  if (ex.decider?.summary) bubbles.push({ side: "teacher", kind: "text", text: `🔑 この箇所では：${ex.decider.summary}` });
+  splitSentences(ex.decider?.summary ?? "").forEach((t, i) =>
+    bubbles.push({ side: "teacher", kind: "text", text: i === 0 ? `🔑 この箇所では：${t}` : t }),
+  );
   if (q.kind === "vocab" && q.lemma && q.qid) {
     const items = sensesOf(q.lemma).map((s) => {
       const w = kobunWordByQid(s.qid);

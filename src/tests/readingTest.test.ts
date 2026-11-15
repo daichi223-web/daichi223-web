@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import fs from "node:fs";
 import type { KobunText, TextAnalysis } from "@/lib/kobun/types";
-import { auxEntryOf, availableGroups, buildReadingTest, parseManualTest, readingThread, selectGroup } from "@/lib/kobun/readingTest";
+import { auxEntryOf, availableGroups, buildReadingTest, parseManualTest, readingThread, selectGroup, splitSentences } from "@/lib/kobun/readingTest";
 
 // 教材の実データ（public/texts-v3 の全教材。analysis があれば使う）
 function load(id: string): { text: KobunText; analysis: TextAnalysis | null } {
@@ -190,5 +190,27 @@ describe("読解テスト（分類：助動詞｜助詞・係り結び｜単語�
     const qs = selectGroup(test, "joshi");
     expect(qs.map((q) => q.spanText)).toEqual(["昔", "申ししかば", "ものならば", "かくなむ申す", "これを聞きてぞ"]);
     expect(selectGroup(test, "aux").every((q) => q.kind === "grammar")).toBe(true);
+  });
+});
+
+describe("読解テストの解説は一文ごとの吹き出し", () => {
+  it("「。」で切り、かっこの中の「。」では切らない", () => {
+    expect(splitSentences("「おこす」は〈よこす〉。手紙の頼みで「送れ。」と言う。訳は（略。）とする")).toEqual([
+      "「おこす」は〈よこす〉。",
+      "手紙の頼みで「送れ。」と言う。",
+      "訳は（略。）とする",
+    ]);
+    expect(splitSentences("")).toEqual([]);
+  });
+
+  it("手書きの問題の解説が文の数だけ先生の吹き出しになる（火鼠の皮衣 問1）", () => {
+    const { text } = load("5954a8d9eb");
+    const raw = JSON.parse(fs.readFileSync("public/reading-tests/5954a8d9eb.json", "utf8"));
+    const q = parseManualTest(raw, text, () => {}).questions[0];
+    const b = readingThread(q, q.answerIndex, { teacher: "sei", voice: false });
+    const texts = b.filter((x) => x.side === "teacher" && x.kind === "text").map((x) => (x as { text: string }).text);
+    expect(texts).toEqual(splitSentences(raw.questions[0].explain));
+    expect(texts.length).toBeGreaterThan(1);
+    expect(texts.join("")).toBe(raw.questions[0].explain);
   });
 });
