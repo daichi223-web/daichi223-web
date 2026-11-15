@@ -14,6 +14,9 @@ import {
   splitSectionPieces,
   tableQuiz,
   termAnswerLines,
+  termOptions,
+  prerequisiteTerms,
+  termsIn,
   type LessonPiece,
   type LessonPlan,
 } from "@/lib/kobun/dojoLesson";
@@ -192,11 +195,43 @@ describe("レッスンの材料（節・途中の問い・ドリルの問い）"
     expect(lessonIntroLine("意味の判別", "chosen")).toBe("じゃあ「意味の判別」を説明するね。");
     expect(lessonIntroLine("「む」と「むず」", "last")).toBe("最後は「む」と「むず」。");
     expect(termAnswerLines({ term: "接続", body: "前の語の形のきまり。例がある。" })).toEqual(["「接続」は、", "前の語の形のきまり。", "例がある。"]);
-    expect(lessonStartLines("助動詞「けり」", [{ term: "接続", body: "" }])).toEqual([
+    expect(lessonStartLines("助動詞「けり」", [{ term: "接続", body: "" }, { term: "連用形", body: "" }])).toEqual([
       "助動詞「けり」を、少しずつ説明していくね。",
-      "説明には「接続」という言葉が出てくるよ。",
+      "説明には「接続」「活用形」などの言葉が出てくるよ。",
       "意味は分かる？",
     ]);
     expect(lessonWrapLines(["a", "b"])).toEqual(["ここまでのまとめ。", "a", "b", "あとはドリルで仕上げよう。"]);
+  });
+});
+
+describe("「分からない言葉」の選択肢は、先に要る言葉だけ・抽象度をそろえる（2026-11-15 ユーザー指摘）", () => {
+  const T = (id: string) => TOPICS.find((x) => x.id === id)!;
+  it("単元そのものが教える言葉は出さない（動詞の活用の「活用」「四段活用」、けりの「過去」「詠嘆」）", () => {
+    const katsuyo = T("doushi-katsuyo");
+    const kt = prerequisiteTerms(katsuyo, termsIn(katsuyo.sections.map((s) => s.content).join(" "))).map((e) => e.term);
+    expect(kt).not.toContain("活用");
+    expect(kt).not.toContain("四段活用");
+    expect(kt).toContain("語幹");
+    const keri = T("jodoshi-keri");
+    const kk = prerequisiteTerms(keri, termsIn(keri.sections.map((s) => s.content).join(" "))).map((e) => e.term);
+    expect(kk).not.toContain("過去");
+    expect(kk).not.toContain("詠嘆");
+    expect(kk).toEqual(expect.arrayContaining(["接続", "連用形"])); // 要約に出てきても、先に要る言葉は残す
+  });
+
+  it("同じ種類の用語は1つの選択肢にまとめ、1語でも種類の名前で出す", () => {
+    const e = (term: string) => ({ term, body: "" });
+    const opts = termOptions([e("活用"), e("未然形"), e("連用形"), e("終止形"), e("確定"), e("語幹")]);
+    expect(opts.map((o) => o.label)).toEqual(["「活用」", "活用形（未然形・連用形など）", "つながり方（確定）", "「語幹」"]);
+    expect(opts[1].entries.map((x) => x.term)).toEqual(["未然形", "連用形", "終止形"]);
+  });
+
+  it("全単元：はじめの選択肢は4つまで・重なりなし", () => {
+    for (const t of TOPICS) {
+      if (t.id.startsWith("vocab")) continue;
+      const opts = termOptions(buildLessonPlan(t, [], () => 0.5).startTerms);
+      expect(opts.length).toBeLessThanOrEqual(4);
+      expect(new Set(opts.map((o) => o.key)).size).toBe(opts.length);
+    }
   });
 });

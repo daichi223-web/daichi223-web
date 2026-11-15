@@ -151,9 +151,60 @@ export interface LessonSection {
 
 export interface LessonPlan {
   sections: LessonSection[];
+  /** はじめに「分からない言葉はある？」で出す用語（単元ぜんぶの説明に出てくる、先に要る言葉。出てくる順・最大4） */
+  startTerms: GlossEntry[];
   /** どの節にも問いが結びつかない単元の、最後の確かめ（無ければ null） */
   finalCheck: LessonSection | null;
   keyPoints: string[];
+}
+
+/** はじめに出す用語の数の上限（まとめる前） */
+export const START_TERM_MAX = 12;
+/** 「どの言葉？」で並べる選択肢の上限 */
+export const TERM_OPTION_MAX = 4;
+
+/**
+ * 「どの言葉？」の選択肢。同じ種類の用語は1つにまとめ、選択肢の抽象度をそろえる
+ * （2026-11-15 ユーザー指摘「質問がMECEではない。抽象度が揃ってない」。「活用」と「未然形」を並べない）。
+ */
+export interface TermOption {
+  key: string;
+  label: string;
+  entries: GlossEntry[];
+}
+
+/** 同じ種類としてまとめる用語（label は選択肢の文字） */
+const TERM_FAMILIES: { key: string; name: string; members: string[] }[] = [
+  { key: "forms", name: "活用形", members: ["未然形", "連用形", "終止形", "連体形", "已然形", "命令形"] },
+  { key: "types", name: "活用の種類", members: ["四段活用", "上二段活用", "下二段活用", "上一段活用", "下一段活用", "変格活用"] },
+  { key: "pos", name: "品詞の名前", members: ["用言", "体言", "動詞", "形容詞", "形容動詞", "助動詞", "助詞"] },
+  { key: "joshi", name: "助詞の種類", members: ["格助詞", "接続助詞", "係助詞"] },
+  { key: "keigo", name: "敬語の種類", members: ["尊敬語", "謙譲語", "丁寧語"] },
+  { key: "imi", name: "意味の名前", members: ["打消", "過去", "推量", "意志", "完了", "存続", "詠嘆"] },
+  { key: "tsunagi", name: "つながり方", members: ["仮定", "確定", "順接", "逆接"] },
+  { key: "doushi2", name: "動詞の種類", members: ["本動詞", "補助動詞", "自動詞", "他動詞"] },
+];
+
+/** 用語を選択肢にまとめる（出てくる順。種類ごとに1つ。上限 max） */
+export function termOptions(entries: GlossEntry[], max = TERM_OPTION_MAX): TermOption[] {
+  const out: TermOption[] = [];
+  for (const e of entries) {
+    const fam = TERM_FAMILIES.find((f) => f.members.includes(e.term));
+    const key = fam ? fam.key : e.term;
+    const have = out.find((o) => o.key === key);
+    if (have) have.entries.push(e);
+    else out.push({ key, label: fam ? fam.name : `「${e.term}」`, entries: [e] });
+  }
+  // 種類のまとまりは、1語だけでも種類の名前で出す（抽象度をそろえる）。かっこの中は、この単元に出てくる語（3つ以上は2つ＋など）
+  for (const o of out) {
+    const fam = TERM_FAMILIES.find((f) => f.key === o.key);
+    if (!fam) continue;
+    // 種類の中は決まった順（活用形なら 未然形→連用形→…）
+    o.entries.sort((x, y) => fam.members.indexOf(x.term) - fam.members.indexOf(y.term));
+    const names = o.entries.map((e) => e.term);
+    o.label = `${fam.name}（${names.length > 2 ? `${names.slice(0, 2).join("・")}など` : names.join("・")}）`;
+  }
+  return out.slice(0, max);
 }
 
 /** 1つの節で出す「今見せた中身から1問」の上限 */
@@ -230,6 +281,24 @@ export function termsIn(text: string): GlossEntry[] {
   return [...out.filter((e) => !BASIC_TERMS.has(e.term)), ...out.filter((e) => BASIC_TERMS.has(e.term))];
 }
 
+/** 意味の名前（助動詞・助詞の単元では、教える中身そのものになる） */
+const MEANING_TERMS = new Set(["打消", "過去", "推量", "意志", "完了", "存続", "詠嘆", "仮定", "確定", "順接", "逆接"]);
+
+/**
+ * 「分からない言葉」として出す用語＝この単元を読むのに先に要る言葉だけ（2026-11-15 ユーザー指摘「質問がMECEではない。抽象度が揃ってない」）。
+ * 単元そのものが教える言葉は外す：
+ *  - 題の用語をふくむ語（「動詞の活用」なら 活用・四段活用…、「音便」なら 音便）
+ *  - 要約・ポイントに出てくる意味の名前（「けり」の過去・詠嘆）
+ * 活用形・接続などは、要約に出てきても先に要る言葉として残す（「けり」は連用形に接続）。
+ */
+export function prerequisiteTerms(topic: Pick<GrammarTopic, "title" | "summary" | "keyPoints">, terms: GlossEntry[]): GlossEntry[] {
+  const about = `${topic.summary ?? ""}${(topic.keyPoints ?? []).join("")}`;
+  const titleTerms = termsIn(topic.title).map((e) => e.term);
+  return terms.filter(
+    (e) => !titleTerms.some((t) => e.term.includes(t)) && !(MEANING_TERMS.has(e.term) && (about.includes(e.term) || topic.title.includes(e.term))),
+  );
+}
+
 /**
  * レッスンの材料をそろえる。節ごとに「かたまり（＋今見せた中身から1問）→ その節のドリルの問い」。
  * ドリルの問いは全体で最大8問：まず各節に1問ずつ（前の節から）、余りがあれば2問目を前の節から足す。
@@ -270,7 +339,7 @@ export function buildLessonPlan(topic: GrammarTopic, drills: GrammarDrill[], rng
       }
     }
     picks[i].slice(0, take[i]).forEach((drill, nth) => steps.push({ kind: "ask", drill, nth }));
-    return { heading: s.heading, index: i, steps, terms: termsIn(s.content) };
+    return { heading: s.heading, index: i, steps, terms: prerequisiteTerms(topic, termsIn(s.content)) };
   });
   const anyAsk = sections.some((s) => s.steps.some((x) => x.kind === "ask"));
   const fallback = anyAsk ? [] : pickLowest(usable, ASK_FALLBACK, rng);
@@ -278,6 +347,7 @@ export function buildLessonPlan(topic: GrammarTopic, drills: GrammarDrill[], rng
     sections,
     finalCheck: fallback.length ? { heading: "", index: -1, steps: fallback.map((drill, nth) => ({ kind: "ask" as const, drill, nth })), terms: [] } : null,
     keyPoints: topic.keyPoints ?? [],
+    startTerms: prerequisiteTerms(topic, termsIn(secs.map((s) => s.content).join(" "))).slice(0, START_TERM_MAX),
   };
 }
 
@@ -308,13 +378,29 @@ export function lessonAskLine(kind: "quick" | "ask", nth = 0): string {
 /** はじめに先生が聞く（この単元で使う用語の意味は分かる？） */
 export function lessonStartLines(topicTitle: string, terms: GlossEntry[]): string[] {
   const lines = [`${quoteName(topicTitle)}を、少しずつ説明していくね。`];
-  if (terms.length) lines.push(`説明には${terms.map((t) => `「${t.term}」`).join("")}という言葉が出てくるよ。`, "意味は分かる？");
+  const opts = termOptions(terms);
+  if (opts.length) lines.push(`説明には${opts.map((o) => o.label.replace(/（.*$/, "")).map((x) => (x.startsWith("「") ? x : `「${x}」`)).join("")}などの言葉が出てくるよ。`, "意味は分かる？");
   return lines;
 }
 
-/** 用語の「〜って？」に先生が答える文（1文ずつ） */
+/**
+ * 選ぶところの選択肢（2026-11-15 ユーザー指摘「質問がMECEではない。抽象度が揃ってない」で、1つの問いには同じ水準の選択肢だけを並べる）。
+ *  start … はじめ：「分かる、はじめよう」「分からない言葉がある」の2つ
+ *  terms … 「どの言葉？」：用語だけ＋「もう大丈夫」
+ *  next  … 次の節を1つ勧め「どうする？」：説明して／分かってる→問題だけ／ほかの所がいい／分からない言葉がある
+ *  other … 「どこにする？」：残りの節だけ＋「やっぱり勧められた節」
+ */
+export type MenuKind = "start" | "terms" | "next" | "other";
+
+
+/** 用語の「〜って？」に先生が答える文（1文ずつ）。まとめた選択肢は、語ごとに1つの吹き出し */
 export function termAnswerLines(entry: GlossEntry): string[] {
   return [`「${entry.term}」は、`, ...splitSentences(entry.body)];
+}
+
+export function termOptionAnswerLines(opt: TermOption): string[] {
+  if (opt.entries.length === 1) return termAnswerLines(opt.entries[0]);
+  return [`${opt.label.replace(/（.*$/, "")}は、この単元では次の${opt.entries.length}つが出てくるよ。`, ...opt.entries.map((e) => `「${e.term}」：${e.body}`)];
 }
 
 /** まとめで先生が言う文（ポイントは1つずつ） */

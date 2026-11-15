@@ -8,12 +8,14 @@ import {
   lessonWrapLines,
   quoteName,
   skipSteps,
-  termAnswerLines,
+  type MenuKind,
+  termOptionAnswerLines,
+  termOptions,
+  type TermOption,
   type LessonPiece,
   type LessonSection,
   type SectionStep,
 } from "@/lib/kobun/dojoLesson";
-import type { GlossEntry } from "@/lib/kobun/glossary";
 import { drillFeedbackWord, drillThread, isDrillAnswerCorrect } from "@/lib/kobun/drillThread";
 import { markLessonDone } from "@/lib/kobun/dojoLocal";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
@@ -41,17 +43,14 @@ import { renderDrillContext } from "./drillContext";
 
 type Ev =
   | { t: "start" }
-  | { t: "menu"; at: "start" | "next"; picked?: string }
-  | { t: "term"; entry: GlossEntry }
+  // rec＝勧めている節（next・other・next から入った terms）。from＝terms に入る前の問い
+  | { t: "menu"; at: MenuKind; rec?: number; from?: "start" | "next"; again?: boolean; picked?: string }
+  | { t: "term"; opt: TermOption }
   | { t: "sec"; sec: number; mode: "explain" | "skip"; how: "first" | "chosen" | "last" | "final"; shown: number }
   | { t: "wrap" };
 
 const CHIP = "text-[13px] font-black px-3 py-1.5 rounded-full border-2 border-rw-primary bg-rw-paper text-rw-ink transition hover:-translate-y-0.5";
 const CHIP_MAIN = "text-[13px] font-black px-3 py-1.5 rounded-full border-2 border-rw-primary bg-rw-primary text-rw-paper transition hover:-translate-y-0.5";
-/** はじめに「分かる？」と聞く用語の数 */
-const START_TERMS = 3;
-/** 節のあいだで「〜って？」と出す用語の数 */
-const MENU_TERMS = 2;
 
 export function LessonSession({
   topic,
@@ -78,7 +77,8 @@ export function LessonSession({
     return m;
   });
   // 用語：はじめに聞くのは最初の節に出てくる言葉
-  const startTerms = useMemo(() => (plan.sections[0]?.terms ?? []).slice(0, START_TERMS), [plan]);
+  // はじめに出す用語：単元の説明ぜんぶに出てくる、先に要る言葉（単元そのものが教える言葉は外してある）
+  const startTerms = plan.startTerms;
   const [events, setEvents] = useState<Ev[]>(() =>
     startTerms.length ? [{ t: "start" }, { t: "menu", at: "start" }] : [{ t: "start" }, { t: "sec", sec: 0, mode: "explain", how: "first", shown: 1 }],
   );
@@ -153,7 +153,7 @@ export function LessonSession({
   /** 節が終わったあと：残りが2つ以上なら聞く、1つなら最後の節、無ければ最後の確かめかまとめ */
   const afterSection = () => {
     const rest = remaining;
-    if (rest.length >= 2) push({ t: "menu", at: "next" });
+    if (rest.length >= 2) push({ t: "menu", at: "next", rec: rest[0].index });
     else if (rest.length === 1) push({ t: "sec", sec: rest[0].index, mode: "explain", how: "last", shown: 1 });
     else if (plan.finalCheck && !events.some((e) => e.t === "sec" && e.sec === -1)) push({ t: "sec", sec: -1, mode: "explain", how: "final", shown: 1 });
     else push({ t: "wrap" });
@@ -164,10 +164,10 @@ export function LessonSession({
     pick(label, { t: "sec", sec: sec.index, mode, how, shown: 1 });
   };
 
-  const askTerm = (entry: GlossEntry, at: "start" | "next") => {
-    setAsked((a) => [...a, entry.term]);
-    logEvent({ area: "grammar", action: "open", targetType: "gloss", targetId: entry.term, ctx: { mode: "lesson", topic: topic.id } });
-    pick(`「${entry.term}」って？`, { t: "term", entry }, { t: "menu", at });
+  const askTerm = (opt: TermOption, from: "start" | "next", rec?: number) => {
+    setAsked((a) => [...a, opt.key]);
+    logEvent({ area: "grammar", action: "open", targetType: "gloss", targetId: opt.entries.map((e) => e.term).join("・"), ctx: { mode: "lesson", topic: topic.id } });
+    pick(opt.label, { t: "term", opt }, { t: "menu", at: "terms", from, rec, again: true });
   };
 
   const answer = (secIdx: number, st: SectionStep, choice: string) => {
@@ -324,39 +324,55 @@ export function LessonSession({
     if (ev.t === "term")
       return (
         <section key={i} className="space-y-1.5">
-          {termAnswerLines(ev.entry).map((l, k) => say(`${i}-${k}`, k === 0 ? <span className="font-black">{l}</span> : l, { first: k === 0, tone: k === 0 ? "core" : "plain" }))}
+          {termOptionAnswerLines(ev.opt).map((l, k) => say(`${i}-${k}`, k === 0 ? <span className="font-black">{l}</span> : l, { first: k === 0, tone: k === 0 ? "core" : "plain" }))}
         </section>
       );
     if (ev.t === "menu") {
-      const rec = remaining[0];
-      const termsHere = (ev.at === "start" ? startTerms : rec?.terms ?? []).filter((t) => !asked.includes(t.term)).slice(0, ev.at === "start" ? START_TERMS : MENU_TERMS);
+      // 1つの問いには同じ水準の選択肢だけ（2026-11-15 ユーザー指摘「質問がMECEではない。抽象度が揃ってない」）
+      const recSec = ev.rec !== undefined ? plan.sections[ev.rec] : remaining[0];
+      const termPool = ev.from === "next" ? recSec?.terms ?? [] : startTerms;
+      const termsLeft = termOptions(termPool).filter((o) => !asked.includes(o.key));
+      const lines: string[] =
+        ev.at === "start"
+          ? []
+          : ev.at === "terms"
+            ? [ev.again ? "ほかにも分からない言葉はある？" : "どの言葉？"]
+            : ev.at === "next"
+              ? [`次は${quoteName(recSec?.heading ?? "")}。`, "どうする？"]
+              : ["どこにする？"];
+      const opts: { label: string; main?: boolean; go: () => void }[] = [];
+      if (ev.at === "start" && recSec) {
+        opts.push({ label: "分かる、はじめよう", main: true, go: () => openSection(recSec, "explain", "分かる、はじめよう", "first") });
+        if (termsLeft.length) opts.push({ label: "分からない言葉がある", go: () => pick("分からない言葉がある", { t: "menu", at: "terms", from: "start" }) });
+      }
+      if (ev.at === "terms") {
+        termsLeft.forEach((o) => opts.push({ label: o.label, go: () => askTerm(o, ev.from ?? "start", ev.rec) }));
+        if (ev.from === "next" && recSec)
+          opts.push({ label: "もう大丈夫", main: true, go: () => pick("もう大丈夫", { t: "menu", at: "next", rec: recSec.index }) });
+        else if (plan.sections[0])
+          opts.push({ label: "もう大丈夫、はじめよう", main: true, go: () => openSection(plan.sections[0], "explain", "もう大丈夫、はじめよう", "first") });
+      }
+      if (ev.at === "next" && recSec) {
+        opts.push({ label: "説明して", main: true, go: () => openSection(recSec, "explain", "説明して", "chosen") });
+        if (skipSteps(recSec).length) opts.push({ label: "分かってる → 問題だけ", go: () => openSection(recSec, "skip", "分かってる。問題だけ", "chosen") });
+        if (remaining.length >= 2) opts.push({ label: "ほかの所がいい", go: () => pick("ほかの所がいい", { t: "menu", at: "other", rec: recSec.index }) });
+        if (termsLeft.length) opts.push({ label: "分からない言葉がある", go: () => pick("分からない言葉がある", { t: "menu", at: "terms", from: "next", rec: recSec.index }) });
+      }
+      if (ev.at === "other" && recSec) {
+        remaining.filter((x) => x.index !== recSec.index).forEach((x) => opts.push({ label: quoteName(x.heading), go: () => openSection(x, "explain", quoteName(x.heading), "chosen") }));
+        opts.push({ label: `やっぱり${quoteName(recSec.heading)}`, main: true, go: () => openSection(recSec, "explain", `やっぱり${quoteName(recSec.heading)}`, "chosen") });
+      }
       return (
         <section key={i} className="space-y-1.5">
-          {ev.at === "next" && say(`${i}-q`, "次はどこを説明しようか？", { first: true })}
-          {ev.at === "start" && asked.length > 0 && say(`${i}-q`, "ほかにも聞きたい言葉はある？", { first: true })}
+          {lines.map((l, k) => say(`${i}-q${k}`, l, { first: k === 0 }))}
           {ev.picked
             ? me(`${i}-me`, ev.picked)
             : isLast && (
                 <div className="flex flex-wrap gap-2 justify-end pt-1">
-                  {ev.at === "start" && rec && (
-                    <button className={CHIP_MAIN} onClick={() => openSection(rec, "explain", asked.length ? "分かった、はじめよう" : "分かる、はじめよう", "first")}>
-                      {asked.length ? "分かった、はじめよう ▸" : "分かる、はじめよう ▸"}
-                    </button>
-                  )}
-                  {ev.at === "next" &&
-                    remaining.map((s, k) => (
-                      <button key={s.index} className={k === 0 ? CHIP_MAIN : CHIP} onClick={() => openSection(s, "explain", `${quoteName(s.heading)}を説明して`, "chosen")}>
-                        {quoteName(s.heading)}を説明して{k === 0 ? "（おすすめ）" : ""}
-                      </button>
-                    ))}
-                  {ev.at === "next" && rec && skipSteps(rec).length > 0 && (
-                    <button className={CHIP} onClick={() => openSection(rec, "skip", `${quoteName(rec.heading)}は分かってる。問題だけ`, "chosen")}>
-                      {quoteName(rec.heading)}は分かってる → 問題だけ
-                    </button>
-                  )}
-                  {termsHere.map((t) => (
-                    <button key={t.term} className={CHIP} onClick={() => askTerm(t, ev.at)}>
-                      「{t.term}」って？
+                  {opts.map((o) => (
+                    <button key={o.label} className={o.main ? CHIP_MAIN : CHIP} onClick={o.go}>
+                      {o.label}
+                      {o.main && " ▸"}
                     </button>
                   ))}
                 </div>
