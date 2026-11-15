@@ -15,6 +15,8 @@ import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from "@/lib/teachers";
 import { useChatTeacher } from "@/lib/chatTeacher";
 import { usePortraitTone } from "@/lib/portraitTone";
 import { readMyStage } from "@/lib/myStage";
+import { renderDrillContext } from "./drillContext";
+import { MarkdownContent } from "./MarkdownContent";
 
 /** 選択肢の表示順をシャッフル（正解が先頭に固定されるのを防ぐ）。入力は破壊しない。 */
 function shuffleChoices(arr: string[]): string[] {
@@ -39,34 +41,8 @@ export interface DrillResult {
 /** 答えた直後の押し間違い（選択肢を押した指が、上がってきた答え合わせに当たる）で次へ進まないための待ち時間 */
 const NEXT_GUARD_MS = 350;
 
-/** 「この単元の基礎を確認する」で開くポイント。単元ごとに一度だけ読む */
-type PointsState = string[] | 'loading' | 'error';
-
-/**
- * 例文の描画。【 】＝問われている語（赤太字）、《 》＝意味・活用を決める手がかり（下線）。
- * どこと呼応して意味を形成しているかを視覚的に示す。
- */
-function renderContext(text: string, showCues: boolean) {
-  const parts = text.split(/(【[^】]*】|《[^》]*》)/);
-  return parts.map((p, i) => {
-    if (p.startsWith("【")) {
-      return (
-        <span key={i} className="font-black text-rw-primary px-0.5 border-b-4" style={{ borderColor: "var(--rw-primary)" }}>
-          {p.slice(1, -1)}
-        </span>
-      );
-    }
-    if (p.startsWith("《")) {
-      if (!showCues) return <span key={i}>{p.slice(1, -1)}</span>;
-      return (
-        <span key={i} className="font-bold text-rw-accent underline decoration-2 underline-offset-4">
-          {p.slice(1, -1)}
-        </span>
-      );
-    }
-    return <span key={i}>{p}</span>;
-  });
-}
+/** 単元の解説（「説明を見る」の節と「この単元の基礎を確認する」のポイント）。単元ごとに一度だけ読む */
+type TopicState = GrammarTopic | 'loading' | 'error';
 
 /**
  * 文法ドリルのセッション。
@@ -101,7 +77,21 @@ export function DrillSession({
   const [saveFailed, setSaveFailed] = useState(0);
   const saveFailedRef = useRef(0);
   const [pointsOpen, setPointsOpen] = useState(false);
-  const [points, setPoints] = useState<Record<string, PointsState>>({});
+  const [topics, setTopics] = useState<Record<string, TopicState>>({});
+  // 答えたあとに開く「この問題の説明」（問題の refHeading と同じ見出しの節。2026-11-15「説明→ドリル→説明」）
+  const [sectionOpen, setSectionOpen] = useState(false);
+  // 読み込みの状態は ref にも持つ（同じ単元を二重に取りに行かない）
+  const topicsRef = useRef<Record<string, TopicState>>({});
+  const loadTopic = (id: string) => {
+    const cur = topicsRef.current[id];
+    if (cur !== undefined && cur !== 'error') return;
+    topicsRef.current = { ...topicsRef.current, [id]: 'loading' };
+    setTopics(topicsRef.current);
+    void fetchJsonAsset<GrammarTopic>(`/grammar/${id}.json`).then(r => {
+      topicsRef.current = { ...topicsRef.current, [id]: r.ok ? r.data : 'error' };
+      setTopics(topicsRef.current);
+    });
+  };
   const answerLock = useRef(false);
   const nextLock = useRef(false);
   const answeredAt = useRef(0);
@@ -134,6 +124,14 @@ export function DrillSession({
     nextLock.current = false;
     if (idx > 0) topRef.current?.scrollIntoView({ block: 'start' });
   }, [idx]);
+
+  // 答えたら、その単元の解説を読んでおく（「説明を見る」を出すかどうかは、節の見出しがあるかで決まる）
+  useEffect(() => {
+    if (!answered || !drill) return;
+    loadTopic(drill.topicId);
+    // 答えたときに1回
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answered, drill?.topicId]);
 
   // 答えたら、答え合わせ（自分の答えの吹き出し）が上に来るまで送る（単語クイズと同じ動き）
   useEffect(() => {
@@ -196,19 +194,20 @@ export function DrillSession({
     setSelected(null);
     setReason('auto');
     setPointsOpen(false);
+    setSectionOpen(false);
   };
 
   // 「この単元の基礎を確認する」：解説ページへ移るとドリルが消えるので、その場で単元の「ポイント」を開く
   const togglePoints = () => {
     setPointsOpen(o => !o);
-    const id = drill.topicId;
-    const cur = points[id];
-    if (cur !== undefined && cur !== 'error') return;
-    setPoints(p => ({ ...p, [id]: 'loading' }));
-    void fetchJsonAsset<GrammarTopic>(`/grammar/${id}.json`).then(r =>
-      setPoints(p => ({ ...p, [id]: r.ok ? (r.data.keyPoints ?? []) : 'error' })));
+    loadTopic(drill.topicId);
   };
-  const topicPoints = points[drill.topicId];
+  const topicState = topics[drill.topicId];
+  const topicPoints = topicState === undefined || topicState === 'loading' || topicState === 'error' ? topicState : (topicState.keyPoints ?? []);
+  // この問題の節（見出しが refHeading と同じもの）。無ければ「説明を見る」は出さない
+  const section = typeof topicState === 'object' && drill.refHeading
+    ? topicState.sections.find(x => x.heading === drill.refHeading && x.content?.trim()) ?? null
+    : null;
 
   const choices = displayChoices;
   const hasCue = !!drill.context && drill.context.includes("《");
@@ -236,7 +235,7 @@ export function DrillSession({
         {drill.context && (
           <>
             <div className="max-h-[26vh] overflow-y-auto">
-              <p className="text-rw-ink font-serif text-[15px] leading-relaxed">{renderContext(drill.context, answered)}</p>
+              <p className="text-rw-ink font-serif text-[15px] leading-relaxed">{renderDrillContext(drill.context, answered)}</p>
             </div>
             {hasCue && answered && (
               <p className="text-[10px] text-rw-ink-soft mt-1 leading-snug">
@@ -307,7 +306,22 @@ export function DrillSession({
           {!canAskReason && followUp?.type === 'retry' && (
             <p className="text-xs mt-4 leading-relaxed text-rw-ink">この問題は、最後にもう一度出します。</p>
           )}
-          {!isCorrect && !support && (
+          {/* この問題の説明（節）をその場で開く。正解でも不正解でも出す */}
+          {section && (
+            <div className="mt-3">
+              <button type="button" onClick={() => setSectionOpen(o => !o)} aria-expanded={sectionOpen}
+                className={`text-xs font-black underline ${isCorrect ? 'text-rw-ink-soft' : 'text-rw-primary'}`}>
+                📖 {section.heading.includes('「') ? section.heading : `「${section.heading}」`}の説明を見る {sectionOpen ? '▴' : '▾'}
+              </button>
+              {sectionOpen && (
+                <div className="mt-2 p-4 rounded-2xl border-2 border-rw-ink bg-rw-paper text-rw-ink">
+                  <h2 className="text-xs font-black tracking-wider text-rw-primary mb-2">{section.heading}</h2>
+                  <MarkdownContent content={section.content} />
+                </div>
+              )}
+            </div>
+          )}
+          {!isCorrect && !support && !section && (
             <div className="mt-3">
               <button type="button" onClick={togglePoints} aria-expanded={pointsOpen}
                 className="text-xs underline text-rw-primary">

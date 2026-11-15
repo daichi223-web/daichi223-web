@@ -52,12 +52,15 @@ export function dojoHomeGuide(g: { dueCount: number; lastTitle: string | null; s
 
 /**
  * 単元ページの上の一言。単元の要約（summary）と、どのレベルから始めるか。
- * levelCount＝この単元のレベルの数、startLabel＝今選んでいるレベルの名前、allMastered＝全部のレベルに ✅、count＝1回の問題数。
+ * levelCount＝この単元のレベルの数、startLabel＝今選んでいるレベルの名前、allMastered＝全部のレベルに ✅、count＝1回の問題数、
+ * lessonFirst＝まだ手をつけていない単元（「先生と学ぶ」を主にする）。
  */
-export function dojoTopicGuide(t: { summary: string | null; levelCount: number; startLabel: string; allMastered: boolean; count: number }): string[] {
+export function dojoTopicGuide(t: { summary: string | null; levelCount: number; startLabel: string; allMastered: boolean; count: number; lessonFirst?: boolean }): string[] {
   const out: string[] = [];
   if (t.summary) out.push(...splitGuide(t.summary));
-  if (t.levelCount <= 1) out.push(`${t.count}問で確かめよう。`);
+  // まだ手をつけていない単元は「先生と学ぶ」から（2026-11-15）
+  if (t.lessonFirst) out.push("まずは説明を少しずつ読みながら、問題を解いていこう。");
+  else if (t.levelCount <= 1) out.push(`${t.count}問で確かめよう。`);
   else if (t.allMastered) out.push("全部のレベルに ✅ がついたね。上のレベルで腕だめししよう。");
   else out.push(`「${t.startLabel}」から始めよう。✅ がついたら次のレベルへ。`);
   return out;

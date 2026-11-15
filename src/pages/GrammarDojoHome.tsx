@@ -223,7 +223,7 @@ export default function GrammarDojoHome() {
             })()}
         </div>
         <p className="text-xs text-rw-ink-soft mb-6 leading-relaxed">
-          用言・助動詞・助詞・敬語・識別の5分野。講義動画 → 要点 → ドリルで鍛える。
+          用言・助動詞・助詞・敬語・識別の5分野。先生の説明と問題で学び、ドリルで仕上げる。
         </p>
 
         {/* 先生のガイド：下のカードの並び（つづきから→復習→ここから）と同じことを一言で（2026-11-15） */}

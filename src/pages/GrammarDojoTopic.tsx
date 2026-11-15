@@ -12,7 +12,7 @@ import { logEvent } from "@/lib/learningEvents";
 import { nextTopicId } from "@/lib/kobun/curriculum";
 import { fillFromUpperLevel } from "@/lib/kobun/drillSupport";
 import { levelKey, initialLevel, MASTERY_PCT } from "@/lib/kobun/topicLevels";
-import { writeDojoLastTopic } from "@/lib/kobun/dojoLocal";
+import { readLessonDone, writeDojoLastTopic } from "@/lib/kobun/dojoLocal";
 import { TEACHER_VOICE_ENABLED } from "@/lib/teachers";
 import { TeacherGuide } from "@/components/quiz/TeacherGuide";
 import { dojoTopicGuide } from "@/lib/kobun/teacherGuide";
@@ -55,8 +55,10 @@ function maxUnlockedLevel(
 const SESSION_SIZE = 8;
 import { VideoEmbed } from "@/components/grammar/VideoEmbed";
 import { DrillSession, type DrillResult } from "@/components/grammar/DrillSession";
+import { LessonSession } from "@/components/grammar/LessonSession";
 
-type Phase = "learn" | "drill" | "done";
+// lesson＝「先生と学ぶ」（説明→問い→説明…→まとめ。2026-11-15。components/grammar/LessonSession.tsx）
+type Phase = "learn" | "lesson" | "drill" | "done";
 
 /**
  * ドリルがある単元の一覧（「次の単元」を決めるのに使う）。
@@ -91,6 +93,8 @@ export default function GrammarDojoTopic() {
   const [loadError, setLoadError] = useState(false);
   const [reloadSeq, setReloadSeq] = useState(0);
   const [phase, setPhase] = useState<Phase>("learn");
+  // 「先生と学ぶ」を最後まで終えた単元（端末に覚える）。レッスンから戻るたびに読み直す
+  const [lessonDone, setLessonDone] = useState<string[]>(() => readLessonDone());
   const [result, setResult] = useState<DrillResult | null>(null);
   const [levelUp, setLevelUp] = useState<number | null>(null);
   const [selLevel, setSelLevel] = useState(1);
@@ -121,6 +125,10 @@ export default function GrammarDojoTopic() {
   const borrowsUpper = sessionCount > Math.min(SESSION_SIZE, levelDrills.length);
   // 「手前の問題」は下のレベルの問題。下が無いレベル（Lv1 など）では、間違えた問題を最後にもう一度出すだけ
   const hasLowerLevel = levels.indexOf(selLevel) > 0;
+  // 「先生と学ぶ」：解説の節がある単元で出す。まだドリルの記録がなく、レッスンも終えていない単元では、こちらを主のボタンにする
+  const hasLesson = !!topic && topic.sections.some((x) => x.content?.trim()) && drills.length > 0;
+  const tried = !!topicId && levels.some((L) => progress[levelKey(topicId, L)] !== undefined);
+  const lessonFirst = hasLesson && !tried && !!topicId && !lessonDone.includes(topicId);
 
   /** 次の単元を調べておく（結果画面で使う。ドリルを始めたときに呼ぶ＝結果が出るころには決まっている） */
   const prepareNext = (id: string) => {
@@ -286,6 +294,41 @@ export default function GrammarDojoTopic() {
     );
   }
 
+  // 先生と学ぶ：説明を少しずつ→その節の問い→…→まとめ。まとめから「ドリルで仕上げる」へ
+  if (phase === "lesson" && topic) {
+    return (
+      <div className="min-h-dvh bg-rw-bg">
+        <div className="max-w-2xl mx-auto px-4 pt-4 pb-8">
+          <div className="flex items-center gap-3 mb-3">
+            <button
+              onClick={() => {
+                setLessonDone(readLessonDone());
+                setPhase("learn");
+                window.scrollTo({ top: 0 });
+              }}
+              className="text-xs font-bold text-rw-ink-soft hover:text-rw-ink transition-colors"
+            >
+              ← やめる
+            </button>
+            <span className="text-xs font-black text-rw-ink truncate min-w-0">{topic.title}</span>
+          </div>
+          <LessonSession
+            topic={topic}
+            drills={drills}
+            onFinish={(to) => {
+              setLessonDone(readLessonDone());
+              if (to === "drill" && levelDrills.length > 0) startDrill(selLevel);
+              else {
+                setPhase("learn");
+                window.scrollTo({ top: 0 });
+              }
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   // ドリル中：答え合わせが会話式（縦に流れる）なので、ページごと縦に送る。背景は単語クイズ・読解テストと同じ和柄
   if (phase === "drill") {
     const seq = sessionSeq.current;
@@ -358,6 +401,7 @@ export default function GrammarDojoTopic() {
               startLabel: LEVEL_LABEL[selLevel] ?? `Lv${selLevel}`,
               allMastered: !!topicId && levels.every((L) => isMastered(levelKey(topicId, L))),
               count: sessionCount,
+              lessonFirst,
             })}
           />
         ) : (
@@ -366,6 +410,24 @@ export default function GrammarDojoTopic() {
 
         {phase === "learn" && (
           <>
+            {/* 先生と学ぶ（2026-11-15）：まだ手をつけていない単元では、いちばん上の主のボタン */}
+            {lessonFirst && (
+              <div className="mb-5">
+                <button
+                onClick={() => {
+                  setPhase("lesson");
+                  window.scrollTo({ top: 0 });
+                }}
+                className={"block w-full text-center bg-rw-primary text-rw-paper rounded-2xl px-6 py-4 transition-transform hover:-translate-y-0.5"}
+                style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
+              >
+                <span className="block font-black tracking-wider">👩‍🏫 先生と学ぶ（説明と問題）</span>
+                <span className="block text-[11px] font-bold opacity-80 mt-0.5">説明を少しずつ読んで、そのつど1〜2問で確かめる</span>
+              </button>
+                <p className="mt-2 text-center text-[11px] font-bold text-rw-ink-soft">ドリルだけ解くなら、下のボタンから</p>
+              </div>
+            )}
+
             {/* 難度レベル選択（複数レベルがある単元のみ）。開始ボタンと一緒に、動画・ポイントより上に置く
                 （ほとんどの生徒は開始ボタンまで下へ送っていた。2026-11-06 見直し ⑦） */}
             {levels.length > 1 && (
@@ -404,14 +466,35 @@ export default function GrammarDojoTopic() {
             {levelDrills.length > 0 ? (
               <button
                 onClick={() => startDrill(selLevel)}
-                className="block w-full text-center bg-rw-primary text-rw-paper font-black rounded-2xl px-6 py-4 tracking-wider transition-transform hover:-translate-y-0.5"
-                style={{ boxShadow: "0 4px 0 var(--rw-ink)" }}
+                className={
+                  lessonFirst
+                    ? "block w-full text-center bg-rw-paper border-2 border-rw-ink text-rw-ink font-black rounded-2xl px-6 py-3 tracking-wider transition-transform hover:-translate-y-0.5"
+                    : "block w-full text-center bg-rw-primary text-rw-paper font-black rounded-2xl px-6 py-4 tracking-wider transition-transform hover:-translate-y-0.5"
+                }
+                style={lessonFirst ? undefined : { boxShadow: "0 4px 0 var(--rw-ink)" }}
               >
                 ⚔️ {levels.length > 1 ? `${LEVEL_LABEL[selLevel]} を始める` : "ドリルを始める"}（{sessionCount}問・学習記録を反映）
               </button>
             ) : (
               <div className="text-center bg-rw-paper border-2 border-rw-rule rounded-2xl p-6">
                 <p className="text-sm text-rw-ink-soft">この単元のドリルは準備中です。</p>
+              </div>
+            )}
+
+            {/* 先生と学ぶ（手をつけた単元では、ドリルの下に従のボタン） */}
+            {hasLesson && !lessonFirst && (
+              <div className="mt-3">
+                <button
+                onClick={() => {
+                  setPhase("lesson");
+                  window.scrollTo({ top: 0 });
+                }}
+                className={"block w-full text-center bg-rw-paper border-2 border-rw-ink text-rw-ink rounded-2xl px-6 py-2.5 transition-transform hover:-translate-y-0.5"}
+                style={undefined}
+              >
+                <span className="block font-black tracking-wider">👩‍🏫 先生と学ぶ（説明と問題）</span>
+                <span className="block text-[11px] font-bold opacity-80 mt-0.5">説明を少しずつ読んで、そのつど1〜2問で確かめる</span>
+              </button>
               </div>
             )}
 

@@ -4,6 +4,7 @@ import { STORAGE_KEYS } from '../storageKeys';
  * 文法道場の「つづきから」と「ここから」を端末に覚える（2026-11-06。見直し ①⑧）。
  *   lastTopic  … 最後にドリルを始めた単元とレベル。単元ページ（GrammarDojoTopic）が書き、道場ホームが「つづきから」に使う
  *   startPoint … 学び始めの判定が決めた出発点の単元。学び始め（Manabinaoshi）が書き、道場ホームが「ここから」に使う
+ *   lessonDone … 「先生と学ぶ」レッスンを最後まで終えた単元（2026-11-15）。単元ページが、どちらのボタンを主にするかに使う
  * 学習の記録（到達度・SRS）ではなく道しるべなので、端末ごとの localStorage に置く。壊れた値・読めない環境では null。
  */
 
@@ -43,4 +44,19 @@ export function readDojoStartPoint(): DojoStartPoint | null {
 
 export function writeDojoStartPoint(stage: number, topicId: string, now: Date = new Date()): void {
   write(STORAGE_KEYS.dojoStartPoint, { stage, topicId, at: now.toISOString() });
+}
+
+/** 「先生と学ぶ」を最後まで終えた単元の ID。壊れた値・読めない環境では空 */
+export function readLessonDone(): string[] {
+  try {
+    const v: unknown = JSON.parse(localStorage.getItem(STORAGE_KEYS.dojoLessonDone) ?? '[]');
+    return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+export function markLessonDone(topicId: string): void {
+  const done = readLessonDone();
+  if (!done.includes(topicId)) write(STORAGE_KEYS.dojoLessonDone, [...done, topicId]);
 }

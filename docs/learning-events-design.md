@@ -93,6 +93,11 @@ update learning_events set user_id = to_uid where user_id = from_uid;
 | vocab | answer | `word` : qid | format=`polysemy` | `src/App.tsx:1401` | CODEX |
 | grammar | answer | `drill` : drill.id | chosen=選択肢、format=ドリルの kind、ctx.role=本問/補助/再挑戦 | `src/components/grammar/DrillSession.tsx:99` | CODEX |
 | grammar | answer | `reibun` : reibun.id | chosen | `src/pages/ReibunQuiz.tsx:131` | — |
+| grammar | answer | `drill` : drill.id | 「先生と学ぶ」の節の問い。ctx.mode=`lesson`、ctx.topic・section・choices（SRS・到達度には入れない。2026-11-15） | `src/components/grammar/LessonSession.tsx` | — |
+| grammar | answer | `lesson-q` : 単元ID:節:位置 | 今見せた表・接続の行からの1問。format=`lesson-quick`、ctx.prompt・section・choices | `src/components/grammar/LessonSession.tsx` | — |
+| grammar | view | `lesson` : topic_id | ctx.step=`start`（sections）／`done`（correct・answered） | `src/components/grammar/LessonSession.tsx` | — |
+| grammar | open | `lesson-section` : 単元ID:見出し | ctx.mode=`explain`／`skip`（分かっている節は問題だけ）、ctx.recommended | `src/components/grammar/LessonSession.tsx` | — |
+| grammar | open | `gloss` : 用語 | 「〜って？」で用語の意味を聞いた。ctx.mode=`lesson`、ctx.topic | `src/components/grammar/LessonSession.tsx` | — |
 | grammar | view | `video` : topic_id | — | `src/pages/GrammarDojoTopic.tsx:208` | CODEX |
 | grammar | view | `topic` : topic_id | — | `src/pages/GrammarDojoTopic.tsx:52` | CODEX |
 | text | view | `text` : slug | ctx.layer | `src/lib/kobun/progress.ts` initProgress / setCurrentLayer | — |

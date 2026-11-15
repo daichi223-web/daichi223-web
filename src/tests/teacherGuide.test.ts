@@ -36,5 +36,7 @@ describe("先生のガイド（文法道場）", () => {
     ).toEqual(["過去（伝聞過去）と詠嘆を表す助動詞。", "連用形に接続。", "「Lv1 型」から始めよう。✅ がついたら次のレベルへ。"]);
     expect(dojoTopicGuide({ summary: null, levelCount: 1, startLabel: "Lv1 型", allMastered: false, count: 8 })).toEqual(["8問で確かめよう。"]);
     expect(dojoTopicGuide({ summary: "要約", levelCount: 2, startLabel: "x", allMastered: true, count: 8 })[1]).toContain("全部のレベル");
+    // まだ手をつけていない単元は「先生と学ぶ」へ
+    expect(dojoTopicGuide({ summary: "要約", levelCount: 3, startLabel: "Lv1 型", allMastered: false, count: 8, lessonFirst: true })[1]).toContain("説明を少しずつ");
   });
 });
