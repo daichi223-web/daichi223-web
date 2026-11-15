@@ -148,25 +148,39 @@ describe("判定", () => {
 
 describe("はじめの確認（段を選ばせず、段0から2問ずつ）", () => {
   const topics = {
-    1: ["doushi-yodan", "doushi-katsuyo", "doushi-kahen", "onbin"],
+    1: ["doushi-yodan", "doushi-katsuyo", "doushi-kahen", "keiyoshi-ku", "keiyoshi-katsuyo", "onbin"],
     2: ["jodoshi-keri", "jodoshi-zu"],
     3: ["kakari-musubi"],
     4: [],
   } as const;
   const drills = {
-    1: [d("y", "doushi-yodan", 10), d("k", "doushi-katsuyo", 10), d("ka", "doushi-kahen", 10), d("o", "onbin", 10)],
+    1: [d("y", "doushi-yodan", 10), d("k", "doushi-katsuyo", 10), d("ka", "doushi-kahen", 10), d("kk", "keiyoshi-ku", 10), d("kt", "keiyoshi-katsuyo", 10), d("o", "onbin", 10)],
     2: [d("ke", "jodoshi-keri", 10), d("z", "jodoshi-zu", 10)],
     3: [d("km", "kakari-musubi", 10)],
     4: [],
   };
   const qs = pickQuickCheck(drills, { 1: [...topics[1]], 2: [...topics[2]], 3: [...topics[3]], 4: [] }, () => 0.3);
 
-  it("段0は用語カード2枚、段1〜4は最初の単元と真ん中の単元から1問ずつ（問題の無い段は飛ばす）", () => {
+  it("段0は用語カード2枚、段1〜4は最初の単元と2問目の単元から1問ずつ（問題の無い段は飛ばす）", () => {
     expect(qs.map((q) => q.stage)).toEqual([0, 0, 1, 1, 2, 2, 3]);
     expect(qs.filter((q) => q.stage === 0).every((q) => q.term && !q.drill)).toBe(true);
-    // 段1：教える順は katsuyo → yodan → kahen → onbin。最初＝katsuyo、真ん中＝kahen
-    expect(qs.filter((q) => q.stage === 1).map((q) => q.drill!.id)).toEqual(["k", "ka"]);
+    // 段1（用言）：教える順は katsuyo → yodan → kahen → keiyoshi-katsuyo → keiyoshi-ku → onbin。1問目＝動詞の最初、2問目＝形容詞の最初
+    expect(qs.filter((q) => q.stage === 1).map((q) => q.drill!.id)).toEqual(["k", "kt"]);
+    // 段2（助動詞）：形の決まりが無いので真ん中の単元
+    expect(qs.filter((q) => q.stage === 2).map((q) => q.drill!.id)).toEqual(["ke", "z"]);
     expect(qs.length).toBeLessThanOrEqual(10);
+  });
+
+  it("用言の段に形容詞の単元が無いときは、真ん中の単元から2問目を取る", () => {
+    const q2 = pickQuickCheck({ 1: [d("y", "doushi-yodan", 10), d("k", "doushi-katsuyo", 10), d("ka", "doushi-kahen", 10)] }, { 1: ["doushi-yodan", "doushi-katsuyo", "doushi-kahen"] }, () => 0.3);
+    expect(q2.filter((q) => q.stage === 1).map((q) => q.drill!.id)).toEqual(["k", "y"]);
+  });
+
+  it("本当の単元の並びで、用言の2問目は形容詞（keiyoshi-katsuyo）", () => {
+    const ids = ["doushi-katsuyo", "doushi-yodan", "doushi-kami-ichidan", "doushi-shimo-nidan", "doushi-kahen", "doushi-sahen", "doushi-rahen", "keiyoshi-katsuyo", "keiyoshi-ku", "keiyoshi-shiku", "keiyoshi-gokan", "onbin"];
+    const q3 = pickQuickCheck({ 1: ids.map((id) => d(id, id, 10)) }, { 1: ids }, () => 0.5);
+    expect(q3.filter((q) => q.stage === 1).map((q) => q.drill!.topicId)).toEqual(["doushi-katsuyo", "keiyoshi-katsuyo"]);
+    expect(q3.filter((q) => q.stage === 1).map((q) => q.startIfWrong)).toEqual(["doushi-katsuyo", "doushi-yodan"]);
   });
 
   it("×の問いで出発点が決まる：1問目なら最初の単元、2問目なら2番目の単元（段0は用語カードから）", () => {

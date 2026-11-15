@@ -484,13 +484,20 @@ export interface QuickQ {
   startIfWrong: string | null;
 }
 
+/**
+ * 2問目を取る単元のまとまり（単元 id の頭）。2026-11-15 ユーザー指示「形容詞も確かめられるように」：
+ * 用言の段は真ん中の単元（ラ変）だと形容詞を確かめないので、1問目＝動詞の最初の単元、2問目＝形容詞の最初の単元にする
+ */
+export const QUICK_SECOND_UNIT: Partial<Record<StageId, string>> = { 1: "keiyoshi-" };
+
 /** 1つの段で出す問いの数 */
 export const QUICK_PER_STAGE = 2;
 
 /**
  * はじめの確認の問いを選ぶ。
  * 段0: きほんの用語カードから無作為に2枚。
- * 段1〜4: 各単元のいちばん易しい1問（pickPlacementDrills）を教える順に並べ、最初の単元と真ん中の単元から1問ずつ。
+ * 段1〜4: 各単元のいちばん易しい1問（pickPlacementDrills）を教える順に並べ、最初の単元と真ん中の単元から1問ずつ
+ *   （用言の段だけは2問目を形容詞の最初の単元から＝QUICK_SECOND_UNIT）。
  *   1問目で × なら最初の単元から、2問目で × なら2番目の単元から始める（1番目は ◯、間の単元はまだ確かめていない）。
  * drillsByStage は段1〜4のドリル（段ごとに取ったもの）。問題が取れなかった段は飛ばす。
  */
@@ -506,7 +513,11 @@ export function pickQuickCheck(
     const per = pickPlacementDrills(drillsByStage[s.id] ?? [], topicIdsByStage[s.id] ?? [], rng);
     if (per.length === 0) continue;
     out.push({ stage: s.id, drill: per[0], startIfWrong: per[0].topicId });
-    if (per.length >= 2) out.push({ stage: s.id, drill: per[Math.max(1, Math.floor(per.length / 2))], startIfWrong: per[1].topicId });
+    if (per.length < 2) continue;
+    // 2問目：決めてある単元のまとまり（用言なら形容詞）の最初の単元。無ければ真ん中の単元
+    const second = QUICK_SECOND_UNIT[s.id];
+    const fromGroup = second ? per.find((d, i) => i > 0 && d.topicId.startsWith(second)) : undefined;
+    out.push({ stage: s.id, drill: fromGroup ?? per[Math.max(1, Math.floor(per.length / 2))], startIfWrong: per[1].topicId });
   }
   return out;
 }
