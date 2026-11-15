@@ -216,8 +216,9 @@ A と B は並行でき、どちらも CODEX の範囲に触れない。記録�
 
 - 教材の読解テスト（`/read/texts/:textId/test`、`src/pages/ReadingTest.tsx`。設計 `docs/reading-test.md`）の出来事。`src/lib/learningEvents.ts` と表（014）は変えていない。
 - 開始：`area: 'text'`、`action: 'open'`、`targetType: 'readtest'`、`targetId` = 教材ID。`ctx` = `{ source: 'auto' | 'manual', n: 問題数 }`（自動問題か手書きの問題ファイルか）。「もう一度」では送らない（同じ画面の中のやり直し）。
-- 回答：`area: 'text'`、`action: 'answer'`、`targetType: 'readq'`、`targetId` = `教材ID:問題番号`、`correct`、`chosen` = 選んだ選択肢の文字列、`format` = 問題の種類（`vocab`／`grammar`／`subject`／`kakari`／`reading`）。`ctx` = `{ tokenIds: 傍線に重なるトークン, span: [文の中の開始, 終了], source, ms }`（`ms` は `markQuestionShown()` からの応答時間で、`logEvent` が付ける）。
+- 回答：`area: 'text'`、`action: 'answer'`、`targetType: 'readq'`、`targetId` = `教材ID:問題番号`、`correct`、`chosen` = 選んだ選択肢の文字列、`format` = 問題の種類（`vocab`／`grammar`／`joshi`／`subject`／`kakari`／`reading`／`yaku`／`keigo`）。`ctx` = `{ tokenIds: 傍線に重なるトークン, span: [文の中の開始, 終了], source, ms }`（`ms` は `markQuestionShown()` からの応答時間で、`logEvent` が付ける）。
 - 問題番号は生成の結果なので、自動問題のデータ（教材・単語帳・決め手）が変わると同じ番号でも別の問題になりうる。集計で問題を同定するときは `ctx.tokenIds` と `ctx.span` を使う。
+- 2026-11-15〜 分類（助動詞・助詞｜単語｜訳・読解）で選べる。開始の `ctx.group` = `aux`／`joshi`／`grammar`（助動詞・助詞を合わせた分類）／`vocab`／`read`／`all`（分類の画面が出ない教材も `all`）。回答の `targetId` の問題番号は**教材の問題全体での番号**（`srcNo`。画面の番号ではない）、画面の番号は `ctx.no`、分類は `ctx.group`。同日、火鼠の皮衣（5954a8d9eb）は問題を15→33問に増やして番号を振り直したので、それより前の記録の番号は今の番号と別の問題を指す（`ctx.span` で同定する）。
 
 ## 10.5 利用状況タブの組み直し（2026-11-10）
 

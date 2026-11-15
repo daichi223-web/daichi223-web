@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import fs from "node:fs";
 import type { KobunText, TextAnalysis } from "@/lib/kobun/types";
-import { auxEntryOf, buildReadingTest, parseManualTest, readingThread } from "@/lib/kobun/readingTest";
+import { auxEntryOf, availableGroups, buildReadingTest, parseManualTest, readingThread, selectGroup } from "@/lib/kobun/readingTest";
 
 // 教材の実データ（public/texts-v3 の全教材。analysis があれば使う）
 function load(id: string): { text: KobunText; analysis: TextAnalysis | null } {
@@ -132,5 +132,63 @@ describe("読解テスト（手書きの問題ファイル）", () => {
     expect(t.questions).toHaveLength(1);
     expect(t.questions[0].no).toBe(1);
     expect(t.questions[0].prompt).toBe("傍線部①の意味"); // 捨てた分を詰めて番号を振り直す
+  });
+});
+
+describe("読解テスト（分類：助動詞｜助詞・係り結び｜単語｜訳・読解）", () => {
+  const { text } = load("5954a8d9eb");
+  const raw = JSON.parse(fs.readFileSync("public/reading-tests/5954a8d9eb.json", "utf8"));
+  const test = parseManualTest(raw, text, () => {});
+
+  it("火鼠の皮衣は4つの分類に分かれ、どの問題もちょうど1つの分類か「全部」に入る", () => {
+    const groups = availableGroups(test);
+    expect(groups.map((g) => [g.group.id, g.count])).toEqual([
+      ["aux", 12],
+      ["joshi", 5],
+      ["vocab", 8],
+      ["read", 8],
+    ]);
+    expect(groups.reduce((n, g) => n + g.count, 0)).toBe(test.questions.length);
+  });
+
+  it("分類で選ぶと番号と問い文の丸数字を1から振り直し、元の番号を srcNo に残す", () => {
+    const qs = selectGroup(test, "vocab");
+    expect(qs.every((q) => q.kind === "vocab")).toBe(true);
+    qs.forEach((q, i) => {
+      expect(q.no).toBe(i + 1);
+      expect(q.prompt.startsWith(`傍線部${"①②③④⑤⑥⑦⑧"[i]}「${q.spanText}」`)).toBe(true);
+      expect(test.questions[q.srcNo! - 1].spanText).toBe(q.spanText);
+    });
+    // 本文の順のまま
+    const order = qs.map((q) => q.srcNo!);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+  });
+
+  it("全部（null）は番号を変えない", () => {
+    const qs = selectGroup(test, null);
+    expect(qs.map((q) => q.no)).toEqual(test.questions.map((q) => q.no));
+    expect(qs.map((q) => q.srcNo)).toEqual(test.questions.map((q) => q.no));
+  });
+
+  it("3問に満たない分類はボタンを出さない（自動問題の教材でも分類は2つまで）", () => {
+    const few = { ...test, questions: test.questions.filter((q) => q.kind !== "vocab" || q.no < 5) };
+    expect(availableGroups(few).map((g) => g.group.id)).toEqual(["aux", "joshi", "read"]);
+  });
+
+  it("助動詞・助詞のどちらかが3問未満なら「助動詞・助詞」1つにまとめる（龍の首の玉＝助動詞2・係り先2）", () => {
+    const { text: t2 } = load("cd8147e868");
+    const r2 = JSON.parse(fs.readFileSync("public/reading-tests/cd8147e868.json", "utf8"));
+    const g2 = availableGroups(parseManualTest(r2, t2, () => {}));
+    expect(g2.map((g) => [g.group.id, g.count])).toEqual([
+      ["grammar", 4],
+      ["vocab", 3],
+      ["read", 7],
+    ]);
+  });
+
+  it("助詞だけを問う問題は「助詞・係り結び」に入り、手書きの問題ファイルの kind「joshi」を読める", () => {
+    const qs = selectGroup(test, "joshi");
+    expect(qs.map((q) => q.spanText)).toEqual(["昔", "申ししかば", "ものならば", "かくなむ申す", "これを聞きてぞ"]);
+    expect(selectGroup(test, "aux").every((q) => q.kind === "grammar")).toBe(true);
   });
 });

@@ -5,18 +5,22 @@
  * 問題は public/reading-tests/<textId>.json があればそれ、無ければ自動（src/lib/kobun/readingTest.ts）。
  */
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import type { KobunText, TextAnalysis } from "@/lib/kobun/types";
 import type { Word } from "@/types";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 import {
+  READING_GROUPS,
   READING_KIND_LABEL,
+  availableGroups,
   buildReadingTest,
   circled,
   fetchManualTest,
   formatElapsed,
+  isReadingGroupId,
   kobunWordByQid,
   readingThread,
+  selectGroup,
   type ReadingQ,
   type ReadingTest as ReadingTestData,
 } from "@/lib/kobun/readingTest";
@@ -146,7 +150,19 @@ export default function ReadingTest() {
     if (!text || analysis === undefined || manual === undefined) return null;
     return manual ?? buildReadingTest(text, analysis);
   }, [text, analysis, manual]);
-  const questions = useMemo(() => test?.questions ?? [], [test]);
+  // 分類（助動詞・助詞｜単語｜訳・読解）。?g= に持つので「もう一度」は同じ分類のまま。?g=all は全部
+  const [params, setParams] = useSearchParams();
+  const gParam = params.get("g");
+  const groups = useMemo(() => (test ? availableGroups(test) : []), [test]);
+  const useChooser = groups.length >= 2;
+  const groupId = useChooser && isReadingGroupId(gParam) ? gParam : null;
+  const choosing = useChooser && !groupId && gParam !== "all";
+  const groupLabel = groupId ? READING_GROUPS.find((g) => g.id === groupId)?.label : useChooser ? "全部" : undefined;
+  const questions = useMemo(() => (test && !choosing ? selectGroup(test, groupId) : []), [test, choosing, groupId]);
+  const chooseGroup = (g: string | null) => {
+    setParams(g ? { g } : {}, { replace: false });
+    window.scrollTo({ top: 0 });
+  };
 
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>([]);
@@ -165,8 +181,8 @@ export default function ReadingTest() {
   useEffect(() => {
     if (!test || !questions.length) return;
     start();
-    logEvent({ area: "text", action: "open", targetType: "readtest", targetId: textId, ctx: { source: test.source, n: questions.length } });
-  }, [test, questions, start, textId]);
+    logEvent({ area: "text", action: "open", targetType: "readtest", targetId: textId, ctx: { source: test.source, n: questions.length, group: groupId ?? "all" } });
+  }, [test, questions, start, textId, groupId]);
 
   // 経過時間
   useEffect(() => {
@@ -197,11 +213,11 @@ export default function ReadingTest() {
       area: "text",
       action: "answer",
       targetType: "readq",
-      targetId: `${textId}:${q.no}`,
+      targetId: `${textId}:${q.srcNo ?? q.no}`,
       correct: i === q.answerIndex,
       chosen: q.choices[i],
       format: q.kind,
-      ctx: { tokenIds: q.tokenIds, span: q.span, source: test?.source },
+      ctx: { tokenIds: q.tokenIds, span: q.span, source: test?.source, group: groupId ?? "all", no: q.no },
     });
     window.setTimeout(() => feedbackRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: "nearest" }), 60);
   };
@@ -248,6 +264,62 @@ export default function ReadingTest() {
       </div>
     );
   }
+  if (choosing) {
+    const total = test.questions.length;
+    return (
+      <div className="min-h-dvh" style={{ background: bgColor }}>
+        <QuizBackground pattern={quizBackground} color={quizBackgroundColor} />
+        <div className="relative z-[1] max-w-2xl mx-auto">
+          <header className="sticky top-0 z-10 bg-rw-paper border-b-2 border-rw-ink px-3 py-2">
+            <div className="flex items-center gap-2">
+              <Link
+                to={backTo}
+                aria-label="教材へ戻る"
+                className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full border-2 border-rw-ink text-rw-ink font-black hover:bg-rw-bg"
+              >
+                ✕
+              </Link>
+              <div className="flex-1 min-w-0 text-center">
+                <p className="text-[10px] font-black tracking-widest text-rw-ink-soft">読解テスト</p>
+                <h1 className="text-sm font-black text-rw-ink truncate">{test.title ?? text.title}</h1>
+              </div>
+              <span className="shrink-0 w-9" aria-hidden />
+            </div>
+          </header>
+          <main className="p-3">
+            <div
+              className="relative rounded-2xl border border-rw-rule p-4 shadow-sm"
+              style={{ background: `color-mix(in srgb, color-mix(in srgb, ${bgColor} 65%, var(--rw-paper)) 92%, transparent)` }}
+            >
+              <p className="text-[15px] font-black text-rw-ink text-center mb-3">どれを解く？</p>
+              <div className="space-y-2">
+                {groups.map(({ group, count }) => (
+                  <button
+                    key={group.id}
+                    type="button"
+                    onClick={() => chooseGroup(group.id)}
+                    className="w-full text-left p-3 rounded-xl border-2 border-rw-ink bg-rw-paper text-rw-ink flex items-center gap-3 transition-transform hover:-translate-y-0.5"
+                    style={{ minHeight: 56, boxShadow: "0 3px 0 var(--rw-primary)" }}
+                  >
+                    <span className="flex-1 min-w-0">
+                      <span className="block font-black">{group.label}</span>
+                      <span className="block text-xs font-bold text-rw-ink-soft">{group.note}</span>
+                    </span>
+                    <span className="shrink-0 font-black tabular-nums">{count}問</span>
+                  </button>
+                ))}
+              </div>
+              <div className="mt-4 text-center">
+                <button type="button" onClick={() => chooseGroup("all")} className="text-sm font-bold text-rw-ink-soft underline underline-offset-2">
+                  全部まとめて解く（{total}問）
+                </button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
   if (!questions.length) {
     return (
       <div className="min-h-dvh bg-rw-bg flex flex-col items-center justify-center gap-3 p-6 text-center">
@@ -274,7 +346,7 @@ export default function ReadingTest() {
               ✕
             </Link>
             <div className="flex-1 min-w-0 text-center">
-              <p className="text-[10px] font-black tracking-widest text-rw-ink-soft">読解テスト</p>
+              <p className="text-[10px] font-black tracking-widest text-rw-ink-soft">読解テスト{groupLabel ? `｜${groupLabel}` : ""}</p>
               <h1 className="text-sm font-black text-rw-ink truncate">{test.title ?? text.title}</h1>
             </div>
             <span className="shrink-0 font-mono font-black text-rw-ink text-sm tabular-nums" aria-label="経過時間">⏱ {formatElapsed(elapsed)}</span>
@@ -439,6 +511,15 @@ export default function ReadingTest() {
                 >
                   もう一度
                 </button>
+                {useChooser && (
+                  <button
+                    type="button"
+                    onClick={() => chooseGroup(null)}
+                    className="rounded-full font-black px-6 py-3 bg-rw-paper border-2 border-rw-ink text-rw-ink"
+                  >
+                    ほかの分類へ
+                  </button>
+                )}
                 <Link to={backTo} className="rounded-full font-black px-6 py-3 bg-rw-paper border-2 border-rw-ink text-rw-ink">
                   教材へ戻る
                 </Link>

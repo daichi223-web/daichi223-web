@@ -26,12 +26,13 @@ import { fillTemplate, pickVariant, type TeacherId, type TeacherLines } from "@/
 import { NEUTRAL_LINES, TEACHER_LINES } from "@/lib/teacherLines";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 
-export type ReadingKind = "vocab" | "grammar" | "subject" | "kakari" | "reading" | "yaku" | "keigo";
+export type ReadingKind = "vocab" | "grammar" | "joshi" | "subject" | "kakari" | "reading" | "yaku" | "keigo";
 
 /** 問題の札（「問N」の横） */
 export const READING_KIND_LABEL: Record<ReadingKind, string> = {
   vocab: "語の意味",
   grammar: "文法的意味",
+  joshi: "助詞",
   subject: "主語",
   kakari: "係り先",
   reading: "内容",
@@ -71,6 +72,8 @@ export interface ReadingQ {
   /** 文法的意味：問うている助動詞（本文の形）と参照単元 */
   target?: string;
   grammarRefId?: string;
+  /** 分類で選んだときの、教材の問題全体での番号（記録の targetId に使う。無ければ no） */
+  srcNo?: number;
 }
 
 export interface ReadingTest {
@@ -89,7 +92,7 @@ export interface BuildOptions {
 // ---------------------------------------------------------------------------
 // 共通
 
-const CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳";
+const CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵㊶㊷㊸㊹㊺㊻㊼㊽㊾㊿";
 export const circled = (n: number): string => CIRCLED[n - 1] ?? `(${n})`;
 
 // FNV-1a（32bit）。同じ seed なら同じ値（並びを決定的にする）
@@ -502,7 +505,7 @@ export interface ManualReadingFile {
   }>;
 }
 
-const KINDS: ReadingKind[] = ["vocab", "grammar", "subject", "kakari", "reading", "yaku", "keigo"];
+const KINDS: ReadingKind[] = ["vocab", "grammar", "joshi", "subject", "kakari", "reading", "yaku", "keigo"];
 
 /**
  * 手書きの問題ファイルを ReadingQ にそろえる。傍線の文字列（spanText）が本文の該当範囲と合わない問題、
@@ -537,7 +540,7 @@ export function parseManualTest(
       span: [a, b],
       spanText: actual,
       tokenIds: s.tokens.filter((t) => t.start < b && t.end > a).map((t) => t.id),
-      prompt: q.prompt.replace(/傍線部[①-⑳]/, () => `傍線部${circled(out.length + 1)}`),
+      prompt: q.prompt.replace(/傍線部[①-⑳㉑-㉟㊱-㊿]/, () => `傍線部${circled(out.length + 1)}`),
       choices,
       answerIndex: q.answerIndex!,
       explain: { text: q.explain },
@@ -606,4 +609,60 @@ export function readingThread(
 export function formatElapsed(ms: number): string {
   const s = Math.max(0, Math.floor(ms / 1000));
   return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+}
+
+// ---------------------------------------------------------------------------
+// 分類（2026-11-15）：問題の種類で「助動詞・助詞」「単語」「訳・読解」に分けて1回に出す（同日、助動詞と助詞・係り結びを分けた）
+
+export type ReadingGroupId = "aux" | "joshi" | "grammar" | "vocab" | "read";
+
+export interface ReadingGroup {
+  id: ReadingGroupId;
+  label: string;
+  /** ボタンの下に出す中身の説明 */
+  note: string;
+  kinds: ReadingKind[];
+}
+
+/** 並び順どおり。「助動詞・助詞」（grammar）は、助動詞と助詞・係り結びのどちらかが少ない教材でだけ使う合わせた分類 */
+export const READING_GROUPS: ReadingGroup[] = [
+  { id: "aux", label: "助動詞", note: "助動詞の意味・敬語", kinds: ["grammar", "keigo"] },
+  { id: "joshi", label: "助詞・係り結び", note: "助詞の働き・係り先", kinds: ["joshi", "kakari"] },
+  { id: "grammar", label: "助動詞・助詞", note: "文法的意味・係り結び・敬語", kinds: ["grammar", "keigo", "joshi", "kakari"] },
+  { id: "vocab", label: "単語", note: "語の意味", kinds: ["vocab"] },
+  { id: "read", label: "訳・読解", note: "現代語訳・内容・主語", kinds: ["yaku", "reading", "subject"] },
+];
+
+/** これより少ない分類はボタンを出さない（「全部まとめて」には入る） */
+export const MIN_GROUP_QUESTIONS = 3;
+
+export const isReadingGroupId = (v: string | null | undefined): v is ReadingGroupId =>
+  READING_GROUPS.some((g) => g.id === v);
+
+/**
+ * 選べる分類と問題数（MIN_GROUP_QUESTIONS 以上のものだけ）。
+ * 助動詞と助詞・係り結びは、両方が MIN_GROUP_QUESTIONS 以上のときだけ分け、そうでなければ「助動詞・助詞」1つにまとめる。
+ */
+export function availableGroups(test: ReadingTest): { group: ReadingGroup; count: number }[] {
+  const counted = READING_GROUPS.map((group) => ({ group, count: test.questions.filter((q) => group.kinds.includes(q.kind)).length }));
+  const n = (id: ReadingGroupId) => counted.find((x) => x.group.id === id)!.count;
+  const split = n("aux") >= MIN_GROUP_QUESTIONS && n("joshi") >= MIN_GROUP_QUESTIONS;
+  return counted.filter(
+    (x) => x.count >= MIN_GROUP_QUESTIONS && (x.group.id === "grammar" ? !split : x.group.id === "aux" || x.group.id === "joshi" ? split : true),
+  );
+}
+
+/**
+ * 分類の問題だけを取り出し、番号を 1 から振り直す（傍線の丸数字・問い文の「傍線部①」も合わせる）。
+ * group が null なら全部（番号はそのまま）。元の番号は srcNo に残す。
+ */
+export function selectGroup(test: ReadingTest, group: ReadingGroupId | null): ReadingQ[] {
+  const kinds = group ? READING_GROUPS.find((g) => g.id === group)?.kinds : null;
+  const picked = kinds ? test.questions.filter((q) => kinds.includes(q.kind)) : test.questions;
+  return picked.map((q, i) => ({
+    ...q,
+    no: i + 1,
+    srcNo: q.srcNo ?? q.no,
+    prompt: q.prompt.replace(/傍線部[①-⑳㉑-㉟㊱-㊿]/, () => `傍線部${circled(i + 1)}`),
+  }));
 }
