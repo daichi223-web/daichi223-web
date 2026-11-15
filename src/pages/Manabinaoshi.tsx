@@ -23,6 +23,9 @@ import {
 } from "@/lib/kobun/manabinaoshi";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 import { orderIndex } from "@/lib/kobun/curriculum";
+import { TEACHER_VOICE_ENABLED } from "@/lib/teachers";
+import { TeacherGuide } from "@/components/quiz/TeacherGuide";
+import { manabiIntroGuide, manabiResultGuide, manabiStageGuide } from "@/lib/kobun/teacherGuide";
 import { splitGloss, type GlossEntry } from "@/lib/kobun/glossary";
 import { writeDojoStartPoint } from "@/lib/kobun/dojoLocal";
 import { TERM_GROUPS, ALL_TERM_CARDS, groupDone, readTermProgress, resumeIndex, writeTermProgress, type TermProgress } from "@/lib/kobun/grammarTerms";
@@ -547,15 +550,21 @@ export default function Manabinaoshi() {
 
         {phase === "intro" && (
           <>
+            {/* 先生のガイドが出るときは、カードの説明の文を先生が言う（2026-11-15） */}
+            {TEACHER_VOICE_ENABLED && <TeacherGuide lines={manabiIntroGuide()} className="mb-3" />}
             <div className="bg-rw-paper border-2 border-rw-ink rounded-3xl p-5 mb-4">
-              <p className="text-[17px] font-black text-rw-ink leading-snug">
-                どこから始めればいいか、
-                <br />
-                問題に答えるだけでわかるよ。
-              </p>
-              <p className="text-[13px] text-rw-ink-soft leading-relaxed mt-2">
-                ことばのきほん → 用言 → 助動詞 → 助詞 → 敬語 の順に2問ずつ。まちがえたところで止まって、そこが「あなたの出発点」になる。
-              </p>
+              {!TEACHER_VOICE_ENABLED && (
+                <>
+                  <p className="text-[17px] font-black text-rw-ink leading-snug">
+                    どこから始めればいいか、
+                    <br />
+                    問題に答えるだけでわかるよ。
+                  </p>
+                  <p className="text-[13px] text-rw-ink-soft leading-relaxed mt-2">
+                    ことばのきほん → 用言 → 助動詞 → 助詞 → 敬語 の順に2問ずつ。まちがえたところで止まって、そこが「あなたの出発点」になる。
+                  </p>
+                </>
+              )}
               <ol className="mt-3 flex flex-wrap items-center gap-1 text-[12px] font-black text-rw-ink">
                 {STAGES.map((s, i) => (
                   <li key={s.id} className="flex items-center gap-1">
@@ -614,6 +623,9 @@ export default function Manabinaoshi() {
                     {no} / {quickQs.length}
                   </span>
                 </div>
+                {TEACHER_VOICE_ENABLED && (no === 1 || quickQs[no - 2]?.stage !== q.stage) && (
+                  <TeacherGuide lines={manabiStageGuide(q.stage)} className="mb-2" />
+                )}
                 <div className="text-[11px] font-black text-rw-ink-soft tracking-wider mb-1.5">
                   段 {st.id}・{shortTitle(st)}
                   {q.drill && <span className="ml-1 font-bold">（{titleOf(q.drill.topicId)}）</span>}
@@ -665,6 +677,17 @@ export default function Manabinaoshi() {
             return (
               <>
                 <h2 className="text-xl font-black text-rw-ink tracking-tight mb-3">{startSt ? "あなたの出発点" : "全部 ◯！"}</h2>
+                {TEACHER_VOICE_ENABLED && (
+                  <TeacherGuide
+                    className="mb-3"
+                    lines={manabiResultGuide({
+                      passedNames: r.passed.map((id) => shortTitle(STAGES[id])),
+                      startStage: r.startStage,
+                      startName: startSt ? shortTitle(startSt) : null,
+                      startTitle: r.startTopic ? titleOf(r.startTopic) : null,
+                    })}
+                  />
+                )}
                 <ol className="space-y-1.5 mb-4">
                   {STAGES.map((s) => {
                     const passed = r.passed.includes(s.id);

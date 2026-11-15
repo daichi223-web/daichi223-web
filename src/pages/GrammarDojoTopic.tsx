@@ -13,6 +13,9 @@ import { nextTopicId } from "@/lib/kobun/curriculum";
 import { fillFromUpperLevel } from "@/lib/kobun/drillSupport";
 import { levelKey, initialLevel, MASTERY_PCT } from "@/lib/kobun/topicLevels";
 import { writeDojoLastTopic } from "@/lib/kobun/dojoLocal";
+import { TEACHER_VOICE_ENABLED } from "@/lib/teachers";
+import { TeacherGuide } from "@/components/quiz/TeacherGuide";
+import { dojoTopicGuide } from "@/lib/kobun/teacherGuide";
 import { dojoBack, safeDojoBackPath, topicUrlWithBack, referenceUrlFromTopic } from "@/lib/returnTo";
 import { QuizBackground } from "@/components/quiz/QuizBackground";
 import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from "@/lib/quizBackground";
@@ -345,8 +348,20 @@ export default function GrammarDojoTopic() {
         <h1 className="text-2xl font-black tracking-tight text-rw-ink mb-1">
           {topic?.title ?? topicId}
         </h1>
-        {topic?.summary && (
-          <p className="text-sm text-rw-ink-soft mb-5 leading-relaxed">{topic.summary}</p>
+        {/* 学ぶ画面では、要約とどのレベルから始めるかを先生が言う（2026-11-15）。ドリル中・結果は今までどおり要約の文 */}
+        {TEACHER_VOICE_ENABLED && phase === "learn" && !loading && levels.length > 0 ? (
+          <TeacherGuide
+            className="mb-4"
+            lines={dojoTopicGuide({
+              summary: topic?.summary ?? null,
+              levelCount: levels.length,
+              startLabel: LEVEL_LABEL[selLevel] ?? `Lv${selLevel}`,
+              allMastered: !!topicId && levels.every((L) => isMastered(levelKey(topicId, L))),
+              count: sessionCount,
+            })}
+          />
+        ) : (
+          topic?.summary && <p className="text-sm text-rw-ink-soft mb-5 leading-relaxed">{topic.summary}</p>
         )}
 
         {phase === "learn" && (

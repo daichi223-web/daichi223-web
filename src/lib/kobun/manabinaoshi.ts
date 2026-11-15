@@ -499,6 +499,7 @@ export const QUICK_PER_STAGE = 2;
  * 段1〜4: 各単元のいちばん易しい1問（pickPlacementDrills）を教える順に並べ、最初の単元と真ん中の単元から1問ずつ
  *   （用言の段だけは2問目を形容詞の最初の単元から＝QUICK_SECOND_UNIT）。
  *   1問目で × なら最初の単元から、2問目で × なら2番目の単元から始める（1番目は ◯、間の単元はまだ確かめていない）。
+ *   ただし用言の2問目（形容詞）で × なら、形容詞の最初の単元から始める。
  * drillsByStage は段1〜4のドリル（段ごとに取ったもの）。問題が取れなかった段は飛ばす。
  */
 export function pickQuickCheck(
@@ -517,7 +518,9 @@ export function pickQuickCheck(
     // 2問目：決めてある単元のまとまり（用言なら形容詞）の最初の単元。無ければ真ん中の単元
     const second = QUICK_SECOND_UNIT[s.id];
     const fromGroup = second ? per.find((d, i) => i > 0 && d.topicId.startsWith(second)) : undefined;
-    out.push({ stage: s.id, drill: fromGroup ?? per[Math.max(1, Math.floor(per.length / 2))], startIfWrong: per[1].topicId });
+    // 形容詞の問いで × なら形容詞の単元から（2026-11-15 ユーザー指示）。真ん中の単元で × なら2番目の単元から
+    if (fromGroup) out.push({ stage: s.id, drill: fromGroup, startIfWrong: fromGroup.topicId });
+    else out.push({ stage: s.id, drill: per[Math.max(1, Math.floor(per.length / 2))], startIfWrong: per[1].topicId });
   }
   return out;
 }

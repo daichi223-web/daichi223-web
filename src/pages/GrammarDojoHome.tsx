@@ -7,6 +7,9 @@ import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 import { orderIndex } from "@/lib/kobun/curriculum";
 import { topicStatus, hasAnyAttempt, type TopicState } from "@/lib/kobun/topicStatus";
 import { readDojoLastTopic, readDojoStartPoint } from "@/lib/kobun/dojoLocal";
+import { TEACHER_VOICE_ENABLED } from "@/lib/teachers";
+import { TeacherGuide } from "@/components/quiz/TeacherGuide";
+import { dojoHomeGuide } from "@/lib/kobun/teacherGuide";
 
 type Category = "用言" | "助動詞" | "助詞" | "敬語" | "識別";
 
@@ -222,6 +225,19 @@ export default function GrammarDojoHome() {
         <p className="text-xs text-rw-ink-soft mb-6 leading-relaxed">
           用言・助動詞・助詞・敬語・識別の5分野。講義動画 → 要点 → ドリルで鍛える。
         </p>
+
+        {/* 先生のガイド：下のカードの並び（つづきから→復習→ここから）と同じことを一言で（2026-11-15） */}
+        {TEACHER_VOICE_ENABLED && ready && (
+          <TeacherGuide
+            className="-mt-3 mb-4"
+            lines={dojoHomeGuide({
+              dueCount,
+              lastTitle: lastUnit?.title ?? null,
+              startTitle: startUnit?.title ?? null,
+              beginner,
+            })}
+          />
+        )}
 
         {/* つづきから：前にドリルを始めた単元へ */}
         {ready && lastUnit && (

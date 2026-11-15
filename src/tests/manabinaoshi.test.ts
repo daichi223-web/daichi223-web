@@ -174,24 +174,26 @@ describe("はじめの確認（段を選ばせず、段0から2問ずつ）", ()
   it("用言の段に形容詞の単元が無いときは、真ん中の単元から2問目を取る", () => {
     const q2 = pickQuickCheck({ 1: [d("y", "doushi-yodan", 10), d("k", "doushi-katsuyo", 10), d("ka", "doushi-kahen", 10)] }, { 1: ["doushi-yodan", "doushi-katsuyo", "doushi-kahen"] }, () => 0.3);
     expect(q2.filter((q) => q.stage === 1).map((q) => q.drill!.id)).toEqual(["k", "y"]);
+    expect(q2.filter((q) => q.stage === 1).map((q) => q.startIfWrong)).toEqual(["doushi-katsuyo", "doushi-yodan"]);
   });
 
   it("本当の単元の並びで、用言の2問目は形容詞（keiyoshi-katsuyo）", () => {
     const ids = ["doushi-katsuyo", "doushi-yodan", "doushi-kami-ichidan", "doushi-shimo-nidan", "doushi-kahen", "doushi-sahen", "doushi-rahen", "keiyoshi-katsuyo", "keiyoshi-ku", "keiyoshi-shiku", "keiyoshi-gokan", "onbin"];
     const q3 = pickQuickCheck({ 1: ids.map((id) => d(id, id, 10)) }, { 1: ids }, () => 0.5);
     expect(q3.filter((q) => q.stage === 1).map((q) => q.drill!.topicId)).toEqual(["doushi-katsuyo", "keiyoshi-katsuyo"]);
-    expect(q3.filter((q) => q.stage === 1).map((q) => q.startIfWrong)).toEqual(["doushi-katsuyo", "doushi-yodan"]);
+    expect(q3.filter((q) => q.stage === 1).map((q) => q.startIfWrong)).toEqual(["doushi-katsuyo", "keiyoshi-katsuyo"]);
   });
 
   it("×の問いで出発点が決まる：1問目なら最初の単元、2問目なら2番目の単元（段0は用語カードから）", () => {
-    expect(qs.filter((q) => q.stage === 1).map((q) => q.startIfWrong)).toEqual(["doushi-katsuyo", "doushi-yodan"]);
+    expect(qs.filter((q) => q.stage === 1).map((q) => q.startIfWrong)).toEqual(["doushi-katsuyo", "keiyoshi-katsuyo"]); // 形容詞で×なら形容詞から
+    expect(qs.filter((q) => q.stage === 2).map((q) => q.startIfWrong)).toEqual(["jodoshi-keri", "jodoshi-zu"]);
     expect(qs[0].startIfWrong).toBeNull();
   });
 
   it("最初の×で止め、そこより下の段を「できた」にする", () => {
     // 段0 ○○、段1 ○×
     const r = judgeQuickCheck(qs, [true, true, true, false]);
-    expect(r).toEqual({ passed: [0], startStage: 1, startTopic: "doushi-yodan" });
+    expect(r).toEqual({ passed: [0], startStage: 1, startTopic: "keiyoshi-katsuyo" });
     expect(quickCheckContinues(qs, [true, true, true, false])).toBe(false);
     expect(quickCheckContinues(qs, [true, true, true])).toBe(true);
     // 段0 の1問目で×
