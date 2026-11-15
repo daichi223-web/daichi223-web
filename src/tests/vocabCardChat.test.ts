@@ -50,6 +50,30 @@ describe('buildCardMenu（単語カードで聞けること）', () => {
   });
 });
 
+describe('見分け方（2026-11-15）', () => {
+  it('多義語の見分け方は、意味を見る前でも選べる。選ぶと消える', () => {
+    expect(buildCardMenu(senses, true, [], true).distinguish).toBe(true);
+    const asked = addAsk([], { kind: 'distinguish' });
+    expect(asked).toEqual([{ kind: 'distinguish' }]);
+    expect(buildCardMenu(senses, true, asked, true).distinguish).toBe(false);
+  });
+
+  it('見分け方が無い語（4つ目を渡さない）には出ない。今までの呼び方の結果は変わらない', () => {
+    expect(buildCardMenu(senses, true, []).distinguish).toBe(false);
+  });
+
+  it('見分け方が残っていれば、選択肢は空ではない', () => {
+    let asked: CardAsk[] = [];
+    for (const a of [
+      { kind: 'sense', qid: '3-1' }, { kind: 'sense', qid: '3-2' },
+      { kind: 'reason', qid: '3-1' }, { kind: 'examples', qid: '3-1' }, { kind: 'reason', qid: '3-2' },
+      { kind: 'trap' },
+    ] as CardAsk[]) asked = addAsk(asked, a);
+    expect(isMenuEmpty(buildCardMenu(senses, true, asked, true))).toBe(false);
+    expect(isMenuEmpty(buildCardMenu(senses, true, addAsk(asked, { kind: 'distinguish' }), true))).toBe(true);
+  });
+});
+
 describe('addAsk', () => {
   it('同じものは二度足さない（会話に同じ吹き出しが重ならない）', () => {
     const a = addAsk([], { kind: 'sense', qid: '3-1' });
@@ -66,6 +90,6 @@ describe('addAsk', () => {
     asked = addAsk(asked, { kind: 'trap' });
     asked = addAsk(asked, { kind: 'sense', qid: '3-2' });
     asked = addAsk(asked, { kind: 'sense', qid: '3-1' });
-    expect(asked.map((a) => (a.kind === 'trap' ? 'trap' : a.qid))).toEqual(['trap', '3-2', '3-1']);
+    expect(asked.map((a) => (a.kind === 'trap' || a.kind === 'distinguish' ? a.kind : a.qid))).toEqual(['trap', '3-2', '3-1']);
   });
 });

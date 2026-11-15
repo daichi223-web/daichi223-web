@@ -31,11 +31,28 @@ export type ChatBubble =
   | { side: 'teacher'; kind: 'trap'; lead: string; modern: string; note?: string }
   /** UI が MarkedSentence で描く。kobun 無しなら訳だけ */
   | { side: 'teacher'; kind: 'example'; lead: string; kobun?: string; modern?: string }
-  /** 意味マップ（2つ以上あるときだけ） */
-  | { side: 'teacher'; kind: 'senses'; items: { label: string; current: boolean }[] }
+  /** 意味マップ（2つ以上あるときだけ）。決め手があれば各意味の見分け方も（2026-11-15） */
+  | { side: 'teacher'; kind: 'senses'; items: SenseMapItem[] }
   /** UI が ○× ボタンを描く */
   | { side: 'teacher'; kind: 'selfJudge'; text: string }
   | { side: 'teacher'; kind: 'text'; text: string };
+
+/**
+ * 意味マップの1行（2026-11-15 ユーザー承認「見分け方を単語クイズの解答後に」）。
+ * rule＝その意味の決め手（kobunQ v2 の decider.rule）、clue＝手がかり（今の意味だけ）、type＝決め手の型の札（見本の語だけ）、
+ * chosen＝生徒が選んだ／書いた意味が同じ語の別の意味だったとき。どれもデータに無ければ付けない。
+ */
+export type SenseMapItem = {
+  label: string;
+  current: boolean;
+  chosen?: boolean;
+  rule?: string;
+  clue?: string;
+  type?: string;
+};
+
+/** 意味マップに渡す、同じ見出し語の意味1つ */
+export type SiblingSense = { label: string; current: boolean; qid?: string; rule?: string; clue?: string; type?: string };
 
 export type ThreadInput = {
   teacher: TeacherId;
@@ -50,8 +67,8 @@ export type ThreadInput = {
   writingUserJudgment?: boolean;
   /** other_sense のとき、書いてしまった意味の表示名（senseLabel(matched)） */
   matchedSense?: string;
-  /** 同じ見出し語の意味の一覧（現在の意味に current）。単義語は [] */
-  siblings?: { label: string; current: boolean }[];
+  /** 同じ見出し語の意味の一覧（現在の意味に current）。単義語は []。qid・決め手があれば見分け方も出す */
+  siblings?: SiblingSense[];
   exampleKobun?: string;
   exampleModern?: string;
   /** 選択肢に出した文字（例文の訳の活用に合わせたもの）。自分の吹き出しも同じ文字にする */
@@ -118,6 +135,23 @@ function decideOutcome(input: ThreadInput): Outcome {
   }
 }
 
+/**
+ * 生徒が選んだ／書いた意味が、同じ語の別の意味だったときの qid。
+ * 意味を答える形式（word-meaning・sentence-meaning）は選んだ選択肢、記述は「別の意味」と判定された意味（表示名で照合）。
+ * 見出し語を答える形式（word-reverse・blank-fill）は意味を選んでいないので付けない。
+ */
+function chosenSiblingQid(input: ThreadInput, verdict: ChatVerdict, siblings: SiblingSense[]): string | undefined {
+  if (verdict === 'ok') return undefined;
+  if (input.quizType === 'word-meaning' || input.quizType === 'sentence-meaning') {
+    const q = input.selected?.qid;
+    return q && q !== input.word.qid && siblings.some((s) => s.qid === q) ? q : undefined;
+  }
+  if (input.quizType === 'meaning-writing' && input.writingResult?.verdict === 'other_sense' && input.matchedSense) {
+    return siblings.find((s) => !s.current && s.label === input.matchedSense)?.qid;
+  }
+  return undefined;
+}
+
 export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdvance: boolean } {
   const { word, quizType, seed } = input;
   const lines = input.voice === false ? NEUTRAL_LINES : (TEACHER_LINES[input.teacher] ?? TEACHER_LINES.sei);
@@ -152,6 +186,9 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
 
   // 正解以外（保留も含む）は解説を厚くする。保留は自己判定の前後で吹き出しが減らないように、判定後も同じ扱い
   const miss = outcome.verdict !== 'ok';
+  const siblings = input.siblings ?? [];
+  // 意味マップに今の意味の決め手が載るときは、核イメージの 🔑 は出さない（同じ文を2か所に出さない）
+  const mapHasRule = siblings.length >= 2 && siblings.some((s) => s.current && s.rule);
 
   // 5. 核イメージ（正解のときは罠も1吹き出しに畳む）
   if (word.senseCore) {
@@ -161,7 +198,7 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
       lead: say('coreLead', outcome.vars),
       lemma: word.lemma,
       core: word.senseCore,
-      ...(miss && word.decider ? { decider: { clue: word.decider.clue, rule: word.decider.rule } } : {}),
+      ...(miss && word.decider && !mapHasRule ? { decider: { clue: word.decider.clue, rule: word.decider.rule } } : {}),
       ...(!miss && word.trap?.modern ? { trapModern: word.trap.modern } : {}),
     });
   }
@@ -199,12 +236,20 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
   }
 
   // 8. 意味マップ（2つ以上あるときだけ）。正解でも出す（ほかの意味も見る方が学習になる。2026-11-02 ユーザー指示）
-  const siblings = input.siblings ?? [];
+  //    決め手があれば各意味の見分け方を添え、選んだ意味が同じ語の別の意味なら印を付ける（2026-11-15）
   if (siblings.length >= 2) {
+    const chosenQid = chosenSiblingQid(input, outcome.verdict, siblings);
     bubbles.push({
       side: 'teacher',
       kind: 'senses',
-      items: siblings.map((s) => ({ label: auxShort(s.label), current: s.current })),
+      items: siblings.map((s) => {
+        const item: SenseMapItem = { label: auxShort(s.label), current: s.current };
+        if (chosenQid && s.qid === chosenQid) item.chosen = true;
+        if (s.rule) item.rule = s.rule;
+        if (s.rule && s.current && s.clue) item.clue = s.clue;
+        if (s.rule && s.type) item.type = s.type;
+        return item;
+      }),
     });
   }
 

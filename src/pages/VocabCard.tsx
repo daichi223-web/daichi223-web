@@ -18,6 +18,8 @@ import { readMyStage } from '@/lib/myStage';
 import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from '@/lib/quizBackground';
 import { addAsk, askKey, buildCardMenu, isMenuEmpty, type CardAsk } from '@/lib/kobun/vocabCardChat';
 import { makeReturnTo, quizUrlWithReturn, wordCardBack } from '@/lib/returnTo';
+import { distinguishRows } from '@/lib/kobun/vocabIndexList';
+import { DeciderTypeTag } from '@/components/kobun/DeciderTypeTag';
 
 // 単語理解カード（B型：核から意味を見ていく／案1「なぜ」ラベル帯）。
 // 「問う前に読んで理解する場所」。答え合わせ後のパネル(WordInsightPanel)とは別に、
@@ -155,6 +157,8 @@ export default function VocabCard() {
     [senses, why, bank],
   );
   const infoByQid = useMemo(() => new Map(infos.map((i) => [i.qid, i])), [infos]);
+  // 見分け方（多義語の意味ごとの決め手を並べたもの。単語一覧の「見分け方」と同じ中身。2026-11-15）
+  const rules = useMemo(() => distinguishRows(senses), [senses]);
 
   // 会話の見た目（単語クイズの答え合わせと同じ設定を使う）
   const [teacherId] = useChatTeacher();
@@ -191,6 +195,7 @@ export default function VocabCard() {
     infos.map((i) => ({ qid: i.qid, label: i.label, hasReason: !!i.whyText, moreExamples: i.more.length })),
     !!trap,
     asked,
+    rules.length > 0,
   );
 
   // 会話の両側。先生・画風・自分の顔・背景は単語クイズの設定（端末ごと）と同じものを使う
@@ -220,6 +225,30 @@ export default function VocabCard() {
           <ChatRow {...tProps} tone={trapTone}>
             <p>現代語の罠</p>
             <p className="mt-0.5">⚠ {why?.trapWhy || `現代語「${trap.modern}」の罠 — ${trap.note}`}</p>
+          </ChatRow>
+        </>
+      );
+    }
+    if (a.kind === 'distinguish') {
+      if (rules.length === 0) return null;
+      return (
+        <>
+          <ChatRow {...meProps}>意味の見分け方</ChatRow>
+          <ChatRow {...tProps} tone={coreTone}>
+            <p>意味の見分け方</p>
+            {/* 核からの分かれ方（why.axis）は最初の吹き出しに出ているので繰り返さない */}
+            <ul className="mt-1.5 space-y-2">
+              {rules.map((d) => (
+                <li key={d.qid}>
+                  <p className="font-black">〈{d.label}〉</p>
+                  <p className="font-semibold">
+                    <DeciderTypeTag type={d.type} />
+                    {d.rule}
+                  </p>
+                  {d.clue && <p className="text-[12px] text-rw-ink-soft font-semibold">手がかり：{d.clue}</p>}
+                </li>
+              ))}
+            </ul>
           </ChatRow>
         </>
       );
@@ -346,7 +375,7 @@ export default function VocabCard() {
               <div className="flex flex-col items-end gap-2">
                 {menu.senses.length > 0 && (
                   <div className="flex flex-col items-end gap-1">
-                    <p className={chipCaption}>{asked.length === 0 ? '見たい意味を選ぶ' : 'ほかの意味'}</p>
+                    <p className={chipCaption}>{asked.some((a) => a.kind === 'sense') ? 'ほかの意味' : '見たい意味を選ぶ'}</p>
                     <div className="flex flex-wrap justify-end gap-2">
                       {menu.senses.map((s) => (
                         <button key={s.qid} type="button" onClick={() => ask({ kind: 'sense', qid: s.qid })} className={chip}>
@@ -373,6 +402,11 @@ export default function VocabCard() {
                     </div>
                   </div>
                 ))}
+                {menu.distinguish && (
+                  <button type="button" onClick={() => ask({ kind: 'distinguish' })} className={chip}>
+                    意味の見分け方
+                  </button>
+                )}
                 {menu.trap && (
                   <button type="button" onClick={() => ask({ kind: 'trap' })} className={chip}>
                     現代語はどこから

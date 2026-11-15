@@ -6,7 +6,8 @@ import { ChatFeedback } from './ChatFeedback';
 import { dataParser } from '../../utils/dataParser';
 import type { WritingJudgeResult } from '../../lib/writingJudge';
 import { prepareWritingJudge } from '../../lib/writingJudgeRuntime';
-import { buildThread, optionLabel } from '../../lib/quiz/chatThread';
+import { buildThread, optionLabel, type SiblingSense } from '../../lib/quiz/chatThread';
+import { deciderTypeOf } from '../../lib/kobun/vocabIndexList';
 import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from '../../lib/teachers';
 import { useChatTeacher } from '../../lib/chatTeacher';
 import { usePortraitTone } from '../../lib/portraitTone';
@@ -115,12 +116,17 @@ export function WordQuizContent({
   const teacherSrc = teacherImage(teacherId, tone);
   const chatMe = { stageN: myStage.n, tone, rankLabel: myStage.rank };
   // 同じ見出し語の意味の一覧（意味マップ）。getWordByLemma は多義語だけ登録されるので、単義語は []
-  const siblings = useMemo(() => {
+  // 各意味の決め手（見分け方）と型の札も渡す（2026-11-15、ユーザー承認「見分け方を単語クイズの解答後に」）
+  const siblings = useMemo<SiblingSense[]>(() => {
     const w = question?.correct;
     if (!w) return [];
     return (dataParser.getWordByLemma(w.lemma)?.meanings ?? []).map((m) => ({
       label: senseLabel(m),
       current: m.qid === w.qid,
+      qid: m.qid,
+      rule: m.decider?.rule?.trim() || undefined,
+      clue: m.decider?.clue?.trim() || undefined,
+      type: deciderTypeOf(m.qid),
     }));
   }, [question?.correct]);
 

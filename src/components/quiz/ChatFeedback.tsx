@@ -7,6 +7,7 @@ import { FaceAvatar } from '../noble/FaceAvatar';
 import { MarkedSentence } from './MarkedSentence';
 import { SenseAnswerGuide } from './SenseAnswerGuide';
 import { softTone } from './writingVerdict';
+import { DeciderTypeTag } from '../kobun/DeciderTypeTag';
 
 // 単語クイズの答え合わせ（LINE 風）。
 // 右＝自分（選んだ答え・書いた意味）、左＝先生（判定・正解・核イメージ・罠・例文と訳・意味マップ）。
@@ -128,9 +129,12 @@ function BubbleBody({
     case 'senses':
       return (
         <div>
-          <p className="text-[11px] font-black text-rw-ink-soft tracking-wider">「{word.lemma}」の意味（全部で{bubble.items.length}つ）</p>
-          {/* 意味は1つずつ大きな丸で区切る。小さな「・」だと「〜ている（補助）」のような意味が説明文に見えてしまう（2026-11-02 ユーザー指摘） */}
-          <ul className="mt-1 space-y-1">
+          <p className="text-[11px] font-black text-rw-ink-soft tracking-wider">
+            「{word.lemma}」の意味{bubble.items.some((it) => it.rule) ? 'と見分け方' : ''}（全部で{bubble.items.length}つ）
+          </p>
+          {/* 意味は1つずつ大きな丸で区切る。小さな「・」だと「〜ている（補助）」のような意味が説明文に見えてしまう（2026-11-02 ユーザー指摘）。
+              決め手があれば各意味の下に見分け方（札＋決め手、今の意味だけ手がかり）。選んだ意味が同じ語の別の意味なら「あなたの答え」（2026-11-15） */}
+          <ul className={`mt-1 ${bubble.items.some((it) => it.rule) ? 'space-y-2' : 'space-y-1'}`}>
             {bubble.items.map((item, i) => (
               <li key={i} className={`flex items-start gap-2 ${item.current ? 'font-black text-rw-ink' : 'text-rw-ink'}`}>
                 <span
@@ -150,6 +154,23 @@ function BubbleBody({
                     >
                       この文
                     </span>
+                  )}
+                  {item.chosen && (
+                    <span
+                      className="ml-1.5 inline-block px-1.5 py-px rounded-full text-[10px] font-black align-[0.1em] border"
+                      style={{ borderColor: 'var(--rw-ng)', color: 'var(--rw-ng)', background: 'var(--rw-paper)' }}
+                    >
+                      あなたの答え
+                    </span>
+                  )}
+                  {item.rule && (
+                    <span className="block mt-0.5 text-[12.5px] font-semibold leading-snug text-rw-ink">
+                      <DeciderTypeTag type={item.type} />
+                      {item.rule}
+                    </span>
+                  )}
+                  {item.clue && (
+                    <span className="block text-[11.5px] font-semibold leading-snug text-rw-ink-soft">手がかり：{item.clue}</span>
                   )}
                 </span>
               </li>

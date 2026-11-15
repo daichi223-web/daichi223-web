@@ -1,30 +1,54 @@
-import { useMemo, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useMemo, useState, useEffect, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import vocabIndex from "@/data/vocabIndex.json";
 import bundledKobunQ from "@/data/kobunQ.v2.slim.json";
+import vocabWhy from "@/data/vocab-why.json";
+import {
+  distinguishRows,
+  senseLabel,
+  kanaRowOf,
+  compareKana,
+  numberBandOf,
+  KANA_ROWS,
+  OTHER_ROW,
+  type DistinguishRow,
+  type DistinguishSense,
+} from "@/lib/kobun/vocabIndexList";
+import { DeciderTypeTag } from "@/components/kobun/DeciderTypeTag";
 
-// 統合「単語ホーム」。単語系の入口を1つに畳む:
-//   🧭 理解する（カード）… この画面の主役。番号範囲・検索・つづきで語を選ぶ
-//   ✍️ 練習する（クイズ・SRS）／🎯 見分ける（クラスター）／📚 単語帳 … 既存面へのリンク
-// データは vocabIndex(単語帳366見出し)＋kobunQ v2(番号・意味・多義/罠) の実データ。
-// 語・qid・掲載順(group番号)は不変。並び・絞り込みは表示上の操作のみ。
+// 単語一覧（/vocab。旧「単語ホーム」）＝語を引く索引。
+// 2026-11-15 ユーザー指示「もっと索引的に」「練習する・見分ける・単語帳はいらない」
+// 「各語のなかで、見分ける法則を分かるように」で作り直した：
+//   - 上の3つの入口（練習する／見分ける／単語帳）と、練習へ範囲を渡すための番号指定を外した
+//     （練習は単語のクイズから、単語帳はホームから行ける）
+//   - 五十音の行（あ・か…）か、単語帳の番号の50語ごとで区切り、上の帯で飛べる
+//   - 多義語は行の「見分け方」で、意味ごとの決め手（kobunQ v2 の decider.rule）をその場で開く。
+//     同じものは単語カードの中にもある（pages/VocabCard.tsx）
+// データは vocabIndex(単語帳の見出し)＋kobunQ v2 の実データ。語・qid・番号は不変。並びは表示上の操作のみ。
 
 interface VIEntry { slug: string; title: string; pos: string; category: string }
 const VI = vocabIndex as unknown as Record<string, VIEntry>;
 
-interface KQ { lemma: string; group: number; senseNorm?: string; sense: string; trap?: unknown }
+interface KQ extends DistinguishSense { lemma: string; group: number; trap?: unknown }
 const KQ_ALL = bundledKobunQ as unknown as KQ[];
+
+const AXIS = (vocabWhy as { words: Record<string, { axis?: string }> }).words;
 
 interface WordRow {
   lemma: string;
   group: number;      // 単語帳の番号
-  meanings: string;   // 意味の一言（senseNorm を連結）
-  senseCount: number; // 多義判定
+  meanings: string;   // 意味の一言（「／」で連結）
+  senseCount: number;
   hasTrap: boolean;   // 古今異義
   category: string;
+  rules: DistinguishRow[]; // 見分け方（多義語のみ）
+  axis?: string;      // 核からの分かれ方（vocab-why にある語のみ）
 }
 
+type Order = "kana" | "number";
+
 const LAST_KEY = "kobun-vocab-last-lemma";
+const sectionId = (key: string) => `vocab-idx-${key}`;
 
 export default function VocabHome() {
   // ---- 実データから行を構築（1回）----
@@ -37,53 +61,41 @@ export default function VocabHome() {
     }
     const out: WordRow[] = [];
     for (const [lemma, vi] of Object.entries(VI)) {
-      const senses = byLemma.get(lemma) ?? [];
-      // kobunQ に sense が無い見出し（単語帳だけにある語）は理解カードを出せないので一覧にも載せない
+      const senses = (byLemma.get(lemma) ?? []).sort((a, b) => (a.meaning_idx ?? 0) - (b.meaning_idx ?? 0));
+      // kobunQ に sense が無い見出し（単語帳だけにある語）は単語カードを出せないので一覧にも載せない
       if (senses.length === 0) continue;
-      const group = senses[0]?.group ?? 9999;
-      const meanings = senses
-        .map((s) => (s.senseNorm || s.sense || "").replace(/〔\s*|\s*〕/g, ""))
-        .filter(Boolean)
-        .join("／");
       out.push({
         lemma,
-        group,
-        meanings,
+        group: senses[0]?.group ?? 9999,
+        meanings: senses.map(senseLabel).filter(Boolean).join("／"),
         senseCount: senses.length,
         hasTrap: senses.some((s) => s.trap),
         category: vi.category || "",
+        rules: distinguishRows(senses),
+        axis: AXIS[lemma]?.axis,
       });
     }
-    out.sort((a, b) => a.group - b.group);
     return out;
   }, []);
 
-  const maxNo = useMemo(() => rows.reduce((m, r) => (r.group < 9999 ? Math.max(m, r.group) : m), 1), [rows]);
-
   // ---- 選択状態 ----
   const [q, setQ] = useState("");
-  const [from, setFrom] = useState(1);
-  const [to, setTo] = useState(330);
+  const [order, setOrder] = useState<Order>("kana");
   const [cat, setCat] = useState<string>("すべて");
+  const [open, setOpen] = useState<Set<string>>(() => new Set());
   const [last, setLast] = useState<string | null>(null);
 
   useEffect(() => {
     try { setLast(localStorage.getItem(LAST_KEY)); } catch { /* noop */ }
   }, []);
 
-  // 「理解 → 練習 → 見分け を同じ範囲で」。クイズ本体(App = "/")は範囲・カテゴリを
-  // localStorage から読むので、ここで選んだ範囲をそのまま書き込んでから移る。
-  // キーと形式は App の useLocalStorageState と一致させること。
-  const navigate = useNavigate();
-  const startPractice = () => {
-    try {
-      localStorage.setItem("kobun-currentMode", JSON.stringify("word"));
-      localStorage.setItem("kobun-wordRange", JSON.stringify({ from, to }));
-      localStorage.setItem("kobun-categoryFilter", JSON.stringify(cat === "すべて" ? [] : [cat]));
-    } catch { /* noop */ }
-    // "/" へ移るだけだとホームが出てクイズが始まらなかった。?mode=word の印で、App がクイズを直接始める（2026-11-06）
-    navigate("/?mode=word");
-  };
+  const toggle = (lemma: string) =>
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(lemma)) next.delete(lemma);
+      else next.add(lemma);
+      return next;
+    });
 
   const categories = useMemo(() => {
     const set = new Set<string>();
@@ -94,183 +106,203 @@ export default function VocabHome() {
   const filtered = useMemo(() => {
     const key = q.trim();
     return rows.filter((r) => {
-      if (r.group < from || r.group > to) return false;
       if (cat !== "すべて" && r.category !== cat) return false;
       if (key && !r.lemma.includes(key) && !r.meanings.includes(key)) return false;
       return true;
     });
-  }, [rows, q, from, to, cat]);
+  }, [rows, q, cat]);
 
-  const clampFrom = (v: number) => setFrom(Math.max(1, Math.min(v, to)));
-  const clampTo = (v: number) => setTo(Math.min(maxNo, Math.max(v, from)));
+  // ---- 索引の区切り ----
+  const sections = useMemo(() => {
+    const sorted = [...filtered].sort((a, b) =>
+      order === "kana" ? compareKana(a.lemma, b.lemma) : a.group - b.group || compareKana(a.lemma, b.lemma),
+    );
+    const map = new Map<string, WordRow[]>();
+    for (const r of sorted) {
+      const k = order === "kana" ? kanaRowOf(r.lemma) : numberBandOf(r.group);
+      map.set(k, [...(map.get(k) ?? []), r]);
+    }
+    return map;
+  }, [filtered, order]);
+
+  // 帯に並べる見出し（語の無い行も並べて押せなくする＝索引の形を保つ）
+  const tabs = useMemo(() => {
+    if (order === "kana") {
+      const t: string[] = [...KANA_ROWS];
+      if (rows.some((r) => kanaRowOf(r.lemma) === OTHER_ROW)) t.push(OTHER_ROW);
+      return t;
+    }
+    const set = new Set(rows.map((r) => numberBandOf(r.group)));
+    return Array.from(set).sort((a, b) => (a === "追加" ? 1 : b === "追加" ? -1 : parseInt(a) - parseInt(b)));
+  }, [rows, order]);
+
+  const jump = (key: string) => {
+    document.getElementById(sectionId(key))?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="min-h-dvh bg-rw-bg">
       <div className="max-w-2xl mx-auto px-5 py-6">
-        <header className="mb-4">
+        <header className="mb-3">
           <Link to="/" className="text-sm font-semibold text-rw-ink-soft hover:text-rw-ink transition-colors">
             ← ホーム
           </Link>
-          <h1 className="mt-3 text-[28px] font-black tracking-tight text-rw-ink leading-none">🗂️ 単語</h1>
+          <h1 className="mt-3 text-[28px] font-black tracking-tight text-rw-ink leading-none">🗂️ 単語一覧</h1>
           <p className="text-xs font-semibold text-rw-ink-soft mt-2">
-            覚える前に「その意味になる理由」を理解する。理解 → 練習 → 見分け を同じ範囲で。
+            語を引く索引。多義語は「見分け方」で、意味ごとの決め手を見られます。
           </p>
         </header>
 
-        {/* 3導線（理解はこの下、ここは他の2＋単語帳） */}
-        <div className="grid grid-cols-3 gap-2.5 mb-5">
-          <DoorButton emoji="✍️" label="練習する" sub={`${from}–${to} で出題`} onClick={startPractice} />
-          <DoorLink to="/tango-dojo" emoji="🎯" label="見分ける" sub="クラスター" />
-          <DoorLink to="/read/vocab" emoji="📚" label="単語帳" sub="本文から" />
-        </div>
-
-        {/* 🧭 理解する（主役） */}
-        <section className="bg-rw-paper border-2 border-rw-ink rounded-2xl p-4">
-          <h2 className="text-sm font-black text-rw-ink mb-2.5">🧭 単語を理解する</h2>
-
-          {/* 検索 */}
+        {/* 検索・並び・索引の帯（上に貼りつく） */}
+        <div className="sticky top-0 z-10 -mx-5 px-5 pt-2 pb-2 bg-rw-bg border-b border-rw-rule">
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="🔍 語・意味で検索（例：おどろく／気づく）"
-            className="w-full rounded-xl border border-rw-rule bg-rw-bg px-3.5 py-2.5 text-sm text-rw-ink mb-3 outline-none focus:border-rw-ink"
+            className="w-full rounded-xl border border-rw-rule bg-rw-paper px-3.5 py-2.5 text-sm text-rw-ink outline-none focus:border-rw-ink"
           />
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-[11px] font-black text-rw-ink-soft">並び</span>
+            <Pill on={order === "kana"} onClick={() => setOrder("kana")}>五十音</Pill>
+            <Pill on={order === "number"} onClick={() => setOrder("number")}>番号</Pill>
+            <span className="ml-auto text-[11px] font-black text-rw-accent">{filtered.length}語</span>
+          </div>
+          <nav aria-label="索引" className="flex flex-wrap gap-1 mt-2">
+            {tabs.map((t) => {
+              const has = sections.has(t);
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  disabled={!has}
+                  onClick={() => jump(t)}
+                  className={`font-black rounded-md border text-center ${
+                    order === "kana" ? "text-[14px] w-8 h-8" : "text-[11px] px-2 h-7"
+                  } ${has ? "border-rw-ink text-rw-ink bg-rw-paper" : "border-rw-rule text-rw-rule bg-transparent"}`}
+                >
+                  {t}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
 
-          {/* つづき */}
-          {last && (
-            <Link
-              to={`/word/${encodeURIComponent(last)}`}
-              className="block rounded-xl px-3.5 py-2.5 mb-3 no-underline"
-              style={{ background: "var(--rw-accent)", color: "var(--rw-paper)", textDecoration: "none" }}
-            >
-              <span className="text-[11px] font-bold opacity-90">つづきから</span>
-              <span className="block text-[15px] font-black">▶ {last}</span>
-            </Link>
+        {/* 品詞の絞り込み・つづき */}
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {categories.map((c) => (
+            <Pill key={c} on={cat === c} onClick={() => setCat(c)}>{c}</Pill>
+          ))}
+        </div>
+        {last && (
+          <Link
+            to={`/word/${encodeURIComponent(last)}`}
+            className="inline-block mt-3 text-[12.5px] font-black text-rw-accent no-underline"
+            style={{ textDecoration: "none" }}
+          >
+            ▶ つづきから：{last}
+          </Link>
+        )}
+
+        {/* 索引 */}
+        <div className="mt-3">
+          {Array.from(sections.entries()).map(([key, list]) => (
+            <section key={key} id={sectionId(key)} style={{ scrollMarginTop: 150 }} className="mb-4">
+              <h2 className="text-[15px] font-black text-rw-ink border-b-2 border-rw-ink pb-0.5 mb-0.5">
+                {key === OTHER_ROW ? "その他" : key}
+                <span className="ml-2 text-[11px] font-bold text-rw-ink-soft">{list.length}語</span>
+              </h2>
+              <div className="divide-y divide-rw-rule">
+                {list.map((r) => (
+                  <IndexRow key={r.lemma} r={r} open={open.has(r.lemma)} onToggle={() => toggle(r.lemma)} />
+                ))}
+              </div>
+            </section>
+          ))}
+          {filtered.length === 0 && (
+            <p className="text-center text-sm text-rw-ink-soft py-6">該当する語がありません</p>
           )}
-
-          {/* 番号範囲（自分で指定） */}
-          <div className="rounded-xl border border-rw-rule p-3 mb-3">
-            <div className="text-[11px] font-black text-rw-ink-soft mb-2">📖 範囲を決めて読む（テスト範囲は自分で指定）</div>
-            <div className="flex items-center gap-2 text-sm">
-              <NumberStepper value={from} onChange={clampFrom} />
-              <span className="font-black text-rw-ink-soft">〜</span>
-              <NumberStepper value={to} onChange={clampTo} />
-              <span className="ml-auto text-[11px] font-black text-rw-accent">{filtered.length}語</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mt-2.5">
-              <QuickRange label="1–330 基本" on={() => { setFrom(1); setTo(330); }} />
-              <QuickRange label={`331–${maxNo} 追加`} on={() => { setFrom(331); setTo(maxNo); }} />
-              <QuickRange label="全部" on={() => { setFrom(1); setTo(maxNo); }} />
-            </div>
-          </div>
-
-          {/* 絞り込み（category） */}
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {categories.map((c) => (
-              <button
-                key={c}
-                onClick={() => setCat(c)}
-                className="text-[11px] font-black px-2.5 py-1 rounded-full border"
-                style={
-                  cat === c
-                    ? { background: "var(--rw-ink)", color: "var(--rw-paper)", borderColor: "var(--rw-ink)" }
-                    : { background: "var(--rw-bg)", color: "var(--rw-ink-soft)", borderColor: "var(--rw-rule)" }
-                }
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-
-          {/* 一覧 */}
-          <div className="divide-y divide-rw-rule">
-            {filtered.slice(0, 400).map((r) => (
-              <Link
-                key={r.lemma}
-                to={`/word/${encodeURIComponent(r.lemma)}`}
-                className="flex items-center gap-3 py-2.5 no-underline"
-                style={{ textDecoration: "none" }}
-              >
-                <span className="text-[10px] font-black text-rw-ink-soft w-8 text-right shrink-0">
-                  {r.group < 9999 ? r.group : "追"}
-                </span>
-                <span className="flex-1 min-w-0">
-                  <span className="text-[16px] font-black text-rw-ink">{r.lemma}</span>
-                  <span className="block text-[12px] text-rw-ink-soft font-semibold truncate">{r.meanings}</span>
-                </span>
-                <span className="flex gap-1 shrink-0">
-                  {r.senseCount > 1 && (
-                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded" style={{ background: "var(--rw-accent-soft)", color: "var(--rw-accent)" }}>多義</span>
-                  )}
-                  {r.hasTrap && (
-                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded" style={{ background: "var(--rw-primary-soft)", color: "var(--rw-primary)" }}>罠</span>
-                  )}
-                </span>
-                <span className="text-rw-ink-soft text-sm shrink-0">▶</span>
-              </Link>
-            ))}
-            {filtered.length === 0 && (
-              <p className="text-center text-sm text-rw-ink-soft py-6">該当する語がありません</p>
-            )}
-          </div>
-          {filtered.length > 400 && (
-            <p className="text-center text-[11px] text-rw-ink-soft pt-3">先頭400語を表示（範囲・検索で絞ってください）</p>
-          )}
-        </section>
+        </div>
       </div>
     </div>
   );
 }
 
-function DoorLink({ to, emoji, label, sub }: { to: string; emoji: string; label: string; sub: string }) {
+function IndexRow({ r, open, onToggle }: { r: WordRow; open: boolean; onToggle: () => void }) {
   return (
-    <Link
-      to={to}
-      className="rounded-2xl border border-rw-rule bg-rw-paper p-3 text-center no-underline"
-      style={{ textDecoration: "none" }}
-    >
-      <div className="text-xl">{emoji}</div>
-      <div className="text-[13px] font-black text-rw-ink mt-0.5">{label}</div>
-      <div className="text-[10px] text-rw-ink-soft font-semibold">{sub}</div>
-    </Link>
+    <div className="py-2">
+      <div className="flex items-center gap-2.5">
+        <Link
+          to={`/word/${encodeURIComponent(r.lemma)}`}
+          className="flex items-baseline gap-2.5 flex-1 min-w-0 no-underline"
+          style={{ textDecoration: "none" }}
+        >
+          <span className="text-[10px] font-black text-rw-ink-soft w-7 text-right shrink-0">
+            {r.group < 9999 ? r.group : "追"}
+          </span>
+          <span className="min-w-0">
+            <span className="text-[16px] font-black text-rw-ink">{r.lemma}</span>
+            <span className="block text-[12px] text-rw-ink-soft font-semibold">{r.meanings}</span>
+          </span>
+        </Link>
+        <span className="flex gap-1 shrink-0">
+          {r.hasTrap && (
+            <span className="text-[9px] font-black px-1.5 py-0.5 rounded" style={{ background: "var(--rw-primary-soft)", color: "var(--rw-primary)" }}>罠</span>
+          )}
+        </span>
+        {r.rules.length > 0 ? (
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={open}
+            className="shrink-0 text-[11px] font-black px-2 py-1 rounded-full border"
+            style={
+              open
+                ? { background: "var(--rw-accent)", color: "var(--rw-paper)", borderColor: "var(--rw-accent)" }
+                : { background: "var(--rw-accent-soft)", color: "var(--rw-accent)", borderColor: "var(--rw-accent-soft)" }
+            }
+          >
+            見分け方 {open ? "▾" : "▸"}
+          </button>
+        ) : (
+          <span className="text-rw-ink-soft text-sm shrink-0">▶</span>
+        )}
+      </div>
+      {open && r.rules.length > 0 && <DistinguishList rows={r.rules} axis={r.axis} />}
+    </div>
   );
 }
 
-function DoorButton({ emoji, label, sub, onClick }: { emoji: string; label: string; sub: string; onClick: () => void }) {
+/** 見分け方（意味ごとの決め手）。一覧の行の下に開く */
+function DistinguishList({ rows, axis }: { rows: DistinguishRow[]; axis?: string }) {
+  return (
+    <div className="mt-2 ml-9 rounded-xl border border-rw-rule bg-rw-paper px-3 py-2">
+      {axis && <p className="text-[12px] font-bold text-rw-ink mb-1.5">🧭 {axis}</p>}
+      <ul className="space-y-1.5">
+        {rows.map((d) => (
+          <li key={d.qid} className="text-[12.5px] leading-snug">
+            <span className="font-black text-rw-accent">〈{d.label}〉</span>
+            <DeciderTypeTag type={d.type} />
+            <span className="text-rw-ink font-semibold">{d.rule}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Pill({ on, onClick, children }: { on: boolean; onClick: () => void; children: ReactNode }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className="rounded-2xl border border-rw-rule bg-rw-paper p-3 text-center"
+      className="text-[11px] font-black px-2.5 py-1 rounded-full border"
+      style={
+        on
+          ? { background: "var(--rw-ink)", color: "var(--rw-paper)", borderColor: "var(--rw-ink)" }
+          : { background: "var(--rw-bg)", color: "var(--rw-ink-soft)", borderColor: "var(--rw-rule)" }
+      }
     >
-      <div className="text-xl">{emoji}</div>
-      <div className="text-[13px] font-black text-rw-ink mt-0.5">{label}</div>
-      <div className="text-[10px] text-rw-ink-soft font-semibold">{sub}</div>
-    </button>
-  );
-}
-
-function NumberStepper({ value, onChange }: { value: number; onChange: (v: number) => void }) {
-  return (
-    <span className="inline-flex items-center gap-2 border border-rw-rule rounded-lg px-2 py-1">
-      <button onClick={() => onChange(value - 1)} className="text-rw-accent font-black w-5 text-lg leading-none">−</button>
-      <input
-        type="number"
-        value={value}
-        onChange={(e) => onChange(parseInt(e.target.value) || 1)}
-        className="w-11 text-center font-black text-rw-ink bg-transparent outline-none"
-      />
-      <button onClick={() => onChange(value + 1)} className="text-rw-accent font-black w-5 text-lg leading-none">＋</button>
-    </span>
-  );
-}
-
-function QuickRange({ label, on }: { label: string; on: () => void }) {
-  return (
-    <button
-      onClick={on}
-      className="text-[10.5px] font-black px-2.5 py-1 rounded-full border border-rw-rule text-rw-ink bg-rw-bg"
-    >
-      {label}
+      {children}
     </button>
   );
 }
