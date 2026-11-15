@@ -1,6 +1,6 @@
 import { useMemo, type KeyboardEvent } from 'react';
 import type { Word } from '../../types';
-import type { ChatBubble, ChatVerdict } from '../../lib/quiz/chatThread';
+import type { ChatBubble, ChatVerdict, SenseMapItem } from '../../lib/quiz/chatThread';
 import type { TeacherMeta } from '../../lib/teachers';
 import type { PortraitTone } from '../../lib/portraitTone';
 import { FaceAvatar } from '../noble/FaceAvatar';
@@ -55,6 +55,44 @@ const VERDICT_MARK: Record<ChatVerdict, { mark: string; color: string }> = {
 };
 
 const JUDGE_BUTTON = 'px-4 py-2 text-rw-ink border-2 font-black rounded-full transition hover:-translate-y-0.5';
+
+/** 意味の行頭の丸（今の意味は塗る）。意味マップと見分け方で共有 */
+function SenseDot({ current }: { current: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="shrink-0 mt-[0.2em] w-[1em] h-[1em] rounded-full border-2"
+      style={{
+        borderColor: current ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
+        background: current ? 'var(--rw-primary)' : 'transparent',
+      }}
+    />
+  );
+}
+
+/** 「この文」「あなたの答え」の印。意味マップと見分け方の両方に付ける（2026-11-15） */
+function SenseMarks({ item }: { item: SenseMapItem }) {
+  return (
+    <>
+      {item.current && (
+        <span
+          className="ml-1.5 inline-block px-1.5 py-px rounded-full text-[10px] font-black align-[0.1em]"
+          style={{ background: 'var(--rw-primary)', color: 'var(--rw-paper)' }}
+        >
+          この文
+        </span>
+      )}
+      {item.chosen && (
+        <span
+          className="ml-1.5 inline-block px-1.5 py-px rounded-full text-[10px] font-black align-[0.1em] border"
+          style={{ borderColor: 'var(--rw-ng)', color: 'var(--rw-ng)', background: 'var(--rw-paper)' }}
+        >
+          あなたの答え
+        </span>
+      )}
+    </>
+  );
+}
 
 function BubbleBody({
   bubble,
@@ -129,46 +167,39 @@ function BubbleBody({
     case 'senses':
       return (
         <div>
-          <p className="text-[11px] font-black text-rw-ink-soft tracking-wider">
-            「{word.lemma}」の意味{bubble.items.some((it) => it.rule) ? 'と見分け方' : ''}（全部で{bubble.items.length}つ）
-          </p>
+          <p className="text-[11px] font-black text-rw-ink-soft tracking-wider">「{word.lemma}」の意味（全部で{bubble.items.length}つ）</p>
           {/* 意味は1つずつ大きな丸で区切る。小さな「・」だと「〜ている（補助）」のような意味が説明文に見えてしまう（2026-11-02 ユーザー指摘）。
-              決め手があれば各意味の下に見分け方（札＋決め手、今の意味だけ手がかり）。選んだ意味が同じ語の別の意味なら「あなたの答え」（2026-11-15） */}
-          <ul className={`mt-1 ${bubble.items.some((it) => it.rule) ? 'space-y-2' : 'space-y-1'}`}>
+              ここは意味の名前と印だけ。見分け方は次の吹き出し（distinguish）に分けた（2026-11-15 ユーザー指示「文字数多い」） */}
+          <ul className="mt-1 space-y-1">
             {bubble.items.map((item, i) => (
               <li key={i} className={`flex items-start gap-2 ${item.current ? 'font-black text-rw-ink' : 'text-rw-ink'}`}>
-                <span
-                  aria-hidden="true"
-                  className="shrink-0 mt-[0.2em] w-[1em] h-[1em] rounded-full border-2"
-                  style={{
-                    borderColor: item.current ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
-                    background: item.current ? 'var(--rw-primary)' : 'transparent',
-                  }}
-                />
+                <SenseDot current={item.current} />
                 <span>
                   {item.label}
-                  {item.current && (
-                    <span
-                      className="ml-1.5 inline-block px-1.5 py-px rounded-full text-[10px] font-black align-[0.1em]"
-                      style={{ background: 'var(--rw-primary)', color: 'var(--rw-paper)' }}
-                    >
-                      この文
-                    </span>
-                  )}
-                  {item.chosen && (
-                    <span
-                      className="ml-1.5 inline-block px-1.5 py-px rounded-full text-[10px] font-black align-[0.1em] border"
-                      style={{ borderColor: 'var(--rw-ng)', color: 'var(--rw-ng)', background: 'var(--rw-paper)' }}
-                    >
-                      あなたの答え
-                    </span>
-                  )}
-                  {item.rule && (
-                    <span className="block mt-0.5 text-[12.5px] font-semibold leading-snug text-rw-ink">
-                      <DeciderTypeTag type={item.type} />
-                      {item.rule}
-                    </span>
-                  )}
+                  <SenseMarks item={item} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    case 'distinguish':
+      // 見分け方（意味マップの次の吹き出し）。意味ごとに札＋決め手、今の意味だけ手がかり。
+      // 「この文」「あなたの答え」の印は意味マップと同じものを付ける（2026-11-15 ユーザー指示「どちらにもつける」）。
+      // 吹き出しの小見出し（「見分け方」）は付けない（同「見分け方の方の見出しは要らない」）
+      return (
+        <div>
+          <ul className="space-y-2">
+            {bubble.items.map((item, i) => (
+              <li key={i} className="flex items-start gap-2 text-rw-ink">
+                <SenseDot current={item.current} />
+                {/* 意味の名前は出さない（決め手の文の〈 〉の中にある。2026-11-15 ユーザー指示「説明の中にある」）。印は文の後ろ */}
+                <span>
+                  <span className={`text-[12.5px] leading-snug ${item.current ? 'font-black' : 'font-semibold'}`}>
+                    <DeciderTypeTag type={item.type} />
+                    {item.rule}
+                  </span>
+                  <SenseMarks item={item} />
                   {item.clue && (
                     <span className="block text-[11.5px] font-semibold leading-snug text-rw-ink-soft">手がかり：{item.clue}</span>
                   )}

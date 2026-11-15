@@ -31,8 +31,13 @@ export type ChatBubble =
   | { side: 'teacher'; kind: 'trap'; lead: string; modern: string; note?: string }
   /** UI が MarkedSentence で描く。kobun 無しなら訳だけ */
   | { side: 'teacher'; kind: 'example'; lead: string; kobun?: string; modern?: string }
-  /** 意味マップ（2つ以上あるときだけ）。決め手があれば各意味の見分け方も（2026-11-15） */
+  /** 意味マップ（2つ以上あるときだけ）。意味の名前と「この文」「あなたの答え」の印だけ */
   | { side: 'teacher'; kind: 'senses'; items: SenseMapItem[] }
+  /**
+   * 見分け方（意味マップの次の吹き出し。決め手のある意味が2つ以上あるときだけ）。
+   * 2026-11-15 ユーザー指示「見分けが文字数多い。いったん語の意味だけで見せた後に次のコメントで説明の部分を出す」
+   */
+  | { side: 'teacher'; kind: 'distinguish'; items: SenseMapItem[] }
   /** UI が ○× ボタンを描く */
   | { side: 'teacher'; kind: 'selfJudge'; text: string }
   | { side: 'teacher'; kind: 'text'; text: string };
@@ -187,8 +192,10 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
   // 正解以外（保留も含む）は解説を厚くする。保留は自己判定の前後で吹き出しが減らないように、判定後も同じ扱い
   const miss = outcome.verdict !== 'ok';
   const siblings = input.siblings ?? [];
-  // 意味マップに今の意味の決め手が載るときは、核イメージの 🔑 は出さない（同じ文を2か所に出さない）
-  const mapHasRule = siblings.length >= 2 && siblings.some((s) => s.current && s.rule);
+  // 見分け方の吹き出しを出すか（意味が2つ以上で、決め手のある意味が2つ以上）。
+  // 出すときに今の意味の決め手が載るなら、核イメージの 🔑 は出さない（同じ文を2か所に出さない）
+  const hasDistinguish = siblings.length >= 2 && siblings.filter((s) => s.rule).length >= 2;
+  const mapHasRule = hasDistinguish && siblings.some((s) => s.current && s.rule);
 
   // 5. 核イメージ（正解のときは罠も1吹き出しに畳む）
   if (word.senseCore) {
@@ -236,21 +243,33 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
   }
 
   // 8. 意味マップ（2つ以上あるときだけ）。正解でも出す（ほかの意味も見る方が学習になる。2026-11-02 ユーザー指示）
-  //    決め手があれば各意味の見分け方を添え、選んだ意味が同じ語の別の意味なら印を付ける（2026-11-15）
+  //    選んだ意味が同じ語の別の意味なら印を付ける（2026-11-15）
+  // 9. 見分け方（2026-11-15）。意味マップは意味の名前だけにし、決め手は次の吹き出しに分ける
+  //    （ユーザー指示「見分けが文字数多い。いったん語の意味だけで見せた後に次のコメントで説明の部分を出す」）。
+  //    決め手のある意味だけを並べ、今の意味だけ手がかりを添える
   if (siblings.length >= 2) {
     const chosenQid = chosenSiblingQid(input, outcome.verdict, siblings);
-    bubbles.push({
-      side: 'teacher',
-      kind: 'senses',
-      items: siblings.map((s) => {
-        const item: SenseMapItem = { label: auxShort(s.label), current: s.current };
-        if (chosenQid && s.qid === chosenQid) item.chosen = true;
-        if (s.rule) item.rule = s.rule;
-        if (s.rule && s.current && s.clue) item.clue = s.clue;
-        if (s.rule && s.type) item.type = s.type;
-        return item;
-      }),
-    });
+    const base = (s: SiblingSense): SenseMapItem => {
+      const item: SenseMapItem = { label: auxShort(s.label), current: s.current };
+      if (chosenQid && s.qid === chosenQid) item.chosen = true;
+      return item;
+    };
+    bubbles.push({ side: 'teacher', kind: 'senses', items: siblings.map(base) });
+    if (hasDistinguish) {
+      bubbles.push({
+        side: 'teacher',
+        kind: 'distinguish',
+        items: siblings
+          .filter((s) => s.rule)
+          .map((s) => {
+            const item = base(s);
+            item.rule = s.rule;
+            if (s.current && s.clue) item.clue = s.clue;
+            if (s.type) item.type = s.type;
+            return item;
+          }),
+      });
+    }
   }
 
   return { bubbles, canAdvance: !needsSelfJudge };

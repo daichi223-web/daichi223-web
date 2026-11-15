@@ -199,46 +199,61 @@ describe('buildThread 4択系（word-meaning / word-reverse / sentence-meaning /
   });
 });
 
-// 2026-11-15：意味マップに見分け方（各意味の決め手）を添える。選んだ意味が同じ語の別の意味なら「あなたの答え」
-describe('意味マップの見分け方', () => {
+// 2026-11-15：意味マップは意味の名前と印だけ、見分け方（各意味の決め手）は次の吹き出しに分ける
+// （ユーザー指示「見分けが文字数多い。いったん語の意味だけで見せた後に次のコメントで説明の部分を出す」）。
+// 「この文」「あなたの答え」の印はどちらにも付ける（同「あなたの答えの印などはどちらにもつける」）
+describe('意味マップと見分け方', () => {
   const RULED = [
     { label: senseLabel(HAZUKASHI), current: true, qid: 't-1', rule: HAZUKASHI.decider!.rule, clue: HAZUKASHI.decider!.clue, type: '視点' },
     { label: senseLabel(HAZUKASHI_2), current: false, qid: 't-2', rule: HAZUKASHI_2.decider!.rule, clue: HAZUKASHI_2.decider!.clue },
   ];
 
-  it('各意味に決め手、今の意味だけ手がかり。札があれば札。正解でも出す', () => {
+  it('意味マップは名前だけ、すぐ次の吹き出しに見分け方（決め手・今の意味だけ手がかり・札）。正解でも出す', () => {
     const { bubbles } = buildThread(choice({ quizType: 'word-meaning', isCorrect: true, siblings: RULED }));
+    expect(kinds(bubbles).slice(-2)).toEqual(['senses', 'distinguish']);
     expect(find(bubbles, 'senses')!.items).toEqual([
+      { label: RULED[0].label, current: true },
+      { label: RULED[1].label, current: false },
+    ]);
+    expect(find(bubbles, 'distinguish')!.items).toEqual([
       { label: RULED[0].label, current: true, rule: RULED[0].rule, clue: RULED[0].clue, type: '視点' },
       { label: RULED[1].label, current: false, rule: RULED[1].rule },
     ]);
   });
 
-  it('同じ語の別の意味を選んで間違えたら、その意味に「あなたの答え」。核イメージの 🔑 は意味マップと重ねない', () => {
+  it('同じ語の別の意味を選んで間違えたら、意味マップと見分け方の両方に「あなたの答え」。核イメージの 🔑 は重ねない', () => {
     const { bubbles } = buildThread(
       choice({ quizType: 'sentence-meaning', isCorrect: false, selected: HAZUKASHI_2, siblings: RULED }),
     );
-    const items = find(bubbles, 'senses')!.items;
-    expect(items.map((it) => !!it.chosen)).toEqual([false, true]);
+    expect(find(bubbles, 'senses')!.items.map((it) => !!it.chosen)).toEqual([false, true]);
+    expect(find(bubbles, 'distinguish')!.items.map((it) => !!it.chosen)).toEqual([false, true]);
+    expect(find(bubbles, 'distinguish')!.items.map((it) => it.current)).toEqual([true, false]);
     expect(find(bubbles, 'core')!.decider).toBeUndefined();
   });
 
   it('別の語を選んだ・見出し語を答える形式では印を付けない', () => {
     const other = buildThread(choice({ quizType: 'word-meaning', isCorrect: false, selected: OTHER, siblings: RULED }));
     expect(find(other.bubbles, 'senses')!.items.some((it) => it.chosen)).toBe(false);
+    expect(find(other.bubbles, 'distinguish')!.items.some((it) => it.chosen)).toBe(false);
     const rev = buildThread(choice({ quizType: 'word-reverse', isCorrect: false, selected: HAZUKASHI_2, siblings: RULED }));
     expect(find(rev.bubbles, 'senses')!.items.some((it) => it.chosen)).toBe(false);
   });
 
-  it('記述で別の意味を書いたら、その意味に「あなたの答え」', () => {
+  it('記述で別の意味を書いたら、両方に「あなたの答え」', () => {
     const { bubbles } = buildThread(writing('other_sense', { matchedSense: senseLabel(HAZUKASHI_2), siblings: RULED }));
     expect(find(bubbles, 'senses')!.items.map((it) => !!it.chosen)).toEqual([false, true]);
+    expect(find(bubbles, 'distinguish')!.items.map((it) => !!it.chosen)).toEqual([false, true]);
   });
 
-  it('決め手の無い意味マップ（今までの渡し方）は、今までどおり 🔑 を核イメージに出す', () => {
-    const { bubbles } = buildThread(choice({ quizType: 'word-meaning', isCorrect: false }));
-    expect(find(bubbles, 'core')!.decider).toEqual(HAZUKASHI.decider);
-    expect(find(bubbles, 'senses')!.items.some((it) => it.rule)).toBe(false);
+  it('決め手のある意味が2つ未満なら見分け方は出さず、今までどおり 🔑 を核イメージに出す', () => {
+    const plain = buildThread(choice({ quizType: 'word-meaning', isCorrect: false }));
+    expect(find(plain.bubbles, 'distinguish')).toBeUndefined();
+    expect(find(plain.bubbles, 'core')!.decider).toEqual(HAZUKASHI.decider);
+    const oneRule = buildThread(
+      choice({ quizType: 'word-meaning', isCorrect: false, siblings: [RULED[0], { ...RULED[1], rule: undefined }] }),
+    );
+    expect(find(oneRule.bubbles, 'distinguish')).toBeUndefined();
+    expect(find(oneRule.bubbles, 'core')!.decider).toEqual(HAZUKASHI.decider);
   });
 });
 
