@@ -9,6 +9,7 @@ import { levelOfSort } from "./topicStatus";
 import { shuffle } from "../shuffle";
 import { splitSentences } from "../splitSentences";
 import { splitGloss, type GlossEntry } from "./glossary";
+import { parseDanChartLine } from "./dan";
 
 /** 解説の小さなかたまり。1回の「つぎ ▸」で1つ出す */
 export type LessonPiece =
@@ -17,7 +18,8 @@ export type LessonPiece =
   | { type: "item"; text: string } // 箇条書きの1項目（番号つきは番号ごと）
   | { type: "example"; text: string } // 例文（「例: …」、> の引用）
   | { type: "table"; lines: string[]; caption?: string } // 表（マークダウンの行のまま）
-  | { type: "pre"; lines: string[] }; // ``` で囲んだ図
+  | { type: "pre"; lines: string[] } // ``` で囲んだ図
+  | { type: "dan"; text: string; names: string[] }; // 段の図（[段の図:四段,上二段]。text は元の行）
 
 /** 1つの節で出す問いの上限と、レッスン全体の上限 */
 export const ASK_PER_SECTION = 2;
@@ -42,7 +44,7 @@ export function splitSectionPieces(markdown: string): LessonPiece[] {
   const push = (p: LessonPiece) => {
     if (lead !== null) {
       if (p.type === "table") p = { ...p, caption: lead };
-      else if (p.type !== "pre") p = { type: "example", text: `${lead} ${p.text}`.trim() };
+      else if (p.type !== "pre" && p.type !== "dan") p = { type: "example", text: `${lead} ${p.text}`.trim() };
       lead = null;
     }
     out.push(p);
@@ -62,6 +64,11 @@ export function splitSectionPieces(markdown: string): LessonPiece[] {
       for (; i < lines.length && isTableLine(lines[i]); i++) block.push(lines[i].trim());
       i--;
       push({ type: "table", lines: block });
+      continue;
+    }
+    const danNames = parseDanChartLine(t);
+    if (danNames) {
+      push({ type: "dan", text: t, names: danNames });
       continue;
     }
     if (t.startsWith("#")) {

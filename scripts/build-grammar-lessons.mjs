@@ -13,7 +13,10 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const mode = process.argv.includes("--write") ? "write" : "check";
-const DOCS = join(root, "docs/grammar-lessons");
+// --dir <フォルダ> で別の場所の台本を検査する（作り直し中の版。--write とは一緒に使わない）
+const dirArg = process.argv.indexOf("--dir");
+const DOCS = dirArg > 0 ? process.argv[dirArg + 1] : join(root, "docs/grammar-lessons");
+if (dirArg > 0 && mode === "write") { console.error("--dir は --check だけ"); process.exit(1); }
 
 // 用語集の48語
 const glossSrc = readFileSync(join(root, "src/lib/kobun/glossary.ts"), "utf8");

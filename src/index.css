@@ -38,6 +38,13 @@
      primary/accent に任せると「若葉」などで ×＝緑・○＝オレンジに入れ替わる（2026-11-04 ユーザー指摘） */
   --rw-ok: #4a9a62;
   --rw-ng: #d0584a;
+
+  /* 五十音の段の色（src/lib/kobun/dan.ts）。活用表の語尾・「ア段」などの語・段の図で使う。テーマでは上書きしない */
+  --dan-a: #c0392b; --dan-a-soft: #fbe3df;
+  --dan-i: #975a16; --dan-i-soft: #f6ead0;
+  --dan-u: #2f7a4f; --dan-u-soft: #dcefe3;
+  --dan-e: #2b62a8; --dan-e-soft: #dde8f6;
+  --dan-o: #6b46c1; --dan-o-soft: #e8e1f7;
 }
 
 /* kobun-v3 リーダー用スタイル */

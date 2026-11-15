@@ -1,6 +1,8 @@
 // 簡易マークダウン（表・太字・箇条書き・番号つき）。リファレンスの節と、文法道場のレッスン・ドリルの「説明を見る」で使う
 // （2026-11-15 に pages/ReferenceTopic.tsx から切り出した。見た目は変えていない）。
 import type { ReactNode } from "react";
+import { danOf, isKatsuyoTable, parseDanChartLine, splitDanWords } from "@/lib/kobun/dan";
+import { DanChart, danStyle } from "./DanChart";
 
 /** 簡易Markdownレンダラ（表・太字・改行対応） */
 export function MarkdownContent({ content }: { content: string }) {
@@ -19,6 +21,14 @@ export function MarkdownContent({ content }: { content: string }) {
         i++;
       }
       elements.push(<MarkdownTable key={`table-${i}`} lines={tableLines} />);
+      continue;
+    }
+
+    // 段の図（[段の図:四段,上二段,下二段]）
+    const danNames = parseDanChartLine(line);
+    if (danNames) {
+      elements.push(<DanChart key={`dan-${i}`} names={danNames} />);
+      i++;
       continue;
     }
 
@@ -78,22 +88,65 @@ export function MarkdownContent({ content }: { content: string }) {
   return <div className="space-y-3 text-sm leading-relaxed">{elements}</div>;
 }
 
-export function InlineMarkdown({ text }: { text: string }) {
+/** 「ア段」「イ段」などの語に段の色を付ける（2026-11-16） */
+function DanWords({ text }: { text: string }) {
+  const parts = splitDanWords(text);
+  if (parts.length === 1 && !parts[0].dan) return <>{text}</>;
+  return (
+    <>
+      {parts.map((p, i) =>
+        p.dan ? (
+          <span key={i} className="font-black" style={{ color: `var(--dan-${p.dan})` }}>
+            {p.text}
+          </span>
+        ) : (
+          <span key={i}>{p.text}</span>
+        ),
+      )}
+    </>
+  );
+}
+
+/** danEndings: 活用表のセル。太字（語尾）を、その最初の字の段の色にする */
+export function InlineMarkdown({ text, danEndings = false }: { text: string; danEndings?: boolean }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/);
   return (
     <>
       {parts.map((part, i) => {
         if (part.startsWith("**") && part.endsWith("**")) {
-          return (
+          const body = part.slice(2, -2);
+          const dan = danEndings && /^[ぁ-ゖ]/.test(body) ? danOf(body) : null; // 語尾はひらがな（「**ナリ活用**」のような見出しは塗らない）
+          return dan ? (
+            <strong key={i} className="font-black rounded px-0.5 whitespace-nowrap" style={danStyle(dan)}>
+              {body}
+            </strong>
+          ) : (
             <strong key={i} className="font-bold">
-              {part.slice(2, -2)}
+              <DanWords text={body} />
             </strong>
           );
         }
-        return <span key={i}>{part}</span>;
+        return (
+          <span key={i}>
+            <DanWords text={part} />
+          </span>
+        );
       })}
     </>
   );
+}
+
+/** 活用表のセル。太字が無く、ローマ字の母音で始まる（a・uる など）ならセルごと段の色 */
+function KatsuyoCell({ cell }: { cell: string }) {
+  if (!cell.includes("**") && /^[aiueo]/.test(cell)) {
+    const dan = danOf(cell)!;
+    return (
+      <span className="font-black rounded px-1 whitespace-nowrap" style={danStyle(dan)}>
+        {cell}
+      </span>
+    );
+  }
+  return <InlineMarkdown text={cell} danEndings />;
 }
 
 export function MarkdownTable({ lines }: { lines: string[] }) {
@@ -105,6 +158,7 @@ export function MarkdownTable({ lines }: { lines: string[] }) {
 
   const headers = parseRow(lines[0]);
   const rows = lines.slice(2).map(parseRow);
+  const katsuyo = isKatsuyoTable(headers);
 
   return (
     <div className="overflow-x-auto">
@@ -127,7 +181,7 @@ export function MarkdownTable({ lines }: { lines: string[] }) {
             <tr key={i} className="border-b border-rw-rule">
               {row.map((cell, j) => (
                 <td key={j} className="px-2 py-1 text-rw-ink">
-                  <InlineMarkdown text={cell} />
+                  {katsuyo ? <KatsuyoCell cell={cell} /> : <InlineMarkdown text={cell} />}
                 </td>
               ))}
             </tr>

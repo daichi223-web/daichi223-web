@@ -28,6 +28,7 @@ import { ChatRow, CHAT_AVATAR_PX, type ChatRowTone } from "@/components/quiz/Cha
 import { ChatFeedback } from "@/components/quiz/ChatFeedback";
 import { FaceAvatar } from "@/components/noble/FaceAvatar";
 import { InlineMarkdown, MarkdownTable } from "./MarkdownContent";
+import { DanChart } from "./DanChart";
 import { renderDrillContext } from "./drillContext";
 
 /**
@@ -226,6 +227,12 @@ export function LessonSession({
           <pre key={key} className="rounded-2xl border border-rw-rule bg-rw-paper p-3 text-[12px] leading-relaxed text-rw-ink overflow-x-auto whitespace-pre" style={{ marginLeft: CHAT_AVATAR_PX + 8 }}>
             {p.lines.join("\n")}
           </pre>
+        );
+      case "dan":
+        return (
+          <div key={key} className="rounded-2xl border-2 border-rw-ink bg-rw-paper p-3" style={{ marginLeft: CHAT_AVATAR_PX + 8 }}>
+            <DanChart names={p.names} />
+          </div>
         );
       case "heading":
         return say(key, <span className="font-black"><InlineMarkdown text={p.text} /></span>, { tone: "core" });
