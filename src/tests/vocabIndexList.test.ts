@@ -45,11 +45,11 @@ describe('distinguishRows（見分け方）', () => {
 });
 
 describe('決め手の型の札（見本）', () => {
-  it('札の付いた qid は単語データにあり、型は定義された8つのどれか', async () => {
+  it('札の付いた qid は単語データにあり、型は定義された12のどれか（2026-11-15 に場面を5つに分けた）', async () => {
     const dt = (await import('../data/decider-types.json')).default as {
       types: Record<string, string>; senses: Record<string, string>;
     };
-    expect(Object.keys(dt.types)).toHaveLength(8);
+    expect(Object.keys(dt.types)).toHaveLength(12);
     const qids = new Set(ALL.map((s) => s.qid));
     for (const [qid, t] of Object.entries(dt.senses)) {
       expect(qids.has(qid), qid).toBe(true);
