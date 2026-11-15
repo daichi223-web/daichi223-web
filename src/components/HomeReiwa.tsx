@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAccountStatus, type AccountStatus } from '@/lib/auth';
-import { getCohort } from '@/lib/cohort';
-import { schoolLabel, isTeacherEmail } from '@/lib/schools';
 import { AUTH_REQUIRED } from '@/lib/authFlags';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getVocabEntries, type VocabEntry } from '@/lib/kobun/progress';
 import { readStreak } from '@/lib/streak';
 import { useFieldMastery } from '@/lib/fieldMastery';
@@ -340,15 +338,11 @@ export default function HomeReiwa({
           active={currentMode === 'word'}
         />
         {/* 多義語のタイルは 2026-11-06 に外した（クイズ画面の「多義語モード」タブから行ける）。
-            右隣は単語の一覧（/vocab。旧ラベル「単語ホーム」） */}
-        <TileLink
-          href="/vocab"
-          emoji="🗂️"
-          label="単語一覧"
-          stat="意味・用例を見る"
-          iconBg="var(--rw-accent)"
-          fgColor="var(--rw-paper)"
-        />
+            右隣は単語の一覧（/vocab。旧ラベル「単語ホーム」）。
+            2026-11-15 ユーザー指示「ホームから直で索引できるといい」「検索窓を出すことできる？単語一覧のところに」で、
+            タイルの中に検索窓を入れた（入れて🔍で /vocab?q=… が絞り込んだ状態で開く。空なら一覧へ） */}
+        <TileVocabSearch />
+
         <TileLink href="/read" emoji="📖" label="読解" stat="本文を読む" iconBg="var(--rw-pop)" fgColor="var(--rw-ink)" />
         <TileLink
           href="/read/grammar"
@@ -408,8 +402,10 @@ export default function HomeReiwa({
         </button>
       </div>
 
-      {/* 記録の引き継ぎ（匿名なら登録を促し、登録済みなら状態だけ）。お試しの端末には出さない（登録へつながない） */}
-      {account && !isGuest() && (
+      {/* 記録の引き継ぎ（匿名なら登録を促す）。お試しの端末には出さない（登録へつながない）。
+          登録済みの状態の行と、先生用の「教員管理画面」の行は 2026-11-15 にホームから外した（ユーザー指示「ホームにいらない」）。
+          登録の状態は /account、管理画面は /teacher を直接開く */}
+      {account && account.isAnonymous && !isGuest() && (
         <Link
           to="/account"
           className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-2.5 mb-4 hover:border-rw-ink-soft transition no-underline text-rw-ink"
@@ -419,33 +415,10 @@ export default function HomeReiwa({
             <span className="text-lg">📮</span>
             <span className="flex-1 min-w-0">
               <span className="block text-[13px] font-black tracking-tight">
-                {!account.isAnonymous
-                  ? `登録済み（${schoolLabel(getCohort())}）`
-                  : AUTH_REQUIRED ? 'はじめに登録' : '記録を引き継ぐ'}
+                {AUTH_REQUIRED ? 'はじめに登録' : '記録を引き継ぐ'}
               </span>
               <span className="block text-[10.5px] text-rw-ink-soft font-semibold truncate">
-                {account.isAnonymous ? '学校のメールで登録すると、別の端末・別のブラウザでも続きから' : account.email}
-              </span>
-            </span>
-            <span className="text-rw-ink-soft text-sm">→</span>
-          </div>
-        </Link>
-      )}
-
-      {/* 先生（@spec.ed.jp）だけに出す管理画面への入口。
-          画面自体は先生用パスワードで守られているので、このリンクは道しるべにすぎない */}
-      {account && !account.isAnonymous && isTeacherEmail(account.email ?? '') && (
-        <Link
-          to="/teacher"
-          className="block bg-rw-paper border border-rw-rule rounded-2xl px-4 py-2.5 mb-4 hover:border-rw-ink-soft transition no-underline text-rw-ink"
-          style={{ textDecoration: 'none' }}
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-lg">🗂️</span>
-            <span className="flex-1 min-w-0">
-              <span className="block text-[13px] font-black tracking-tight">教員管理画面</span>
-              <span className="block text-[10.5px] text-rw-ink-soft font-semibold truncate">
-                利用状況・教材公開・小テスト範囲（先生用のパスワードが必要）
+                学校のメールで登録すると、別の端末・別のブラウザでも続きから
               </span>
             </span>
             <span className="text-rw-ink-soft text-sm">→</span>
@@ -518,6 +491,50 @@ function Tile({
         {stat}
       </div>
     </button>
+  );
+}
+
+/** 単語一覧のタイル（検索窓つき）。見た目は TileLink にそろえ、説明の行の代わりに検索窓を置く */
+function TileVocabSearch() {
+  const navigate = useNavigate();
+  const [q, setQ] = useState('');
+  const go = () => {
+    const key = q.trim();
+    navigate(key ? `/vocab?q=${encodeURIComponent(key)}` : '/vocab');
+  };
+  return (
+    <div className="text-left bg-rw-paper border border-rw-rule rounded-2xl p-3.5 min-h-[96px] hover:border-rw-ink-soft transition text-rw-ink">
+      <Link to="/vocab" className="flex items-center gap-2 no-underline" style={{ textDecoration: 'none' }}>
+        <span
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-xl shrink-0"
+          style={{ background: 'var(--rw-accent)', color: 'var(--rw-paper)' }}
+        >
+          🗂️
+        </span>
+        <span className="text-base font-black tracking-tight text-rw-ink">単語一覧</span>
+      </Link>
+      <form
+        role="search"
+        className="mt-2 flex items-center rounded-lg border border-rw-rule bg-rw-bg focus-within:border-rw-ink"
+        onSubmit={(e) => {
+          e.preventDefault();
+          go();
+        }}
+      >
+        <input
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="語・意味で引く"
+          aria-label="単語一覧を検索"
+          enterKeyHint="search"
+          className="min-w-0 flex-1 bg-transparent px-2 py-1.5 text-[13px] text-rw-ink outline-none"
+        />
+        <button type="submit" aria-label="検索" className="shrink-0 px-2 text-sm">
+          🔍
+        </button>
+      </form>
+    </div>
   );
 }
 

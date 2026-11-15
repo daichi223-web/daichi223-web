@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import vocabIndex from "@/data/vocabIndex.json";
 import bundledKobunQ from "@/data/kobunQ.v2.slim.json";
 import vocabWhy from "@/data/vocab-why.json";
@@ -79,7 +79,9 @@ export default function VocabHome() {
   }, []);
 
   // ---- 選択状態 ----
-  const [q, setQ] = useState("");
+  // ホームの「単語一覧」の検索窓から来たときは ?q= で絞り込んだ状態で開く（2026-11-15）
+  const [searchParams] = useSearchParams();
+  const [q, setQ] = useState(() => searchParams.get("q") ?? "");
   const [order, setOrder] = useState<Order>("kana");
   const [cat, setCat] = useState<string>("すべて");
   const [open, setOpen] = useState<Set<string>>(() => new Set());
