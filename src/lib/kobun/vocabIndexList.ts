@@ -57,6 +57,15 @@ export function distinguishRows(senses: DistinguishSense[]): DistinguishRow[] {
   return rows.length >= 2 ? rows : [];
 }
 
+/**
+ * 決め手の文の中に〈意味〉が書いてあるか。書いてあれば、見分け方の行に意味の名前を出さない（2026-11-15 ユーザー指示
+ * 「気づくと目を覚ますも要らない。説明の中にある」「はずして」）。多義語の決め手616のうち15は〈 〉が無い
+ * （「…なら下二段」「同上」など）ので、そのときだけ名前を出す。
+ */
+export function ruleShowsMeaning(rule: string | undefined): boolean {
+  return /〈[^〉]+〉/.test(rule ?? '');
+}
+
 /** 五十音の行の見出し（並び順） */
 export const KANA_ROWS = ['あ', 'か', 'さ', 'た', 'な', 'は', 'ま', 'や', 'ら', 'わ'] as const;
 /** かなで始まらない語（漢字の見出しなど）の行。読みは推測しないので、ここにまとめる */

@@ -18,7 +18,7 @@ import { readMyStage } from '@/lib/myStage';
 import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from '@/lib/quizBackground';
 import { addAsk, askKey, buildCardMenu, isMenuEmpty, type CardAsk } from '@/lib/kobun/vocabCardChat';
 import { makeReturnTo, quizUrlWithReturn, wordCardBack } from '@/lib/returnTo';
-import { distinguishRows } from '@/lib/kobun/vocabIndexList';
+import { distinguishRows, ruleShowsMeaning } from '@/lib/kobun/vocabIndexList';
 import { DeciderTypeTag } from '@/components/kobun/DeciderTypeTag';
 
 // 単語理解カード（B型：核から意味を見ていく／案1「なぜ」ラベル帯）。
@@ -240,7 +240,8 @@ export default function VocabCard() {
             <ul className="mt-1.5 space-y-2">
               {rules.map((d) => (
                 <li key={d.qid}>
-                  <p className="font-black">〈{d.label}〉</p>
+                  {/* 意味の名前は、決め手の文の〈 〉に書いてあれば出さない（2026-11-15 ユーザー指示「はずして」） */}
+                  {!ruleShowsMeaning(d.rule) && <p className="font-black">〈{d.label}〉</p>}
                   <p className="font-semibold">
                     <DeciderTypeTag type={d.type} />
                     {d.rule}

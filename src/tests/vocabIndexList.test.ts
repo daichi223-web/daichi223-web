@@ -6,6 +6,7 @@ import {
   compareKana,
   numberBandOf,
   OTHER_ROW,
+  ruleShowsMeaning,
   type DistinguishSense,
 } from '../lib/kobun/vocabIndexList';
 
@@ -56,9 +57,35 @@ describe('決め手の型の札（見本）', () => {
     }
   });
 
-  it('見分け方の行に札が載る（札の無い語は undefined のまま）', () => {
-    expect(distinguishRows(sensesOf('かたはらいたし')).map((r) => r.type)).toEqual(['視点', '視点', '視点', '決まった形']);
-    expect(distinguishRows(sensesOf('あはれなり')).every((r) => r.type === undefined)).toBe(true);
+  it('見分け方の行に札が載る（2026-11-15 に全多義語へ広げた）', () => {
+    expect(distinguishRows(sensesOf('かたはらいたし')).map((r) => r.type).slice(0, 3)).toEqual(['視点', '視点', '視点']);
+    expect(distinguishRows(sensesOf('ゆめ・ゆめゆめ～打消・禁止')).map((r) => r.type)).toEqual(['呼応', '呼応']);
+  });
+
+  it('実データ：多義語の見分け方の行はすべて札が付く', () => {
+    const by = new Map<string, DistinguishSense[]>();
+    for (const r of ALL) by.set(r.lemma, [...(by.get(r.lemma) ?? []), r]);
+    const rows = [...by.values()].filter((a) => a.length > 1).flatMap((a) => distinguishRows(a));
+    const missing = rows.filter((r) => !r.type).map((r) => r.qid);
+    expect(missing).toEqual([]);
+  });
+});
+
+describe('ruleShowsMeaning（意味の名前を出すか）', () => {
+  it('〈 〉で意味を書いた決め手は名前を出さない。書いていない決め手は名前を出す', () => {
+    expect(ruleShowsMeaning('眠っている状況が前提なら〈目を覚ます〉')).toBe(true);
+    expect(ruleShowsMeaning('たまふる・たまふれ の形は必ず下二段〈ております〉')).toBe(true);
+    expect(ruleShowsMeaning('同上（仰せ給ふ・仰せける）')).toBe(false);
+    expect(ruleShowsMeaning(undefined)).toBe(false);
+  });
+
+  it('実データ：多義語の決め手のうち〈 〉の無いものは少数（名前を出す行）', () => {
+    const by = new Map<string, DistinguishSense[]>();
+    for (const r of ALL) by.set(r.lemma, [...(by.get(r.lemma) ?? []), r]);
+    const rows = [...by.values()].filter((a) => a.length > 1).flatMap((a) => distinguishRows(a));
+    const noMeaning = rows.filter((r) => !ruleShowsMeaning(r.rule));
+    expect(rows.length).toBeGreaterThan(600);
+    expect(noMeaning.length).toBeLessThan(30);
   });
 });
 

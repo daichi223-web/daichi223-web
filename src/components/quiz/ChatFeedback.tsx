@@ -8,6 +8,7 @@ import { MarkedSentence } from './MarkedSentence';
 import { SenseAnswerGuide } from './SenseAnswerGuide';
 import { softTone } from './writingVerdict';
 import { DeciderTypeTag } from '../kobun/DeciderTypeTag';
+import { ruleShowsMeaning } from '../../lib/kobun/vocabIndexList';
 
 // 単語クイズの答え合わせ（LINE 風）。
 // 右＝自分（選んだ答え・書いた意味）、左＝先生（判定・正解・核イメージ・罠・例文と訳・意味マップ）。
@@ -193,8 +194,12 @@ function BubbleBody({
             {bubble.items.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-rw-ink">
                 <SenseDot current={item.current} />
-                {/* 意味の名前は出さない（決め手の文の〈 〉の中にある。2026-11-15 ユーザー指示「説明の中にある」）。印は文の後ろ */}
+                {/* 意味の名前は、決め手の文の〈 〉に書いてあれば出さない（2026-11-15 ユーザー指示「説明の中にある」）。
+                    〈 〉の無い決め手（「…なら下二段」など15件）だけ名前を出す。印は文の後ろ */}
                 <span>
+                  {!ruleShowsMeaning(item.rule) && (
+                    <span className={`block ${item.current ? 'font-black' : 'font-bold'}`}>{item.label}</span>
+                  )}
                   <span className={`text-[12.5px] leading-snug ${item.current ? 'font-black' : 'font-semibold'}`}>
                     <DeciderTypeTag type={item.type} />
                     {item.rule}

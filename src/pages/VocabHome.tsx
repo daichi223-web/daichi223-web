@@ -11,6 +11,7 @@ import {
   numberBandOf,
   KANA_ROWS,
   OTHER_ROW,
+  ruleShowsMeaning,
   type DistinguishRow,
   type DistinguishSense,
 } from "@/lib/kobun/vocabIndexList";
@@ -282,7 +283,8 @@ function DistinguishList({ rows, axis }: { rows: DistinguishRow[]; axis?: string
       <ul className="space-y-1.5">
         {rows.map((d) => (
           <li key={d.qid} className="text-[12.5px] leading-snug">
-            <span className="font-black text-rw-accent">〈{d.label}〉</span>
+            {/* 意味の名前は、決め手の文の〈 〉に書いてあれば出さない（2026-11-15 ユーザー指示「はずして」） */}
+            {!ruleShowsMeaning(d.rule) && <span className="font-black text-rw-accent">〈{d.label}〉</span>}
             <DeciderTypeTag type={d.type} />
             <span className="text-rw-ink font-semibold">{d.rule}</span>
           </li>
