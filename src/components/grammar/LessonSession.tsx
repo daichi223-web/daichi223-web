@@ -2,14 +2,13 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { GrammarDrill, GrammarTopic } from "@/lib/kobun/types";
 import {
   buildLessonPlan,
-  lessonAskLine,
-  lessonIntroLine,
-  lessonStartLines,
-  lessonWrapLines,
+  buildScriptPlan,
   quoteName,
+  type LessonScript,
   skipSteps,
   type MenuKind,
   termOptionAnswerLines,
+  termOptionNames,
   termOptions,
   type TermOption,
   type LessonPiece,
@@ -20,6 +19,7 @@ import { drillFeedbackWord, drillThread, isDrillAnswerCorrect } from "@/lib/kobu
 import { markLessonDone } from "@/lib/kobun/dojoLocal";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from "@/lib/teachers";
+import { lessonLine, type LessonLines, type LessonVars } from "@/lib/teacherLessonLines";
 import { useChatTeacher } from "@/lib/chatTeacher";
 import { usePortraitTone } from "@/lib/portraitTone";
 import { readMyStage } from "@/lib/myStage";
@@ -27,7 +27,7 @@ import { shuffle } from "@/lib/shuffle";
 import { ChatRow, CHAT_AVATAR_PX, type ChatRowTone } from "@/components/quiz/ChatRow";
 import { ChatFeedback } from "@/components/quiz/ChatFeedback";
 import { FaceAvatar } from "@/components/noble/FaceAvatar";
-import { InlineMarkdown, MarkdownTable } from "./MarkdownContent";
+import { InlineMarkdown, MarkdownContent, MarkdownTable } from "./MarkdownContent";
 import { DanChart } from "./DanChart";
 import { renderDrillContext } from "./drillContext";
 
@@ -56,15 +56,18 @@ const CHIP_MAIN = "text-[13px] font-black px-3 py-1.5 rounded-full border-2 bord
 export function LessonSession({
   topic,
   drills,
+  script,
   onFinish,
 }: {
   topic: GrammarTopic;
   drills: GrammarDrill[];
+  /** 先生の台本（public/grammar-lessons/<id>.json）。無ければ解説の節から組む */
+  script?: LessonScript | null;
   /** まとめのボタン：drill＝ドリルで仕上げる、page＝単元のページへ戻る */
   onFinish: (to: "drill" | "page") => void;
 }) {
   // 材料と選択肢の並びは、レッスンを開いたときに1回だけ決める
-  const [plan] = useState(() => buildLessonPlan(topic, drills));
+  const [plan] = useState(() => (script ? buildScriptPlan(topic, script, drills) : buildLessonPlan(topic, drills)));
   const secOf = (i: number): LessonSection => (i < 0 ? plan.finalCheck! : plan.sections[i]);
   const stepsOf = (ev: Extract<Ev, { t: "sec" }>): SectionStep[] => (ev.mode === "skip" ? skipSteps(secOf(ev.sec)) : secOf(ev.sec).steps);
   const [choiceOrder] = useState<Record<string, string[]>>(() => {
@@ -92,6 +95,20 @@ export function LessonSession({
   const myStage = useMemo(readMyStage, []);
   const teacher = TEACHERS[teacherId];
   const teacherSrc = teacherImage(teacherId, tone);
+  // 説明の前後の一言は、選んだ先生の文法の台詞（2026-11-16。説明そのものは全員共通）
+  const L = (key: keyof LessonLines, seed: string, vars: LessonVars = {}) => lessonLine(key, vars, `${topic.id}:${seed}`, teacherId, TEACHER_VOICE_ENABLED);
+  const startOpts = termOptions(startTerms);
+  const startLines = [
+    L("start", "start", { 単元: quoteName(topic.title) }),
+    ...(startOpts.length
+      ? [
+          L("termsIntro", "start", {
+            用語: termOptionNames(startOpts),
+          }),
+          L("termsAsk", "start"),
+        ]
+      : []),
+  ];
 
   const last = events[events.length - 1];
   const doneSecs = new Set(events.flatMap((e) => (e.t === "sec" && e !== last ? [e.sec] : [])));
@@ -228,6 +245,15 @@ export function LessonSession({
             {p.lines.join("\n")}
           </pre>
         );
+      case "ref":
+        return (
+          <details key={key} className="rounded-2xl border-2 border-rw-rule bg-rw-paper p-3" style={{ marginLeft: CHAT_AVATAR_PX + 8 }}>
+            <summary className="cursor-pointer text-[13px] font-black text-rw-ink-soft">📖 解説を見る：{p.text}</summary>
+            <div className="mt-2">
+              <MarkdownContent content={p.content} />
+            </div>
+          </details>
+        );
       case "dan":
         return (
           <div key={key} className="rounded-2xl border-2 border-rw-ink bg-rw-paper p-3" style={{ marginLeft: CHAT_AVATAR_PX + 8 }}>
@@ -277,15 +303,22 @@ export function LessonSession({
       const ok = chosen === st.q.answer;
       return (
         <div key={k} className="space-y-2">
-          {say(`${k}-lead`, lessonAskLine("quick"), { first: true })}
+          {say(`${k}-lead`, L("quickLead", k), { first: true })}
           <div className="bg-rw-paper p-3 rounded-2xl border-2 border-rw-ink">
+            {st.q.context && (
+              <>
+                <p className="text-rw-ink font-serif text-[15px] leading-relaxed">{renderDrillContext(st.q.context, chosen !== undefined)}</p>
+                <div className="border-b border-rw-rule my-2" />
+              </>
+            )}
             <p className="text-[15px] font-black text-rw-ink leading-snug">{st.q.prompt}</p>
           </div>
           {choiceButtons(key, choiceOrder[key] ?? st.q.choices, (c) => c === st.q.answer, (c) => answer(ev.sec, st, c), active)}
           {chosen !== undefined && (
             <div className="space-y-1.5">
               {me(`${k}-me`, chosen)}
-              {say(`${k}-v`, <span className={ok ? "text-rw-accent font-black" : "text-rw-primary font-black"}>{ok ? "◯ そのとおり。" : `× 正しくは「${st.q.answer}」。`}</span>, { first: true })}
+              {say(`${k}-v`, <span className={ok ? "text-rw-accent font-black" : "text-rw-primary font-black"}>{ok ? `◯ ${L("right", k)}` : `× ${L("wrong", k, { 正解: st.q.answer })}`}</span>, { first: true })}
+              {!ok && st.q.miss?.[chosen] && say(`${k}-m`, <InlineMarkdown text={st.q.miss[chosen]} />)}
               {say(`${k}-e`, <InlineMarkdown text={st.q.explain} />)}
             </div>
           )}
@@ -294,7 +327,7 @@ export function LessonSession({
     }
     return (
       <div key={k} className="space-y-2">
-        {say(`${k}-lead`, lessonAskLine("ask", st.nth), { first: true })}
+        {say(`${k}-lead`, st.nth === 0 ? L("askLead", k) : L("askMore", k), { first: true })}
         <div className="bg-rw-paper p-3.5 rounded-2xl border-2 border-rw-ink">
           {st.drill.context && (
             <>
@@ -325,13 +358,13 @@ export function LessonSession({
     if (ev.t === "start")
       return (
         <section key={i} className="space-y-1.5">
-          {lessonStartLines(topic.title, startTerms).map((l, k) => say(`${i}-${k}`, l, { first: k === 0 }))}
+          {startLines.map((l, k) => say(`${i}-${k}`, l, { first: k === 0 }))}
         </section>
       );
     if (ev.t === "term")
       return (
         <section key={i} className="space-y-1.5">
-          {termOptionAnswerLines(ev.opt).map((l, k) => say(`${i}-${k}`, k === 0 ? <span className="font-black">{l}</span> : l, { first: k === 0, tone: k === 0 ? "core" : "plain" }))}
+          {(ev.opt.entries.length === 1 ? [L("termLead", `term:${ev.opt.key}`, { 用語: `「${ev.opt.entries[0].term}」` }), ...termOptionAnswerLines(ev.opt).slice(1)] : termOptionAnswerLines(ev.opt)).map((l, k) => say(`${i}-${k}`, k === 0 ? <span className="font-black">{l}</span> : l, { first: k === 0, tone: k === 0 ? "core" : "plain" }))}
         </section>
       );
     if (ev.t === "menu") {
@@ -343,10 +376,10 @@ export function LessonSession({
         ev.at === "start"
           ? []
           : ev.at === "terms"
-            ? [ev.again ? "ほかにも分からない言葉はある？" : "どの言葉？"]
+            ? [ev.again ? L("moreTerms", `m${i}`) : L("whichTerm", `m${i}`)]
             : ev.at === "next"
-              ? [`次は${quoteName(recSec?.heading ?? "")}。`, "どうする？"]
-              : ["どこにする？"];
+              ? [L("nextPart", `m${i}`, { 部分: quoteName(recSec?.heading ?? "") }), L("nextAsk", `m${i}`)]
+              : [L("otherAsk", `m${i}`)];
       const opts: { label: string; main?: boolean; go: () => void }[] = [];
       if (ev.at === "start" && recSec) {
         opts.push({ label: "分かる、はじめよう", main: true, go: () => openSection(recSec, "explain", "分かる、はじめよう", "first") });
@@ -360,8 +393,11 @@ export function LessonSession({
           opts.push({ label: "もう大丈夫、はじめよう", main: true, go: () => openSection(plan.sections[0], "explain", "もう大丈夫、はじめよう", "first") });
       }
       if (ev.at === "next" && recSec) {
-        opts.push({ label: "説明して", main: true, go: () => openSection(recSec, "explain", "説明して", "chosen") });
-        if (skipSteps(recSec).length) opts.push({ label: "分かってる → 問題だけ", go: () => openSection(recSec, "skip", "分かってる。問題だけ", "chosen") });
+        // 台本の部分は「〜を教えて」「〜は分かってる」（台本の ask・known）
+        const askLabel = recSec.ask ?? "説明して";
+        const knownLabel = recSec.known ? `${recSec.known} → 問題だけ` : "分かってる → 問題だけ";
+        opts.push({ label: askLabel, main: true, go: () => openSection(recSec, "explain", askLabel, "chosen") });
+        if (skipSteps(recSec).length) opts.push({ label: knownLabel, go: () => openSection(recSec, "skip", recSec.known ? `${recSec.known}。問題だけ` : "分かってる。問題だけ", "chosen") });
         if (remaining.length >= 2) opts.push({ label: "ほかの所がいい", go: () => pick("ほかの所がいい", { t: "menu", at: "other", rec: recSec.index }) });
         if (termsLeft.length) opts.push({ label: "分からない言葉がある", go: () => pick("分からない言葉がある", { t: "menu", at: "terms", from: "next", rec: recSec.index }) });
       }
@@ -397,12 +433,13 @@ export function LessonSession({
     if (ev.t === "sec") {
       const sec = secOf(ev.sec);
       const steps = stepsOf(ev);
+      const part = { 部分: quoteName(sec.heading) };
       const intro =
         ev.how === "final"
-          ? "最後に、この単元の問題で確かめよう。"
+          ? L("finalCheck", `s${i}`)
           : ev.mode === "skip"
-            ? `${quoteName(sec.heading)}は分かっているんだね。${steps.length ? "問題で確かめよう。" : ""}`
-            : lessonIntroLine(sec.heading, ev.how === "last" ? "last" : ev.how === "first" ? "first" : "chosen");
+            ? L("knownReply", `s${i}`, part)
+            : L(ev.how === "last" ? "partLast" : ev.how === "first" ? "partFirst" : "partChosen", `s${i}`, part);
       return (
         <section key={i} className="space-y-2" aria-label={sec.heading || "確かめ"}>
           {say(`${i}-intro`, <span className="font-black">{intro}</span>, { first: true, tone: "core" })}
@@ -413,7 +450,7 @@ export function LessonSession({
     // まとめ
     return (
       <section key={i} className="space-y-1.5" aria-label="まとめ">
-        {lessonWrapLines(plan.keyPoints).map((line, k) =>
+        {[plan.keyPoints.length ? L("wrapLead", "wrap") : L("wrapPraise", "wrap"), ...plan.keyPoints, L("finish", "wrap")].map((line, k) =>
           say(`${i}-${k}`, k === 0 ? <span className="font-black">{line}</span> : line, { first: k === 0, tone: k > 0 && k <= plan.keyPoints.length ? "core" : "plain" }),
         )}
         {tally.n > 0 && <p className="text-center text-[12px] font-black text-rw-ink-soft pt-2">途中の問い {tally.ok} / {tally.n} 問 正解</p>}

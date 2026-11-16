@@ -1,13 +1,15 @@
 import type { GrammarDrill } from './types';
 import type { Word } from '../../types';
 import type { ChatBubble } from '../quiz/chatThread';
-import { fillTemplate, pickVariant, type TeacherId, type TeacherLines } from '../teachers';
-import { TEACHER_LINES, NEUTRAL_LINES } from '../teacherLines';
+import type { TeacherId } from '../teachers';
+import { lessonLine } from '../teacherLessonLines';
 
 /**
  * 文法ドリルの答え合わせ（ChatFeedback に渡す吹き出し）を組む純関数（2026-11-06。文法道場の見直し ⑤）。
  * 単語クイズ（lib/quiz/chatThread.ts）・読解テスト（readingThread）と同じ部品で出すためのもの。
  * 吹き出しは3種類だけ：自分の答え → 判定（正解。／正しくは「〜」。）→ 解説の文（explanation）。
+ * 判定の一言は文法の先生の台詞（teacherLessonLines.ts の drillCorrect／drillWrong。2026-11-16 ユーザー指示「ドリルも独自のコメントにして」で、
+ * 単語クイズの台詞 TEACHER_LINES から切り替えた）。
  * DOM・画面に触れない（vitest の node 環境で検査する）。
  */
 
@@ -40,13 +42,8 @@ export function drillThread(
   chosen: string | null,
   opts: { teacher: TeacherId; voice: boolean },
 ): ChatBubble[] {
-  const lines: TeacherLines = opts.voice ? (TEACHER_LINES[opts.teacher] ?? TEACHER_LINES.sei) : NEUTRAL_LINES;
   const ok = chosen !== null && isDrillAnswerCorrect(drill, chosen);
-  const key: keyof TeacherLines = ok ? 'correct' : 'wrong';
-  const say = fillTemplate(pickVariant(lines[key], `drill:${drill.id}:${key}`), {
-    語: targetOf(drill),
-    正解: drillAnswerLabel(drill),
-  });
+  const say = lessonLine(ok ? 'drillCorrect' : 'drillWrong', { 正解: drillAnswerLabel(drill) }, `drill:${drill.id}`, opts.teacher, opts.voice);
   const bubbles: ChatBubble[] = [
     { side: 'me', kind: 'answer', text: chosen ?? DRILL_NO_ANSWER },
     { side: 'teacher', kind: 'verdict', text: say, verdict: ok ? 'ok' : 'ng' },

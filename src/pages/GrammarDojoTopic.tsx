@@ -56,6 +56,7 @@ const SESSION_SIZE = 8;
 import { VideoEmbed } from "@/components/grammar/VideoEmbed";
 import { DrillSession, type DrillResult } from "@/components/grammar/DrillSession";
 import { LessonSession } from "@/components/grammar/LessonSession";
+import { isLessonScript, type LessonScript } from "@/lib/kobun/dojoLesson";
 
 // lesson＝「先生と学ぶ」（説明→問い→説明…→まとめ。2026-11-15。components/grammar/LessonSession.tsx）
 type Phase = "learn" | "lesson" | "drill" | "done";
@@ -93,6 +94,8 @@ export default function GrammarDojoTopic() {
   const [loadError, setLoadError] = useState(false);
   const [reloadSeq, setReloadSeq] = useState(0);
   const [phase, setPhase] = useState<Phase>("learn");
+  // 先生の台本（public/grammar-lessons/<id>.json。2026-11-16）。undefined＝読み込み中、null＝無い（解説の節から組む）
+  const [lessonScript, setLessonScript] = useState<LessonScript | null | undefined>(undefined);
   // 「先生と学ぶ」を最後まで終えた単元（端末に覚える）。レッスンから戻るたびに読み直す
   const [lessonDone, setLessonDone] = useState<string[]>(() => readLessonDone());
   const [result, setResult] = useState<DrillResult | null>(null);
@@ -218,6 +221,18 @@ export default function GrammarDojoTopic() {
     };
   }, [topicId, reloadSeq]);
 
+  useEffect(() => {
+    if (!topicId) return;
+    let cancelled = false;
+    setLessonScript(undefined);
+    fetchJsonAsset<unknown>(`/grammar-lessons/${topicId}.json`)
+      .then((r) => !cancelled && setLessonScript(r.ok && isLessonScript(r.data, topicId) ? r.data : null))
+      .catch(() => !cancelled && setLessonScript(null));
+    return () => {
+      cancelled = true;
+    };
+  }, [topicId]);
+
   const handleComplete = (r: DrillResult) => {
     setResult(r);
     setSaveFailed((n) => Math.max(n, r.saveFailed ?? 0));
@@ -312,9 +327,13 @@ export default function GrammarDojoTopic() {
             </button>
             <span className="text-xs font-black text-rw-ink truncate min-w-0">{topic.title}</span>
           </div>
+          {lessonScript === undefined ? (
+            <p className="text-center text-sm font-bold text-rw-ink-soft py-10">読み込み中…</p>
+          ) : (
           <LessonSession
             topic={topic}
             drills={drills}
+            script={lessonScript}
             onFinish={(to) => {
               setLessonDone(readLessonDone());
               if (to === "drill" && levelDrills.length > 0) startDrill(selLevel);
@@ -324,6 +343,7 @@ export default function GrammarDojoTopic() {
               }
             }}
           />
+          )}
         </div>
       </div>
     );

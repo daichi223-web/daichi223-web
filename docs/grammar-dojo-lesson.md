@@ -68,7 +68,13 @@
   - `src/components/grammar/drillContext.tsx`（例文の【】《》）
   - `src/lib/splitSentences.ts`（readingTest から切り出し。readingTest からも今までどおり import できる）
 
+## 先生の台本で組む（2026-11-16）
+- 全単元の分析と分解（`docs/grammar-lessons/decomposition*.md`）から、単元ごとの台本（```lesson）を書いた。1部分＝1つの要素で、説明には必ず例を入れる。
+- 台本 → `scripts/build-grammar-lessons.mjs --write` → `public/grammar-lessons/<id>.json`。単元ページが読み込み、あれば `buildScriptPlan` で組む（無い・壊れているときは解説の節から組む今までの形）。
+- 1部分の流れ：先生の説明（say を1文ずつ）→ table の節の表・段の図（表の無い節は「解説を見る」カード）→ 確かめ（checks。誤答には miss の「なぜそれを選びやすいか」）→ その節のドリル（1部分1問・全体5問まで）。
+- 次の部分の選択肢は台本の ask（「〜を教えて」）・known（「〜は分かってる → 問題だけ」）。
+- 説明の前後の一言は、選んだ先生の文法の台詞（`src/lib/teacherLessonLines.ts`。単語クイズの台詞とは別。ドリル・復習の判定の一言も同じ台詞）。説明そのものは全員共通。
+
 ## まだのこと
-- 先生の口調で書き直した説明（今は解説の文そのまま）。
 - 用語集に無い言葉（「ラ変型」「本活用」など）は「〜って？」に出ない。
 - `vocab-*` の単元（本番に未投入）はレッスンの対象だが、確かめていない。

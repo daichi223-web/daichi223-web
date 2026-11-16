@@ -372,9 +372,9 @@ const HATTEN: TermCard[] = [
 ];
 
 export const TERM_GROUPS: TermGroup[] = [
-  { id: "kihon", title: "きほん", lead: "言葉の種類と、形が変わるということ", cards: KIHON },
+  { id: "kihon", title: "きほん", lead: "品詞（言葉の種類）と、活用（形が変わること）", cards: KIHON },
   { id: "yougen", title: "用言", lead: "6つの活用形と、活用の種類", cards: YOUGEN },
-  { id: "jodoshi", title: "助動詞", lead: "助動詞がそえる意味の名前", cards: JODOSHI },
+  { id: "jodoshi", title: "助動詞", lead: "助動詞の文法的意味（そえる意味）", cards: JODOSHI },
   { id: "joshi", title: "助詞", lead: "助詞の種類と、つなぎ方・係り結び", cards: JOSHI },
   { id: "keigo", title: "敬語", lead: "誰を高めているか", cards: KEIGO },
   { id: "hatten", title: "発展", lead: "動詞のはたらきの見分け（敬語と活用の一歩先）", cards: HATTEN },

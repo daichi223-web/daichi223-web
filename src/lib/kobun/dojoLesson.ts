@@ -8,7 +8,7 @@ import type { GrammarDrill, GrammarTopic } from "./types";
 import { levelOfSort } from "./topicStatus";
 import { shuffle } from "../shuffle";
 import { splitSentences } from "../splitSentences";
-import { splitGloss, type GlossEntry } from "./glossary";
+import { GLOSSARY, splitGloss, type GlossEntry } from "./glossary";
 import { parseDanChartLine } from "./dan";
 
 /** 解説の小さなかたまり。1回の「つぎ ▸」で1つ出す */
@@ -19,7 +19,8 @@ export type LessonPiece =
   | { type: "example"; text: string } // 例文（「例: …」、> の引用）
   | { type: "table"; lines: string[]; caption?: string } // 表（マークダウンの行のまま）
   | { type: "pre"; lines: string[] } // ``` で囲んだ図
-  | { type: "dan"; text: string; names: string[] }; // 段の図（[段の図:四段,上二段]。text は元の行）
+  | { type: "dan"; text: string; names: string[] } // 段の図（[段の図:四段,上二段]。text は元の行）
+  | { type: "ref"; text: string; content: string }; // 解説の節を開いて見るカード（台本の table が表の無い節のとき。text は節の見出し）
 
 /** 1つの節で出す問いの上限と、レッスン全体の上限 */
 export const ASK_PER_SECTION = 2;
@@ -140,6 +141,10 @@ export interface QuickQ {
   answer: string;
   /** 答えたあとの一言（本文のどこに書いてあったか） */
   explain: string;
+  /** 例文（【 】が問う所、《 》が手がかり。台本の問いだけ） */
+  context?: string;
+  /** 誤答ごとの「なぜそれを選びやすいか」（台本の問いだけ） */
+  miss?: Record<string, string>;
 }
 
 export type SectionStep =
@@ -154,6 +159,9 @@ export interface LessonSection {
   steps: SectionStep[];
   /** この節に出てくる文法用語（「〜って？」と聞ける。出てくる順） */
   terms: GlossEntry[];
+  /** 台本の部分のときの、選択肢の文（「〜を教えて」「〜は分かってる」） */
+  ask?: string;
+  known?: string;
 }
 
 export interface LessonPlan {
@@ -177,18 +185,23 @@ export const TERM_OPTION_MAX = 4;
 export interface TermOption {
   key: string;
   label: string;
+  /** 種類のまとまりの名前（「活用形」「接続（つながり方）」）。1語だけの選択肢には無い */
+  name?: string;
   entries: GlossEntry[];
 }
 
-/** 同じ種類としてまとめる用語（label は選択肢の文字） */
-const TERM_FAMILIES: { key: string; name: string; members: string[] }[] = [
+/**
+ * 同じ種類としてまとめる用語（name は選択肢の文字）。名前は文法用語で書き、やさしい言い方は（ ）に添える
+ * （2026-11-16 ユーザー指示「接続（つながり方）にして。文法用語は覚える必要がある。簡易な言い方にしない。する場合は（）書き」）。
+ */
+const TERM_FAMILIES: { key: string; name: string; plain?: string; members: string[] }[] = [
   { key: "forms", name: "活用形", members: ["未然形", "連用形", "終止形", "連体形", "已然形", "命令形"] },
   { key: "types", name: "活用の種類", members: ["四段活用", "上二段活用", "下二段活用", "上一段活用", "下一段活用", "変格活用"] },
-  { key: "pos", name: "品詞の名前", members: ["用言", "体言", "動詞", "形容詞", "形容動詞", "助動詞", "助詞"] },
+  { key: "pos", name: "品詞", members: ["用言", "体言", "動詞", "形容詞", "形容動詞", "助動詞", "助詞"] },
   { key: "joshi", name: "助詞の種類", members: ["格助詞", "接続助詞", "係助詞"] },
   { key: "keigo", name: "敬語の種類", members: ["尊敬語", "謙譲語", "丁寧語"] },
-  { key: "imi", name: "意味の名前", members: ["打消", "過去", "推量", "意志", "完了", "存続", "詠嘆"] },
-  { key: "tsunagi", name: "つながり方", members: ["仮定", "確定", "順接", "逆接"] },
+  { key: "imi", name: "文法的意味", members: ["打消", "過去", "推量", "意志", "完了", "存続", "詠嘆"] },
+  { key: "tsunagi", name: "接続", plain: "つながり方", members: ["仮定", "確定", "順接", "逆接"] },
   { key: "doushi2", name: "動詞の種類", members: ["本動詞", "補助動詞", "自動詞", "他動詞"] },
 ];
 
@@ -209,7 +222,9 @@ export function termOptions(entries: GlossEntry[], max = TERM_OPTION_MAX): TermO
     // 種類の中は決まった順（活用形なら 未然形→連用形→…）
     o.entries.sort((x, y) => fam.members.indexOf(x.term) - fam.members.indexOf(y.term));
     const names = o.entries.map((e) => e.term);
-    o.label = `${fam.name}（${names.length > 2 ? `${names.slice(0, 2).join("・")}など` : names.join("・")}）`;
+    const list = names.length > 2 ? `${names.slice(0, 2).join("・")}など` : names.join("・");
+    o.name = fam.plain ? `${fam.name}（${fam.plain}）` : fam.name;
+    o.label = fam.plain ? `${fam.name}（${fam.plain}：${list}）` : `${fam.name}（${list}）`;
   }
   return out.slice(0, max);
 }
@@ -386,7 +401,7 @@ export function lessonAskLine(kind: "quick" | "ask", nth = 0): string {
 export function lessonStartLines(topicTitle: string, terms: GlossEntry[]): string[] {
   const lines = [`${quoteName(topicTitle)}を、少しずつ説明していくね。`];
   const opts = termOptions(terms);
-  if (opts.length) lines.push(`説明には${opts.map((o) => o.label.replace(/（.*$/, "")).map((x) => (x.startsWith("「") ? x : `「${x}」`)).join("")}などの言葉が出てくるよ。`, "意味は分かる？");
+  if (opts.length) lines.push(`説明には${termOptionNames(opts)}などの言葉が出てくるよ。`, "意味は分かる？");
   return lines;
 }
 
@@ -399,6 +414,11 @@ export function lessonStartLines(topicTitle: string, terms: GlossEntry[]): strin
  */
 export type MenuKind = "start" | "terms" | "next" | "other";
 
+
+/** はじめの「説明には〜などの言葉が出てくる」の〜（種類のまとまりは「接続（つながり方）」のような名前、1語はその語） */
+export function termOptionNames(opts: TermOption[]): string {
+  return opts.map((o) => o.name ?? o.label).map((x) => (x.startsWith("「") ? x : `「${x}」`)).join("");
+}
 
 /** 用語の「〜って？」に先生が答える文（1文ずつ）。まとめた選択肢は、語ごとに1つの吹き出し */
 export function termAnswerLines(entry: GlossEntry): string[] {
@@ -413,4 +433,92 @@ export function termOptionAnswerLines(opt: TermOption): string[] {
 /** まとめで先生が言う文（ポイントは1つずつ） */
 export function lessonWrapLines(keyPoints: string[]): string[] {
   return [...(keyPoints.length ? ["ここまでのまとめ。", ...keyPoints] : ["ここまでよくがんばったね。"]), "あとはドリルで仕上げよう。"];
+}
+
+// ---------------------------------------------------------------------------
+// 台本（docs/grammar-lessons/*.md の ```lesson → scripts/build-grammar-lessons.mjs --write → public/grammar-lessons/<id>.json）
+// からレッスンを組む（2026-11-16）。台本の1部分＝1つの節：先生の説明（say）→ 表（table の節の表・段の図）→ 確かめ（checks）→
+// その節のドリルの問い（drillHeading）。台本が無い単元は buildLessonPlan（解説の節から組む）のまま。
+// ---------------------------------------------------------------------------
+
+export interface LessonScriptCheck {
+  prompt: string;
+  context?: string;
+  choices: string[];
+  answer: string;
+  explain: string;
+  miss?: Record<string, string>;
+}
+export interface LessonScriptPart {
+  key: string;
+  title: string;
+  ask: string;
+  known: string;
+  say: string[];
+  table?: string;
+  checks?: LessonScriptCheck[];
+  drillHeading?: string;
+}
+export interface LessonScript {
+  id: string;
+  terms?: string[];
+  parts: LessonScriptPart[];
+  wrap?: string[];
+}
+
+/** 台本として使える形か（壊れたファイルは使わず、解説から組む方へ戻す） */
+export function isLessonScript(x: unknown, topicId: string): x is LessonScript {
+  const L = x as LessonScript;
+  return !!L && L.id === topicId && Array.isArray(L.parts) && L.parts.length > 0 && L.parts.every((p) => p && typeof p.title === "string" && Array.isArray(p.say));
+}
+
+/** 台本の部分には確かめ（checks）があるので、ドリルの問いは1部分1問・全体で5問まで（2026-11-16。問いが13〜18問に増えたため） */
+export const SCRIPT_ASK_PER_PART = 1;
+export const SCRIPT_ASK_MAX = 5;
+
+export function buildScriptPlan(topic: GrammarTopic, script: LessonScript, drills: GrammarDrill[], rng: () => number = Math.random): LessonPlan {
+  const usable = drills.filter((d) => d.topicId === topic.id && isAskable(d));
+  const secByHeading = new Map((topic.sections ?? []).map((s) => [s.heading, s]));
+  const picks = script.parts.map((p) =>
+    p.drillHeading ? pickLowest(usable.filter((d) => d.refHeading === p.drillHeading), SCRIPT_ASK_PER_PART, rng) : [],
+  );
+  const take = script.parts.map(() => 0);
+  let left = SCRIPT_ASK_MAX;
+  for (let round = 0; round < SCRIPT_ASK_PER_PART; round++)
+    picks.forEach((p, i) => {
+      if (left > 0 && p.length > round) {
+        take[i]++;
+        left--;
+      }
+    });
+  const glossOf = (terms: string[]) => terms.map((t) => GLOSSARY.find((e) => e.term === t)).filter((e): e is GlossEntry => !!e);
+  const sections: LessonSection[] = script.parts.map((p, i) => {
+    const steps: SectionStep[] = p.say.map((text) => ({ kind: "piece" as const, piece: { type: "text" as const, text } }));
+    const sec = p.table ? secByHeading.get(p.table) : undefined;
+    if (sec) {
+      const visual = splitSectionPieces(sec.content).filter((piece) => piece.type === "table" || piece.type === "dan");
+      // 表・段の図があればそれを、無ければ節をまるごと「解説を見る」カードで（開いて読む）
+      if (visual.length) visual.forEach((piece) => steps.push({ kind: "piece", piece }));
+      else steps.push({ kind: "piece", piece: { type: "ref", text: sec.heading, content: sec.content } });
+    }
+    for (const c of p.checks ?? []) {
+      if (!c.choices?.includes(c.answer)) continue;
+      steps.push({
+        kind: "quick",
+        q: { prompt: c.prompt, choices: [c.answer, ...c.choices.filter((x) => x !== c.answer)], answer: c.answer, explain: c.explain, context: c.context, miss: c.miss },
+      });
+    }
+    picks[i].slice(0, take[i]).forEach((drill, nth) => steps.push({ kind: "ask", drill, nth }));
+    return { heading: p.title, index: i, steps, terms: prerequisiteTerms(topic, termsIn(p.say.join(""))), ask: p.ask, known: p.known };
+  });
+  const anyAsk = sections.some((s) => s.steps.some((x) => x.kind === "ask"));
+  const fallback = anyAsk ? [] : pickLowest(usable, ASK_FALLBACK, rng);
+  // 単元そのものが教える言葉（題名の語）は外す（2026-11-15 の「抽象度をそろえる」と同じ）
+  const start = prerequisiteTerms(topic, glossOf(script.terms ?? []));
+  return {
+    sections,
+    finalCheck: fallback.length ? { heading: "", index: -1, steps: fallback.map((drill, nth) => ({ kind: "ask" as const, drill, nth })), terms: [] } : null,
+    keyPoints: script.wrap?.length ? script.wrap : topic.keyPoints ?? [],
+    startTerms: (start.length ? start : prerequisiteTerms(topic, termsIn(script.parts.flatMap((p) => p.say).join("")))).slice(0, START_TERM_MAX),
+  };
 }
