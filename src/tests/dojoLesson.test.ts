@@ -5,7 +5,11 @@ import {
   ASK_MAX,
   QUICK_PER_SECTION,
   buildLessonPlan,
+  buildScriptPlan,
   isAskable,
+  isLessonScript,
+  SCRIPT_ASK_MAX,
+  type LessonScript,
   lessonIntroLine,
   lessonStartLines,
   lessonWrapLines,
@@ -14,6 +18,7 @@ import {
   splitSectionPieces,
   tableQuiz,
   termAnswerLines,
+  termOptionNames,
   termOptions,
   prerequisiteTerms,
   termsIn,
@@ -176,11 +181,18 @@ describe("レッスンの材料（節・途中の問い・ドリルの問い）"
     expect(skipSteps(noAsk).map((x) => (x.kind === "quick" ? x.q.prompt : ""))).toEqual(["今の説明で、接続は何形？"]);
   });
 
-  it("どの節にも問いが結びつかない単元（形容詞・形容動詞の活用）は、最後の確かめに3問", () => {
+  it("どの節にも問いが結びつかない単元は、最後の確かめに3問（形容詞・形容動詞の活用の、2026-11-16 より前の見出し「活用表」で確かめる）", () => {
     const t = TOPICS.find((x) => x.id === "keiyoshi-katsuyo")!;
-    const plan = buildLessonPlan(t, DRILLS.filter((d) => d.topicId === t.id), () => 0.3);
+    const old = DRILLS.filter((d) => d.topicId === t.id).map((d) => ({ ...d, refHeading: "活用表" }));
+    const plan = buildLessonPlan(t, old, () => 0.3);
     expect(plan.sections.every((s) => s.steps.every((x) => x.kind !== "ask"))).toBe(true);
     expect(plan.finalCheck?.steps).toHaveLength(3);
+  });
+
+  it("形容詞・形容動詞の活用の問いは、ク活用・シク活用の活用表の節に結びつく（2026-11-16 に見出しを直した）", () => {
+    const t = TOPICS.find((x) => x.id === "keiyoshi-katsuyo")!;
+    const asks = asksOf(buildLessonPlan(t, DRILLS.filter((d) => d.topicId === t.id), () => 0.3));
+    expect(new Set(asks.map((a) => a.heading))).toEqual(new Set(["ク活用の活用表", "シク活用の活用表"]));
   });
 
   it("問いが多い単元（尊敬語・8節）でも8問まで。問いのある節（7節）には少なくとも1問ずつ", () => {
@@ -222,7 +234,9 @@ describe("「分からない言葉」の選択肢は、先に要る言葉だけ�
   it("同じ種類の用語は1つの選択肢にまとめ、1語でも種類の名前で出す", () => {
     const e = (term: string) => ({ term, body: "" });
     const opts = termOptions([e("活用"), e("未然形"), e("連用形"), e("終止形"), e("確定"), e("語幹")]);
-    expect(opts.map((o) => o.label)).toEqual(["「活用」", "活用形（未然形・連用形など）", "つながり方（確定）", "「語幹」"]);
+    expect(opts.map((o) => o.label)).toEqual(["「活用」", "活用形（未然形・連用形など）", "接続（つながり方：確定）", "「語幹」"]);
+    // はじめの「説明には〜」は文法用語で、やさしい言い方は（ ）書き（2026-11-16 ユーザー指示）
+    expect(termOptionNames(opts)).toBe("「活用」「活用形」「接続（つながり方）」「語幹」");
     expect(opts[1].entries.map((x) => x.term)).toEqual(["未然形", "連用形", "終止形"]);
   });
 
@@ -233,5 +247,50 @@ describe("「分からない言葉」の選択肢は、先に要る言葉だけ�
       expect(opts.length).toBeLessThanOrEqual(4);
       expect(new Set(opts.map((o) => o.key)).size).toBe(opts.length);
     }
+  });
+});
+
+describe("先生の台本からレッスンを組む（public/grammar-lessons、2026-11-16）", () => {
+  const ids: string[] = JSON.parse(fs.readFileSync("public/grammar-lessons/index.json", "utf8"));
+  const scripts = ids.map((id) => JSON.parse(fs.readFileSync(`public/grammar-lessons/${id}.json`, "utf8")) as LessonScript);
+
+  it("44単元の台本がそろい、どれも使える形", () => {
+    expect(ids.length).toBe(44);
+    for (const L of scripts) expect(isLessonScript(L, L.id)).toBe(true);
+    expect(isLessonScript({ id: "x", parts: [] }, "x")).toBe(false);
+    expect(isLessonScript(scripts[0], "ちがう単元")).toBe(false);
+  });
+
+  it("台本の1部分＝1節：説明 → 表 → 確かめ → ドリルの問い。確かめの正解は先頭、問いは8問まで", () => {
+    for (const L of scripts) {
+      const topic = TOPICS.find((t) => t.id === L.id)!;
+      const plan = buildScriptPlan(topic, L, DRILLS.filter((d) => d.topicId === L.id), () => 0.3);
+      expect(plan.sections.map((s) => s.heading)).toEqual(L.parts.map((p) => p.title));
+      plan.sections.forEach((sec, i) => {
+        const part = L.parts[i];
+        const kinds = sec.steps.map((x) => x.kind);
+        // 並び：piece が先、quick、ask の順
+        expect([...kinds].sort((a, b) => ["piece", "quick", "ask"].indexOf(a) - ["piece", "quick", "ask"].indexOf(b))).toEqual(kinds);
+        expect(sec.steps.filter((x) => x.kind === "piece" && x.piece.type === "text")).toHaveLength(part.say.length);
+        // table の節は、表・段の図か、表の無い節なら「解説を見る」カードで必ず出る
+        if (part.table) expect(sec.steps.some((x) => x.kind === "piece" && ["table", "dan", "ref"].includes(x.piece.type)), `${L.id} ${part.title}`).toBe(true);
+        for (const st of sec.steps) {
+          if (st.kind === "quick") expect(st.q.choices[0]).toBe(st.q.answer);
+          if (st.kind === "ask") expect(st.drill.refHeading).toBe(part.drillHeading);
+        }
+        expect(sec.ask).toBe(part.ask);
+        expect(sec.known).toBe(part.known);
+      });
+      const asks = plan.sections.flatMap((s) => s.steps.filter((x) => x.kind === "ask"));
+      expect(asks.length).toBeLessThanOrEqual(SCRIPT_ASK_MAX);
+      expect(plan.keyPoints).toEqual(L.wrap?.length ? L.wrap : topic.keyPoints ?? []);
+    }
+  });
+
+  it("はじめの用語は台本の terms から、単元そのものが教える言葉（題名の語）は外す", () => {
+    const L = scripts.find((x) => x.id === "doushi-yodan")!;
+    const topic = TOPICS.find((t) => t.id === L.id)!;
+    const plan = buildScriptPlan(topic, L, [], () => 0.3);
+    expect(plan.startTerms.map((e) => e.term)).not.toContain("四段活用");
   });
 });
