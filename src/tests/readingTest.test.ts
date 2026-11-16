@@ -175,14 +175,22 @@ describe("読解テスト（分類：助動詞｜助詞・係り結び｜単語�
     expect(availableGroups(few).map((g) => g.group.id)).toEqual(["aux", "joshi", "read"]);
   });
 
-  it("助動詞・助詞のどちらかが3問未満なら「助動詞・助詞」1つにまとめる（龍の首の玉＝助動詞2・係り先2）", () => {
+  it("助動詞・助詞のどちらかが3問未満なら「助動詞・助詞」1つにまとめる（龍の首の玉から助動詞2・助詞2・単語3を残した形で確かめる。2026-11-16 に実データは各分類3問以上になった）", () => {
     const { text: t2 } = load("cd8147e868");
     const r2 = JSON.parse(fs.readFileSync("public/reading-tests/cd8147e868.json", "utf8"));
-    const g2 = availableGroups(parseManualTest(r2, t2, () => {}));
+    const keep: Record<string, number> = { grammar: 2, keigo: 0, joshi: 1, kakari: 1, vocab: 3 };
+    const seen: Record<string, number> = {};
+    const qs = r2.questions.filter((q: { kind: string }) => {
+      if (!(q.kind in keep)) return true;
+      seen[q.kind] = (seen[q.kind] ?? 0) + 1;
+      return seen[q.kind] <= keep[q.kind];
+    });
+    const g2 = availableGroups(parseManualTest({ ...r2, questions: qs }, t2, () => {}));
+    const read = qs.filter((q: { kind: string }) => ["yaku", "reading", "subject"].includes(q.kind)).length;
     expect(g2.map((g) => [g.group.id, g.count])).toEqual([
       ["grammar", 4],
       ["vocab", 3],
-      ["read", 7],
+      ["read", read],
     ]);
   });
 
@@ -212,5 +220,20 @@ describe("読解テストの解説は一文ごとの吹き出し", () => {
     expect(texts).toEqual(splitSentences(raw.questions[0].explain));
     expect(texts.length).toBeGreaterThan(1);
     expect(texts.join("")).toBe(raw.questions[0].explain);
+  });
+});
+
+describe("手書きの読解テスト（public/reading-tests の全ファイル。2026-11-16 公開教材に問題を足した）", () => {
+  const files = fs.readdirSync("public/reading-tests").filter((f) => f.endsWith(".json"));
+  it("どのファイルも、捨てられる問題が無く、番号が1から順", () => {
+    for (const f of files) {
+      const id = f.replace(/\.json$/, "");
+      const raw = JSON.parse(fs.readFileSync(`public/reading-tests/${f}`, "utf8"));
+      const warns: string[] = [];
+      const test = parseManualTest(raw, load(id).text, (m) => warns.push(m));
+      expect(warns, id).toEqual([]);
+      expect(test.questions.length, id).toBe(raw.questions.length);
+      expect(raw.questions.map((q: { no: number }) => q.no), id).toEqual(raw.questions.map((_: unknown, i: number) => i + 1));
+    }
   });
 });
