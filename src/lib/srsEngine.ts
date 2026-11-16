@@ -123,6 +123,14 @@ export async function getDueWords(): Promise<string[]> {
  * （箱＝単語のレベル。箱が上がった語は教材の実戦例文に切り替える等に使う）
  */
 export async function getSrsBoxes(qids: string[]): Promise<Record<string, number>> {
+  return (await getSrsBoxesOrNull(qids)) ?? {};
+}
+
+/**
+ * getSrsBoxes と同じ。ただし取れなかったときは null を返す（「未学習で箱が無い」と「取れなかった」を区別する）。
+ * 今日の分が、取れた箱をそのまま出題の準備に渡すために使う（2026-11-16）。
+ */
+export async function getSrsBoxesOrNull(qids: string[]): Promise<Record<string, number> | null> {
   if (qids.length === 0) return {};
   const userId = await getUserId();
   const { data, error } = await supabase
@@ -130,7 +138,7 @@ export async function getSrsBoxes(qids: string[]): Promise<Record<string, number
     .select('qid, box')
     .eq('user_id', userId)
     .in('qid', qids);
-  if (error || !data) return {};
+  if (error || !data) return null;
   const out: Record<string, number> = {};
   for (const r of data) out[r.qid as string] = r.box as number;
   return out;

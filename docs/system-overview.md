@@ -14,7 +14,7 @@
 flowchart LR
   subgraph FRONT["ブラウザ（Vite + React）"]
     HOME["ホーム<br/>HomeReiwa"]
-    QUIZ["単語クイズ<br/>App.tsx"]
+    QUIZ["単語クイズ<br/>App.tsx・lib/quiz/wordQuiz"]
     TEXT["教材<br/>HomeV3・TextReader"]
     DOJO["文法道場<br/>GrammarDojoHome・Topic"]
     CARD["単語カード<br/>VocabCard"]
@@ -25,7 +25,7 @@ flowchart LR
     EXTRA["public/corpus-examples.json<br/>example-context.json・example-bank"]
   end
   subgraph API["Vercel の関数（api/）"]
-    CHOICES["getChoices<br/>buildChoices"]
+    CHOICES["getChoices<br/>（古い画面だけが呼ぶ）"]
     SUBMIT["submitAnswer<br/>userCorrectAnswer"]
   end
   subgraph DB["Supabase"]
@@ -43,7 +43,6 @@ flowchart LR
   QUIZ --> EXTRA
   TEXT --> TJSON
   CARD --> SLIM
-  QUIZ --> CHOICES
   QUIZ --> SUBMIT
   CHOICES --> CAND
   QUIZ --> WS
@@ -225,38 +224,45 @@ flowchart TD
 
 ## 7. シーケンス：単語クイズの出題を作る
 
+2026-11-16 に作り直した。選択肢を1問ずつ関数（`/api/getChoices`）へ取りに行くのをやめ、ブラウザの中で作る。
+関数は米国東部で動き、DB はシンガポールにあるので、1回に 1.1〜1.5 秒かかっていた（調査 `F:\A2A\_work\kobun-speed\chousa-2026-11-16.md`）。
+
 ```mermaid
 sequenceDiagram
   participant U as 生徒
   participant A as App.tsx
+  participant D as wordQuizData（読み込み）
   participant S as Supabase
   participant F as 配信データ
-  participant V as api/getChoices
+  participant B as wordQuiz（組み立て・純関数）
 
+  A->>D: アプリを開いたとき preloadWordQuizFiles
+  D->>F: 空欄の例文・実戦例文・例文ごとの手当て（先読み）
   U->>A: 単語を押す・範囲を変える
-  A->>A: setupQuiz → setupWordQuiz
-  A->>S: getWordStats・getSrsBoxes・getDueAmong
-  S-->>A: 語ごとの正誤・箱・期限が来た語
-  A->>A: pickQuestions（出す語を決める）
-  A->>F: loadCorpusExamples・loadBlanks
-  F-->>A: 実戦例文・空欄つき例文
-  A->>A: 箱で形式を決める・箱3以上は実戦例文へ
-  loop 1問ずつ（並列）
-    A->>V: qid・形式・除く qid
-    V->>S: candidates（誤答の候補）
-    V-->>A: 選択肢4つ（buildChoices）
+  A->>A: setupQuiz → setupWordQuiz（範囲・絞り込み）
+  par 同時に取る
+    A->>D: loadWordQuizFiles
+    D-->>A: 先読みしたファイル（取れていれば通信なし）
+  and
+    A->>D: loadWordQuizRecords
+    D->>S: getWordStats・getSrsBoxes・getDueAmong
+    S-->>D: 語ごとの正誤・箱・期限が来た語
+    D-->>A: 学習の記録
   end
-  alt 選択肢が4つ届かない
-    A->>A: buildFallbackOptions（手元で作る）
-  end
-  A->>F: loadExampleContext
-  A->>A: repairTranslationClashes・repairDistractors・exampleFittedLabels
+  A->>B: buildWordQuiz（材料を全部渡す）
+  B->>B: pickQuestions（出す語を決める）
+  B->>B: 箱で形式を決める・箱3以上は実戦例文へ
+  B->>B: buildChoices（選択肢4つ。現代語の罠・同じ語の別の意味・前後の語）
+  B->>B: 訳の穴と同じ言葉・出さない意味を入れ替える・選択肢の活用を合わせる
+  B-->>A: 出題・内訳・使った選択肢
   A-->>U: 1問目を出す
 ```
 
-- 選択肢の決まり（正解と同じ意味・表記ちがい・意味が重なる組を誤答に入れない）は `src/lib/senseEquivalence.ts` にあり、関数と手元の両方が使う。
-- 誤答の候補は、関数も手元も「番号が前後10以内の語 → 残り」の順に選ぶ（`nearbyFirst`）。
-- 学習記録が取れないときは、出す語をランダムに選んで続ける。
+- 選択肢の組み立ては `src/lib/quiz/choices.ts` の `buildChoices`（関数 `api/getChoices.ts` も同じものを使う。関数は古い画面を開いたままの端末のために残してある）。決まり（正解と同じ意味・表記ちがい・意味が重なる組を誤答に入れない）は `src/lib/senseEquivalence.ts`。
+- 誤答の候補は「番号が前後10以内の語 → 残り」の順に選ぶ（`nearbyFirst`）。
+- 学習記録が取れないときは、出す語をランダムに選んで続ける。ファイルが取れないときは、それ無しで出題し、次の出題でもう一度取りに行く。
+- 「今日の分」は、今日の復習と範囲の成績・箱を同時に取り、取った箱をそのまま組み立てに渡す（出題の準備で取り直さない）。
+- DB の `candidates` 表は選択肢には使っていない（関数は引いていたが、正解と同じ qid の行なので全部捨てていた）。
 
 ## 8. シーケンス：回答から結果まで
 

@@ -10,17 +10,20 @@ export interface BlankEntry {
 let cache: Record<string, BlankEntry[]> | null = null;
 let inflight: Promise<Record<string, BlankEntry[]>> | null = null;
 
+// 取れたら覚える。取れなかったときは空を返すが覚えない（次の出題でもう一度試す。
+// 2026-11-16：アプリを開いた時点で先読みするようにしたので、そのときの失敗を引きずらないため）
 export async function loadBlanks(): Promise<Record<string, BlankEntry[]>> {
   if (cache) return cache;
   if (inflight) return inflight;
   inflight = (async () => {
     try {
       const res = await fetch('/kobun-blanks.json');
-      cache = res.ok ? ((await res.json()) as Record<string, BlankEntry[]>) : {};
+      if (res.ok) cache = (await res.json()) as Record<string, BlankEntry[]>;
     } catch {
-      cache = {};
+      /* 取れなければ空欄なしで出題する */
     }
-    return cache;
+    inflight = null;
+    return cache ?? {};
   })();
   return inflight;
 }

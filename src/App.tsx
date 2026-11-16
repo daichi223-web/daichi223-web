@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { returnLabels, safeReturnPath } from '@/lib/returnTo';
 import { dataParser } from './utils/dataParser';
-import { Word, MultiMeaningWord } from './types';
-import { RangeBlockPicker } from './components/RangeBlockPicker';
-import { useFullSelectInput } from './hooks/useFullSelectInput';
+import { Word, MultiMeaningWord, type WordQuizType } from './types';
 import { useLocalStorageState } from './hooks/useLocalStorageState';
 import type { WritingJudgeResult } from './lib/writingJudge';
 import { judgeWritingAnswer, isDecided, toAutoFields } from './lib/writingJudgeRuntime';
@@ -20,20 +18,20 @@ import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
 import { compositionLine, pickQuestions, type Bucket } from './lib/quizSelector';
 import { shuffle } from './lib/shuffle';
 import { buildRetryRound, countScored } from './lib/quiz/retryRound';
-import { loadBlanks, type BlankEntry } from './lib/blanksLoader';
+import { buildWordQuiz, type QuizQuestion, type ResolvedWordQuizType } from './lib/quiz/wordQuiz';
+import { loadWordQuizFiles, loadWordQuizRecords, preloadWordQuizFiles } from './lib/quiz/wordQuizData';
+import { trapsOf } from './lib/quiz/modernTraps';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import { logEvent, markQuestionShown } from './lib/learningEvents';
 import { composeTodaySet, estimateToday, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
 import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
-import { nextWordRange, nextRangeLabel } from './lib/quiz/nextRange';
+import { nextWordRange } from './lib/quiz/nextRange';
 import { readStreak } from './lib/streak';
-import { buildFallbackOptions, pickTrueFalseWrongMeaning, repairDistractors, repairTranslationClashes } from './lib/senseEquivalence';
-import { lookupExampleContext, type ExampleContext, type ExampleContextMap } from './lib/exampleContext';
-import { exampleFittedLabels } from './lib/quiz/optionForms';
+import { pickTrueFalseWrongMeaning } from './lib/senseEquivalence';
 import {
   updateSrsState,
   getSrsBoxes,
-  getDueAmong,
+  getSrsBoxesOrNull,
   getTodayReviewSet,
   getLastActivity,
   gapDays,
@@ -41,33 +39,6 @@ import {
   WELCOME_BACK_GAP_DAYS,
 } from './lib/srsEngine';
 
-// 教材実例文（qid → 例文[]）。箱(単語レベル)が上がった語の出題に使う
-// mark = 問われている語の位置 [[開始, 長さ], …]（あるものだけ。無ければ画面で活用照合）
-type CorpusExample = { jp: string; translation: string; mark?: [number, number][] };
-let corpusExamplesCache: Record<string, CorpusExample[]> | null = null;
-// 例文ごとの手当て（誤答に出さない意味・前後の本文・補足）。正本 data/enrich/example-context.jsonl → scripts/build-example-context.mjs
-let exampleContextCache: ExampleContextMap | null = null;
-async function loadExampleContext(): Promise<ExampleContextMap> {
-  if (exampleContextCache) return exampleContextCache;
-  try {
-    const res = await fetch('/example-context.json');
-    exampleContextCache = res.ok ? await res.json() : {};
-  } catch {
-    exampleContextCache = {};
-  }
-  return exampleContextCache!;
-}
-
-async function loadCorpusExamples(): Promise<Record<string, CorpusExample[]>> {
-  if (corpusExamplesCache) return corpusExamplesCache;
-  try {
-    const res = await fetch('/corpus-examples.json');
-    corpusExamplesCache = res.ok ? await res.json() : {};
-  } catch {
-    corpusExamplesCache = {};
-  }
-  return corpusExamplesCache!;
-}
 import VocabModal from './components/VocabModal';
 import { IndexModal } from './components/IndexModal';
 import { CHAPTERS, chapterFor, chapterColor } from './utils/chapters';
@@ -75,6 +46,9 @@ import bundledVocabIndex from './data/vocabIndex.json';
 import { hasAdminSession } from './lib/adminSession';
 import ReiwaThemePicker from './theme/ReiwaThemePicker';
 import HomeReiwa from './components/HomeReiwa';
+import { QuizResultScreen } from './components/quiz/QuizResultScreen';
+import { QuizModeTabs, QuizSettingsPanel } from './components/quiz/QuizSettingsPanel';
+import { QuizToolbar } from './components/quiz/QuizToolbar';
 
 const WORD_QUIZ_LABELS: Record<WordQuizType, string> = {
   'auto': 'おまかせ（覚えるほど問いが難しくなる）',
@@ -84,34 +58,22 @@ const WORD_QUIZ_LABELS: Record<WordQuizType, string> = {
   'blank-fill': '空欄に入る語を選ぶ（テスト形式）',
   'meaning-writing': '意味を書いて答える',
 };
+// 設定パネルに出す形式（並び順どおり。旧形式 word-reverse は出さない）
+const WORD_TYPE_OPTIONS = (['auto', 'word-meaning', 'sentence-meaning', 'blank-fill', 'meaning-writing'] as const).map(
+  (value) => ({ value: value as WordQuizType, label: WORD_QUIZ_LABELS[value] })
+);
 const POLYSEMY_QUIZ_LABELS: Record<PolysemyQuizType, string> = {
   'example-comprehension': '例文と意味を結びつける',
   'true-false': '例文の訳の正誤を判断',
   'context-writing': '文脈から意味を書く',
 };
 
-type AppMode = 'word' | 'polysemy';
-type WordQuizType = 'auto' | 'word-meaning' | 'word-reverse' | 'sentence-meaning' | 'blank-fill' | 'meaning-writing';
-// おまかせ以外の「実際に出題される形式」
-type ResolvedWordQuizType = Exclude<WordQuizType, 'auto'>;
-type PolysemyQuizType = 'example-comprehension' | 'true-false' | 'context-writing';
+const POLYSEMY_TYPE_OPTIONS = (['example-comprehension', 'true-false', 'context-writing'] as const).map(
+  (value) => ({ value: value as PolysemyQuizType, label: POLYSEMY_QUIZ_LABELS[value] })
+);
 
-interface QuizQuestion {
-  correct: Word;
-  options: Word[];
-  exampleIndex?: number;
-  exampleKobun?: string;
-  exampleModern?: string;
-  senseCount?: number; // 同一 lemma の意味数（多義語は例文を最初から表示）
-  srsBox?: number; // 単語レベル（SRS箱 1-5）
-  corpusExample?: boolean; // 例文が教材実文（箱3以上で切替）
-  resolvedType?: ResolvedWordQuizType; // おまかせ時: この問題の実出題形式
-  jpBlank?: string; // blank-fill: 〔　　　〕入りの例文 (Excel原本の手作業空欄)
-  exampleMark?: [number, number][]; // 実戦例文に付いてきた対象語の位置（exampleKobun に対する）
-  exampleContext?: ExampleContext; // 例文1文で意味が決まらないときの前後の本文・補足（sentence-meaning で表示）
-  optionLabels?: Record<string, string>; // 選択肢の文字を例文の訳の活用に合わせたもの（qid → 文字。lib/quiz/optionForms）
-  retry?: boolean; // セッションの最後の「もう一度」（lib/quiz/retryRound。SRS・正答数は進めない）
-}
+type AppMode = 'word' | 'polysemy';
+type PolysemyQuizType = 'example-comprehension' | 'true-false' | 'context-writing';
 
 interface TrueFalseQuestion {
   example: string;
@@ -134,8 +96,6 @@ interface PolysemyState {
 
 // 重複回避用ヘルパー関数（sessionStorage 利用）
 const RECENT_CHOICES_KEY = 'kobun-recent-choices';
-/** 選択肢を API から取るときに待つ上限（過ぎたら手元で作る。2026-11-16） */
-const CHOICES_TIMEOUT_MS = 5000;
 const MAX_RECENT_CHOICES = 12; // 最大12個まで記録（3問×4択）
 
 function getRecentChoices(): string[] {
@@ -162,7 +122,6 @@ function App() {
   const [currentMode, setCurrentMode] = useLocalStorageState<AppMode>('kobun-currentMode', 'word');
   const [allWords, setAllWords] = useState<Word[]>([]);
   // qid → 単語データの行（API の選択肢に辞書の形 senseNorm を補う）
-  const wordByQid = useMemo(() => new Map(allWords.map((w) => [w.qid, w])), [allWords]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
   // 出題の作り直しの通し番号。最後に始めた作り直しだけを画面に反映する（2026-11-04）。
@@ -173,14 +132,6 @@ function App() {
   const retryAddedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [homeDataError, setHomeDataError] = useState(false);
-
-  // UI refs for focus management
-  const wordQuizTypeRef = useRef<HTMLSelectElement>(null);
-  const polysemyQuizTypeRef = useRef<HTMLSelectElement>(null);
-
-  // Full select inputs
-  const fullSelectA = useFullSelectInput(); // wordNumQuestions 用
-  const fullSelectB = useFullSelectInput(); // polysemyNumQuestions 用
 
   // Word mode settings with localStorage persistence
   const [wordQuizType, setWordQuizType] = useLocalStorageState<WordQuizType>('kobun-wordQuizType', 'auto');
@@ -507,6 +458,8 @@ function App() {
 
   useEffect(() => {
     loadData();
+    // 出題に使うファイルを先に読み始める（出題を作るときに待たない。lib/quiz/wordQuizData）
+    preloadWordQuizFiles();
   }, []);
 
   // Initial quiz setup when data loads or settings change
@@ -607,7 +560,8 @@ function App() {
 
   // opts.sequential: フィルタの並び順どおりに出題（復習＝期限の古い順、おかえり＝ウォームアップを先頭）
   // opts.numQuestions: このセッションだけ出題数を上書き
-  type QuizOpts = { sequential?: boolean; numQuestions?: number };
+  // opts.knownBoxes: 出す語の箱を呼ぶ側がもう持っているとき（今日の分）。渡すと出題の準備で DB を引かない
+  type QuizOpts = { sequential?: boolean; numQuestions?: number; knownBoxes?: Record<string, number> };
   // modeOverride: setCurrentMode 直後は closure の currentMode が古いので、呼び出し側でモードを明示できる
   const setupQuiz = async (
     qidFilterOverride?: string[],
@@ -639,20 +593,9 @@ function App() {
   // 中身はアプリが決め、生徒はボタン1つで始める。again=true は「もう1セット」（おかえり語は付けない）。
   const startTodaySession = async (again = false, rangeOverride?: { from: number; to: number }) => {
     const warmup = again ? [] : (welcomeBack?.warmup ?? []);
-    let due: string[] = [];
-    try {
-      due = (await getTodayReviewSet(undefined, allWords.map(w => w.qid))).qids;
-    } catch {
-      due = [];
-    }
     const start = rangeOverride?.from ?? wordRange.from ?? 1;
     const end = rangeOverride?.to ?? wordRange.to ?? 330;
     let pool = allWords.filter((w) => w.group >= start && w.group <= end);
-    if (rangeOverride) {
-      // 小テスト範囲から始めたときは、範囲外の復習語を混ぜない
-      const inRange = new Set(pool.map((w) => w.qid));
-      due = due.filter((q) => inRange.has(q));
-    }
     if (categoryFilter.length > 0 && !rangeOverride) {
       const catSet = new Set(categoryFilter);
       const vidx = bundledVocabIndex as Record<string, { category?: string }>;
@@ -661,12 +604,23 @@ function App() {
         return c ? catSet.has(c) : false;
       });
     }
+    // 今日の復習と、範囲の成績・箱を同時に取る（2026-11-16。順に待っていたのを1往復に）。
+    // 復習が取れなければ復習なし、記録が取れなければ全部「未着手」として補充する
     let stats: Record<string, { correct: number; incorrect: number; lastSeen?: string | null }> = {};
     let boxes: Record<string, number> = {};
-    try {
-      [stats, boxes] = await Promise.all([getWordStats(), getSrsBoxes(pool.map((w) => w.qid))]);
-    } catch {
-      // 記録が取れなければ全部「未着手」として補充する
+    const [dueSet, gotStats, gotBoxes] = await Promise.all([
+      getTodayReviewSet(undefined, allWords.map(w => w.qid)).catch(() => null),
+      getWordStats().catch(() => null),
+      getSrsBoxesOrNull(pool.map((w) => w.qid)).catch(() => null),
+    ]);
+    let due: string[] = dueSet?.qids ?? [];
+    // 今までと同じく、成績と箱は両方取れたときだけ使う
+    if (gotStats && gotBoxes) { stats = gotStats; boxes = gotBoxes; }
+    const recs = !!(gotStats && gotBoxes);
+    if (rangeOverride) {
+      // 小テスト範囲から始めたときは、範囲外の復習語を混ぜない
+      const inRange = new Set(pool.map((w) => w.qid));
+      due = due.filter((q) => inRange.has(q));
     }
     const set = composeTodaySet({
       warmup,
@@ -687,13 +641,15 @@ function App() {
     }
     let boxesBefore: Record<string, number> = {};
     for (const q of set.qids) if (boxes[q] != null) boxesBefore[q] = boxes[q];
-    const missing = set.qids.filter((q) => boxesBefore[q] == null);
+    // 範囲の外の語（復習・おかえり）の箱だけ取り足す。範囲の中で箱の無い語は未学習なので取り直さない
+    const inPool = new Set(pool.map((w) => w.qid));
+    const missing = set.qids.filter((q) => boxesBefore[q] == null && !(recs && inPool.has(q)));
+    let boxesKnown = recs;
     if (missing.length > 0) {
-      try {
-        boxesBefore = { ...boxesBefore, ...(await getSrsBoxes(missing)) };
-      } catch {
-        // 成長1行が出ないだけ
-      }
+      // 取れなければ成長1行が出ないだけ。出題の準備で取り直す
+      const more = await getSrsBoxesOrNull(missing).catch(() => null);
+      if (more) boxesBefore = { ...boxesBefore, ...more };
+      else boxesKnown = false;
     }
     setTodaySession({ qids: set.qids, boxesBefore, parts: set.parts });
     setTodayGrowth(null);
@@ -702,7 +658,13 @@ function App() {
     setQuizMode('today');
     setCurrentMode('word');
     setShowHome(false);
-    void setupQuiz(set.qids, null, { sequential: true, numQuestions: set.qids.length }, 'word');
+    // 箱はここで取ってあるので、出題の準備では取り直さない（取れていないときだけ取り直す）
+    void setupQuiz(
+      set.qids,
+      null,
+      { sequential: true, numQuestions: set.qids.length, knownBoxes: boxesKnown ? boxesBefore : undefined },
+      'word',
+    );
   };
 
   // 現在のクイズで出題中の lemma を返す (モード切替の seed 用)。
@@ -726,6 +688,12 @@ function App() {
     // qid フィルタ (引数優先、次に state)。指定があれば苦手単語 / SRS 復習として
     // その qid のみ出題、なければ範囲で絞り込む
     const filter = qidFilterOverride ?? quizQidFilter;
+    const emptyMessage = () =>
+      quizQidFilter
+        ? '対象となる単語が見つかりません。'
+        : wordQuizType === 'blank-fill'
+        ? 'この範囲には空欄テキストのある単語がありません（範囲331以降は非対応）。'
+        : '出題範囲に単語が見つかりません。';
     let targetWords: Word[];
     if (filter && filter.length > 0) {
       const qidSet = new Set(filter);
@@ -752,249 +720,46 @@ function App() {
       }
     }
 
-    // 空欄補充・おまかせは Excel 原本の手作業空欄 (jpBlank) を遅延ロード
-    let blanks: Record<string, BlankEntry[]> = {};
-    if (wordQuizType === 'blank-fill' || wordQuizType === 'auto') {
-      blanks = await loadBlanks();
-      if (wordQuizType === 'blank-fill') {
-        targetWords = targetWords.filter((w) => (blanks[w.qid]?.length ?? 0) > 0);
-      }
-    }
-
-    // 記述式は1単語以上でOK、選択式も1単語以上（前後5単語から選択肢を選ぶ）
     if (targetWords.length < 1) {
-      if (allWords.length > 0) {
-        const msg = quizQidFilter
-          ? '対象となる単語が見つかりません。'
-          : wordQuizType === 'blank-fill'
-          ? 'この範囲には空欄テキストのある単語がありません（範囲331以降は非対応）。'
-          : '出題範囲に単語が見つかりません。';
-        showErrorMessage(msg);
-      }
+      if (allWords.length > 0) showErrorMessage(emptyMessage());
       return;
     }
 
-    // おまかせ選択: 明示フィルタ（復習・苦手）が無い通常出題だけ対象。取得失敗時は従来のランダム
-    let autoPicked = false;
-    if (!filter && pickMode === 'auto') {
-      try {
-        const rangeQids = targetWords.map((w) => w.qid);
-        // 期限が来た語（古い順）も取り、先に出す（2026-11-06。出す語の決め方を箱と期限にそろえる）。
-        // 取れなければ期限を見ない今までの配分で続ける
-        const [stats, boxes, due] = await Promise.all([
-          getWordStats(),
-          getSrsBoxes(rangeQids),
-          getDueAmong(rangeQids).catch(() => [] as string[]),
-        ]);
-        const r = pickQuestions({
-          items: targetWords,
-          key: (w) => w.qid,
-          order: (w) => w.group * 100 + (w.meaning_idx ?? 0),
-          group: (w) => w.group, // 未着手は各語の1つめの意味から（範囲の語がまんべんなく出る）
-          stats, boxes, due, n: opts?.numQuestions ?? wordNumQuestions,
-        });
-        if (r.picked.length > 0 && !stale()) { targetWords = r.picked; autoPicked = true; setLastPick(r.composition); }
-      } catch { /* ランダムにフォールバック */ }
-    }
-
-    const quizData: QuizQuestion[] = [];
-    const usedIndexes = new Set();
-    const maxQuestions = new Set(targetWords.map(w => w.qid)).size;
-    const actualNumQuestions = Math.min(opts?.numQuestions ?? wordNumQuestions, maxQuestions);
-
-    // 重複回避用に最近使った選択肢を追跡
-    const recentChoices = getRecentChoices();
-
-    // 問題データを事前準備
-    const questionPrepData = [];
-    for (let i = 0; i < actualNumQuestions; i++) {
-      let correctWordIndex = -1;
-      // 第1問: seedLemma が範囲内にあれば優先採用 (モード切替時の語引継ぎ)
-      if (i === 0 && seedLemma) {
-        correctWordIndex = targetWords.findIndex(
-          (w) => w.lemma === seedLemma && !usedIndexes.has(w.qid)
-        );
-      }
-      if (correctWordIndex < 0 && (opts?.sequential || autoPicked)) {
-        // 順序固定: 未使用の先頭を取る
-        correctWordIndex = targetWords.findIndex((w) => !usedIndexes.has(w.qid));
-      }
-      if (correctWordIndex < 0) {
-        do {
-          correctWordIndex = Math.floor(Math.random() * targetWords.length);
-        } while (usedIndexes.has(targetWords[correctWordIndex].qid));
-      }
-
-      usedIndexes.add(targetWords[correctWordIndex].qid);
-      const correctWord = targetWords[correctWordIndex];
-
-      // Get examples for the correct word (sense-priority)
-      const multiMeaningWord = dataParser.getWordByLemma(correctWord.lemma);
-      const examples = dataParser.getExamplesForSense(correctWord, correctWord.qid, multiMeaningWord);
-
-      // Select a random example index if examples are available
-      const exampleIndex = examples.kobun.length > 0 ? Math.floor(Math.random() * examples.kobun.length) : 0;
-      const exampleKobun = examples.kobun[exampleIndex] || '';
-      const exampleModern = examples.modern[exampleIndex] || '';
-
-      questionPrepData.push({
-        correctWord,
-        exampleIndex,
-        exampleKobun,
-        exampleModern,
-        srsBox: 1,
-        corpusExample: false,
-        resolvedType: undefined as ResolvedWordQuizType | undefined,
-        jpBlank: undefined as string | undefined,
-        exampleMark: undefined as [number, number][] | undefined
-      });
-    }
-
-    // 単語レベル（SRS箱）が3以上に育った語は、単語帳の基本例文 → 教材の実戦例文に差し替える。
-    // 暗記した例文の再認ではなく、初見の実文で意味が取れるか（転移）を試すため。
-    try {
-      const prepQids = questionPrepData.map((p) => p.correctWord.qid);
-      const [boxes, corpus] = await Promise.all([getSrsBoxes(prepQids), loadCorpusExamples()]);
-      for (const prep of questionPrepData) {
-        prep.srsBox = boxes[prep.correctWord.qid] ?? 1;
-        const pool = corpus[prep.correctWord.qid];
-        if (prep.srsBox >= 3 && pool && pool.length > 0) {
-          const e = pool[Math.floor(Math.random() * pool.length)];
-          prep.exampleKobun = e.jp;
-          prep.exampleModern = e.translation;
-          prep.exampleMark = e.mark;
-          prep.corpusExample = true;
-        }
-      }
-    } catch {
-      /* 取得失敗時は基本例文のまま出題 */
-    }
-
-    // 出題形式の解決:
-    //   おまかせ = SRS箱に応じて問い方を昇格 (箱1 再認 → 箱2-3 例文 → 箱4 空欄 → 箱5 記述)。
-    //   blank-fill / おまかせの箱4 は Excel 原本の空欄テキストに差し替える。
-    for (const prep of questionPrepData) {
-      let qType: ResolvedWordQuizType;
-      if (wordQuizType === 'auto') {
-        const box = prep.srsBox ?? 1;
-        const hasBlank = (blanks[prep.correctWord.qid]?.length ?? 0) > 0;
-        if (box <= 1) qType = 'word-meaning';
-        else if (box <= 3) qType = 'sentence-meaning';
-        else if (box === 4) qType = hasBlank ? 'blank-fill' : 'sentence-meaning';
-        else qType = 'meaning-writing';
-      } else {
-        qType = wordQuizType as ResolvedWordQuizType;
-      }
-      prep.resolvedType = qType;
-
-      if (qType === 'blank-fill') {
-        const pool = blanks[prep.correctWord.qid] ?? [];
-        if (pool.length > 0) {
-          const b = pool[Math.floor(Math.random() * pool.length)];
-          prep.jpBlank = b.jpBlank;
-          prep.exampleKobun = b.jp;
-          prep.exampleModern = b.translation;
-          prep.exampleMark = undefined; // 実戦例文の位置は、差し替えた空欄の例文には当てはまらない
-          prep.corpusExample = false;
-        } else {
-          prep.resolvedType = 'sentence-meaning'; // 空欄なし語のフォールバック
-        }
-      }
-    }
-
-    // 記述モード以外では選択肢をAPIから並列取得
-    let apiChoices: (Word[] | null)[] = [];
-    if (wordQuizType !== 'meaning-writing') {
-      const apiPromises = questionPrepData.map(async (prep, idx) => {
-        if (prep.resolvedType === 'meaning-writing') return null;
-        const apiMode = prep.resolvedType === 'blank-fill' ? 'word-reverse' : prep.resolvedType;
-        try {
-          const excludeQids = [...Array.from(usedIndexes), ...recentChoices].join(',');
-          // 待つのは5秒まで（2026-11-16 ユーザー指摘「始まらない・止まる」：通信が止まると出題が始まらなかった）。
-          // 間に合わなければ下の前後の語からの選択肢（buildFallbackOptions）で出す
-          const ctrl = new AbortController();
-          const timer = window.setTimeout(() => ctrl.abort(), CHOICES_TIMEOUT_MS);
-          const response = await fetch(
-            `/api/getChoices?qid=${encodeURIComponent(prep.correctWord.qid)}&correctQid=${encodeURIComponent(prep.correctWord.qid)}&excludeQids=${excludeQids}&mode=${apiMode}`,
-            { signal: ctrl.signal }
-          ).finally(() => window.clearTimeout(timer));
-
-          if (response.ok) {
-            const data = await response.json();
-            if (data.choices && data.choices.length >= 4) {
-              // 使った選択肢を記録
-              data.choices.forEach((c: Word) => addRecentChoice(c.qid));
-              // API は qid・lemma・sense だけ返す。選択肢は辞書の形（senseNorm）で出すので単語データの行に置き換える（罠の疑似選択肢はそのまま）
-              return data.choices.map((c: Word) => wordByQid.get(c.qid) ?? c);
-            }
-          }
-        } catch (e) {
-          console.warn(`Failed to fetch choices for question ${idx}:`, e);
-        }
-        return null;
-      });
-
-      apiChoices = await Promise.all(apiPromises);
-    }
-
-    // 例文ごとの手当て（無ければ空。取得に失敗しても出題は続ける）
-    const exampleContexts = await loadExampleContext();
-
-    // 各問題を構築
-    for (let i = 0; i < questionPrepData.length; i++) {
-      const prep = questionPrepData[i];
-      let options: Word[] = apiChoices[i] || [];
-      // この問題の実出題形式 (おまかせは prep で解決済み)
-      const qType: ResolvedWordQuizType = prep.resolvedType ?? (wordQuizType as ResolvedWordQuizType);
-
-      // フォールバック：API が使えない場合は前後10単語から選択肢を生成（記述モード以外）。
-      // 正解と同じ意味・同じ語の表記ちがいは誤答に入れない（選び方は lib/senseEquivalence）
-      if (qType !== 'meaning-writing' && options.length < 4) {
-        options = buildFallbackOptions(prep.correctWord, allWords, qType);
-      }
-      // 例文の訳の穴と同じ言葉の誤答は、訳どおりに選んだ生徒を×にするので入れ替える（2026-11-04。lib/senseEquivalence）
-      if (qType === 'word-meaning' || qType === 'sentence-meaning') {
-        options = repairTranslationClashes(
-          options,
-          prep.correctWord,
-          prep.exampleModern,
-          buildFallbackOptions(prep.correctWord, allWords, qType).filter((w) => w.qid !== prep.correctWord.qid)
-        );
-      }
-      // この例文では紛れる意味（同じ語の近い意味）を誤答に出さない（2026-11-05。lib/exampleContext）
-      const ctx = lookupExampleContext(exampleContexts, prep.correctWord.qid, prep.exampleKobun);
-      if (ctx?.avoid?.length && (qType === 'word-meaning' || qType === 'sentence-meaning')) {
-        const avoid = new Set(ctx.avoid);
-        options = repairDistractors(
-          options,
-          prep.correctWord,
-          (o) => avoid.has(o.qid),
-          buildFallbackOptions(prep.correctWord, allWords, qType).filter(
-            (w) => w.qid !== prep.correctWord.qid && !avoid.has(w.qid)
-          )
-        );
-      }
-
-      quizData.push({
-        correct: prep.correctWord,
-        options,
-        exampleIndex: prep.exampleIndex,
-        exampleKobun: dataParser.getEmphasizedExample(prep.exampleKobun, prep.correctWord.lemma),
-        exampleModern: prep.exampleModern,
-        senseCount: allWords.reduce((n, w) => n + (w.lemma === prep.correctWord.lemma ? 1 : 0), 0),
-        srsBox: prep.srsBox,
-        corpusExample: prep.corpusExample,
-        resolvedType: qType,
-        jpBlank: prep.jpBlank,
-        exampleMark: prep.exampleMark,
-        exampleContext: qType === 'sentence-meaning' && ctx && (ctx.before || ctx.after || ctx.note) ? ctx : undefined,
-        // 例文から意味を選ぶ: 選択肢は訳なので例文の訳の活用に合わせる（正解＝訳の穴の言葉、誤答＝同じ活用形。助動詞の訳は足さない）
-        optionLabels: qType === 'sentence-meaning' ? exampleFittedLabels(options, prep.correctWord, prep.exampleModern) : undefined,
-      });
-    }
-
+    // 材料を同時に取る：ファイル（空欄の例文・実戦例文・例文ごとの手当て。初回だけ通信）と学習の記録（成績・箱・期限）。
+    // 組み立ては lib/quiz/wordQuiz の純関数で、通信しない（2026-11-16。選択肢の API 呼び出しをやめた）
+    const autoPick = !filter && pickMode === 'auto';
+    const [files, records] = await Promise.all([
+      loadWordQuizFiles(wordQuizType === 'blank-fill' || wordQuizType === 'auto'),
+      !autoPick && opts?.knownBoxes
+        ? Promise.resolve({ stats: null, boxes: opts.knownBoxes, due: [] })
+        : loadWordQuizRecords(targetWords.map((w) => w.qid), autoPick),
+    ]);
     if (stale()) return;
-    setCurrentQuizData(quizData);
+
+    const result = buildWordQuiz({
+      targetWords,
+      allWords,
+      quizType: wordQuizType,
+      numQuestions: opts?.numQuestions ?? wordNumQuestions,
+      autoPick,
+      sequential: opts?.sequential,
+      seedLemma,
+      blanks: files.blanks,
+      records,
+      corpus: files.corpus,
+      exampleContexts: files.exampleContexts,
+      trapsOf,
+      recentChoices: getRecentChoices(),
+      examplesOf: (w) => dataParser.getExamplesForSense(w, w.qid, dataParser.getWordByLemma(w.lemma)),
+    });
+    if (!result.ok) {
+      if (allWords.length > 0) showErrorMessage(emptyMessage());
+      return;
+    }
+    result.usedChoiceQids.forEach(addRecentChoice);
+    if (result.composition) setLastPick(result.composition);
+
+    setCurrentQuizData(result.questions);
     setCurrentQuestionIndex(0);
     setScore(0);
     setIsQuizActive(true);
@@ -1628,87 +1393,27 @@ function App() {
     }
     return '';
   })();
-  const searchHref = currentVisibleLemma
-    ? `/search?q=${encodeURIComponent(currentVisibleLemma)}`
-    : '/search';
-
   // Index button and modal (always visible)
   useEffect(() => { if (showHome) setReturnTo(null); }, [showHome]);
 
   const indexButton = (
     <>
       {/* Top-right fixed navigation - compact on mobile */}
-      <div className="fixed top-2 right-2 z-50 flex gap-1.5">
-        {!showHome && returnTo && (
-          <button
-            onClick={() => navigate(returnTo)}
-            className="bg-rw-paper hover:bg-rw-primary-soft text-rw-ink border-2 border-rw-ink whitespace-nowrap font-bold py-1 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-            title={returnLabels(returnTo).title}
-          >
-            {/* 戻り先が単語カードのときは「単語カードへ」（2026-11-06） */}
-            📖<span className="ml-1">{returnLabels(returnTo).short}</span>
-          </button>
-        )}
-        {!showHome && (
-          <button
-            onClick={() => {
-              setShowHome(true);
-              setShowResults(false);
-              setQuizQidFilter(null);
-              setQuizMode('normal');
-            }}
-            className="bg-rw-ink hover:opacity-90 text-rw-paper font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-            title="ホームに戻る"
-          >
-            🏠<span className="hidden sm:inline ml-1">ホーム</span>
-          </button>
-        )}
-        <button
-          onClick={() => setShowThemePicker(true)}
-          className="bg-rw-primary hover:opacity-90 text-rw-paper font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-          title="テーマ設定 (5色プリセット + カスタム)"
-        >
-          🎨<span className="hidden sm:inline ml-1">テーマ</span>
-        </button>
-        <a
-          href={searchHref}
-          className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-          title={currentVisibleLemma ? `「${currentVisibleLemma}」を検索` : '単語・例文・教材を検索'}
-        >
-          🔍<span className="ml-1">
-            {currentVisibleLemma ? `「${currentVisibleLemma}」` : '検索'}
-          </span>
-        </a>
-        <a
-          href="/read"
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-          title="古文読み（読解モード）"
-        >
-          📚<span className="hidden sm:inline ml-1">読解</span>
-        </a>
-        <a
-          href="/read/grammar"
-          className="bg-rose-600 hover:bg-rose-700 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-          title="文法道場（ドリル＋識別）"
-        >
-          ⚔️<span className="hidden sm:inline ml-1">文法</span>
-        </a>
-        <button
-          onClick={() => setShowIndexModal(true)}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-        >
-          索引
-        </button>
-        {typeof window !== 'undefined' && hasAdminSession() && (
-          <a
-            href="/teacher"
-            className="bg-slate-700 hover:bg-slate-800 text-white font-bold py-1.5 px-2 md:px-3 rounded-lg shadow-lg transition-colors text-xs md:text-sm"
-            title="教員管理画面(回答一覧・誤答分析・教材公開管理)"
-          >
-            🛠<span className="hidden sm:inline ml-1">教員</span>
-          </a>
-        )}
-      </div>
+      <QuizToolbar
+        showHome={showHome}
+        returnTo={returnTo}
+        searchLemma={currentVisibleLemma}
+        showTeacher={typeof window !== 'undefined' && hasAdminSession()}
+        onReturn={(path) => navigate(path)}
+        onHome={() => {
+          setShowHome(true);
+          setShowResults(false);
+          setQuizQidFilter(null);
+          setQuizMode('normal');
+        }}
+        onOpenTheme={() => setShowThemePicker(true)}
+        onOpenIndex={() => setShowIndexModal(true)}
+      />
 
       {/* Theme Picker (5色プリセット + カスタム) */}
       <ReiwaThemePicker open={showThemePicker} focus={themeFocus} onClose={() => { setShowThemePicker(false); setThemeFocus(null); }} />
@@ -1802,383 +1507,46 @@ function App() {
   }
 
   if (showResults) {
-    const totalScore = getTotalScore();
-    const percent = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
-    const isPerfectScore = score === totalScore && totalScore > 0;
-    const showGinkgoAnimation = isPerfectScore && totalScore >= 20;
-
-    // 単語王：330問完全制覇（範囲1-330）
-    const isMasterAchievement = isPerfectScore && totalScore === 330 &&
-      (wordRange.from === 1 && wordRange.to === 330);
-
-    // 単語最強王：多義語モード200問完全制覇（範囲1-330。多義語の見出し語数。2026-10-16 に8意味を追加して 196→200）
-    const isUltimateMasterAchievement = isPerfectScore && totalScore === 200 &&
-      (polysemyRange.from === 1 && polysemyRange.to === 330);
-
     return (
-      <div className="bg-rw-bg min-h-dvh relative overflow-hidden">
-        {indexButton}
-        {/* 銀杏の葉アニメーション */}
-        {showGinkgoAnimation && (
-          <div className="ginkgo-container">
-            {[...Array(15)].map((_, i) => (
-              <div
-                key={i}
-                className="ginkgo-leaf"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 3}s`,
-                  animationDuration: `${4 + Math.random() * 2}s`
-                }}
-              >
-                🍂
-              </div>
-            ))}
-            <style>{`
-              .ginkgo-container {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: 50;
-              }
-              .ginkgo-leaf {
-                position: absolute;
-                top: -50px;
-                font-size: 2rem;
-                animation: fall linear infinite;
-              }
-              @keyframes fall {
-                0% {
-                  transform: translateY(0) rotate(0deg);
-                  opacity: 1;
-                }
-                100% {
-                  transform: translateY(100vh) rotate(360deg);
-                  opacity: 0.3;
-                }
-              }
-            `}</style>
-          </div>
-        )}
-
-        <div className="max-w-2xl mx-auto px-4 py-6 md:px-8 md:py-8 relative z-10 pt-16">
-          {/* スコアカード (rw-paper + ink 太枠 + pop 装飾円) */}
-          <div className="bg-rw-paper border-2 border-rw-ink rounded-3xl p-6 md:p-8 text-center relative overflow-hidden">
-            <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-rw-pop opacity-40" />
-            <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-rw-accent opacity-30" />
-
-            <div className="relative">
-              {quizMode === 'today' ? (
-                <>
-                  <div className="text-[10px] tracking-[0.2em] font-black text-rw-ink-soft uppercase mb-1">Today's Quest</div>
-                  <h1 className="text-2xl font-black text-rw-ink mb-2">今日はここまで</h1>
-                  <p className="text-rw-ink-soft text-sm mb-2">今日の分は終わり。お疲れさま。</p>
-                  {todayGrowth ? (
-                    <p className="text-sm font-black text-rw-accent mb-5">{todayGrowth}</p>
-                  ) : (
-                    <div className="mb-3" />
-                  )}
-                </>
-              ) : (
-                <>
-                  <div className="text-[10px] tracking-[0.2em] font-black text-rw-ink-soft uppercase mb-1">Quest Cleared</div>
-                  <h1 className="text-2xl font-black text-rw-ink mb-2">クイズ終了！</h1>
-                  <p className="text-rw-ink-soft text-sm mb-5">お疲れ様でした。</p>
-                </>
-              )}
-
-              {/* Perfect Score Celebration */}
-              {isPerfectScore && (
-                <div className="mb-5">
-                  {isUltimateMasterAchievement ? (
-                    <>
-                      <div className="text-7xl md:text-8xl font-black mb-3 animate-pulse" style={{
-                        background: 'linear-gradient(45deg, var(--rw-primary), var(--rw-pop), var(--rw-primary))',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        textShadow: '0 0 30px rgba(255, 0, 0, 0.4)'
-                      }}>
-                        🔥👑🔥
-                      </div>
-                      <p className="text-4xl md:text-5xl font-black mb-3 tracking-widest" style={{
-                        background: 'linear-gradient(45deg, var(--rw-primary), var(--rw-pop))',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                      }}>
-                        単語最強王
-                      </p>
-                      <p className="text-base font-black text-rw-primary mb-1">全200問完全制覇！</p>
-                      <p className="text-sm text-rw-ink-soft">あなたは最強の単語マスターです！</p>
-                    </>
-                  ) : isMasterAchievement ? (
-                    <>
-                      <div className="text-7xl md:text-8xl font-black mb-3 animate-pulse" style={{
-                        background: 'linear-gradient(45deg, var(--rw-pop), #FFA500, var(--rw-pop))',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        textShadow: '0 0 30px rgba(255, 215, 0, 0.4)'
-                      }}>
-                        👑
-                      </div>
-                      <p className="text-4xl md:text-5xl font-black mb-3 tracking-widest" style={{
-                        background: 'linear-gradient(45deg, var(--rw-pop), #FF8C00)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                      }}>
-                        単語王
-                      </p>
-                      <p className="text-base font-black text-rw-pop mb-1">全330問完全制覇！</p>
-                      <p className="text-sm text-rw-ink-soft">あなたは真の単語マスターです！</p>
-                    </>
-                  ) : (
-                    <>
-                      <div className="text-7xl font-black mb-2 animate-bounce" style={{ color: 'var(--rw-accent)' }}>
-                        ○
-                      </div>
-                      <p className="text-lg font-black text-rw-accent mb-1">パーフェクト！</p>
-                      <p className="text-sm text-rw-ink-soft">すべて正解です！素晴らしい！</p>
-                      {showGinkgoAnimation && (
-                        <p className="text-xs text-rw-pop mt-1">🍂 銀杏の葉が舞っています 🍂</p>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* スコア表示 (大型) */}
-              <div className="mb-5">
-                <div className="flex items-baseline justify-center gap-1">
-                  <span
-                    className="text-6xl md:text-7xl font-black"
-                    style={{
-                      color: isPerfectScore
-                        ? 'var(--rw-accent)'
-                        : percent >= 80
-                        ? 'var(--rw-accent)'
-                        : percent >= 50
-                        ? 'var(--rw-pop)'
-                        : 'var(--rw-primary)',
-                    }}
-                  >
-                    {score}
-                  </span>
-                  <span className="text-2xl font-black text-rw-ink-soft">
-                    / {totalScore}
-                  </span>
-                </div>
-                <p className="text-sm font-bold text-rw-ink-soft mt-1">正解率 {percent}%</p>
-              </div>
-
-              {/* 間違えた単語の復習リスト */}
-              {wrongAnswers.length > 0 && (
-                <div className="mb-5 text-left">
-                  <div className="flex items-baseline justify-between mb-2">
-                    <h3 className="text-xs font-black tracking-wider text-rw-ink-soft uppercase">
-                      間違えた単語 ({wrongAnswers.length}語)
-                    </h3>
-                    {wrongAnswers.length > 0 && (
-                      <button
-                        onClick={() => {
-                          const qids = wrongAnswers.map((w) => w.qid);
-                          setQuizQidFilter(qids);
-                          setQuizMode('focus');
-                          setShowResults(false);
-                          setIsQuizActive(false);
-                          void setupQuiz(qids, null, undefined, 'word');
-                        }}
-                        className="text-[11px] font-black px-3 py-1 rounded-full transition-colors"
-                        style={{
-                          background: 'var(--rw-ink)',
-                          color: 'var(--rw-paper)',
-                        }}
-                        title="間違えた単語だけでクイズを再起動"
-                      >
-                        全部復習 ▶
-                      </button>
-                    )}
-                  </div>
-                  <div className="space-y-1.5 max-h-56 overflow-y-auto">
-                    {wrongAnswers.map((w) => {
-                      const hasExpl = bundledVocabIndex && w.lemma in (bundledVocabIndex as Record<string, unknown>);
-                      return (
-                        <div
-                          key={w.qid}
-                          className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm border border-rw-rule"
-                          style={{ background: 'var(--rw-primary-soft)' }}
-                        >
-                          <div className="flex-1 min-w-0 flex items-baseline gap-2">
-                            <span className="font-bold text-rw-ink shrink-0">{w.lemma}</span>
-                            <span className="text-rw-ink-soft truncate">{w.sense}</span>
-                          </div>
-                          {hasExpl && (
-                            <button
-                              onClick={() => setVocabLemma(w.lemma)}
-                              className="text-[10px] font-black rounded-full px-2 py-1 shrink-0"
-                              style={{
-                                background: 'color-mix(in srgb, var(--layer-5) 12%, transparent)',
-                                color: 'var(--layer-5)',
-                                border: '1px solid color-mix(in srgb, var(--layer-5) 30%, transparent)',
-                              }}
-                              title={`「${w.lemma}」の詳細解説を開く`}
-                            >
-                              📖
-                            </button>
-                          )}
-                          <button
-                            onClick={() => {
-                              setQuizQidFilter([w.qid]);
-                              setQuizMode('focus');
-                              setShowResults(false);
-                              setIsQuizActive(false);
-                              void setupQuiz([w.qid], null, undefined, 'word');
-                            }}
-                            className="text-[10px] font-black rounded-full px-2 py-1 shrink-0"
-                            style={{
-                              background: 'var(--rw-ink)',
-                              color: 'var(--rw-paper)',
-                            }}
-                            title={`「${w.lemma}」だけで再挑戦`}
-                          >
-                            🔁
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* 累計学習統計 (生徒のがんばり全体像) */}
-              {cumulativeStats.totalAnswered > 0 && (
-                <div className="mb-5 text-left">
-                  <h3 className="text-xs font-black tracking-wider text-rw-ink-soft mb-2 uppercase">
-                    これまでの累計
-                  </h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-accent-soft)' }}>
-                      <div className="text-xs text-rw-ink-soft font-bold">累計正答率</div>
-                      <div className="text-2xl font-black text-rw-accent mt-0.5">
-                        {Math.round((cumulativeStats.totalCorrect / cumulativeStats.totalAnswered) * 100)}%
-                      </div>
-                    </div>
-                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-primary-soft)' }}>
-                      <div className="text-xs text-rw-ink-soft font-bold">挑戦回数</div>
-                      <div className="text-2xl font-black text-rw-primary mt-0.5">
-                        {cumulativeStats.totalAnswered}
-                      </div>
-                    </div>
-                    <div className="rounded-xl p-3 text-center" style={{ background: 'var(--rw-pop)', opacity: 0.85 }}>
-                      <div className="text-xs text-rw-ink font-bold">マスター</div>
-                      <div className="text-2xl font-black text-rw-ink mt-0.5">
-                        {cumulativeStats.masteredCount}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* アクションボタン（今日の分は「終わる」が既定、もう1セットは任意） */}
-              <div className="space-y-2.5">
-                {quizMode === 'today' ? (
-                  <>
-                    <button
-                      onClick={() => {
-                        setShowHome(true);
-                        setShowResults(false);
-                        setIsQuizActive(false);
-                        setQuizQidFilter(null);
-                        setQuizMode('normal');
-                        setTodaySession(null);
-                      }}
-                      className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
-                      style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
-                    >
-                      今日はここまで（ホームへ）
-                    </button>
-                    <button
-                      onClick={() => void startTodaySession(true)}
-                      className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
-                    >
-                      もう1セット ▶
-                    </button>
-                    {nextRangeForEnd && (
-                      <button
-                        onClick={() => goNextWordRange(nextRangeForEnd)}
-                        className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
-                      >
-                        {nextRangeLabel(nextRangeForEnd)} ▶
-                      </button>
-                    )}
-                    <button
-                      onClick={() => navigate('/vocab')}
-                      className="w-full font-bold py-3 px-4 rounded-full bg-transparent text-rw-ink-soft border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
-                    >
-                      単語のホーム（単語一覧）へ
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    {returnTo && (
-                      <button
-                        onClick={() => navigate(returnTo)}
-                        className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
-                        style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
-                      >
-                        📖 {returnLabels(returnTo).long}
-                      </button>
-                    )}
-                    {!returnTo && nextRangeForEnd && (
-                      <button
-                        onClick={() => goNextWordRange(nextRangeForEnd)}
-                        className="w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"
-                        style={{ boxShadow: '0 4px 0 var(--rw-primary)' }}
-                      >
-                        {nextRangeLabel(nextRangeForEnd)} ▶
-                      </button>
-                    )}
-                    <button
-                      onClick={restartQuiz}
-                      className={returnTo || nextRangeForEnd
-                        ? "w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
-                        : "w-full font-black py-3.5 px-4 rounded-full bg-rw-ink text-rw-paper transition-transform active:scale-95 tracking-wider"}
-                      style={returnTo || nextRangeForEnd ? undefined : { boxShadow: '0 4px 0 var(--rw-primary)' }}
-                    >
-                      {returnTo ? "もう一度解く ▶" : "同じ範囲を繰り返す ▶"}
-                    </button>
-                    {currentMode === 'word' && (
-                      <button
-                        onClick={() => navigate('/vocab')}
-                        className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
-                      >
-                        単語のホーム（単語一覧）へ
-                      </button>
-                    )}
-                    <button
-                      onClick={() => {
-                        setShowHome(true);
-                        setShowResults(false);
-                        setIsQuizActive(false);
-                        setQuizQidFilter(null);
-                        setQuizMode('normal');
-                      }}
-                      className="w-full font-bold py-3.5 px-4 rounded-full bg-rw-paper text-rw-ink border-2 border-rw-rule hover:bg-rw-primary-soft transition-colors"
-                    >
-                      ホームに戻る
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <>
+        {/* 間違えた語の 📖 で開く解説（結果画面でも出す） */}
+        {vocabLemma && <VocabModal lemma={vocabLemma} onClose={() => setVocabLemma(null)} />}
+        <QuizResultScreen
+          header={indexButton}
+          score={score}
+          totalScore={getTotalScore()}
+          currentMode={currentMode}
+          quizMode={quizMode}
+          todayGrowth={todayGrowth}
+          wordRangeIsAll={wordRange.from === 1 && wordRange.to === 330}
+          polysemyRangeIsAll={polysemyRange.from === 1 && polysemyRange.to === 330}
+          wrongAnswers={wrongAnswers}
+          cumulativeStats={cumulativeStats}
+          returnTo={returnTo}
+          nextRangeForEnd={nextRangeForEnd}
+          hasExplanation={(lemma) => lemma in (bundledVocabIndex as Record<string, unknown>)}
+          onReview={(qids) => {
+            setQuizQidFilter(qids);
+            setQuizMode('focus');
+            setShowResults(false);
+            setIsQuizActive(false);
+            void setupQuiz(qids, null, undefined, 'word');
+          }}
+          onOpenVocab={setVocabLemma}
+          onGoHome={() => {
+            setShowHome(true);
+            setShowResults(false);
+            setIsQuizActive(false);
+            setQuizQidFilter(null);
+            setQuizMode('normal');
+            if (quizMode === 'today') setTodaySession(null);
+          }}
+          onAnotherSet={() => void startTodaySession(true)}
+          onNextRange={goNextWordRange}
+          onRestart={restartQuiz}
+          onNavigate={(path) => navigate(path)}
+        />
+      </>
     );
   }
 
@@ -2220,218 +1588,55 @@ function App() {
         )}
 
         {/* Mode Selection Tabs */}
-        <div className="flex justify-center border-b border-rw-rule mb-4 bg-rw-paper rounded-t-2xl shadow-sm">
-          <button
-            onClick={() => {
-              if (currentMode === 'word') return;
-              const lemma = getCurrentLemma();
-              setShowResults(false);
-              if (lemma) setPendingSeedLemma(lemma);
-              // 苦手復習などの絞り込みが残っていると、作り直しの useEffect が何もしない（出題が出ない）
-              setQuizQidFilter(null);
-              setQuizMode('normal');
-              setCurrentMode('word');
-            }}
-            className={`mode-tab ${currentMode === 'word' ? 'active-tab' : ''}`}
-            style={{
-              padding: '0.75rem 1.5rem',
-              fontWeight: 600,
-              color: currentMode === 'word' ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
-              borderBottom: currentMode === 'word' ? '3px solid var(--rw-primary)' : '3px solid transparent',
-              transition: 'all 0.2s ease-in-out',
-              cursor: 'pointer',
-              minHeight: '44px'
-            }}
-          >
-            単語モード
-          </button>
-          <button
-            onClick={() => {
-              if (currentMode === 'polysemy') return;
-              const lemma = getCurrentLemma();
-              setShowResults(false);
-              if (lemma) setPendingSeedLemma(lemma);
-              setQuizQidFilter(null);
-              setQuizMode('normal');
-              setCurrentMode('polysemy');
-            }}
-            className={`mode-tab ${currentMode === 'polysemy' ? 'active-tab' : ''}`}
-            style={{
-              padding: '0.75rem 1.5rem',
-              fontWeight: 600,
-              color: currentMode === 'polysemy' ? 'var(--rw-primary)' : 'var(--rw-ink-soft)',
-              borderBottom: currentMode === 'polysemy' ? '3px solid var(--rw-primary)' : '3px solid transparent',
-              transition: 'all 0.2s ease-in-out',
-              cursor: 'pointer',
-              minHeight: '44px'
-            }}
-          >
-            多義語モード
-          </button>
-        </div>
+        <QuizModeTabs
+          current={currentMode}
+          onSelect={(mode) => {
+            if (currentMode === mode) return;
+            const lemma = getCurrentLemma();
+            setShowResults(false);
+            if (lemma) setPendingSeedLemma(lemma);
+            // 苦手復習などの絞り込みが残っていると、作り直しの useEffect が何もしない（出題が出ない）
+            setQuizQidFilter(null);
+            setQuizMode('normal');
+            setCurrentMode(mode);
+          }}
+        />
 
         {/* Settings Area */}
+        {/* カテゴリ絞り込み chips は非表示 (章範囲指定で代替)。
+            CategoryFilterChips コンポーネント自体と URL ?category= ハンドラは
+            残しているので、必要になったらここを再表示するだけで戻せる。 */}
         <div className="bg-rw-paper p-3 rounded-b-2xl shadow-sm border-x border-b border-rw-rule mb-2">
           {currentMode === 'word' ? (
-            <div className="grid grid-cols-2 gap-2">
-              {/* 左列: モードと問題数 */}
-              <div className="space-y-2">
-                <div>
-                  <select
-                    ref={wordQuizTypeRef}
-                    value={wordQuizType}
-                    onChange={(e) => setWordQuizType(e.target.value as WordQuizType)}
-                    className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
-                  >
-                    <option value="auto">おまかせ（覚えるほど問いが難しくなる）</option>
-                    <option value="word-meaning">単語の意味を選ぶ</option>
-                    <option value="sentence-meaning">例文から意味を選ぶ</option>
-                    <option value="blank-fill">空欄に入る語を選ぶ（テスト形式）</option>
-                    <option value="meaning-writing">意味を書いて答える</option>
-                  </select>
-                </div>
-                <div>
-                  <select
-                    value={pickMode}
-                    onChange={(e) => setPickMode(e.target.value as 'auto' | 'random')}
-                    className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
-                    title="どの語を出すか。おまかせは学習記録から、苦手→まだ解いていない語（番号順）→途中の語 の順に配分し、正答率の高い語は頻度を下げる"
-                  >
-                    <option value="auto">出す語はおまかせ（苦手・未着手を優先）</option>
-                    <option value="random">出す語はランダム</option>
-                  </select>
-                  {pickMode === 'auto' && lastPick && (
-                    <div className="text-[10px] text-rw-ink-soft mt-0.5">
-                      {compositionLine(lastPick)}
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center space-x-1">
-                  <label className="text-xs text-rw-ink-soft whitespace-nowrap">問題数</label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    autoComplete="off"
-                    autoCorrect="off"
-                    enterKeyHint="done"
-                    value={wordNumQuestions}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      if (v === "") return;
-                      const n = parseInt(v, 10);
-                      if (!Number.isNaN(n)) setWordNumQuestions(Math.max(1, Math.min(330, n)));
-                    }}
-                    onBlur={(e) => {
-                      if (e.target.value === "" || Number.isNaN(parseInt(e.target.value, 10))) {
-                        setWordNumQuestions(10);
-                      }
-                    }}
-                    {...fullSelectA}
-                    onWheel={(e) => e.preventDefault()}
-                    min="1"
-                    max="330"
-                    placeholder="数"
-                    className="w-14 p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-center text-base"
-                    style={{
-                      MozAppearance: 'textfield',
-                      WebkitAppearance: 'none'
-                    }}
-                  />
-                </div>
-              </div>
-              {/* 右列: 範囲選択（ボタン1つ→シートで幅と区切りをタップ。2026-11-13 ユーザー指示。components/RangeBlockPicker.tsx） */}
-              <div>
-                <RangeBlockPicker
-                  value={wordRange}
-                  onChange={handleWordRangeChange}
-                  min={1}
-                  max={330}
-                />
-              </div>
-            </div>
-          ) : null}
-
-          {/* カテゴリ絞り込み chips は非表示 (章範囲指定で代替)。
-              CategoryFilterChips コンポーネント自体と URL ?category= ハンドラは
-              残しているので、必要になったらここを再表示するだけで戻せる。 */}
-
-          {currentMode !== 'word' && (
-            <div className="grid grid-cols-2 gap-2">
-              {/* 左列: モードと問題数 */}
-              <div className="space-y-2">
-                <div>
-                  <select
-                    ref={polysemyQuizTypeRef}
-                    value={polysemyQuizType}
-                    onChange={(e) => setPolysemyQuizType(e.target.value as PolysemyQuizType)}
-                    className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
-                  >
-                    <option value="example-comprehension">例文と意味を結びつける</option>
-                    <option value="true-false">例文の訳の正誤を判断</option>
-                    <option value="context-writing">文脈から意味を書く</option>
-                  </select>
-                </div>
-                <div>
-                  <select
-                    value={pickMode}
-                    onChange={(e) => setPickMode(e.target.value as 'auto' | 'random')}
-                    className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
-                    title="どの語を出すか。おまかせは学習記録から、苦手→まだ解いていない語（番号順）→途中の語 の順に配分し、正答率の高い語は頻度を下げる"
-                  >
-                    <option value="auto">出す語はおまかせ（苦手・未着手を優先）</option>
-                    <option value="random">出す語はランダム</option>
-                  </select>
-                  {pickMode === 'auto' && lastPick && (
-                    <div className="text-[10px] text-rw-ink-soft mt-0.5">
-                      {compositionLine(lastPick)}
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center space-x-1">
-                  <label className="text-xs text-rw-ink-soft whitespace-nowrap">問題数</label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    autoComplete="off"
-                    autoCorrect="off"
-                    enterKeyHint="done"
-                    value={polysemyNumQuestions}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      if (v === "") return;
-                      const n = parseInt(v, 10);
-                      if (!Number.isNaN(n)) setPolysemyNumQuestions(Math.max(1, Math.min(330, n)));
-                    }}
-                    onBlur={(e) => {
-                      if (e.target.value === "" || Number.isNaN(parseInt(e.target.value, 10))) {
-                        setPolysemyNumQuestions(5);
-                      }
-                    }}
-                    {...fullSelectB}
-                    onWheel={(e) => e.preventDefault()}
-                    min="1"
-                    max="330"
-                    placeholder="数"
-                    className="w-14 p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-center text-base"
-                    style={{
-                      MozAppearance: 'textfield',
-                      WebkitAppearance: 'none'
-                    }}
-                  />
-                </div>
-              </div>
-              {/* 右列: 範囲選択（ボタン1つ→シートで幅と区切りをタップ。2026-11-13 ユーザー指示。components/RangeBlockPicker.tsx） */}
-              <div>
-                <RangeBlockPicker
-                  value={polysemyRange}
-                  onChange={handlePolysemyRangeChange}
-                  min={1}
-                  max={330}
-                />
-              </div>
-            </div>
+            <QuizSettingsPanel
+              key="word"
+              typeOptions={WORD_TYPE_OPTIONS}
+              quizType={wordQuizType}
+              onQuizTypeChange={setWordQuizType}
+              pickMode={pickMode}
+              onPickModeChange={setPickMode}
+              lastPickLine={lastPick ? compositionLine(lastPick) : null}
+              numQuestions={wordNumQuestions}
+              onNumQuestionsChange={setWordNumQuestions}
+              defaultNumQuestions={10}
+              range={wordRange}
+              onRangeChange={handleWordRangeChange}
+            />
+          ) : (
+            <QuizSettingsPanel
+              key="polysemy"
+              typeOptions={POLYSEMY_TYPE_OPTIONS}
+              quizType={polysemyQuizType}
+              onQuizTypeChange={setPolysemyQuizType}
+              pickMode={pickMode}
+              onPickModeChange={setPickMode}
+              lastPickLine={lastPick ? compositionLine(lastPick) : null}
+              numQuestions={polysemyNumQuestions}
+              onNumQuestionsChange={setPolysemyNumQuestions}
+              defaultNumQuestions={5}
+              range={polysemyRange}
+              onRangeChange={handlePolysemyRangeChange}
+            />
           )}
         </div>
 
