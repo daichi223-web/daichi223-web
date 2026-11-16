@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { getUserId } from './wordStats';
+import { bumpLearningVersion } from './learningVersion';
 
 /**
  * 箱5つの間隔反復（Leitner 方式）。単語と文法ドリルで共通。
@@ -123,14 +124,6 @@ export async function getDueWords(): Promise<string[]> {
  * （箱＝単語のレベル。箱が上がった語は教材の実戦例文に切り替える等に使う）
  */
 export async function getSrsBoxes(qids: string[]): Promise<Record<string, number>> {
-  return (await getSrsBoxesOrNull(qids)) ?? {};
-}
-
-/**
- * getSrsBoxes と同じ。ただし取れなかったときは null を返す（「未学習で箱が無い」と「取れなかった」を区別する）。
- * 今日の分が、取れた箱をそのまま出題の準備に渡すために使う（2026-11-16）。
- */
-export async function getSrsBoxesOrNull(qids: string[]): Promise<Record<string, number> | null> {
   if (qids.length === 0) return {};
   const userId = await getUserId();
   const { data, error } = await supabase
@@ -138,7 +131,7 @@ export async function getSrsBoxesOrNull(qids: string[]): Promise<Record<string, 
     .select('qid, box')
     .eq('user_id', userId)
     .in('qid', qids);
-  if (error || !data) return null;
+  if (error || !data) return {};
   const out: Record<string, number> = {};
   for (const r of data) out[r.qid as string] = r.box as number;
   return out;
@@ -193,6 +186,15 @@ export async function getDueCount(): Promise<number> {
  *   どれも reviewTransition が決める。
  */
 export async function updateSrsState(qid: string, isCorrect: boolean): Promise<void> {
+  try {
+    await writeSrsState(qid, isCorrect);
+  } finally {
+    // 書いたら、覚えてあるまとめ読みを捨てる（lib/learningSnapshot が取り直す）
+    bumpLearningVersion();
+  }
+}
+
+async function writeSrsState(qid: string, isCorrect: boolean): Promise<void> {
   const userId = await getUserId();
 
   // Get current SRS state（last_review は卒業の間隔を決めるのに使う）

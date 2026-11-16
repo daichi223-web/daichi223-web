@@ -14,13 +14,23 @@ import { quizMeanings } from './components/quiz/writingVerdict';
 import { QuizBackground } from './components/quiz/QuizBackground';
 import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from './lib/quizBackground';
 import { readChatTeacher } from './lib/chatTeacher';
-import { recordAnswer, getWeakWords, getWordStats } from './lib/wordStats';
+import { recordAnswer } from './lib/wordStats';
 import { compositionLine, pickQuestions, type Bucket } from './lib/quizSelector';
 import { shuffle } from './lib/shuffle';
 import { buildRetryRound, countScored } from './lib/quiz/retryRound';
 import { buildWordQuiz, type QuizQuestion, type ResolvedWordQuizType } from './lib/quiz/wordQuiz';
 import { loadWordQuizFiles, loadWordQuizRecords, preloadWordQuizFiles } from './lib/quiz/wordQuizData';
 import { trapsOf } from './lib/quiz/modernTraps';
+import {
+  EMPTY_SNAPSHOT,
+  loadLearningSnapshot,
+  statsMapOf,
+  boxesOf,
+  weakWordsOf,
+  todayReviewOf,
+  lastActivityOf,
+  warmupWordsOf,
+} from './lib/learningSnapshot';
 import { recordQuizTypeCorrect } from './lib/quizTypeStats';
 import { logEvent, markQuestionShown } from './lib/learningEvents';
 import { composeTodaySet, estimateToday, countGrowth, growthLine, type TodayParts } from './lib/todaySession';
@@ -31,11 +41,7 @@ import { pickTrueFalseWrongMeaning } from './lib/senseEquivalence';
 import {
   updateSrsState,
   getSrsBoxes,
-  getSrsBoxesOrNull,
-  getTodayReviewSet,
-  getLastActivity,
   gapDays,
-  getWarmupWords,
   WELCOME_BACK_GAP_DAYS,
 } from './lib/srsEngine';
 
@@ -332,23 +338,24 @@ function App() {
   }, [allWords.length, modeParam]);
 
   // ホーム表示時に学習履歴ベースの集計を取得
+  // 2026-11-16：学習の記録はまとめ読み1回（word_stats と srs_state を同時に）にし、苦手・今日の復習・
+  // 最後に解いた日・おかえりの語は手元で計算する（lib/learningSnapshot。前は項目ごとに DB を引いていた）。
+  // 単語データが入る前は動かさない（前は空の一覧で1回よけいに走っていた）
   useEffect(() => {
-    if (!showHome) return;
+    if (!showHome || allWords.length === 0) return;
     let cancelled = false;
     setHomeDataError(false);
     (async () => {
       try {
-        const [weak, today, last, range] = await Promise.all([
-          getWeakWords(undefined, undefined, allWords.map(w => w.qid)),
-          getTodayReviewSet(undefined, allWords.map(w => w.qid)),
-          getLastActivity(),
-          getActiveQuizRange(),
-        ]);
-        const gap = gapDays(last);
-        const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? await getWarmupWords(undefined, allWords.map(w => w.qid)) : [];
+        const qids = allWords.map(w => w.qid);
+        const [snap, range] = await Promise.all([loadLearningSnapshot(), getActiveQuizRange()]);
+        const weak = weakWordsOf(snap, qids);
+        const today = todayReviewOf(snap, qids);
+        const gap = gapDays(lastActivityOf(snap));
+        const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? warmupWordsOf(snap, qids) : [];
         if (!cancelled) {
           setWeakWordsCount(weak.length);
-          setDueWordsCount(today.qids.length);
+          setDueWordsCount(today.length);
           setQuizRange(range);
           setWelcomeBack(gap != null && gap >= WELCOME_BACK_GAP_DAYS && warmup.length > 0 ? { gapDays: gap, warmup } : null);
         }
@@ -372,7 +379,7 @@ function App() {
     let cancelled = false;
     (async () => {
       try {
-        const stats = await getWordStats();
+        const stats = statsMapOf(await loadLearningSnapshot().catch(() => EMPTY_SNAPSHOT));
         if (cancelled) return;
         let totalAnswered = 0;
         let totalCorrect = 0;
@@ -560,8 +567,7 @@ function App() {
 
   // opts.sequential: フィルタの並び順どおりに出題（復習＝期限の古い順、おかえり＝ウォームアップを先頭）
   // opts.numQuestions: このセッションだけ出題数を上書き
-  // opts.knownBoxes: 出す語の箱を呼ぶ側がもう持っているとき（今日の分）。渡すと出題の準備で DB を引かない
-  type QuizOpts = { sequential?: boolean; numQuestions?: number; knownBoxes?: Record<string, number> };
+  type QuizOpts = { sequential?: boolean; numQuestions?: number };
   // modeOverride: setCurrentMode 直後は closure の currentMode が古いので、呼び出し側でモードを明示できる
   const setupQuiz = async (
     qidFilterOverride?: string[],
@@ -604,19 +610,12 @@ function App() {
         return c ? catSet.has(c) : false;
       });
     }
-    // 今日の復習と、範囲の成績・箱を同時に取る（2026-11-16。順に待っていたのを1往復に）。
-    // 復習が取れなければ復習なし、記録が取れなければ全部「未着手」として補充する
-    let stats: Record<string, { correct: number; incorrect: number; lastSeen?: string | null }> = {};
-    let boxes: Record<string, number> = {};
-    const [dueSet, gotStats, gotBoxes] = await Promise.all([
-      getTodayReviewSet(undefined, allWords.map(w => w.qid)).catch(() => null),
-      getWordStats().catch(() => null),
-      getSrsBoxesOrNull(pool.map((w) => w.qid)).catch(() => null),
-    ]);
-    let due: string[] = dueSet?.qids ?? [];
-    // 今までと同じく、成績と箱は両方取れたときだけ使う
-    if (gotStats && gotBoxes) { stats = gotStats; boxes = gotBoxes; }
-    const recs = !!(gotStats && gotBoxes);
+    // 今日の復習・成績・箱は、学習の記録のまとめ読みから（2026-11-16。ホームで読んだものが残っていれば通信なし）。
+    // 取れなければ復習なし・全部「未着手」として補充する
+    const snap = await loadLearningSnapshot().catch(() => EMPTY_SNAPSHOT);
+    const stats: Record<string, { correct: number; incorrect: number; lastSeen?: string | null }> = statsMapOf(snap);
+    const boxes: Record<string, number> = boxesOf(snap);
+    let due: string[] = todayReviewOf(snap, allWords.map(w => w.qid));
     if (rangeOverride) {
       // 小テスト範囲から始めたときは、範囲外の復習語を混ぜない
       const inRange = new Set(pool.map((w) => w.qid));
@@ -639,18 +638,9 @@ function App() {
       void setupQuiz();
       return;
     }
-    let boxesBefore: Record<string, number> = {};
+    // 始める前の箱（終わったあとの成長1行に使う）。箱の無い語は未学習。記録が取れなかったときは空（成長1行が出ないだけ）
+    const boxesBefore: Record<string, number> = {};
     for (const q of set.qids) if (boxes[q] != null) boxesBefore[q] = boxes[q];
-    // 範囲の外の語（復習・おかえり）の箱だけ取り足す。範囲の中で箱の無い語は未学習なので取り直さない
-    const inPool = new Set(pool.map((w) => w.qid));
-    const missing = set.qids.filter((q) => boxesBefore[q] == null && !(recs && inPool.has(q)));
-    let boxesKnown = recs;
-    if (missing.length > 0) {
-      // 取れなければ成長1行が出ないだけ。出題の準備で取り直す
-      const more = await getSrsBoxesOrNull(missing).catch(() => null);
-      if (more) boxesBefore = { ...boxesBefore, ...more };
-      else boxesKnown = false;
-    }
     setTodaySession({ qids: set.qids, boxesBefore, parts: set.parts });
     setTodayGrowth(null);
     setLastPick(set.parts.freshComposition);
@@ -658,13 +648,7 @@ function App() {
     setQuizMode('today');
     setCurrentMode('word');
     setShowHome(false);
-    // 箱はここで取ってあるので、出題の準備では取り直さない（取れていないときだけ取り直す）
-    void setupQuiz(
-      set.qids,
-      null,
-      { sequential: true, numQuestions: set.qids.length, knownBoxes: boxesKnown ? boxesBefore : undefined },
-      'word',
-    );
+    void setupQuiz(set.qids, null, { sequential: true, numQuestions: set.qids.length }, 'word');
   };
 
   // 現在のクイズで出題中の lemma を返す (モード切替の seed 用)。
@@ -730,9 +714,7 @@ function App() {
     const autoPick = !filter && pickMode === 'auto';
     const [files, records] = await Promise.all([
       loadWordQuizFiles(wordQuizType === 'blank-fill' || wordQuizType === 'auto'),
-      !autoPick && opts?.knownBoxes
-        ? Promise.resolve({ stats: null, boxes: opts.knownBoxes, due: [] })
-        : loadWordQuizRecords(targetWords.map((w) => w.qid), autoPick),
+      loadWordQuizRecords(targetWords.map((w) => w.qid), autoPick),
     ]);
     if (stale()) return;
 
@@ -788,7 +770,7 @@ function App() {
     let ordered: MultiMeaningWord[] | null = null;
     if (pickMode === 'auto') {
       try {
-        const stats = await getWordStats();
+        const stats = statsMapOf(await loadLearningSnapshot().catch(() => EMPTY_SNAPSHOT));
         const byLemma: Record<string, { correct: number; incorrect: number; lastSeen?: string | null }> = {};
         for (const w of polysemyWords) {
           let c = 0, i = 0, last: string | null = null;
@@ -1477,7 +1459,7 @@ function App() {
             }}
             onStartReview={async () => {
               let weak: string[];
-              try { weak = await getWeakWords(undefined, undefined, allWords.map(w => w.qid)); }
+              try { weak = weakWordsOf(await loadLearningSnapshot(), allWords.map(w => w.qid)); }
               catch { setHomeDataError(true); return; }
               if (weak.length === 0) return;
               setQuizQidFilter(weak);

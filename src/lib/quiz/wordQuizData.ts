@@ -2,15 +2,14 @@
  * 単語クイズの出題に要る材料の読み込み（2026-11-16 に src/App.tsx から切り出した）。
  *
  *   ファイル（初回だけ通信）… 空欄の例文・実戦例文・例文ごとの手当て
- *   学習の記録（毎回 DB）     … 成績・箱・期限
+ *   学習の記録（まとめ読み）  … 成績・箱・期限（lib/learningSnapshot）
  *
  * 出題の組み立て（./wordQuiz の buildWordQuiz）は、ここで取ったものを受け取るだけで通信しない。
  * ファイルと記録は同時に取る。ファイルはアプリを開いた時点で先に読み始める（preloadWordQuizFiles）。
  */
 import { loadBlanks, type BlankEntry } from '../blanksLoader';
 import type { ExampleContextMap } from '../exampleContext';
-import { getWordStats } from '../wordStats';
-import { getDueAmong, getSrsBoxes } from '../srsEngine';
+import { EMPTY_SNAPSHOT, boxesOf, dueAmongOf, loadLearningSnapshot, statsMapOf } from '../learningSnapshot';
 import type { CorpusExample, WordQuizRecords } from './wordQuiz';
 
 /** 取れたら覚え、取れなかったら次の呼び出しでもう一度試す（空のまま覚えない） */
@@ -71,16 +70,17 @@ export async function loadWordQuizFiles(needBlanks: boolean): Promise<WordQuizFi
 }
 
 /**
- * 出題の候補（qids）の学習の記録を1回で取る。
+ * 出題の候補（qids）の学習の記録。まとめ読み（lib/learningSnapshot）から取り出す。
+ * ホームで読んだものが残っていれば通信しない。
  *   箱   … いつも（実戦例文への差し替えと、おまかせの問い方に使う）
  *   成績・期限 … 出す語をおまかせで選ぶときだけ
- * 取れなかったものは null（成績・箱）か空（期限）。出題は止めない。
+ * 取れなかったときは、今までと同じく「記録なし」（全部未学習）として続ける。出題は止めない。
  */
 export async function loadWordQuizRecords(qids: string[], autoPick: boolean): Promise<WordQuizRecords> {
-  const [stats, boxes, due] = await Promise.all([
-    autoPick ? getWordStats().catch(() => null) : Promise.resolve(null),
-    getSrsBoxes(qids).catch(() => null),
-    autoPick ? getDueAmong(qids).catch(() => [] as string[]) : Promise.resolve([] as string[]),
-  ]);
-  return { stats, boxes, due };
+  const snap = await loadLearningSnapshot().catch(() => EMPTY_SNAPSHOT);
+  return {
+    stats: autoPick ? statsMapOf(snap) : null,
+    boxes: boxesOf(snap, qids),
+    due: autoPick ? dueAmongOf(snap, qids) : [],
+  };
 }

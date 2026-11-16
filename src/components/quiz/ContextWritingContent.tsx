@@ -161,7 +161,10 @@ export function ContextWritingContent({
         }
       });
 
-      await Promise.all(submitPromises);
+      // 送信の返事は待たずに次へ進む（2026-11-16。前は関数の返事を待つあいだ「次へ」が止まっていた）。
+      // 正誤と復習の記録は上の onJudged で済んでいる。ここで送るのは回答の本文（正解の辞書の候補）で、
+      // 失敗しても送り直さない（今までと同じ。意味ごとに catch 済み）
+      void Promise.all(submitPromises);
 
       onNext();
     } finally {

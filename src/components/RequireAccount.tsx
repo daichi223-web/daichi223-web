@@ -15,38 +15,59 @@ import { isGuest, verifyGuest } from '@/lib/guest';
 // 安全弁: 既定はオフ。Vercel の環境変数 VITE_AUTH_REQUIRED=1 を入れて再デプロイした時だけ必須になる。
 // 生徒が入れなくなる等のトラブルが起きたら、この変数を消して再デプロイすれば元に戻る
 // （コードを revert する必要はない）。オフの間は /account から任意で登録できる。
+//
+// 2026-11-16：ページを移るたびに「確認中…」へ戻すのをやめた。
+//   前は、ページを移るたびに中の画面をいったん消して確かめ直していた（中の画面が毎回作り直しになり、
+//   読み込みが2回走っていた）。一度通ったあとは画面を出したまま裏で確かめ直し、だめなときだけ登録へ送る。
+//   登録済みの印（プロフィールのキャッシュ）がある端末は、開いた直後も画面を先に出す。
+//   /account などの除外ページを通ったあとは、今までどおり「確認中…」で確かめ直す（登録・ログアウトの直後のため）。
 
 const EXEMPT = ['/account', '/guest', '/auth/callback', '/teacher', '/test-grading'];
+
+/** この起動のあいだに一度「通ってよい」と確かめられたか（除外ページを通ると消す） */
+let passed = false;
+
+/** 登録の確認。通ってよければ 'ok'、登録へ送るなら 'redirect'。通信の失敗は投げる */
+async function checkAccount(): Promise<'ok' | 'redirect'> {
+  // お試し（パスワードで入った端末）は登録なしで通す。パスワードが変わった・止めたら印が外れて登録へ（lib/guest.ts）
+  if (isGuest() && (await verifyGuest())) return 'ok';
+  await ensureAnonSession();
+  const st = await getAccountStatus();
+  if (st.isAnonymous) return 'redirect';
+  if (cachedProfile()?.registered) return 'ok';
+  const p = await fetchProfile();
+  return p.registered ? 'ok' : 'redirect';
+}
+
+/** 確かめる前に画面を出してよいか（一度通った・登録済みの印が端末にある） */
+function canShowFirst(): boolean {
+  return passed || cachedProfile()?.registered === true;
+}
 
 export default function RequireAccount({ children }: { children: ReactNode }) {
   const loc = useLocation();
   const exempt = !AUTH_REQUIRED || EXEMPT.some((p) => loc.pathname === p || loc.pathname.startsWith(p + '/'));
-  const [state, setState] = useState<'checking' | 'ok' | 'redirect'>(exempt ? 'ok' : 'checking');
+  const [state, setState] = useState<'checking' | 'ok' | 'redirect'>(exempt || canShowFirst() ? 'ok' : 'checking');
 
   useEffect(() => {
-    if (exempt) { setState('ok'); return; }
+    if (exempt) {
+      // 除外ページ（登録・ログアウトをする所）を通ったら、次のページでは確かめ終わるまで待つ
+      passed = false;
+      setState('ok');
+      return;
+    }
     let alive = true;
-    setState('checking'); // 前のページで決めた結果を持ち越さない（/account から戻った時に再確認）
-    (async () => {
-      try {
-        // お試し（パスワードで入った端末）は登録なしで通す。パスワードが変わった・止めたら印が外れて登録へ（lib/guest.ts）
-        if (isGuest() && (await verifyGuest())) {
-          if (alive) setState('ok');
-          return;
-        }
-        await ensureAnonSession();
-        const st = await getAccountStatus();
-        if (!alive) return;
-        if (st.isAnonymous) { setState('redirect'); return; }
-        if (cachedProfile()?.registered) { setState('ok'); return; }
-        const p = await fetchProfile();
-        if (!alive) return;
-        setState(p.registered ? 'ok' : 'redirect');
-      } catch {
+    // 一度通っている・登録済みの印があるなら画面は出したまま。そうでなければ確かめ終わるまで待つ
+    setState(canShowFirst() ? 'ok' : 'checking');
+    checkAccount()
+      .then((r) => {
+        passed = r === 'ok';
+        if (alive) setState(r);
+      })
+      .catch(() => {
         // サーバ側の一時障害で学習を止めない（メールが付いている人だけここに来る）
         if (alive) setState('ok');
-      }
-    })();
+      });
     return () => { alive = false; };
   }, [loc.pathname, exempt]);
 

@@ -8,10 +8,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import bundledKobunQ from '@/data/kobunQ.v2.slim.json';
 import vocabIndex from '@/data/vocabIndex.json';
-import { getWordStats } from '@/lib/wordStats';
+import { loadLearningSnapshot, statsMapOf } from '@/lib/learningSnapshot';
 import { getQuizTypeCorrect, type QuizTypeStats } from '@/lib/quizTypeStats';
-import { supabase } from '@/lib/supabase';
-import { currentAuthUid } from '@/lib/anonAuth';
 import { CHAPTERS, chapterFor } from '@/utils/chapters';
 import { readPeakTiers, updatePeakTiers } from '@/lib/peakTiers';
 
@@ -230,19 +228,13 @@ export function useFieldMastery(): FieldMasteryResult & { loading: boolean; tota
     let cancelled = false;
     const fetchAll = async () => {
       try {
-        const s = await getWordStats();
+        // 成績と箱はまとめ読みから（2026-11-16。前は成績の返事を待ってから箱を取りに行っていた。
+        // ホームの集計・出題の準備と同じ読み込みを分け合うので、ここでの通信は増えない）
+        const snap = await loadLearningSnapshot();
         if (cancelled) return;
-        setStats(s);
+        setStats(statsMapOf(snap));
         setQuizTypeStats(getQuizTypeCorrect());
-        const userId = (await currentAuthUid()) ?? '';
-        if (userId) {
-          const { data, error } = await supabase
-            .from('srs_state')
-            .select('qid, box')
-            .eq('user_id', userId);
-          if (error) console.warn('[useFieldMastery] srs_state fetch failed:', error);
-          if (!cancelled) setSrsRows((data ?? []) as SrsBoxRow[]);
-        }
+        setSrsRows(snap.srs.map((r) => ({ qid: r.qid, box: r.box })));
       } catch (e) {
         console.warn('[useFieldMastery] fetch error:', e);
       } finally {
