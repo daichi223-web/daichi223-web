@@ -37,6 +37,12 @@ export type PickInput<T> = {
    * 渡さない・空のときは今までと同じ配分（文法道場・多義語モードは渡していない）。
    */
   due?: string[];
+  /**
+   * 同じ語の意味をまとめる鍵（単語なら見出しの番号 group）。渡すと、未着手は「各語の1つめの意味を番号順に → 2つめの意味 …」
+   * の順に取る（2026-11-16 ユーザー指摘「単語モードの10」で範囲内の語が出ない：10語の範囲でも意味が26あり、
+   * 番号順に10個取ると前の4語の意味だけで埋まっていた）。渡さなければ今までどおり番号順。
+   */
+  group?: (t: T) => number | string;
   n: number;
   now?: Date;
   rng?: () => number;
@@ -155,8 +161,21 @@ export function pickQuestions<T>(input: PickInput<T>): PickResult<T> {
     })
     .map((x) => x.t);
 
-  // new: 番号順に進める（決定的）。同じ番号内だけ揺らす
-  const newSorted = [...byBucket.new].sort((a, b) => order(a) - order(b));
+  // new: 番号順に進める（決定的）。group があれば、各語の何番目の意味か（0,1,2…）を先に比べて、語に偏らないようにする
+  const byOrder = [...byBucket.new].sort((a, b) => order(a) - order(b));
+  const nthInGroup = new Map<T, number>();
+  if (input.group) {
+    const seen = new Map<number | string, number>();
+    for (const t of byOrder) {
+      const g = input.group(t);
+      const k = seen.get(g) ?? 0;
+      nthInGroup.set(t, k);
+      seen.set(g, k + 1);
+    }
+  }
+  const newSorted = input.group
+    ? [...byOrder].sort((a, b) => (nthInGroup.get(a)! - nthInGroup.get(b)!) || order(a) - order(b))
+    : byOrder;
 
   const picked: T[] = [];
   const take = (bucket: Bucket, arr: T[], count: number) => {

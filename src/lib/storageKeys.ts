@@ -33,7 +33,7 @@ export const STORAGE_KEYS = {
   wordNumQuestions: 'kobun-wordNumQuestions',
   polysemyNumQuestions: 'kobun-polysemyNumQuestions',
   currentMode: 'kobun-currentMode',
-  categoryFilter: 'kobun-categoryFilter',
+  categoryFilter: 'kobun-categoryFilter', // 2026-11-16 から書かない（App.tsx が起動時に消す）
 
   // === ID / フラグ ===
   anonId: 'anonId',                              // legacy 匿名 ID (auth.uid 移行後は削除されてる)

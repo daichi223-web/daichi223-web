@@ -134,6 +134,8 @@ interface PolysemyState {
 
 // 重複回避用ヘルパー関数（sessionStorage 利用）
 const RECENT_CHOICES_KEY = 'kobun-recent-choices';
+/** 選択肢を API から取るときに待つ上限（過ぎたら手元で作る。2026-11-16） */
+const CHOICES_TIMEOUT_MS = 5000;
 const MAX_RECENT_CHOICES = 12; // 最大12個まで記録（3問×4択）
 
 function getRecentChoices(): string[] {
@@ -193,7 +195,13 @@ function App() {
   const [lastPick, setLastPick] = useState<Record<Bucket, number> | null>(null);
   const [wordRange, setWordRange] = useLocalStorageState<{from?: number; to?: number}>('kobun-wordRange', { from: 1, to: 50 });
   // 単語帳カテゴリ絞り込み (重要動詞/敬語動詞/...) — 空配列は「全て」
-  const [categoryFilter, setCategoryFilter] = useLocalStorageState<string[]>('kobun-categoryFilter', []);
+  // カテゴリ絞り込み（URL ?category= から入ったときだけ）。2026-11-16：端末に覚えるのをやめた。
+  // 設定欄のカテゴリ chips を隠したあとも古い値が端末に残り、見えないまま範囲を絞って「出題範囲に単語が見つかりません」になっていた
+  // （ユーザー指摘「単語モードの10」「最初の10個は出た」。例：重要動詞が残っていると 11〜20 に該当語が無い）。残っている値は起動時に消す。
+  const [categoryFilter, setCategoryFilter] = useState<string[]>([]);
+  useEffect(() => {
+    try { localStorage.removeItem('kobun-categoryFilter'); } catch { /* 使えない環境では何もしない */ }
+  }, []);
 
   // Polysemy mode settings with localStorage persistence
   const [polysemyQuizType, setPolysemyQuizType] = useLocalStorageState<PolysemyQuizType>('kobun-polysemyQuizType', 'example-comprehension');
@@ -782,6 +790,7 @@ function App() {
           items: targetWords,
           key: (w) => w.qid,
           order: (w) => w.group * 100 + (w.meaning_idx ?? 0),
+          group: (w) => w.group, // 未着手は各語の1つめの意味から（範囲の語がまんべんなく出る）
           stats, boxes, due, n: opts?.numQuestions ?? wordNumQuestions,
         });
         if (r.picked.length > 0 && !stale()) { targetWords = r.picked; autoPicked = true; setLastPick(r.composition); }
@@ -901,9 +910,14 @@ function App() {
         const apiMode = prep.resolvedType === 'blank-fill' ? 'word-reverse' : prep.resolvedType;
         try {
           const excludeQids = [...Array.from(usedIndexes), ...recentChoices].join(',');
+          // 待つのは5秒まで（2026-11-16 ユーザー指摘「始まらない・止まる」：通信が止まると出題が始まらなかった）。
+          // 間に合わなければ下の前後の語からの選択肢（buildFallbackOptions）で出す
+          const ctrl = new AbortController();
+          const timer = window.setTimeout(() => ctrl.abort(), CHOICES_TIMEOUT_MS);
           const response = await fetch(
-            `/api/getChoices?qid=${encodeURIComponent(prep.correctWord.qid)}&correctQid=${encodeURIComponent(prep.correctWord.qid)}&excludeQids=${excludeQids}&mode=${apiMode}`
-          );
+            `/api/getChoices?qid=${encodeURIComponent(prep.correctWord.qid)}&correctQid=${encodeURIComponent(prep.correctWord.qid)}&excludeQids=${excludeQids}&mode=${apiMode}`,
+            { signal: ctrl.signal }
+          ).finally(() => window.clearTimeout(timer));
 
           if (response.ok) {
             const data = await response.json();

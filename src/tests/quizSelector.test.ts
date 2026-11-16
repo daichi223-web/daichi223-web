@@ -217,3 +217,23 @@ describe('pickQuestions：期限が来た語（due）', () => {
     }
   });
 });
+
+describe('未着手を語に偏らせない（group。2026-11-16 ユーザー指摘「単語モードの10」）', () => {
+  // 10語・各語2〜3意味（26意味）。10問なら10語すべてが1回ずつ出る
+  const items = Array.from({ length: 10 }, (_, g) => Array.from({ length: g % 3 === 0 ? 3 : g % 3 === 1 ? 2 : 3 }, (_, m) => ({ qid: `${g + 1}-${m}`, g: g + 1, m }))).flat();
+  const base = { items, key: (t: { qid: string }) => t.qid, order: (t: { g: number; m: number }) => t.g * 100 + t.m, stats: {}, boxes: {}, n: 10, rng: () => 0.5 };
+  it('group を渡すと、10語の範囲で10問なら10語ぜんぶ（各語の1つめの意味）', () => {
+    const r = pickQuestions({ ...base, group: (t) => t.g });
+    expect(new Set(r.picked.map((t) => t.g)).size).toBe(10);
+    expect(r.picked.every((t) => t.m === 0)).toBe(true);
+  });
+  it('group を渡さなければ今までどおり番号順（前の語の意味から埋まる）', () => {
+    const r = pickQuestions(base);
+    expect(new Set(r.picked.map((t) => t.g)).size).toBeLessThan(10);
+  });
+  it('問題数が語数より多ければ、2つめの意味へ進む（番号順）', () => {
+    const r = pickQuestions({ ...base, n: 13, group: (t) => t.g });
+    const second = r.picked.filter((t) => t.m === 1).map((t) => t.g).sort((a, b) => a - b);
+    expect(second).toEqual([1, 2, 3]);
+  });
+});
