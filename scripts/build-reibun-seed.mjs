@@ -92,6 +92,8 @@ export function buildRows(src = DEFAULT_SRC) {
 
     s.examples.forEach((e, i) => {
       const id = `reibun-${meaningKey}-${String(i + 1).padStart(2, "0")}`;
+      // 外した例（retired）は seed に入れない。番号はもとの位置のまま（ほかの例の id と手がかりの対応を変えない。2026-11-16）
+      if (e.retired === true) return;
       const conf = e.confidence || "medium";
       // 両論ある例(noQuiz)は出題から除外（正解衝突を防ぐ）。事典には残す
       const isQuiz = conf === "high" && e.verified === true && e.noQuiz !== true;
