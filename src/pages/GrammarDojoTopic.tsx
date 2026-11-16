@@ -5,7 +5,8 @@ import { fetchJsonAsset } from "@/lib/fetchJson";
 import {
   fetchMedia, fetchDrills, fetchDojoTopicLevels, markWatched, saveTopicResult, getAllTopicProgressOrThrow, drillLevel,
 } from "@/lib/kobun/dojoData";
-import { getWordStats } from '@/lib/wordStats';
+import { loadLearningSnapshot, statsMapOf } from '@/lib/learningSnapshot';
+import { fetchTopicMeta } from "@/lib/kobun/grammarTopicMeta";
 import { pickQuestions, type ItemStat } from '@/lib/quizSelector';
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 import { logEvent } from "@/lib/learningEvents";
@@ -143,8 +144,8 @@ export default function GrammarDojoTopic() {
         const nid = nextTopicId(id, ids);
         if (!nid) return;
         setNextTopic({ of: id, id: nid, title: null });
-        const r = await fetchJsonAsset<GrammarTopic>(`/grammar/${nid}.json`);
-        if (r.ok && nextReq.current === id) setNextTopic({ of: id, id: nid, title: r.data.title });
+        const meta = await fetchTopicMeta(nid); // 題名は索引から（無い単元だけ JSON を取る）
+        if (meta && nextReq.current === id) setNextTopic({ of: id, id: nid, title: meta.title });
       })
       .catch(() => {
         if (nextReq.current === id) nextReq.current = null;
@@ -192,7 +193,8 @@ export default function GrammarDojoTopic() {
       fetchDrills(topicId),
       // 到達度は「失敗したら例外」の版で読む。読めないまま進むと、空の到達度を元に結果を保存して過去の最高記録を下げてしまう
       getAllTopicProgressOrThrow(),
-      getWordStats(),
+      // 成績は共通のまとめ読み（60秒覚える・1,000行を超えても続きを取る）。取れなければ今までどおり「記録なし」
+      loadLearningSnapshot().then(statsMapOf).catch(() => ({} as Record<string, ItemStat>)),
     ]).then(([t, m, d, p, stats]) => {
       if (cancelled) return;
       // 単元の説明もドリルも取れなかったときは通信の失敗とみなす（「準備中」と出さない）
@@ -236,7 +238,7 @@ export default function GrammarDojoTopic() {
   const handleComplete = (r: DrillResult) => {
     setResult(r);
     setSaveFailed((n) => Math.max(n, r.saveFailed ?? 0));
-    void getWordStats().then(setAnswerStats).catch(() => {});
+    void loadLearningSnapshot().then((s) => setAnswerStats(statsMapOf(s))).catch(() => {});
     setPhase("done");
     window.scrollTo({ top: 0 });
     if (!topicId) return;
@@ -382,6 +384,7 @@ export default function GrammarDojoTopic() {
               drills={sessionDrills}
               supportBank={drills}
               stats={answerStats}
+              preloadedTopic={topic ?? undefined}
               onComplete={handleComplete}
               onSaveFailed={(n) => {
                 if (sessionSeq.current === seq) setSaveFailed(n);

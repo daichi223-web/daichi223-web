@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import type { GrammarDrill, GrammarTopic } from "@/lib/kobun/types";
-import { fetchJsonAsset } from "@/lib/fetchJson";
-import { fetchDojoTopicIds, fetchDrillsForTopics } from "@/lib/kobun/dojoData";
+import type { GrammarDrill } from "@/lib/kobun/types";
+import { fetchTopicMetas } from "@/lib/kobun/grammarTopicMeta";
+import { fetchDojoTopicLevels, fetchDrillsForTopics } from "@/lib/kobun/dojoData";
 import {
   STAGES,
   isCorrect,
@@ -328,15 +328,17 @@ export default function Manabinaoshi() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const ids = await fetchDojoTopicIds();
-      const list = await Promise.all(
-        ids.map(async (id) => {
-          const r = await fetchJsonAsset<GrammarTopic>(`/grammar/${id}.json`);
-          return r.ok ? { id, title: r.data.title, category: r.data.category as string } : null;
-        })
-      );
+      // 単元の一覧は道場ホームと同じ索引（1,000行の上限を越えても続きを取る・覚えてある）。失敗は今までどおり「空」
+      let ids: string[] = [];
+      try {
+        ids = Object.keys(await fetchDojoTopicLevels());
+      } catch (e) {
+        console.warn("[dojo] topic list failed:", e);
+      }
+      // 題名・分野は同梱の索引から（通信なし）。索引に無い単元だけ単元の JSON を取りに行く
+      const metas = await fetchTopicMetas(ids);
       if (cancelled) return;
-      const ok = list.filter((x): x is TopicMeta => x !== null);
+      const ok: TopicMeta[] = metas.map((m) => ({ id: m.id, title: m.title, category: m.category }));
       if (ok.length === 0) setLoadError(true);
       setTopics(ok);
     })();

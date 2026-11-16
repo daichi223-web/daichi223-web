@@ -15,12 +15,13 @@ import {
   availableGroups,
   buildReadingTest,
   circled,
-  fetchManualTest,
+  parseManualTest,
   formatElapsed,
   isReadingGroupId,
   kobunWordByQid,
   readingThread,
   selectGroup,
+  type ManualReadingFile,
   type ReadingQ,
   type ReadingTest as ReadingTestData,
 } from "@/lib/kobun/readingTest";
@@ -134,11 +135,18 @@ export default function ReadingTest() {
   useEffect(() => {
     if (!textId) return;
     let alive = true;
-    fetchJsonAsset<KobunText>(`/texts-v3/${textId}.json`).then((r) => {
+    // 問題ファイルは本文を待たずに同時に取り始める（本文が来てから形を確かめる）。
+    // 404（問題ファイル無し）は今までどおり manual = null（自動で作る）。
+    const manualReq = fetchJsonAsset<ManualReadingFile>(`/reading-tests/${textId}.json`);
+    fetchJsonAsset<KobunText>(`/texts-v3/${textId}.json`).then(async (r) => {
       if (!alive) return;
       if (!r.ok) return setLoadError(true);
       setText(r.data);
-      fetchManualTest(textId, r.data).then((m) => alive && setManual(m));
+      const mr = await manualReq;
+      if (!alive) return;
+      if (!mr.ok || !mr.data || !Array.isArray(mr.data.questions)) return setManual(null);
+      const t = parseManualTest(mr.data, r.data);
+      setManual(t.questions.length ? t : null);
     });
     fetchJsonAsset<TextAnalysis>(`/analysis/${textId}.json`).then((r) => alive && setAnalysis(r.ok ? r.data : null));
     return () => {

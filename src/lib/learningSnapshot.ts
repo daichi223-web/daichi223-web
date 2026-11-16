@@ -162,3 +162,30 @@ export function warmupWordsOf(
   }
   return pool.slice(0, n);
 }
+
+/**
+ * 学習履歴（/stats）の3つの集計（2026-11-16）。単語データにある qid（known）だけを数える。
+ * 今までの getWordStats・getWeakWords・getDueWords と srs_state の（qid, box）の問い合わせと同じ決め方。
+ * 文法ドリルなど known に無い qid の行は、どれにも入らない。
+ */
+export function statsPageViewOf(
+  s: LearningSnapshot,
+  known: string[],
+  now: Date = new Date()
+): {
+  stats: Record<string, { correct: number; incorrect: number; lastSeen: string }>;
+  weakQids: string[];
+  dueQids: string[];
+  srsRows: Array<{ qid: string; box: number }>;
+} {
+  const want = new Set(known);
+  const all = statsMapOf(s);
+  const stats: Record<string, { correct: number; incorrect: number; lastSeen: string }> = {};
+  for (const [qid, v] of Object.entries(all)) if (want.has(qid)) stats[qid] = v;
+  return {
+    stats,
+    weakQids: weakWordsOf(s, known),
+    dueQids: dueAmongOf(s, known, now),
+    srsRows: s.srs.filter((r) => want.has(r.qid)).map((r) => ({ qid: r.qid, box: r.box })),
+  };
+}

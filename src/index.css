@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&family=Noto+Serif+JP:wght@400;500;600;700;800&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Klee+One:wght@400;600&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+/* Web フォント（Google Fonts）の CSS は index.html の <link> で読む（2026-11-16）。
+   ここで @import していた間は、その CSS（圧縮後 約510KB・@font-face 2,124個）が届くまで
+   最初の描画も JS の実行も止まっていた。使うフォントと太さは同じ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -50,6 +50,8 @@ type TextBody = {
 type VocabIndex = Record<string, VocabIndexEntry>;
 
 const MAX_RESULTS = 30;
+// 「本文も検索」で同時に取るファイル数（120 本を一度に取らない）
+const BODY_FETCH_CONCURRENCY = 6;
 const SNIPPET_CONTEXT = 20;
 
 function escapeRegex(s: string) {
@@ -122,6 +124,16 @@ export default function SearchPage() {
   const [bodiesLoading, setBodiesLoading] = useState(false);
   const [openVocabLemma, setOpenVocabLemma] = useState<string | null>(null);
   const bodiesRef = useRef<TextBody[] | null>(null);
+  const bodiesStartedRef = useRef(false);
+  const examplesLoadedRef = useRef(false);
+  const examplesInflightRef = useRef(false);
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     setVocabIdx(bundledVocabIndex as VocabIndex);
@@ -133,22 +145,47 @@ export default function SearchPage() {
       }
     }
     setLemmaGroup(map);
-    fetch('/examples.json')
-      .then((r) => (r.ok ? r.json() : []))
-      .then(setExamples);
   }, []);
 
+  // 例文（約 760KB）は、検索語が入ってから取る（開いただけでは取らない）。
+  // 最初から ?q= があるときは、開いた直後に検索語があるのですぐ取る。
+  // 取れなかったときは覚えず、検索語を入れ直したときにもう一度取る。
+  const hasQuery = query.length > 0;
   useEffect(() => {
-    if (!includeBodies || bodiesRef.current) return;
+    if (!hasQuery || examplesLoadedRef.current || examplesInflightRef.current) return;
+    examplesInflightRef.current = true;
+    fetch('/examples.json')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!Array.isArray(d)) return;
+        examplesLoadedRef.current = true;
+        if (mountedRef.current) setExamples(d);
+      })
+      .catch(() => {
+        /* 取れなければ例文は出さない（次の入力でもう一度試す） */
+      })
+      .finally(() => {
+        examplesInflightRef.current = false;
+      });
+  }, [hasQuery]);
+
+  useEffect(() => {
+    if (!includeBodies || bodiesRef.current || bodiesStartedRef.current) return;
     if (texts.length === 0) return;
+    bodiesStartedRef.current = true;
     setBodiesLoading(true);
-    Promise.all(
-      texts.map((t) =>
-        fetch(`/texts/${t.slug}.json`)
-          .then((r) => (r.ok ? r.json() : null))
-          .then((d) => {
-            if (!d) return null;
-            return {
+    const list = texts;
+    const out: Array<TextBody | null> = new Array(list.length).fill(null);
+    let next = 0;
+    const worker = async () => {
+      while (next < list.length) {
+        const i = next++;
+        const t = list[i];
+        try {
+          const r = await fetch(`/texts/${t.slug}.json`);
+          const d = r.ok ? await r.json() : null;
+          if (d) {
+            out[i] = {
               slug: t.slug,
               title: d.title,
               source_work: d.source_work,
@@ -156,12 +193,19 @@ export default function SearchPage() {
               original: d.sections?.['本文'] || '',
               translation: d.sections?.['現代語訳'] || '',
             } as TextBody;
-          })
-          .catch(() => null)
-      )
-    ).then((arr) => {
-      const filtered = arr.filter((x): x is TextBody => !!x);
+          }
+        } catch {
+          out[i] = null;
+        }
+      }
+    };
+    Promise.all(
+      Array.from({ length: Math.min(BODY_FETCH_CONCURRENCY, list.length) }, worker)
+    ).then(() => {
+      // 並びは texts の順のまま（取れなかったものだけ除く）
+      const filtered = out.filter((x): x is TextBody => !!x);
       bodiesRef.current = filtered;
+      if (!mountedRef.current) return;
       setBodies(filtered);
       setBodiesLoading(false);
     });

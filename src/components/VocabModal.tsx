@@ -34,20 +34,29 @@ type TextIndexEntry = {
 };
 
 let examplesCache: ExamplesByLemma | null = null;
+let examplesInflight: Promise<ExamplesByLemma> | null = null;
 
 async function loadVocabIndex(): Promise<VocabIndex> {
   return bundledVocabIndex as VocabIndex;
 }
 
-async function loadExamples(): Promise<ExamplesByLemma> {
-  if (examplesCache) return examplesCache;
-  const res = await fetch('/examples-by-lemma.json');
-  if (!res.ok) {
-    examplesCache = {};
-    return examplesCache;
-  }
-  examplesCache = (await res.json()) as ExamplesByLemma;
-  return examplesCache;
+// 取れたらモジュール内に覚え、窓を開くたびに取り直さない（約 815KB）。
+// 取れなかったとき（HTTP エラー）は空を返すが覚えない＝次に開いたとき取り直す（lib/blanksLoader.ts と同じ型）。
+// 通信そのものの失敗は呼び出し元へ投げる（今までどおり画面のエラー表示になる）。
+function loadExamples(): Promise<ExamplesByLemma> {
+  if (examplesCache) return Promise.resolve(examplesCache);
+  if (examplesInflight) return examplesInflight;
+  examplesInflight = (async () => {
+    try {
+      const res = await fetch('/examples-by-lemma.json');
+      if (!res.ok) return {} as ExamplesByLemma;
+      examplesCache = (await res.json()) as ExamplesByLemma;
+      return examplesCache;
+    } finally {
+      examplesInflight = null;
+    }
+  })();
+  return examplesInflight;
 }
 
 async function loadTextsIndex(): Promise<TextIndexEntry[]> {
@@ -119,17 +128,16 @@ export default function VocabModal({ lemma, onClose, textId }: Props) {
         const e = idx[lemma];
         if (!cancelled && e) setEntry(e);
 
-        // Fetch HTML explanation (if available)
-        if (e) {
+        // 解説の HTML と例文は同時に取り始める（HTML は取れ次第すぐ出す）
+        const htmlReq = (async () => {
+          if (!e) return;
           const res = await fetch(`/vocab/${e.slug}.html`);
           if (res.ok) {
             const text = await res.text();
             if (!cancelled) setHtml(text.replace(/^<!--META:.*?-->\n?/, ''));
           }
-        }
-
-        // Fetch examples
-        const ex = await loadExamples();
+        })();
+        const [, ex] = await Promise.all([htmlReq, loadExamples()]);
         if (!cancelled) setExamples(ex[lemma] || []);
 
         // Fetch texts index for source lookup

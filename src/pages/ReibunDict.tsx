@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  fetchAllReibun,
-  fetchMeanings,
   meaningBadge,
   JODOSHI_ORDER,
 } from "@/lib/kobun/reibunData";
+import { loadReibunAndMeanings } from "@/lib/kobun/reibunCache";
 import type { GrammarReibun, GrammarJodoshiMeaning } from "@/lib/kobun/types";
 import { ReibunSentence, ReibunLegend } from "@/components/grammar/ReibunSentence";
 
@@ -19,7 +18,7 @@ export default function ReibunDict() {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const [r, m] = await Promise.all([fetchAllReibun(), fetchMeanings()]);
+      const [r, m] = await loadReibunAndMeanings();
       if (!alive) return;
       setReibun(r);
       setMeanings(m);

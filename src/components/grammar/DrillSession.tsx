@@ -56,12 +56,15 @@ export function DrillSession({
   onComplete,
   supportBank = drills,
   stats = {},
+  preloadedTopic,
   onSaveFailed,
 }: {
   drills: GrammarDrill[];
   supportBank?: GrammarDrill[];
   stats?: Record<string, ItemStat>;
   onComplete: (result: DrillResult) => void;
+  /** 親（単元ページ）がすでに読んでいる単元の解説。同じ単元なら取り直さない */
+  preloadedTopic?: GrammarTopic;
   /** 記録の保存に失敗するたびに、失敗した合計を知らせる（結果画面を出したあとに分かることもある） */
   onSaveFailed?: (failed: number) => void;
 }) {
@@ -85,6 +88,11 @@ export function DrillSession({
   const loadTopic = (id: string) => {
     const cur = topicsRef.current[id];
     if (cur !== undefined && cur !== 'error') return;
+    if (preloadedTopic && preloadedTopic.id === id) {
+      topicsRef.current = { ...topicsRef.current, [id]: preloadedTopic };
+      setTopics(topicsRef.current);
+      return;
+    }
     topicsRef.current = { ...topicsRef.current, [id]: 'loading' };
     setTopics(topicsRef.current);
     void fetchJsonAsset<GrammarTopic>(`/grammar/${id}.json`).then(r => {

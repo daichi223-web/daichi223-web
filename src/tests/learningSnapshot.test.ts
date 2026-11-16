@@ -34,6 +34,7 @@ import {
   todayReviewOf,
   lastActivityOf,
   warmupWordsOf,
+  statsPageViewOf,
   type LearningSnapshot,
 } from '../lib/learningSnapshot';
 import { bumpLearningVersion } from '../lib/learningVersion';
@@ -141,5 +142,21 @@ describe('loadLearningSnapshot（読み込みと覚え方）', () => {
     db.fail = false;
     const s = await loadLearningSnapshot();
     expect(s.stats).toHaveLength(1);
+  });
+});
+
+describe('学習履歴（/stats）の集計', () => {
+  it('単語データにある qid だけ。文法ドリルの行は成績・箱・苦手・期限のどれにも入らない', () => {
+    const v = statsPageViewOf(snap, words, now);
+    expect(Object.keys(v.stats).sort()).toEqual(['1-1', '2-1', '3-1']);
+    expect(v.stats['2-1']).toEqual({ correct: 3, incorrect: 2, lastSeen: ago(50) });
+    expect(v.weakQids).toEqual(['2-1', '3-1']); // 苦手＝箱1が先頭、続けて誤答率40%以上
+    expect(v.dueQids.sort()).toEqual(['2-1', '3-1', '4-1']); // next_review <= 今。日付の無い行は入らない
+    expect(v.srsRows.map((r) => r.qid)).toEqual(['1-1', '2-1', '3-1', '4-1', '5-1', '6-1']);
+    expect(v.srsRows.find((r) => r.qid === '5-1')).toEqual({ qid: '5-1', box: 4 });
+  });
+
+  it('記録が空なら全部空', () => {
+    expect(statsPageViewOf({ stats: [], srs: [] }, words, now)).toEqual({ stats: {}, weakQids: [], dueQids: [], srsRows: [] });
   });
 });

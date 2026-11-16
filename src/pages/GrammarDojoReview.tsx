@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { GrammarDrill } from "@/lib/kobun/types";
-import { fetchTodayReview, fetchDrills } from "@/lib/kobun/dojoData";
+import { fetchTodayReviewWithBank } from "@/lib/kobun/dojoData";
 import { DrillSession, type DrillResult } from "@/components/grammar/DrillSession";
 
 type Phase = "loading" | "ready" | "drill" | "done" | "empty" | "error";
@@ -33,10 +33,9 @@ export default function GrammarDojoReview() {
 
   /** 今日の分を取る（失敗したら例外。空なら drills が空） */
   const loadBatch = useCallback(async (): Promise<Batch> => {
-    const { drills } = await fetchTodayReview(shownIds.current);
-    // 「一段手前」の候補は無くても復習はできるので、ここの失敗は空として扱う（fetchDrills は失敗で空を返す）
-    const banks = await Promise.all([...new Set(drills.map((d) => d.topicId))].map(fetchDrills));
-    return { drills, supportBank: banks.flat() };
+    // 問題の本体と「一段手前」の候補は同時に取る（候補は無くても復習はできるので、その失敗は空として扱う）
+    const { drills, supportBank } = await fetchTodayReviewWithBank(shownIds.current);
+    return { drills, supportBank };
   }, []);
 
   useEffect(() => {

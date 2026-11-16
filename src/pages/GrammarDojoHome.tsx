@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import type { GrammarTopic, LayerId, TopicProgress } from "@/lib/kobun/types";
-import { fetchJsonAsset } from "@/lib/fetchJson";
+import type { LayerId, TopicProgress } from "@/lib/kobun/types";
+import { fetchTopicMetas } from "@/lib/kobun/grammarTopicMeta";
 import { fetchDojoTopicLevels, getAllTopicProgressOrThrow, fetchTodayReviewCount } from "@/lib/kobun/dojoData";
 import { computeDojoLevel } from "@/lib/kobun/dojoLevel";
 import { orderIndex } from "@/lib/kobun/curriculum";
@@ -131,17 +131,10 @@ export default function GrammarDojoHome() {
           fetchTodayReviewCount(),
         ]);
         const ids = Object.keys(lv);
-        const fetched = await Promise.all(
-          ids.map(async (id): Promise<Unit | null> => {
-            const r = await fetchJsonAsset<GrammarTopic>(`/grammar/${id}.json`);
-            // 題名を取れなかった単元は一覧に出さない（英字の ID のまま並べない）
-            return r.ok
-              ? { id, title: r.data.title, summary: r.data.summary, layer: r.data.layer, category: r.data.category }
-              : null;
-          })
-        );
+        // 題名・要約・分野は同梱の索引から（通信なし）。索引に無い単元だけ単元の JSON を取りに行く。
+        // 題名を取れなかった単元は一覧に出さない（英字の ID のまま並べない）
+        const list: Unit[] = await fetchTopicMetas(ids);
         if (cancelled) return;
-        const list = fetched.filter((u): u is Unit => u !== null);
         // 単元はあるのに題名が1つも取れない＝通信の失敗（「準備中」ではない）
         if (ids.length > 0 && list.length === 0) throw new Error("grammar topics: no title loaded");
         setUnits(list);

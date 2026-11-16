@@ -2,9 +2,6 @@ import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-// 単語クイズ本体（初回ロードでほぼ確実に必要なので eager）
-import App from './App.tsx'
-import { TestGrading } from './TestGrading.tsx'
 import PullToRefresh from './components/PullToRefresh.tsx'
 import RequireAccount from './components/RequireAccount.tsx'
 import { ensureAnonSession } from './lib/anonAuth.ts'
@@ -19,6 +16,29 @@ import './index.css'
 applyUnlockFromUrl()
 // `?cohort=<コホート名>` を消費して localStorage に保存。学年・学校別教材セットの選択。
 applyCohortFromUrl()
+
+// 単語のホームとクイズ（App）も遅延ロードにする（2026-11-16）。
+// 教材や文法のページを直接開いたときに、単語データ（約720KB）まで読まなくて済む。
+// トップを開いたときは、下の「先に取り始める」で待ちを増やさない。
+const loadApp = () => import('./App.tsx')
+if (window.location.pathname === '/') void loadApp().catch(() => {})
+const App = lazy(loadApp)
+const TestGrading = lazy(() => import('./TestGrading.tsx').then((m) => ({ default: m.TestGrading })))
+
+// 新しい版が出たあと、開いたままの画面が古い名前の部品を取りに行くと 404 になる（画面が出ない）。
+// そのときは1回だけページを読み直して新しい版にする。続けては読み直さない（1分に1回まで）。
+window.addEventListener('vite:preloadError', (event) => {
+  const KEY = 'kobun.chunkReloadAt'
+  try {
+    const last = Number(sessionStorage.getItem(KEY) || 0)
+    if (Date.now() - last < 60_000) return
+    sessionStorage.setItem(KEY, String(Date.now()))
+  } catch {
+    return
+  }
+  event.preventDefault()
+  window.location.reload()
+})
 
 // 読解 v3 と、単語アプリから動線が遠いページは遅延ロード
 const HomeV3 = lazy(() => import('./pages/HomeV3.tsx'))

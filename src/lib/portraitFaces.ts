@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { PortraitTone } from './portraitTone';
-import { MIYABI_PORTRAITS_READY } from './nobleData';
+import { MIYABI_PORTRAITS_READY, portraitArtTone } from './nobleData';
 
 // 位階の肖像（public/portraits、4:3）から「顔」を丸く切り出すための表。
 // nobleData.ts の PORTRAITS の focusX/focusY（object-position 用、全件 50/50）とは別の概念で、ここでは中心と大きさを持つ。
@@ -151,4 +151,27 @@ export function faceImgStyle(
   const left = boxPx / 2 - (W * face.cx) / 100;
   const top = boxPx * noseAt - (H * face.cy) / 100;
   return { position: 'absolute', width: W, height: H, left, top, maxWidth: 'none' };
+}
+
+/**
+ * 顔だけ切り出した小さい丸アイコン用の画像（128px 四方の webp）。
+ * 生成 = scripts/build-portrait-faces.py（この表を読み、faceImgStyle と同じ範囲を切る）。置き場所 public/portraits/face/<画風>-NN.webp。
+ * 第 n 階が 1〜21 の整数でないときは null（呼ぶ側は大きい肖像＋faceImgStyle で出す）。
+ */
+export function faceThumbSrc(tone: PortraitTone, n: number): string | null {
+  if (!Number.isInteger(n) || n < 1 || n > STAGE_COUNT) return null;
+  return `/portraits/face/${portraitArtTone(tone)}-${String(n).padStart(2, '0')}.webp`;
+}
+
+/** クイズに入る前に自分の顔の画像を先に取っておく（答え合わせの会話で遅れて出ないように）。失敗しても何も起きない */
+export function preloadFace(tone: PortraitTone, n: number): void {
+  const src = faceThumbSrc(tone, n);
+  if (!src || typeof Image === 'undefined') return;
+  try {
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = src;
+  } catch {
+    /* 先読みは無くても動く */
+  }
 }

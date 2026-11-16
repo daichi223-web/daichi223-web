@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getWordStats, getWeakWords } from '@/lib/wordStats';
-import { getDueWords } from '@/lib/srsEngine';
+import { loadLearningSnapshot, statsPageViewOf } from '@/lib/learningSnapshot';
 import { readStreak, type StreakSnapshot } from '@/lib/streak';
-import { supabase } from '@/lib/supabase';
-import { currentAuthUid } from '@/lib/anonAuth';
 import bundledKobunQ from '@/data/kobunQ.v2.slim.json';
 import vocabIndex from '@/data/vocabIndex.json';
 import bundledTextsV3 from '@/data/textsV3Index.json';
@@ -435,21 +432,15 @@ export default function StatsPage() {
     let cancelled = false;
     (async () => {
       try {
-        const [s, weak, due] = await Promise.all([getWordStats(), getWeakWords(), getDueWords()]);
-        // SRS box 分布も取得
-        const userId = (await currentAuthUid()) ?? '';
-        let srs: SrsBoxRow[] = [];
-        if (userId) {
-          const { data } = await supabase.from('srs_state').select('qid, box').eq('user_id', userId);
-          srs = (data ?? []) as SrsBoxRow[];
-        }
+        // 共通のまとめ読み（word_stats と srs_state を同時に1回ずつ。ホームから来たときは通信なし）
+        const snapshot = await loadLearningSnapshot();
         if (cancelled) return;
         // 単語データから外した qid（欠番）の記録は、一覧にも件数にも出さない
-        const known = (qid: string) => lemmaIndex[qid] !== undefined;
-        setStats(Object.fromEntries(Object.entries(s).filter(([qid]) => known(qid))));
-        setWeakQids(weak.filter(known));
-        setDueQids(due.filter(known));
-        setSrsRows(srs.filter((r) => known(r.qid)));
+        const v = statsPageViewOf(snapshot, Object.keys(lemmaIndex));
+        setStats(v.stats);
+        setWeakQids(v.weakQids);
+        setDueQids(v.dueQids);
+        setSrsRows(v.srsRows);
       } catch (e) {
         // silent fail
       } finally {

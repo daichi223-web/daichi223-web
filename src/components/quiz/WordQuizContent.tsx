@@ -326,14 +326,7 @@ export function WordQuizContent({
           </span>
         </div>
       )}
-      {/* 単語レベルが上がった語は教材の実戦例文で出題されていることを示す */}
-      {question.corpusExample && (
-        <div className="mb-2 text-center">
-          <span className="inline-block text-[11px] font-black px-3 py-1 rounded-full bg-rw-primary-soft text-rw-primary">
-            📕 教材の実戦例文 — 単語Lv{question.srsBox ?? 3}
-          </span>
-        </div>
-      )}
+      {/* 「📕 教材の実戦例文 — 単語Lv3」の札は出さない（2026-11-16 ユーザー指示「ここは要らない」）。例文の差し替えそのものは今までどおり */}
       {headwordNo(!answersLemma || answeredCorrectly !== null)}
       <p className="text-xs font-black text-rw-ink tracking-wider mb-2 text-center">{instruction}</p>
       <div className="mb-3">

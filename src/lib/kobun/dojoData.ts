@@ -286,15 +286,16 @@ async function fetchDueSrsRows(now: Date): Promise<SrsDueRow[]> {
  * 以前は期日が来た ID を全部 URL に並べて grammar_drills に問い合わせていた（数百件で URL が長すぎて
  * 失敗するおそれ）。いまは問題の索引と srs_state の行を手元で突き合わせる。
  */
-async function resolveTodayReview(exclude?: ReadonlySet<string>): Promise<TodayReview> {
+async function resolveTodayReview(exclude?: ReadonlySet<string>): Promise<TodayReview & { index: DrillIndexRow[] }> {
   const now = new Date();
   const [index, rows] = await Promise.all([fetchDrillIndex(), fetchDueSrsRows(now)]);
-  return pickTodayReview(rows, new Set(index.map((r) => r.id)), {
+  const review = pickTodayReview(rows, new Set(index.map((r) => r.id)), {
     now,
     todayStart: startOfToday(now),
     cap: DOJO_REVIEW_CAP,
     exclude,
   });
+  return { ...review, index };
 }
 
 /** 復習の「今日の分」の問題数（道場ホームの復習カード・教材一覧の文法道場ボタンのバッジ用）。失敗したら例外 */
@@ -302,17 +303,8 @@ export async function fetchTodayReviewCount(): Promise<number> {
   return (await resolveTodayReview()).ids.length;
 }
 
-/**
- * 復習の「今日の分」の問題（期日の古い順・最大20問）と、残りの数。失敗したら例外。
- * exclude = この画面ですでに出した問題（「つづけてもう少し」で同じ問題を出さないため）。
- */
-export async function fetchTodayReview(
-  exclude?: ReadonlySet<string>
-): Promise<{ drills: GrammarDrill[]; remaining: number }> {
-  const { ids, remaining } = await resolveTodayReview(exclude);
-  if (ids.length === 0) return { drills: [], remaining };
-
-  // ここで URL に並ぶ ID は多くても上限（20）個
+/** 今日の分の問題の本体を取る（ids は多くても上限（20）個なので URL は長くならない）。失敗したら例外 */
+async function fetchDrillsByIds(ids: string[], remaining: number): Promise<{ drills: GrammarDrill[]; remaining: number }> {
   const { data, error } = await supabase
     .from("grammar_drills")
     .select("id, topic_id, kind, prompt, context, choices, answer, explanation, ref_heading, sort")
@@ -324,10 +316,40 @@ export async function fetchTodayReview(
   return { drills, remaining };
 }
 
+/**
+ * 復習の「今日の分」の問題（期日の古い順・最大20問）と、残りの数。失敗したら例外。
+ * exclude = この画面ですでに出した問題（「つづけてもう少し」で同じ問題を出さないため）。
+ */
+export async function fetchTodayReview(
+  exclude?: ReadonlySet<string>
+): Promise<{ drills: GrammarDrill[]; remaining: number }> {
+  const { ids, remaining } = await resolveTodayReview(exclude);
+  if (ids.length === 0) return { drills: [], remaining };
+  return fetchDrillsByIds(ids, remaining);
+}
+
+/**
+ * 復習の「今日の分」と、間違えたときの「一段手前」の候補を一緒に取る（復習の画面用）。
+ * 問題の本体と、手前の候補（今日の分の単元のドリル全部）は互いに依存しない。単元は索引から分かるので、
+ * 以前のように「本体を取ってから単元を知って候補を取る」直列にせず、同時に取る。
+ * 手前の候補の取得に失敗したときは空として扱う（fetchDrills は失敗で空を返す）。本体の失敗は例外。
+ */
+export async function fetchTodayReviewWithBank(
+  exclude?: ReadonlySet<string>
+): Promise<{ drills: GrammarDrill[]; supportBank: GrammarDrill[]; remaining: number }> {
+  const { ids, remaining, index } = await resolveTodayReview(exclude);
+  if (ids.length === 0) return { drills: [], supportBank: [], remaining };
+  const topicOf = new Map(index.map((r) => [r.id, r.topicId]));
+  const topicIds = [...new Set(ids.map((id) => topicOf.get(id)).filter((t): t is string => t !== undefined))];
+  const [main, banks] = await Promise.all([fetchDrillsByIds(ids, remaining), Promise.all(topicIds.map(fetchDrills))]);
+  return { drills: main.drills, supportBank: banks.flat(), remaining: main.remaining };
+}
+
 /** ドリル1問の解答を記録（正誤数 + SRS箱）。qid = drill.id */
 export async function recordDrillAnswer(drillId: string, isCorrect: boolean): Promise<void> {
-  await recordAnswer(drillId, isCorrect);
-  await updateSrsState(drillId, isCorrect);
+  // 別の表（word_stats と srs_state）へ書く2つなので同時に走らせる（読んでから書く往復が直列で4回になっていた）。
+  // どちらかが失敗したら今までどおり投げる（もう一方は書き終えるまで走る）
+  await Promise.all([recordAnswer(drillId, isCorrect), updateSrsState(drillId, isCorrect)]);
 }
 
 /** 全単元の到達度を取得（道場ホーム用） */

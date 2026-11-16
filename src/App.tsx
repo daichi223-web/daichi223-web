@@ -21,6 +21,9 @@ import { buildRetryRound, countScored } from './lib/quiz/retryRound';
 import { buildWordQuiz, type QuizQuestion, type ResolvedWordQuizType } from './lib/quiz/wordQuiz';
 import { loadWordQuizFiles, loadWordQuizRecords, preloadWordQuizFiles } from './lib/quiz/wordQuizData';
 import { trapsOf } from './lib/quiz/modernTraps';
+import { preloadFace } from './lib/portraitFaces';
+import { readPortraitTone } from './lib/portraitTone';
+import { readMyStage } from './lib/myStage';
 import {
   EMPTY_SNAPSHOT,
   loadLearningSnapshot,
@@ -129,11 +132,12 @@ function App() {
   const [allWords, setAllWords] = useState<Word[]>([]);
   // qid → 単語データの行（API の選択肢に辞書の形 senseNorm を補う）
   const [isLoading, setIsLoading] = useState(true);
-  const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
   // 出題の作り直しの通し番号。最後に始めた作り直しだけを画面に反映する（2026-11-04）。
   // 作成中にモード・範囲を変えると、古い作成が後から新しい出題を上書きしたり、作成中の印が立ったままになって
   // 以後の作り直しが止まったりしていた（「単語モードを選んでも一回表示されない」）
   const setupSeqRef = useRef(0);
+  // いまの出題を作ったときの opts（語を絞った出題で形式を変えたとき、同じ並び・同じ問題数で作り直す）
+  const lastSetupOptsRef = useRef<{ sequential?: boolean; numQuestions?: number } | undefined>(undefined);
   // 間違えた語の「もう一度」を、このセッションで既に足したか（setupQuiz で戻す）
   const retryAddedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
@@ -212,6 +216,9 @@ function App() {
   const lemmaOfQid = (qid: string): string | undefined =>
     allWords.find((w) => w.qid === qid)?.lemma;
   const [currentWritingAnswerId, setCurrentWritingAnswerId] = useState<string>('');
+  // 回答の本文を送った返事を待つ約束。返事（answerId）が届く前に「合っていた／ちがった」を押しても、
+  // 届いてから自己判定を送れるように持っておく（2026-11-16。今までは届く前に押すと判定が送られなかった）
+  const writingAnswerIdRef = useRef<Promise<string | null> | null>(null);
 
   // Wrong answers tracking for session-end review
   const [wrongAnswers, setWrongAnswers] = useState<Array<{ lemma: string; sense: string; qid: string }>>([]);
@@ -467,6 +474,8 @@ function App() {
     loadData();
     // 出題に使うファイルを先に読み始める（出題を作るときに待たない。lib/quiz/wordQuizData）
     preloadWordQuizFiles();
+    // 答え合わせに出る自分の顔（小さい画像）も先に取っておく
+    preloadFace(readPortraitTone(), readMyStage().n);
   }, []);
 
   // Initial quiz setup when data loads or settings change
@@ -481,13 +490,7 @@ function App() {
       // モード切替で seed lemma が設定されていれば第1問に同じ語を引き継ぐ
       const seed = pendingSeedLemma;
       if (seed) setPendingSeedLemma(null);
-      setIsGeneratingQuiz(true);
-      // setupQuiz は呼んだ時点（最初の await の前）で通し番号を進める
-      const run = setupQuiz(undefined, seed);
-      const mySeq = setupSeqRef.current;
-      run.finally(() => {
-        if (setupSeqRef.current === mySeq) setIsGeneratingQuiz(false);
-      });
+      void setupQuiz(undefined, seed);
     }
     // pendingSeedLemma は意図的に依存に入れない (mode/range 変更時に最新値を closure で拾う)
   }, [
@@ -498,6 +501,18 @@ function App() {
     quizQidFilter,
     categoryFilter,
   ]);
+
+  // 語を絞った出題（ヒートマップ・教材・苦手・今日の分から来たクイズ）の途中で形式を変えたとき。
+  // 上の作り直しは絞り込み中は走らないので、同じ語のまま新しい形式で作り直す
+  // （2026-11-16 ユーザー指摘「ヒートマップから単語に飛んで、形式を変えても切り替わらない」）。
+  const prevWordQuizTypeRef = useRef(wordQuizType);
+  useEffect(() => {
+    const changed = prevWordQuizTypeRef.current !== wordQuizType;
+    prevWordQuizTypeRef.current = wordQuizType;
+    if (!changed) return;
+    if (allWords.length === 0 || !quizQidFilter || currentMode !== 'word') return;
+    void setupQuiz(quizQidFilter, null, lastSetupOptsRef.current, 'word');
+  }, [wordQuizType]);
 
 
   const loadData = async () => {
@@ -576,6 +591,7 @@ function App() {
     modeOverride?: 'word' | 'polysemy',
   ) => {
     const seq = ++setupSeqRef.current;
+    lastSetupOptsRef.current = opts;
     retryAddedRef.current = false;
     // Reset all quiz states when switching modes
     setShowResults(false);
@@ -673,8 +689,10 @@ function App() {
     // その qid のみ出題、なければ範囲で絞り込む
     const filter = qidFilterOverride ?? quizQidFilter;
     const emptyMessage = () =>
-      quizQidFilter
-        ? '対象となる単語が見つかりません。'
+      filter && filter.length > 0
+        ? wordQuizType === 'blank-fill'
+          ? 'この単語には空欄の問題がありません。ほかの形式を選んでください。'
+          : '対象となる単語が見つかりません。'
         : wordQuizType === 'blank-fill'
         ? 'この範囲には空欄テキストのある単語がありません（範囲331以降は非対応）。'
         : '出題範囲に単語が見つかりません。';
@@ -1059,7 +1077,7 @@ function App() {
       localStorage.setItem('anonId', anonId);
     }
 
-    fetch('/api/submitAnswer', {
+    const sent: Promise<string | null> = fetch('/api/submitAnswer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1072,13 +1090,16 @@ function App() {
     })
       .then(response => response.json())
       .then(data => {
-        if (data.answerId) {
-          setCurrentWritingAnswerId(data.answerId);
-        }
+        const id: string | null = typeof data?.answerId === 'string' && data.answerId ? data.answerId : null;
+        // 次の問題へ進んだあとに届いた返事は、今の問題の印にしない
+        if (id && writingAnswerIdRef.current === sent) setCurrentWritingAnswerId(id);
+        return id;
       })
       .catch(e => {
         console.error('Failed to submit answer:', e);
+        return null;
       });
+    writingAnswerIdRef.current = sent;
   };
 
   // 自己判定は、機械で決まらなかった（保留の）回答にだけ受け付ける
@@ -1091,22 +1112,26 @@ function App() {
       if (judgment && !isRetryQuestion()) setScore(prev => prev + 1);
     }
 
-    // 自己判定を回答の行に残す（バックグラウンド）- answerIdがあれば保存
-    if (currentWritingAnswerId) {
-      const anonId = localStorage.getItem('anonId');
-      if (anonId) {
+    // 自己判定を回答の行に残す（バックグラウンド）。answerId がまだ届いていなければ、届くのを待ってから送る
+    const knownId = currentWritingAnswerId;
+    const pendingId = writingAnswerIdRef.current;
+    const anonId = localStorage.getItem('anonId');
+    if (anonId && (knownId || pendingId)) {
+      void (async () => {
+        const answerId = knownId || (pendingId ? await pendingId : null);
+        if (!answerId) return;
         fetch('/api/userCorrectAnswer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            answerId: currentWritingAnswerId,
+            answerId,
             userCorrection: judgment ? 'OK' : 'NG',
             userId: anonId,
           }),
         }).catch(e => {
           console.error('Failed to submit user correction:', e);
         });
-      }
+      })();
     }
 
     // 判定後も自動では進まない。selfRight / selfWrong の吹き出しを見せ、タップか「つぎへ」で次へ（2026-11-02）
@@ -1148,6 +1173,7 @@ function App() {
     setShowWritingResult(false);
     setWritingUserJudgment(undefined);
     setCurrentWritingAnswerId('');
+    writingAnswerIdRef.current = null;
   };
 
   const handleExampleComprehensionCheck = async (answers: {[key: string]: string}) => {

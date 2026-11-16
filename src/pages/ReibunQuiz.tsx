@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { fetchAllReibun, fetchMeanings, JODOSHI_ORDER } from "@/lib/kobun/reibunData";
+import { JODOSHI_ORDER } from "@/lib/kobun/reibunData";
+import { loadReibunAndMeanings } from "@/lib/kobun/reibunCache";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
 import type { GrammarReibun, GrammarJodoshiMeaning } from "@/lib/kobun/types";
 import { ReibunSentence, ReibunLegend } from "@/components/grammar/ReibunSentence";
@@ -36,7 +37,7 @@ export default function ReibunQuiz() {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const [r, m] = await Promise.all([fetchAllReibun(), fetchMeanings()]);
+      const [r, m] = await loadReibunAndMeanings();
       if (!alive) return;
       setReibun(r);
       setMeanings(m);

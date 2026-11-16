@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
+import { Fragment, memo, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
 import type {
   Sentence,
   Token,
@@ -58,7 +58,9 @@ const hintLabel: Record<ReadingHintType, string> = {
   culture: "古文常識",
 };
 
-export function TokenizedText({
+// 親（教材画面）が語のカードを動かすたびに描き直されないよう memo にする（2026-11-16）。
+// 親は props を安定させて渡す（関数は useCallback、強調・手がかりはこの文に関わるときだけ値を渡す）
+export const TokenizedText = memo(function TokenizedText({
   sentence,
   currentLayer,
   analysis,
@@ -334,4 +336,4 @@ export function TokenizedText({
           />
         );
   }
-}
+});

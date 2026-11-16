@@ -1,7 +1,8 @@
 import { useParams, useSearchParams, useLocation, Link } from "react-router-dom";
 import { tokenIdFromHash } from "@/lib/returnTo";
-import { useState, useEffect, useMemo, Fragment } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback, Fragment } from "react";
 import type {
+  Sentence,
   KobunText,
   LayerId,
   LayerDefinition,
@@ -203,9 +204,12 @@ export default function TextReader() {
     setCurrentLayer(textId, layer);
   };
 
-  const handleTokenView = (tokenId: string) => {
+  // 本文の部品（TokenizedText は memo）へ渡すので、textId が変わるときだけ作り直す
+  const handleTokenView = useCallback((tokenId: string) => {
     markTokenViewed(textId, tokenId);
-  };
+  }, [textId]);
+  // 和歌で文の一部（tokens を絞った）を描くときの文オブジェクト。描くたびに作り直さず、かたまりごとに1つを使い回す
+  const pieceSentences = useRef(new WeakMap<Piece, Sentence>());
 
   // 浮かぶ解説カード：教材の全トークン（id → トークンと文）。フックは早期 return より前に呼ぶ
   const cardTokens = useMemo(() => {
@@ -284,10 +288,19 @@ export default function TextReader() {
 
   // ---- 本文のかたまりの描画（wakaLayout の RenderBlock） ----
   const BODY = "leading-[2.2] text-[17px]";
+  const pieceSentenceOf = (piece: Piece): Sentence => {
+    if (piece.tokens === piece.sentence.tokens) return piece.sentence;
+    let s = pieceSentences.current.get(piece);
+    if (!s) {
+      s = { ...piece.sentence, tokens: piece.tokens };
+      pieceSentences.current.set(piece, s);
+    }
+    return s;
+  };
   const renderPiece = (piece: Piece, opts: { className?: string; annotation?: boolean; key?: string } = {}) => (
     <TokenizedText
       key={`${piece.sentence.id}${opts.key ?? ""}`}
-      sentence={piece.tokens === piece.sentence.tokens ? piece.sentence : { ...piece.sentence, tokens: piece.tokens }}
+      sentence={pieceSentenceOf(piece)}
       currentLayer={currentLayer}
       analysis={analysis}
       textTitle={text.title}
@@ -295,8 +308,8 @@ export default function TextReader() {
       onTokenView={handleTokenView}
       shikiResetKey={shikiResetKey}
       cardMode={cardMode}
-      highlightTokenId={wordCard.activeId}
-      cueTokenIds={wordCard.cueIds}
+      highlightTokenId={wordCard.activeId && piece.tokens.some((t) => t.id === wordCard.activeId) ? wordCard.activeId : null}
+      cueTokenIds={wordCard.cueIds.size > 0 && piece.tokens.some((t) => wordCard.cueIds.has(t.id)) ? wordCard.cueIds : undefined}
       isVocabToken={wordCard.isVocab}
       isCardToken={wordCard.isCard}
       className={opts.className ?? BODY}
