@@ -50,6 +50,7 @@ export function TeacherDetailSheet({ id, tone, selected, onSelect, onClose }: Pr
   if (!id) return null;
   const t = TEACHERS[id];
   const p = TEACHER_PROFILES[id];
+  const fictional = p.persona === 'fictional';
 
   return createPortal(
     <div
@@ -106,7 +107,7 @@ export function TeacherDetailSheet({ id, tone, selected, onSelect, onClose }: Pr
             {selected ? 'いま選んでいる先生' : 'この先生にする'}
           </button>
 
-          <Section title="史実" note="史料や作品から確かめられること">
+          <Section title={fictional ? "作中の描写" : "史実"} note={fictional ? "物語の本文から確かめられること（物語の登場人物で、実在の人ではない）" : "史料や作品から確かめられること"}>
             <Bullets items={p.facts} />
             {p.words.length > 0 && (
               <div className="mt-2 pt-2 border-t border-rw-rule space-y-1.5">
@@ -121,12 +122,12 @@ export function TeacherDetailSheet({ id, tone, selected, onSelect, onClose }: Pr
           </Section>
 
           {p.legends.length > 0 && (
-            <Section title="伝わる話" note="後の時代の説話・伝説。史実とは区別して読む" tint="legend">
+            <Section title={fictional ? "作品について" : "伝わる話"} note={fictional ? "作品の成り立ちと、後の時代の受けとめられ方" : "後の時代の説話・伝説。史実とは区別して読む"} tint="legend">
               <Bullets items={p.legends} />
             </Section>
           )}
 
-          <Section title="先生キャラ" note="ここからはこのアプリの創作。史実をもとに起こした人物像" tint="fiction">
+          <Section title="先生キャラ" note={fictional ? "ここからはこのアプリの創作。作中の描写をもとに起こした人物像" : "ここからはこのアプリの創作。史実をもとに起こした人物像"} tint="fiction">
             <p className="text-[13px] leading-relaxed text-rw-ink">{p.character.summary}</p>
             <ul className="mt-2 space-y-1.5">
               {p.character.basis.map((b, i) => (

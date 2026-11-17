@@ -11,9 +11,17 @@ import type { PortraitTone } from './portraitTone';
 // Codex の読み直し＝共有ファイルの依頼4 は未着手）。戻すときは false にするだけ（中立の文に戻り、ホームのあいさつも消える）。
 export const TEACHER_VOICE_ENABLED = true;
 
-export type TeacherId = 'sei' | 'murasaki' | 'michizane' | 'tsurayuki' | 'teika' | 'komachi' | 'izumi' | 'koshikibu' | 'ukyo' | 'narihira';
+export type BaseTeacherId = 'sei' | 'murasaki' | 'michizane' | 'tsurayuki' | 'teika' | 'komachi' | 'izumi' | 'koshikibu' | 'ukyo' | 'narihira';
+// 教材の先生（2026-11-17 ユーザー指示）。その教材の読解テストに出て、クリアすると選べるようになる（workTeachers.ts）。
+export type GuestTeacherId = 'kaguya';
+export type TeacherId = BaseTeacherId | GuestTeacherId;
 
-export const TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
+/** はじめから選べる先生（設定欄に並ぶ順） */
+export const TEACHER_IDS: readonly BaseTeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
+/** 教材をクリアすると手に入る先生 */
+export const GUEST_TEACHER_IDS: readonly GuestTeacherId[] = ['kaguya'];
+/** 台詞・人物解説を持つ先生のすべて */
+export const ALL_TEACHER_IDS: readonly TeacherId[] = [...TEACHER_IDS, ...GUEST_TEACHER_IDS];
 
 export type TeacherMeta = {
   id: TeacherId;
@@ -108,6 +116,15 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
     oneLiner: '心が先に立つ、型にはまらない歌の人',
     profile: '六歌仙の一人。仮名序に「その心余りて詞たらず」、国史に「漢学は乏しいが和歌が上手」と記された。',
   },
+  // 2026-11-17 追加（ユーザー指示「竹取物語の問題の先生はかぐや姫に」）。教材の先生（竹取物語の読解テストをクリアすると選べる）。作中の人物
+  kaguya: {
+    id: 'kaguya',
+    name: 'かぐや姫',
+    kana: 'かぐやひめ',
+    title: '『竹取物語』の主人公',
+    oneLiner: '難題を出す月の姫。簡単にはほめない先生',
+    profile: '『竹取物語』の作中の人物。五人の貴公子に難題を出し、帝の求めにも応じず、育ての親に手紙を残して月へ帰った。',
+  },
 };
 
 // 先生の絵の「みやび」（2026-11-13、Codex 作。背景は透明）。ファイル名は作業中の仮の名のまま <id>-anime.webp。
@@ -116,7 +133,8 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
 // 小式部内侍（元気な先輩）に回した（2026-11-13 ユーザー承認）。清少納言は同日、型に合わせて描き直した絵が届いて入れた。
 /** みやびの絵がある先生（public/teachers/<id>-anime.webp）。無い先生は しっとり（sharp）の絵で出す */
 // 2026-11-13 夜（ユーザー指示）：貫之として届いた絵を業平に回し、道真（固め）と貫之（ややファンキー）は40〜50代のイケオジに描き直した（Codex の依頼5）。
-export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
+// 2026-11-17：かぐや姫（Codex の依頼7）。
+export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira', 'kaguya'];
 
 /** 先生の絵のパス。みやびは <id>-anime.webp、ほかは <id>-<tone>.webp */
 export function teacherImage(id: TeacherId, tone: PortraitTone): string {
@@ -125,7 +143,7 @@ export function teacherImage(id: TeacherId, tone: PortraitTone): string {
 }
 
 export function isTeacherId(v: unknown): v is TeacherId {
-  return typeof v === 'string' && (TEACHER_IDS as readonly string[]).includes(v);
+  return typeof v === 'string' && (ALL_TEACHER_IDS as readonly string[]).includes(v);
 }
 
 /** 状況ごとの台詞（variant の配列）。鍵の意味は BRIEF-lines.md の「出力の形」と同じ */

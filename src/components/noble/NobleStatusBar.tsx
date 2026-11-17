@@ -8,6 +8,7 @@ import {
 } from '@/lib/nobleData';
 import { recordPromotion } from '@/lib/promotionHistory';
 import { usePortraitTone } from '@/lib/portraitTone';
+import { PostName } from './KanshokuPicker';
 
 // ホーム/学習履歴の最上部に置く統合ステータスバー。
 // 1段 ~90px で 「肖像サムネ + 位階 + 次の昇進バー + 3 KPI」を集約。
@@ -110,7 +111,7 @@ export default function NobleStatusBar({
               {stage.rank}
             </span>
             <span className="text-[10px] text-rw-ink-soft truncate">
-              {stage.post.split('・')[0]}
+              <PostName stage={stage} />
             </span>
           </div>
         </div>

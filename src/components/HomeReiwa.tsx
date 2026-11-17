@@ -17,6 +17,7 @@ import { quizRangeHeadline, type QuizRange } from '@/lib/quizRange';
 import { TEACHER_VOICE_ENABLED } from '@/lib/teachers';
 import { TeacherGreeting } from '@/components/quiz/TeacherGreeting';
 import { isGuest } from '@/lib/guest';
+import { PostName } from '@/components/noble/KanshokuPicker';
 
 // Reiwa デザイン版ホーム画面。
 // handoff/dir-reiwa.jsx の RwHome を本番ロジックと結線したもの。
@@ -227,7 +228,7 @@ export default function HomeReiwa({
                     {nobleStage.rank}
                   </div>
                   <div className="text-[9px] opacity-80 truncate mt-0.5">
-                    {nobleStage.post.split('・')[0]}
+                    <PostName stage={nobleStage} />
                   </div>
                 </div>
               </div>

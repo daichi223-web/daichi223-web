@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   type PartLevels,
@@ -18,6 +18,7 @@ import {
 import { recordPromotion } from '@/lib/promotionHistory';
 import RoadmapModal from './RoadmapModal';
 import HistoryDrawer from './HistoryDrawer';
+import { KanshokuPicker, PostName } from './KanshokuPicker';
 import { usePortraitTone } from '@/lib/portraitTone';
 
 // StatsPage の theme='noble' 区画。掛軸スタイルで水彩肖像をヒーローに、
@@ -58,6 +59,8 @@ export default function NobleStatsDashboard({ parts, score, onOpenLook }: Props)
   };
 
   const stage = effectiveStage(score);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const closePicker = useCallback(() => setPickerOpen(false), []);
   const next = nextStage(score, stage.n);
   const portrait = portraitForStage(stage.n, portraitTone);
   const tone = TIER_TONE[stage.era];
@@ -94,6 +97,25 @@ export default function NobleStatsDashboard({ parts, score, onOpenLook }: Props)
           </button>
         </div>
       )}
+
+      {/* 名乗る官職を選ぶ（2026-11-17 ユーザー指示。kanshoku.ts）。掛軸を畳んでいても見えるよう、ここに置く */}
+      <div className="px-4 py-2.5 border-b border-rw-rule flex items-center gap-2">
+        <span className="flex-1 min-w-0 text-[12px] text-rw-ink truncate">
+          <span className="text-[10px] font-bold text-rw-ink-soft mr-1.5">官職</span>
+          <span className="font-black" style={{ fontFamily: '"Noto Serif JP", serif' }}>{stage.rank}</span>
+          <span className="mx-1 text-rw-ink-soft">・</span>
+          <span className="font-bold"><PostName stage={stage} /></span>
+        </span>
+        <button
+          type="button"
+          onClick={() => setPickerOpen(true)}
+          className="shrink-0 text-[11px] font-bold px-3 py-1 rounded-full border-2"
+          style={{ borderColor: 'var(--rw-primary)', color: 'var(--rw-primary)' }}
+        >
+          官職を選ぶ
+        </button>
+        <KanshokuPicker stage={stage} open={pickerOpen} onClose={closePicker} />
+      </div>
 
       {showKakejiku && (
       <>
@@ -199,7 +221,7 @@ export default function NobleStatsDashboard({ parts, score, onOpenLook }: Props)
                 {stage.rank}
                 {stage.rank.length === 1 ? '位' : ''}
                 <span className="text-[10px] text-rw-ink-soft font-normal ml-2">
-                  {stage.post.split('・')[0]}
+                  <PostName stage={stage} />
                 </span>
               </div>
               <div className="text-[10px] text-rw-ink-soft tracking-wide mt-0.5 leading-snug">

@@ -15,6 +15,7 @@
 | koshikibu | 小式部内侍（2026-11-12 追加） | https://www.canva.com/M/MAHatYZZ2HE | https://www.canva.com/M/MAHatVglC9Y | https://www.canva.com/M/MAHatZ-nNz4 |
 | ukyo | 建礼門院右京大夫（2026-11-12 追加） | https://www.canva.com/M/MAHatff5lPc | https://www.canva.com/M/MAHatezbYQM | https://www.canva.com/M/MAHatQxfhDA |
 | narihira | 在原業平（2026-11-12 追加） | https://www.canva.com/M/MAHatZyjQ9g | https://www.canva.com/M/MAHatTYpz2g | https://www.canva.com/M/MAHatdLNA0Q |
+| kaguya | かぐや姫（2026-11-17 追加・教材の先生） | https://www.canva.com/M/MAHbLNuweLg | https://www.canva.com/M/MAHbLGRLAns | https://www.canva.com/M/MAHbLItskLs |
 
 不採用（見本）: 博士 https://www.canva.com/M/MAHZui3s-XQ
 

@@ -26,11 +26,13 @@ import {
   type ReadingTest as ReadingTestData,
 } from "@/lib/kobun/readingTest";
 import { ChatFeedback } from "@/components/quiz/ChatFeedback";
+import { FaceAvatar } from "@/components/noble/FaceAvatar";
 import { QuizBackground } from "@/components/quiz/QuizBackground";
 import { answerTone, scrollBehavior } from "@/components/quiz/writingVerdict";
 import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from "@/lib/quizBackground";
-import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from "@/lib/teachers";
+import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage, type TeacherId } from "@/lib/teachers";
 import { useChatTeacher } from "@/lib/chatTeacher";
+import { isReadingTestCleared, isTeacherUnlocked, unlockTeacher, workTeacherOf } from "@/lib/workTeachers";
 import { usePortraitTone } from "@/lib/portraitTone";
 import { readMyStage } from "@/lib/myStage";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
@@ -205,8 +207,10 @@ export default function ReadingTest() {
     if (q && !finished) markQuestionShown();
   }, [q, finished]);
 
-  // 答え合わせの先生と自分（単語クイズと同じ設定）
-  const [teacherId] = useChatTeacher();
+  // 答え合わせの先生と自分（単語クイズと同じ設定）。教材の先生が決まっていればそちらを優先（workTeachers.ts。2026-11-17）
+  const [chosenTeacher] = useChatTeacher();
+  const workTeacher = text ? workTeacherOf(textId ?? "", text.source) : null;
+  const teacherId = workTeacher ?? chosenTeacher;
   const [tone] = usePortraitTone();
   const myStage = useMemo(readMyStage, []);
   const [quizBackground] = useQuizBackground();
@@ -214,6 +218,7 @@ export default function ReadingTest() {
   const bgColor = QUIZ_BACKGROUND_COLORS[quizBackgroundColor]?.bg ?? "var(--rw-bg)";
 
   const feedbackRef = useRef<HTMLDivElement>(null);
+  const [newTeacher, setNewTeacher] = useState<TeacherId | null>(null);
   const choose = (i: number) => {
     if (!q || chosen !== null) return;
     setAnswers((a) => a.map((x, k) => (k === idx ? i : x)));
@@ -251,6 +256,11 @@ export default function ReadingTest() {
     } else {
       setEndAt(Date.now());
       window.scrollTo({ top: 0 });
+      // 教材をクリアすると、その教材の先生が手に入る（2026-11-17 ユーザー指示）
+      const correct = answers.filter((a, k) => a !== null && a === questions[k]?.answerIndex).length;
+      if (workTeacher && isReadingTestCleared(correct, questions.length) && unlockTeacher(workTeacher)) {
+        setNewTeacher(workTeacher);
+      }
     }
   };
 
@@ -475,6 +485,20 @@ export default function ReadingTest() {
                 <span className="text-lg font-black"> / {questions.length} 問正解</span>
               </p>
               <p className="text-center text-sm font-bold text-rw-ink-soft mt-1">かかった時間 {formatElapsed(elapsed)}</p>
+              {newTeacher && (
+                <div className="mt-4 flex items-center gap-3 rounded-xl border-2 p-3" style={{ borderColor: "var(--rw-primary)", background: "var(--rw-primary-soft)" }}>
+                  <FaceAvatar src={teacherImage(newTeacher, tone)} size={48} alt="" />
+                  <p className="flex-1 text-sm text-rw-ink">
+                    <b>{TEACHERS[newTeacher].name}</b>が先生に加わりました。
+                    <span className="block text-xs text-rw-ink-soft mt-0.5">テーマの「先生」の「もっと」から選べます。</span>
+                  </p>
+                </div>
+              )}
+              {!newTeacher && workTeacher && !isTeacherUnlocked(workTeacher) && (
+                <p className="mt-3 text-center text-xs font-bold text-rw-ink-soft">
+                  8割以上正解すると、{TEACHERS[workTeacher].name}が先生に加わります。
+                </p>
+              )}
 
               {correctCount < questions.length && (
                 <div className="mt-4">

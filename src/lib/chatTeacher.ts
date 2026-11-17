@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { isTeacherId, type TeacherId } from './teachers';
 import { isGuest } from './guest';
+import { isTeacherUnlocked } from './workTeachers';
 
 // 答え合わせの先生の選択（端末ごと）。portraitTone.ts と同じ型：
 // 文字列を許可リストで検証して読む・書いたら CustomEvent で同一タブに知らせる・フックは storage と CustomEvent を購読する。
@@ -16,7 +17,8 @@ const defaultTeacher = (): TeacherId => (isGuest() ? GUEST_DEFAULT_TEACHER : DEF
 export function readChatTeacher(): TeacherId {
   try {
     const value = localStorage.getItem(CHAT_TEACHER_KEY);
-    return isTeacherId(value) ? value : defaultTeacher();
+    // 教材の先生は、手に入れた端末でだけ選べる（workTeachers.ts）
+    return isTeacherId(value) && isTeacherUnlocked(value) ? value : defaultTeacher();
   } catch {
     return defaultTeacher();
   }
@@ -37,7 +39,7 @@ export function useChatTeacher(): [TeacherId, (id: TeacherId) => void] {
   useEffect(() => {
     const sync = (event: Event) => {
       const custom = event as CustomEvent<unknown>;
-      setTeacher(isTeacherId(custom.detail) ? custom.detail : readChatTeacher());
+      setTeacher(isTeacherId(custom.detail) && isTeacherUnlocked(custom.detail) ? custom.detail : readChatTeacher());
     };
     window.addEventListener('storage', sync);
     window.addEventListener(CHANGE_EVENT, sync);

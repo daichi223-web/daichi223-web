@@ -20,9 +20,11 @@ export const STORAGE_KEYS = {
 
   // === 表示設定 (任意で export/import) ===
   noblShowKakejiku: 'kobun.noble.showKakejiku', // 装束 (掛軸) ヒーローの開閉状態
-  portraitTone: 'kobun.noble.portraitTone',    // 絵の雰囲気 (yuru=ゆるり/pop=いろどり/sharp=しっとり/miyabi=みやび。自分の肖像と先生の絵)
+  chosenPost: 'kobun.noble.chosenPost',        // 段ごとに選んだ官職 (JSON {段: 名前}。kanshoku.ts)
+  portraitTone: 'kobun.noble.portraitTone',   // 絵の雰囲気 (yuru=ゆるり/pop=いろどり/sharp=しっとり/miyabi=みやび。自分の肖像と先生の絵)
   chatTeacher: 'kobun.chat.teacher',           // 単語クイズの答え合わせの先生 (sei/murasaki/michizane/tsurayuki/teika/komachi/izumi/koshikibu/ukyo/narihira)
-  chatBackground: 'kobun.chat.background',    // 単語クイズ画面の和柄 (seigaiha/shippo/asanoha/kikko/ichimatsu/uroko/yagasuri)
+  unlockedTeachers: 'kobun.chat.unlockedTeachers', // 教材をクリアして手に入れた先生 (JSON の配列。kaguya ほか。workTeachers.ts)
+  chatBackground: 'kobun.chat.background',   // 単語クイズ画面の和柄 (seigaiha/shippo/asanoha/kikko/ichimatsu/uroko/yagasuri)
   chatBackgroundColor: 'kobun.chat.backgroundColor', // 和柄の色 (kinari/sakura/wakatake/sora/yamabuki/fuji)
   reiwaTheme: 'kobun.reiwaTheme',                       // 令和テーマ
   characterTheme: 'kobun-tan:dashboard-character-theme', // 庭/装束

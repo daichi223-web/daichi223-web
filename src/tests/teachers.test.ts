@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  ANIME_TEACHER_IDS, TEACHERS, TEACHER_IDS, TEACHER_LINE_KEYS, TEACHER_VAR_NAMES, fillTemplate, isTeacherId, pickVariant, teacherImage,
+  ALL_TEACHER_IDS, ANIME_TEACHER_IDS, GUEST_TEACHER_IDS, TEACHERS, TEACHER_IDS, TEACHER_LINE_KEYS, TEACHER_VAR_NAMES, fillTemplate, isTeacherId, pickVariant, teacherImage,
   type TeacherLines,
 } from '../lib/teachers';
 import { TEACHER_LINES } from '../lib/teacherLines';
@@ -29,7 +29,7 @@ const REQUIRED_VARS: Partial<Record<keyof TeacherLines, string[]>> = {
 };
 
 const eachLine = (fn: (teacher: string, key: keyof TeacherLines, line: string) => void) => {
-  for (const id of TEACHER_IDS) {
+  for (const id of ALL_TEACHER_IDS) {
     for (const key of TEACHER_LINE_KEYS) {
       for (const line of TEACHER_LINES[id][key]) fn(id, key, line);
     }
@@ -39,9 +39,10 @@ const eachLine = (fn: (teacher: string, key: keyof TeacherLines, line: string) =
 describe('TEACHERS（先生10人のデータ）', () => {
   it('10人の id・名前がそろい、isTeacherId が許可リストで判定する', () => {
     expect(TEACHER_IDS).toEqual(['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira']);
-    expect(Object.keys(TEACHERS).sort()).toEqual([...TEACHER_IDS].sort());
+    expect(GUEST_TEACHER_IDS).toEqual(['kaguya']);
+    expect(Object.keys(TEACHERS).sort()).toEqual([...ALL_TEACHER_IDS].sort());
     expect(TEACHER_IDS.map((id) => TEACHERS[id].name)).toEqual(['清少納言', '紫式部', '菅原道真', '紀貫之', '藤原定家', '小野小町', '和泉式部', '小式部内侍', '建礼門院右京大夫', '在原業平']);
-    for (const id of TEACHER_IDS) {
+    for (const id of ALL_TEACHER_IDS) {
       expect(TEACHERS[id].id).toBe(id);
       expect(TEACHERS[id].kana.length).toBeGreaterThan(0);
       expect(TEACHERS[id].title.length).toBeGreaterThan(0);
@@ -51,6 +52,7 @@ describe('TEACHERS（先生10人のデータ）', () => {
     expect(isTeacherId('teika')).toBe(true);
     expect(isTeacherId('komachi')).toBe(true);
     expect(isTeacherId('narihira')).toBe(true);
+    expect(isTeacherId('kaguya')).toBe(true);
     expect(isTeacherId('hakase')).toBe(false);
     expect(isTeacherId(null)).toBe(false);
     expect(isTeacherId(undefined)).toBe(false);
@@ -62,10 +64,10 @@ describe('TEACHERS（先生10人のデータ）', () => {
     expect(teacherImage('murasaki', 'pop')).toBe('/teachers/murasaki-pop.webp');
   });
 
-  it('10人×3画風 = 30枚の絵が public/teachers に実在する', () => {
+  it('先生ごと3画風の絵が public/teachers に実在する（教材の先生も）', () => {
     const dir = fileURLToPath(new URL('../../public/teachers/', import.meta.url));
     const missing: string[] = [];
-    for (const id of TEACHER_IDS) {
+    for (const id of ALL_TEACHER_IDS) {
       for (const tone of TONES) {
         const file = `${id}-${tone}.webp`;
         expect(teacherImage(id, tone)).toBe(`/teachers/${file}`);
@@ -77,7 +79,7 @@ describe('TEACHERS（先生10人のデータ）', () => {
 
   it('絵の雰囲気「みやび」を選ぶと、絵がある先生は <id>-anime.webp、無い先生は しっとり の絵', () => {
     const dir = fileURLToPath(new URL('../../public/teachers/', import.meta.url));
-    for (const id of TEACHER_IDS) {
+    for (const id of ALL_TEACHER_IDS) {
       const has = ANIME_TEACHER_IDS.includes(id);
       if (has) expect(existsSync(join(dir, `${id}-anime.webp`)), id).toBe(true);
       expect(teacherImage(id, 'miyabi')).toBe(has ? `/teachers/${id}-anime.webp` : `/teachers/${id}-sharp.webp`);
@@ -87,9 +89,9 @@ describe('TEACHERS（先生10人のデータ）', () => {
 });
 
 describe('TEACHER_PROFILES（人物解説。史実・伝わる話・先生キャラを分けて持つ）', () => {
-  it('10人とも、時代・史実・先生キャラ（性格の軸と創作の部分）・出典がある', () => {
-    expect(Object.keys(TEACHER_PROFILES).sort()).toEqual([...TEACHER_IDS].sort());
-    for (const id of TEACHER_IDS) {
+  it('全員、時代・史実（作中の人物は作中の描写）・先生キャラ（性格の軸と創作の部分）・出典がある', () => {
+    expect(Object.keys(TEACHER_PROFILES).sort()).toEqual([...ALL_TEACHER_IDS].sort());
+    for (const id of ALL_TEACHER_IDS) {
       const p = TEACHER_PROFILES[id];
       expect(p.era.length, id).toBeGreaterThan(0);
       expect(p.facts.length, id).toBeGreaterThanOrEqual(3);
