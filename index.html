@@ -23,13 +23,16 @@
     <!-- ▼▼▼ 警告に対応して、この行を追加しました ▼▼▼ -->
     <meta name="mobile-web-app-capable" content="yes">
 
-    <!-- Web フォント。CSS が大きい（圧縮後 約510KB）ので、画面と JS を止めない読み方にする：
+    <!-- Web フォント。使うのは Noto Sans JP（本文）と Noto Serif JP（古文の本文など）の2書体。
+         太さは「400..900」の範囲で頼む（1つのファイルに全部の太さが入っているので、1つずつ並べると同じ定義が太さの数だけ増える。
+         5書体・太さを並べていたときは圧縮後 約510KB、今は約60KB。明朝は前と同じ 800 まで＝900 を足すと今より太く出る所がある）。
+         書体を足すときは、使う所を作ってから足す。CSS は画面と JS を止めない読み方にする：
          まず印刷用として読み（描画を止めない）、届いたら画面用に切り替える。届くまでは端末のフォントで出る
          （display=swap なので、今までも CSS が届いたあとは同じ順で切り替わっていた）。2026-11-16 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&amp;family=Noto+Serif+JP:wght@400;500;600;700;800&amp;family=Zen+Maru+Gothic:wght@400;500;700;900&amp;family=Klee+One:wght@400;600&amp;family=JetBrains+Mono:wght@400;500;700;800&amp;display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&amp;family=Noto+Serif+JP:wght@400;500;600;700;800&amp;family=Zen+Maru+Gothic:wght@400;500;700;900&amp;family=Klee+One:wght@400;600&amp;family=JetBrains+Mono:wght@400;500;700;800&amp;display=swap"></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400..900&amp;family=Noto+Serif+JP:wght@400..800&amp;display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400..900&amp;family=Noto+Serif+JP:wght@400..800&amp;display=swap"></noscript>
 
   </head>
   <body>
