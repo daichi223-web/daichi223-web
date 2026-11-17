@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PROVINCES, SHINNO_NINKOKU, defaultPost, displayPost, postNames, postOptions, readChosenPost, writeChosenPost } from '../lib/kanshoku';
+import { PROVINCES, SHINNO_NINKOKU, defaultPost, displayPost, kaisetsuFor, postNames, postOptions, readChosenPost, writeChosenPost } from '../lib/kanshoku';
 import { STAGES } from '../lib/nobleData';
 
 describe('延喜式の国の等級', () => {
@@ -82,5 +82,28 @@ describe('選んだ官職（端末ごと）', () => {
   it('その段の候補に無い名前は捨てる（別の段の官職・表を直したあとの古い値）', () => {
     writeChosenPost(9, '大納言');
     expect(readChosenPost(9)).toBeNull();
+  });
+});
+
+describe('kaisetsuFor（選ぶときの解説）', () => {
+  it('すべての段の、名乗れる名前すべてに解説がある', () => {
+    for (const s of STAGES) for (const name of postNames(s.n)) expect(kaisetsuFor(name), `${s.n} ${name}`).not.toBeNull();
+  });
+
+  it('等級の見出し（大国守など）にも解説がある', () => {
+    for (const s of STAGES) for (const o of postOptions(s.n)) if (o.kind === 'zuryo') expect(kaisetsuFor(`${o.grade}${o.post}`)).not.toBeNull();
+  });
+
+  it('受領は国の読み＋の＋かみ／すけ、国と守介の2文', () => {
+    const v = kaisetsuFor('播磨守')!;
+    expect(v.kana).toBe('はりまのかみ');
+    expect(v.lines.length).toBe(2);
+    expect(kaisetsuFor('上総介')!.kana).toBe('かずさのすけ');
+    expect(kaisetsuFor('蔵人頭')!.kana).toBe('くろうどのとう');
+  });
+
+  it('知らない名前は null（推測で作らない）', () => {
+    expect(kaisetsuFor('宇宙守')).toBeNull();
+    expect(kaisetsuFor('なにか')).toBeNull();
   });
 });

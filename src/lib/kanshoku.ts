@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { STAGES, type Stage } from './nobleData';
-import { KANSHOKU_STAGE_POSTS, ZURYO_POSTS } from './kanshokuData';
+import { KANSHOKU_STAGE_POSTS, POST_KAISETSU, PROVINCE_KAISETSU, ZURYO_KAISETSU, ZURYO_POSTS } from './kanshokuData';
 
 // 位階の段ごとに、名乗る官職を選ぶ（2026-11-17 ユーザー指示「位階で中国守・小国・大国とかを選べるように」「官位も選べるように。蔵人など有名どころを」）。
 // 候補の表は kanshokuData.ts（官位令・慣例で照合した結果。根拠と出典 = F:\A2A\_work\kanshoku\）。
@@ -108,3 +108,28 @@ export function useDisplayPost(stage: Pick<Stage, 'n' | 'post'>): string {
 }
 
 export const STAGE_COUNT = STAGES.length;
+
+// ── 解説（2026-11-17 ユーザー指示「官職や国を選ぶ時に簡単な解説を表示させたい」） ──
+export type KaisetsuView = { title: string; kana: string; lines: string[] };
+
+const POST_KANA = { 守: 'かみ', 介: 'すけ' } as const;
+
+/**
+ * 選んだ・触った名前の解説。官職名・「播磨守」のような受領・「大国守」のような等級＋守介に対応する。
+ * 解説の無い名前は null（推測で作らない）。
+ */
+export function kaisetsuFor(name: string): KaisetsuView | null {
+  const post = POST_KAISETSU[name];
+  if (post) return { title: name, kana: post.kana, lines: [post.text] };
+  const m = name.match(/^(.+?)(守|介)$/);
+  if (!m) return null;
+  const [, head, kami] = m as unknown as [string, string, '守' | '介'];
+  const role = ZURYO_KAISETSU[kami];
+  const grade = ZURYO_KAISETSU[head];
+  if (grade && role) return { title: name, kana: `${grade.kana}の${POST_KANA[kami]}`, lines: [grade.text, role.text] };
+  const prov = PROVINCE_KAISETSU[head];
+  if (prov && role) {
+    return { title: name, kana: `${prov.kana}の${POST_KANA[kami]}`, lines: [prov.text, role.text] };
+  }
+  return null;
+}

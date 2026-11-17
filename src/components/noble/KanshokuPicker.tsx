@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { Stage } from '../../lib/nobleData';
-import { defaultPost, postOptions, readChosenPost, useDisplayPost, writeChosenPost, type PostOption } from '../../lib/kanshoku';
+import { defaultPost, kaisetsuFor, postOptions, readChosenPost, useDisplayPost, writeChosenPost, type PostOption } from '../../lib/kanshoku';
 
 // 官職を選ぶシート（2026-11-17 ユーザー指示「位階で中国守・大国とかを選べるように」「官位も選べるように。蔵人など有名どころを」）。
 // 今の段で名乗れる官職だけを出す。受領は「大国守」などの等級を開くと国が並ぶ。選んだものは端末ごと（kanshoku.ts）。
@@ -19,11 +19,14 @@ function zuryoLabel(o: Extract<PostOption, { kind: 'zuryo' }>): string {
 export function KanshokuPicker({ stage, open, onClose }: { stage: Stage; open: boolean; onClose: () => void }) {
   const [chosen, setChosen] = useState<string | null>(() => readChosenPost(stage.n));
   const [openGrade, setOpenGrade] = useState<string | null>(null);
+  // 解説を出している名前（タップした官職・国・等級）。開いたときは今名乗っている官職
+  const [focus, setFocus] = useState<string | null>(null);
 
   useEffect(() => {
     if (!open) return;
     setChosen(readChosenPost(stage.n));
     setOpenGrade(null);
+    setFocus(null);
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -34,8 +37,10 @@ export function KanshokuPicker({ stage, open, onClose }: { stage: Stage; open: b
   const pick = (name: string | null) => {
     writeChosenPost(stage.n, name);
     setChosen(name);
+    setFocus(name);
   };
   const current = chosen ?? defaultPost(stage);
+  const view = kaisetsuFor(focus ?? current);
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-label="官職を選ぶ">
@@ -49,6 +54,19 @@ export function KanshokuPicker({ stage, open, onClose }: { stage: Stage; open: b
           </div>
           <button type="button" onClick={onClose} className="shrink-0 w-8 h-8 rounded-full border-2 border-rw-ink font-black" aria-label="閉じる">✕</button>
         </div>
+
+        {/* 解説（タップした官職・国の、読みと簡単な説明。出典 = F:\A2A\_work\kanshoku\kaisetsu.json） */}
+        {view && (
+          <div className="mt-3 rounded-xl border border-rw-rule bg-rw-bg px-3 py-2" aria-live="polite">
+            <p className="text-[13px] font-black text-rw-ink">
+              {view.title}
+              <span className="ml-1.5 text-[10.5px] font-bold text-rw-ink-soft">（{view.kana}）</span>
+            </p>
+            {view.lines.map((t, i) => (
+              <p key={i} className="mt-0.5 text-[11.5px] leading-relaxed text-rw-ink-soft">{t}</p>
+            ))}
+          </div>
+        )}
 
         {options.length === 0 && <p className="mt-4 text-sm text-rw-ink-soft">この段で選べる官職はまだありません。</p>}
 
@@ -81,7 +99,10 @@ export function KanshokuPicker({ stage, open, onClose }: { stage: Stage; open: b
               <div key={zuryoLabel(o)}>
                 <button
                   type="button"
-                  onClick={() => setOpenGrade((g) => (g === zuryoLabel(o) ? null : zuryoLabel(o)))}
+                  onClick={() => {
+                    setOpenGrade((g) => (g === zuryoLabel(o) ? null : zuryoLabel(o)));
+                    setFocus(zuryoLabel(o));
+                  }}
                   aria-expanded={openGrade === zuryoLabel(o)}
                   className="w-full text-left px-3 py-2 rounded-xl border-2 border-rw-rule flex items-center gap-2"
                 >
