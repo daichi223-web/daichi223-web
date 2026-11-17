@@ -16,6 +16,12 @@
 | ukyo | 建礼門院右京大夫（2026-11-12 追加） | https://www.canva.com/M/MAHatff5lPc | https://www.canva.com/M/MAHatezbYQM | https://www.canva.com/M/MAHatQxfhDA |
 | narihira | 在原業平（2026-11-12 追加） | https://www.canva.com/M/MAHatZyjQ9g | https://www.canva.com/M/MAHatTYpz2g | https://www.canva.com/M/MAHatdLNA0Q |
 | kaguya | かぐや姫（2026-11-17 追加・教材の先生） | https://www.canva.com/M/MAHbLNuweLg | https://www.canva.com/M/MAHbLGRLAns | https://www.canva.com/M/MAHbLItskLs |
+| nukata | 額田王（2026-11-18・教材の先生） | https://www.canva.com/M/MAHbNygitU0 | https://www.canva.com/M/MAHbN30EnB4 | https://www.canva.com/M/MAHbN3yQM9I |
+| yotsugi | 大宅世継（同） | https://www.canva.com/M/MAHbN7Pxacs | https://www.canva.com/M/MAHbN5mRMPk | https://www.canva.com/M/MAHbN3bwLwg |
+| kazan | 花山院（同） | https://www.canva.com/M/MAHbN_a57nk | https://www.canva.com/M/MAHbN-fR_T0 | https://www.canva.com/M/MAHbN-WK_1U |
+| yoshihide | 絵仏師良秀（同） | https://www.canva.com/M/MAHbNy4QwI8 | https://www.canva.com/M/MAHbN25nLfs | https://www.canva.com/M/MAHbN_94geU |
+| kenko | 兼好法師（同） | https://www.canva.com/M/MAHbN4-5Tm0 | https://www.canva.com/M/MAHbN35Dr_w | https://www.canva.com/M/MAHbN3Q7rJk |
+| takasuenomusume | 菅原孝標女（同） | https://www.canva.com/M/MAHbN-Ubv-w | https://www.canva.com/M/MAHbN4Sh72k | https://www.canva.com/M/MAHbNxbDWro |
 
 不採用（見本）: 博士 https://www.canva.com/M/MAHZui3s-XQ
 

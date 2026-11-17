@@ -13,13 +13,13 @@ export const TEACHER_VOICE_ENABLED = true;
 
 export type BaseTeacherId = 'sei' | 'murasaki' | 'michizane' | 'tsurayuki' | 'teika' | 'komachi' | 'izumi' | 'koshikibu' | 'ukyo' | 'narihira';
 // 教材の先生（2026-11-17 ユーザー指示）。その教材の読解テストに出て、クリアすると選べるようになる（workTeachers.ts）。
-export type GuestTeacherId = 'kaguya';
+export type GuestTeacherId = 'kaguya' | 'yoshihide' | 'kenko' | 'takasuenomusume' | 'nukata' | 'yotsugi' | 'kazan';
 export type TeacherId = BaseTeacherId | GuestTeacherId;
 
 /** はじめから選べる先生（設定欄に並ぶ順） */
 export const TEACHER_IDS: readonly BaseTeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
 /** 教材をクリアすると手に入る先生 */
-export const GUEST_TEACHER_IDS: readonly GuestTeacherId[] = ['kaguya'];
+export const GUEST_TEACHER_IDS: readonly GuestTeacherId[] = ['kaguya', 'yoshihide', 'kenko', 'takasuenomusume', 'nukata', 'yotsugi', 'kazan'];
 /** 台詞・人物解説を持つ先生のすべて */
 export const ALL_TEACHER_IDS: readonly TeacherId[] = [...TEACHER_IDS, ...GUEST_TEACHER_IDS];
 
@@ -124,6 +124,60 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
     title: '『竹取物語』の主人公',
     oneLiner: '難題を出す月の姫。簡単にはほめない先生',
     profile: '『竹取物語』の作中の人物。五人の貴公子に難題を出し、帝の求めにも応じず、育ての親に手紙を残して月へ帰った。',
+  },
+  // 絵仏師良秀（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\yoshihide.json）
+  yoshihide: {
+    id: 'yoshihide',
+    name: '絵仏師良秀',
+    kana: 'えぶっしりょうしゅう',
+    title: '『宇治拾遺物語』の絵仏師',
+    oneLiner: '実物を見て悟る、口の悪い職人',
+    profile: '『宇治拾遺物語』の説話に出る絵仏師。実物をよく見て描き方を悟り、「これこそせうとくよ」と言い切った。',
+  },
+  // 兼好法師（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\kenko.json）
+  kenko: {
+    id: 'kenko',
+    name: '兼好法師',
+    kana: 'けんこうほうし',
+    title: '『徒然草』の作者',
+    oneLiner: 'うのみにしない、皮肉まじりの法師',
+    profile: '鎌倉時代の終わりから南北朝時代の歌人で、『徒然草』の作者。うわさを疑い、人の思い込みを笑いをまじえて書いた。',
+  },
+  // 菅原孝標女（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\takasuenomusume.json）
+  takasuenomusume: {
+    id: 'takasuenomusume',
+    name: '菅原孝標女',
+    kana: 'すがわらのたかすえのむすめ',
+    title: '『更級日記』の作者',
+    oneLiner: '物語が大好きな、読書仲間',
+    profile: '『更級日記』の作者。少女のころ『源氏物語』を夢中で読んだ日々を、のちにふり返って書いた。本名は分かっていない。',
+  },
+  // 額田王（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\nukata.json）
+  nukata: {
+    id: 'nukata',
+    name: '額田王',
+    kana: 'ぬかたのおおきみ',
+    title: '『万葉集』の宮廷歌人',
+    oneLiner: 'みんなを送り出す、号令役の判者',
+    profile: '七世紀の宮廷歌人。春と秋の優劣を歌で判じ「秋山我は」と結んだ。「熟田津に」は天皇の代わりに詠んだとする説が有力。',
+  },
+  // 大宅世継（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\yotsugi.json）
+  yotsugi: {
+    id: 'yotsugi',
+    name: '大宅世継',
+    kana: 'おおやけのよつぎ',
+    title: '『大鏡』の語り手',
+    oneLiner: '話し出すと止まらない、語りの翁',
+    profile: '『大鏡』の作中の語り手で、実在しない。雲林院の菩提講で夏山繁樹と出会い、昔の帝や大臣の話を語り出す話し好きの翁。',
+  },
+  // 花山院（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\kazan.json）
+  kazan: {
+    id: 'kazan',
+    name: '花山院',
+    kana: 'かざんいん',
+    title: '『大鏡』花山院の出家',
+    oneLiner: '美しいものに目がない、風流の院',
+    profile: '第65代の天皇（968〜1008）。和歌・絵・庭づくりに才があり、『大鏡』で「風流者」と評された。教材では『大鏡』の語りの中に出る。',
   },
 };
 

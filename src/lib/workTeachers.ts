@@ -19,6 +19,8 @@ export const BY_WORK: Readonly<Record<string, TeacherId>> = {
   '和泉式部日記': 'izumi',
   '建礼門院右京大夫集': 'ukyo',
   '毎月抄': 'teika',
+  '徒然草': 'kenko',
+  '更級日記': 'takasuenomusume',
   // 源氏物語は1本ごとに作中の人物にする予定（第2段）。それまでは作者の紫式部。
   '源氏物語（一）': 'murasaki',
   '源氏物語（二）': 'murasaki',
@@ -29,6 +31,12 @@ export const BY_TEXT: Readonly<Record<string, TeacherId>> = {
   b34f00e739: 'michizane', // 大鏡「菅公配流」
   faa890f809: 'teika', // 中世の歌
   f0740d6350: 'komachi', // 王朝の歌
+  '31d11bf2f8': 'yoshihide', // 宇治拾遺物語「絵仏師良秀」
+  '2e45c61a81': 'nukata', // 万葉の歌
+  '61ad02e1df': 'yotsugi', // 大鏡「雲林院にて」
+  b8832b8fec: 'yotsugi', // 大鏡「中宮安子の嫉妬」（語り手の世継）
+  bb32c7b026: 'yotsugi', // 大鏡「宣耀殿の女御」（語り手の世継）
+  f7aee682ff: 'kazan', // 大鏡「花山院の出家」
 };
 
 /** この教材の先生。決まっていなければ null（選んでいる先生のまま） */
@@ -84,6 +92,12 @@ export function unlockTeacher(id: TeacherId): boolean {
 /** どの教材をクリアすると手に入るか（設定欄の鍵つきの先生に出す） */
 export const GUEST_UNLOCK_HINT: Readonly<Record<GuestTeacherId, string>> = {
   kaguya: '竹取物語の読解テストをクリア',
+  yoshihide: '宇治拾遺物語「絵仏師良秀」の読解テストをクリア',
+  kenko: '徒然草の読解テストをクリア',
+  takasuenomusume: '更級日記の読解テストをクリア',
+  nukata: '「万葉の歌」の読解テストをクリア',
+  yotsugi: '大鏡「雲林院にて」の読解テストをクリア',
+  kazan: '大鏡「花山院の出家」の読解テストをクリア',
 };
 
 export function useUnlockedTeachers(): GuestTeacherId[] {

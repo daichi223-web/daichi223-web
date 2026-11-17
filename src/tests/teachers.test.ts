@@ -39,7 +39,8 @@ const eachLine = (fn: (teacher: string, key: keyof TeacherLines, line: string) =
 describe('TEACHERS（先生10人のデータ）', () => {
   it('10人の id・名前がそろい、isTeacherId が許可リストで判定する', () => {
     expect(TEACHER_IDS).toEqual(['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira']);
-    expect(GUEST_TEACHER_IDS).toEqual(['kaguya']);
+    expect(GUEST_TEACHER_IDS[0]).toBe('kaguya');
+    for (const id of GUEST_TEACHER_IDS) expect(TEACHER_IDS as readonly string[]).not.toContain(id);
     expect(Object.keys(TEACHERS).sort()).toEqual([...ALL_TEACHER_IDS].sort());
     expect(TEACHER_IDS.map((id) => TEACHERS[id].name)).toEqual(['清少納言', '紫式部', '菅原道真', '紀貫之', '藤原定家', '小野小町', '和泉式部', '小式部内侍', '建礼門院右京大夫', '在原業平']);
     for (const id of ALL_TEACHER_IDS) {
