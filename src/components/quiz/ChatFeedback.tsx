@@ -263,9 +263,12 @@ export function ChatFeedback({
   exampleMark,
   onSelfJudge,
 }: ChatFeedbackProps) {
-  // 先生の顔：判定の吹き出しがあれば、その判定の表情（正解＝うれしい・不正解＝はげまし）。1回の答え合わせに顔は1つ
-  const verdict = bubbles.find((b) => b.kind === 'verdict') as { verdict?: 'ok' | 'ng' } | undefined;
-  const faceSrc = teacherSrcFor ? teacherSrcFor(expressionForVerdict(verdict?.verdict)) : teacherSrc;
+  // 先生の顔：判定の吹き出しだけ、その判定の表情（正解＝うれしい・不正解＝はげまし）。
+  // 解説の吹き出しは正解・不正解とも、いつもの顔（2026-11-18 ユーザー指示「正解の時も解説のところで顔を変えて」）
+  const faceFor = (bubble: ChatBubble): string =>
+    teacherSrcFor
+      ? teacherSrcFor(bubble.kind === 'verdict' ? expressionForVerdict(bubble.verdict === 'ok' || bubble.verdict === 'ng' ? bubble.verdict : undefined) : 'base')
+      : teacherSrc;
   // key は「どちら側＋種類＋何番目か」。自己判定のあとで吹き出しが入れ替わっても、残る吹き出しはアニメし直さない
   const rows = useMemo(() => {
     const seen: Partial<Record<ChatBubble['kind'], number>> = {};
@@ -307,7 +310,7 @@ export function ChatFeedback({
                 className={`flex items-start gap-2 animate-slide-up ${isMe ? 'justify-end' : ''}`}
                 style={{ animationDelay: `${i * STAGGER_MS}ms`, animationFillMode: 'backwards' }}
               >
-                {!isMe && <FaceAvatar src={faceSrc} size={AVATAR_PX} alt={teacher.name} className="mt-4" />}
+                {!isMe && <FaceAvatar src={faceFor(bubble)} size={AVATAR_PX} alt={teacher.name} className="mt-4" />}
                 <div className={`flex flex-col min-w-0 max-w-[82%] ${isMe ? 'items-end' : 'items-start'}`}>
                   <p className={`text-[10px] font-black text-rw-ink-soft mb-0.5 ${isMe ? 'mr-1' : 'ml-1'}`}>
                     {isMe ? `${me.rankLabel} ・ あなた` : teacher.name}
