@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { STAGES, type Stage } from './nobleData';
-import { KANSHOKU_STAGE_POSTS, POST_KAISETSU, PROVINCE_KAISETSU, ZURYO_KAISETSU, ZURYO_POSTS } from './kanshokuData';
+import { CAREER_ROUTES, CAREER_TERMS, KANSHOKU_STAGE_POSTS, NEXT_POSTS, NYOBO, POST_KAISETSU, PROVINCE_KAISETSU, ZURYO_KAISETSU, ZURYO_POSTS } from './kanshokuData';
 
 // 位階の段ごとに、名乗る官職を選ぶ（2026-11-17 ユーザー指示「位階で中国守・小国・大国とかを選べるように」「官位も選べるように。蔵人など有名どころを」）。
 // 候補の表は kanshokuData.ts（官位令・慣例で照合した結果。根拠と出典 = F:\A2A\_work\kanshoku\）。
@@ -110,7 +110,7 @@ export function useDisplayPost(stage: Pick<Stage, 'n' | 'post'>): string {
 export const STAGE_COUNT = STAGES.length;
 
 // ── 解説（2026-11-17 ユーザー指示「官職や国を選ぶ時に簡単な解説を表示させたい」） ──
-export type KaisetsuView = { title: string; kana: string; lines: string[] };
+export type KaisetsuView = { title: string; kana: string; lines: string[]; next?: { post: string; route: string }[] };
 
 const POST_KANA = { 守: 'かみ', 介: 'すけ' } as const;
 
@@ -119,6 +119,37 @@ const POST_KANA = { 守: 'かみ', 介: 'すけ' } as const;
  * 解説の無い名前は null（推測で作らない）。
  */
 export function kaisetsuFor(name: string): KaisetsuView | null {
+  const v = kaisetsuBody(name);
+  if (!v) return null;
+  const next = nextPostsOf(name);
+  return next.length ? { ...v, next } : v;
+}
+
+/** 国名の等級（大国〜下国）。国名でなければ null */
+function gradeOf(province: string): ProvinceGrade | null {
+  return (Object.keys(PROVINCES) as ProvinceGrade[]).find((g) => PROVINCES[g].includes(province)) ?? null;
+}
+
+/**
+ * この官職のあと、よく進む先（出世ルートの名前つき）。受領は「播磨守」→「大国守」のように等級で引く。
+ * 根拠のあるものだけ（routes.json の next）。無ければ空。
+ */
+export function nextPostsOf(name: string): { post: string; route: string }[] {
+  let key = name;
+  const m = name.match(/^(.+?)(守|介)$/);
+  if (!NEXT_POSTS[key] && m) {
+    const g = gradeOf(m[1]);
+    if (g) key = `${g}${m[2]}`;
+  }
+  const routeName = (id: string) => CAREER_ROUTES.find((r) => r.id === id)?.name ?? id;
+  return (NEXT_POSTS[key] ?? []).map((x) => ({ post: x.post, route: routeName(x.route) }));
+}
+
+function kaisetsuBody(name: string): KaisetsuView | null {
+  const term = CAREER_TERMS[name];
+  if (term) return { title: name, kana: term.kana, lines: [term.text] };
+  const nyobo = NYOBO.posts.find((x) => x.name === name);
+  if (nyobo) return { title: name, kana: nyobo.kana, lines: [nyobo.text] };
   const post = POST_KAISETSU[name];
   if (post) return { title: name, kana: post.kana, lines: [post.text] };
   const m = name.match(/^(.+?)(守|介)$/);

@@ -107,3 +107,29 @@ describe('kaisetsuFor（選ぶときの解説）', () => {
     expect(kaisetsuFor('なにか')).toBeNull();
   });
 });
+
+describe('出世ルート・次に進む先・用語', () => {
+  it('ルートの段と官職名は、その段の候補か受領の等級に合う（位の外の身分は n=null）', async () => {
+    const { CAREER_ROUTES } = await import('../lib/kanshokuData');
+    for (const r of CAREER_ROUTES) {
+      expect(r.steps.length, r.id).toBeGreaterThan(2);
+      for (const s of r.steps) {
+        if (s.n === null) continue;
+        const ok = postNames(s.n).includes(s.post) || /^(大国|上国|中国|下国)(守|介)$/.test(s.post);
+        expect(ok, `${r.id}: ${s.n} ${s.post}`).toBe(true);
+      }
+    }
+  });
+
+  it('六位蔵人のあとは五位蔵人（公卿への道）など。受領は国名でも等級で引く', async () => {
+    const { nextPostsOf } = await import('../lib/kanshoku');
+    expect(nextPostsOf('六位蔵人').map((x) => x.post)).toContain('五位蔵人');
+    const harima = nextPostsOf('播磨守');
+    expect(harima).toEqual(nextPostsOf('大国守'));
+  });
+
+  it('用語・女房の官も解説に出る', () => {
+    expect(kaisetsuFor('叙爵')?.kana).toBe('じょしゃく');
+    expect(kaisetsuFor('尚侍')?.kana).toBe('ないしのかみ');
+  });
+});

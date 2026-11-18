@@ -65,6 +65,14 @@ export function KanshokuPicker({ stage, open, onClose }: { stage: Stage; open: b
             {view.lines.map((t, i) => (
               <p key={i} className="mt-0.5 text-[11.5px] leading-relaxed text-rw-ink-soft">{t}</p>
             ))}
+            {view.next && view.next.length > 0 && (
+              <p className="mt-1 text-[11.5px] leading-relaxed text-rw-ink">
+                <span className="font-bold text-rw-ink-soft">このあと、よく進む先：</span>
+                {view.next.map((x, i) => (
+                  <span key={x.post}>{i > 0 ? '・' : ''}<b>{x.post}</b><span className="text-rw-ink-soft">（{x.route}）</span></span>
+                ))}
+              </p>
+            )}
           </div>
         )}
 
