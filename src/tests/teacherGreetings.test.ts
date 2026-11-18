@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { TEACHER_IDS } from '../lib/teachers';
+import { ALL_TEACHER_IDS } from '../lib/teachers';
 import {
   EVENT_WINDOWS, QUIZ_SOON_DAYS, TEACHER_GREETINGS, eventsOn, pickGreeting, type GreetingEvent,
 } from '../lib/teacherGreetings';
@@ -11,8 +11,9 @@ const d = (m: number, day: number) => new Date(2026, m - 1, day);
 describe('TEACHER_GREETINGS（季節・行事のあいさつ）', () => {
   const entries = Object.entries(TEACHER_GREETINGS);
 
-  it('先生10人全員にある', () => {
-    expect(Object.keys(TEACHER_GREETINGS).sort()).toEqual([...TEACHER_IDS].sort());
+  // 教材の先生も、選んだときにホームで一言を言う（2026-11-18 ユーザー指摘「新しいキャラの先生になったときの最初のコメントがない」）
+  it('先生全員（はじめの10人と教材の先生）にある', () => {
+    expect(Object.keys(TEACHER_GREETINGS).sort()).toEqual([...ALL_TEACHER_IDS].sort());
   });
 
   it('同じ先生の中で同じ文を重ねない', () => {
@@ -69,8 +70,8 @@ describe('eventsOn（日付から行事を決める）', () => {
 });
 
 describe('pickGreeting（その日の一言）', () => {
-  it('10人とも、どの日でも一言が返る', () => {
-    for (const id of TEACHER_IDS) {
+  it('先生全員、どの日でも一言が返る', () => {
+    for (const id of ALL_TEACHER_IDS) {
       for (const [m, day] of [[1, 1], [2, 2], [5, 1], [7, 7], [10, 20], [12, 31]]) {
         const line = pickGreeting({ teacher: id, date: d(m, day) });
         expect(line, `${id} ${m}/${day}`).toBeTruthy();
@@ -88,7 +89,7 @@ describe('pickGreeting（その日の一言）', () => {
   });
 
   it('ホームに戻るたび（種が変わるたび）に一言が変わり、直前の一言（avoid）とは同じにならない', () => {
-    for (const id of TEACHER_IDS) {
+    for (const id of ALL_TEACHER_IDS) {
       let prev: string | null = null;
       const seen = new Set<string>();
       for (let visit = 1; visit <= 40; visit++) {
