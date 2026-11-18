@@ -193,7 +193,7 @@ export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'mich
 // 表情差分（2026-11-18、ユーザー指示「先生の顔のバリエーションをつけたい」。調査 = F:\A2A\_work\work-teachers\expression-research.md）。
 // base＝今の1枚／joy＝うれしい（正解）／cheer＝はげまし（不正解。がっかり・かわいそう・怒りの顔にしない＝教育研究による）。
 // 段階1はゆるり×2表情×全員（Canva で今の絵を参照画像にして顔だけ変えた。原本 assets-src/teachers/expr/）。
-// かぐや姫の joy は「解かれてやや悔しそう」（ユーザー指示）。ファイルは <id>-<tone>-<expr>.webp。無い組み合わせは base で出す。
+// かぐや姫の joy は「解かれてやや悔しそう」、cheer は「まだ解かれず少し得意そう」（ユーザー指示）。ファイルは <id>-<tone>-<expr>.webp。無い組み合わせは base で出す。
 export type TeacherExpression = 'base' | 'joy' | 'cheer';
 
 /** 表情差分の絵がある画風（先生ごと）。足したらここに書く */
