@@ -1,7 +1,7 @@
 import { useMemo, type KeyboardEvent } from 'react';
 import type { Word } from '../../types';
 import type { ChatBubble, ChatVerdict, SenseMapItem } from '../../lib/quiz/chatThread';
-import type { TeacherMeta } from '../../lib/teachers';
+import { expressionForVerdict, type TeacherExpression, type TeacherMeta } from '../../lib/teachers';
 import type { PortraitTone } from '../../lib/portraitTone';
 import { FaceAvatar } from '../noble/FaceAvatar';
 import { MarkedSentence } from './MarkedSentence';
@@ -22,6 +22,8 @@ export interface ChatFeedbackProps {
   /** 左のアイコンと名前 */
   teacher: TeacherMeta;
   teacherSrc: string;
+  /** 表情ごとの絵（あれば判定に合わせて うれしい／はげまし の顔にする。2026-11-18） */
+  teacherSrcFor?: (expr: TeacherExpression) => string;
   /** 右のアイコン（位階の肖像から顔を丸く切る）と名前 */
   me: { stageN: number; tone: PortraitTone; rankLabel: string };
   /** answerGuide / example の描画に使う */
@@ -255,11 +257,15 @@ export function ChatFeedback({
   onNext,
   teacher,
   teacherSrc,
+  teacherSrcFor,
   me,
   word,
   exampleMark,
   onSelfJudge,
 }: ChatFeedbackProps) {
+  // 先生の顔：判定の吹き出しがあれば、その判定の表情（正解＝うれしい・不正解＝はげまし）。1回の答え合わせに顔は1つ
+  const verdict = bubbles.find((b) => b.kind === 'verdict') as { verdict?: 'ok' | 'ng' } | undefined;
+  const faceSrc = teacherSrcFor ? teacherSrcFor(expressionForVerdict(verdict?.verdict)) : teacherSrc;
   // key は「どちら側＋種類＋何番目か」。自己判定のあとで吹き出しが入れ替わっても、残る吹き出しはアニメし直さない
   const rows = useMemo(() => {
     const seen: Partial<Record<ChatBubble['kind'], number>> = {};
@@ -301,7 +307,7 @@ export function ChatFeedback({
                 className={`flex items-start gap-2 animate-slide-up ${isMe ? 'justify-end' : ''}`}
                 style={{ animationDelay: `${i * STAGGER_MS}ms`, animationFillMode: 'backwards' }}
               >
-                {!isMe && <FaceAvatar src={teacherSrc} size={AVATAR_PX} alt={teacher.name} className="mt-4" />}
+                {!isMe && <FaceAvatar src={faceSrc} size={AVATAR_PX} alt={teacher.name} className="mt-4" />}
                 <div className={`flex flex-col min-w-0 max-w-[82%] ${isMe ? 'items-end' : 'items-start'}`}>
                   <p className={`text-[10px] font-black text-rw-ink-soft mb-0.5 ${isMe ? 'mr-1' : 'ml-1'}`}>
                     {isMe ? `${me.rankLabel} ・ あなた` : teacher.name}

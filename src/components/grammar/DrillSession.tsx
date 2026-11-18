@@ -291,6 +291,7 @@ export function DrillSession({
             onNext={handleNext}
             teacher={TEACHERS[teacherId]}
             teacherSrc={teacherImage(teacherId, tone)}
+            teacherSrcFor={(e) => teacherImage(teacherId, tone, e)}
             me={{ stageN: myStage.n, tone, rankLabel: myStage.rank }}
             word={drillFeedbackWord(drill)}
           />

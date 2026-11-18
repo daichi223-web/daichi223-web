@@ -345,6 +345,7 @@ export function LessonSession({
             onNext={() => {}}
             teacher={teacher}
             teacherSrc={teacherSrc}
+            teacherSrcFor={(e) => teacherImage(teacherId, tone, e)}
             me={{ stageN: myStage.n, tone, rankLabel: myStage.rank }}
             word={drillFeedbackWord(st.drill)}
           />

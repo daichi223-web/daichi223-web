@@ -190,10 +190,31 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
 // 2026-11-17：かぐや姫（Codex の依頼7）。
 export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira', 'kaguya'];
 
-/** 先生の絵のパス。みやびは <id>-anime.webp、ほかは <id>-<tone>.webp */
-export function teacherImage(id: TeacherId, tone: PortraitTone): string {
+// 表情差分（2026-11-18、ユーザー指示「先生の顔のバリエーションをつけたい」。調査 = F:\A2A\_work\work-teachers\expression-research.md）。
+// base＝今の1枚／joy＝うれしい（正解）／cheer＝はげまし（不正解。がっかり・かわいそう・怒りの顔にしない＝教育研究による）。
+// 段階1はゆるり×2表情×全員（Canva で今の絵を参照画像にして顔だけ変えた。原本 assets-src/teachers/expr/）。
+// かぐや姫の joy は「解かれてやや悔しそう」（ユーザー指示）。ファイルは <id>-<tone>-<expr>.webp。無い組み合わせは base で出す。
+export type TeacherExpression = 'base' | 'joy' | 'cheer';
+
+/** 表情差分の絵がある画風（先生ごと）。足したらここに書く */
+export const TEACHER_EXPRESSION_TONES: Readonly<Partial<Record<TeacherId, readonly PortraitTone[]>>> = Object.fromEntries(
+  ([...TEACHER_IDS, ...GUEST_TEACHER_IDS] as TeacherId[]).map((id) => [id, ['yuru'] as const]),
+);
+
+export function hasTeacherExpression(id: TeacherId, tone: PortraitTone, expr: TeacherExpression): boolean {
+  return expr !== 'base' && (TEACHER_EXPRESSION_TONES[id] ?? []).includes(tone);
+}
+
+/** 先生の絵のパス。みやびは <id>-anime.webp、ほかは <id>-<tone>.webp。表情差分があれば <id>-<tone>-<expr>.webp */
+export function teacherImage(id: TeacherId, tone: PortraitTone, expr: TeacherExpression = 'base'): string {
   if (tone === 'miyabi') return ANIME_TEACHER_IDS.includes(id) ? `/teachers/${id}-anime.webp` : `/teachers/${id}-sharp.webp`;
+  if (hasTeacherExpression(id, tone, expr)) return `/teachers/${id}-${tone}-${expr}.webp`;
   return `/teachers/${id}-${tone}.webp`;
+}
+
+/** 答え合わせの判定 → 表情。1回の答え合わせに顔は1つ（調査の 2-1） */
+export function expressionForVerdict(verdict: 'ok' | 'ng' | undefined): TeacherExpression {
+  return verdict === 'ok' ? 'joy' : verdict === 'ng' ? 'cheer' : 'base';
 }
 
 export function isTeacherId(v: unknown): v is TeacherId {

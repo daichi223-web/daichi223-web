@@ -258,6 +258,7 @@ export function WordQuizContent({
                 onNext={onNext}
                 teacher={teacher}
                 teacherSrc={teacherSrc}
+                teacherSrcFor={(e) => teacherImage(teacherId, tone, e)}
                 me={chatMe}
                 word={question.correct}
                 exampleMark={question.exampleMark}
@@ -522,6 +523,7 @@ export function WordQuizContent({
               onNext={onNext}
               teacher={teacher}
               teacherSrc={teacherSrc}
+              teacherSrcFor={(e) => teacherImage(teacherId, tone, e)}
               me={chatMe}
               word={question.correct}
               exampleMark={question.exampleMark}
