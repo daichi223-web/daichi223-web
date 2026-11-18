@@ -37,6 +37,15 @@ export const BY_TEXT: Readonly<Record<string, TeacherId>> = {
   b8832b8fec: 'yotsugi', // 大鏡「中宮安子の嫉妬」（語り手の世継）
   bb32c7b026: 'yotsugi', // 大鏡「宣耀殿の女御」（語り手の世継）
   f7aee682ff: 'kazan', // 大鏡「花山院の出家」
+  // 竹取物語は章段ごとに中心の人物（2026-11-18 ユーザー決定）。妻問い・天の羽衣は BY_WORK のかぐや姫のまま。
+  ec2159c6e8: 'taketorinookina', // 竹取物語「かぐや姫の生い立ち」
+  e9846f4330: 'ishitsukuri', // 竹取物語「仏の御石の鉢」
+  '97a9d9174a': 'kuramochi', // 竹取物語「蓬萊の玉の枝」
+  '5954a8d9eb': 'abenomiushi', // 竹取物語「火鼠の皮衣」
+  cd8147e868: 'otomonomiyuki', // 竹取物語「龍の首の玉」
+  '949859d6f5': 'isonokami', // 竹取物語「燕の子安貝」
+  '7eb37dba92': 'mikado', // 竹取物語「御狩のみゆき」
+  '067781f251': 'mikado', // 竹取物語「ふじの煙」
 };
 
 /** この教材の先生。決まっていなければ null（選んでいる先生のまま） */
@@ -91,7 +100,14 @@ export function unlockTeacher(id: TeacherId): boolean {
 
 /** どの教材をクリアすると手に入るか（設定欄の鍵つきの先生に出す） */
 export const GUEST_UNLOCK_HINT: Readonly<Record<GuestTeacherId, string>> = {
-  kaguya: '竹取物語の読解テストをクリア',
+  kaguya: '竹取物語「貴公子たちの妻問い」か「天の羽衣」の読解テストをクリア',
+  taketorinookina: '竹取物語「かぐや姫の生い立ち」の読解テストをクリア',
+  ishitsukuri: '竹取物語「仏の御石の鉢」の読解テストをクリア',
+  kuramochi: '竹取物語「蓬萊の玉の枝」の読解テストをクリア',
+  abenomiushi: '竹取物語「火鼠の皮衣」の読解テストをクリア',
+  otomonomiyuki: '竹取物語「龍の首の玉」の読解テストをクリア',
+  isonokami: '竹取物語「燕の子安貝」の読解テストをクリア',
+  mikado: '竹取物語「御狩のみゆき」か「ふじの煙」の読解テストをクリア',
   yoshihide: '宇治拾遺物語「絵仏師良秀」の読解テストをクリア',
   kenko: '徒然草の読解テストをクリア',
   takasuenomusume: '更級日記の読解テストをクリア',

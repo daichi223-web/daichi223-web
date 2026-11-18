@@ -13,13 +13,13 @@ export const TEACHER_VOICE_ENABLED = true;
 
 export type BaseTeacherId = 'sei' | 'murasaki' | 'michizane' | 'tsurayuki' | 'teika' | 'komachi' | 'izumi' | 'koshikibu' | 'ukyo' | 'narihira';
 // 教材の先生（2026-11-17 ユーザー指示）。その教材の読解テストに出て、クリアすると選べるようになる（workTeachers.ts）。
-export type GuestTeacherId = 'kaguya' | 'yoshihide' | 'kenko' | 'takasuenomusume' | 'nukata' | 'yotsugi' | 'kazan';
+export type GuestTeacherId = 'kaguya' | 'yoshihide' | 'kenko' | 'takasuenomusume' | 'nukata' | 'yotsugi' | 'kazan' | 'taketorinookina' | 'mikado' | 'ishitsukuri' | 'kuramochi' | 'abenomiushi' | 'otomonomiyuki' | 'isonokami';
 export type TeacherId = BaseTeacherId | GuestTeacherId;
 
 /** はじめから選べる先生（設定欄に並ぶ順） */
 export const TEACHER_IDS: readonly BaseTeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
 /** 教材をクリアすると手に入る先生 */
-export const GUEST_TEACHER_IDS: readonly GuestTeacherId[] = ['kaguya', 'yoshihide', 'kenko', 'takasuenomusume', 'nukata', 'yotsugi', 'kazan'];
+export const GUEST_TEACHER_IDS: readonly GuestTeacherId[] = ['kaguya', 'yoshihide', 'kenko', 'takasuenomusume', 'nukata', 'yotsugi', 'kazan', 'taketorinookina', 'mikado', 'ishitsukuri', 'kuramochi', 'abenomiushi', 'otomonomiyuki', 'isonokami'];
 /** 台詞・人物解説を持つ先生のすべて */
 export const ALL_TEACHER_IDS: readonly TeacherId[] = [...TEACHER_IDS, ...GUEST_TEACHER_IDS];
 
@@ -179,6 +179,69 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
     oneLiner: '美しいものに目がない、風流の院',
     profile: '第65代の天皇（968〜1008）。和歌・絵・庭づくりに才があり、『大鏡』で「風流者」と評された。教材では『大鏡』の語りの中に出る。',
   },
+  // 竹取の翁（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\taketorinookina.json）
+  taketorinookina: {
+    id: 'taketorinookina',
+    name: '竹取の翁',
+    kana: 'たけとりのおきな',
+    title: '『竹取物語』かぐや姫の育ての親',
+    oneLiner: 'わが子のことのように喜ぶ、竹取りのじい',
+    profile: '『竹取物語』の作中の人物。光る竹の中に見つけた女の子をかぐや姫と名づけ、妻とともに大切に育てた老人。',
+  },
+  // 帝（竹取物語）（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\mikado.json）
+  mikado: {
+    id: 'mikado',
+    name: '帝（竹取物語）',
+    kana: 'みかど',
+    title: '『竹取物語』に登場する帝',
+    oneLiner: '見届けて認める、おおらかな帝',
+    profile: '『竹取物語』の作中の帝。名は書かれていない。御狩の行幸で竹取の家を訪れ、物語の結びで「ふじの山」の名の由来となる。',
+  },
+  // 石作の皇子（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\ishitsukuri.json）
+  ishitsukuri: {
+    id: 'ishitsukuri',
+    name: '石作の皇子',
+    kana: 'いしつくりのみこ',
+    title: '『竹取物語』五人の貴公子の一人',
+    oneLiner: '近道で失敗した、本物探しの先輩',
+    profile: '『竹取物語』で難題「仏の御石の鉢」を出された貴公子。山寺の古い鉢で済ませようとして、光が無いことで見破られた。',
+  },
+  // 庫持の皇子（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\kuramochi.json）
+  kuramochi: {
+    id: 'kuramochi',
+    name: '庫持の皇子',
+    kana: 'くらもちのみこ',
+    title: '『竹取物語』五人の貴公子の一人',
+    oneLiner: '作り物を見破られた、確かめの先輩',
+    profile: '『竹取物語』で難題「蓬萊の玉の枝」を出された貴公子。そっくりの玉の枝を作らせたが、匠たちの訴えで作り物と分かった。',
+  },
+  // 右大臣阿部御主人（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\abenomiushi.json）
+  abenomiushi: {
+    id: 'abenomiushi',
+    name: '右大臣阿部御主人',
+    kana: 'うだいじんあべのみうし',
+    title: '『竹取物語』の五人の貴公子の一人',
+    oneLiner: '自分の目で確かめよと説く、太っ腹の大臣',
+    profile: '『竹取物語』の作中の人物で、財産豊かな右大臣。かぐや姫に「火鼠の皮衣」を求められ、唐の商人に探させた。',
+  },
+  // 大納言大伴御行（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\otomonomiyuki.json）
+  otomonomiyuki: {
+    id: 'otomonomiyuki',
+    name: '大納言大伴御行',
+    kana: 'だいなごんおおとものみゆき',
+    title: '『竹取物語』の五人の貴公子の一人',
+    oneLiner: '一歩ずつ進めと励ます、豪快な親分',
+    profile: '『竹取物語』の作中の人物で、大納言。かぐや姫に「龍の首の玉」を求められ、自分で船を出して嵐にあった。',
+  },
+  // 中納言石上麻呂足（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\isonokami.json）
+  isonokami: {
+    id: 'isonokami',
+    name: '中納言石上麻呂足',
+    kana: 'ちゅうなごんいそのかみのまろたり',
+    title: '『竹取物語』の五人の貴公子の一人',
+    oneLiner: '落ち着いていこうと並んで走る、素直な相棒',
+    profile: '『竹取物語』の作中の人物で、中納言。かぐや姫に「燕の子安貝」を求められ、役人の知恵を借りて自分で巣を探った。',
+  },
 };
 
 // 先生の絵の「みやび」（2026-11-13、Codex 作。背景は透明）。ファイル名は作業中の仮の名のまま <id>-anime.webp。
@@ -196,9 +259,14 @@ export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'mich
 // かぐや姫の joy は「解かれてやや悔しそう」、cheer は「まだ解かれず少し得意そう」（ユーザー指示）。ファイルは <id>-<tone>-<expr>.webp。無い組み合わせは base で出す。
 export type TeacherExpression = 'base' | 'joy' | 'cheer';
 
+/** 表情差分の絵がまだ無い先生（絵を足したらここから外す） */
+const EXPRESSION_PENDING: readonly TeacherId[] = ['taketorinookina', 'mikado', 'ishitsukuri', 'kuramochi', 'abenomiushi', 'otomonomiyuki', 'isonokami'];
+
 /** 表情差分の絵がある画風（先生ごと）。足したらここに書く */
 export const TEACHER_EXPRESSION_TONES: Readonly<Partial<Record<TeacherId, readonly PortraitTone[]>>> = Object.fromEntries(
-  ([...TEACHER_IDS, ...GUEST_TEACHER_IDS] as TeacherId[]).map((id) => [id, ['yuru'] as const]),
+  ([...TEACHER_IDS, ...GUEST_TEACHER_IDS] as TeacherId[])
+    .filter((id) => !EXPRESSION_PENDING.includes(id))
+    .map((id) => [id, ['yuru'] as const]),
 );
 
 export function hasTeacherExpression(id: TeacherId, tone: PortraitTone, expr: TeacherExpression): boolean {

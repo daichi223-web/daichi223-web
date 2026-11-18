@@ -44,10 +44,22 @@ describe('workTeacherOf（教材の先生）', () => {
     for (const t of [...Object.values(BY_WORK), ...Object.values(BY_TEXT)]) expect(ALL_TEACHER_IDS).toContain(t);
   });
 
-  it('竹取物語の10本はすべてかぐや姫', () => {
+  it('竹取物語の10本は章段ごとの中心の人物（2026-11-18 ユーザー決定）', () => {
     const taketori = rows.filter((r) => r.source_work === '竹取物語');
     expect(taketori.length).toBe(10);
-    for (const r of taketori) expect(workTeacherOf(r.id, r.source_work)).toBe('kaguya');
+    const expected: Record<string, string> = {
+      ec2159c6e8: 'taketorinookina', // かぐや姫の生い立ち
+      '86b5308b5a': 'kaguya', // 貴公子たちの妻問い
+      e9846f4330: 'ishitsukuri', // 仏の御石の鉢
+      '97a9d9174a': 'kuramochi', // 蓬萊の玉の枝
+      '5954a8d9eb': 'abenomiushi', // 火鼠の皮衣
+      cd8147e868: 'otomonomiyuki', // 龍の首の玉
+      '949859d6f5': 'isonokami', // 燕の子安貝
+      '7eb37dba92': 'mikado', // 御狩のみゆき
+      d50584362e: 'kaguya', // 天の羽衣
+      '067781f251': 'mikado', // ふじの煙
+    };
+    for (const r of taketori) expect(workTeacherOf(r.id, r.source_work)).toBe(expected[r.id]);
   });
 });
 

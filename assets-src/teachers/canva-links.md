@@ -22,6 +22,13 @@
 | yoshihide | 絵仏師良秀（同） | https://www.canva.com/M/MAHbNy4QwI8 | https://www.canva.com/M/MAHbN25nLfs | https://www.canva.com/M/MAHbN_94geU |
 | kenko | 兼好法師（同） | https://www.canva.com/M/MAHbN4-5Tm0 | https://www.canva.com/M/MAHbN35Dr_w | https://www.canva.com/M/MAHbN3Q7rJk |
 | takasuenomusume | 菅原孝標女（同） | https://www.canva.com/M/MAHbN-Ubv-w | https://www.canva.com/M/MAHbN4Sh72k | https://www.canva.com/M/MAHbNxbDWro |
+| taketorinookina | 竹取の翁（2026-11-18・教材の先生。しっとりはかぐや姫の絵を画風の参照に、ゆるり・いろどりはかぐや姫の同じ画風＋本人のしっとりを参照に） | https://www.canva.com/M/MAHbOjGbsko | https://www.canva.com/M/MAHbOrVumNY | https://www.canva.com/M/MAHbOiFqBMs |
+| mikado | 帝（竹取物語）（同） | https://www.canva.com/M/MAHbOqXBw6I | https://www.canva.com/M/MAHbOhdVNEE | https://www.canva.com/M/MAHbOmvE2nw |
+| ishitsukuri | 石作の皇子（同） | https://www.canva.com/M/MAHbOkxulrc | https://www.canva.com/M/MAHbOkeMgxU | https://www.canva.com/M/MAHbOtz6JBA |
+| kuramochi | 庫持の皇子（同） | https://www.canva.com/M/MAHbOlQd_44 | https://www.canva.com/M/MAHbOil3--E | https://www.canva.com/M/MAHbOrJ4Pv0 |
+| abenomiushi | 右大臣阿部御主人（同） | https://www.canva.com/M/MAHbOnDaQgs | https://www.canva.com/M/MAHbOmxDmh8 | https://www.canva.com/M/MAHbOunZIPs |
+| otomonomiyuki | 大納言大伴御行（同） | https://www.canva.com/M/MAHbOv_CtQo | https://www.canva.com/M/MAHbOkcucd8 | https://www.canva.com/M/MAHbOpW80qE |
+| isonokami | 中納言石上麻呂足（同） | https://www.canva.com/M/MAHbOtERMgY | https://www.canva.com/M/MAHbOoWGXrc | https://www.canva.com/M/MAHbOmPTJKc |
 
 不採用（見本）: 博士 https://www.canva.com/M/MAHZui3s-XQ
 
