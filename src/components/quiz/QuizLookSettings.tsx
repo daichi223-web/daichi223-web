@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { readingTestPath, unlockTextOf } from '../../lib/teacherTexts';
+import { getPublishedSlugs } from '../../lib/textPublications';
 import { FaceAvatar } from '../noble/FaceAvatar';
 import { TeacherDetailSheet } from './TeacherDetailSheet';
 import { PatternSwatch } from './QuizBackground';
@@ -47,6 +50,29 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
   const hiddenCount = available.length - collapsed.length + locked.length;
   // 先生をタップすると人物解説が開く（選ぶのは解説の中の「この先生にする」。2026-11-12 ユーザー指示）
   const [detail, setDetail] = useState<TeacherId | null>(null);
+  // 🔒の先生をタップすると、その先生が出る教材（公開中のいちばん前）の読解テストへ（2026-11-18 ユーザー指示）。
+  // 索引と公開の表は「もっと」を開いたときに1回だけ読む。飛び先が無い先生は今までどおり条件だけ
+  const [unlockLinks, setUnlockLinks] = useState<Partial<Record<TeacherId, string>>>({});
+  const needLinks = expanded && locked.length > 0;
+  useEffect(() => {
+    if (!needLinks) return;
+    let alive = true;
+    Promise.all([import('../../data/textsV3Index.json'), getPublishedSlugs()])
+      .then(([mod, published]) => {
+        if (!alive) return;
+        const rows = mod.default as { id: string; source?: string | null }[];
+        const links: Partial<Record<TeacherId, string>> = {};
+        for (const id of locked) {
+          const textId = unlockTextOf(id, rows, published);
+          if (textId) links[id] = readingTestPath(textId);
+        }
+        setUnlockLinks(links);
+      })
+      .catch(() => { /* 読めなければ今までどおり条件だけ見せる */ });
+    return () => { alive = false; };
+    // locked は描画ごとに新しい配列なので、中身（id の並び）で比べる
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [needLinks, locked.join(',')]);
 
   return (
     <div className={`mt-1 pt-2 border-t border-rw-rule space-y-2 ${className}`}>
@@ -79,23 +105,45 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
             );
           })}
           {/* 教材の先生：その教材の読解テストをクリアすると選べる（workTeachers.ts）。まだのときは鍵つきで、条件だけ見せる */}
-          {expanded && locked.map((id) => (
-            <div
-              key={id}
-              title={`${GUEST_UNLOCK_HINT[id]}で先生になります`}
-              aria-label={`まだ手に入れていない先生：${GUEST_UNLOCK_HINT[id]}で加わります`}
-              className="shrink-0 flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl border-2 border-dashed"
-              style={{ borderColor: 'var(--rw-rule)', color: 'var(--rw-ink-soft)', maxWidth: 96 }}
-            >
-              <span className="relative">
-                <span style={{ filter: 'grayscale(1) brightness(0.35)', opacity: 0.5, display: 'block' }}>
-                  <FaceAvatar src={teacherImage(id, tone)} size={40} alt="" />
+          {expanded && locked.map((id) => {
+            const to = unlockLinks[id];
+            const body = (
+              <>
+                <span className="relative">
+                  <span style={{ filter: 'grayscale(1) brightness(0.35)', opacity: 0.5, display: 'block' }}>
+                    <FaceAvatar src={teacherImage(id, tone)} size={40} alt="" />
+                  </span>
+                  <span className="absolute inset-0 flex items-center justify-center text-base" aria-hidden>🔒</span>
                 </span>
-                <span className="absolute inset-0 flex items-center justify-center text-base" aria-hidden>🔒</span>
-              </span>
-              <span className="text-[9px] font-bold leading-tight text-center">{GUEST_UNLOCK_HINT[id]}</span>
-            </div>
-          ))}
+                <span className="text-[9px] font-bold leading-tight text-center">{GUEST_UNLOCK_HINT[id]}</span>
+                {to && <span className="text-[9px] font-black leading-none text-rw-primary">解きに行く ▸</span>}
+              </>
+            );
+            const className = 'shrink-0 flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl border-2 border-dashed';
+            const style = { borderColor: 'var(--rw-rule)', color: 'var(--rw-ink-soft)', maxWidth: 96 };
+            return to ? (
+              <Link
+                key={id}
+                to={to}
+                title={`${GUEST_UNLOCK_HINT[id]}で先生になります。タップで読解テストへ`}
+                aria-label={`まだ手に入れていない先生：${GUEST_UNLOCK_HINT[id]}で加わります。読解テストを開く`}
+                className={`${className} transition hover:border-solid`}
+                style={style}
+              >
+                {body}
+              </Link>
+            ) : (
+              <div
+                key={id}
+                title={`${GUEST_UNLOCK_HINT[id]}で先生になります`}
+                aria-label={`まだ手に入れていない先生：${GUEST_UNLOCK_HINT[id]}で加わります`}
+                className={className}
+                style={style}
+              >
+                {body}
+              </div>
+            );
+          })}
           {hiddenCount > 0 && (
             <button
               type="button"
@@ -110,7 +158,7 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
           )}
         </div>
         <p className="mt-1 text-[10px] text-rw-ink-soft">
-          先生をタップすると、人物の解説が開きます。{expanded && locked.length > 0 && '🔒の先生は、教材の読解テストをクリアすると加わります。'}
+          先生をタップすると、人物の解説が開きます。{expanded && locked.length > 0 && '🔒の先生は、教材の読解テストをクリアすると加わります（タップでその読解テストへ）。'}
         </p>
         {/* 先生の絵は、テーマの「あなたのキャラ」（絵の雰囲気）に合わせて変わる。みやびもそこで選ぶ（2026-11-13 ユーザー指示で一本化） */}
         <TeacherDetailSheet id={detail} tone={tone} selected={detail === teacher} onSelect={setTeacher} onClose={() => setDetail(null)} />

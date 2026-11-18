@@ -1,19 +1,26 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { STAGES, TIER_TONE, robeColorOf } from '@/lib/nobleData';
-import { CAREER_ROUTES, CAREER_TERMS, KANSHOKU_STAGE_POSTS, NYOBO, ZURYO_POSTS } from '@/lib/kanshokuData';
+import { CAREER_ROUTES, CAREER_TERMS, NYOBO } from '@/lib/kanshokuData';
+import { KEITO, cellPosts, keitoSpan } from '@/lib/kanniKeito';
 import { PROVINCES, SHINNO_NINKOKU, kaisetsuFor, type ProvinceGrade } from '@/lib/kanshoku';
 import { rankFullName } from '@/lib/teacherPromotions';
 import { readMyStage } from '@/lib/myStage';
 
 /**
  * 位階表（/kanni。2026-11-18 ユーザー指示「位階表つくっても見られるようにできる？」）。
- * 21段ごとに、位・区分（地下／殿上人／公卿）・袍の色・名乗れる官職・受領を1枚のカードで並べる。
+ * 縦＝21段の位（上が正一位）、横＝役所の系統（kanniKeito.ts）の表。左の位の列に袍の色・区分・いま（2026-11-18 ユーザー指示で、段ごとのカードから置き換え）。
  * 官職や国をタップすると読みと解説（kanshoku.ts の kaisetsuFor）。データは位階の「官職を選ぶ」と同じ表（kanshokuData.ts）。
  * 出世ルート（2026-11-18、ユーザー指示「出世ルートなども解説できればよい」）：ルートを選ぶと、通る官職に番号が付く。正本 = F:\A2A\_work\kanshoku\routes.json。
  */
 
 const GRADES: ProvinceGrade[] = ['大国', '上国', '中国', '下国'];
+/** 表の行：上が正一位（官位相当表の並び） */
+const ROWS = [...STAGES].sort((a, b) => b.n - a.n);
+/** 系統ごとの縦の線の範囲 */
+const SPANS: Record<string, { min: number; max: number } | null> = Object.fromEntries(
+  KEITO.map((k) => [k.id, keitoSpan(k.id, STAGES.map((s) => s.n))]),
+);
 
 export default function KanniTable() {
   const myN = useMemo(() => readMyStage().n, []);
@@ -28,19 +35,32 @@ export default function KanniTable() {
   };
   const view = focus ? kaisetsuFor(focus) : null;
   const { hash } = useLocation();
-  // 開いたら、指定の段（#kanni-N）か今の段まで送る
+  // 開いたら、指定の段（#kanni-N）か今の段まで送る。表の中だけを送り、ページは表がちょうど収まる所まで
+  // （ページごと送ると、表の見出しが画面の外に出てしまう）
+  const boxRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const id = hash ? decodeURIComponent(hash.slice(1)) : `kanni-${myN}`;
-    requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: 'center' }));
+    requestAnimationFrame(() => {
+      const box = boxRef.current;
+      const row = document.getElementById(id);
+      if (!row) return;
+      if (box && box.contains(row)) {
+        const top = row.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop;
+        box.scrollTop = Math.max(0, top - box.clientHeight / 2 + row.offsetHeight / 2);
+        box.scrollIntoView({ block: 'nearest' });
+      } else {
+        row.scrollIntoView({ block: 'center' });
+      }
+    });
   }, [hash, myN]);
 
-  const chip = (name: string, key?: string, no = 0) => (
+  const chip = (name: string, key?: string, no = 0, small = false) => (
     <button
       key={key ?? name}
       type="button"
       onClick={() => setFocus((f) => (f === name ? null : name))}
       aria-pressed={focus === name}
-      className="px-2 py-0.5 rounded-full border text-[12px] font-bold"
+      className={small ? 'px-1.5 py-0.5 rounded-full border text-[11px] font-bold whitespace-nowrap' : 'px-2 py-0.5 rounded-full border text-[12px] font-bold'}
       style={{
         borderColor: focus === name || no ? 'var(--rw-primary)' : 'var(--rw-rule)',
         borderWidth: no ? 2 : 1,
@@ -66,7 +86,7 @@ export default function KanniTable() {
           </div>
         </div>
         <p className="text-[12px] leading-relaxed text-rw-ink-soft mb-3">
-          位（くらい）ごとに、その位の人が就いた主な官職です。律令の「官位令」の決まり（官位相当）と、平安時代の慣例で並べています。
+          縦に位（くらい）、横に役所の系統をとって、その位の人が就いた主な官職を並べた表です。律令の「官位令」の決まり（官位相当）と、平安時代の慣例によります。
           官職や国をタップすると、読みと説明が出ます。
         </p>
 
@@ -129,34 +149,80 @@ export default function KanniTable() {
           )}
         </div>
 
-        <ol className="space-y-2">
-          {STAGES.map((s) => {
-            const mine = s.n === myN;
-            const tone = TIER_TONE[s.era];
-            const posts = KANSHOKU_STAGE_POSTS[s.n] ?? [];
-            const zuryo = ZURYO_POSTS.filter((z) => z.n === s.n);
-            return (
-              <li
-                key={s.n}
-                id={`kanni-${s.n}`}
-                className="rounded-xl border bg-rw-paper px-3 py-2"
-                style={{ borderColor: mine ? 'var(--rw-primary)' : 'var(--rw-rule)', borderWidth: mine ? 2 : 1 }}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="w-3.5 h-3.5 rounded-sm border shrink-0" style={{ background: robeColorOf(s.display.robe), borderColor: 'rgba(0,0,0,0.2)' }} title={`袍：${s.display.robe}`} />
-                  <span className="text-[15px] font-black text-rw-ink" style={{ fontFamily: '"Noto Serif JP", serif' }}>{rankFullName(s.rank)}</span>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border" style={{ color: tone.fg, borderColor: tone.fg }}>{s.era}</span>
-                  <span className="text-[10px] text-rw-ink-soft">第{s.n}階・袍 {s.display.robe}</span>
-                  {mine && <span className="ml-auto text-[10px] font-black px-2 py-0.5 rounded-full" style={{ background: 'var(--rw-primary)', color: '#fff' }}>いま</span>}
-                </div>
-                <div className="mt-1.5 flex flex-wrap gap-1">
-                  {zuryo.map((z) => chip(`${z.grade}${z.post}`, undefined, stepNo(s.n, `${z.grade}${z.post}`)))}
-                  {posts.map((p) => chip(p.name, `${s.n}-${p.name}`, stepNo(s.n, p.name)))}
-                </div>
-              </li>
-            );
-          })}
-        </ol>
+        {/* 系統の表（2026-11-18 ユーザー指示「位階表は縦の系統がわかるようにして」「系統の表だけにする」）。
+            縦＝位（上が正一位）、横＝役所の系統。同じ列で官職のある段どうしを縦の線で結ぶ。位の列と見出しは送っても残す */}
+        <p className="text-[11px] text-rw-ink-soft mb-1.5">同じ列を上へたどると、その役所の中での上がり方が分かります。表は横にも送れます。</p>
+        <div ref={boxRef} className="-mx-4 sm:mx-0 overflow-auto border-y sm:border sm:rounded-xl border-rw-rule bg-rw-paper" style={{ maxHeight: '72vh' }}>
+          <table className="border-separate text-left" style={{ borderSpacing: 0 }}>
+            <thead>
+              <tr>
+                <th className="sticky top-0 left-0 z-30 bg-rw-paper border-b-2 border-r border-rw-rule px-2 py-1.5 text-[11px] font-black text-rw-ink" style={{ minWidth: 96 }}>
+                  位
+                </th>
+                {KEITO.map((k, i) => (
+                  <th
+                    key={k.id}
+                    scope="col"
+                    className="sticky top-0 z-20 border-b-2 border-rw-rule px-1.5 py-1.5 text-center align-bottom"
+                    style={{ minWidth: 78, background: i % 2 ? 'var(--rw-paper)' : 'var(--rw-bg)' }}
+                  >
+                    <span className="block text-[11px] font-black leading-tight text-rw-ink">{k.name}</span>
+                    <span className="block text-[9px] font-bold leading-tight text-rw-ink-soft mt-0.5">{k.note}</span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {ROWS.map((s) => {
+                const mine = s.n === myN;
+                const tone = TIER_TONE[s.era];
+                return (
+                  <tr key={s.n} id={`kanni-${s.n}`}>
+                    <th
+                      scope="row"
+                      className="sticky left-0 z-10 border-b border-r border-rw-rule px-2 py-1 align-middle"
+                      style={{ background: mine ? 'var(--rw-primary-soft)' : 'var(--rw-paper)', borderLeft: `4px solid ${tone.fg}` }}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-sm border shrink-0" style={{ background: robeColorOf(s.display.robe), borderColor: 'rgba(0,0,0,0.2)' }} title={`袍：${s.display.robe}`} />
+                        <span className="text-[12.5px] font-black text-rw-ink whitespace-nowrap" style={{ fontFamily: '"Noto Serif JP", serif' }}>{rankFullName(s.rank)}</span>
+                      </span>
+                      <span className="flex items-center gap-1 mt-0.5">
+                        <span className="text-[9px] font-bold" style={{ color: tone.fg }}>{s.era}</span>
+                        {mine && <span className="text-[9px] font-black px-1.5 rounded-full" style={{ background: 'var(--rw-primary)', color: '#fff' }}>いま</span>}
+                      </span>
+                    </th>
+                    {KEITO.map((k, i) => {
+                      const posts = cellPosts(s.n, k.id);
+                      const span = SPANS[k.id];
+                      const inSpan = !!span && s.n >= span.min && s.n <= span.max;
+                      return (
+                        <td
+                          key={k.id}
+                          className="relative border-b border-rw-rule px-1 py-1 text-center align-middle"
+                          style={{ background: mine ? 'var(--rw-primary-soft)' : i % 2 ? 'var(--rw-paper)' : 'var(--rw-bg)' }}
+                        >
+                          {inSpan && (
+                            <span
+                              aria-hidden
+                              className="absolute left-1/2 -translate-x-1/2 w-[2px]"
+                              style={{ top: s.n === span.max ? '50%' : 0, bottom: s.n === span.min ? '50%' : 0, background: 'var(--rw-rule)' }}
+                            />
+                          )}
+                          {posts.length > 0 && (
+                            <span className="relative flex flex-col items-center gap-0.5">
+                              {posts.map((p) => chip(p, `${s.n}-${p}`, stepNo(s.n, p), true))}
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
 
         <h2 className="mt-6 mb-2 text-base font-black text-rw-ink" style={{ fontFamily: '"Noto Serif JP", serif' }}>国の等級（延喜式）</h2>
         <p className="text-[12px] leading-relaxed text-rw-ink-soft mb-2">
