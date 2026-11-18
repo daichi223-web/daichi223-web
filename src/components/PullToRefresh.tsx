@@ -54,8 +54,10 @@ export default function PullToRefresh() {
     };
 
     // ボタン・リンク・入力欄の上で始めたタッチ、品詞分解の印刷画面（縦書きで縦スクロールが常に先頭）では使わない
+    // 前に重ねた画面（テーマのシートなどの aria-modal）の中のタッチも使わない。
+    // シートの中で上へ戻そうと指を下へ動かすと、後ろのページを引っぱっていた（2026-11-18 ユーザー指摘「テーマの画面で後ろの画面が動く」）
     const isExcluded = (el: Element | null): boolean =>
-      !!el?.closest?.('a, button, input, select, textarea, label, [role="button"]') ||
+      !!el?.closest?.('a, button, input, select, textarea, label, [role="button"], [aria-modal="true"]') ||
       document.documentElement.classList.contains('hp-tate') ||
       document.documentElement.classList.contains('hp-yoko');
 

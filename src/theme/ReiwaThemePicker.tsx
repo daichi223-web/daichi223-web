@@ -36,6 +36,15 @@ export default function ReiwaThemePicker({ open, onClose, focus = null }: Props)
     return () => window.clearTimeout(id);
   }, [open, focus]);
 
+  // 開いているあいだは後ろのページをスクロールさせない（暗い背景をなぞったとき・シートを端まで送ったときに後ろが動いていた。2026-11-18 ユーザー指摘）
+  useEffect(() => {
+    if (!open) return;
+    const html = document.documentElement;
+    const prev = html.style.overflow;
+    html.style.overflow = 'hidden';
+    return () => { html.style.overflow = prev; };
+  }, [open]);
+
   if (!open) return null;
 
   return (
@@ -46,9 +55,9 @@ export default function ReiwaThemePicker({ open, onClose, focus = null }: Props)
       aria-modal="true"
       aria-label="テーマ設定"
     >
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-black/40 touch-none" />
       <div
-        className="relative w-full max-w-md bg-rw-paper rounded-t-3xl sm:rounded-3xl shadow-2xl animate-slide-up max-h-[85vh] overflow-y-auto"
+        className="relative w-full max-w-md bg-rw-paper rounded-t-3xl sm:rounded-3xl shadow-2xl animate-slide-up max-h-[85vh] overflow-y-auto overscroll-contain"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ヘッダ */}
