@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { STAGES, robeColorOf } from '@/lib/nobleData';
 
 // 出世絵巻 — 21 階全図。現在の階位にスクロール、過去はくすませて表示。
@@ -43,12 +44,21 @@ export default function RoadmapModal({ currentN, onClose }: Props) {
               二十一階 全図
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="px-3 py-1.5 text-[11px] font-bold tracking-wider border border-rw-ink-soft text-rw-ink rounded bg-white/40"
-          >
-            閉じる
-          </button>
+          <div className="flex items-center gap-2">
+            {/* 位階表（2026-11-18） */}
+            <Link
+              to="/kanni"
+              className="px-3 py-1.5 text-[11px] font-bold tracking-wider border border-rw-ink-soft text-rw-ink rounded bg-white/40"
+            >
+              位階表
+            </Link>
+            <button
+              onClick={onClose}
+              className="px-3 py-1.5 text-[11px] font-bold tracking-wider border border-rw-ink-soft text-rw-ink rounded bg-white/40"
+            >
+              閉じる
+            </button>
+          </div>
         </div>
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-4">

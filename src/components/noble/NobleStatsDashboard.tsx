@@ -114,6 +114,13 @@ export default function NobleStatsDashboard({ parts, score, onOpenLook }: Props)
         >
           官職を選ぶ
         </button>
+        <Link
+          to={`/kanni#kanni-${stage.n}`}
+          className="shrink-0 text-[11px] font-bold px-3 py-1 rounded-full border-2"
+          style={{ borderColor: 'var(--rw-rule)', color: 'var(--rw-ink-soft)' }}
+        >
+          位階表
+        </Link>
         <KanshokuPicker stage={stage} open={pickerOpen} onClose={closePicker} />
       </div>
 
