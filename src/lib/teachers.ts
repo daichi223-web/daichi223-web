@@ -251,7 +251,12 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
 /** みやびの絵がある先生（public/teachers/<id>-anime.webp）。無い先生は しっとり（sharp）の絵で出す */
 // 2026-11-13 夜（ユーザー指示）：貫之として届いた絵を業平に回し、道真（固め）と貫之（ややファンキー）は40〜50代のイケオジに描き直した（Codex の依頼5）。
 // 2026-11-17：かぐや姫（Codex の依頼7）。
-export const ANIME_TEACHER_IDS: readonly TeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira', 'kaguya'];
+// 教材の先生13人のみやびは Codex の依頼11・12（2026-11-18）。源氏の8人は依頼13で届いていて、源氏の先生と一緒に入れる
+export const ANIME_TEACHER_IDS: readonly TeacherId[] = [
+  'sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira', 'kaguya',
+  'nukata', 'yotsugi', 'kazan', 'yoshihide', 'kenko', 'takasuenomusume',
+  'taketorinookina', 'mikado', 'ishitsukuri', 'kuramochi', 'abenomiushi', 'otomonomiyuki', 'isonokami',
+];
 
 // 表情差分（2026-11-18、ユーザー指示「先生の顔のバリエーションをつけたい」。調査 = F:\A2A\_work\work-teachers\expression-research.md）。
 // base＝今の1枚／joy＝うれしい（正解）／cheer＝はげまし（不正解。がっかり・かわいそう・怒りの顔にしない＝教育研究による）。
