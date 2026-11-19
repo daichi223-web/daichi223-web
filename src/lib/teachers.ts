@@ -89,7 +89,7 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
     name: '和泉式部',
     kana: 'いずみしきぶ',
     title: '『和泉式部日記』で知られる恋の歌人',
-    oneLiner: '正解を自分のことのように喜ぶ、情熱の人',
+    oneLiner: '自分磨きを華やかに盛り上げる、ノリのいいお姉さん',
     profile: '中宮彰子に仕えた歌人。紫式部は「口にまかせた歌にも必ず目にとまる一節がある」と評した。',
   },
   koshikibu: {
