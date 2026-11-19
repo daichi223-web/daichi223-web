@@ -33,6 +33,7 @@ import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } fro
 import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage, type TeacherId } from "@/lib/teachers";
 import { useChatTeacher } from "@/lib/chatTeacher";
 import { isReadingTestCleared, isTeacherUnlocked, unlockTeacher, workTeacherOf } from "@/lib/workTeachers";
+import { ALL_GROUPS, groupsOfRun, readClearedGroups, recordClearedGroups, remainingGroups } from "@/lib/readingClear";
 import { usePortraitTone } from "@/lib/portraitTone";
 import { readMyStage } from "@/lib/myStage";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
@@ -165,6 +166,8 @@ export default function ReadingTest() {
   const gParam = params.get("g");
   const groups = useMemo(() => (test ? availableGroups(test) : []), [test]);
   const useChooser = groups.length >= 2;
+  /** 先生を手に入れるのに要る分類（選ぶ画面が無い教材は空＝全部まとめて1回） */
+  const groupIds = useMemo(() => (useChooser ? groups.map((g) => g.group.id) : []), [useChooser, groups]);
   const groupId = useChooser && isReadingGroupId(gParam) ? gParam : null;
   const choosing = useChooser && !groupId && gParam !== "all";
   const groupLabel = groupId ? READING_GROUPS.find((g) => g.id === groupId)?.label : useChooser ? "全部" : undefined;
@@ -256,10 +259,12 @@ export default function ReadingTest() {
     } else {
       setEndAt(Date.now());
       window.scrollTo({ top: 0 });
-      // 教材をクリアすると、その教材の先生が手に入る（2026-11-17 ユーザー指示）
+      // 教材をクリアすると、その教材の先生が手に入る（2026-11-17 ユーザー指示）。
+      // クリア＝その教材の全部の分類をそれぞれ8割以上（2026-11-19 ユーザー指示「教材のクイズを全部解かないと手に入らないようにして」。readingClear.ts）
       const correct = answers.filter((a, k) => a !== null && a === questions[k]?.answerIndex).length;
-      if (workTeacher && isReadingTestCleared(correct, questions.length) && unlockTeacher(workTeacher)) {
-        setNewTeacher(workTeacher);
+      if (workTeacher && isReadingTestCleared(correct, questions.length)) {
+        const done = recordClearedGroups(textId, groupsOfRun(groupId, groupIds));
+        if (remainingGroups(groupIds, done).length === 0 && unlockTeacher(workTeacher)) setNewTeacher(workTeacher);
       }
     }
   };
@@ -495,11 +500,17 @@ export default function ReadingTest() {
                   </p>
                 </div>
               )}
-              {!newTeacher && workTeacher && !isTeacherUnlocked(workTeacher) && (
-                <p className="mt-3 text-center text-xs font-bold text-rw-ink-soft">
-                  8割以上正解すると、{TEACHERS[workTeacher].name}が先生に加わります。
-                </p>
-              )}
+              {!newTeacher && workTeacher && !isTeacherUnlocked(workTeacher) && (() => {
+                const remain = remainingGroups(groupIds, readClearedGroups(textId)).filter((id) => id !== ALL_GROUPS);
+                const names = remain.map((id) => `「${READING_GROUPS.find((g) => g.id === id)?.label ?? id}」`).join("");
+                return (
+                  <p className="mt-3 text-center text-xs font-bold text-rw-ink-soft">
+                    {names
+                      ? <>あと{names}を8割以上で解くと、{TEACHERS[workTeacher].name}が先生に加わります。</>
+                      : <>この教材の問題を全部、8割以上で解くと、{TEACHERS[workTeacher].name}が先生に加わります。</>}
+                  </p>
+                );
+              })()}
 
               {correctCount < questions.length && (
                 <div className="mt-4">

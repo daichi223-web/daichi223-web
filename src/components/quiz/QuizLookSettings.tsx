@@ -158,7 +158,7 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
           )}
         </div>
         <p className="mt-1 text-[10px] text-rw-ink-soft">
-          先生をタップすると、人物の解説が開きます。{expanded && locked.length > 0 && '🔒の先生は、教材の読解テストをクリアすると加わります（タップでその読解テストへ）。'}
+          先生をタップすると、人物の解説が開きます。{expanded && locked.length > 0 && '🔒の先生は、教材の読解テストを全部の分類で8割以上とると加わります（タップでその読解テストへ）。'}
         </p>
         {/* 先生の絵は、テーマの「あなたのキャラ」（絵の雰囲気）に合わせて変わる。みやびもそこで選ぶ（2026-11-13 ユーザー指示で一本化） */}
         <TeacherDetailSheet id={detail} tone={tone} selected={detail === teacher} onSelect={setTeacher} onClose={() => setDetail(null)} />

@@ -24,6 +24,7 @@ export const STORAGE_KEYS = {
   portraitTone: 'kobun.noble.portraitTone',   // 絵の雰囲気 (yuru=ゆるり/pop=いろどり/sharp=しっとり/miyabi=みやび。自分の肖像と先生の絵)
   chatTeacher: 'kobun.chat.teacher',           // 単語クイズの答え合わせの先生 (sei/murasaki/michizane/tsurayuki/teika/komachi/izumi/koshikibu/ukyo/narihira)
   unlockedTeachers: 'kobun.chat.unlockedTeachers', // 教材をクリアして手に入れた先生 (JSON の配列。kaguya ほか。workTeachers.ts)
+  readtestCleared: 'kobun.readtest.cleared', // 読解テストで8割以上を取った分類 ({ 教材ID: 分類ID[] }。全部そろうと教材の先生が手に入る。readingClear.ts)
   chatBackground: 'kobun.chat.background',   // 単語クイズ画面の和柄 (seigaiha/shippo/asanoha/kikko/ichimatsu/uroko/yagasuri)
   chatBackgroundColor: 'kobun.chat.backgroundColor', // 和柄の色 (kinari/sakura/wakatake/sora/yamabuki/fuji)
   reiwaTheme: 'kobun.reiwaTheme',                       // 令和テーマ
