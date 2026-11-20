@@ -13,13 +13,13 @@ export const TEACHER_VOICE_ENABLED = true;
 
 export type BaseTeacherId = 'sei' | 'murasaki' | 'michizane' | 'tsurayuki' | 'teika' | 'komachi' | 'izumi' | 'koshikibu' | 'ukyo' | 'narihira';
 // 教材の先生（2026-11-17 ユーザー指示）。その教材の読解テストに出て、クリアすると選べるようになる（workTeachers.ts）。
-export type GuestTeacherId = 'kaguya' | 'yoshihide' | 'kenko' | 'takasuenomusume' | 'nukata' | 'yotsugi' | 'kazan' | 'taketorinookina' | 'mikado' | 'ishitsukuri' | 'kuramochi' | 'abenomiushi' | 'otomonomiyuki' | 'isonokami';
+export type GuestTeacherId = 'kaguya' | 'yoshihide' | 'kenko' | 'takasuenomusume' | 'nukata' | 'yotsugi' | 'kazan' | 'taketorinookina' | 'mikado' | 'ishitsukuri' | 'kuramochi' | 'abenomiushi' | 'otomonomiyuki' | 'isonokami' | 'kiritsubo' | 'murasakinoue' | 'onnasannomiya' | 'hikaru' | 'akashi' | 'aoi' | 'kaoru' | 'oigimi' | 'wakamurasaki' | 'nakanokimi' | 'kinto' | 'yukinari' | 'norinaga';
 export type TeacherId = BaseTeacherId | GuestTeacherId;
 
 /** はじめから選べる先生（設定欄に並ぶ順） */
 export const TEACHER_IDS: readonly BaseTeacherId[] = ['sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira'];
 /** 教材をクリアすると手に入る先生 */
-export const GUEST_TEACHER_IDS: readonly GuestTeacherId[] = ['kaguya', 'yoshihide', 'kenko', 'takasuenomusume', 'nukata', 'yotsugi', 'kazan', 'taketorinookina', 'mikado', 'ishitsukuri', 'kuramochi', 'abenomiushi', 'otomonomiyuki', 'isonokami'];
+export const GUEST_TEACHER_IDS: readonly GuestTeacherId[] = ['kaguya', 'yoshihide', 'kenko', 'takasuenomusume', 'nukata', 'yotsugi', 'kazan', 'taketorinookina', 'mikado', 'ishitsukuri', 'kuramochi', 'abenomiushi', 'otomonomiyuki', 'isonokami', 'kiritsubo', 'murasakinoue', 'onnasannomiya', 'hikaru', 'akashi', 'aoi', 'kaoru', 'oigimi', 'wakamurasaki', 'nakanokimi', 'kinto', 'yukinari', 'norinaga'];
 /** 台詞・人物解説を持つ先生のすべて */
 export const ALL_TEACHER_IDS: readonly TeacherId[] = [...TEACHER_IDS, ...GUEST_TEACHER_IDS];
 
@@ -242,6 +242,123 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
     oneLiner: '落ち着いていこうと並んで走る、素直な相棒',
     profile: '『竹取物語』の作中の人物で、中納言。かぐや姫に「燕の子安貝」を求められ、役人の知恵を借りて自分で巣を探った。',
   },
+  // 桐壺更衣（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\kiritsubo.json）
+  kiritsubo: {
+    id: 'kiritsubo',
+    name: '桐壺更衣',
+    kana: 'きりつぼのこうい',
+    title: '『源氏物語』光源氏の母',
+    oneLiner: '言葉少なに支え続ける人',
+    profile: '『源氏物語』の最初に登場する人で、光源氏の母。帝の心づかいを頼みに、言葉少なに宮仕えを続けた。',
+  },
+  // 紫の上（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\murasakinoue.json）
+  murasakinoue: {
+    id: 'murasakinoue',
+    name: '紫の上',
+    kana: 'むらさきのうえ',
+    title: '『源氏物語』六条院の女主人',
+    oneLiner: 'まず理由を汲み取ってくれる人',
+    profile: '『源氏物語』の女主人公の一人。雀の子を逃がされて悔しがった少女が、相手の立場を思いやる六条院の女主人になった。',
+  },
+  // 女三宮（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\onnasannomiya.json）
+  onnasannomiya: {
+    id: 'onnasannomiya',
+    name: '女三宮',
+    kana: 'おんなさんのみや',
+    title: '『源氏物語』朱雀院の皇女',
+    oneLiner: 'おっとり。最後は自分で決める',
+    profile: '『源氏物語』の作中の人物。朱雀院の皇女で、光源氏の正室。おっとりして人見知りしない人として描かれる。',
+  },
+  // 光源氏（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\hikaru.json）
+  hikaru: {
+    id: 'hikaru',
+    name: '光源氏',
+    kana: 'ひかるげんじ',
+    title: '『源氏物語』の主人公',
+    oneLiner: '冗談で場をほぐす、多才な先輩',
+    profile: '『源氏物語』の主人公。須磨では、ついて来た人々を気づかい、冗談で場をほぐしながら絵や琴に親しんだ。',
+  },
+  // 明石の君（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\akashi.json）
+  akashi: {
+    id: 'akashi',
+    name: '明石の君',
+    kana: 'あかしのきみ',
+    title: '『源氏物語』明石の入道の娘',
+    oneLiner: '先を読む、冷静で気品ある師',
+    profile: '『源氏物語』の作中の人物。明石の入道の娘で、歌・筆跡・箏の琴に気品がある。先を考えて動く人として描かれる。',
+  },
+  // 葵の上（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\aoi.json）
+  aoi: {
+    id: 'aoi',
+    name: '葵の上',
+    kana: 'あおいのうえ',
+    title: '『源氏物語』左大臣家の姫',
+    oneLiner: '端正で照れ屋。だんだん打ち解ける',
+    profile: '『源氏物語』の作中の人物。左大臣家の姫で、頭中将の妹。きちんとしていて、打ち解けにくい人として描かれる。',
+  },
+  // 薫（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\kaoru.json）
+  kaoru: {
+    id: 'kaoru',
+    name: '薫',
+    kana: 'かおる',
+    title: '『源氏物語』宇治十帖の主人公',
+    oneLiner: '「なぜ？」を問い続ける内省の人',
+    profile: '『源氏物語』宇治十帖の主人公。宇治の八の宮を「心の先達」として通い、霧の夜に山荘の姫君たちをかいま見る。',
+  },
+  // 大君（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\oigimi.json）
+  oigimi: {
+    id: 'oigimi',
+    name: '大君',
+    kana: 'おおいぎみ',
+    title: '『源氏物語』宇治の八の宮の長女',
+    oneLiner: '教えを守り、流されないしっかり姉',
+    profile: '『源氏物語』宇治十帖の人物。宇治に住む八の宮の長女で、父の言い置いた教えを守り、妹の中の君を何より気づかった。',
+  },
+  // 若紫（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\wakamurasaki.json）
+  wakamurasaki: {
+    id: 'wakamurasaki',
+    name: '若紫',
+    kana: 'わかむらさき',
+    title: '『源氏物語』北山の少女（のちの紫の上）',
+    oneLiner: '思ったまま言う、生き物好きの元気っ子',
+    profile: '『源氏物語』若紫巻に出てくる十歳ほどの少女で、のちの紫の上。逃がされた雀の子を悔しがって走って来る姿で登場する。',
+  },
+  // 中の君（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\nakanokimi.json）
+  nakanokimi: {
+    id: 'nakanokimi',
+    name: '中の君',
+    kana: 'なかのきみ',
+    title: '『源氏物語』宇治の八の宮の次女',
+    oneLiner: 'せんぱいを慕う、甘え上手な妹',
+    profile: '『源氏物語』宇治十帖の人物。宇治に住む八の宮の次女で、姉の大君といつも一緒に楽器を合わせて稽古した妹。',
+  },
+  // 藤原公任（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\kinto.json）
+  kinto: {
+    id: 'kinto',
+    name: '藤原公任',
+    kana: 'ふじわらのきんとう',
+    title: '『大鏡』三船の才・四条大納言',
+    oneLiner: '何でもできる、格付け好きの採点者',
+    profile: '平安時代中期の公卿・歌人。和歌・漢詩・管弦のどれにもすぐれ、『和漢朗詠集』を選んだ。「四条大納言」と呼ばれた。',
+  },
+  // 藤原行成（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\yukinari.json）
+  yukinari: {
+    id: 'yukinari',
+    name: '藤原行成',
+    kana: 'ふじわらのゆきなり',
+    title: '三蹟の一人・『権記』の書き手',
+    oneLiner: '一画ずつ確かめる、律儀な能書家',
+    profile: '平安時代中期の公卿で、三蹟に数えられる能書家。一条天皇に重んじられ、日記『権記』を残した。清少納言とも親しかった。',
+  },
+  // 本居宣長（教材の先生。2026-11-18 追加。設定 = F:\A2A\_work\work-teachers\design\norinaga.json）
+  norinaga: {
+    id: 'norinaga',
+    name: '本居宣長',
+    kana: 'もとおりのりなが',
+    title: '『源氏物語玉の小櫛』『玉勝間』の著者',
+    oneLiner: '先生の説でも誤りは正す、一語の人',
+    profile: '江戸時代中期の国学者。松坂で町医者として働きながら、『源氏物語』の本質を「もののあはれを知る」ことと説いた。',
+  },
 };
 
 // 先生の絵の「みやび」（2026-11-13、Codex 作。背景は透明）。ファイル名は作業中の仮の名のまま <id>-anime.webp。
@@ -251,11 +368,14 @@ export const TEACHERS: Record<TeacherId, TeacherMeta> = {
 /** みやびの絵がある先生（public/teachers/<id>-anime.webp）。無い先生は しっとり（sharp）の絵で出す */
 // 2026-11-13 夜（ユーザー指示）：貫之として届いた絵を業平に回し、道真（固め）と貫之（ややファンキー）は40〜50代のイケオジに描き直した（Codex の依頼5）。
 // 2026-11-17：かぐや姫（Codex の依頼7）。
-// 教材の先生13人のみやびは Codex の依頼11・12（2026-11-18）。源氏の8人は依頼13で届いていて、源氏の先生と一緒に入れる
+// 教材の先生13人のみやびは Codex の依頼11・12（2026-11-18）。源氏の8人（依頼13）と新しい5人（依頼16）は 2026-11-20 に入れた
 export const ANIME_TEACHER_IDS: readonly TeacherId[] = [
   'sei', 'murasaki', 'michizane', 'tsurayuki', 'teika', 'komachi', 'izumi', 'koshikibu', 'ukyo', 'narihira', 'kaguya',
   'nukata', 'yotsugi', 'kazan', 'yoshihide', 'kenko', 'takasuenomusume',
   'taketorinookina', 'mikado', 'ishitsukuri', 'kuramochi', 'abenomiushi', 'otomonomiyuki', 'isonokami',
+  // 源氏の8人（依頼13）と新しい先生5人（依頼16）。2026-11-20 組み込み
+  'kiritsubo', 'murasakinoue', 'onnasannomiya', 'hikaru', 'akashi', 'aoi', 'kaoru', 'oigimi',
+  'wakamurasaki', 'nakanokimi', 'kinto', 'yukinari', 'norinaga',
 ];
 
 // 表情差分（2026-11-18、ユーザー指示「先生の顔のバリエーションをつけたい」。調査 = F:\A2A\_work\work-teachers\expression-research.md）。
@@ -265,7 +385,11 @@ export const ANIME_TEACHER_IDS: readonly TeacherId[] = [
 export type TeacherExpression = 'base' | 'joy' | 'cheer';
 
 /** 表情差分の絵がまだ無い先生（絵を足したらここから外す） */
-const EXPRESSION_PENDING: readonly TeacherId[] = ['taketorinookina', 'mikado', 'ishitsukuri', 'kuramochi', 'abenomiushi', 'otomonomiyuki', 'isonokami'];
+const EXPRESSION_PENDING: readonly TeacherId[] = [
+  'taketorinookina', 'mikado', 'ishitsukuri', 'kuramochi', 'abenomiushi', 'otomonomiyuki', 'isonokami',
+  'kiritsubo', 'murasakinoue', 'onnasannomiya', 'hikaru', 'akashi', 'aoi', 'kaoru', 'oigimi',
+  'wakamurasaki', 'nakanokimi', 'kinto', 'yukinari', 'norinaga',
+];
 
 /** 表情差分の絵がある画風（先生ごと）。足したらここに書く */
 export const TEACHER_EXPRESSION_TONES: Readonly<Partial<Record<TeacherId, readonly PortraitTone[]>>> = Object.fromEntries(
@@ -278,14 +402,18 @@ export function hasTeacherExpression(id: TeacherId, tone: PortraitTone, expr: Te
   return expr !== 'base' && (TEACHER_EXPRESSION_TONES[id] ?? []).includes(tone);
 }
 
+/** いろどり（pop）の絵がまだ無い先生。届くまでは しっとり の絵で出す（2026-11-21。絵を足したらここから外す） */
+export const POP_PENDING: readonly TeacherId[] = ['kaoru', 'oigimi'];
+
 /** 先生の絵のパス。みやびは <id>-anime.webp、ほかは <id>-<tone>.webp。表情差分があれば <id>-<tone>-<expr>.webp */
 export function teacherImage(id: TeacherId, tone: PortraitTone, expr: TeacherExpression = 'base'): string {
   if (tone === 'miyabi') return ANIME_TEACHER_IDS.includes(id) ? `/teachers/${id}-anime.webp` : `/teachers/${id}-sharp.webp`;
+  if (tone === 'pop' && POP_PENDING.includes(id)) return `/teachers/${id}-sharp.webp`;
   if (hasTeacherExpression(id, tone, expr)) return `/teachers/${id}-${tone}-${expr}.webp`;
   return `/teachers/${id}-${tone}.webp`;
 }
 
-/** 答え合わせの判定 → 表情。1回の答え合わせに顔は1つ（調査の 2-1） */
+/** 答え合わせの判定 → 表情。表情を出すのは判定の吹き出しだけで、解説の吹き出しはいつもの顔（2026-11-18 ユーザー指示） */
 export function expressionForVerdict(verdict: 'ok' | 'ng' | undefined): TeacherExpression {
   return verdict === 'ok' ? 'joy' : verdict === 'ng' ? 'cheer' : 'base';
 }

@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import textsIndex from '../data/textsIndex.json';
 import {
-  BY_TEXT, BY_WORK, isReadingTestCleared, isTeacherUnlocked, readUnlockedTeachers, unlockTeacher, workTeacherOf,
+  BY_TEXT, BY_WORK, isReadingTestCleared, isTeacherUnlocked, readUnlockedTeachers, unlockOnTextClear, unlockTeacher, workTeacherOf,
 } from '../lib/workTeachers';
+import { unlockTextOf } from '../lib/teacherTexts';
 import { ALL_TEACHER_IDS, TEACHER_IDS } from '../lib/teachers';
 import { readChatTeacher, CHAT_TEACHER_KEY } from '../lib/chatTeacher';
 import { COLLAPSED_COUNT, collapsedTeachers } from '../components/quiz/QuizLookSettings';
@@ -61,6 +62,25 @@ describe('workTeacherOf（教材の先生）', () => {
     };
     for (const r of taketori) expect(workTeacherOf(r.id, r.source_work)).toBe(expected[r.id]);
   });
+
+  it('源氏物語は1本ごとの中心の人物。亡くなる場面と廃院の怪は紫式部（2026-11-18 ユーザー決定）', () => {
+    const genji = rows.filter((r) => (r.source_work ?? '').startsWith('源氏物語（'));
+    expect(genji.length).toBe(11);
+    const expected: Record<string, string> = {
+      cec7f3b46f: 'kiritsubo', // 光源氏の誕生
+      '83e7b6a341': 'murasaki', // 飽かぬ別れ（桐壺更衣が亡くなる）
+      '249a2e97df': 'murasaki', // 廃院の怪
+      fd3012c216: 'wakamurasaki', // 若紫の君（2026-11-19 紫の上から若紫へ）
+      f78ab86be9: 'hikaru', // 心づくしの秋
+      da30d34a6c: 'onnasannomiya', // 暁の雪
+      '0a93657296': 'akashi', // 母子の別離
+      '467249bc39': 'murasaki', // 萩のうは露（紫の上が亡くなる）
+      '364673ceb1': 'aoi', // 車争ひ
+      fe466e5a11: 'kaoru', // 霧の中のかいま見
+      '4c5d7950dd': 'oigimi', // 髪の香
+    };
+    for (const r of genji) expect(workTeacherOf(r.id, r.source_work)).toBe(expected[r.id]);
+  });
 });
 
 describe('クリアで先生が手に入る', () => {
@@ -91,6 +111,42 @@ describe('クリアで先生が手に入る', () => {
     expect(readChatTeacher()).toBe('sei');
     unlockTeacher('kaguya');
     expect(readChatTeacher()).toBe('kaguya');
+  });
+
+  it('公任・行成・宣長は教材ごと（行成は清少納言から振り替え。2026-11-19）', () => {
+    expect(workTeacherOf('f1c4b82dd3', '大鏡（一）')).toBe('kinto');
+    expect(workTeacherOf('ff9c2346eb', '枕草子（二）')).toBe('yukinari');
+    expect(workTeacherOf('8bb763a731', '源氏物語玉の小櫛')).toBe('norinaga');
+  });
+
+  it('大君を手に入れると、中の君も一緒に加わる', () => {
+    expect(unlockOnTextClear('4c5d7950dd', '源氏物語（二）')).toEqual(['oigimi', 'nakanokimi']);
+    expect(unlockOnTextClear('4c5d7950dd', '源氏物語（二）')).toEqual([]);
+  });
+
+  it('若紫を手に入れたあと、源氏物語のほかの教材をクリアすると紫の上も加わる', () => {
+    // 若紫より前に源氏のほかの教材を解いても、紫の上は来ない
+    expect(unlockOnTextClear('f78ab86be9', '源氏物語（二）')).toEqual(['hikaru']);
+    expect(unlockOnTextClear('fd3012c216', '源氏物語（一）')).toEqual(['wakamurasaki']);
+    // 若紫の教材をもう一度解いても「ほかの教材」に数えない
+    expect(unlockOnTextClear('fd3012c216', '源氏物語（一）')).toEqual([]);
+    // 玉の小櫛は源氏物語の教材ではない
+    expect(unlockOnTextClear('8bb763a731', '源氏物語玉の小櫛')).toEqual(['norinaga']);
+    // 先生が紫式部の教材（廃院の怪）でもよい
+    expect(unlockOnTextClear('249a2e97df', '源氏物語（一）')).toEqual(['murasakinoue']);
+    expect(isTeacherUnlocked('murasakinoue')).toBe(true);
+  });
+
+  it('🔒の飛び先：中の君は姉の教材、紫の上は若紫がまだなら若紫の教材・手に入れたら源氏のほかの教材', () => {
+    const r = [
+      { id: '249a2e97df', source: '源氏物語（一）' },
+      { id: 'fd3012c216', source: '源氏物語（一）' },
+      { id: '4c5d7950dd', source: '源氏物語（二）' },
+    ];
+    expect(unlockTextOf('nakanokimi', r, null)).toBe('4c5d7950dd');
+    expect(unlockTextOf('murasakinoue', r, null)).toBe('fd3012c216');
+    expect(unlockTextOf('murasakinoue', r, null, ['wakamurasaki'])).toBe('249a2e97df');
+    expect(unlockTextOf('murasakinoue', r, new Set(['4c5d7950dd']), ['wakamurasaki'])).toBe('4c5d7950dd');
   });
 
   it('壊れた値は空として読む', () => {

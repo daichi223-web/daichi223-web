@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  ALL_TEACHER_IDS, ANIME_TEACHER_IDS, GUEST_TEACHER_IDS, TEACHERS, TEACHER_IDS, TEACHER_LINE_KEYS, TEACHER_VAR_NAMES, fillTemplate, isTeacherId, pickVariant, teacherImage,
+  ALL_TEACHER_IDS, ANIME_TEACHER_IDS, GUEST_TEACHER_IDS, POP_PENDING, TEACHERS, TEACHER_IDS, TEACHER_LINE_KEYS, TEACHER_VAR_NAMES, fillTemplate, isTeacherId, pickVariant, teacherImage,
   type TeacherLines,
 } from '../lib/teachers';
 import { TEACHER_LINES } from '../lib/teacherLines';
@@ -71,6 +71,12 @@ describe('TEACHERS（先生10人のデータ）', () => {
     for (const id of ALL_TEACHER_IDS) {
       for (const tone of TONES) {
         const file = `${id}-${tone}.webp`;
+        if (tone === 'pop' && POP_PENDING.includes(id)) {
+          // いろどりの絵が届くまでは しっとり で出す。届いたら POP_PENDING から外す（ここで止める）
+          expect(teacherImage(id, tone)).toBe(`/teachers/${id}-sharp.webp`);
+          expect(existsSync(join(dir, file)), `${file} が届いたら POP_PENDING から外す`).toBe(false);
+          continue;
+        }
         expect(teacherImage(id, tone)).toBe(`/teachers/${file}`);
         if (!existsSync(join(dir, file))) missing.push(file);
       }
@@ -84,7 +90,7 @@ describe('TEACHERS（先生10人のデータ）', () => {
       const has = ANIME_TEACHER_IDS.includes(id);
       if (has) expect(existsSync(join(dir, `${id}-anime.webp`)), id).toBe(true);
       expect(teacherImage(id, 'miyabi')).toBe(has ? `/teachers/${id}-anime.webp` : `/teachers/${id}-sharp.webp`);
-      expect(teacherImage(id, 'pop')).toBe(`/teachers/${id}-pop.webp`);
+      expect(teacherImage(id, 'pop')).toBe(POP_PENDING.includes(id) ? `/teachers/${id}-sharp.webp` : `/teachers/${id}-pop.webp`);
     }
   });
 });

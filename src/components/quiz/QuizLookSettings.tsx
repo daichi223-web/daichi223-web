@@ -63,7 +63,7 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
         const rows = mod.default as { id: string; source?: string | null }[];
         const links: Partial<Record<TeacherId, string>> = {};
         for (const id of locked) {
-          const textId = unlockTextOf(id, rows, published);
+          const textId = unlockTextOf(id, rows, published, unlocked);
           if (textId) links[id] = readingTestPath(textId);
         }
         setUnlockLinks(links);
@@ -72,7 +72,7 @@ export function QuizLookSettings({ className = '' }: { className?: string }) {
     return () => { alive = false; };
     // locked は描画ごとに新しい配列なので、中身（id の並び）で比べる
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [needLinks, locked.join(',')]);
+  }, [needLinks, locked.join(','), unlocked.join(',')]);
 
   return (
     <div className={`mt-1 pt-2 border-t border-rw-rule space-y-2 ${className}`}>

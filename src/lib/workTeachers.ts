@@ -21,7 +21,7 @@ export const BY_WORK: Readonly<Record<string, TeacherId>> = {
   '毎月抄': 'teika',
   '徒然草': 'kenko',
   '更級日記': 'takasuenomusume',
-  // 源氏物語は1本ごとに作中の人物にする予定（第2段）。それまでは作者の紫式部。
+  // 源氏物語は1本ごとの作中の人物を BY_TEXT に書く。ここは決めていない教材（亡くなる場面・廃院の怪）の作者の紫式部。
   '源氏物語（一）': 'murasaki',
   '源氏物語（二）': 'murasaki',
 };
@@ -46,6 +46,19 @@ export const BY_TEXT: Readonly<Record<string, TeacherId>> = {
   '949859d6f5': 'isonokami', // 竹取物語「燕の子安貝」
   '7eb37dba92': 'mikado', // 竹取物語「御狩のみゆき」
   '067781f251': 'mikado', // 竹取物語「ふじの煙」
+  // 源氏物語は1本ごとに中心の人物（2026-11-18 ユーザー決定）。亡くなる場面（飽かぬ別れ・萩のうは露）と廃院の怪は BY_WORK の紫式部のまま。
+  cec7f3b46f: 'kiritsubo', // 源氏物語「光源氏の誕生」
+  fd3012c216: 'wakamurasaki', // 源氏物語「若紫の君」（2026-11-19 紫の上から若紫へ。紫の上は GROWN_UP で加わる）
+  da30d34a6c: 'onnasannomiya', // 源氏物語「暁の雪」
+  f78ab86be9: 'hikaru', // 源氏物語「心づくしの秋」
+  '0a93657296': 'akashi', // 源氏物語「母子の別離」
+  '364673ceb1': 'aoi', // 源氏物語「車争ひ」
+  fe466e5a11: 'kaoru', // 源氏物語「霧の中のかいま見」
+  '4c5d7950dd': 'oigimi', // 源氏物語「髪の香」（妹の中の君は COMPANIONS で一緒に加わる）
+  // 2026-11-19 ユーザー指示「行成、公任あたりも入れて」「宣長出す」。3本とも 11/3 時点で未公開＝公開まで手に入らない
+  f1c4b82dd3: 'kinto', // 大鏡「公任、三船の誉れ」
+  ff9c2346eb: 'yukinari', // 枕草子「上にさぶらふ御猫は」（清少納言から行成へ。ユーザー選択）
+  '8bb763a731': 'norinaga', // 源氏物語玉の小櫛「もののあはれ論」
 };
 
 /** この教材の先生。決まっていなければ null（選んでいる先生のまま） */
@@ -98,6 +111,38 @@ export function unlockTeacher(id: TeacherId): boolean {
   return true;
 }
 
+// ── 一緒に・あとから加わる先生（2026-11-19 ユーザー決定） ──
+/** 一緒に加わる：大君を手に入れると、妹の中の君も（「お姉さまと一緒に来ました」） */
+export const COMPANIONS: Readonly<Partial<Record<GuestTeacherId, readonly GuestTeacherId[]>>> = {
+  oigimi: ['nakanokimi'],
+};
+
+/** 育って加わる：若紫を手に入れたあと、源氏物語のほかの教材を1本クリアすると、大人になった紫の上も */
+export const GROWN_UP = {
+  from: 'wakamurasaki',
+  to: 'murasakinoue',
+  works: ['源氏物語（一）', '源氏物語（二）'],
+} as const satisfies { from: GuestTeacherId; to: GuestTeacherId; works: readonly string[] };
+
+/**
+ * 教材の読解テストを全部の分類でクリアしたとき、手に入る先生を手に入れる。新しく手に入った先生を順に返す。
+ * その教材の先生 → 一緒に加わる先生 → 育って加わる先生（若紫の教材そのものは「ほかの教材」に数えない）。
+ */
+export function unlockOnTextClear(textId: string, source: string | null | undefined): GuestTeacherId[] {
+  const had = readUnlockedTeachers();
+  const own = workTeacherOf(textId, source);
+  const want: TeacherId[] = own ? [own] : [];
+  if (had.includes(GROWN_UP.from) && own !== GROWN_UP.from && source && (GROWN_UP.works as readonly string[]).includes(source)) {
+    want.push(GROWN_UP.to);
+  }
+  const got: GuestTeacherId[] = [];
+  for (const id of want) {
+    if (!isGuestTeacherId(id)) continue;
+    for (const t of [id, ...(COMPANIONS[id] ?? [])]) if (unlockTeacher(t)) got.push(t);
+  }
+  return got;
+}
+
 /** どの教材をクリアすると手に入るか（設定欄の鍵つきの先生に出す） */
 export const GUEST_UNLOCK_HINT: Readonly<Record<GuestTeacherId, string>> = {
   kaguya: '竹取物語「貴公子たちの妻問い」か「天の羽衣」の読解テストをクリア',
@@ -108,6 +153,19 @@ export const GUEST_UNLOCK_HINT: Readonly<Record<GuestTeacherId, string>> = {
   otomonomiyuki: '竹取物語「龍の首の玉」の読解テストをクリア',
   isonokami: '竹取物語「燕の子安貝」の読解テストをクリア',
   mikado: '竹取物語「御狩のみゆき」か「ふじの煙」の読解テストをクリア',
+  kiritsubo: '源氏物語「光源氏の誕生」の読解テストをクリア',
+  wakamurasaki: '源氏物語「若紫の君」の読解テストをクリア',
+  murasakinoue: '若紫を手に入れたあと、源氏物語のほかの教材をクリア',
+  onnasannomiya: '源氏物語「暁の雪」の読解テストをクリア',
+  hikaru: '源氏物語「心づくしの秋」の読解テストをクリア',
+  akashi: '源氏物語「母子の別離」の読解テストをクリア',
+  aoi: '源氏物語「車争ひ」の読解テストをクリア',
+  kaoru: '源氏物語「霧の中のかいま見」の読解テストをクリア',
+  oigimi: '源氏物語「髪の香」の読解テストをクリア',
+  nakanokimi: '源氏物語「髪の香」の読解テストをクリア（姉の大君と一緒に）',
+  kinto: '大鏡「公任、三船の誉れ」の読解テストをクリア',
+  yukinari: '枕草子「上にさぶらふ御猫は」の読解テストをクリア',
+  norinaga: '源氏物語玉の小櫛「もののあはれ論」の読解テストをクリア',
   yoshihide: '宇治拾遺物語「絵仏師良秀」の読解テストをクリア',
   kenko: '徒然草の読解テストをクリア',
   takasuenomusume: '更級日記の読解テストをクリア',
