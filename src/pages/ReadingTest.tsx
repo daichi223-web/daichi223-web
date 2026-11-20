@@ -32,8 +32,10 @@ import { answerTone, scrollBehavior } from "@/components/quiz/writingVerdict";
 import { QUIZ_BACKGROUND_COLORS, useQuizBackground, useQuizBackgroundColor } from "@/lib/quizBackground";
 import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage, type TeacherId } from "@/lib/teachers";
 import { useChatTeacher } from "@/lib/chatTeacher";
-import { isReadingTestCleared, isTeacherUnlocked, unlockTeacher, workTeacherOf } from "@/lib/workTeachers";
+import { isReadingTestCleared, isTeacherUnlocked, unlockOnTextClear, workTeacherOf } from "@/lib/workTeachers";
 import { ALL_GROUPS, groupsOfRun, readClearedGroups, recordClearedGroups, remainingGroups } from "@/lib/readingClear";
+import { noteAnswer, resetAnswerStreak } from "@/lib/answerStreak";
+import { EARLIER, readGardenRuns, recordGardenRun } from "@/lib/garden";
 import { usePortraitTone } from "@/lib/portraitTone";
 import { readMyStage } from "@/lib/myStage";
 import { logEvent, markQuestionShown } from "@/lib/learningEvents";
@@ -185,8 +187,12 @@ export default function ReadingTest() {
   const finished = endAt !== null;
 
   // 始める（読み込めたとき・もう一度）
+  // この回で読解の庭の草木が花・満開になったか（garden.ts）
+  const [gardenNews, setGardenNews] = useState<"bloom" | "full" | null>(null);
   const start = useCallback(() => {
     setIdx(0);
+    setGardenNews(null);
+    resetAnswerStreak(); // 連続正解はこの回の中で数える（同じ問題をもう一度解くときも数え直す）
     setAnswers(questions.map(() => null));
     setStartAt(Date.now());
     setEndAt(null);
@@ -221,7 +227,8 @@ export default function ReadingTest() {
   const bgColor = QUIZ_BACKGROUND_COLORS[quizBackgroundColor]?.bg ?? "var(--rw-bg)";
 
   const feedbackRef = useRef<HTMLDivElement>(null);
-  const [newTeacher, setNewTeacher] = useState<TeacherId | null>(null);
+  // 新しく手に入った先生（一緒に・育って加わる先生もいるので複数。workTeachers.ts の unlockOnTextClear）
+  const [newTeachers, setNewTeachers] = useState<TeacherId[]>([]);
   const choose = (i: number) => {
     if (!q || chosen !== null) return;
     setAnswers((a) => a.map((x, k) => (k === idx ? i : x)));
@@ -262,9 +269,16 @@ export default function ReadingTest() {
       // 教材をクリアすると、その教材の先生が手に入る（2026-11-17 ユーザー指示）。
       // クリア＝その教材の全部の分類をそれぞれ8割以上（2026-11-19 ユーザー指示「教材のクイズを全部解かないと手に入らないようにして」。readingClear.ts）
       const correct = answers.filter((a, k) => a !== null && a === questions[k]?.answerIndex).length;
-      if (workTeacher && isReadingTestCleared(correct, questions.length)) {
-        const done = recordClearedGroups(textId, groupsOfRun(groupId, groupIds));
-        if (remainingGroups(groupIds, done).length === 0 && unlockTeacher(workTeacher)) setNewTeacher(workTeacher);
+      const passed = isReadingTestCleared(correct, questions.length);
+      // 8割以上を取った分類は、先生のいない教材でも覚える（読解の庭の草木が育つ。2026-11-21 garden.ts）
+      const before = readClearedGroups(textId);
+      const done = passed ? recordClearedGroups(textId, groupsOfRun(groupId, groupIds)) : before;
+      const prevRun = readGardenRuns()[textId];
+      const run = recordGardenRun(textId, { groups: groupIds, clearedBefore: before, clearedAfter: done, fullRun: groupId === null, passed });
+      setGardenNews(!prevRun?.fullDay && run.fullDay ? "full" : !prevRun?.bloomDay && run.bloomDay && run.bloomDay !== EARLIER ? "bloom" : null);
+      if (workTeacher && passed && remainingGroups(groupIds, done).length === 0) {
+        const got = unlockOnTextClear(textId ?? "", text?.source);
+        if (got.length > 0) setNewTeachers(got);
       }
     }
   };
@@ -457,7 +471,7 @@ export default function ReadingTest() {
               {chosen !== null && (
                 <div ref={feedbackRef} className="scroll-mb-4">
                   <ChatFeedback
-                    bubbles={readingThread(q, chosen, { teacher: teacherId, voice: TEACHER_VOICE_ENABLED })}
+                    bubbles={readingThread(q, chosen, { teacher: teacherId, voice: TEACHER_VOICE_ENABLED, streak: noteAnswer(q, chosen === q.answerIndex) })}
                     canAdvance
                     onNext={next}
                     teacher={TEACHERS[teacherId]}
@@ -491,16 +505,31 @@ export default function ReadingTest() {
                 <span className="text-lg font-black"> / {questions.length} 問正解</span>
               </p>
               <p className="text-center text-sm font-bold text-rw-ink-soft mt-1">かかった時間 {formatElapsed(elapsed)}</p>
-              {newTeacher && (
+              {newTeachers.length > 0 && (
                 <div className="mt-4 flex items-center gap-3 rounded-xl border-2 p-3" style={{ borderColor: "var(--rw-primary)", background: "var(--rw-primary-soft)" }}>
-                  <FaceAvatar src={teacherImage(newTeacher, tone)} size={48} alt="" />
+                  <span className="flex -space-x-3 shrink-0">
+                    {newTeachers.map((id) => <FaceAvatar key={id} src={teacherImage(id, tone)} size={48} alt="" />)}
+                  </span>
                   <p className="flex-1 text-sm text-rw-ink">
-                    <b>{TEACHERS[newTeacher].name}</b>が先生に加わりました。
+                    {newTeachers.map((id, k) => (
+                      <span key={id}>{k > 0 && "と"}<b>{TEACHERS[id].name}</b></span>
+                    ))}が先生に加わりました。
                     <span className="block text-xs text-rw-ink-soft mt-0.5">テーマの「先生」の「もっと」から選べます。</span>
                   </p>
                 </div>
               )}
-              {!newTeacher && workTeacher && !isTeacherUnlocked(workTeacher) && (() => {
+              {gardenNews && (
+                <Link
+                  to="/garden"
+                  className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-rw-rule bg-rw-paper px-3 py-2.5 text-sm font-bold text-rw-ink no-underline"
+                >
+                  <span>
+                    {gardenNews === "full" ? "読解の庭で、この教材の草木が満開になりました。" : "読解の庭で、この教材の花が咲きました。院が1か所よみがえります。"}
+                  </span>
+                  <span className="shrink-0 text-xs text-rw-ink-soft">庭を見る →</span>
+                </Link>
+              )}
+              {newTeachers.length === 0 && workTeacher && !isTeacherUnlocked(workTeacher) && (() => {
                 const remain = remainingGroups(groupIds, readClearedGroups(textId)).filter((id) => id !== ALL_GROUPS);
                 const names = remain.map((id) => `「${READING_GROUPS.find((g) => g.id === id)?.label ?? id}」`).join("");
                 return (

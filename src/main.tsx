@@ -50,6 +50,7 @@ const ReferenceHome = lazy(() => import('./pages/ReferenceHome.tsx'))
 const ReferenceTopic = lazy(() => import('./pages/ReferenceTopic.tsx'))
 const AffixList = lazy(() => import('./pages/AffixList.tsx'))
 const KanniTable = lazy(() => import('./pages/KanniTable.tsx'))
+const GardenPage = lazy(() => import('./pages/GardenPage.tsx'))
 const GrammarDojoHome = lazy(() => import('./pages/GrammarDojoHome.tsx'))
 const Manabinaoshi = lazy(() => import('./pages/Manabinaoshi.tsx'))
 const VocabDojoHome = lazy(() => import('./pages/VocabDojoHome.tsx'))
@@ -115,6 +116,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/read/reference/:topicId" element={<ReferenceTopic />} />
           <Route path="/read/affixes" element={<AffixList />} />
           <Route path="/kanni" element={<KanniTable />} />
+          <Route path="/garden" element={<GardenPage />} />
           <Route path="/read/grammar" element={<GrammarDojoHome />} />
           <Route path="/manabinaoshi" element={<Manabinaoshi />} />
           <Route path="/tango-dojo" element={<VocabDojoHome />} />

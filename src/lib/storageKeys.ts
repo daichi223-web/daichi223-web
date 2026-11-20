@@ -16,6 +16,7 @@ export const STORAGE_KEYS = {
   dojoLastTopic: 'kobun.dojo.lastTopic',        // 文法道場: 最後にドリルを始めた単元とレベル（「つづきから」。lib/kobun/dojoLocal）
   dojoStartPoint: 'kobun.dojo.startPoint',      // 文法道場: 学び始めの判定が決めた出発点の単元（「ここから」。lib/kobun/dojoLocal）
   dojoLessonDone: 'kobun.dojo.lessonDone',      // 文法道場: 「先生と学ぶ」レッスンを最後まで終えた単元の ID の一覧（lib/kobun/dojoLocal）
+  gardenRuns: 'kobun.garden.runs',              // 読解の庭: 教材ごとの分類の一覧・花が咲いた日・満開の日（lib/garden.ts）
   manabinaoshiTerms: 'kobun.manabinaoshi.terms', // 学び始め: 「文法用語になれる」48語の済んだカードと最初の正誤（lib/kobun/grammarTerms）
 
   // === 表示設定 (任意で export/import) ===
