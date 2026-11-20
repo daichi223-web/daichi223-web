@@ -15,6 +15,7 @@ import { TEACHERS, TEACHER_VOICE_ENABLED, teacherImage } from "@/lib/teachers";
 import { useChatTeacher } from "@/lib/chatTeacher";
 import { usePortraitTone } from "@/lib/portraitTone";
 import { readMyStage } from "@/lib/myStage";
+import { noteAnswer, resetAnswerStreak } from "@/lib/answerStreak";
 import { renderDrillContext } from "./drillContext";
 import { MarkdownContent } from "./MarkdownContent";
 
@@ -100,6 +101,8 @@ export function DrillSession({
       setTopics(topicsRef.current);
     });
   };
+  // 連続正解はこのドリルの回の中で数える（lib/answerStreak。最初の描画で1回だけ数え直す）
+  useState(() => { resetAnswerStreak(); return null; });
   const answerLock = useRef(false);
   const nextLock = useRef(false);
   const answeredAt = useRef(0);
@@ -286,7 +289,12 @@ export function DrillSession({
         // 最低の高さ＝画面の高さ − 上の余白。答え合わせが短くても上端まで上がるように（単語クイズと同じ）
         <div ref={feedbackRef} className="scroll-mt-2 pb-3" style={{ minHeight: 'calc(100dvh - 3rem)' }}>
           <ChatFeedback
-            bubbles={drillThread(drill, selected, { teacher: teacherId, voice: TEACHER_VOICE_ENABLED })}
+            bubbles={drillThread(drill, selected, {
+              teacher: teacherId,
+              voice: TEACHER_VOICE_ENABLED,
+              // 連続正解（もう一度の問題も別に数えるよう、問題の段 step ごと）
+              streak: step ? noteAnswer(step, selected !== null && isDrillAnswerCorrect(drill, selected)) : undefined,
+            })}
             canAdvance
             onNext={handleNext}
             teacher={TEACHERS[teacherId]}

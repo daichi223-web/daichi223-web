@@ -3,6 +3,7 @@ import type { Word } from '../../types';
 import type { ChatBubble } from '../quiz/chatThread';
 import type { TeacherId } from '../teachers';
 import { lessonLine } from '../teacherLessonLines';
+import { streakPraise } from '../answerStreak';
 
 /**
  * 文法ドリルの答え合わせ（ChatFeedback に渡す吹き出し）を組む純関数（2026-11-06。文法道場の見直し ⑤）。
@@ -40,7 +41,7 @@ export function drillFeedbackWord(drill: GrammarDrill): Word {
 export function drillThread(
   drill: GrammarDrill,
   chosen: string | null,
-  opts: { teacher: TeacherId; voice: boolean },
+  opts: { teacher: TeacherId; voice: boolean; streak?: number },
 ): ChatBubble[] {
   const ok = chosen !== null && isDrillAnswerCorrect(drill, chosen);
   const say = lessonLine(ok ? 'drillCorrect' : 'drillWrong', { 正解: drillAnswerLabel(drill) }, `drill:${drill.id}`, opts.teacher, opts.voice);
@@ -48,6 +49,9 @@ export function drillThread(
     { side: 'me', kind: 'answer', text: chosen ?? DRILL_NO_ANSWER },
     { side: 'teacher', kind: 'verdict', text: say, verdict: ok ? 'ok' : 'ng' },
   ];
+  // 連続正解のお褒め（2026-11-19。lib/answerStreak）
+  const praise = ok ? streakPraise(opts.teacher, opts.streak, `drill:${drill.id}`, opts.voice) : null;
+  if (praise) bubbles.push({ side: 'teacher', kind: 'text', text: praise });
   const explanation = drill.explanation?.trim();
   if (explanation) bubbles.push({ side: 'teacher', kind: 'text', text: explanation });
   return bubbles;

@@ -40,6 +40,7 @@ import { composeTodaySet, estimateToday, countGrowth, growthLine, type TodayPart
 import { getActiveQuizRange, type QuizRange } from './lib/quizRange';
 import { nextWordRange } from './lib/quiz/nextRange';
 import { readStreak } from './lib/streak';
+import { resetAnswerStreak } from './lib/answerStreak';
 import { pickTrueFalseWrongMeaning } from './lib/senseEquivalence';
 import {
   updateSrsState,
@@ -599,6 +600,7 @@ function App() {
     setCurrentQuestionIndex(0);
     setCurrentQuizData([]);
     setScore(0);
+    resetAnswerStreak(); // 連続正解は1回のクイズの中で数える（lib/answerStreak）
     setNextButtonVisible(false);
     setShowWritingResult(false);
     setShowCorrectCircle(false);
@@ -762,6 +764,7 @@ function App() {
     setCurrentQuizData(result.questions);
     setCurrentQuestionIndex(0);
     setScore(0);
+    resetAnswerStreak(); // 連続正解は1回のクイズの中で数える（lib/answerStreak）
     setIsQuizActive(true);
     setShowResults(false);
     setNextButtonVisible(false);
@@ -838,6 +841,7 @@ function App() {
 
     setCurrentQuestionIndex(0);
     setScore(0);
+    resetAnswerStreak(); // 連続正解は1回のクイズの中で数える（lib/answerStreak）
     setIsQuizActive(true);
     setShowResults(false);
     setNextButtonVisible(false);

@@ -24,6 +24,7 @@ import { senseLabel } from "@/components/quiz/writingVerdict";
 import { auxShort, type ChatBubble } from "@/lib/quiz/chatThread";
 import { splitSentences } from "@/lib/splitSentences";
 import { fillTemplate, pickVariant, type TeacherId, type TeacherLines } from "@/lib/teachers";
+import { streakPraise } from "@/lib/answerStreak";
 import { NEUTRAL_LINES, TEACHER_LINES } from "@/lib/teacherLines";
 import { fetchJsonAsset } from "@/lib/fetchJson";
 
@@ -570,7 +571,7 @@ export { splitSentences };
 export function readingThread(
   q: ReadingQ,
   chosen: number,
-  opts: { teacher: TeacherId; voice: boolean },
+  opts: { teacher: TeacherId; voice: boolean; streak?: number },
 ): ChatBubble[] {
   const lines: TeacherLines = opts.voice ? (TEACHER_LINES[opts.teacher] ?? TEACHER_LINES.sei) : NEUTRAL_LINES;
   const ok = chosen === q.answerIndex;
@@ -584,6 +585,9 @@ export function readingThread(
     { side: "me", kind: "answer", text: q.choices[chosen] ?? "（無回答）" },
     { side: "teacher", kind: "verdict", text: say, verdict: ok ? "ok" : "ng" },
   ];
+  // 連続正解のお褒め（2026-11-19。lib/answerStreak）
+  const praise = ok ? streakPraise(opts.teacher, opts.streak, `read:${q.sentenceId}:${q.no}`, opts.voice) : null;
+  if (praise) bubbles.push({ side: "teacher", kind: "text", text: praise });
   const ex = q.explain;
   // 解説は一文ごとに別の吹き出しにする（2026-11-15 ユーザー指示）
   for (const t of splitSentences(ex.text ?? "")) bubbles.push({ side: "teacher", kind: "text", text: t });

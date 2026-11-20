@@ -18,8 +18,8 @@ function stableChunk(id: string): string | undefined {
   }
   // 単語データ（qid の正本から作る。語を直したときだけ変わる）
   if (p.endsWith('/src/data/kobunQ.v2.slim.json') || p.endsWith('/src/data/vocabIndex.json')) return 'data-vocab';
-  // 先生の台詞・あいさつ・昇進の言葉・人物解説（文章だけ）
-  if (/\/src\/lib\/(teachers|teacherLines|teacherGreetings|teacherPromotions|teacherProfiles)\.ts$/.test(p)) return 'teacher-text';
+  // 先生の台詞・あいさつ・昇進の言葉・人物解説・連続正解のお褒め（文章だけ）
+  if (/\/src\/lib\/(teachers|teacherLines|teacherGreetings|teacherPromotions|teacherProfiles|teacherStreakLinesData)\.ts$/.test(p)) return 'teacher-text';
   return undefined;
 }
 

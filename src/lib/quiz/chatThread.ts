@@ -3,6 +3,7 @@ import type { WritingJudgeResult } from '../writingJudge';
 import { selfJudgePrompt, senseLabel, stripSenseBrackets } from '../../components/quiz/writingVerdict';
 import { fillTemplate, pickVariant, type TeacherId, type TeacherLines, type TeacherVars } from '../teachers';
 import { TEACHER_LINES, NEUTRAL_LINES } from '../teacherLines';
+import { streakPraise } from '../answerStreak';
 
 /**
  * 単語クイズの答え合わせ（LINE 風）のやりとりを組む純関数。
@@ -82,6 +83,8 @@ export type ThreadInput = {
   seed: string;
   /** false なら先生の口調（キャラの台詞）を使わず、中立の文（NEUTRAL_LINES）で答え合わせする。既定 true */
   voice?: boolean;
+  /** この問題の時点の連続正解数（answerStreak.ts の noteAnswer）。5・10・以後5ごとに正解なら先生が褒める */
+  streak?: number;
 };
 
 export const NO_ANSWER_LABEL = '（無回答）';
@@ -174,12 +177,19 @@ export function buildThread(input: ThreadInput): { bubbles: ChatBubble[]; canAdv
   // 2. 判定（保留で自己判定が決まったら、その後ろに selfRight / selfWrong）
   const outcome = decideOutcome(input);
   bubbles.push({ side: 'teacher', kind: 'verdict', text: say(outcome.lineKey, outcome.vars), verdict: outcome.verdict });
+  // 連続正解のお褒め（2026-11-19）。判定のすぐ後の1吹き出し。記述の保留→自己判定で正解は、自己判定の台詞の後ろ
+  const praise = (): void => {
+    const text = streakPraise(input.teacher, input.streak, seed, input.voice !== false);
+    if (text) bubbles.push({ side: 'teacher', kind: 'text', text });
+  };
+  if (outcome.verdict === 'ok') praise();
   if (outcome.verdict === 'pending' && typeof input.writingUserJudgment === 'boolean') {
     bubbles.push({
       side: 'teacher',
       kind: 'text',
       text: say(input.writingUserJudgment ? 'selfRight' : 'selfWrong', outcome.vars),
     });
+    if (input.writingUserJudgment) praise();
   }
 
   // 3. 正解の示し方（記述で正解以外。保留も含む）

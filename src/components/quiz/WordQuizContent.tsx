@@ -18,6 +18,14 @@ import {
 } from './writingVerdict';
 import { resolveTargetSpans, type Span } from '../../lib/targetMark';
 import type { ExampleContext } from '../../lib/exampleContext';
+import { noteAnswer } from '../../lib/answerStreak';
+
+/** 記述の連続正解数。保留で自己判定がまだのときは数えない（undefined） */
+function writingStreak(question: object, result: WritingJudgeResult, judgment: boolean | undefined): number | undefined {
+  const verdict = result?.verdict ?? 'pending';
+  if (verdict === 'pending') return typeof judgment === 'boolean' ? noteAnswer(question, judgment) : undefined;
+  return noteAnswer(question, verdict === 'correct');
+}
 
 interface QuizQuestion {
   correct: Word;
@@ -248,6 +256,7 @@ export function WordQuizContent({
             exampleModern: question.exampleModern,
             seed: question.correct.qid,
           voice: TEACHER_VOICE_ENABLED,
+            streak: writingStreak(question, writingResult, writingUserJudgment),
           });
           return (
             // 判定から自己判定までが見える位置へ寄せる（scrollIntoView の的）
@@ -513,6 +522,7 @@ export function WordQuizContent({
           exampleModern: question.exampleModern,
           seed: question.correct.qid,
           voice: TEACHER_VOICE_ENABLED,
+          streak: noteAnswer(question, answeredCorrectly),
         });
         return (
           // 最低の高さ＝画面の高さ − 上の余白。答え合わせが短くてもページの下が足りず上端まで上がらない、を防ぐ
