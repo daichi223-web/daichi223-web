@@ -79,7 +79,7 @@ async function callAPI(path: string, body?: any) {
 
 export default function Teacher() {
   const [token, setToken] = useState<string | null>(() => getToken());
-  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble" | "quizrange" | "usage" | "guest">("answers");
+  const [activeTab, setActiveTab] = useState<"answers" | "candidates" | "analytics" | "texts" | "noble" | "quizrange" | "usage" | "guest">("usage");
   const [rows, setRows] = useState<any[]>([]);
   const [candidates, setCandidates] = useState<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
@@ -2409,9 +2409,10 @@ function UsageView() {
           </div>
 
           <UsageTrendChart data={data} />
+          <UsagePeopleSection data={data} topicTitles={topicTitles} showClasses={!cls} part="students" />
 
           <UsageStumblesSection stumbles={stumbles} query={loadedQuery} topicTitles={topicTitles} />
-          <UsagePeopleSection data={data} topicTitles={topicTitles} showClasses={!cls} />
+          <UsagePeopleSection data={data} topicTitles={topicTitles} showClasses={!cls} part="classes" />
           <UsageTextsSection data={data} />
         </>
       )}
@@ -2579,6 +2580,7 @@ function UsageStumblesSection({ stumbles, query, topicTitles }: { stumbles: any;
   const [limit, setLimit] = useState(20);
   const [open, setOpen] = useState<string | null>(null);
   const [who, setWho] = useState<Record<string, any[] | "loading" | "error">>({});
+  const [shown, setShown] = useState(false);
 
   useEffect(() => {
     setOpen(null);
@@ -2627,9 +2629,20 @@ function UsageStumblesSection({ stumbles, query, topicTitles }: { stumbles: any;
   const answerText = (a: unknown) => (Array.isArray(a) ? a.join("／") : a == null ? "" : String(a));
   const cols = kind === "topic" ? 5 : 6;
 
+  const head = (
+    <button onClick={() => setShown((v) => !v)} aria-expanded={shown} className="text-left mb-1">
+      <h3 className="text-base font-semibold text-slate-800">
+        <span className="text-slate-400 mr-1">{shown ? "▾" : "▸"}</span>
+        何でつまずいているか（単語の誤答 {fmtN((stumbles.words ?? []).length)} 語・文法の単元 {fmtN(topics.length)}・文法の問題 {fmtN((stumbles.drills ?? []).length)}）
+      </h3>
+      {!shown && <span className="text-xs text-slate-500">押すと開きます。上の期間・学校・年・組で絞った分を集計しています。</span>}
+    </button>
+  );
+  if (!shown) return <section>{head}</section>;
+
   return (
     <section>
-      <h3 className="text-base font-semibold text-slate-800 mb-1">何でつまずいているか</h3>
+      {head}
       <p className="text-xs text-slate-500 mb-2">
         誤答率だけでは「1人が何度も間違えた」のか「多くの人が間違えた」のかが分からないので、人数で数えています。
         「初回」は各生徒がこの期間に最初に解いた1回、「2回以上」は期間内に同じものを2回以上間違えた人です。
@@ -2783,10 +2796,26 @@ function UsageBar({ value, max, color, className = "" }: { value: number; max: n
 }
 const U_BAR = { used: "bg-slate-600", vocab: "bg-blue-600", grammar: "bg-emerald-600", text: "bg-amber-500" };
 
-function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; topicTitles: Record<string, string>; showClasses: boolean }) {
+// part = "students"：生徒別（日ごとのグラフのすぐ下。最近使った順・はじめは STUDENT_PAGE 人）
+// part = "classes" ：クラス別（はじめは組と使った人だけ。内訳はトグル）
+const STUDENT_PAGE = 20;
+
+function UsagePeopleSection({
+  data,
+  topicTitles,
+  showClasses,
+  part,
+}: {
+  data: any;
+  topicTitles: Record<string, string>;
+  showClasses: boolean;
+  part: "students" | "classes";
+}) {
   const [open, setOpen] = useState<number | null>(null);
-  const [order, setOrder] = useState<"class" | "last">("class");
+  const [order, setOrder] = useState<"class" | "last">("last");
   const [openClass, setOpenClass] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
+  const [classDetail, setClassDetail] = useState(false);
 
   const titleOf = useMemo(() => {
     const m: Record<string, string> = {};
@@ -2936,6 +2965,32 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
         </div>
   );
 
+  if (part === "students") {
+    const shown = showAll ? people : people.slice(0, STUDENT_PAGE);
+    const rest = people.length - STUDENT_PAGE;
+    return (
+      <section>
+        <div className="flex flex-wrap items-center gap-2 mb-1">
+          <h3 className="text-base font-semibold text-slate-800">生徒別の使った人（使った {fmtN(people.length)} 人）</h3>
+          <select value={order} onChange={(e) => setOrder(e.target.value as "class" | "last")} className={U_SEL} aria-label="並び">
+            <option value="last">最近使った順</option>
+            <option value="class">組・番号順</option>
+          </select>
+        </div>
+        <p className="text-xs text-slate-500 mb-1">行を押すと範囲の内訳が開きます。</p>
+        {studentTable(shown)}
+        {rest > 0 && (
+          <button onClick={() => setShowAll((v) => !v)} className="mt-2 text-slate-600 underline" aria-expanded={showAll}>
+            {showAll ? `▾ ${STUDENT_PAGE} 人だけにする` : `▸ 残りの ${fmtN(rest)} 人も見る`}
+          </button>
+        )}
+        <p className="text-xs text-slate-500 mt-1">「項目」は語の意味ごとの数（1語に意味が複数あれば別に数えます）。番号帯は50語ごと。</p>
+      </section>
+    );
+  }
+
+  if (!(showClasses && classRows.length > 1)) return null;
+
   return (
     <section className="space-y-4">
       <div>
@@ -2952,6 +3007,9 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
             「登録」はその組でアプリに登録している人数（在籍数ではありません）。「使った人」は期間中に単語・文法・教材のどれかを使った人。回答数は組の合計です。
             棒は、登録している人のうち何割が使ったかを表します。組を押すと、その組で使った生徒が開きます。
           </p>
+          <button onClick={() => setClassDetail((v) => !v)} className="mb-2 text-slate-600 underline" aria-expanded={classDetail}>
+            {classDetail ? "▾ 単語・文法・教材の内訳を閉じる" : "▸ 単語・文法・教材の内訳も見る"}
+          </button>
           {/* スマホ：1組ずつ縦に並べる */}
           <div className="sm:hidden rounded-lg border border-slate-200 bg-white divide-y divide-slate-100">
             {classRows.map((r) => (
@@ -2973,7 +3031,7 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
                   </span>
                 </button>
                 <UsageBar value={r.used} max={r.registered} color={U_BAR.used} className="mt-1" />
-                <dl className="mt-2 grid grid-cols-[2.5rem_4rem_1fr] items-center gap-x-2 gap-y-1 tabular-nums">
+                {classDetail && <dl className="mt-2 grid grid-cols-[2.5rem_4rem_1fr] items-center gap-x-2 gap-y-1 tabular-nums">
                   <dt className="text-slate-500">単語</dt>
                   <dd><UsageBar value={r.vocabU} max={r.registered} color={U_BAR.vocab} /></dd>
                   <dd>{r.vocabU ? `${fmtN(r.vocabU)} 人・回答 ${fmtN(r.vocabAns)}・正答率 ${pctOf(r.vocabCorrect, r.vocabAns)}` : "—"}</dd>
@@ -2983,7 +3041,7 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
                   <dt className="text-slate-500">教材</dt>
                   <dd><UsageBar value={r.textU} max={r.registered} color={U_BAR.text} /></dd>
                   <dd>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</dd>
-                </dl>
+                </dl>}
                 {openClass === classLabel(r) && (
                   <div className="mt-2">
                     <div className="text-xs text-slate-500 mb-1">この組で使った生徒（行を押すと範囲の内訳）</div>
@@ -3000,6 +3058,8 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
                 <tr>
                   <th className={U_TH} rowSpan={2}>組</th>
                   <th className={`${U_TH} text-right`} rowSpan={2}>使った人／登録</th>
+                  {classDetail && (
+                    <>
                   <th className={U_TH} rowSpan={2}>
                     登録した人のうち使った割合
                     <div className="font-normal text-xs text-slate-500">
@@ -3012,8 +3072,10 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
                   <th className={`${U_TH} text-center border-l border-slate-200`} colSpan={3}>単語</th>
                   <th className={`${U_TH} text-center border-l border-slate-200`} colSpan={3}>文法</th>
                   <th className={`${U_TH} text-center border-l border-slate-200`}>教材</th>
+                    </>
+                  )}
                 </tr>
-                <tr>
+                {classDetail && <tr>
                   <th className={`${U_TH} text-right border-l border-slate-200`}>使った人</th>
                   <th className={`${U_TH} text-right`}>回答数</th>
                   <th className={`${U_TH} text-right`}>正答率</th>
@@ -3021,7 +3083,7 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
                   <th className={`${U_TH} text-right`}>回答数</th>
                   <th className={`${U_TH} text-right`}>正答率</th>
                   <th className={`${U_TH} text-right border-l border-slate-200`}>開いた人</th>
-                </tr>
+                </tr>}
               </thead>
               <tbody>
                 {classRows.flatMap((r) => {
@@ -3042,6 +3104,8 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
                       {fmtN(r.used)}／{fmtN(r.registered)} 人
                       <span className="text-slate-500">（{pctOf(r.used, r.registered)}）</span>
                     </td>
+                    {classDetail && (
+                      <>
                     <td className="px-2 py-1.5 min-w-[11rem]">
                       <div className="space-y-0.5">
                         <UsageBar value={r.used} max={r.registered} color={U_BAR.used} />
@@ -3057,12 +3121,14 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
                     <td className={U_TDN}>{r.grammarU ? fmtN(r.grammarAns) : "—"}</td>
                     <td className={U_TDN}>{r.grammarU ? pctOf(r.grammarCorrect, r.grammarAns) : "—"}</td>
                     <td className={`${U_TDN} border-l border-slate-100`}>{r.textU ? `${fmtN(r.textU)} 人` : "—"}</td>
+                      </>
+                    )}
                   </tr>,
                   ];
                   if (isOpen) {
                     out.push(
                       <tr key={`${classLabel(r)}-people`} className="bg-slate-50">
-                        <td colSpan={10} className="px-3 py-2">
+                        <td colSpan={classDetail ? 10 : 2} className="px-3 py-2">
                           <div className="text-xs text-slate-500 mb-1">この組で使った生徒（行を押すと範囲の内訳）</div>
                           {studentTable(peopleOf(r))}
                         </td>
@@ -3076,18 +3142,6 @@ function UsagePeopleSection({ data, topicTitles, showClasses }: { data: any; top
           </div>
         </div>
       )}
-
-      <div>
-        <div className="flex flex-wrap items-center gap-2 mb-1">
-          <h4 className="font-semibold text-slate-700">生徒別（使った {fmtN(people.length)} 人。行を押すと範囲の内訳）</h4>
-          <select value={order} onChange={(e) => setOrder(e.target.value as "class" | "last")} className={U_SEL} aria-label="並び">
-            <option value="class">組・番号順</option>
-            <option value="last">最近使った順</option>
-          </select>
-        </div>
-        {studentTable(people)}
-        <p className="text-xs text-slate-500 mt-1">「項目」は語の意味ごとの数（1語に意味が複数あれば別に数えます）。番号帯は50語ごと。</p>
-      </div>
     </section>
   );
 }
