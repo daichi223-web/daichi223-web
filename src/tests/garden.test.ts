@@ -7,6 +7,7 @@ import {
   EARLIER, ESTATE_PARTS, nextPart, plantFor, plantImage, plantStage, readGardenRuns, recordGardenRun, restoredParts, seasonOf, workName,
   type PlantKey, type Stage,
 } from '../lib/garden';
+import { ESTATE_HIT, ESTATE_HIT_ORDER, ESTATE_LAYERS, ESTATE_SIZE } from '../lib/gardenEstateLayers';
 
 function stubStorage() {
   const m = new Map<string, string>();
@@ -145,5 +146,25 @@ describe('草木の種類と絵', () => {
     expect(seasonOf(new Date(2026, 6, 1))).toBe('summer');
     expect(seasonOf(new Date(2026, 10, 21))).toBe('autumn');
     expect(seasonOf(new Date(2026, 0, 5))).toBe('winter');
+  });
+});
+
+describe('院の絵の層（gardenEstateLayers.ts）', () => {
+  const pub = (f: string) => join(__dirname, '..', '..', 'public', 'garden', 'estate', f);
+  it('土台・全体の地面・11か所の層の絵がある', () => {
+    expect(existsSync(pub('ruined.webp'))).toBe(true);
+    expect(existsSync(pub('ground.webp'))).toBe(true);
+    expect(ESTATE_LAYERS.ground).toBeDefined();
+    for (const p of ESTATE_PARTS) expect(existsSync(pub(`${p.key}.webp`)), p.key).toBe(true);
+  });
+  it('11か所すべてに層と押せる範囲があり、絵の中に収まる', () => {
+    expect([...ESTATE_HIT_ORDER].sort()).toEqual(ESTATE_PARTS.map((p) => p.key).sort());
+    for (const p of ESTATE_PARTS) {
+      const L = ESTATE_LAYERS[p.key];
+      expect(L, p.key).toBeDefined();
+      expect(L.x >= 0 && L.y >= 0 && L.x + L.w <= ESTATE_SIZE.w && L.y + L.h <= ESTATE_SIZE.h, p.key).toBe(true);
+      expect(ESTATE_HIT[p.key]?.length, p.key).toBeGreaterThan(0);
+      for (const poly of ESTATE_HIT[p.key]) expect(poly.length, p.key).toBeGreaterThanOrEqual(3);
+    }
   });
 });

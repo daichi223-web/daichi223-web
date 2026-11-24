@@ -208,3 +208,10 @@ input[type=text] {
 input[type=number] {
   -moz-appearance: textfield;
 }
+/* 読解の庭の院の絵（src/components/garden/EstatePicture.tsx） */
+.garden-estate-hit polygon { fill: transparent; cursor: pointer; }
+.garden-estate-hit:focus { outline: none; }
+.garden-estate-hit:focus-visible polygon { fill: rgba(253, 250, 245, .28); stroke: #fdfaf5; stroke-width: 3; }
+.garden-estate-layer { animation: garden-estate-in .9s ease-out both; }
+@keyframes garden-estate-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .garden-estate-layer { animation: none; } }

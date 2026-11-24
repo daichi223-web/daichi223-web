@@ -1,7 +1,7 @@
 // 読解の庭（/garden）。2026-11-21 ユーザー決定「平面の絵」・計画の承認「その計画で進めて」。
 // 上＝荒れた「なにがしの院」が、花が咲くたびに1か所ずつよみがえる。下＝前栽（教材ごとの草木）。
 // 決まりは src/lib/garden.ts。草木の絵は Codex の依頼B（public/garden/plants、作り直し = assets-src/garden/make_plants.py）。
-// 院は Codex の依頼A の絵が届くまで、図形の見取り図（components/garden/EstateSketch.tsx）。
+// 院の絵は components/garden/EstatePicture.tsx（荒れた院の上に、よみがえった所の層を重ねる。2026-11-24 Canva で生成）。
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
@@ -15,7 +15,7 @@ import {
   nextPart, plantFor, plantImage, plantStage, readGardenRuns, restoredParts, seasonOf, workName,
   type EstateKey, type PlantKey, type Stage,
 } from '@/lib/garden';
-import EstateSketch from '@/components/garden/EstateSketch';
+import EstatePicture from '@/components/garden/EstatePicture';
 
 type TextEntry = { id: string; title: string; source?: string; genre?: string };
 type Plant = { id: string; title: string; work: string; key: PlantKey; stage: Stage };
@@ -143,7 +143,7 @@ export default function GardenPage() {
             <small className="text-[10px] text-rw-ink-soft font-bold">よみがえった所 {restored.length}/{ESTATE_PARTS.length}・咲いた花 {bloomCount}本</small>
           </div>
           <div style={{ background: `linear-gradient(180deg, ${sky} 0%, var(--rw-paper) 100%)` }}>
-            <EstateSketch restored={restoredSet} next={next?.key ?? null} names={PART_NAMES} onPick={setOpenPart} />
+            <EstatePicture restored={restoredSet} next={next?.key ?? null} names={PART_NAMES} onPick={setOpenPart} />
           </div>
           <div className="flex gap-2 items-start px-3 py-2.5 border-t border-rw-rule text-[12.5px] font-bold leading-normal">
             <span className="shrink-0 text-[10px] font-black bg-rw-ink text-rw-paper rounded-full px-2 py-0.5 mt-px">{next ? '次の一歩' : '完成'}</span>
