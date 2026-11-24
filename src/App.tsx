@@ -152,7 +152,7 @@ function App() {
     if (wordQuizType === 'word-reverse') setWordQuizType('blank-fill');
   }, []);
   const [wordNumQuestions, setWordNumQuestions] = useLocalStorageState<number>('kobun-wordNumQuestions', 10);
-  // 出題の選び方: auto = 学習記録から「苦手→未着手（番号順）→途中」を配分、得意は頻度を下げる。random = 従来
+  // 出題の選び方: auto = 学習記録から配分（単語は範囲の未着手を先に7割→期限・苦手→途中、多義語は苦手→未着手→途中）、得意は頻度を下げる。random = 従来
   const [pickMode, setPickMode] = useLocalStorageState<'auto' | 'random'>('kobun-pickMode', 'auto');
   const [lastPick, setLastPick] = useState<Record<Bucket, number> | null>(null);
   const [wordRange, setWordRange] = useLocalStorageState<{from?: number; to?: number}>('kobun-wordRange', { from: 1, to: 50 });
@@ -239,6 +239,8 @@ function App() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [weakWordsCount, setWeakWordsCount] = useState(0);
   const [dueWordsCount, setDueWordsCount] = useState(0);
+  // 今日の分に入る復習の数（範囲内だけ。ホームの「復習 N語 ＋ 新しく M語」に使う）
+  const [todayDueCount, setTodayDueCount] = useState(0);
   // 長い空白のあとの「おかえり」: 空白日数と、箱4〜5からのウォームアップ語
   const [welcomeBack, setWelcomeBack] = useState<{ gapDays: number; warmup: string[] } | null>(null);
   // 「今日の分」: 出題した qid・開始時の箱（終了画面の成長1行用）・内訳
@@ -345,6 +347,23 @@ function App() {
     }
   }, [allWords.length, modeParam]);
 
+  // 今日の分の候補＝範囲（＋分類）の語。今日の復習・おかえりの語もこの中だけから取る
+  // （2026-11-24 ユーザー指示。前は範囲外の期限が来た語も混ざっていた）。rangeOverride は小テスト範囲（分類は見ない）
+  const todayPoolOf = (rangeOverride?: { from: number; to: number }): Word[] => {
+    const start = rangeOverride?.from ?? wordRange.from ?? 1;
+    const end = rangeOverride?.to ?? wordRange.to ?? 330;
+    let pool = allWords.filter((w) => w.group >= start && w.group <= end);
+    if (categoryFilter.length > 0 && !rangeOverride) {
+      const catSet = new Set(categoryFilter);
+      const vidx = bundledVocabIndex as Record<string, { category?: string }>;
+      pool = pool.filter((w) => {
+        const c = vidx[w.lemma]?.category;
+        return c ? catSet.has(c) : false;
+      });
+    }
+    return pool;
+  };
+
   // ホーム表示時に学習履歴ベースの集計を取得
   // 2026-11-16：学習の記録はまとめ読み1回（word_stats と srs_state を同時に）にし、苦手・今日の復習・
   // 最後に解いた日・おかえりの語は手元で計算する（lib/learningSnapshot。前は項目ごとに DB を引いていた）。
@@ -356,14 +375,17 @@ function App() {
     (async () => {
       try {
         const qids = allWords.map(w => w.qid);
+        const poolQids = todayPoolOf().map(w => w.qid);
         const [snap, range] = await Promise.all([loadLearningSnapshot(), getActiveQuizRange()]);
         const weak = weakWordsOf(snap, qids);
         const today = todayReviewOf(snap, qids);
+        const todayInRange = todayReviewOf(snap, poolQids);
         const gap = gapDays(lastActivityOf(snap));
-        const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? warmupWordsOf(snap, qids) : [];
+        const warmup = gap != null && gap >= WELCOME_BACK_GAP_DAYS ? warmupWordsOf(snap, poolQids) : [];
         if (!cancelled) {
           setWeakWordsCount(weak.length);
           setDueWordsCount(today.length);
+          setTodayDueCount(todayInRange.length);
           setQuizRange(range);
           setWelcomeBack(gap != null && gap >= WELCOME_BACK_GAP_DAYS && warmup.length > 0 ? { gapDays: gap, warmup } : null);
         }
@@ -372,6 +394,7 @@ function App() {
           setHomeDataError(true);
           setWeakWordsCount(0);
           setDueWordsCount(0);
+          setTodayDueCount(0);
           setWelcomeBack(null);
         }
       }
@@ -379,7 +402,7 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [showHome, allWords]);
+  }, [showHome, allWords, wordRange.from, wordRange.to, categoryFilter]);
 
   // 結果表示時に累計統計を取得
   useEffect(() => {
@@ -616,35 +639,24 @@ function App() {
   // 「今日の分」: おかえり語 → 今日の復習 → 範囲内からおまかせ補充、で基本10問。
   // 中身はアプリが決め、生徒はボタン1つで始める。again=true は「もう1セット」（おかえり語は付けない）。
   const startTodaySession = async (again = false, rangeOverride?: { from: number; to: number }) => {
-    const warmup = again ? [] : (welcomeBack?.warmup ?? []);
-    const start = rangeOverride?.from ?? wordRange.from ?? 1;
-    const end = rangeOverride?.to ?? wordRange.to ?? 330;
-    let pool = allWords.filter((w) => w.group >= start && w.group <= end);
-    if (categoryFilter.length > 0 && !rangeOverride) {
-      const catSet = new Set(categoryFilter);
-      const vidx = bundledVocabIndex as Record<string, { category?: string }>;
-      pool = pool.filter((w) => {
-        const c = vidx[w.lemma]?.category;
-        return c ? catSet.has(c) : false;
-      });
-    }
+    const pool = todayPoolOf(rangeOverride);
+    const inRange = new Set(pool.map((w) => w.qid));
+    // おかえりの語・今日の復習も範囲内だけ（範囲外の語は混ぜない）
+    const warmup = again ? [] : (welcomeBack?.warmup ?? []).filter((q) => inRange.has(q));
     // 今日の復習・成績・箱は、学習の記録のまとめ読みから（2026-11-16。ホームで読んだものが残っていれば通信なし）。
     // 取れなければ復習なし・全部「未着手」として補充する
     const snap = await loadLearningSnapshot().catch(() => EMPTY_SNAPSHOT);
     const stats: Record<string, { correct: number; incorrect: number; lastSeen?: string | null }> = statsMapOf(snap);
     const boxes: Record<string, number> = boxesOf(snap);
-    let due: string[] = todayReviewOf(snap, allWords.map(w => w.qid));
-    if (rangeOverride) {
-      // 小テスト範囲から始めたときは、範囲外の復習語を混ぜない
-      const inRange = new Set(pool.map((w) => w.qid));
-      due = due.filter((q) => inRange.has(q));
-    }
+    // 範囲内の語で期限の古い順に取る（前は全語で上限まで取ってから範囲で絞っていたので、範囲内の復習が欠けることがあった）
+    const due: string[] = todayReviewOf(snap, pool.map((w) => w.qid));
     const set = composeTodaySet({
       warmup,
       due,
       pool,
       key: (w) => w.qid,
       order: (w) => w.group * 100 + (w.meaning_idx ?? 0),
+      group: (w) => w.group, // 新しい語は各語の1つめの意味から（範囲の語がまんべんなく出る）
       stats,
       boxes,
     });
@@ -1479,7 +1491,7 @@ function App() {
             dueWordsCount={dueWordsCount}
             dataError={homeDataError}
             welcomeBack={welcomeBack ? { gapDays: welcomeBack.gapDays, warmupCount: welcomeBack.warmup.length } : null}
-            todayPreview={estimateToday(welcomeBack?.warmup.length ?? 0, dueWordsCount)}
+            todayPreview={estimateToday(welcomeBack?.warmup.length ?? 0, todayDueCount)}
             quizRange={quizRange}
             onStartToday={() => void startTodaySession()}
             onStartQuizRange={(r) => {

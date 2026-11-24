@@ -17,6 +17,8 @@
  *   due を渡さないとき … weak 40% / new 30% / 残りは mid、足りない分は他から補う（今までどおり）
  *   due を渡したとき   … due 40% / weak 30% / new 30% / 残りは mid、
  *                         足りない分は due の残り → weak の残り → new の残り → mid → strong
+ *   newShare を渡したとき … まず未着手を n×newShare 個（番号順）取り、残りの枠を上の配分で埋める
+ *                         （2026-11-24 ユーザー指示「範囲の未習の問題を優先」。単語のおまかせと今日の分は RANGE_NEW_SHARE=0.7）
  * 純粋関数なので単体テストできる。DB アクセスは呼び出し側。
  */
 
@@ -43,6 +45,11 @@ export type PickInput<T> = {
    * 番号順に10個取ると前の4語の意味だけで埋まっていた）。渡さなければ今までどおり番号順。
    */
   group?: (t: T) => number | string;
+  /**
+   * 未着手を先に取る割合（0〜1）。渡すと、まず未着手を ceil(n×newShare) 個まで番号順に取り、
+   * 残りの枠を期限・苦手・途中の配分で埋める。渡さなければ今までどおり（未着手は30%）。
+   */
+  newShare?: number;
   n: number;
   now?: Date;
   rng?: () => number;
@@ -55,6 +62,8 @@ const WEAK_ERR_RATE = 0.4;
 const STRONG_MIN_ATTEMPTS = 3;
 const STRONG_ERR_RATE = 0.2;
 const STRONG_BOX = 4;
+/** 範囲の未着手を先に出す割合（単語のおまかせ・今日の分。10問なら7問） */
+export const RANGE_NEW_SHARE = 0.7;
 /** 直近この時間内に解いた語は、同じ枠の中で後回しにする */
 const RECENT_MS = 60 * 60 * 1000;
 
@@ -188,10 +197,16 @@ export function pickQuestions<T>(input: PickInput<T>): PickResult<T> {
   // 期限を見ない配分は今までの数え方のまま（文法道場の結果を変えないため）
   const room = (quota: number) => (useDue ? Math.max(0, Math.min(quota, n - picked.length)) : quota);
 
-  // 0) due は期限の古い順に最大 40%
-  const dueRest = useDue ? take('due', dueSorted, Math.ceil(n * 0.4)) : [];
+  // 未着手を先に（newShare を渡したときだけ）。残りの枠（base）を下の配分で分ける
+  const newShare = input.newShare != null ? Math.max(0, Math.min(1, input.newShare)) : null;
+  let newRest = newSorted;
+  if (newShare != null) newRest = take('new', newSorted, Math.min(newSorted.length, Math.ceil(n * newShare)));
+  const base = n - picked.length;
 
-  const quotaWeak = room(Math.min(weakSorted.length, Math.ceil(n * (useDue ? 0.3 : 0.4))));
+  // 0) due は期限の古い順に最大 40%
+  const dueRest = useDue ? take('due', dueSorted, Math.ceil(base * 0.4)) : [];
+
+  const quotaWeak = room(Math.min(weakSorted.length, Math.ceil(base * (useDue ? 0.3 : 0.4))));
 
   // 1) weak は上位 2×quota の中から重み付きで（毎回同じ顔ぶれにしない）
   const weakWindow = weakSorted.slice(0, Math.max(quotaWeak * 2, quotaWeak));
@@ -200,9 +215,9 @@ export function pickQuestions<T>(input: PickInput<T>): PickResult<T> {
   composition.weak += weakChosen.length;
   const weakRest = weakSorted.filter((t) => !weakChosen.includes(t));
 
-  // 2) new は番号順に quota 個
-  const quotaNew = room(Math.min(newSorted.length, Math.ceil(n * 0.3)));
-  let newRest = take('new', newSorted, quotaNew);
+  // 2) new は番号順に quota 個（newShare で先に取ったときは、残りは 4) の補充へ回す）
+  const quotaNew = newShare != null ? 0 : room(Math.min(newRest.length, Math.ceil(n * 0.3)));
+  newRest = take('new', newRest, quotaNew);
 
   // 3) 残りは mid から誤答率に応じた重みで（直近は重み半減）
   let remaining = n - picked.length;

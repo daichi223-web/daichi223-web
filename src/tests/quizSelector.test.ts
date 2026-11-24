@@ -237,3 +237,28 @@ describe('未着手を語に偏らせない（group。2026-11-16 ユーザー指
     expect(second).toEqual([1, 2, 3]);
   });
 });
+
+describe('範囲の未着手を先に（newShare。2026-11-24 ユーザー指示「範囲の未習の問題を優先」）', () => {
+  // 30語: 1〜10 は期限が来た語（箱1）、11〜14 は苦手（箱1・期限前）、15〜30 は未着手
+  const pool = items(30);
+  const boxes: Record<string, number> = Object.fromEntries(pool.slice(0, 14).map((t) => [t.qid, 1]));
+  const stats: Record<string, ItemStat> = Object.fromEntries(pool.slice(0, 14).map((t) => [t.qid, { correct: 0, incorrect: 1 }]));
+  const due = pool.slice(0, 10).map(key);
+  it('10問なら未着手7問（番号順）、残り3問を期限が来た語・苦手で', () => {
+    const r = pickQuestions({ items: pool, key, order, stats, boxes, due, newShare: 0.7, n: 10, now, rng: seeded() });
+    expect(r.composition).toMatchObject({ new: 7, due: 2, weak: 1, mid: 0, strong: 0 });
+    const newOnes = r.picked.filter((t) => t.group >= 15).map((t) => t.group).sort((a, b) => a - b);
+    expect(newOnes).toEqual([15, 16, 17, 18, 19, 20, 21]);
+  });
+  it('未着手が足りなければ、その分は期限が来た語・苦手で埋める', () => {
+    const few = pool.slice(0, 16); // 未着手は15・16の2語だけ
+    const r = pickQuestions({ items: few, key, order, stats, boxes, due, newShare: 0.7, n: 10, now, rng: seeded() });
+    expect(r.picked).toHaveLength(10);
+    expect(r.composition.new).toBe(2);
+    expect(r.composition.due + r.composition.weak).toBe(8);
+  });
+  it('newShare を渡さなければ今までどおり（未着手は3問）', () => {
+    const r = pickQuestions({ items: pool, key, order, stats, boxes, due, n: 10, now, rng: seeded() });
+    expect(r.composition).toMatchObject({ due: 4, weak: 3, new: 3 });
+  });
+});

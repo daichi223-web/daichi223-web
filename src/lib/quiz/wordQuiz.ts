@@ -10,7 +10,7 @@
  */
 import type { Word, WordQuizType } from '../../types';
 import type { BlankEntry } from '../blanksLoader';
-import { pickQuestions, type Bucket, type ItemStat } from '../quizSelector';
+import { pickQuestions, RANGE_NEW_SHARE, type Bucket, type ItemStat } from '../quizSelector';
 import {
   buildFallbackOptions,
   canUseAsDistractor,
@@ -127,6 +127,7 @@ export function buildWordQuiz(input: WordQuizInput): WordQuizResult {
       key: (w) => w.qid,
       order: (w) => w.group * 100 + (w.meaning_idx ?? 0),
       group: (w) => w.group, // 未着手は各語の1つめの意味から（範囲の語がまんべんなく出る）
+      newShare: RANGE_NEW_SHARE, // 範囲の未着手を先に7割（2026-11-24）
       stats: records.stats,
       boxes: records.boxes,
       due: records.due,

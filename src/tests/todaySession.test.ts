@@ -18,27 +18,52 @@ describe('composeTodaySet', () => {
     expect([...r.qids].sort()).toEqual(items(10).map(key).sort());
   });
 
-  it('おかえり → 復習 → 補充 の順で並び、合計10問', () => {
+  it('おかえり → 復習 → 新しい語 の順で並び、合計10問（新しい語7・残り3をおかえりと復習で）', () => {
     const r = composeTodaySet({
-      warmup: ['20-1', '21-1'],
+      warmup: ['20-1'],
       due: ['3-1', '4-1', '5-1'],
       pool: items(30), key, order, stats: {}, now, rng: seeded(),
     });
-    expect(r.qids.slice(0, 5)).toEqual(['20-1', '21-1', '3-1', '4-1', '5-1']);
+    expect(r.qids.slice(0, 3)).toEqual(['20-1', '3-1', '4-1']);
     expect(r.qids).toHaveLength(10);
-    expect(r.parts).toMatchObject({ warmup: 2, review: 3, fresh: 5 });
+    expect(r.parts).toMatchObject({ warmup: 1, review: 2, fresh: 7 });
     // 補充は既出を避ける
     expect(new Set(r.qids).size).toBe(10);
   });
 
-  it('復習が溜まっていても新しい語を3語入れる（復習は上限で切り、合計10問）', () => {
+  it('復習が溜まっていても範囲の未着手を7語入れる（復習は上限で切り、合計10問。2026-11-24）', () => {
     const due = items(12).map(key);
     const r = composeTodaySet({ warmup: ['30-1'], due, pool: items(30), key, order, stats: {}, now });
     expect(r.qids).toHaveLength(10);
-    expect(r.parts).toMatchObject({ warmup: 1, review: 6, fresh: 3 });
-    expect(r.parts.freshComposition?.new).toBe(3);
+    expect(r.parts).toMatchObject({ warmup: 1, review: 2, fresh: 7 });
+    expect(r.parts.freshComposition?.new).toBe(7);
     // 新しい語は未着手のうち番号の小さい順（復習・おかえりの語は除く）
-    expect(r.qids.slice(7)).toEqual(['13-1', '14-1', '15-1']);
+    expect(r.qids.slice(3)).toEqual(['13-1', '14-1', '15-1', '16-1', '17-1', '18-1', '19-1']);
+  });
+
+  it('おかえりの語が5語でも合計10問を超えない（新しい語は残りの5枠）', () => {
+    const warmup = ['26-1', '27-1', '28-1', '29-1', '30-1'];
+    const r = composeTodaySet({ warmup, due: ['1-1', '2-1'], pool: items(30), key, order, stats: {}, now });
+    expect(r.qids).toHaveLength(10);
+    expect(r.parts).toMatchObject({ warmup: 5, review: 0, fresh: 5 });
+  });
+
+  it('未着手が7語に足りなければ、その分は復習で埋める', () => {
+    const pool = items(15);
+    const stats: Record<string, ItemStat> = Object.fromEntries(pool.slice(0, 12).map((t) => [t.qid, { correct: 1, incorrect: 0 }]));
+    const r = composeTodaySet({ warmup: [], due: pool.slice(0, 12).map(key), pool, key, order, stats, now });
+    expect(r.parts).toMatchObject({ review: 7, fresh: 3 });
+    expect(r.parts.freshComposition?.new).toBe(3);
+  });
+
+  it('group を渡すと、新しい語は各語の1つめの意味から', () => {
+    // 5語×3意味。7語の枠なら 5語の1つめ → 1・2語目の2つめ
+    const pool = Array.from({ length: 5 }, (_, g) => [0, 1, 2].map((m) => ({ qid: `${g + 1}-${m}`, group: g + 1, m }))).flat();
+    const r = composeTodaySet({
+      warmup: [], due: [], pool, key: (t) => t.qid, order: (t) => t.group * 100 + t.m, group: (t) => t.group,
+      stats: {}, now, rng: seeded(),
+    });
+    expect(r.qids.slice(0, 7)).toEqual(['1-0', '2-0', '3-0', '4-0', '5-0', '1-1', '2-1']);
   });
 
   it('範囲に未着手の語が残っていなければ、復習で10問を埋める', () => {
@@ -48,10 +73,10 @@ describe('composeTodaySet', () => {
     expect(r.parts).toMatchObject({ warmup: 0, review: 10, fresh: 0 });
   });
 
-  it('復習が少なければ従来どおり補充で10問にする', () => {
-    const r = composeTodaySet({ warmup: [], due: ['5-1', '6-1'], pool: items(30), key, order, stats: {}, now, rng: seeded() });
+  it('復習が少なければ補充で10問にする', () => {
+    const r = composeTodaySet({ warmup: [], due: ['5-1'], pool: items(30), key, order, stats: {}, now, rng: seeded() });
     expect(r.qids).toHaveLength(10);
-    expect(r.parts).toMatchObject({ review: 2, fresh: 8 });
+    expect(r.parts).toMatchObject({ review: 1, fresh: 9 });
   });
 
   it('重複 qid は先勝ちで数える', () => {
@@ -60,7 +85,7 @@ describe('composeTodaySet', () => {
     expect(r.parts).toMatchObject({ warmup: 1, review: 1, fresh: 0 });
   });
 
-  it('補充は苦手を優先する', () => {
+  it('新しい語7語のあとの補充は苦手を優先する', () => {
     const stats: Record<string, ItemStat> = { '25-1': { correct: 0, incorrect: 3 }, '26-1': { correct: 1, incorrect: 2 } };
     const r = composeTodaySet({ warmup: [], due: [], pool: items(30), key, order, stats, now, rng: seeded() });
     expect(r.qids).toContain('25-1');
@@ -73,9 +98,9 @@ describe('estimateToday', () => {
   it('復習は 10−新しい語の枠−おかえり まで、残りが新しい語', () => {
     expect(estimateToday(0, 0)).toEqual({ review: 0, fresh: 10 });
     expect(estimateToday(0, 3)).toEqual({ review: 3, fresh: 7 });
-    expect(estimateToday(0, 50)).toEqual({ review: 7, fresh: 3 });
-    expect(estimateToday(5, 3)).toEqual({ review: 2, fresh: 3 });
-    expect(estimateToday(5, 10)).toEqual({ review: 2, fresh: 3 });
+    expect(estimateToday(0, 50)).toEqual({ review: 3, fresh: 7 });
+    expect(estimateToday(1, 10)).toEqual({ review: 2, fresh: 7 });
+    expect(estimateToday(5, 10)).toEqual({ review: 0, fresh: 5 });
   });
 });
 

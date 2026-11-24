@@ -4,21 +4,24 @@
  * ねらい: ホームのボタン1つで、中身をアプリが決める短いセッションを出す。
  *   1. おかえりウォームアップ（長い空白のあとだけ。箱4〜5の「覚えていた語」）
  *   2. 今日の復習（期限の古い順。TODAY_SIZE − 新しい語の枠 まで。srsEngine.getTodayReviewSet）
- *   3. 新しい語の枠（範囲内の未着手の語を番号順に MIN_NEW_PER_DAY 語まで）
+ *   3. 新しい語の枠（範囲内の未着手の語を番号順に MIN_NEW_PER_DAY 語まで。group を渡すと各語の1つめの意味から）
  *   4. 足りない分は、範囲内の候補から「おまかせ」で補充（苦手→未着手→途中）
  * 合計 TODAY_SIZE 問（おかえりの語を含む。おかえりが多い日は復習を減らす）。
  *
  * 新しい語の枠（2026-11-05）: 以前は復習だけで10語に届くと補充が0になり、期限切れが溜まった生徒は
  * 新しい語に進めなくなっていた（本番では SRS の大半が期限切れ）。復習は上限で切っても消えず、翌日以降に回る。
  *
+ * 未着手を優先（2026-11-24 ユーザー指示「範囲の未習の問題を優先」）: 新しい語の枠を 3 → 7（RANGE_NEW_SHARE＝7割）。
+ * 復習は残り3枠までで、未着手が尽きたら復習が増える。範囲外の語は呼び出し側が渡さない（復習・おかえりも範囲内だけ）。
+ *
  * DB アクセスは呼び出し側（App.tsx）。ここは配列とマップだけを扱う。
  */
-import { classify, pickQuestions, type ItemStat, type Bucket } from './quizSelector';
+import { classify, pickQuestions, RANGE_NEW_SHARE, type ItemStat, type Bucket } from './quizSelector';
 
 /** 今日の分の基本サイズ（2〜3分で終わる長さ） */
 export const TODAY_SIZE = 10;
-/** 復習が溜まっていても毎日入れる新しい語（未着手）の数 */
-export const MIN_NEW_PER_DAY = 3;
+/** 復習が溜まっていても毎日入れる新しい語（未着手）の数（10問中7語） */
+export const MIN_NEW_PER_DAY = Math.ceil(TODAY_SIZE * RANGE_NEW_SHARE);
 
 export type TodayParts = {
   /** おかえりウォームアップ（覚えていた語） */
@@ -40,6 +43,8 @@ export type ComposeInput<T> = {
   pool: T[];
   key: (t: T) => string;
   order: (t: T) => number;
+  /** 同じ語の意味をまとめる鍵（単語なら group）。渡すと新しい語は各語の1つめの意味から順に取る */
+  group?: (t: T) => number | string;
   stats: Record<string, ItemStat>;
   boxes?: Record<string, number>;
   size?: number;
@@ -65,9 +70,23 @@ export function composeTodaySet<T>(input: ComposeInput<T>): TodaySet {
       return !warmupSet.has(k) && !dueSet.has(k) && classify(input.stats[k], input.boxes?.[k]) === 'new';
     })
     .sort((a, b) => input.order(a) - input.order(b));
-  const reserveNew = Math.min(minNew, newCandidates.length);
+  if (input.group) {
+    // 各語の何番目の意味か（0,1,2…）を先に比べる。10語の範囲でも1語の意味だけで埋まらないように（quizSelector と同じ）
+    const nth = new Map<T, number>();
+    const seenGroup = new Map<number | string, number>();
+    for (const t of newCandidates) {
+      const g = input.group(t);
+      const k = seenGroup.get(g) ?? 0;
+      nth.set(t, k);
+      seenGroup.set(g, k + 1);
+    }
+    newCandidates.sort((a, b) => (nth.get(a)! - nth.get(b)!) || input.order(a) - input.order(b));
+  }
+  const warmupCount = warmupSet.size;
+  // おかえりの語（最大5語）と合わせて size を超えないようにする（新しい語7語の枠にしてから、5＋7で超えうる）
+  const reserveNew = Math.min(minNew, newCandidates.length, Math.max(0, size - warmupCount));
   // おかえりの語も合計に含める（おかえり＋復習＋新しい語で size。復習は残っても翌日以降に回る）
-  const reviewCap = Math.max(0, size - reserveNew - new Set(input.warmup).size);
+  const reviewCap = Math.max(0, size - reserveNew - warmupCount);
 
   const seen = new Set<string>();
   const qids: string[] = [];
@@ -104,8 +123,10 @@ export function composeTodaySet<T>(input: ComposeInput<T>): TodaySet {
       items: candidates,
       key: input.key,
       order: input.order,
+      group: input.group,
       stats: input.stats,
       boxes: input.boxes,
+      // newShare は渡さない（未着手の7割は上の「新しい語の枠」で取り済み。残りの枠は苦手・途中に回す）
       n: need,
       now: input.now,
       rng: input.rng,

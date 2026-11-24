@@ -92,7 +92,7 @@ export function QuizSettingsPanel<T extends string>({
             className="w-full p-1 bg-rw-bg border border-rw-rule text-rw-ink rounded text-xs"
             title="どの語を出すか。おまかせは学習記録から、苦手→まだ解いていない語（番号順）→途中の語 の順に配分し、正答率の高い語は頻度を下げる"
           >
-            <option value="auto">出す語はおまかせ（苦手・未着手を優先）</option>
+            <option value="auto">出す語はおまかせ（未着手・苦手を優先）</option>
             <option value="random">出す語はランダム</option>
           </select>
           {pickMode === 'auto' && lastPickLine && (

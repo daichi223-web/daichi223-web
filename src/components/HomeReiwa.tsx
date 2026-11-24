@@ -309,7 +309,7 @@ export default function HomeReiwa({
                     <div className="text-[11px] opacity-90 font-bold leading-tight truncate">
                       {todayPreview.review > 0
                         ? `復習 ${todayPreview.review}語 ＋ 新しく ${todayPreview.fresh}語`
-                        : `${rangeLabel} から、苦手・未着手を優先`}
+                        : `${rangeLabel} から、未着手を優先`}
                     </div>
                     <div className="flex items-baseline gap-1 mt-1.5">
                       <span className="text-3xl font-black">{todayTotal}</span>
