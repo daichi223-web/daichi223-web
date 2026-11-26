@@ -16,6 +16,7 @@ Each text record:
 """
 import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -25,7 +26,9 @@ import yaml
 sys.stdout.reconfigure(encoding='utf-8')
 
 ROOT = Path(__file__).resolve().parent.parent
-VAULT = Path('F:/A2A/NotebookLM/kokugo-vault/30-教材/古文')
+# Vault の場所：環境変数 KOKUGO_VAULT（Vault の根元）があればそれ、無ければこのリポジトリの隣の kokugo-vault。
+# 2026-11-26 に F: の使用をやめたので、ドライブ名は書かない。
+VAULT = Path(os.environ.get('KOKUGO_VAULT') or (ROOT.parent / 'kokugo-vault')) / '30-教材' / '古文'
 OUT_DIR = ROOT / 'public' / 'texts'
 
 # Skip list: MDs excluded from the public corpus.
