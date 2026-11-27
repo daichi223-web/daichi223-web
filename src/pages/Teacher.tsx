@@ -1679,6 +1679,224 @@ function TextsManageView() {
   );
 }
 
+// 誤答分析「学校・学年ごとの記述の誤答」（2026-11-27）。元 = /api/teacher?action=usageWritingAnswers
+//   learning_events の ctx.answer（記述の答えの文）を、利用状況タブと同じ絞り込み（期間・学校・年・組）で数える。
+//   答えの文を記録し始める前の回答は入らない。下の「候補を集計」の表（answers 表・全体）とは別。
+function WritingMistakesByGroup({ getQuestionDisplay }: { getQuestionDisplay: (qid: string) => string }) {
+  const [from, setFrom] = useState<string>(jstDayShift(-29));
+  const [to, setTo] = useState<string>(jstDayShift(0));
+  const [school, setSchool] = useState<string>("");
+  const [grade, setGrade] = useState<string>("");
+  const [cls, setCls] = useState<string>("");
+  const [data, setData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
+
+  const headNo = (qid: string) => /^(\d+)-\d+$/.exec(String(qid ?? ""))?.[1] ?? "";
+
+  const load = async (f: string, t: string, s: string, g: string, c: string) => {
+    setLoading(true);
+    setErr(null);
+    const q = `from=${f}&to=${t}${s ? `&school=${s}` : ""}${g ? `&grade=${g}` : ""}${c ? `&cls=${c}` : ""}`;
+    try {
+      setData(await callAPI(`/api/teacher?action=usageWritingAnswers&${q}`));
+    } catch (e: any) {
+      setErr(String(e?.message || e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void load(from, to, school, grade, cls);
+  }, []);
+
+  const preset = (f: string) => {
+    const t = jstDayShift(0);
+    setFrom(f);
+    setTo(t);
+    void load(f, t, school, grade, cls);
+  };
+  const pick = (s: string, g: string, c: string) => {
+    setSchool(s);
+    setGrade(g);
+    setCls(c);
+    void load(from, to, s, g, c);
+  };
+
+  const roster = (data?.roster ?? []) as Array<{ school: string; grade: number | null; cls: number | null }>;
+  const schools = [...new Set(roster.map((r) => r.school))];
+  const inSchool = roster.filter((r) => !school || r.school === school);
+  const grades = [...new Set(inSchool.map((r) => r.grade).filter((x): x is number => x != null))].sort((a, b) => a - b);
+  const classes = [
+    ...new Set(inSchool.filter((r) => !grade || r.grade === Number(grade)).map((r) => r.cls).filter((x): x is number => x != null)),
+  ].sort((a, b) => a - b);
+  const scope = [school, grade ? `${grade}年` : "", cls ? `${cls}組` : ""].filter(Boolean).join(" ") || "登録済みの全員";
+
+  const wrongs = (data?.wrongs ?? []) as Array<{ id: string; answerNorm: string; sample: string; n: number; users: number; override: string | null }>;
+  const shown = showAll ? wrongs : wrongs.slice(0, 30);
+  const items = ((data?.items ?? []) as Array<{ id: string; n: number; wrong: number; users: number; wrongUsers: number }>)
+    .filter((r) => r.wrongUsers > 0)
+    .slice(0, 20);
+  const total = ((data?.items ?? []) as Array<{ n: number; wrong: number }>).reduce(
+    (t, r) => ({ n: t.n + r.n, wrong: t.wrong + r.wrong }),
+    { n: 0, wrong: 0 },
+  );
+  const OVERRIDE_LABEL: Record<string, string> = { OK: "正解にした", NG: "誤答と決めた", ABSTAIN: "保留にした" };
+
+  return (
+    <div className="bg-white rounded-lg shadow p-4 space-y-3 text-sm">
+      <h3 className="font-bold text-slate-800">🏫 学校・学年ごとの記述の誤答</h3>
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <span className="font-medium text-slate-700">期間</span>
+        {(
+          [
+            ["直近7日", jstDayShift(-6)],
+            ["直近30日", jstDayShift(-29)],
+            ["記録開始から", LOG_START],
+          ] as [string, string][]
+        ).map(([label, f]) => (
+          <button
+            key={label}
+            onClick={() => preset(f)}
+            disabled={loading}
+            className={`px-4 py-2 sm:px-3 sm:py-1.5 rounded-lg border disabled:opacity-50 ${
+              from === f && to === jstDayShift(0)
+                ? "border-blue-600 bg-blue-600 text-white"
+                : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+        <input type="date" value={from} min={LOG_START} onChange={(e) => setFrom(e.target.value)} className={U_SEL} aria-label="開始日" />
+        <span>〜</span>
+        <input type="date" value={to} min={LOG_START} onChange={(e) => setTo(e.target.value)} className={U_SEL} aria-label="終了日" />
+        <button
+          onClick={() => void load(from, to, school, grade, cls)}
+          disabled={loading || !from || !to}
+          className="px-4 py-2 sm:px-3 sm:py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+        >
+          表示
+        </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <span className="font-medium text-slate-700">対象</span>
+        {schools.length > 1 && (
+          <select value={school} onChange={(e) => pick(e.target.value, "", "")} disabled={loading} className={U_SEL} aria-label="学校">
+            <option value="">すべての学校</option>
+            {schools.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        )}
+        <select value={grade} onChange={(e) => pick(school, e.target.value, "")} disabled={loading || !grades.length} className={U_SEL} aria-label="学年">
+          <option value="">すべての学年</option>
+          {grades.map((g) => (
+            <option key={g} value={g}>{g}年</option>
+          ))}
+        </select>
+        <select value={cls} onChange={(e) => pick(school, grade, e.target.value)} disabled={loading || !classes.length} className={U_SEL} aria-label="組">
+          <option value="">すべての組</option>
+          {classes.map((c) => (
+            <option key={c} value={c}>{c}組</option>
+          ))}
+        </select>
+        {data && (
+          <span className="text-slate-500 basis-full sm:basis-auto">
+            {data.from ?? "…"} 〜 {data.to ?? "…"}・{scope}（登録 {fmtN(data.registered)} 人）・回答 {fmtN(total.n)}・誤答 {fmtN(total.wrong)}
+          </span>
+        )}
+      </div>
+      <p className="text-xs text-slate-500">
+        単語クイズの記述（意味を書く・文脈から意味を書く）で、最後の判定（自動判定、保留なら生徒の自己判定）が誤りだった答えを、登録済みの生徒について数えています。
+        答えの文を記録し始めた後の回答だけが入ります（それより前の記述は、誰の答えかが残っていないので学校・学年で分けられません）。「もう一度」の再出題は数えません。
+        下の「サマリ」以降の表は、これまでどおり全体を「候補を集計」でまとめたものです。
+      </p>
+      {data && data.piiDecrypted === false && (
+        <p className="text-xs text-amber-700">プロフィールを復号できないため、年・組で絞れません（学校だけで集計しています）。</p>
+      )}
+      {err && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">{err}</div>}
+      {loading && <div className="text-slate-500">読み込み中…</div>}
+
+      {data && !loading && (
+        wrongs.length === 0 ? (
+          <div className="text-slate-500 py-4">この条件では、記述の誤答はまだありません。</div>
+        ) : (
+          <>
+            <div className="font-medium text-slate-700">よくある誤答（間違えた人の多い順）</div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-3 py-2 text-left">#</th>
+                    <th className="px-3 py-2 text-right">番号</th>
+                    <th className="px-3 py-2 text-left">単語</th>
+                    <th className="px-3 py-2 text-left">誤答内容</th>
+                    <th className="px-3 py-2 text-right">間違えた人</th>
+                    <th className="px-3 py-2 text-right">回数</th>
+                    <th className="px-3 py-2 text-left">正解の辞書</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {shown.map((w, i) => (
+                    <tr key={`${w.id}_${w.answerNorm}`} className="border-t border-slate-100">
+                      <td className="px-3 py-2 text-slate-500">{i + 1}</td>
+                      <td className="px-3 py-2 text-right tabular-nums text-slate-600">{headNo(w.id)}</td>
+                      <td className="px-3 py-2 font-medium">{getQuestionDisplay(w.id)}</td>
+                      <td className="px-3 py-2 text-slate-700">{w.sample || w.answerNorm}</td>
+                      <td className="px-3 py-2 text-right font-bold text-red-600 tabular-nums">{w.users}</td>
+                      <td className="px-3 py-2 text-right tabular-nums">{w.n}</td>
+                      <td className="px-3 py-2 text-slate-500">{w.override ? OVERRIDE_LABEL[w.override] ?? w.override : "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {wrongs.length > 30 && (
+              <button onClick={() => setShowAll((v) => !v)} className="text-blue-700 hover:underline">
+                {showAll ? "はじめの30件だけにする" : `残り ${wrongs.length - 30} 件も見る`}
+              </button>
+            )}
+            {data.wrongsTotal > wrongs.length && (
+              <p className="text-xs text-slate-500">ほかに {fmtN(data.wrongsTotal - wrongs.length)} 件の誤答があります（間違えた人の多い {wrongs.length} 件だけを出しています）。</p>
+            )}
+
+            <div className="font-medium text-slate-700 pt-2">単語別（間違えた人の多い順・20語）</div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-3 py-2 text-right">番号</th>
+                    <th className="px-3 py-2 text-left">単語</th>
+                    <th className="px-3 py-2 text-right">間違えた人／解いた人</th>
+                    <th className="px-3 py-2 text-right">誤答／回答</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((r) => (
+                    <tr key={r.id} className="border-t border-slate-100">
+                      <td className="px-3 py-2 text-right tabular-nums text-slate-600">{headNo(r.id)}</td>
+                      <td className="px-3 py-2 font-medium">{getQuestionDisplay(r.id)}</td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {r.wrongUsers}／{r.users}（{pctOf(r.wrongUsers, r.users)}）
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {r.wrong}／{r.n}（{pctOf(r.wrong, r.n)}）
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )
+      )}
+    </div>
+  );
+}
+
 function AnalyticsView({
   candidates,
   getQuestionDisplay,
@@ -1747,6 +1965,7 @@ function AnalyticsView({
 
   return (
     <div className="space-y-6">
+      <WritingMistakesByGroup getQuestionDisplay={getQuestionDisplay} />
       <div className="bg-white rounded-lg shadow p-4">
         <h3 className="font-bold text-slate-800 mb-3">📈 サマリ</h3>
         <div className="grid grid-cols-3 gap-3">

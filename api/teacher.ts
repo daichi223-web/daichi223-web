@@ -20,6 +20,7 @@ import { getQuizRange, setQuizRange } from "./_teacher_quizRange.js";
 import usageData from "./_teacher_usageData.js";
 import usageAreas from "./_teacher_usageAreas.js";
 import usageStumbles from "./_teacher_usageStumbles.js";
+import usageWritingAnswers from "./_teacher_usageWritingAnswers.js";
 import { guestLogin, guestCheck, getGuestAccess, setGuestAccess } from "./_guest.js";
 
 type Handler = (req: VercelRequest, res: VercelResponse) => Promise<unknown> | unknown;
@@ -37,6 +38,7 @@ const ROUTES: Record<string, Handler> = {
   usageData,
   usageAreas,
   usageStumbles,
+  usageWritingAnswers,
   // お試し（ゲスト）のパスワード。guestLogin・guestCheck は認証不要、残り2つは教員のみ（api/_guest.ts）
   guestLogin,
   guestCheck,

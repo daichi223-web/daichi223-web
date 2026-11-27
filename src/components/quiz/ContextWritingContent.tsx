@@ -17,6 +17,8 @@ export interface ContextWritingJudged {
   result: WritingJudgeResult;
   /** 最終の正誤。保留のまま進んだ意味は null（記録しない） */
   final: boolean | null;
+  /** 生徒が書いた答え（learning_events の ctx.answer に入れ、教員画面で学校・学年ごとに数える） */
+  answer: string;
 }
 
 export interface ContextWritingContentProps {
@@ -116,7 +118,7 @@ export function ContextWritingContent({
     setIsSubmitting(true);
 
     try {
-      onJudged(meanings.map(m => ({ qid: m.qid, result: results[m.qid], final: finalOf(m.qid) })));
+      onJudged(meanings.map(m => ({ qid: m.qid, result: results[m.qid], final: finalOf(m.qid), answer: (answers[m.qid] || '').trim() })));
 
       const anonId = localStorage.getItem('anonId') || `anon_${Date.now()}`;
       if (!localStorage.getItem('anonId')) {

@@ -220,6 +220,8 @@ function App() {
   // 回答の本文を送った返事を待つ約束。返事（answerId）が届く前に「合っていた／ちがった」を押しても、
   // 届いてから自己判定を送れるように持っておく（2026-11-16。今までは届く前に押すと判定が送られなかった）
   const writingAnswerIdRef = useRef<Promise<string | null> | null>(null);
+  // 保留の自己判定を記録するときに使う、生徒が書いた答え
+  const writingAnswerTextRef = useRef<string>('');
 
   // Wrong answers tracking for session-end review
   const [wrongAnswers, setWrongAnswers] = useState<Array<{ lemma: string; sense: string; qid: string }>>([]);
@@ -1026,19 +1028,21 @@ function App() {
 
   // 記述の最終判定を記録する。1回の回答につき1回だけ呼ぶ
   // （自動判定と自己判定で SRS を二度動かさない）。
-  const finalizeWriting = (qid: string, isCorrect: boolean, result: WritingJudgeResult, selfJudged: boolean) => {
+  const finalizeWriting = (qid: string, isCorrect: boolean, result: WritingJudgeResult, selfJudged: boolean, answer: string) => {
     const isRetry = isRetryQuestion();
     if (!isRetry) {
       recordAnswer(qid, isCorrect).catch((e) => console.warn('[recordAnswer] failed:', e));
       updateSrsState(qid, isCorrect).catch((e) => console.warn('[updateSrsState] failed:', e));
     }
-    // 記述の本文は answers 表に残るので、ここには判定だけ入れる
+    // 記述の本文は answers 表にも残る。answers には誰の答えかが無いので、教員画面で学校・学年ごとに数えるために
+    // ここにも ctx.answer として入れる（chosen は単語では qid の欄なので使わない。2026-11-27）
     logEvent({
       area: 'vocab', action: 'answer', targetType: 'word', targetId: qid,
       correct: isCorrect,
       format: currentMode === 'polysemy' ? 'context-writing' : 'meaning-writing', route: quizMode,
       ctx: {
         mode: currentMode, score: isCorrect ? 100 : 0, verdict: result.verdict, self: selfJudged,
+        ...(answer.trim() ? { answer: answer.trim().slice(0, 200) } : {}),
         teacher: readChatTeacher(),
         ...(result.matchedQid ? { matched: result.matchedQid } : {}),
         ...(isRetry ? { retry: true } : {}),
@@ -1066,18 +1070,19 @@ function App() {
     const result = judgeWritingAnswer(userAnswer, target, siblings);
     setWritingResult(result);
     setCurrentWritingQid(correctQid);
+    writingAnswerTextRef.current = userAnswer;
     setWritingUserJudgment(undefined);
     setShowWritingResult(true);
 
     const isRetry = isRetryQuestion();
     if (result.verdict === 'correct') {
-      finalizeWriting(correctQid, true, result, false);
+      finalizeWriting(correctQid, true, result, false, userAnswer);
       if (!isRetry) setScore(prev => prev + 1);
       // 正解でも自動では進まない。答え合わせの吹き出しを見せ、タップか「つぎへ」で次へ（2026-11-02）
       setNextButtonVisible(true);
     } else if (isDecided(result)) {
       // 別義・現代語・無回答は不正解で確定
-      finalizeWriting(correctQid, false, result, false);
+      finalizeWriting(correctQid, false, result, false, userAnswer);
       setNextButtonVisible(true);
     }
     // 保留は自己判定を待つ。「つぎへ」は出さない（2026-11-06。状態遷移の見直し 案 B）。
@@ -1124,7 +1129,7 @@ function App() {
     setWritingUserJudgment(judgment);
 
     if (currentWritingQid) {
-      finalizeWriting(currentWritingQid, judgment, writingResult, true);
+      finalizeWriting(currentWritingQid, judgment, writingResult, true, writingAnswerTextRef.current);
       if (judgment && !isRetryQuestion()) setScore(prev => prev + 1);
     }
 
@@ -1156,11 +1161,11 @@ function App() {
 
   // 多義語の記述（意味ごとに判定）。final が null の意味は保留のまま進んだもので、記録しない
   const handleContextWritingJudged = (
-    results: Array<{ qid: string; result: WritingJudgeResult; final: boolean | null }>
+    results: Array<{ qid: string; result: WritingJudgeResult; final: boolean | null; answer: string }>
   ) => {
     for (const r of results) {
       if (r.final === null) continue;
-      finalizeWriting(r.qid, r.final, r.result, r.result.verdict === 'pending');
+      finalizeWriting(r.qid, r.final, r.result, r.result.verdict === 'pending', r.answer);
     }
     if (results.length > 0 && results.every(r => r.final === true)) {
       setScore(prev => prev + 1);
