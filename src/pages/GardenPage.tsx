@@ -2,6 +2,7 @@
 // 上＝荒れた「なにがしの院」が、花が咲くたびに1か所ずつよみがえる。下＝前栽（教材ごとの草木）。
 // 決まりは src/lib/garden.ts。草木の絵は Codex の依頼B（public/garden/plants、作り直し = assets-src/garden/make_plants.py）。
 // 院の絵は components/garden/EstatePicture.tsx（荒れた院の上に、よみがえった所の層を重ねる。2026-11-24 Canva で生成）。
+// 院の各所の解説（どんな所か・教材の用例・ことば）は lib/gardenGuide.ts（2026-11-24）。
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
@@ -15,6 +16,7 @@ import {
   nextPart, plantFor, plantImage, plantStage, readGardenRuns, restoredParts, seasonOf, workName,
   type EstateKey, type PlantKey, type Stage,
 } from '@/lib/garden';
+import { ESTATE_GUIDE } from '@/lib/gardenGuide';
 import EstatePicture from '@/components/garden/EstatePicture';
 
 type TextEntry = { id: string; title: string; source?: string; genre?: string };
@@ -155,15 +157,26 @@ export default function GardenPage() {
               )}
             </span>
           </div>
-          {restored.length > 0 && (
-            <div className="flex flex-wrap gap-1 px-3 pb-2.5">
-              {restored.map((r) => (
-                <button key={r.key} type="button" onClick={() => setOpenPart(r.key)} className="text-[11px] font-bold border border-rw-rule bg-rw-bg text-rw-ink rounded-full px-2.5 py-0.5">
-                  {PART_NAMES[r.key]}
-                </button>
-              ))}
+          {/* 11か所の解説（荒れている所も開ける） */}
+          <div className="px-3 pb-2.5">
+            <div className="text-[10px] font-extrabold text-rw-ink-soft mb-1">院の各所の解説（絵の中を押しても開きます）</div>
+            <div className="flex flex-wrap gap-1">
+              {ESTATE_PARTS.map((p) => {
+                const done = restoredSet.has(p.key);
+                return (
+                  <button
+                    key={p.key}
+                    type="button"
+                    onClick={() => setOpenPart(p.key)}
+                    aria-label={`${p.name}の解説（${done ? 'よみがえった' : 'まだ荒れている'}）`}
+                    className={`text-[11px] font-bold border rounded-full px-2.5 py-0.5 ${done ? 'border-rw-ink bg-rw-ink text-rw-paper' : 'border-rw-rule bg-rw-bg text-rw-ink-soft'}`}
+                  >
+                    {p.name}
+                  </button>
+                );
+              })}
             </div>
-          )}
+          </div>
           <details className="px-3 pb-2.5 text-[11px] text-rw-ink-soft leading-relaxed">
             <summary className="cursor-pointer font-bold">この院のモチーフ</summary>
             <p className="mt-1">
@@ -255,13 +268,51 @@ export default function GardenPage() {
             <p className="text-[11px] text-rw-ink-soft mt-2">「{TITLE_OF.get(restoredBy)}」の花でよみがえりました。</p>
           )}
           {(() => {
+            const g = ESTATE_GUIDE[part.key];
+            const quotes = g.quotes.filter((q) => visible.has(q.text) && TITLE_OF.has(q.text));
+            return (
+              <>
+                <h4 className="text-[11px] font-extrabold text-rw-ink-soft mt-4 mb-1">どんな所か</h4>
+                <div className="flex flex-col gap-1.5 text-[13px] leading-relaxed">
+                  {g.about.map((a) => <p key={a} className="m-0">{a}</p>)}
+                </div>
+                {quotes.length > 0 && (
+                  <>
+                    <h4 className="text-[11px] font-extrabold text-rw-ink-soft mt-4 mb-1">教材ではこう出てくる</h4>
+                    <div className="flex flex-col gap-1.5">
+                      {quotes.map((q) => (
+                        <Link key={`${q.text}-${q.sid}-${q.line}`} to={`/read/texts/${q.text}`} className="block border border-rw-rule rounded-[10px] px-3 py-2 text-rw-ink no-underline">
+                          <div className="font-serif text-[13.5px] font-bold leading-relaxed">「{q.line}」</div>
+                          <div className="text-[11.5px] text-rw-ink-soft leading-normal mt-0.5">{q.tip}</div>
+                          <div className="text-[11px] font-bold mt-1 flex justify-between">
+                            <span>{TITLE_OF.get(q.text)}</span>
+                            <span className="text-rw-ink-soft font-semibold">教材を読む →</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </>
+                )}
+                <h4 className="text-[11px] font-extrabold text-rw-ink-soft mt-4 mb-1">いっしょに覚えることば</h4>
+                <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-[12.5px] leading-normal">
+                  {g.words.map((w) => (
+                    <div key={w.w} className="contents">
+                      <dt className="font-black whitespace-nowrap">{w.w}<span className="text-[10px] text-rw-ink-soft font-bold">（{w.yomi}）</span></dt>
+                      <dd className="m-0">{w.mean}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </>
+            );
+          })()}
+          {(() => {
             const links = part.texts.filter((id) => visible.has(id) && TITLE_OF.has(id));
             const hidden = part.texts.length - links.length;
             return (
               <>
                 {links.length > 0 && (
                   <div className="mt-3 flex flex-col gap-1.5">
-                    <div className="text-[11px] font-extrabold text-rw-ink-soft">この所が出てくる教材（咲かせると、ここが先によみがえる）</div>
+                    <div className="text-[11px] font-extrabold text-rw-ink-soft">咲かせると、ここが先によみがえる教材</div>
                     {links.map((id) => (
                       <Link key={id} to={`/read/texts/${id}`} className="flex justify-between items-center border border-rw-rule rounded-[10px] px-3 py-2 text-rw-ink no-underline text-[13px] font-bold">
                         {TITLE_OF.get(id)}
@@ -274,7 +325,7 @@ export default function GardenPage() {
               </>
             );
           })()}
-          <p className="text-[10px] text-rw-ink-soft mt-2.5">説明は AI が教材と便覧の範囲で書いたものです（先生の確認前）。</p>
+          <p className="text-[10px] text-rw-ink-soft mt-2.5">解説は AI が、寝殿造の資料と教材の本文をもとに書いたものです（先生の確認前）。「この絵では」とあるのは、この院の絵の配置です。</p>
         </Sheet>
       )}
     </div>

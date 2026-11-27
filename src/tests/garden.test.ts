@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import bundledTextsV3 from '../data/textsV3Index.json';
 import { ALL_GROUPS } from '../lib/readingClear';
@@ -8,6 +8,7 @@ import {
   type PlantKey, type Stage,
 } from '../lib/garden';
 import { ESTATE_HIT, ESTATE_HIT_ORDER, ESTATE_LAYERS, ESTATE_SIZE } from '../lib/gardenEstateLayers';
+import { ESTATE_GUIDE } from '../lib/gardenGuide';
 
 function stubStorage() {
   const m = new Map<string, string>();
@@ -166,5 +167,35 @@ describe('院の絵の層（gardenEstateLayers.ts）', () => {
       expect(ESTATE_HIT[p.key]?.length, p.key).toBeGreaterThan(0);
       for (const poly of ESTATE_HIT[p.key]) expect(poly.length, p.key).toBeGreaterThanOrEqual(3);
     }
+  });
+});
+
+describe('院の各所の解説（gardenGuide.ts）', () => {
+  const textsDir = join(__dirname, '..', '..', 'public', 'texts-v3');
+  it('11か所すべてに「どんな所か」と「ことば」がある', () => {
+    for (const p of ESTATE_PARTS) {
+      const g = ESTATE_GUIDE[p.key];
+      expect(g, p.key).toBeDefined();
+      expect(g.about.length, p.key).toBeGreaterThanOrEqual(2);
+      expect(g.words.length, p.key).toBeGreaterThanOrEqual(2);
+      for (const w of g.words) expect(w.w && w.yomi && w.mean, `${p.key} ${w.w}`).toBeTruthy();
+    }
+    expect(Object.keys(ESTATE_GUIDE).sort()).toEqual(ESTATE_PARTS.map((p) => p.key).sort());
+  });
+  it('用例の一節は、教材のその文にそのままある（捏造しない）', () => {
+    const ids = new Set((bundledTextsV3 as { id: string }[]).map((t) => t.id));
+    let n = 0;
+    for (const p of ESTATE_PARTS) {
+      for (const q of ESTATE_GUIDE[p.key].quotes) {
+        expect(ids.has(q.text), `${p.key} ${q.text}`).toBe(true);
+        const doc = JSON.parse(readFileSync(join(textsDir, `${q.text}.json`), 'utf8')) as { sentences: { id: string; originalText: string }[] };
+        const s = doc.sentences.find((x) => x.id === q.sid);
+        expect(s, `${p.key} ${q.text} ${q.sid}`).toBeDefined();
+        expect(s!.originalText.includes(q.line), `${p.key} ${q.text} ${q.sid}「${q.line}」`).toBe(true);
+        expect(q.tip.length, `${p.key} ${q.line}`).toBeGreaterThan(0);
+        n++;
+      }
+    }
+    expect(n).toBeGreaterThan(0);
   });
 });
