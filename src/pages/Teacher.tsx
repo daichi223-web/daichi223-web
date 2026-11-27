@@ -1685,6 +1685,9 @@ function AnalyticsView({
   candidates: any[];
   getQuestionDisplay: (qid: string) => string;
 }) {
+  // 単語の見出し番号（qid「123-2」の「-」の前）。形が違えば空
+  const headNo = (qid: string) => /^(\d+)-\d+$/.exec(String(qid ?? ""))?.[1] ?? "";
+
   // Top wrong answers (proposed_role='negative', sorted by freq)
   const topWrongs = useMemo(() => {
     return candidates
@@ -1780,6 +1783,7 @@ function AnalyticsView({
             <thead className="bg-slate-100">
               <tr>
                 <th className="px-3 py-2 text-left">#</th>
+                <th className="px-3 py-2 text-right">番号</th>
                 <th className="px-3 py-2 text-left">単語</th>
                 <th className="px-3 py-2 text-left">誤答内容</th>
                 <th className="px-3 py-2 text-right">回数</th>
@@ -1790,6 +1794,7 @@ function AnalyticsView({
               {topWrongs.map((c, i) => (
                 <tr key={`${c.qid}_${c.answerNorm}`} className="border-t border-slate-100">
                   <td className="px-3 py-2 text-slate-500">{i + 1}</td>
+                  <td className="px-3 py-2 text-right tabular-nums text-slate-600">{headNo(c.qid)}</td>
                   <td className="px-3 py-2 font-medium">{getQuestionDisplay(c.qid)}</td>
                   <td className="px-3 py-2 text-slate-700">{c.sampleAny || c.answerNorm}</td>
                   <td className="px-3 py-2 text-right font-bold text-red-600">{c.freq}</td>
@@ -1809,6 +1814,7 @@ function AnalyticsView({
           <table className="w-full text-sm">
             <thead className="bg-slate-100">
               <tr>
+                <th className="px-3 py-2 text-right">番号</th>
                 <th className="px-3 py-2 text-left">単語</th>
                 <th className="px-3 py-2 text-right">誤答パターン数</th>
                 <th className="px-3 py-2 text-right">誤答延べ回数</th>
@@ -1818,6 +1824,7 @@ function AnalyticsView({
             <tbody>
               {byQid.map((r) => (
                 <tr key={r.qid} className="border-t border-slate-100">
+                  <td className="px-3 py-2 text-right tabular-nums text-slate-600">{headNo(r.qid)}</td>
                   <td className="px-3 py-2 font-medium">{getQuestionDisplay(r.qid)}</td>
                   <td className="px-3 py-2 text-right">{r.negativeCount}</td>
                   <td className="px-3 py-2 text-right text-red-600 font-bold">{r.negativeFreq}</td>
