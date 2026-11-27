@@ -1,5 +1,5 @@
 // 読解の庭（/garden）の院の11か所の解説。2026-11-24 ユーザー承認「はい」（解説の形＝どんな所か・教材での用例・ことば）。
-// 文は AI が書いたもの（先生の確認前）。裏づけ：JAANUS（shinden-zukuri・shinden-zukuri teien・chūmonrō）、
+// 文は AI が書いたもの（2026-11-27 先生が本番の画面で確認済み）。裏づけ：JAANUS（shinden-zukuri・shinden-zukuri teien・chūmonrō）、
 // 『作庭記』の遣水の流し方、釣殿＝日本大百科全書の説明、配置＝国語便覧の寝殿造の図（文は写していない）。
 // 「この絵では」と書いたところは、この院の絵の配置（_work/kobun-garden/design/estate-design.md）の話。
 // 用例は教材の本文（public/texts-v3/<text>.json の文 sid）にそのままある一節。テストで本文と照合する。
