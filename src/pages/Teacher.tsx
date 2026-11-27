@@ -5,6 +5,7 @@ import { dataParser } from "../utils/dataParser";
 import bundledTextsIndex from "../data/textsIndex.json";
 import bundledKobunQ from "../data/kobunQ.v2.slim.json";
 import bundledTextsV3Index from "../data/textsV3Index.json";
+import * as wordExport from "../lib/wordMistakeExport";
 // 利用状況ダッシュボード（scripts/usage-report.mjs が作るローカル版と同じテンプレート・同じ集計コードを流用）
 import usageTemplate from "../../scripts/usage-dashboard.template.html?raw";
 import usageAggregateSrc from "../../scripts/usage-aggregate.js?raw";
@@ -2419,6 +2420,7 @@ function UsageView() {
           <UsagePeopleSection data={data} topicTitles={topicTitles} showClasses={!cls} part="students" />
 
           <UsageStumblesSection stumbles={stumbles} query={loadedQuery} topicTitles={topicTitles} />
+          <UsageWordExport query={loadedQuery} />
           <UsagePeopleSection data={data} topicTitles={topicTitles} showClasses={!cls} part="classes" />
           <UsageTextsSection data={data} />
         </>
@@ -2785,6 +2787,227 @@ function UsageStumblesSection({ stumbles, query, topicTitles }: { stumbles: any;
         <button onClick={() => setLimit((n) => n + 30)} className={`${U_BTN} mt-2`}>
           もっと見る（残り {fmtN(rows.length - limit)}）
         </button>
+      )}
+    </section>
+  );
+}
+
+// ---- 単語の誤答を書き出す（期間・対象は上の絞り込み、単語の番号範囲はここで選ぶ） ----------------
+//
+// API = usageStumbles&export=words（下限なし）。CSV（BOM 付き UTF-8）と印刷用の表（→ PDF に保存）。
+// 生徒個人の行は入れない。範囲の初期値は「小テスト範囲」タブの設定（cohort=default、有効なときだけ）。
+const U_NUM = "w-20 border border-slate-300 rounded px-2 py-1 bg-white tabular-nums";
+
+function UsageWordExport({ query }: { query: string }) {
+  const [shown, setShown] = useState(false);
+  const [rFrom, setRFrom] = useState("");
+  const [rTo, setRTo] = useState("");
+  const [quizRange, setQuizRange] = useState<{ label: string; from: number; to: number } | null>(null);
+  const [sort, setSort] = useState<wordExport.ExportSort>("wrongUsers");
+  const [res, setRes] = useState<any | null>(null);
+  const [resKey, setResKey] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  // 小テスト範囲を初期値に（開いたとき1回だけ）
+  useEffect(() => {
+    if (!shown || quizRange) return;
+    let cancelled = false;
+    void callAPI(`/api/teacher?action=getQuizRange&cohort=default`)
+      .then((d) => {
+        const row = d?.row;
+        if (cancelled || !row || row.active === false || !row.range_from || !row.range_to) return;
+        const q = { label: String(row.label ?? ""), from: Number(row.range_from), to: Number(row.range_to) };
+        setQuizRange(q);
+        setRFrom((v) => v || String(q.from));
+        setRTo((v) => v || String(q.to));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [shown]);
+
+  const rangeParam = () => {
+    const a = rFrom.trim();
+    const b = rTo.trim();
+    if (!a && !b) return { ok: true as const, param: "" };
+    if (!/^\d{1,4}$/.test(a) || !/^\d{1,4}$/.test(b)) return { ok: false as const, error: "範囲は両方に番号（1〜9999）を入れてください。全範囲なら両方を空に。" };
+    if (Number(a) < 1 || Number(a) > Number(b)) return { ok: false as const, error: "範囲の始めが終わりより大きくなっています。" };
+    return { ok: true as const, param: `${Number(a)}-${Number(b)}` };
+  };
+  const rp = rangeParam();
+  const key = `${query}|${rp.ok ? rp.param : "?"}`;
+  const stale = !!res && resKey !== key;
+
+  const extract = async () => {
+    if (!rp.ok) return setErr(rp.error);
+    setLoading(true);
+    setErr(null);
+    setMsg(null);
+    try {
+      const r = await callAPI(`/api/teacher?action=usageStumbles&${query}&export=words${rp.param ? `&range=${rp.param}` : ""}`);
+      setRes(r);
+      setResKey(key);
+    } catch (e: any) {
+      setErr(String(e?.message || e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const rows: wordExport.WordMistakeRow[] = useMemo(() => (res ? wordExport.sortRows(res.words ?? [], sort) : []), [res, sort]);
+  const meta = (): wordExport.ExportMeta => {
+    const f = res?.filter ?? {};
+    return {
+      from: res?.from ?? null,
+      to: res?.to ?? null,
+      scope: [f.school, f.grade != null ? `${f.grade}年` : "", f.cls != null ? `${f.cls}組` : ""].filter(Boolean).join(" ") || "登録済みの全員",
+      range: res?.range ?? null,
+      generatedAt: res?.generatedAt ?? new Date().toISOString(),
+      totals: res?.rangeTotals ?? { words: 0, n: 0, wrong: 0 },
+    };
+  };
+  const fileBase = () => {
+    const m = meta();
+    return `単語の誤答_${m.from ?? "開始"}_${m.to ?? "今日"}_${m.range ? `${m.range[0]}-${m.range[1]}` : "全範囲"}`;
+  };
+
+  const downloadCsv = () => {
+    const csv = wordExport.buildCsv(rows, usageWordInfo, meta());
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${fileBase()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  };
+
+  const openPrint = () => {
+    const html = wordExport.buildPrintHtml(rows, usageWordInfo, meta(), sort);
+    const url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
+    const w = window.open(url, "_blank");
+    if (!w) setMsg("新しいタブが開けませんでした。ブラウザのポップアップの許可を確かめてください。");
+    else setMsg("新しいタブで印刷の画面が開きます。送り先で「PDF に保存」を選ぶと PDF になります。");
+    setTimeout(() => URL.revokeObjectURL(url), 120_000);
+  };
+
+  const head = (
+    <button onClick={() => setShown((v) => !v)} aria-expanded={shown} className="text-left mb-1">
+      <h3 className="text-base font-semibold text-slate-800">
+        <span className="text-slate-400 mr-1">{shown ? "▾" : "▸"}</span>
+        単語の誤答を書き出す（CSV・PDF）
+      </h3>
+      {!shown && <span className="text-xs text-slate-500">期間・学校・年・組は上の絞り込み、単語の番号の範囲はここで選びます。</span>}
+    </button>
+  );
+  if (!shown) return <section>{head}</section>;
+
+  const t = res?.rangeTotals;
+  return (
+    <section>
+      {head}
+      <p className="text-xs text-slate-500 mb-2">
+        期間・学校・年・組は上の絞り込みのまま、単語の番号の範囲で絞って、回答のあった語（意味）をすべて出します（上の「つまずき」と違い、少ない回答の語も入ります）。
+        数えるのは選択式の回答だけです（語→意味・意味→語・例文・空欄補充・多義語の例文理解。○×と記述は入れません）。
+        書き出すのは語ごとの人数と回数だけで、生徒個人の行は入れません。
+      </p>
+      <div className="flex flex-wrap items-center gap-2 mb-2">
+        <span className="font-medium text-slate-700">単語の範囲</span>
+        <input inputMode="numeric" value={rFrom} onChange={(e) => setRFrom(e.target.value)} className={U_NUM} aria-label="範囲の始めの番号" placeholder="始め" />
+        <span>〜</span>
+        <input inputMode="numeric" value={rTo} onChange={(e) => setRTo(e.target.value)} className={U_NUM} aria-label="範囲の終わりの番号" placeholder="終わり" />
+        <span className="text-slate-500">番（両方空＝全範囲）</span>
+        {quizRange && (
+          <button
+            onClick={() => {
+              setRFrom(String(quizRange.from));
+              setRTo(String(quizRange.to));
+            }}
+            className={U_BTN}
+          >
+            小テスト範囲（{quizRange.label ? `${quizRange.label} ` : ""}{quizRange.from}〜{quizRange.to}）
+          </button>
+        )}
+        <button
+          onClick={() => {
+            setRFrom("");
+            setRTo("");
+          }}
+          className={U_BTN}
+        >
+          全範囲
+        </button>
+        <button onClick={() => void extract()} disabled={loading || !query} className="px-4 py-2 sm:px-3 sm:py-1.5 rounded-lg border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50">
+          {loading ? "抽出中…" : "抽出する"}
+        </button>
+      </div>
+      {err && <div className="text-red-700 mb-2">{err}</div>}
+      {res && (
+        <div className="space-y-2">
+          {stale && <div className="text-amber-700">絞り込みか範囲が変わりました。「抽出する」を押し直すと、今の条件で出し直します。</div>}
+          <div className="text-slate-700">
+            {wordExport.periodText(meta())}・{meta().scope}・{wordExport.rangeText(meta().range)}：
+            回答のあった語 {fmtN(t?.words)}・回答 {fmtN(t?.n)} 件・誤答 {fmtN(t?.wrong)} 件（{pctOf(t?.wrong ?? 0, t?.n ?? 0)}）
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="flex items-center gap-1 text-slate-600">
+              並び
+              <select value={sort} onChange={(e) => setSort(e.target.value as wordExport.ExportSort)} className={U_SEL}>
+                <option value="wrongUsers">間違えた人の多い順</option>
+                <option value="number">番号順</option>
+              </select>
+            </label>
+            <button onClick={downloadCsv} disabled={stale} className={U_BTN}>
+              CSV をダウンロード
+            </button>
+            <button onClick={openPrint} disabled={stale} className={U_BTN}>
+              PDF（印刷用の表を開く）
+            </button>
+          </div>
+          {msg && <div className="text-xs text-slate-600">{msg}</div>}
+          <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+            <table className="min-w-full">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className={U_TH}>語（意味）</th>
+                  <th className={`${U_TH} text-right`}>間違えた人／解いた人</th>
+                  <th className={`${U_TH} text-right`}>初回の誤答</th>
+                  <th className={`${U_TH} text-right`}>2回以上</th>
+                  <th className={`${U_TH} text-right`}>回答（誤答率）</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.slice(0, 10).map((r) => (
+                  <tr key={r.id} className="border-t border-slate-100">
+                    <td className={U_TDW}>
+                      <span className="text-slate-400 tabular-nums mr-1">{String(r.id).split("-")[0]}</span>
+                      {usageWordLabel(r.id)}
+                    </td>
+                    <td className={U_TDN}>
+                      {fmtN(r.wrongUsers)}／{fmtN(r.users)} 人<span className="text-slate-500">（{pctOf(r.wrongUsers, r.users)}）</span>
+                    </td>
+                    <td className={U_TDN}>{fmtN(r.firstWrong)} 人</td>
+                    <td className={U_TDN}>{fmtN(r.repeatUsers)} 人</td>
+                    <td className={U_TDN}>
+                      {fmtN(r.n)}
+                      <span className="text-slate-500">（{pctOf(r.wrong, r.n)}）</span>
+                    </td>
+                  </tr>
+                ))}
+                {!rows.length && (
+                  <tr>
+                    <td className={U_TD} colSpan={5}>この条件で回答のあった単語はありません</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          {rows.length > 10 && <div className="text-xs text-slate-500">画面には先頭の 10 語だけ出しています（書き出しには {fmtN(rows.length)} 語すべて入ります）。</div>}
+        </div>
       )}
     </section>
   );
