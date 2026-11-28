@@ -7,6 +7,7 @@
 // ここで該当する生徒の user_id を選び、DB 関数（migration 016）の p_users に渡す。
 //   usage_by_area … 領域別・重なり・日ごと・教材別・生徒別
 //   usage_daily_users … 日ごとの使った人（時系列グラフ。migration 017）
+//   usage_daily_counts … 日ごと・領域ごとの回数（解いた問題・教材を開いた回数。時系列グラフの「回数」。migration 021）
 //   usage_ranges  … 生徒ごとの 単語の番号帯・文法の単元・教材（どの範囲をやっているか）
 // 集計結果だけを返す。生徒ごとの行の user_id は「学校コード＋年・組・番号」（users の index）に置き換える。
 import type { VercelRequest, VercelResponse } from "@vercel/node";
@@ -39,10 +40,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       p_to: to ? jstStartIso(to, 1) : null,
       p_users: picked,
     };
-    const [agg, rng, daily] = await Promise.all([
+    const [agg, rng, daily, counts] = await Promise.all([
       supabaseAdmin.rpc("usage_by_area", args),
       supabaseAdmin.rpc("usage_ranges", args),
       supabaseAdmin.rpc("usage_daily_users", args),
+      supabaseAdmin.rpc("usage_daily_counts", args),
     ]);
     if (agg.error) throw new Error(`usage_by_area: ${agg.error.message}`);
     if (rng.error) throw new Error(`usage_ranges: ${rng.error.message}`);
@@ -64,6 +66,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       users,
       // 日ごとの「使った人」（領域をまたいで重複なし。migration 017）。関数が無いときは null（グラフは領域別だけになる）
       dayUsers: daily.error ? null : daily.data,
+      // 日ごと・領域ごとの回数（解いた問題・教材を開いた回数。migration 021）。関数が無いときは null（グラフは人数だけ）
+      dayCounts: counts.error ? null : counts.data,
       registered: picked.length,
       roster: buildRoster(ids.identity),
       piiDecrypted: ids.piiDecrypted,

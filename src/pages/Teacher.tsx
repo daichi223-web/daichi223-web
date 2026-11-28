@@ -2682,7 +2682,11 @@ function UsageTrendChart({ data }: { data: any }) {
     return () => ro.disconnect();
   }, []);
 
-  const hasAll = Array.isArray(data.dayUsers);
+  // 「人数」= その日に使った人／「回数」= 解いた問題の数（単語・文法）と教材を開いた回数（migration 021。無ければ切り替えを出さない）
+  const hasCounts = Array.isArray(data.dayCounts);
+  const [mode, setMode] = useState<"users" | "counts">("users");
+  const counts = mode === "counts" && hasCounts;
+  const hasAll = counts || Array.isArray(data.dayUsers);
   const rows = useMemo(() => {
     const m = new Map<string, Record<TrendKey, number>>();
     const at = (day: string) => {
@@ -2690,8 +2694,18 @@ function UsageTrendChart({ data }: { data: any }) {
       if (!x) m.set(day, (x = { all: 0, vocab: 0, grammar: 0, text: 0 }));
       return x;
     };
-    for (const d of data.days ?? []) if (d.area in at(d.day)) at(d.day)[d.area as TrendKey] = d.users;
-    for (const d of data.dayUsers ?? []) at(d.day).all = d.users;
+    if (counts) {
+      for (const d of data.dayCounts ?? []) {
+        const r = at(d.day);
+        if (d.area === "vocab" || d.area === "grammar") {
+          r[d.area as TrendKey] = d.answers ?? 0;
+          r.all += d.answers ?? 0; // 全体 = 単語と文法の解いた問題の合計（教材を開いた回数は足さない）
+        } else if (d.area === "text") r.text = d.opens ?? 0;
+      }
+    } else {
+      for (const d of data.days ?? []) if (d.area in at(d.day)) at(d.day)[d.area as TrendKey] = d.users;
+      for (const d of data.dayUsers ?? []) at(d.day).all = d.users;
+    }
     const keys = [...m.keys()].sort();
     const first = data.from ?? keys[0];
     const last = data.to ?? keys[keys.length - 1];
@@ -2702,9 +2716,12 @@ function UsageTrendChart({ data }: { data: any }) {
       out.push({ day, ...(m.get(day) ?? { all: 0, vocab: 0, grammar: 0, text: 0 }) });
     }
     return out;
-  }, [data]);
+  }, [data, counts]);
 
-  const series = U_TREND.filter((s) => s.k !== "all" || hasAll);
+  const series = U_TREND.filter((s) => s.k !== "all" || hasAll).map((s) =>
+    counts ? { ...s, label: ({ all: "単語＋文法の問題", vocab: "単語の問題", grammar: "文法の問題", text: "教材を開いた" } as const)[s.k] } : s,
+  );
+  const unit = (k: TrendKey) => (counts ? (k === "text" ? "回" : "問") : "人");
   const n = rows.length;
   if (!n) return null;
 
@@ -2736,9 +2753,30 @@ function UsageTrendChart({ data }: { data: any }) {
 
   return (
     <section>
-      <h3 className="text-base font-semibold text-slate-800 mb-1">日ごとの使った人（時系列）</h3>
+      <div className="flex flex-wrap items-center gap-2 mb-1">
+        <h3 className="text-base font-semibold text-slate-800">{counts ? "日ごとの回数（時系列）" : "日ごとの使った人（時系列）"}</h3>
+        {hasCounts && (
+          <div role="radiogroup" aria-label="グラフの数え方" className="inline-flex rounded-lg border border-slate-300 overflow-hidden">
+            {(["users", "counts"] as const).map((k) => (
+              <button
+                key={k}
+                role="radio"
+                aria-checked={mode === k}
+                onClick={() => setMode(k)}
+                className={`px-3 py-1 ${mode === k ? "bg-slate-700 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
+              >
+                {k === "users" ? "人数" : "回数"}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <p className="text-xs text-slate-500 mb-2">
-        {hasAll
+        {counts
+          ? `解いた問題の数（単語・文法。「もう一度」の再出題も練習の量として数えます）と、教材を開いた回数です。太い線は単語と文法の問題の合計。1日あたり平均 ${
+              Math.round((total / n) * 10) / 10
+            } 問、最も多い日は ${md(top.day)}（${wd(top.day)}）の ${fmtN(top.all)} 問。`
+          : hasAll
           ? `「全体」は、その日に単語・文法・教材のどれかを使った人（同じ人は1人と数えます）。1日あたり平均 ${
               Math.round((total / n) * 10) / 10
             } 人、最も多い日は ${md(top.day)}（${wd(top.day)}）の ${fmtN(top.all)} 人。`
@@ -2751,17 +2789,17 @@ function UsageTrendChart({ data }: { data: any }) {
             <span key={s.k} className="inline-flex items-center gap-1">
               <span className="inline-block w-3 rounded-full" style={{ height: s.k === "all" ? 4 : 3, background: s.color }} />
               {s.label}
-              {h && <span className="font-semibold">{fmtN(h[s.k])} 人</span>}
+              {h && <span className="font-semibold">{fmtN(h[s.k])} {unit(s.k)}</span>}
             </span>
           ))}
-          {!h && <span className="text-xs text-slate-500">グラフに触れると、その日の人数が出ます</span>}
+          {!h && <span className="text-xs text-slate-500">グラフに触れると、その日の{counts ? "回数" : "人数"}が出ます</span>}
         </div>
         <div ref={boxRef} className="mt-1">
           <svg
             width={w}
             height={H}
             role="img"
-            aria-label="日ごとの使った人の折れ線グラフ"
+            aria-label={counts ? "日ごとの回数の折れ線グラフ" : "日ごとの使った人の折れ線グラフ"}
             style={{ touchAction: "pan-y", display: "block" }}
             onPointerMove={onMove}
             onPointerDown={onMove}
