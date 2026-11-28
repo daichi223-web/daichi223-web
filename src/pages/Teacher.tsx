@@ -739,7 +739,7 @@ export default function Teacher() {
       )}
 
       {activeTab === "analytics" && (
-        <AnalyticsView candidates={candidates} getQuestionDisplay={getQuestionDisplay} />
+        <AnalyticsView getQuestionDisplay={getQuestionDisplay} />
       )}
 
       {activeTab === "texts" && <TextsManageView />}
@@ -1897,186 +1897,13 @@ function WritingMistakesByGroup({ getQuestionDisplay }: { getQuestionDisplay: (q
   );
 }
 
-function AnalyticsView({
-  candidates,
-  getQuestionDisplay,
-}: {
-  candidates: any[];
-  getQuestionDisplay: (qid: string) => string;
-}) {
-  // 単語の見出し番号（qid「123-2」の「-」の前）。形が違えば空
-  const headNo = (qid: string) => /^(\d+)-\d+$/.exec(String(qid ?? ""))?.[1] ?? "";
-
-  // Top wrong answers (proposed_role='negative', sorted by freq)
-  const topWrongs = useMemo(() => {
-    return candidates
-      .filter((c) => c.proposedRole === "negative")
-      .sort((a, b) => (b.freq || 0) - (a.freq || 0))
-      .slice(0, 30);
-  }, [candidates]);
-
-  // Aggregate by qid: count of wrong patterns & total freq
-  const byQid = useMemo(() => {
-    const m = new Map<
-      string,
-      { qid: string; negativeCount: number; negativeFreq: number; totalFreq: number }
-    >();
-    for (const c of candidates) {
-      const qid = c.qid;
-      if (!qid) continue;
-      const row = m.get(qid) || {
-        qid,
-        negativeCount: 0,
-        negativeFreq: 0,
-        totalFreq: 0,
-      };
-      row.totalFreq += c.freq || 0;
-      if (c.proposedRole === "negative") {
-        row.negativeCount += 1;
-        row.negativeFreq += c.freq || 0;
-      }
-      m.set(qid, row);
-    }
-    return Array.from(m.values())
-      .filter((r) => r.negativeFreq > 0)
-      .sort((a, b) => b.negativeFreq - a.negativeFreq)
-      .slice(0, 20);
-  }, [candidates]);
-
-  // Date histogram (by lastSeen date)
-  const dailyHistogram = useMemo(() => {
-    const bucket: Record<string, number> = {};
-    for (const c of candidates) {
-      const ls = c.lastSeen;
-      let d: Date | null = null;
-      if (ls?.toDate) d = ls.toDate();
-      else if (ls?._seconds) d = new Date(ls._seconds * 1000);
-      else if (typeof ls === "string") d = new Date(ls);
-      if (!d) continue;
-      const key = d.toISOString().slice(0, 10);
-      bucket[key] = (bucket[key] || 0) + (c.freq || 0);
-    }
-    return Object.entries(bucket)
-      .sort(([a], [b]) => (a > b ? 1 : -1))
-      .slice(-30);
-  }, [candidates]);
-
-  const maxDaily = Math.max(1, ...dailyHistogram.map(([, n]) => n));
-
+// 誤答分析タブ。2026-11-28 に、候補表（candidates・30日分・絞り込みなし）から作っていた
+// サマリ・頻出誤答TOP30・単語別誤答集中度・日別解答累計の4表を外した（利用状況タブの書き出し［記述］・
+// 回数のグラフと、ここの「学校・学年ごとの記述の誤答」に重なるため）。候補の判断は「選択肢候補」タブ。
+function AnalyticsView({ getQuestionDisplay }: { getQuestionDisplay: (qid: string) => string }) {
   return (
     <div className="space-y-6">
       <WritingMistakesByGroup getQuestionDisplay={getQuestionDisplay} />
-      <div className="bg-white rounded-lg shadow p-4">
-        <h3 className="font-bold text-slate-800 mb-3">📈 サマリ</h3>
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-blue-50 rounded p-3">
-            <div className="text-2xl font-bold text-blue-700">
-              {candidates.length}
-            </div>
-            <div className="text-xs text-blue-600">候補総数</div>
-          </div>
-          <div className="bg-red-50 rounded p-3">
-            <div className="text-2xl font-bold text-red-700">
-              {candidates.filter((c) => c.proposedRole === "negative").length}
-            </div>
-            <div className="text-xs text-red-600">誤答パターン</div>
-          </div>
-          <div className="bg-amber-50 rounded p-3">
-            <div className="text-2xl font-bold text-amber-700">
-              {candidates.filter((c) => c.proposedRole === "review").length}
-            </div>
-            <div className="text-xs text-amber-600">要確認</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-4">
-        <h3 className="font-bold text-slate-800 mb-3">
-          🏆 頻出誤答TOP30 (proposed_role=negative × freq desc)
-        </h3>
-        {topWrongs.length === 0 ? (
-          <div className="text-slate-500 text-sm py-4">
-            まだデータがありません。生徒の記述解答が累積されたら「候補を集計」を実行してください。
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-slate-100">
-              <tr>
-                <th className="px-3 py-2 text-left">#</th>
-                <th className="px-3 py-2 text-right">番号</th>
-                <th className="px-3 py-2 text-left">単語</th>
-                <th className="px-3 py-2 text-left">誤答内容</th>
-                <th className="px-3 py-2 text-right">回数</th>
-                <th className="px-3 py-2 text-right">平均点</th>
-              </tr>
-            </thead>
-            <tbody>
-              {topWrongs.map((c, i) => (
-                <tr key={`${c.qid}_${c.answerNorm}`} className="border-t border-slate-100">
-                  <td className="px-3 py-2 text-slate-500">{i + 1}</td>
-                  <td className="px-3 py-2 text-right tabular-nums text-slate-600">{headNo(c.qid)}</td>
-                  <td className="px-3 py-2 font-medium">{getQuestionDisplay(c.qid)}</td>
-                  <td className="px-3 py-2 text-slate-700">{c.sampleAny || c.answerNorm}</td>
-                  <td className="px-3 py-2 text-right font-bold text-red-600">{c.freq}</td>
-                  <td className="px-3 py-2 text-right text-slate-500">{c.avgScore ?? '-'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-4">
-        <h3 className="font-bold text-slate-800 mb-3">📊 単語別誤答集中度 (TOP20)</h3>
-        {byQid.length === 0 ? (
-          <div className="text-slate-500 text-sm py-4">データなし</div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-slate-100">
-              <tr>
-                <th className="px-3 py-2 text-right">番号</th>
-                <th className="px-3 py-2 text-left">単語</th>
-                <th className="px-3 py-2 text-right">誤答パターン数</th>
-                <th className="px-3 py-2 text-right">誤答延べ回数</th>
-                <th className="px-3 py-2 text-right">全解答数</th>
-              </tr>
-            </thead>
-            <tbody>
-              {byQid.map((r) => (
-                <tr key={r.qid} className="border-t border-slate-100">
-                  <td className="px-3 py-2 text-right tabular-nums text-slate-600">{headNo(r.qid)}</td>
-                  <td className="px-3 py-2 font-medium">{getQuestionDisplay(r.qid)}</td>
-                  <td className="px-3 py-2 text-right">{r.negativeCount}</td>
-                  <td className="px-3 py-2 text-right text-red-600 font-bold">{r.negativeFreq}</td>
-                  <td className="px-3 py-2 text-right text-slate-500">{r.totalFreq}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-4">
-        <h3 className="font-bold text-slate-800 mb-3">📅 日別 解答累計 (直近30日)</h3>
-        {dailyHistogram.length === 0 ? (
-          <div className="text-slate-500 text-sm py-4">データなし</div>
-        ) : (
-          <div className="space-y-1">
-            {dailyHistogram.map(([date, n]) => (
-              <div key={date} className="flex items-center gap-2 text-xs">
-                <span className="w-24 text-slate-500">{date}</span>
-                <div className="flex-1 bg-slate-100 rounded h-3 overflow-hidden">
-                  <div
-                    className="bg-blue-500 h-full"
-                    style={{ width: `${(n / maxDaily) * 100}%` }}
-                  />
-                </div>
-                <span className="w-12 text-right font-medium">{n}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }
