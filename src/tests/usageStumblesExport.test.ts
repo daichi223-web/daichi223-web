@@ -56,6 +56,18 @@ describe("usageStumbles export=words", () => {
     expect(body.drillInfo).toBeUndefined();
   });
 
+  it("kind=writing は記述だけで数え、kind を返す。既定は choice、形違いは 400", async () => {
+    const { body } = await call({ export: "words", kind: "writing" });
+    expect(rpc.mock.calls[0][1].p_word_formats).toEqual(["meaning-writing", "context-writing"]);
+    expect(body.kind).toBe("writing");
+    expect(body.formats).toEqual(["meaning-writing", "context-writing"]);
+    const d = await call({ export: "words" });
+    expect(d.body.kind).toBe("choice");
+    const bad = await call({ export: "words", kind: "true-false" });
+    expect(bad.status).toBe(400);
+    expect(rpc).toHaveBeenCalledTimes(2);
+  });
+
   it("範囲なしは全部（形の違う id も含む）", async () => {
     const { body } = await call({ export: "words" });
     expect(body.words).toHaveLength(5);

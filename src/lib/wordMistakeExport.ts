@@ -25,7 +25,12 @@ export type ExportMeta = {
   range: [number, number] | null;
   generatedAt: string; // ISO
   totals: { words: number; n: number; wrong: number };
+  kind?: WordKind; // 数えた形式（省略は選択式）
 };
+
+/** 数える形式。API の kind（api/_wordRange.ts の WORD_KIND_FORMATS） */
+export type WordKind = "choice" | "writing";
+export const KIND_LABEL: Record<WordKind, string> = { choice: "選択式", writing: "記述" };
 
 export type ExportSort = "wrongUsers" | "number";
 
@@ -70,8 +75,16 @@ const label = (qid: string, info: Record<string, WordInfo>) => {
 const confusedText = (r: WordMistakeRow, info: Record<string, WordInfo>) =>
   (r.confused ?? []).map((c) => `${label(c.id, info)} ${c.users}人・${c.n}回`).join(" ／ ");
 
-/** 数えている出題形式（API が p_word_formats で選択式だけに絞る＝api/_wordRange.ts の CHOICE_WORD_FORMATS） */
+/** 数えている出題形式（API が p_word_formats で絞る＝api/_wordRange.ts の WORD_KIND_FORMATS） */
 export const FORMAT_TEXT = "選択式だけ（語→意味・意味→語・例文・空欄補充・多義語の例文理解。○×と記述は入れない）";
+export const WRITING_FORMAT_TEXT = "記述だけ（意味を書く・多義語の文脈から意味を書く。○×と選択式は入れない）";
+export const formatText = (kind: WordKind = "choice") => (kind === "writing" ? WRITING_FORMAT_TEXT : FORMAT_TEXT);
+
+/** 印刷用の表の末尾の注記 */
+const noteText = (kind: WordKind) =>
+  kind === "writing"
+    ? "選んだ期間の単語クイズの記述の回答（意味を書く・多義語の文脈から書く。○×・選択式と「もう一度」の再出題を除く）を、登録済みの生徒について数えています。正誤は1回の回答の最後の判定（自動判定、保留なら生徒の自己判定）です。「初回」は各生徒がこの期間に最初に解いた1回、「2回以上」は期間内に同じ語（意味）を2回以上間違えた人です。記述には選択肢が無いので「何と間違えたか」は空欄です（答えの文は「誤答分析」タブで見られます）。人数は単語ごとに数えているので、合計すると同じ人が重なります。"
+    : "選んだ期間の単語クイズの選択式の回答（○×・記述と「もう一度」の再出題を除く）を、登録済みの生徒について数えています。「初回」は各生徒がこの期間に最初に解いた1回、「2回以上」は期間内に同じ語（意味）を2回以上間違えた人です。「何と間違えたか」は選んだ誤りの選択肢の上位3つです。人数は単語ごとに数えているので、合計すると同じ人が重なります。";
 
 export const periodText =(m: Pick<ExportMeta, "from" | "to">) => `${m.from ?? "記録開始"} 〜 ${m.to ?? "今日"}`;
 export const rangeText = (r: ExportMeta["range"]) => (r ? `${r[0]}〜${r[1]}番` : "全範囲");
@@ -116,7 +129,7 @@ export function buildCsv(rows: WordMistakeRow[], info: Record<string, WordInfo>,
   lines.push([csvCell("期間"), csvCell(periodText(meta))].join(","));
   lines.push([csvCell("対象"), csvCell(meta.scope)].join(","));
   lines.push([csvCell("単語の範囲"), csvCell(rangeText(meta.range))].join(","));
-  lines.push([csvCell("形式"), csvCell(FORMAT_TEXT)].join(","));
+  lines.push([csvCell("形式"), csvCell(formatText(meta.kind))].join(","));
   lines.push([csvCell("作成"), csvCell(jstStamp(meta.generatedAt))].join(","));
   lines.push("");
   lines.push(CSV_HEADER.map(csvCell).join(","));
@@ -176,7 +189,7 @@ export function buildPrintHtml(
 
   return `<!doctype html>
 <html lang="ja"><head><meta charset="utf-8">
-<title>単語の誤答 ${esc(periodText(meta))} ${esc(rangeText(meta.range))}</title>
+<title>単語の誤答（${KIND_LABEL[meta.kind ?? "choice"]}） ${esc(periodText(meta))} ${esc(rangeText(meta.range))}</title>
 <style>
 @page { size: A4 portrait; margin: 12mm 10mm; }
 * { box-sizing: border-box; }
@@ -202,12 +215,12 @@ td.c { font-size: 8.5pt; }
 @media print { .bar { display: none; } body { padding: 0; } }
 </style></head><body>
 <div class="bar"><button onclick="window.print()">印刷 / PDF に保存</button>　送り先で「PDF に保存」を選ぶと PDF になります。</div>
-<h1>単語の誤答（古文単語）</h1>
+<h1>単語の誤答（古文単語・${KIND_LABEL[meta.kind ?? "choice"]}）</h1>
 <div class="meta">
 <div><b>期間</b>${esc(periodText(meta))}</div>
 <div><b>対象</b>${esc(meta.scope)}</div>
 <div><b>単語の範囲</b>${esc(rangeText(meta.range))}</div>
-<div><b>形式</b>${esc(FORMAT_TEXT)}</div>
+<div><b>形式</b>${esc(formatText(meta.kind))}</div>
 <div><b>並び</b>${sort === "number" ? "番号順" : "間違えた人の多い順"}</div>
 <div><b>作成</b>${esc(jstStamp(meta.generatedAt))}</div>
 </div>
@@ -223,7 +236,7 @@ td.c { font-size: 8.5pt; }
 ${body || '<tr><td colspan="8">この条件で回答のあった単語はありません。</td></tr>'}
 </tbody>
 </table>
-<p class="note">選んだ期間の単語クイズの選択式の回答（○×・記述と「もう一度」の再出題を除く）を、登録済みの生徒について数えています。「初回」は各生徒がこの期間に最初に解いた1回、「2回以上」は期間内に同じ語（意味）を2回以上間違えた人です。「何と間違えたか」は選んだ誤りの選択肢の上位3つです。人数は単語ごとに数えているので、合計すると同じ人が重なります。</p>
+<p class="note">${esc(noteText(meta.kind ?? "choice"))}</p>
 ${autoPrint ? "<script>window.addEventListener('load',function(){setTimeout(function(){window.print()},300)})</script>" : ""}
 </body></html>`;
 }

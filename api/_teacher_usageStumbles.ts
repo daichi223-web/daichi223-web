@@ -10,7 +10,9 @@
 // 集計は DB 関数 usage_stumbles / usage_stumble_users（migration 016）。対象は登録済みの生徒だけ。
 //   書き出し用（教員画面「単語の誤答を書き出す」）:
 //     &export=words … 単語だけを返す（文法とドリルの問題文は引かない）。下限なし（1回答・1人から）。
-//       数えるのは選択式の回答だけ（CHOICE_WORD_FORMATS。○×・記述は入れない。migration 019 の p_word_formats）。
+//       &kind=choice（既定）… 選択式の回答だけ（CHOICE_WORD_FORMATS）
+//       &kind=writing      … 記述の回答だけ（WRITING_WORD_FORMATS）
+//       ○×はどちらにも入れない（migration 019 の p_word_formats）。
 //     &range=101-150 … 単語の番号（qid の「-」の前）で絞る。両端を含む。省略は全範囲。
 //     このとき rangeTotals に、範囲内の単語の回答数・誤答数・語数の合計を返す
 //     （解いた人の重複なしの数は DB 関数に無いので出さない）。
@@ -18,7 +20,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { supabaseAdmin } from "./_supabaseAdmin.js";
 import { requireStaff } from "./_requireStaff.js";
 import { loadIdentities, makeUserIndex, dayParam, jstStartIso, parseUsageFilter, pickUsers } from "./_usageIdentity.js";
-import { CHOICE_WORD_FORMATS, parseWordRange, wordNo } from "./_wordRange.js";
+import { WORD_KIND_FORMATS, parseWordKind, parseWordRange, wordNo } from "./_wordRange.js";
 
 const TYPES = new Set(["word", "drill", "topic"]);
 
@@ -54,7 +56,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const rawRange = typeof req.query.range === "string" ? req.query.range : "";
       const range = parseWordRange(rawRange);
       if (rawRange && !range) return res.status(400).json({ error: "range は 101-150 の形で指定してください" });
-      const r = await supabaseAdmin.rpc("usage_stumbles", { ...period, p_min_n: 1, p_min_users: 1, p_word_formats: CHOICE_WORD_FORMATS });
+      const kind = parseWordKind(req.query.kind);
+      if (!kind) return res.status(400).json({ error: "kind は choice か writing です" });
+      const formats = WORD_KIND_FORMATS[kind];
+      const r = await supabaseAdmin.rpc("usage_stumbles", { ...period, p_min_n: 1, p_min_users: 1, p_word_formats: formats });
       if (r.error) throw new Error(`usage_stumbles: ${r.error.message}`);
       const all =((r.data as Record<string, any>)?.words ?? []) as any[];
       const words = range
@@ -73,7 +78,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         to,
         filter,
         range,
-        formats: CHOICE_WORD_FORMATS,
+        kind,
+        formats,
         registered: picked.length,
         rangeTotals,
         words,

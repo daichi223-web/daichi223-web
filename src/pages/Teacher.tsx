@@ -3023,6 +3023,7 @@ function UsageWordExport({ query }: { query: string }) {
   const [rTo, setRTo] = useState("");
   const [quizRange, setQuizRange] = useState<{ label: string; from: number; to: number } | null>(null);
   const [sort, setSort] = useState<wordExport.ExportSort>("wrongUsers");
+  const [kind, setKind] = useState<wordExport.WordKind>("choice");
   const [res, setRes] = useState<any | null>(null);
   const [resKey, setResKey] = useState("");
   const [loading, setLoading] = useState(false);
@@ -3057,7 +3058,7 @@ function UsageWordExport({ query }: { query: string }) {
     return { ok: true as const, param: `${Number(a)}-${Number(b)}` };
   };
   const rp = rangeParam();
-  const key = `${query}|${rp.ok ? rp.param : "?"}`;
+  const key = `${query}|${rp.ok ? rp.param : "?"}|${kind}`;
   const stale = !!res && resKey !== key;
 
   const extract = async () => {
@@ -3066,7 +3067,7 @@ function UsageWordExport({ query }: { query: string }) {
     setErr(null);
     setMsg(null);
     try {
-      const r = await callAPI(`/api/teacher?action=usageStumbles&${query}&export=words${rp.param ? `&range=${rp.param}` : ""}`);
+      const r = await callAPI(`/api/teacher?action=usageStumbles&${query}&export=words&kind=${kind}${rp.param ? `&range=${rp.param}` : ""}`);
       setRes(r);
       setResKey(key);
     } catch (e: any) {
@@ -3086,11 +3087,12 @@ function UsageWordExport({ query }: { query: string }) {
       range: res?.range ?? null,
       generatedAt: res?.generatedAt ?? new Date().toISOString(),
       totals: res?.rangeTotals ?? { words: 0, n: 0, wrong: 0 },
+      kind: res?.kind === "writing" ? "writing" : "choice",
     };
   };
   const fileBase = () => {
     const m = meta();
-    return `単語の誤答_${m.from ?? "開始"}_${m.to ?? "今日"}_${m.range ? `${m.range[0]}-${m.range[1]}` : "全範囲"}`;
+    return `単語の誤答_${wordExport.KIND_LABEL[m.kind ?? "choice"]}_${m.from ?? "開始"}_${m.to ?? "今日"}_${m.range ? `${m.range[0]}-${m.range[1]}` : "全範囲"}`;
   };
 
   const downloadCsv = () => {
@@ -3131,9 +3133,24 @@ function UsageWordExport({ query }: { query: string }) {
       {head}
       <p className="text-xs text-slate-500 mb-2">
         期間・学校・年・組は上の絞り込みのまま、単語の番号の範囲で絞って、回答のあった語（意味）をすべて出します（上の「つまずき」と違い、少ない回答の語も入ります）。
-        数えるのは選択式の回答だけです（語→意味・意味→語・例文・空欄補充・多義語の例文理解。○×と記述は入れません）。
+        選択式（語→意味・意味→語・例文・空欄補充・多義語の例文理解）と記述（意味を書く・多義語の文脈から書く）は分けて数えます。○×はどちらにも入れません。
         書き出すのは語ごとの人数と回数だけで、生徒個人の行は入れません。
       </p>
+      <div className="flex flex-wrap items-center gap-2 mb-2" role="radiogroup" aria-label="数える形式">
+        <span className="font-medium text-slate-700">形式</span>
+        {(["choice", "writing"] as const).map((k) => (
+          <button
+            key={k}
+            role="radio"
+            aria-checked={kind === k}
+            onClick={() => setKind(k)}
+            className={kind === k ? "px-4 py-2 sm:px-3 sm:py-1.5 rounded-lg border border-slate-700 bg-slate-700 text-white" : U_BTN}
+          >
+            {wordExport.KIND_LABEL[k]}
+          </button>
+        ))}
+        {kind === "writing" && <span className="text-xs text-slate-500">記述には選択肢が無いので「何と間違えたか」は空欄です（答えの文は「誤答分析」タブ）。</span>}
+      </div>
       <div className="flex flex-wrap items-center gap-2 mb-2">
         <span className="font-medium text-slate-700">単語の範囲</span>
         <input inputMode="numeric" value={rFrom} onChange={(e) => setRFrom(e.target.value)} className={U_NUM} aria-label="範囲の始めの番号" placeholder="始め" />
@@ -3169,7 +3186,7 @@ function UsageWordExport({ query }: { query: string }) {
         <div className="space-y-2">
           {stale && <div className="text-amber-700">絞り込みか範囲が変わりました。「抽出する」を押し直すと、今の条件で出し直します。</div>}
           <div className="text-slate-700">
-            {wordExport.periodText(meta())}・{meta().scope}・{wordExport.rangeText(meta().range)}：
+            {wordExport.periodText(meta())}・{meta().scope}・{wordExport.rangeText(meta().range)}・{wordExport.KIND_LABEL[meta().kind ?? "choice"]}：
             回答のあった語 {fmtN(t?.words)}・回答 {fmtN(t?.n)} 件・誤答 {fmtN(t?.wrong)} 件（{pctOf(t?.wrong ?? 0, t?.n ?? 0)}）
           </div>
           <div className="flex flex-wrap items-center gap-2">

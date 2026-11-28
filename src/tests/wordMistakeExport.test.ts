@@ -96,6 +96,16 @@ describe("印刷用の表", () => {
     expect(html).not.toContain("x<y>");
     expect(html).not.toContain("window.print()},300"); // autoPrint=false
   });
+  it("記述は見出し・形式・注記が記述になる（CSV も）", () => {
+    const m = { ...meta, kind: "writing" as const };
+    const html = buildPrintHtml([row("101-1")], info, m, "number", false);
+    expect(html).toContain("古文単語・記述");
+    expect(html).toContain("記述だけ（意味を書く");
+    expect(html).toContain("最後の判定");
+    expect(html).not.toContain("選択式だけ");
+    const lines = buildCsv([row("101-1")], info, m).slice(1).split("\r\n");
+    expect(lines[3]).toBe('"形式","記述だけ（意味を書く・多義語の文脈から意味を書く。○×と選択式は入れない）"');
+  });
   it("行が無いときは「ありません」", () => {
     expect(buildPrintHtml([], info, { ...meta, totals: { words: 0, n: 0, wrong: 0 } }, "wrongUsers")).toContain("回答のあった単語はありません");
   });
